@@ -6,8 +6,8 @@
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
 # Larissa Manderfeld, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:09+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5321,6 +5321,14 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "Geen bewerkingen gevonden. Laten we een overdracht maken!"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr ""
+"Er is geen product gevonden waarvoor series/partijen kunnen worden "
+"gegenereerd."
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "Geen product gevonden. Maak er één aan!"
@@ -10287,11 +10295,16 @@ msgstr "Je kunt het soort product dat al in gebruik is niet wijzigen."
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-msgid "You can not delete moves linked to another operation"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
-"Je kan geen verplaatsingen verwijderen die gekoppeld zijn aan een andere "
-"bewerking"
+"Je kunt geen gesnoozede aanvulregel maken dat niet handmatig wordt "
+"geactiveerd."
 
 #. module: stock
 #. odoo-python
@@ -10341,6 +10354,17 @@ msgstr ""
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Je kunt slechts 1.0 %s verwerken van producten met een unieke serienummer."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Je kunt alleen handmatige aanvulregels snoozen. Je kunt beter 'auto-"
+"trigger'-aanvulregels archiveren als je niet wilt dat ze worden geactiveerd."
 
 #. module: stock
 #. odoo-python
@@ -10444,6 +10468,19 @@ msgstr ""
 msgid "You cannot delete a scrap which is done."
 msgstr ""
 "Het is niet mogelijk een afkeuring te verwijderen welke al verwerkt is."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"Via deze weergave kun je hoeveelheden van verschillende transfers niet "
+"rechtstreeks in hetzelfde pakket verpakken. Probeer ze toe te voegen aan een"
+" batchpicking en verpak ze daar."
 
 #. module: stock
 #. odoo-python

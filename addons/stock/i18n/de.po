@@ -4597,7 +4597,7 @@ msgstr "Vorlaufzeiten"
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
 msgid "Least Packages"
-msgstr "Kleinste Pakete"
+msgstr "Wenige Pakete"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -5349,6 +5349,8 @@ msgstr "Keine Vorgänge gefunden. Erstellen Sie einen Transfer!"
 #: code:addons/stock/models/stock_move.py:0
 msgid "No product found to generate Serials/Lots for."
 msgstr ""
+"Es wurde kein Produkt gefunden, für das eine Serien-/Losnummer generiert "
+"werden kann."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -10344,11 +10346,16 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-msgid "You can not delete moves linked to another operation"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
-"Sie können keine Buchungen löschen, die mit einem anderen Vorgang verknüpft "
-"sind"
+"Sie können keinen schlummernden Beschaffungspunkt erstellen, der nicht "
+"manuell ausgelöst wird."
 
 #. module: stock
 #. odoo-python
@@ -10398,6 +10405,18 @@ msgstr ""
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Sie können nur 1,0 %s Produkte mit eindeutiger Seriennummer verarbeiten."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Sie können nur manuelle Beschaffungspunkte schlummern lassen. Sie sollte "
+"Beschaffungspunkte mit „Automatischem Auslöser“ eher archivieren, wenn Sie "
+"nicht möchten, dass sie ausgelöst werden."
 
 #. module: stock
 #. odoo-python
@@ -10499,6 +10518,19 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "Sie können keinen Ausschuss löschen, der erledigt ist."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"Sie können über diese Ansicht nicht direkt Mengen aus unterschiedlichen "
+"Transfers im selben Paket verpacken. Fügen Sie sie zu einer "
+"Stapelkommissionierung hinzu und verpacken Sie sie dort."
 
 #. module: stock
 #. odoo-python

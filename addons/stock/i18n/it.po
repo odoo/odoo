@@ -5320,6 +5320,12 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "Nessun'operazione trovata. Creiamo un trasferimento!"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr "Nessun prodotto trovato per cui generare numeri di serie o lotto."
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "Nessun prodotto trovato. Creane uno!"
@@ -10285,9 +10291,16 @@ msgstr "Impossibile cambiare la tipologia di un prodotto già utilizzato."
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-msgid "You can not delete moves linked to another operation"
-msgstr "Non è possibile eliminare movimenti collegati ad un'altra operazione"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+"Non è possibile creare un punto d'ordine sospeso che non venga attivato "
+"manualmente."
 
 #. module: stock
 #. odoo-python
@@ -10338,6 +10351,17 @@ msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Con un numero di serie univoco è possibile elaborare solo 1,0 %s di "
 "prodotto."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"È possibile mettere in pausa solo punti d'ordine manuali. È necessario "
+"archiviare punti d'ordine 'auto-trigger' se non vuoi attivarli."
 
 #. module: stock
 #. odoo-python
@@ -10436,6 +10460,19 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "Impossibile eliminare uno scarto già completato."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"Da questa vista, non è possibile confezionare nello stesso collo quantità "
+"provenienti da vari trasferimenti. Prova ad aggiungerli ad un prelievo "
+"raggruppato e confezionali lì."
 
 #. module: stock
 #. odoo-python
