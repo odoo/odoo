@@ -61,6 +61,9 @@ export class PaymentRazorpay extends PaymentInterface {
             this.payment_stopped
                 ? this._showError(_t("Transaction failed due to inactivity"))
                 : this._showError(response.error);
+            if (response.payment_messageCode === "P2P_DEVICE_CANCELED") {
+                line.set_payment_status("retry");
+            }
             this._removePaymentHandler(["p2pRequestId", "referenceId"]);
             return Promise.resolve(false);
         }
@@ -126,7 +129,7 @@ export class PaymentRazorpay extends PaymentInterface {
             //Within 90 seconds, inactivity will result in transaction cancellation and payment termination.
             if (this.payment_stopped) {
                 this._razorpay_cancel().then(() => {
-                    paymentLine.set_payment_status("force_done");
+                    paymentLine.set_payment_status("retry");
                     this.payment_stopped = false;
                 });
                 return resolve(false);
