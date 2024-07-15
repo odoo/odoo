@@ -30,7 +30,10 @@
                 <div role="alert" class="alert alert-warning" invisible="invoicing_message == ''">
                     <field name="invoicing_message" nolabel="1"/>
                 </div>
-                <div role="alert" class="alert alert-info" invisible="not delivery_message">
+                <div role="alert" class="alert alert-info" invisible="context.get('no_rate') or not delivery_message">
+                    <field name="delivery_message" nolabel="1"/>
+                </div>
+                <div role="alert" class="alert alert-danger" invisible="not context.get('no_rate') or not delivery_message">
                     <field name="delivery_message" nolabel="1"/>
                 </div>
                 <footer>
