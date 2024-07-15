@@ -218,6 +218,16 @@ export class MediaPlugin extends Plugin {
         return hasChange;
     }
 
+    createAttachment({ el, imageData, resModel, resId }) {
+        return rpc("/html_editor/attachment/add_data", {
+            name: el.dataset.fileName || "",
+            data: imageData,
+            is_image: true,
+            res_model: resModel,
+            res_id: resId,
+        });
+    }
+
     /**
      * Saves a base64 encoded image as an attachment.
      * Relies on saveModifiedImage being called after it for webp.
@@ -236,13 +246,15 @@ export class MediaPlugin extends Plugin {
             el.classList.remove("o_b64_image_to_save");
             return;
         }
-        const attachment = await rpc("/html_editor/attachment/add_data", {
-            name: el.dataset.fileName || "",
-            data: imageData,
-            is_image: true,
-            res_model: resModel,
-            res_id: resId,
+        const attachment = await this.createAttachment({
+            el,
+            imageData,
+            resId,
+            resModel,
         });
+        if (!attachment) {
+            return;
+        }
         if (attachment.mimetype === "image/webp") {
             el.classList.add("o_modified_image_to_save");
             el.dataset.originalId = attachment.id;

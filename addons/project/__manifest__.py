@@ -190,8 +190,6 @@
 
             'web/static/src/env.js',
 
-            ('include', 'web_editor.assets_wysiwyg'),
-
             'web/static/src/legacy/scss/fields.scss',
 
             'base/static/src/scss/res_partner.scss',
@@ -199,18 +197,11 @@
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',
 
-            'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
-            'web_editor/static/lib/vkbeautify/**/*',
-            'web_editor/static/src/js/common/**/*',
-            'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',
-            'web_editor/static/src/js/wysiwyg/fonts.js',
+            'bus/static/src/**/*.js',
 
-            'web_editor/static/src/components/**/*',
-            'web_editor/static/src/scss/web_editor.common.scss',
-            'web_editor/static/src/scss/web_editor.backend.scss',
-
-            'web_editor/static/src/js/backend/**/*',
-            'web_editor/static/src/xml/backend.xml',
+            'html_editor/static/src/**/*',
+            'html_editor/static/lib/DOMpurify.js',
+            'html_editor/static/lib/jQuery.transfo.js',
 
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/chatter/web/form_renderer.scss',
