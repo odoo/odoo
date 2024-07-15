@@ -2873,20 +2873,27 @@ class MrpProduction(models.Model):
         entity = self[child_field].filtered(lambda line: line.product_id.id == product_id)
         if entity:
             if quantity != 0:
-                entity.product_uom_qty = quantity
+                self._update_catalog_line_quantity(entity, quantity, **kwargs)
             else:
                 entity.unlink()
         elif quantity > 0:
-            command = Command.create({
-                'product_uom_qty': quantity,
-                'product_id': product_id,
-            })
+            new_line = self._get_new_catalog_line_values(product_id, quantity, **kwargs)
+            command = Command.create(new_line)
             self.write({child_field: [command]})
 
         return self.env['product.product'].browse(product_id).standard_price
 
     def _get_product_catalog_domain(self):
         return expression.AND([super()._get_product_catalog_domain(), [('id', '!=', self.product_id.id)]])
+
+    def _update_catalog_line_quantity(self, line, quantity, **kwargs):
+        line.product_uom_qty = quantity
+
+    def _get_new_catalog_line_values(self, product_id, quantity, **kwargs):
+        return {
+            'product_id': product_id,
+            'product_uom_qty': quantity,
+        }
 
     def _post_run_manufacture(self, post_production_values):
         note_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
