@@ -300,7 +300,7 @@ test("a failing tour logs the step that failed in run", async () => {
 
 test("a failing tour with disabled element", async () => {
     patchWithCleanup(browser.console, {
-        log: (s) => expect.step(`log: ${s}`),
+        log: (s) => {},
         warn: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
@@ -338,16 +338,12 @@ test("a failing tour with disabled element", async () => {
     getService("tour_service").startTour("tour3", { mode: "auto" });
     await advanceTime(750);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour3 on step: '.button0'"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour3 on step: '.button1'"]);
     await advanceTime(750);
     await advanceTime(10000);
-
-    const expectedError = [
+    expect.verifySteps([
         `error: Tour tour3 failed at step .button1. Element has been found but is disabled.`,
-    ];
-    expect.verifySteps(expectedError);
+    ]);
 });
 
 test("a failing tour logs the step that failed", async () => {

@@ -49,19 +49,6 @@ function increaseProductQuantity(productName) {
     };
 }
 
-function decreaseProductQuantity(productName) {
-    return {
-        content: `Decrease the quantity of ${productName}`,
-        trigger: `
-            ${productSelector(productName)}
-            td.o_sale_product_configurator_qty
-            button:has(i.fa-minus)
-        `,
-        allowDisabled: true,
-        run: 'click',
-    };
-}
-
 function setProductQuantity(productName, quantity) {
     return {
         content: `Set the quantity of ${productName} to ${quantity}`,
@@ -213,7 +200,6 @@ export default {
     optionalProductImageSrc,
     addOptionalProduct,
     increaseProductQuantity,
-    decreaseProductQuantity,
     setProductQuantity,
     assertProductQuantity,
     selectAttribute,
