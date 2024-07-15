@@ -104,7 +104,7 @@ export class ListDataSource extends OdooViewsDataSource {
                     };
                     break;
                 default:
-                    spec[field.name] = field;
+                    spec[field.name] = {};
                     break;
             }
         }
