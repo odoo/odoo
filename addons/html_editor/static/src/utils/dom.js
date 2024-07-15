@@ -1,12 +1,5 @@
 import { closestBlock, isBlock } from "./blocks";
-import {
-    isSelfClosingElement,
-    isShrunkBlock,
-    isVisible,
-    paragraphRelatedElements,
-} from "./dom_info";
-import { prepareUpdate } from "./dom_state";
-import { boundariesOut, leftPos, nodeSize, rightPos } from "./position";
+import { isShrunkBlock, isVisible, paragraphRelatedElements } from "./dom_info";
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
 import { childNodes } from "./dom_traversal";
@@ -217,67 +210,6 @@ export function cleanTrailingBR(el) {
         }
     }
     return br;
-}
-
-/**
- * Moves the given subset of nodes of a source element to the given destination.
- * If the source element is left empty it is removed. This ensures the moved
- * content and its destination surroundings are restored (@see restoreState) to
- * the way there were.
- *
- * It also reposition at the right position on the left of the moved nodes.
- *
- * @param {HTMLElement} destinationEl
- * @param {number} destinationOffset
- * @param {HTMLElement} sourceEl
- * @param {number} [startIndex=0]
- * @param {number} [endIndex=sourceEl.childNodes.length]
- * @returns {Array.<HTMLElement, number} The position at the left of the moved
- *     nodes after the move was done (and where the cursor was returned).
- */
-export function moveNodes(
-    destinationEl,
-    destinationOffset,
-    sourceEl,
-    startIndex = 0,
-    endIndex = sourceEl.childNodes.length
-) {
-    if (isSelfClosingElement(destinationEl)) {
-        throw new Error(`moveNodes: Invalid destination element ${destinationEl.nodeName}`);
-    }
-
-    const nodes = [];
-    for (let i = startIndex; i < endIndex; i++) {
-        nodes.push(sourceEl.childNodes[i]);
-    }
-
-    if (nodes.length) {
-        const restoreDestination = prepareUpdate(destinationEl, destinationOffset);
-        const restoreMoved = prepareUpdate(
-            ...leftPos(sourceEl.childNodes[startIndex]),
-            ...rightPos(sourceEl.childNodes[endIndex - 1])
-        );
-        const fragment = document.createDocumentFragment();
-        nodes.forEach((node) => fragment.appendChild(node));
-        const posRightNode = destinationEl.childNodes[destinationOffset];
-        if (posRightNode) {
-            destinationEl.insertBefore(fragment, posRightNode);
-        } else {
-            destinationEl.appendChild(fragment);
-        }
-        restoreDestination();
-        restoreMoved();
-    }
-
-    if (!nodeSize(sourceEl)) {
-        const restoreOrigin = prepareUpdate(...boundariesOut(sourceEl));
-        sourceEl.remove();
-        restoreOrigin();
-    }
-
-    // Return cursor position, but don't change it
-    const firstNode = nodes.find((node) => !!node.parentNode);
-    return firstNode ? leftPos(firstNode) : [destinationEl, destinationOffset];
 }
 
 export function toggleClass(node, className) {
