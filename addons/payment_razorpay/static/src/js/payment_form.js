@@ -1,7 +1,6 @@
 /** @odoo-module **/
 /* global Razorpay */
 
-import { _t } from '@web/core/l10n/translation';
 import { loadJS } from '@web/core/assets';
 import paymentForm from '@payment/js/payment_form';
 
@@ -47,7 +46,9 @@ paymentForm.include({
         const RazorpayJS = Razorpay(razorpayOptions);
         RazorpayJS.open();
         RazorpayJS.on('payment.failed', response => {
-            this._displayErrorDialog(_t("Payment processing failed"), response.error.description);
+            this._displayErrorDialog(
+                this.errorMapping['paymentProcessingError'], response.error.description
+            );
         });
     },
 

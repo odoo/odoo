@@ -63,7 +63,7 @@ PaymentForm.include({
                     $field.popover({content: errorFields[id], trigger: 'hover', container: 'body', placement: 'top'});
                 }
                 this._displayErrorDialog(
-                    _t("Payment processing failed"),
+                    this.errorMapping['paymentProcessingError'],
                     _t("Some information is missing to process your payment.")
                 );
                 return;

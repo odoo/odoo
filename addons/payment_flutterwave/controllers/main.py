@@ -7,7 +7,6 @@ import pprint
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
 
@@ -46,19 +45,17 @@ class FlutterwaveController(http.Controller):
         _logger.info("Notification received from Flutterwave with data:\n%s", pprint.pformat(data))
 
         if data['event'] == 'charge.completed':
-            try:
-                # Check the origin of the notification.
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                    'flutterwave', data['data']
-                )
+            # Check the origin of the notification.
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'flutterwave', data['data']
+            )
+            if tx_sudo:
                 signature = request.httprequest.headers.get('verif-hash')
                 self._verify_notification_signature(signature, tx_sudo)
 
                 # Handle the notification data.
                 notification_data = data['data']
                 tx_sudo._handle_notification_data('flutterwave', notification_data)
-            except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-                _logger.exception("Unable to handle the notification data; skipping to acknowledge")
         return request.make_json_response('')
 
     @staticmethod

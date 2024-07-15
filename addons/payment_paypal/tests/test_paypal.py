@@ -65,10 +65,6 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         )
 
     def test_feedback_processing(self):
-        # Unknown transaction
-        with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_notification_data('paypal', self.notification_data)
-
         # Confirmed transaction
         tx = self._create_transaction('redirect')
         self.env['payment.transaction']._handle_notification_data('paypal', self.notification_data)

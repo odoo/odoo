@@ -6,9 +6,9 @@ import logging
 from werkzeug import urls
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_repr
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_payulatam import const
 from odoo.addons.payment_payulatam.controllers.main import PayuLatamController
@@ -99,7 +99,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'payulatam' or len(tx) == 1:
@@ -108,9 +107,7 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('referenceCode')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'payulatam')])
         if not tx:
-            raise ValidationError(
-                "PayU Latam: " + _("No transaction found matching reference %s.", reference)
-            )
+            logging.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
 
         return tx
 
@@ -144,8 +141,5 @@ class PaymentTransaction(models.Model):
         elif status in ('EXPIRED', 'DECLINED'):
             self._set_canceled(state_message=state_message)
         else:
-            _logger.warning(
-                "received data with invalid payment status (%s) for transaction with reference %s",
-                status, self.reference
-            )
-            self._set_error("PayU Latam: " + _("Invalid payment status."))
+            _logger.warning(payment_const.INVALID_PAYMENT_STATUS, status, self.reference)
+            self._set_error(_("Invalid payment status."))

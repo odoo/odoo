@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
-from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -102,12 +101,6 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
         self._test_alipay_feedback_processing()
 
     def _test_alipay_feedback_processing(self):
-        # Unknown transaction
-        with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_notification_data(
-                'alipay', self.notification_data
-            )
-
         # Confirmed transaction
         tx = self._create_transaction('redirect')
         self.env['payment.transaction']._handle_notification_data('alipay', self.notification_data)

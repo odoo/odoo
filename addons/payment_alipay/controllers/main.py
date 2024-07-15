@@ -8,8 +8,9 @@ import requests
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
+
+from odoo.addons.payment import const as payment_const
 
 _logger = logging.getLogger(__name__)
 
@@ -49,18 +50,16 @@ class AlipayController(http.Controller):
         :rtype: str
         """
         _logger.info("notification received from Alipay with data:\n%s", pprint.pformat(data))
-        try:
-            # Check the origin and integrity of the notification
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'alipay', data
-            )
+        # Check the origin and integrity of the notification
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            'alipay', data
+        )
+        if tx_sudo:
             self._verify_notification_origin(data, tx_sudo)
             self._verify_notification_signature(data, tx_sudo)
 
             # Handle the notification data
             tx_sudo._handle_notification_data('alipay', data)
-        except ValidationError:  # Acknowledge the notification to avoid getting spammed
-            _logger.exception("unable to handle the notification data; skipping to acknowledge")
 
         return 'SUCCESS'  # Acknowledge the notification
 
@@ -83,7 +82,7 @@ class AlipayController(http.Controller):
             'notify_id': notification_data['notify_id'],
         }
         try:
-            response = requests.post(url, data=payload, timeout=60)
+            response = requests.post(url, data=payload, timeout=payment_const.TIMEOUT)
             response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as error:
             _logger.exception(

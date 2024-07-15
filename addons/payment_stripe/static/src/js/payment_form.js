@@ -1,7 +1,6 @@
 /** @odoo-module */
 /* global Stripe */
 
-import { _t } from '@web/core/l10n/translation';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
 import paymentForm from '@payment/js/payment_form';
 
@@ -88,7 +87,7 @@ paymentForm.include({
             'payment', paymentElementOptions
         );
         paymentElement.on('loaderror', response => {
-            this._displayErrorDialog(_t("Cannot display the payment form"), response.error.message);
+            this._displayErrorDialog(this.errorMapping['displayFormError'], response.error.message);
         });
         paymentElement.mount(stripeInlineForm);
 
@@ -132,7 +131,7 @@ paymentForm.include({
         try {
             await this.stripeElements[paymentOptionId].submit();
         } catch (error) {
-            this._displayErrorDialog(_t("Incorrect payment details"), error.message);
+            this._displayErrorDialog(this.errorMapping['incorrectPaymentDetails'], error.message);
             this._enableButton();
             return
         }
@@ -158,7 +157,7 @@ paymentForm.include({
 
         const { error } = await this._stripeConfirmIntent(processingValues, paymentOptionId);
         if (error) {
-            this._displayErrorDialog(_t("Payment processing failed"), error.message);
+            this._displayErrorDialog(this.errorMapping['paymentProcessingError'], error.message);
             this._enableButton();
         }
     },

@@ -6,7 +6,6 @@ from unittest.mock import patch
 from freezegun import freeze_time
 from werkzeug.exceptions import Forbidden
 
-from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -59,12 +58,6 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
         )
 
     def test_feedback_processing(self):
-        # Unknown transaction
-        with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_notification_data(
-                'sips', self.notification_data
-            )
-
         # Confirmed transaction
         tx = self._create_transaction('redirect')
         self.env['payment.transaction']._handle_notification_data('sips', self.notification_data)

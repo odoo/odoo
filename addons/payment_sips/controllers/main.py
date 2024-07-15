@@ -8,7 +8,6 @@ import pprint
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -54,18 +53,16 @@ class SipsController(http.Controller):
         :return: An empty string to acknowledge the notification
         :rtype: str
         """
-        _logger.info("notification received from SIPS with data:\n%s", pprint.pformat(data))
-        try:
-            # Check the integrity of the notification
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'sips', data
-            )
+        _logger.info("Notification received from SIPS with data:\n%s", pprint.pformat(data))
+        # Check the integrity of the notification
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            'sips', data
+        )
+        if tx_sudo:
             self._verify_notification_signature(data, tx_sudo)
 
             # Handle the notification data
             tx_sudo._handle_notification_data('sips', data)
-        except ValidationError:
-            _logger.exception("unable to handle the notification data; skipping to acknowledge")
         return ''
 
     @staticmethod

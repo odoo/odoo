@@ -6,7 +6,6 @@ import pprint
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import consteq
 
@@ -31,10 +30,11 @@ class PayuLatamController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'payulatam', data
         )
-        self._verify_notification_signature(data, tx_sudo)
+        if tx_sudo:
+            self._verify_notification_signature(data, tx_sudo)
 
-        # Handle the notification data
-        tx_sudo._handle_notification_data('payulatam', data)
+            # Handle the notification data
+            tx_sudo._handle_notification_data('payulatam', data)
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
@@ -52,17 +52,14 @@ class PayuLatamController(http.Controller):
         )
         data = self._normalize_data_keys(raw_data)
 
-        try:
-            # Check the origin and integrity of the notification
-            tx_sudo = request.env['payment.transaction'].sudo().with_context(
-                payulatam_is_confirmation_page=True
-            )._get_tx_from_notification_data('payulatam', data)
-            self._verify_notification_signature(data, tx_sudo)  # Use the normalized data.
+        # Check the origin and integrity of the notification
+        tx_sudo = request.env['payment.transaction'].sudo().with_context(
+            payulatam_is_confirmation_page=True
+        )._get_tx_from_notification_data('payulatam', data)
+        self._verify_notification_signature(data, tx_sudo)  # Use the normalized data.
 
-            # Handle the notification data
-            tx_sudo._handle_notification_data('payulatam', data)
-        except ValidationError:  # Acknowledge the notification to avoid getting spammed
-            _logger.exception("unable to handle the notification data; skipping to acknowledge")
+        # Handle the notification data
+        tx_sudo._handle_notification_data('payulatam', data)
 
         return ''
 

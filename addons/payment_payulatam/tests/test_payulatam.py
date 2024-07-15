@@ -5,7 +5,6 @@ from unittest.mock import patch
 from freezegun import freeze_time
 from werkzeug.exceptions import Forbidden
 
-from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -119,12 +118,6 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
             'TX_TAX': '.00',
             'merchant_address': 'Av 123 Calle 12'
         }
-
-        # should raise error about unknown tx
-        with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_notification_data(
-                'payulatam', payulatam_post_data
-            )
 
         tx = self._create_transaction(flow='redirect')
 

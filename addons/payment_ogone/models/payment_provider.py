@@ -4,10 +4,11 @@ import logging
 from hashlib import new as hashnew
 
 import requests
+from lxml import etree, objectify
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment_ogone import const
@@ -134,15 +135,22 @@ class PaymentProvider(models.Model):
 
         url = self._ogone_get_api_url('directlink')
         try:
-            response = requests.request(method, url, data=payload, timeout=60)
+            response = requests.request(
+                method, url, data=payload, timeout=payment_const.TIMEOUT
+            )
             response.raise_for_status()
-        except requests.exceptions.ConnectionError:
-            _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Ogone: " + _("Could not establish the connection to the API."))
-        except requests.exceptions.HTTPError:
-            _logger.exception("invalid API request at %s with data %s", url, payload)
-            raise ValidationError("Ogone: " + _("The communication with the API failed."))
-        return response.content
+            tree = objectify.fromstring(response.content)
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            return payment_utils.format_error_response(payment_const.API_CONNECTION_ERROR)
+        except requests.exceptions.HTTPError as err:
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, err.response.text)
+            return payment_utils.format_error_response(payment_const.API_COMMUNICATION_ERROR)
+        except etree.XMLSyntaxError:
+            return payment_utils.format_error_response(
+                _("Received badly structured response from the API.")
+            )
+        return tree
 
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """

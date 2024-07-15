@@ -4,12 +4,12 @@ import logging
 import pprint
 import uuid
 
-from lxml import etree, objectify
+from lxml import etree
 from werkzeug import urls
 
 from odoo import _, api, models
-from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_ogone import const
 from odoo.addons.payment_ogone.controllers.main import OgoneController
@@ -113,7 +113,8 @@ class PaymentTransaction(models.Model):
             return
 
         if not self.token_id:
-            raise UserError("Ogone: " + _("The transaction is not linked to a token."))
+            self._set_error(payment_const.TX_NOT_LINKED_TO_TOKEN_ERROR)
+            return
 
         # Make the payment request
         data = {
@@ -143,17 +144,16 @@ class PaymentTransaction(models.Model):
             "payment request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat({k: v for k, v in data.items() if k != 'PSWD'})
         )  # Log the payment request data without the password
-        response_content = self.provider_id._ogone_make_request(data)
-        try:
-            tree = objectify.fromstring(response_content)
-        except etree.XMLSyntaxError:
-            raise ValidationError("Ogone: " + "Received badly structured response from the API.")
+        tree = self.provider_id._ogone_make_request(data)
+        if not payment_utils.set_tx_error_from_response(self, tree):
+            return
 
         # Handle the feedback data
         _logger.info(
             "payment request response (as an etree) for transaction with reference %s:\n%s",
             self.reference, etree.tostring(tree, pretty_print=True, encoding='utf-8')
         )
+
         feedback_data = {'ORDERID': tree.get('orderID'), 'tree': tree}
         _logger.info(
             "handling feedback data from Ogone for transaction with reference %s with data:\n%s",
@@ -168,7 +168,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'ogone' or len(tx) == 1:
@@ -177,9 +176,7 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('ORDERID')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'ogone')])
         if not tx:
-            raise ValidationError(
-                "Ogone: " + _("No transaction found matching reference %s.", reference)
-            )
+            logging.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -226,16 +223,11 @@ class PaymentTransaction(models.Model):
             else:
                 reason = "Unknown reason"
             _logger.info("the payment has been declined: %s.", reason)
-            self._set_error(
-                "Ogone: " + _("The payment has been declined: %s", reason)
-            )
+            self._set_error(_("The payment has been declined: %s", reason))
         else:  # Classify unknown payment statuses as `error` tx state
-            _logger.info(
-                "received data with invalid payment status (%s) for transaction with reference %s",
-                payment_status, self.reference
-            )
+            _logger.info(payment_const.INVALID_PAYMENT_STATUS, payment_status, self.reference)
             self._set_error(
-                "Ogone: " + _("Received data with invalid payment status: %s", payment_status)
+                _("Received data with invalid payment status: %s", payment_status)
             )
 
     def _ogone_tokenize_from_notification_data(self, notification_data):

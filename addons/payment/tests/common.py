@@ -98,6 +98,8 @@ class PaymentCommon(BaseCommon):
         cls.account_payment_installed = account_payment_module.state in ('installed', 'to upgrade')
         cls.enable_post_process_patcher = True
 
+        cls.response_error = {'error': 'Oopsie'}
+
     def setUp(self):
         super().setUp()
         if self.account_payment_installed and self.enable_post_process_patcher:

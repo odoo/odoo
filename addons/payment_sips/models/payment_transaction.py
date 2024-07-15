@@ -7,8 +7,8 @@ import logging
 from werkzeug import urls
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_sips.const import RESPONSE_CODES_MAPPING, SUPPORTED_CURRENCIES
 from odoo.addons.payment_sips.controllers.main import SipsController
@@ -89,7 +89,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'sips' or len(tx) == 1:
@@ -104,9 +103,7 @@ class PaymentTransaction(models.Model):
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'sips')])
         if not tx:
-            raise ValidationError(
-                "Sips: " + _("No transaction found matching reference %s.", reference)
-            )
+            logging.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
 
         return tx
 

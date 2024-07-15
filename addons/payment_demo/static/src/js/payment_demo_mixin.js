@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
 import { rpc, RPCError } from "@web/core/network/rpc";
 
 export default {
@@ -24,8 +23,8 @@ export default {
             window.location = '/payment/status';
         }).catch(error => {
             if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
-                this._enableButton?.(); // This method doesn't exists in Express Checkout form.
+                this._displayErrorDialog(this.errorMapping['paymentProcessingError'], error.data.message);
+                this._enableButton?.(); // This method doesn't exist in Express Checkout form.
             } else {
                 return Promise.reject(error);
             }

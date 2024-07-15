@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from werkzeug import urls
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_payumoney.controllers.main import PayUMoneyController
 
@@ -61,15 +63,12 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('txnid')
         if not reference:
-            raise ValidationError(
-                "PayUmoney: " + _("Received data with missing reference (%s)", reference)
-            )
+            logging.warning(payment_const.MISSING_REFERENCE_ERROR)
+            return tx
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'payumoney')])
         if not tx:
-            raise ValidationError(
-                "PayUmoney: " + _("No transaction found matching reference %s.", reference)
-            )
+            logging.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
 
         return tx
 
@@ -100,6 +99,4 @@ class PaymentTransaction(models.Model):
         else:  # 'failure'
             # See https://www.payumoney.com/pdf/PayUMoney-Technical-Integration-Document.pdf
             error_code = notification_data.get('Error')
-            self._set_error(
-                "PayUmoney: " + _("The payment encountered an error with code %s", error_code)
-            )
+            self._set_error(_("The payment encountered an error with code %s", error_code))

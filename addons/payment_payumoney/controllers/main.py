@@ -40,10 +40,11 @@ class PayUMoneyController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'payumoney', data
         )
-        self._verify_notification_signature(data, tx_sudo)
+        if tx_sudo:
+            self._verify_notification_signature(data, tx_sudo)
 
-        # Handle the notification data
-        tx_sudo._handle_notification_data('payumoney', data)
+            # Handle the notification data
+            tx_sudo._handle_notification_data('payumoney', data)
         return request.redirect('/payment/status')
 
     @staticmethod
