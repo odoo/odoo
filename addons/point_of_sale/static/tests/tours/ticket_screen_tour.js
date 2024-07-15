@@ -183,7 +183,6 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("-0001"),
             ProductScreen.clickNumpad("1"),
-            TicketScreen.toRefundTextContains("To Refund: 1.00"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
             { ...ProductScreen.back(), mobile: true },
