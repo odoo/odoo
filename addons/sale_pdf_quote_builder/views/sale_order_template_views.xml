@@ -8,30 +8,25 @@
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page name="pdf_quote" string="Quote Builder">
-                    <group>
-                        <group>
-                            <field
-                                name="sale_header_ids"
-                                options="{'no_quick_create': True}"
-                                widget="many2many_tags"
-                            />
-                        </group>
-                        <group>
-                            <field
-                                name="sale_footer_ids"
-                                options="{'no_quick_create': True}"
-                                widget="many2many_tags"
-                            />
-                        </group>
-                        <p class="text-muted">
-                            Provide header pages and footer pages to compose an attractive quotation with more information
-                            about your company, your products and you services. <br/>
-                            The pdf of your quotes will be built by putting together header pages, product descriptions,
-                            details of the quote and then the footer pages. <br/>
-                            If empty, it will use those define in the company settings. <br/>
-                            <widget name="documentation_link" path="/_downloads/5f0840ed187116c425fdac2ab4b592e1/pdfquotebuilderexamples.zip" label=" Download examples" icon="fa-arrow-right"/>
-                        </p>
-                    </group>
+                    <field
+                        name="quotation_document_ids"
+                        mode="kanban"
+                        widget="quotation_document_many2many"
+                        class="w-100"
+                        nolabel="1"
+                        options="{'create': False}"
+                        context="{
+                            'kanban_view_ref': 'sale_pdf_quote_builder.quotation_document_kanban',
+                        }"
+                    />
+                    <p class="text-muted">
+                        Provide header pages and footer pages to compose an attractive quotation with more information
+                        about your company, your products and you services. <br/>
+                        The pdf of your quotes will be built by putting together header pages, product descriptions,
+                        details of the quote and then the footer pages. <br/>
+                        If empty, it will use those define in the company settings. <br/>
+                        <widget name="documentation_link" path="/_downloads/5f0840ed187116c425fdac2ab4b592e1/pdfquotebuilderexamples.zip" label=" Download examples" icon="fa-arrow-right"/>
+                    </p>
                 </page>
             </notebook>
         </field>

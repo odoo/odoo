@@ -2,13 +2,12 @@
 
 import base64
 import datetime
-import json
 import os
 
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 from odoo.tools.misc import file_open
 
 from odoo.addons.sale.tests.common import SaleCommon
@@ -17,7 +16,7 @@ directory = os.path.dirname(__file__)
 
 
 @tagged('-at_install', 'post_install')
-class TestPDFQuoteBuilder(SaleCommon):
+class TestPDFQuoteBuilder(HttpCase, SaleCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -54,46 +53,7 @@ class TestPDFQuoteBuilder(SaleCommon):
     def test_compute_customizable_pdf_form_fields_when_no_file(self):
         self.env['quotation.document'].search([]).action_archive()
         self.env['product.document'].search([]).action_archive()
-        expected_result = '{"header": {}, "line": {}, "footer": {}}'
-        self.sale_order.is_pdf_quote_builder_active = True
-        self.assertEqual(self.sale_order.customizable_pdf_form_fields, expected_result)
-
-    def test_compute_customizable_pdf_form_fields_with_1_file(self):
-        self.sale_order.order_line[0].product_id = self.product.id
-        quotation_custom_form_fields = {  # 2 times the same doc
-            "custom_1": "",
-            "custom_2": "",
-            "description": "",  # already mapped for product_document
-            "dyna_1": "",
-            "dyna_2": "",
-            "quantity": "",  # already mapped for product_document
-        }
-        product_custom_form_fields = {
-            'custom_1': '', 'custom_2': '', 'dyna_1': '', 'dyna_2': '',
-        }
-        expected_result = {
-            "header": {str(self.header.id): {
-                "document_name": "Header", "custom_form_fields": quotation_custom_form_fields
-            }},
-            "line": {
-                str(self.sale_order.order_line[0].id): {
-                    "product_name": "Test Product",
-                    str(self.product_document.id): {
-                        "document_name": "product doc",
-                        "custom_form_fields": product_custom_form_fields
-                    }
-                }
-            },
-            "footer": {str(self.footer.id): {
-                "document_name": "Footer", "custom_form_fields": quotation_custom_form_fields
-            }}
-        }
-        self.sale_order.is_pdf_quote_builder_active = True
-        computed_result = json.loads(self.sale_order.customizable_pdf_form_fields)
-        # Compare part of it as we reach the maximum chars to compare
-        self.assertEqual(computed_result['header'], expected_result['header'])
-        self.assertEqual(computed_result['line'], expected_result['line'])
-        self.assertEqual(computed_result['footer'], expected_result['footer'])
+        self.assertEqual(self.sale_order.customizable_pdf_form_fields, False)
 
     def test_dynamic_fields_mapping_for_quotation_document(self):
         FormField = self.env['sale.pdf.form.field']
@@ -176,3 +136,12 @@ class TestPDFQuoteBuilder(SaleCommon):
                 form_field, self.sale_order, sol_1
             )
             self.assertEqual(result, expected_value)
+
+    def _test_custom_content_kanban_like(self):
+        # TODO VCR finish tour and uncomment
+        self.start_tour(
+            f'/odoo/sales/{self.sale_order.id}',
+            'custom_content_kanban_like_tour',
+            login='admin',
+        )
+        # Assert documents are selected

@@ -20,14 +20,20 @@ class QuotationDocumentController(Controller):
         methods=['POST'],
         auth='user',
     )
-    def upload_document(self):
+    def upload_document(self, ufile, sale_order_template_id=False):
+        sale_order_template_id = request.env['sale.order.template'].browse(
+            int(sale_order_template_id)
+        )
         files = request.httprequest.files.getlist('ufile')
         result = {'success': _("All files uploaded")}
         for ufile in files:
             try:
                 mimetype = ufile.content_type
                 doc = request.env['quotation.document'].create({
-                    'name': ufile.filename, 'mimetype': mimetype, 'raw': ufile.read()
+                    'name': ufile.filename,
+                    'mimetype': mimetype,
+                    'raw': ufile.read(),
+                    'quotation_template_ids': sale_order_template_id,
                 })
                 # pypdf will also catch malformed document
                 utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))

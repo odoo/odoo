@@ -85,15 +85,3 @@ class QuotationDocument(models.Model):
             },
             'target': 'current',
         }
-
-    def _update_custom_content_map(self, custom_content_map, existing_mapping):
-        self.ensure_one()
-        doc_name = self.name.rstrip('.pdf')
-        doc_id = str(self.id)
-        existing_document_content = existing_mapping.get(doc_id, {})
-        custom_content_map[doc_id] = {'document_name': doc_name, 'custom_form_fields': {}}
-        for form_field in self.form_field_ids.filtered(lambda ff: not ff.path):
-            content = existing_document_content.get(
-                'custom_form_fields', {}
-            ).get(form_field.name, "")
-            custom_content_map[doc_id]['custom_form_fields'][form_field.name] = content

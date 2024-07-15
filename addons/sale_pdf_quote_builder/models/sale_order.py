@@ -4,147 +4,118 @@ import json
 
 from odoo import _, api, fields, models
 
-DEFAULT_FORM_FIELDS_MAPPING = {'header': {}, 'line': {}, 'footer': {}}
-
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    is_pdf_quote_builder_active = fields.Boolean(string="Use PDF Quote Builder")
+    available_product_document_ids = fields.Many2many(
+        string="Available Product Documents",
+        comodel_name='quotation.document',
+        compute='_compute_available_product_document_ids',
+    )
+    is_pdf_quote_builder_available = fields.Boolean(
+        compute='_compute_is_pdf_quote_builder_available',
+    )
     quotation_document_ids = fields.Many2many(
         string="Headers/Footers",
         comodel_name='quotation.document',
-        compute='_compute_quotation_document_ids',
-        store=True,
         readonly=False,
     )
     customizable_pdf_form_fields = fields.Json(
         string="Customizable PDF Form Fields",
-        compute='_compute_customizable_pdf_form_fields',
-        store=True,
         readonly=False,
     )
 
     # === COMPUTE METHODS === #
 
-    @api.depends('is_pdf_quote_builder_active', 'sale_order_template_id')
-    def _compute_quotation_document_ids(self):
+    @api.depends('sale_order_template_id')
+    def _compute_available_product_document_ids(self):
         for order in self:
-            if not order.is_pdf_quote_builder_active:
-                order.quotation_document_ids = self.env['quotation.document']
-            elif order.sale_order_template_id:
-                template = order.sale_order_template_id
-                order.quotation_document_ids = template.sale_header_ids + template.sale_footer_ids
-            else:
-                quotation_documents = self.env['quotation.document'].search([], order='sequence')
-                headers = quotation_documents.filtered(lambda doc: doc.document_type == 'header')
-                footers = quotation_documents - headers
-                order.quotation_document_ids = self.env['quotation.document']
-                if headers:
-                    order.quotation_document_ids += headers[0]
-                if footers:
-                    order.quotation_document_ids += footers[0]
-
-    @api.depends('quotation_document_ids', 'order_line.product_document_ids', 'is_pdf_quote_builder_active')
-    def _compute_customizable_pdf_form_fields(self):
-        """ Compute the json of the customizable_pdf_form_fields field.
-
-        The dependencies on the selected documents ensure that a newly added files could be fill
-        immediately.
-
-        The resulting json would look like this:
-        {
-            "header": {
-                document_1.id: {
-                    "document_name": document1.name,
-                    "custom_form_fields": {
-                        "form_field_1": "custom value",
-                        "form_field_2": "Ducks are funny",
-                        ...
-                    }
-                },
-                document_2.id: {...},
-                ...
-            },
-            "line": {
-                sale_order_line_1.id: {document_3.id: {...}, ... }, ...
-            },
-            "footer": {
-                document_4.id: {...}, ...
-            },
-        }
-        """
-        for order in self:
-            if not order.is_pdf_quote_builder_active:
-                continue
-            if not isinstance(order.id, int):
-                # Avoid computing with NewId when adding a line
-                order.customizable_pdf_form_fields = json.dumps(DEFAULT_FORM_FIELDS_MAPPING)
-                continue
-            custom_content_mapping = {'header': {}, 'line': {}, 'footer': {}}
-            existing_mapping = (
-                order.customizable_pdf_form_fields
-                and json.loads(order.customizable_pdf_form_fields)
-                or DEFAULT_FORM_FIELDS_MAPPING
+            order.available_product_document_ids = self.env['quotation.document'].search(
+                [], order='sequence'
+            ).filtered(lambda doc:
+                self.sale_order_template_id in doc.quotation_template_ids
+                or not doc.quotation_template_ids
             )
 
-            existing_mapping = existing_mapping or custom_content_mapping
-
-            quotation_documents = order.quotation_document_ids
-            headers = quotation_documents.filtered(lambda doc: doc.document_type == 'header')
-            footers = quotation_documents - headers
-            for header in headers:
-                header._update_custom_content_map(
-                    custom_content_mapping['header'], existing_mapping['header']
-                )
-            for line in order.order_line:
-                for product_document in line.product_document_ids:
-                    product_document._update_custom_content_map(
-                        line, custom_content_mapping['line'], existing_mapping['line']
-                    )
-            for footer in footers:
-                footer._update_custom_content_map(
-                    custom_content_mapping['footer'], existing_mapping['footer']
-                )
-
-            order.customizable_pdf_form_fields = json.dumps(custom_content_mapping)
+    @api.depends('available_product_document_ids', 'order_line', 'order_line.available_product_document_ids')
+    def _compute_is_pdf_quote_builder_available(self):
+        for order in self:
+            order.is_pdf_quote_builder_available = bool(
+                order.available_product_document_ids
+                or order.order_line.available_product_document_ids
+            )
 
     # === ACTION METHODS === #
 
-    def action_toggle_is_pdf_quote_builder_active(self):
-        """ Toggle the field `is_pdf_quote_builder_active`. """
-        self.ensure_one()
-        self.is_pdf_quote_builder_active = not self.is_pdf_quote_builder_active
-
     def get_update_included_pdf_params(self):
+        if not self:
+            return {}
         self.ensure_one()
-        quotation_documents = self.env['quotation.document'].search([], order='sequence')
-        headers_available = quotation_documents.filtered(lambda doc: doc.document_type == 'header')
-        footers_available = quotation_documents.filtered(lambda doc: doc.document_type == 'footer')
+        existing_mapping = (
+            self.customizable_pdf_form_fields
+            and json.loads(self.customizable_pdf_form_fields)
+        ) or {}
+
+        headers_available = self.available_product_document_ids.filtered(
+            lambda doc: doc.document_type == 'header'
+        )
+        footers_available = self.available_product_document_ids.filtered(
+            lambda doc: doc.document_type == 'footer'
+        )
         selected_documents = self.quotation_document_ids
         selected_headers = selected_documents.filtered(lambda doc: doc.document_type == 'header')
         selected_footers = selected_documents - selected_headers
         lines_params = []
         for line in self.order_line:
             if line.available_product_document_ids:
-                lines_params.append({'name': line.name, 'id': line.id, 'files': [{
-                    'name': doc.name.rstrip('.pdf'),
-                    'id': doc.id,
-                    'is_selected': doc in line.product_document_ids,
-                } for doc in line.available_product_document_ids]})
+                lines_params.append({
+                    'name': _("Product") + " > " + line.name.splitlines()[0],
+                    'id': line.id,
+                    'files': [{
+                        'name': doc.name.rstrip('.pdf'),
+                        'id': doc.id,
+                        'is_selected': doc in line.product_document_ids,
+                        'custom_form_fields': [{
+                            'name': custom_form_field.name,
+                            'value': existing_mapping.get('line', {}).get(str(line.id), {}).get(
+                                str(doc.id), {}
+                            ).get('custom_form_fields', {}).get(custom_form_field.name, ""),
+                        } for custom_form_field in doc.form_field_ids.filtered(
+                            lambda ff: not ff.path
+                        )],
+                    } for doc in line.available_product_document_ids]
+                })
         dialog_params = {
             'headers': {'name': _("Header"), 'files': [{
-                'name': header.name, 'id': header.id, 'is_selected': header in selected_headers
+                'id': header.id,
+                'name': header.name,
+                'is_selected': header in selected_headers,
+                'custom_form_fields': [{
+                    'name': custom_form_field.name,
+                    'value': existing_mapping.get('header', {}).get(str(header.id), {}).get(
+                        'custom_form_fields', {}
+                    ).get(custom_form_field.name, ""),
+                } for custom_form_field in header.form_field_ids.filtered(lambda ff: not ff.path)],
             } for header in headers_available]},
             'lines': lines_params,
             'footers': {'name': _("Footer"), 'files': [{
-                'name': footer.name, 'id': footer.id, 'is_selected': footer in selected_footers
+                'id': footer.id,
+                'name': footer.name,
+                'is_selected': footer in selected_footers,
+                'custom_form_fields': [{
+                    'name': custom_form_field.name,
+                    'value': existing_mapping.get('footer', {}).get(str(footer.id), {}).get(
+                        'custom_form_fields', {}
+                    ).get(custom_form_field.name, ""),
+                } for custom_form_field in footer.form_field_ids.filtered(lambda ff: not ff.path)],
             } for footer in footers_available]},
         }
         return dialog_params
 
     # === BUSINESS METHODS === #
 
+    # FIXME EDM dead code below ?
     def save_included_pdf(self, selected_pdf):
         """ Configure the PDF that should be included in the PDF quote builder for a given quote
 

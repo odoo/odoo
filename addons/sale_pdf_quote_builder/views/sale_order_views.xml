@@ -7,67 +7,25 @@
         <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']//tree" position="inside">
+                <!-- TODO VCR test mobile view ? -->
                 <field name="product_document_ids" column_invisible="1"/>
             </xpath>
             <page name="optional_products" position="after">
-                <page name="pdf_quote_builder" string="Quote Builder">
-                    <button
-                        name="action_toggle_is_pdf_quote_builder_active"
-                        invisible="is_pdf_quote_builder_active"
-                        class="btn btn-primary"
-                        type="object"
-                        icon="fa-globe"
-                    >
-                            <span> Activate</span>
-                    </button>
+                <page
+                    name="pdf_quote_builder"
+                    string="Quote Builder"
+                    invisible="not is_pdf_quote_builder_available"
+                >
+                    <div invisible="id">
+                        This feature requires the Sales Order to be saved first.
+                        Please save the sales order and refresh the page.
+                    </div>
+                    <!-- Needed by customContentKanbanLikeWidget to save the selected documents -->
                     <field name="quotation_document_ids" invisible="1"/>
+                    <field name="customizable_pdf_form_fields" invisible="1"/>
                     <widget
-                        name="updateIncludedPdfWidget"
-                        invisible="not is_pdf_quote_builder_active"
+                        name="customContentKanbanLikeWidget"
                         class="d-inline"
-                    />
-                    <button
-                        name="action_toggle_is_pdf_quote_builder_active"
-                        invisible="not is_pdf_quote_builder_active"
-                        class="btn btn-secondary mx-1"
-                        type="object"
-                        icon="fa-eye-slash"
-                    >
-                            <span> Deactivate</span>
-                    </button>
-                    <br/>
-                    <p class="text-muted" invisible="is_pdf_quote_builder_active"> <br/>
-                        Make your quote attractive: <br/>
-                        <ul>
-                            <li>Add headers, product descriptions and footers PDF to your quote.</li>
-                            <li>Put fields in your PDF templates to define content areas.</li>
-                            <li>Customize their content to add specifications, project's
-                                clarifications, details of the offer, etc. </li>
-                        </ul>
-                        Data of the quotation (customer name, quotation reference, ... ) and
-                        your customized contents are injected in<br/>
-                        documents using pdf form fields. (See the
-                        <widget
-                            name="documentation_link"
-                            path="/applications/sales/sales/send_quotations/pdf_quote_builder.html"
-                            label="documentation"
-                        />for detailed explanations)
-                        <div>
-                            <br/>
-                            <widget
-                                name="documentation_link"
-                                path="/_downloads/56a93429515b36105d952e1d2b802f9e/sample_quotation.pdf"
-                                label=" Preview Sample Quote"
-                                icon="fa-arrow-right"
-                            />
-                        </div>
-                    </p>
-                    <group string="Sections" invisible="not is_pdf_quote_builder_active"/>
-                    <field
-                        name="customizable_pdf_form_fields"
-                        invisible="not is_pdf_quote_builder_active"
-                        widget="custom_content_kanban_like"
-                        style="display:inline;"
                     />
                 </page>
             </page>

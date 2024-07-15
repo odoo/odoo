@@ -77,16 +77,3 @@ class ProductDocument(models.Model):
             },
             'target': 'current',
         }
-
-    def _update_custom_content_map(self, sol, custom_content_map, existing_mapping):
-        self.ensure_one()
-        doc_name = self.name.rstrip('.pdf')
-        doc_id = str(self.id)
-        sol_id = str(sol.id)
-        existing_document_content = existing_mapping.get(sol_id, {}).get(doc_id, {})
-        if not custom_content_map.get(sol_id):
-            custom_content_map[sol_id] = {'product_name': sol.product_id.name}
-        custom_content_map[sol_id][doc_id] = {'document_name': doc_name, 'custom_form_fields': {}}
-        for form_field in self.form_field_ids.filtered(lambda ff: not ff.path):
-            content = existing_document_content.get('custom_form_fields', {}).get(form_field, "")
-            custom_content_map[sol_id][doc_id]['custom_form_fields'][form_field.name] = content
