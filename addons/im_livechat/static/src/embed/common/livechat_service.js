@@ -48,6 +48,8 @@ export class LivechatService {
     rule;
     initialized = false;
     available = session.livechatData?.isAvailable;
+    /** @type {import("models").Thread} */
+    thread;
     _onStateChangeCallbacks = {
         [SESSION_STATE.CREATED]: [],
         [SESSION_STATE.PERSISTED]: [],
@@ -82,7 +84,9 @@ export class LivechatService {
         this.rule = this.store.LivechatRule.insert(data.rule);
         this.store.insert(data.storeData);
         if (this.options?.force_thread) {
-            this._saveLivechatState(this.options.force_thread, { persisted: true });
+            this.state = SESSION_STATE.PERSISTED;
+            this.thread = this.store.Thread.insert(this.options.force_thread);
+            this._saveLivechatState();
         }
         if (this.savedState) {
             this.state = this.savedState.persisted
@@ -144,6 +148,7 @@ export class LivechatService {
                 await rpc("/im_livechat/visitor_leave_session", { channel_id: this.thread.id });
             }
         } finally {
+            this.thread = undefined;
             expirableStorage.removeItem(SAVED_STATE_STORAGE_KEY);
             cookie.delete(LIVECHAT_UUID_COOKIE);
             this.state = SESSION_STATE.NONE;
@@ -165,32 +170,33 @@ export class LivechatService {
      * Save the current live chat state. Only save the strict minimum if the
      * thread is persisted.
      *
-     * @param {object} threadData
-     * @param {object} param1
-     * @param {boolean} [param1.persisted=false]
+     * @param {Object} [saveData]
      */
-    _saveLivechatState(threadData, { persisted = false } = {}) {
+    _saveLivechatState(saveData) {
         const { guest_token } = this.store;
         if (guest_token) {
             expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, guest_token);
         }
         const ONE_DAY_TTL = 60 * 60 * 24;
-        if (threadData.uuid) {
-            cookie.set(LIVECHAT_UUID_COOKIE, threadData.uuid, ONE_DAY_TTL);
+        if (this.thread.uuid) {
+            cookie.set(LIVECHAT_UUID_COOKIE, this.thread.uuid, ONE_DAY_TTL);
         }
+        const persisted = this.state === SESSION_STATE.PERSISTED;
         expirableStorage.setItem(
             SAVED_STATE_STORAGE_KEY,
             JSON.stringify({
-                threadData: persisted
-                    ? { id: threadData.id, model: "discuss.channel" }
-                    : threadData,
-                persisted,
                 livechatUserId: this.savedState?.livechatUserId ?? session.user_id,
+                persisted,
+                store: persisted ? { "discuss.channel": [{ id: this.thread.id }] } : saveData,
             }),
             ONE_DAY_TTL
         );
-        if (threadData.operator) {
-            expirableStorage.setItem(OPERATOR_STORAGE_KEY, threadData.operator.id, ONE_DAY_TTL * 7);
+        if (this.thread.operator) {
+            expirableStorage.setItem(
+                OPERATOR_STORAGE_KEY,
+                this.thread.operator.id,
+                ONE_DAY_TTL * 7
+            );
         }
     }
 
@@ -206,7 +212,7 @@ export class LivechatService {
                 channel_id: this.options.channel_id,
                 anonymous_name: this.options.default_username ?? _t("Visitor"),
                 chatbot_script_id: this.savedState
-                    ? this.savedState.threadData.chatbot?.script.id
+                    ? this.thread.chatbot?.script.id
                     : this.rule.chatbotScript?.id,
                 previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
                 temporary_id: this.thread?.id,
@@ -214,19 +220,17 @@ export class LivechatService {
             },
             { shadow: true }
         );
-        const threadData = data["discuss.channel"]?.[0];
-        if (!threadData?.operator) {
+        // clean copy of data for saving in storage, because store insert will add cyclic references
+        const saveData = JSON.parse(JSON.stringify(data));
+        const { Thread = [] } = this.store.insert(data);
+        this.thread = Thread[0];
+        if (!this.thread?.operator) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
             this.leave({ notifyServer: false });
             return;
         }
-        threadData["scrollUnread"] = false;
-        // clean copy of data for saving in storage, because store insert will add cyclic references
-        const saveThreadData = JSON.parse(JSON.stringify(threadData));
-        saveThreadData["model"] = "discuss.channel";
         this.state = persist ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
-        this.store.insert(data); // before save to have guest_token in store
-        this._saveLivechatState(saveThreadData, { persisted: persist });
+        this._saveLivechatState(saveData);
         await Promise.all(this._onStateChangeCallbacks[this.state].map((fn) => fn()));
     }
 
@@ -243,16 +247,6 @@ export class LivechatService {
      */
     get guestToken() {
         return getGuestToken();
-    }
-
-    /**
-     * @returns {import("models").Thread|undefined}
-     */
-    get thread() {
-        if (!this.savedState) {
-            return null;
-        }
-        return this.store.Thread.get(this.savedState.threadData);
     }
 }
 
