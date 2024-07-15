@@ -65,7 +65,7 @@
                             </div>
                         </div>
                     </t>
-                <div class="o_wevent_search d-flex w-100 w-lg-auto">
+                <div class="o_wevent_search d-flex w-100">
                     <div class="w-100 flex-grow-1">
                         <t t-call="website_event.events_search_box_input"/>
                     </div>
@@ -271,6 +271,7 @@
 <template id="events_list" name="Events list">
     <!-- Options -->
     <t t-set="opt_index_sidebar" t-value="is_view_active('website_event.opt_index_sidebar')"/>
+    <t t-set="opt_events_event_location" t-value="is_view_active('website_event.event_location')"/>
     <t t-if="opt_events_list_columns" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-md-6' or 'col-md-6 col-lg-4 col-xl-3'"/>
     <t t-else="" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-12' or 'col-xl-12'"/>
     <!-- No events -->
@@ -301,9 +302,20 @@
                         <div class="d-block h-100 w-100">
                             <t t-call="website.record_cover">
                                 <t t-set="_record" t-value="event"/>
-                                <!-- Short Date -->
                                 <meta itemprop="startDate" t-att-content="event.date_begin.isoformat()"/>
-                                <div t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable #{(not opt_events_list_columns) and 'left'} ">
+                                <!-- Short date + Country Flag -->
+                                <div t-if="opt_events_event_location" t-attf-class="o_wevent_date_with_flag o_wevent_event_date position-absolute shadow-sm o_not_editable #{(not opt_events_list_columns) and 'left'} ">
+                                    <div class="o_wevent_event_date_text">
+                                        <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
+                                        <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
+                                    </div>
+                                    <div class="o_wevent_event_country_flag">
+                                        <img t-if="event.country_id and event.country_id.image_url" class="h-100 align-baseline" t-att-src="event.country_id.image_url" t-att-alt="event.country_id.name"/>
+                                        <i t-elif="not event.country_id" class="fa fa-video-camera h-100"/>
+                                    </div>
+                                </div>
+                                <!-- Short Date -->
+                                <div t-else="" t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable #{(not opt_events_list_columns) and 'left'} ">
                                     <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
                                     <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
                                 </div>
