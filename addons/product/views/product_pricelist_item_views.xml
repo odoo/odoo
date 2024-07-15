@@ -132,9 +132,11 @@
                             </div>
                             <label for="percent_price" string="Discount"
                                 invisible="compute_price != 'percentage'"/>
-                            <div class="o_row" invisible="compute_price != 'percentage'" style="width: 40% !important;">
+                            <div class="o_row gap-3" invisible="compute_price != 'percentage'">
                                 <field name="percent_price"/>
                                 <span>%</span>
+                                <span>on</span>
+                                <field name="base_pricelist_id" placeholder="sales price"/>
                             </div>
                         </group>
                         <group name="pricelist_rule_limits">
