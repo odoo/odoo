@@ -5,7 +5,6 @@ import {
     cleanTrailingBR,
     fillShrunkPhrasingParent,
     makeContentsInline,
-    moveNodes,
     setTagName,
 } from "../utils/dom";
 import {
@@ -21,7 +20,7 @@ import {
 } from "../utils/dom_info";
 import { closestElement, descendants } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
-import { DIRECTIONS, childNodeIndex, rightPos, startPos } from "../utils/position";
+import { DIRECTIONS, childNodeIndex, rightPos } from "../utils/position";
 
 export class DomPlugin extends Plugin {
     static name = "dom";
@@ -453,20 +452,38 @@ export class DomPlugin extends Plugin {
 
     mergeAdjacentNodes(node) {
         let selection = null;
-        let beforeMove = () => {
-            selection = this.shared.getEditableSelection({ deep: true });
-            beforeMove = null;
-        };
-        for (const el of [node, ...descendants(node)]) {
-            this.mergeAdjacentNode(el, beforeMove);
+        let toMerge = [];
+        for (const el of descendants(node)) {
+            if (this.shouldBeMerged(el)) {
+                toMerge.push(el);
+            }
         }
+        while (toMerge.length) {
+            selection = selection || this.shared.getEditableSelection({ deep: true });
+            for (const el of toMerge) {
+                const destinationEl = el.previousSibling;
+                const fragment = document.createDocumentFragment();
+                while (el.hasChildNodes()) {
+                    fragment.appendChild(el.firstChild);
+                }
+                destinationEl.appendChild(fragment);
+                el.remove();
+            }
+            toMerge = [];
+            for (const el of descendants(node)) {
+                if (this.shouldBeMerged(el)) {
+                    toMerge.push(el);
+                }
+            }
+        }
+
         if (selection) {
             this.shared.setSelection(selection);
         }
     }
 
-    mergeAdjacentNode(node, beforeMove) {
-        if (
+    shouldBeMerged(node) {
+        return (
             areSimilarElements(node, node.previousSibling) &&
             !isUnbreakable(node) &&
             !isEditorTab(node) &&
@@ -476,11 +493,6 @@ export class DomPlugin extends Plugin {
                 (node.textContent === "\u200B" || node.previousSibling.textContent === "\u200B")
             ) &&
             !isProtecting(node)
-        ) {
-            if (beforeMove) {
-                beforeMove();
-            }
-            moveNodes(...startPos(node), node.previousSibling);
-        }
+        );
     }
 }
