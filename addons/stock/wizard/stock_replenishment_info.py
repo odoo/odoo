@@ -8,7 +8,7 @@ from datetime import datetime, time
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv.expression import AND
-from odoo.tools.date_utils import get_month, subtract
+from odoo.tools.date_utils import get_month, subtract, get_fiscal_year
 from odoo.tools.misc import get_lang, format_date
 
 
@@ -22,6 +22,12 @@ class StockReplenishmentInfo(models.TransientModel):
     qty_to_order = fields.Float(related='orderpoint_id.qty_to_order')
     json_lead_days = fields.Char(compute='_compute_json_lead_days')
     json_replenishment_history = fields.Char(compute='_compute_json_replenishment_history')
+    periods = fields.Selection([
+        ('year', 'Yearly'),
+        ('month', 'Monthly'),
+    ], string='Stock replenishment info period',
+        default='year',
+        help="The stock replenishments infos can be either ordered monthly or yearly.")
 
     warehouseinfo_ids = fields.One2many(related='orderpoint_id.warehouse_id.resupply_route_ids')
     wh_replenishment_option_ids = fields.One2many('stock.replenishment.option', 'replenishment_info_id', compute='_compute_wh_replenishment_options')
@@ -59,12 +65,16 @@ class StockReplenishmentInfo(models.TransientModel):
 
     @api.depends('orderpoint_id')
     def _compute_json_replenishment_history(self):
+        period_setting = self.orderpoint_id.company_id.stock_replenishment_info_periods
+        today = fields.Datetime.now()
+        get_period = get_fiscal_year if period_setting == 'year' else get_month
+        group_period = "date:year" if period_setting == 'year' else "date:month"
+        start_period = subtract(today, year=2) if period_setting == 'year' else subtract(today, months=2)
         for replenishment_report in self:
             replenishment_history = []
             today = fields.Datetime.now()
-            first_month = subtract(today, months=2)
-            date_from, dummy = get_month(first_month)
-            dummy, date_to = get_month(today)
+            date_from, dummy = get_period(start_period)
+            dummy, date_to = get_period(today)
             domain = [
                 ('product_id', '=', replenishment_report.product_id.id),
                 ('date', '>=', date_from),
@@ -72,18 +82,20 @@ class StockReplenishmentInfo(models.TransientModel):
                 ('state', '=', 'done'),
                 ('company_id', '=', replenishment_report.orderpoint_id.company_id.id)
             ]
-            quantity_by_month_out = self.env['stock.move']._read_group(
+            quantity_by_period_out = self.env['stock.move'].read_group(
                 AND([domain, [('location_dest_id.usage', '=', 'customer')]]),
-                ['date:month'], ['product_qty:sum'])
-            quantity_by_month_returned = dict(self.env['stock.move']._read_group(
+                ['date', 'product_qty'], [group_period])
+            quantity_by_period_returned = self.env['stock.move'].read_group(
                 AND([domain, [('location_id.usage', '=', 'customer')]]),
-                ['date:month'], ['product_qty:sum']))
+                ['date', 'product_qty'], [group_period])
+            quantity_by_period_returned = {
+                g[group_period]: g['product_qty'] for g in quantity_by_period_returned}
             locale = get_lang(self.env).code
-            fmt = models.READ_GROUP_DISPLAY_FORMAT['month']
-            for month, product_qty_sum in quantity_by_month_out:
+            fmt = models.READ_GROUP_DISPLAY_FORMAT['month'] if period_setting == 'month' else models.READ_GROUP_DISPLAY_FORMAT['year']
+            for period, product_qty_sum in quantity_by_period_out:
                 replenishment_history.append({
-                    'name': babel.dates.format_datetime(month, format=fmt, locale=locale),
-                    'quantity': product_qty_sum - quantity_by_month_returned.get(month, 0),
+                    'name': babel.dates.format_datetime(period, format=fmt, locale=locale),
+                    'quantity': product_qty_sum - quantity_by_period_returned.get(period, 0),
                     'uom_name': replenishment_report.product_id.uom_id.display_name,
                 })
             replenishment_report.json_replenishment_history = dumps({

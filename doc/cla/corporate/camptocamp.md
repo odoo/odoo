@@ -50,7 +50,7 @@ Ricardo Almeida Soares ricardo.almeidasoares@camptocamp.com https://github.com/R
 Juan Miguel Sánchez Arce juan.sanchez@camptocamp.com https://github.com/JuMiSanAr
 Maksym Yankin maksym.yankin@camptocamp.com https://github.com/yankinmax
 Vincent Van Rossem vincent.vanrossem@camptocamp.com https://github.com/vvrossem
-Victor Vermot-Petit-Outhenin victor.vermot@camptocamp.com https://github.com/victorvermot
+Victor Vermot-Petit-Outhenin victorvermot@gmail.com https://github.com/victorvermot
 Sarah Jallon sarah.jallon@camptocamp.com https://github.com/sarsurgithub
 Ricardo Almeida Soares ricardo.almeidasoares@camptocamp.com https://github.com/ricardoalso
 Italo Lopes italo.lopes@camptocamp.com https://github.com/imlopes
