@@ -359,11 +359,13 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.email_from, partner_email)
         self.assertEqual(lead.phone, '+1 202 555 6666')
 
-        # resetting lead values also resets partner
+        # resetting lead values should not reset partner: voiding lead info (because
+        # of some reasons) should not prevent from using the contact in other records
         lead.email_from, lead.phone = False, False
-        self.assertFalse(partner.email)
-        self.assertFalse(partner.email_normalized)
-        self.assertFalse(partner.phone)
+        self.assertFalse(lead.email_from)
+        self.assertFalse(lead.phone)
+        self.assertEqual(partner.email, partner_email)
+        self.assertEqual(partner.phone, '+1 202 555 6666')
 
     @users('user_sales_manager')
     def test_crm_lead_partner_sync_email_phone(self):
@@ -458,15 +460,16 @@ class TestCRMLead(TestCrmCommon):
             self.assertEqual(lead.mobile, new_mobile_formatted)
             self.assertEqual(partner.mobile, partner_mobile)
 
-            # LEAD/PARTNER SYNC: reseting lead values also resets partner for email
-            # and phone, but not for mobile
+            # LEAD/PARTNER SYNC: resetting lead values should not reset partner
+            # # voiding lead info (because of some reasons) should not prevent
+            # # from using the contact in other records
             lead_form.email_from, lead_form.phone, lead.mobile = False, False, False
-            self.assertTrue(lead_form.partner_email_update)
-            self.assertTrue(lead_form.partner_phone_update)
+            self.assertFalse(lead_form.partner_email_update)
+            self.assertFalse(lead_form.partner_phone_update)
             lead_form.save()
-            self.assertFalse(partner.email)
-            self.assertFalse(partner.email_normalized)
-            self.assertFalse(partner.phone)
+            self.assertEqual(partner.email, new_email)
+            self.assertEqual(partner.email_normalized, new_email_normalized)
+            self.assertEqual(partner.phone, new_phone_formatted)
             self.assertFalse(lead.phone)
             self.assertFalse(lead.mobile)
             self.assertFalse(lead.phone_sanitized)
