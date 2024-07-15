@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 
@@ -36,6 +36,7 @@ class res_partner(models.Model):
         )
         supplier_invoice_groups = self.env['account.move']._read_group(
             domain=[('partner_id', 'in', all_partners.ids),
+                    *self.env['account.move']._check_company_domain(self.env.company),
                     ('move_type', 'in', ('in_invoice', 'in_refund'))],
             groupby=['partner_id'], aggregates=['__count']
         )
@@ -65,3 +66,13 @@ class res_partner(models.Model):
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', default=1, company_dependent=True,
         help="Number of days to send reminder email before the promised receipt date")
     buyer_id = fields.Many2one('res.users', string='Buyer')
+
+    def action_open_purchase_matching(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Purchase Matching"),
+            'res_model': 'purchase.bill.line.match',
+            'domain': [('partner_id', '=', self.id), ('company_id', 'in', [self.env.company.id])],
+            'views': [(self.env.ref('purchase.purchase_bill_line_match_tree').id, 'tree')],
+        }
