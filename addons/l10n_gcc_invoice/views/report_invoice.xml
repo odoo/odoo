@@ -478,7 +478,7 @@
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-out="o.invoice_payment_term_id.note"/>
+                            <span t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" t-out="o.invoice_payment_term_id.note"/>
                         </div>
                         <div class="col-6 text-end">
                             <span dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
@@ -489,7 +489,7 @@
                 <p t-if="o.narration" name="comment">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-out="o.narration"/>
+                            <span t-if="o.narration != o_sec.narration" t-out="o.narration"/>
                         </div>
                         <div class="col-6 text-end">
                             <span t-out="o_sec.narration"/>
@@ -499,7 +499,7 @@
                 <p t-if="o.fiscal_position_id.note" name="note">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-out="o.fiscal_position_id.note"/>
+                            <span t-if="o.fiscal_position_id.note != o_sec.fiscal_position_id.note" t-out="o.fiscal_position_id.note"/>
                         </div>
                         <div class="col-6 text-end">
                             <span t-out="o_sec.fiscal_position_id.note"/>
