@@ -166,15 +166,15 @@ export class Message extends Component {
         useEffect(
             () => {
                 if (this.shadowBody.el) {
-                    const body = document.createElement("span");
-                    body.innerHTML = this.state.showTranslation
+                    const bodyEl = document.createElement("span");
+                    bodyEl.innerHTML = this.state.showTranslation
                         ? this.message.translationValue
                         : this.props.messageSearch?.highlight(this.message.body) ??
                           this.message.body;
-                    this.prepareMessageBody(body);
-                    this.shadowRoot.appendChild(body);
+                    this.prepareMessageBody(bodyEl);
+                    this.shadowRoot.appendChild(bodyEl);
                     return () => {
-                        this.shadowRoot.removeChild(body);
+                        this.shadowRoot.removeChild(bodyEl);
                     };
                 }
             },
@@ -461,10 +461,8 @@ export class Message extends Component {
         }
     }
 
-    /**
-     * @param {HTMLElement} element
-     */
-    prepareMessageBody(element) {}
+    /** @param {HTMLElement} bodyEl */
+    prepareMessageBody(bodyEl) {}
 
     enterEditMode() {
         const message = toRaw(this.props.message);
