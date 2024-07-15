@@ -141,8 +141,8 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     content: "Save the record",
     run: "click",
 }, {
-    trigger: '.o_breadcrumb .o_control_panel_breadcrumbs_actions button',
-    content: 'Convert the Todo to a task belonging to a project',
+    trigger: '.o_breadcrumb .o_control_panel_breadcrumbs_actions button:enabled',
+    content: "Convert the Todo to a task belonging to a project:enabled",
     run: "click",
 }, {
     trigger: '.o_menu_item:contains("Convert to Task")',
