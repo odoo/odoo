@@ -158,6 +158,13 @@ class Contract(models.Model):
                     contract=contract.name, start=contract.date_start, end=contract.date_end,
                 ))
 
+    @api.onchange('state')
+    def _onchange_state(self):
+        for contract in self.filtered(lambda contract: contract.state == 'open'):
+            employee = contract.employee_id
+            employee.job_id = employee.job_id or contract.job_id
+            employee.department_id = employee.department_id or contract.department_id
+
     @api.model
     def update_state(self):
         from_cron = 'from_cron' in self.env.context
