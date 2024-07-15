@@ -56,7 +56,8 @@ class PosPaymentMethod(models.Model):
                     'createdTime': response.get('createdTime'),
                 }
             elif payment_status == 'FAILED' or payment_messageCode == 'P2P_DEVICE_CANCELED':
-                return {'error': str(response.get('message', _('Razorpay POS transaction failed')))}
+                return {'error': str(response.get('message', _('Razorpay POS transaction failed'))),
+                        'payment_messageCode': payment_messageCode}
             elif payment_messageCode in ['P2P_DEVICE_RECEIVED', 'P2P_DEVICE_SENT', 'P2P_STATUS_QUEUED']:
                 return {'status': payment_messageCode.split('_')[-1]}
         default_error_msg = _('Razorpay POS payment status request expected errorCode not found in the response')
