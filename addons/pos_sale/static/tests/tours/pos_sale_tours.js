@@ -129,4 +129,12 @@ odoo.define('pos_sale.tour', function (require) {
 
     Tour.register('PosOrderDoesNotRemainInList', { test: true, url: '/pos/ui' }, getSteps());
 
+    startSteps();
+
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    ProductScreen.check.selectedOrderlineHas('Test service product', '1.00', '50.00');
+
+    Tour.register('PosSettleDraftOrder', { test: true, url: '/pos/ui' }, getSteps());
+
 });
