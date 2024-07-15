@@ -20,10 +20,70 @@ class HrLeaveType(models.Model):
 class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
+<<<<<<< HEAD
     def _prepare_resource_leave_vals(self):
         vals = super(HrLeave, self)._prepare_resource_leave_vals()
         vals['work_entry_type_id'] = self.holiday_status_id.work_entry_type_id.id
         return vals
+||||||| parent of 1c4126c76e71 (temp)
+    def _create_resource_leave(self):
+        """
+        Add a resource leave in calendars of contracts running at the same period.
+        This is needed in order to compute the correct number of hours/days of the leave
+        according to the contract's calender.
+        """
+        resource_leaves = super(HrLeave, self)._create_resource_leave()
+        for resource_leave in resource_leaves:
+            resource_leave.work_entry_type_id = resource_leave.holiday_id.holiday_status_id.work_entry_type_id.id
+
+        resource_leave_values = []
+
+        for leave in self.filtered(lambda l: l.employee_id):
+            contracts = leave.employee_id.sudo()._get_contracts(leave.date_from, leave.date_to, states=['open'])
+            for contract in contracts:
+                if contract and contract.resource_calendar_id != leave.employee_id.resource_calendar_id:
+                    resource_leave_values += [{
+                        'name': _("%s: Time Off", leave.employee_id.name),
+                        'holiday_id': leave.id,
+                        'resource_id': leave.employee_id.resource_id.id,
+                        'work_entry_type_id': leave.holiday_status_id.work_entry_type_id.id,
+                        'time_type': leave.holiday_status_id.time_type,
+                        'date_from': max(leave.date_from, datetime.combine(contract.date_start, datetime.min.time())),
+                        'date_to': min(leave.date_to, datetime.combine(contract.date_end or date.max, datetime.max.time())),
+                        'calendar_id': contract.resource_calendar_id.id,
+                    }]
+
+        return resource_leaves | self.env['resource.calendar.leaves'].create(resource_leave_values)
+=======
+    def _create_resource_leave(self):
+        """
+        Add a resource leave in calendars of contracts running at the same period.
+        This is needed in order to compute the correct number of hours/days of the leave
+        according to the contract's calender.
+        """
+        resource_leaves = super(HrLeave, self)._create_resource_leave()
+        for resource_leave in resource_leaves:
+            resource_leave.work_entry_type_id = resource_leave.holiday_id.holiday_status_id.work_entry_type_id.id
+
+        resource_leave_values = []
+
+        for leave in self.filtered(lambda l: l.employee_id):
+            contracts = leave.employee_id.sudo()._get_contracts(leave.date_from, leave.date_to, states=['open'])
+            for contract in contracts:
+                if contract and contract.resource_calendar_id != leave.employee_id.resource_calendar_id:
+                    resource_leave_values += [{
+                        'name': _("%s: Time Off", leave.employee_id.name),
+                        'holiday_id': leave.id,
+                        'resource_id': leave.employee_id.resource_id.id,
+                        'work_entry_type_id': leave.holiday_status_id.work_entry_type_id.id,
+                        'time_type': leave.holiday_status_id.time_type,
+                        'date_from': max(leave.date_from, datetime.combine(contract.date_start, datetime.min.time())),
+                        'date_to': min(leave.date_to, datetime.combine(contract.date_end or date.max, datetime.max.time())),
+                        'calendar_id': contract.resource_calendar_id.id,
+                    }]
+
+        return resource_leaves | self.env['resource.calendar.leaves'].sudo().create(resource_leave_values)
+>>>>>>> 1c4126c76e71 (temp)
 
     def _get_overlapping_contracts(self, contract_states=None):
         self.ensure_one()
