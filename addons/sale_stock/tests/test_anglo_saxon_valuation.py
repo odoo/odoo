@@ -38,7 +38,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 2.0,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 12,
-                    'tax_ids': False,  # no love taxes amls
+                    'tax_id': False,  # no love taxes amls
                 })],
         })
         sale_order.flush_recordset()
@@ -941,7 +941,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 10.0,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 12,
-                    'tax_ids': False,  # no love taxes amls
+                    'tax_id': False,  # no love taxes amls
                 })],
         })
         sale_order.action_confirm()
@@ -1031,7 +1031,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 1,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 20,
-                    'tax_ids': False,
+                    'tax_id': False,
                 })],
         })
         sale_order.action_confirm()
@@ -1050,7 +1050,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 6,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 20,
-                    'tax_ids': False,
+                    'tax_id': False,
                 })],
         })
         sale_order.action_confirm()
@@ -1095,7 +1095,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 10.0,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 12,
-                    'tax_ids': False,  # no love taxes amls
+                    'tax_id': False,  # no love taxes amls
                 })],
         })
         sale_order.action_confirm()
@@ -1175,7 +1175,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 1.0,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 12,
-                    'tax_ids': False,  # no love taxes amls
+                    'tax_id': False,  # no love taxes amls
                 })],
         })
         so_2.action_confirm()
@@ -1271,7 +1271,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 1,
                     'product_uom': unit_12.id,
                     'price_unit': 18,
-                    'tax_ids': False,  # no love taxes amls
+                    'tax_id': False,  # no love taxes amls
                 })],
         })
         so_1.action_confirm()
@@ -1331,7 +1331,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 1,
                     'product_uom': unit_12.id,
                     'price_unit': 18,
-                    'tax_ids': False,  # no love taxes amls
+                    'tax_id': False,  # no love taxes amls
                 })],
         })
         so_2.action_confirm()
@@ -1398,7 +1398,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 3.0,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 100,
-                    'tax_ids': False,
+                    'tax_id': False,
                 })],
         })
         so.action_confirm()
@@ -1491,7 +1491,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 3.0,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 100,
-                    'tax_ids': False,
+                    'tax_id': False,
                 })],
         })
         so.action_confirm()
@@ -1536,7 +1536,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         ctx = {'active_model': 'sale.order', 'active_ids': so.ids}
         create_invoice_wizard = self.env['sale.advance.payment.inv'].with_context(ctx).create({'advance_payment_method': 'delivered'})
         create_invoice_wizard.create_invoices()
-        reverse_invoice = so.account_move_ids[-1]
+        reverse_invoice = so.invoice_ids[-1]
         with Form(reverse_invoice) as reverse_invoice_form:
             with reverse_invoice_form.invoice_line_ids.edit(0) as line:
                 line.quantity = 1
@@ -1578,7 +1578,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 3.0,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 100,
-                    'tax_ids': False,
+                    'tax_id': False,
                 })],
         })
         so.action_confirm()
@@ -1668,7 +1668,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 1.0,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 100,
-                    'tax_ids': False,
+                    'tax_id': False,
                 })],
         })
         so.action_confirm()
@@ -1749,7 +1749,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
                     'product_uom_qty': 10.0,
                     'product_uom': self.product.uom_id.id,
                     'price_unit': 100,
-                    'tax_ids': False,
+                    'tax_id': False,
                 })],
         })
         so.action_confirm()
@@ -1758,11 +1758,11 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         down_payment = self.env['sale.advance.payment.inv'].create({
             'advance_payment_method': 'percentage',
             'amount': 100,
-            'order_ids': so.ids,
+            'sale_order_ids': so.ids,
         })
         down_payment.create_invoices()
         # Invoice the delivered part from the down payment
-        down_payment_invoices = so.account_move_ids
+        down_payment_invoices = so.invoice_ids
         down_payment_invoices.action_post()
 
         # Deliver a part of it with a backorder
@@ -1774,7 +1774,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
         invoice_wizard.create_invoices()
-        credit_note = so.account_move_ids.filtered(lambda i: i.state != 'posted')
+        credit_note = so.invoice_ids.filtered(lambda i: i.state != 'posted')
         self.assertEqual(len(credit_note), 1)
         self.assertEqual(len(credit_note.invoice_line_ids.filtered(lambda line: line.display_type == 'product')), 2)
         down_payment_line = credit_note.invoice_line_ids.filtered(lambda line: line.sale_line_ids.is_downpayment)
@@ -1789,7 +1789,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
         invoice_wizard.create_invoices()
 
-        invoice = so.account_move_ids.filtered(lambda i: i.state != 'posted')
+        invoice = so.invoice_ids.filtered(lambda i: i.state != 'posted')
         invoice.action_post()
 
         # Check the resulting accounting entries

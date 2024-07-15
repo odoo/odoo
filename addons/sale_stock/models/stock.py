@@ -36,7 +36,7 @@ class StockMove(models.Model):
         related to this stock move.
         """
         rslt = super(StockMove, self)._get_related_invoices()
-        invoices = self.mapped('picking_id.sale_id.account_move_ids').filtered(lambda x: x.state == 'posted')
+        invoices = self.mapped('picking_id.sale_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         rslt += invoices
         #rslt += invoices.mapped('reverse_entry_ids')
         return rslt

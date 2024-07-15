@@ -231,7 +231,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(self.sale_order.state, 'sale')
         self.assertTrue(tx.invoice_ids)
-        self.assertTrue(self.sale_order.account_move_ids)
+        self.assertTrue(self.sale_order.invoice_ids)
 
     def test_auto_done_and_auto_invoice(self):
         # Set automatic invoice
@@ -248,7 +248,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(self.sale_order.state, 'sale')
         self.assertTrue(self.sale_order.locked)
         self.assertTrue(tx.invoice_ids)
-        self.assertTrue(self.sale_order.account_move_ids)
+        self.assertTrue(self.sale_order.invoice_ids)
         self.assertTrue(tx.invoice_ids.is_move_sent)
 
     def test_so_partial_payment_no_invoice(self):
@@ -263,7 +263,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(self.sale_order.state, 'draft')
         self.assertFalse(tx.invoice_ids)
-        self.assertFalse(self.sale_order.account_move_ids)
+        self.assertFalse(self.sale_order.invoice_ids)
 
     def test_already_confirmed_so_payment(self):
         # Set automatic invoice
@@ -278,7 +278,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         tx._post_process()
 
         self.assertTrue(tx.invoice_ids)
-        self.assertTrue(self.sale_order.account_move_ids)
+        self.assertTrue(self.sale_order.invoice_ids)
 
     def test_invoice_is_final(self):
         """Test that invoice generated from a payment are always final"""
@@ -341,9 +341,9 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.sale_order.action_confirm()
         self.sale_order._create_invoices()
 
-        self.assertEqual(len(self.sale_order.account_move_ids), 1, msg="1 invoice should be created.")
+        self.assertEqual(len(self.sale_order.invoice_ids), 1, msg="1 invoice should be created.")
 
-        first_invoice = self.sale_order.account_move_ids
+        first_invoice = self.sale_order.invoice_ids
         linked_txs = first_invoice.transaction_ids
         msg = "The newly created invoice should be linked to the done and pending transactions."
         self.assertEqual(len(linked_txs), 2, msg=msg)
@@ -360,7 +360,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.sale_order.order_line[0].product_uom_qty += 2
         self.sale_order._create_invoices()
 
-        second_invoice = self.sale_order.account_move_ids - first_invoice
+        second_invoice = self.sale_order.invoice_ids - first_invoice
         msg = "The newly created invoice should only be linked to the pending transaction."
         self.assertEqual(len(second_invoice.transaction_ids), 1, msg=msg)
         self.assertEqual(second_invoice.transaction_ids.state, 'pending', msg=msg)
@@ -449,7 +449,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
             tx._post_process()
 
-        invoice = self.sale_order.account_move_ids
+        invoice = self.sale_order.invoice_ids
         self.assertTrue(len(invoice) == 1)
         self.assertTrue(invoice.line_ids[0].is_downpayment)
 
