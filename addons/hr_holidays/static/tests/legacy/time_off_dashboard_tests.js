@@ -23,8 +23,7 @@ QUnit.module("leave dashboard", {
                     show_unusual_days="True"
                     color="color"
                     hide_time="True"
-                    mode="year"
-                    all_day="last_several_days">
+                    mode="year">
                 <field name="name"/>
                 <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
