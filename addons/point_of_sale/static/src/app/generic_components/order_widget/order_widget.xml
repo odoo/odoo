@@ -20,8 +20,10 @@
             </div>
         </t>
         <t t-else="">
-            <CenteredIcon icon="'fa-shopping-cart fa-4x'" text="emptyCartText()"/>
-            <t t-slot="details"/>
+            <div class="flex-grow-1 d-flex flex-column justify-content-center">
+                <CenteredIcon icon="'fa-shopping-cart fa-4x'" text="emptyCartText()" class="'h-unset'"/>
+                <t t-slot="details"/>
+            </div>
         </t>
     </t>
 </templates>
