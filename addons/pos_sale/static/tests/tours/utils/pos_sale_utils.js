@@ -43,3 +43,13 @@ export function downPaymentFirstOrder() {
         Dialog.confirm(),
     ];
 }
+
+export function checkOrdersListEmpty() {
+    return [
+        ProductScreen.clickControlButton("Quotation/Order"),
+        {
+            content: "Check that the orders list is empty",
+            trigger: "p:contains(No record found)",
+        },
+    ];
+}
