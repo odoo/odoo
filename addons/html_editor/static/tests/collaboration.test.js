@@ -630,6 +630,49 @@ describe("data-oe-protected", () => {
             },
         });
     });
+
+    test("should properly apply `contenteditable` attribute on received protected nodes", async () => {
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
+        });
+        const e1 = peerInfos.c1.editor;
+        const e2 = peerInfos.c2.editor;
+        e1.shared.domInsert(
+            parseHTML(
+                e1.document,
+                unformat(`
+                    <div data-oe-protected="true">
+                        <div data-oe-protected="false">
+                            <p>d</p>
+                        </div>
+                    </div>
+                `)
+            )
+        );
+        e1.dispatch("ADD_STEP");
+        mergePeersSteps(peerInfos);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            unformat(`
+                <div contenteditable="false" data-oe-protected="true">
+                    <div contenteditable="true" data-oe-protected="false">
+                        <p>d</p>
+                    </div>
+                </div>
+                <p>[]a</p>
+            `)
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            unformat(`
+                <div contenteditable="false" data-oe-protected="true">
+                    <div contenteditable="true" data-oe-protected="false">
+                        <p>d</p>
+                    </div>
+                </div>
+                <p>[]a</p>
+            `)
+        );
+    });
 });
 describe("post process external steps", () => {
     test("should properly await a processing promise before accepting new external steps.", async () => {
