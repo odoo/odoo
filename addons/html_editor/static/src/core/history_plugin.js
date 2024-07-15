@@ -105,6 +105,9 @@ export class HistoryPlugin extends Plugin {
 
     setup() {
         this.mutationFilteredClasses = new Set(this.resources["mutation_filtered_classes"]);
+        this._onKeyupResetContenteditableNodes = [];
+        this.addDomListener(this.document, "beforeinput", this._onDocumentBeforeInput.bind(this));
+        this.addDomListener(this.document, "input", this._onDocumentInput.bind(this));
         this.addDomListener(this.editable, "pointerup", () => {
             this.stageSelection();
             this.stageNextSelection = true;
@@ -313,6 +316,9 @@ export class HistoryPlugin extends Plugin {
             if (record.type === "attributes") {
                 // Skip the attributes change on the dom.
                 if (record.target === this.editable) {
+                    continue;
+                }
+                if (record.attributeName === "contenteditable") {
                     continue;
                 }
                 // @todo @phoenix test attributeCache
@@ -680,6 +686,9 @@ export class HistoryPlugin extends Plugin {
             this.revertMutations(stepToRevert.mutations);
         }
         this.applyMutations(newStep.mutations);
+        this.dispatch("NORMALIZE", {
+            node: this.getMutationsRoot(newStep.mutations) || this.editable,
+        });
         this.steps.splice(index, 0, newStep);
         for (const stepToApply of stepsAfterNewStep) {
             this.applyMutations(stepToApply.mutations);
@@ -1089,5 +1098,35 @@ export class HistoryPlugin extends Plugin {
         }
         _map.set(node, serializedNode.nodeId);
         return [node, _map];
+    }
+
+    _onDocumentBeforeInput(ev) {
+        if (this.editable.contains(ev.targget)) {
+            return;
+        }
+        if (["historyUndo", "historyRedo"].includes(ev.inputType)) {
+            this._onKeyupResetContenteditableNodes.push(
+                ...this.editable.querySelectorAll("[contenteditable=true]")
+            );
+            if (this.editable.getAttribute("contenteditable") === "true") {
+                this._onKeyupResetContenteditableNodes.push(this.editable);
+            }
+
+            for (const node of this._onKeyupResetContenteditableNodes) {
+                node.setAttribute("contenteditable", false);
+            }
+        }
+    }
+
+    _onDocumentInput(ev) {
+        if (
+            ["historyUndo", "historyRedo"].includes(ev.inputType) &&
+            this._onKeyupResetContenteditableNodes.length
+        ) {
+            for (const node of this._onKeyupResetContenteditableNodes) {
+                node.setAttribute("contenteditable", true);
+            }
+            this._onKeyupResetContenteditableNodes = [];
+        }
     }
 }
