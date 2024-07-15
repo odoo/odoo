@@ -136,4 +136,17 @@ odoo.define('pos_sale.tour', function (require) {
     ReceiptScreen.do.clickNextOrder();
 
     Tour.register('PosSettleOrderWithNote', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.do.clickNextOrder();
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.check.checkOrdersListEmpty();
+
+    Tour.register('PosOrderDoesNotRemainInList', { test: true, url: '/pos/ui' }, getSteps());
 });
