@@ -24,11 +24,15 @@ class PosConfig(models.Model):
         return self.env["res.lang"].get_installed()
 
     def _self_order_default_user(self):
-        users = self.env["res.users"].search(['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)])
-        for user in users:
-            if (user.sudo().has_group("point_of_sale.group_pos_user")
-                    or user.sudo().has_group("point_of_sale.group_pos_manager")):
-                return user
+        user_ids = self.env["res.users"].search(['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)])
+        admin_user_ids = user_ids.filtered(lambda u: u.has_group("point_of_sale.group_pos_manager"))
+
+        if admin_user_ids:
+            return admin_user_ids[0]
+
+        for user_id in user_ids:
+            if user_id.has_group("point_of_sale.group_pos_user"):
+                return user_id
 
     status = fields.Selection(
         [("inactive", "Inactive"), ("active", "Active")],
