@@ -212,3 +212,20 @@ registry.category("web_tour.tours").add("PosLoadOrder", {
             ProductScreen.selectedOrderlineHas("Product A", "1.00", "10.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.checkOrdersListEmpty(),
+        ].flat(),
+});
