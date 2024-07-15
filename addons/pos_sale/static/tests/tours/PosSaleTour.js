@@ -214,3 +214,21 @@ registry
             ProductScreen.totalAmountIs(980.0)
         ].flat(),
     });
+
+registry
+    .category("web_tour.tours")
+    .add('PosOrderDoesNotRemainInList', {
+        test: true,
+        url: '/pos/ui',
+        steps: () => [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod('Bank'),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.checkOrdersListEmpty(),
+        ].flat(),
+    });
