@@ -3,6 +3,7 @@
 
 from odoo import api, Command, fields, models, _
 
+from odoo.tools.misc import clean_context
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.sql import column_exists, create_column
 
@@ -53,13 +54,14 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super()._action_confirm()
+        context = clean_context(self._context)
         if len(self.company_id) == 1:
             # All orders are in the same company
-            self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
+            self.order_line.sudo().with_company(self.company_id).with_context(context)._timesheet_service_generation()
         else:
             # Orders from different companies are confirmed together
             for order in self:
-                order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
+                order.order_line.sudo().with_company(order.company_id).with_context(context)._timesheet_service_generation()
         return result
 
     def action_view_task(self):
@@ -167,9 +169,10 @@ class SaleOrderLine(models.Model):
         lines = super().create(vals_list)
         # Do not generate task/project when expense SO line, but allow
         # generate task with hours=0.
+        context = clean_context(self._context)
         for line in lines:
             if line.state == 'sale' and not line.is_expense:
-                line.sudo()._timesheet_service_generation()
+                line.sudo().with_context(context)._timesheet_service_generation()
                 # if the SO line created a task, post a message on the order
                 if line.task_id:
                     msg_body = _("Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>") % (line.product_id.name, line.task_id.id, line.task_id.name)
