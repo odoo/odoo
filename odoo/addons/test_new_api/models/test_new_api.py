@@ -1898,6 +1898,15 @@ class Prefetch(models.Model):
     hansel = fields.Integer('Hansel', prefetch="Hansel and Gretel")
     gretel = fields.Char('Gretel', prefetch="Hansel and Gretel")
 
+    line_ids = fields.One2many('test_new_api.prefetch.line', 'prefetch_id')
+
+
+class PrefetchLine(models.Model):
+    _name = _description = 'test_new_api.prefetch.line'
+
+    prefetch_id = fields.Many2one('test_new_api.prefetch')
+    harry = fields.Integer(related='prefetch_id.harry', store=True)
+
 
 class Modified(models.Model):
     _name = 'test_new_api.modified'
