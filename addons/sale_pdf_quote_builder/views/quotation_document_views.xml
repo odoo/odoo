@@ -87,23 +87,8 @@
                                 <span class="text-bg-danger">Archived</span>
                             </div>
                             <div class="o_kanban_image">
-                                <t
-                                    t-set="webimage"
-                                    t-value="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"
-                                />
-                                <div
-                                    t-attf-class="o_kanban_image_wrapper #{(webimage or binaryPreviewable) ? 'o_kanban_previewer' : ''}"
-                                >
-                                    <img
-                                        t-if="webimage"
-                                        t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}"
-                                        width="100"
-                                        height="100"
-                                        alt="Document"
-                                        class="o_attachment_image"
-                                    />
+                                <div class="o_kanban_image_wrapper o_kanban_previewer">
                                     <div
-                                        t-else=""
                                         class="o_image o_image_thumbnail"
                                         t-att-data-mimetype="record.mimetype.value"
                                     />
