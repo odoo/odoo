@@ -37,12 +37,23 @@
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button class="oe_stat_button"
+                        name="action_purchase_matching"
+                        type="object"
+                        groups="purchase.group_purchase_user"
+                        icon="fa-bullseye"
+                        invisible="not partner_id or move_type not in ('in_invoice', 'in_refund') or is_purchase_matched">
+                    <div class="o_field_statinfo">
+                        <span class="o_stat_text">Purchase Matching</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button"
                         name="action_view_source_purchase_orders"
                         type="object"
                         groups="purchase.group_purchase_user"
                         icon="fa-pencil-square-o"
                         invisible="purchase_order_count == 0 or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
-                    <field string="Purchases" name="purchase_order_count" widget="statinfo"/>
+                    <field string="Purchases" name="purchase_order_name" widget="statinfo" invisible="purchase_order_count != 1"/>
+                    <field string="Purchases" name="purchase_order_count" widget="statinfo" invisible="purchase_order_count == 1"/>
                 </button>
             </xpath>
         </field>

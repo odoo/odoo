@@ -18,6 +18,7 @@
         'data/ir_cron_data.xml',
         'report/purchase_reports.xml',
         'views/purchase_views.xml',
+        'views/purchase_bill_line_match_views.xml',
         'views/res_config_settings_views.xml',
         'views/product_views.xml',
         'views/res_partner_views.xml',
@@ -30,6 +31,7 @@
         'report/purchase_quotation_templates.xml',
         'views/product_packaging_views.xml',
         'views/analytic_account_views.xml',
+        'wizard/bill_to_po_wizard_views.xml',
     ],
     'demo': [
         'data/purchase_demo.xml',

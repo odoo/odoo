@@ -22,6 +22,8 @@ class AccountMove(models.Model):
         string='Purchase Order',
         help="Auto-complete from a past purchase order.")
     purchase_order_count = fields.Integer(compute="_compute_origin_po_count", string='Purchase Order Count')
+    purchase_order_name = fields.Char(compute='_compute_purchase_order_name')
+    is_purchase_matched = fields.Boolean(compute='_compute_is_purchase_matched')  # 0: PO not required or partially linked. 1: All lines linked
 
     def _get_invoice_reference(self):
         self.ensure_one()
@@ -115,9 +117,28 @@ class AccountMove(models.Model):
         return res
 
     @api.depends('line_ids.purchase_line_id')
+    def _compute_is_purchase_matched(self):
+        for move in self:
+            if any(il.display_type == 'product' and not bool(il.purchase_line_id) for il in move.invoice_line_ids):
+                move.is_purchase_matched = False
+                continue
+            move.is_purchase_matched = True
+
+    @api.depends('line_ids.purchase_line_id')
     def _compute_origin_po_count(self):
         for move in self:
             move.purchase_order_count = len(move.line_ids.purchase_line_id.order_id)
+
+    @api.depends('purchase_order_count')
+    def _compute_purchase_order_name(self):
+        for move in self:
+            if move.purchase_order_count == 1:
+                move.purchase_order_name = move.invoice_line_ids.purchase_order_id.display_name
+            else:
+                move.purchase_order_name = False
+
+    def action_purchase_matching(self):
+        return self.partner_id.action_open_purchase_matching()
 
     def action_view_source_purchase_orders(self):
         self.ensure_one()
@@ -473,10 +494,23 @@ class AccountMoveLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
     _inherit = 'account.move.line'
 
-    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null')
+    is_downpayment = fields.Boolean()
+    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null', copy=False)
     purchase_order_id = fields.Many2one('purchase.order', 'Purchase Order', related='purchase_line_id.order_id', readonly=True)
 
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'purchase_line_id' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
         values['purchase_line_id'] = self.purchase_line_id.id
+
+    def _prepare_line_values_for_purchase(self):
+        return [
+            {
+                'product_id': line.product_id.id,
+                'product_qty': line.quantity,
+                'product_uom': line.product_uom_id.id,
+                'price_unit': line.price_unit,
+                'discount': line.discount,
+            }
+            for line in self
+        ]
