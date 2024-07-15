@@ -61,6 +61,5 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
             'server_url': chatbot_script.get_base_url(),
             'channel_data': {'id': discuss_channel.id, 'model': 'discuss.channel'},
             'chatbot_data': chatbot_script._format_for_frontend(),
-            'current_partner_id': request.env.user.partner_id.id,
             'storeData': store.get_result(),
         })

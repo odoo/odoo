@@ -150,16 +150,23 @@ class LivechatController(http.Controller):
                 fields={"id": True, "user_livechat_username": True, "write_date": True},
             )
             channel_info = {
-                'id': -1, # only one temporary thread at a time, id does not matter.
+                "id": -1,  # only one temporary thread at a time, id does not matter.
                 "isLoaded": True,
-                'name': channel_vals['name'],
+                "name": channel_vals["name"],
+                "scrollUnread": False,
                 "operator": {"id": operator_partner.id, "type": "partner"},
-                'state': 'open',
-                'channel_type': 'livechat',
-                'chatbot': {
-                    'script': chatbot_script._format_for_frontend(),
-                    'steps': chatbot_script._get_welcome_steps().mapped(lambda s: {'scriptStep': {'id': s.id}}),
-                } if chatbot_script else None
+                "state": "open",
+                "channel_type": "livechat",
+                "chatbot": (
+                    {
+                        "script": chatbot_script._format_for_frontend(),
+                        "steps": chatbot_script._get_welcome_steps().mapped(
+                            lambda s: {"scriptStep": {"id": s.id}}
+                        ),
+                    }
+                    if chatbot_script
+                    else None
+                ),
             }
             store.add("discuss.channel", channel_info)
         else:
@@ -182,7 +189,10 @@ class LivechatController(http.Controller):
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
             store.add(channel)
-            store.add("discuss.channel", {"id": channel.id, "isLoaded": not chatbot_script})
+            store.add(
+                "discuss.channel",
+                {"id": channel.id, "isLoaded": not chatbot_script, "scrollUnread": False},
+            )
             if guest:
                 store.add({"guest_token": guest._format_auth_cookie()})
         request.env["res.users"]._init_store_data(store)

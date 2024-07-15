@@ -332,9 +332,6 @@ class ImLivechatChannel(models.Model):
         info['server_url'] = self.get_base_url()
         if info['available']:
             info['options'] = self._get_channel_infos()
-            info['options']['current_partner_id'] = (
-                self.env.user.partner_id.id if not self.env.user._is_public() else None
-            )
             info['options']["default_username"] = username
         return info
 

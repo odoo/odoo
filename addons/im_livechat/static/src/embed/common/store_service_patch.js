@@ -3,7 +3,6 @@ import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 import { Store, storeService } from "@mail/core/common/store_service";
 
 import { patch } from "@web/core/utils/patch";
-import { session } from "@web/session";
 
 storeService.dependencies.push("im_livechat.initialized");
 
@@ -19,19 +18,10 @@ patch(Store.prototype, {
             }
             return;
         }
-        const messagingData = {
-            "discuss.channel": [],
-            Store: { settings: {} },
-        };
-        if (session.livechatData?.options.current_partner_id) {
-            messagingData.Store.current_partner = {
-                id: session.livechatData.options.current_partner_id,
-            };
+        if (livechatService.savedState?.store) {
+            const { Thread = [] } = this.store.insert(livechatService.savedState.store);
+            livechatService.thread = Thread[0];
         }
-        if (livechatService.savedState?.threadData) {
-            messagingData["discuss.channel"].push(livechatService.savedState.threadData);
-        }
-        this.insert(messagingData);
         this.isReady.resolve();
     },
     get initMessagingParams() {
