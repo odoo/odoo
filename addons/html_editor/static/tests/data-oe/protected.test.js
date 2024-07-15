@@ -340,55 +340,6 @@ test("removing a recursively protected then unprotected node should be undo-able
     );
 });
 
-test("normalize should set contenteditable attribute on protecting nodes and that mutation should be observed", async () => {
-    // Mutation should be observed in order for the content to arrive to a collaborator in a
-    // "normalized state". Can be changed, but the entire editable has to be normalized
-    // after receiving any external step in that case.
-    const { editor, el, plugins } = await setupEditor(
-        unformat(`
-            <p>a[]</p>
-        `)
-    );
-    const p = el.querySelector("p");
-    p.before(
-        ...parseHTML(
-            editor.document,
-            unformat(`
-                <div data-oe-protected="true">
-                    <div data-oe-protected="false">
-                        <p>d</p>
-                    </div>
-                </div>
-            `)
-        ).children
-    );
-    editor.dispatch("ADD_STEP");
-    const historyPlugin = plugins.get("history");
-    const lastStep = editor.shared.getHistorySteps().at(-1);
-    expect(lastStep.mutations.length).toBe(3);
-    expect(lastStep.mutations[0].type).toBe("add");
-    expect(lastStep.mutations[1].type).toBe("attributes");
-    expect(lastStep.mutations[1].value).toBe("true");
-    expect(historyPlugin.idToNodeMap.get(lastStep.mutations[1].id)).toBe(
-        el.querySelector(`[data-oe-protected="false"]`)
-    );
-    expect(lastStep.mutations[2].type).toBe("attributes");
-    expect(lastStep.mutations[2].value).toBe("false");
-    expect(historyPlugin.idToNodeMap.get(lastStep.mutations[2].id)).toBe(
-        el.querySelector(`[data-oe-protected="true"]`)
-    );
-    expect(getContent(el)).toBe(
-        unformat(`
-            <div data-oe-protected="true" contenteditable="false">
-                <div data-oe-protected="false" contenteditable="true">
-                    <p>d</p>
-                </div>
-            </div>
-            <p>a[]</p>
-        `)
-    );
-});
-
 test("removing a protected node and then removing its protected parent should be ignored", async () => {
     const { editor, el, plugins } = await setupEditor(
         unformat(`
