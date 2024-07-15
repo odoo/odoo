@@ -148,7 +148,7 @@ class TestWebsiteSaleComparisonUi(HttpCase):
 
         tr_vintage = root.xpath('//div[@id="product_specifications"]//tr')[0]
         text_vintage = etree.tostring(tr_vintage, encoding='unicode', method='text')
-        self.assertEqual(text_vintage.replace(' ', '').replace('\n', ''), "Vintage2018or2017or2016or2015")
+        self.assertEqual(text_vintage.replace(' ', '').replace('\n', ''), "Vintage2018,2017,2016,2015")
 
         tr_varieties = root.xpath('//div[@id="product_specifications"]//tr')[1]
         text_varieties = etree.tostring(tr_varieties, encoding='unicode', method='text')

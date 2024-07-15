@@ -169,8 +169,8 @@ $input-border-color: $gray-400;
         --table-accent-bg: rgba(0, 0, 0, 0);
     }
     *:not(#product_attributes_simple) > .table-sm tbody td {
-        padding-top: 0.75rem;
-        padding-bottom: 0.75rem;
+        padding-top: map-get($spacers, 2);
+        padding-bottom: map-get($spacers, 2);
     }
 
     #products_grid_before {
@@ -810,6 +810,42 @@ a.no-decoration {
     }
 }
 
-.wsale_products_categories_list .accordion-button:not(.collapsed).bg-transparent::after {
-    background-image: escape-svg($accordion-button-icon);
+.oe_website_sale {
+    // Changes the chevron color to contrast with user's theme background color
+    .accordion-button:not(.collapsed)::after {
+        background-image: escape-svg($accordion-button-icon);
+    }
+
+    #product_accordion {
+        --accordion-active-bg: inherit;
+        --accordion-active-color: var(--accordion-btn-color);
+        --accordion-btn-padding-x : 0;
+        --accordion-body-padding-x: 0;
+
+        .accordion-item {
+            border-top: $border-width solid $border-color;
+            border-bottom: $border-width solid $border-color;
+
+            &:not(:last-child) {
+                border-bottom: 0;
+            }
+        }
+
+        .accordion-button:not(.collapsed) {
+            box-shadow: none;
+        }
+
+        // Necessary to display the first accordion entry as opened before the
+        // JS code is loaded. When loaded, the `.o_accordion_not_initialized` class
+        // will be removed.
+        &.o_accordion_not_initialized > .accordion-item:first-child {
+            .accordion-button::after {
+                transform: var(--accordion-btn-icon-transform);
+            }
+
+            .accordion-collapse {
+                display: block;
+            }
+        }
+    }
 }

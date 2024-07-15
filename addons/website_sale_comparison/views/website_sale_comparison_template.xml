@@ -39,33 +39,7 @@
                             <div class="row">
                                 <t t-foreach="categories" t-as="category">
                                     <div class="col-lg-6">
-                                        <table class="table">
-                                            <t t-if="len(categories) > 1">
-                                                <tr>
-                                                    <th class="text-start" t-att-colspan="2">
-                                                        <span t-if="category" t-field="category.name"/>
-                                                        <span t-else="">Others</span>
-                                                    </th>
-                                                </tr>
-                                            </t>
-                                            <tr t-foreach="categories[category].filtered(lambda l: len(l.value_ids) > 1)" t-as="ptal">
-                                                <td class="w-25"><span t-field="ptal.attribute_id.name"/></td>
-                                                <td class="w-75 text-muted">
-                                                    <t t-foreach="ptal.value_ids" t-as="pav">
-                                                        <span t-field="pav.name"/><t t-if="not pav_last"> or</t>
-                                                    </t>
-                                                </td>
-                                            </tr>
-                                            <t t-set="single_value_attributes" t-value="categories[category]._prepare_single_value_for_display()"/>
-                                            <tr t-foreach="single_value_attributes" t-as="attribute">
-                                                <td class="w-25"><span t-field="attribute.name"/></td>
-                                                <td class="w-75 text-muted">
-                                                    <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
-                                                        <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
-                                                    </t>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                        <t t-call="website_sale_comparison.specifications_table"/>
                                     </div>
                                 </t>
                                 <t t-if="is_view_active('website_sale.product_tags')">
@@ -95,6 +69,95 @@
                 </section>
             </t>
         </xpath>
+    </template>
+
+    <template
+        id="accordion_specs_item"
+        name="Specifications Accordion Item"
+        inherit_id="website_sale.product_accordion"
+        active="False"
+    >
+        <xpath expr="//div[@id='more_information_accordion_item']" position="before">
+            <t t-if="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()">
+                <t t-foreach="categories" t-as="category">
+                    <div class="accordion-item">
+                        <div class="accordion-header my-0 h6">
+                            <button
+                                t-out="category.name"
+                                class="accordion-button collapsed fw-medium"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                t-attf-data-bs-target="#category_accordion_{{category_index}}"
+                                aria-expanded="false"
+                                aria-controls="specifications"
+                            >
+                                <t t-if="category_size == 1">Specifications</t>
+                                <t t-else="">Others</t>
+                            </button>
+                        </div>
+                        <div
+                            t-attf-id="category_accordion_{{category_index}}"
+                            class="accordion-collapse collapse"
+                            data-bs-parent="#product_accordion"
+                        >
+                            <div class="accordion-body pt-0">
+                                <t t-call="website_sale_comparison.specifications_table">
+                                    <t t-set="is_accordion" t-value="True"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="specifications_table" name="Specifications Table">
+        <table t-attf-class="table {{is_accordion and 'table-sm mb-0'}}">
+            <t t-if="len(categories) > 1 and not is_accordion">
+                <tr>
+                    <th class="text-start" colspan="2">
+                        <span t-if="category" t-field="category.name"/>
+                        <span t-else="">Others</span>
+                    </th>
+                </tr>
+            </t>
+            <tr
+                t-foreach="categories[category].filtered(lambda l: len(l.value_ids) > 1)"
+                t-as="ptal"
+            >
+                <t
+                    t-set="hide_border_bottom_classes"
+                    t-value="'border-bottom-0' if ptal_last and is_accordion else ''"
+                />
+                <td t-attf-class="w-25 {{hide_border_bottom_classes}} ps-0">
+                    <span t-field="ptal.attribute_id.name"/>
+                </td>
+                <td t-attf-class="w-75 {{hide_border_bottom_classes}} pe-0 text-muted text-end">
+                    <t t-foreach="ptal.value_ids" t-as="pav">
+                        <span t-field="pav.name"/><t t-if="not pav_last">, </t>
+                    </t>
+                </td>
+            </tr>
+            <t
+                t-set="single_value_attributes"
+                t-value="categories[category]._prepare_single_value_for_display()"
+            />
+            <tr t-foreach="single_value_attributes" t-as="attribute">
+                <t
+                    t-set="hide_border_bottom_classes"
+                    t-value="'border-bottom-0' if attribute_last and is_accordion else ''"
+                />
+                <td t-attf-class="w-25 {{hide_border_bottom_classes}} ps-0 ">
+                    <span t-field="attribute.name"/>
+                </td>
+                <td t-attf-class="w-75 {{hide_border_bottom_classes}} pe-0 text-muted text-end">
+                    <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
+                        <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
+                    </t>
+                </td>
+            </tr>
+        </table>
     </template>
 
     <template id="product_compare" name="Comparator Page">
