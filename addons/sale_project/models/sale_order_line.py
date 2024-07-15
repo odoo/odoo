@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, Command, fields, models, _
-from odoo.tools import format_amount
+from odoo.tools import clean_context, format_amount
 from odoo.tools.sql import column_exists, create_column
 
 
@@ -104,10 +104,11 @@ class SaleOrderLine(models.Model):
         lines = super().create(vals_list)
         # Do not generate task/project when expense SO line, but allow
         # generate task with hours=0.
+        context = clean_context(self._context)
         for line in lines:
             if line.state == 'sale' and not line.is_expense:
                 has_task = bool(line.task_id)
-                line.sudo()._timesheet_service_generation()
+                line.sudo().with_context(context)._timesheet_service_generation()
                 # if the SO line created a task, post a message on the order
                 if line.task_id and not has_task:
                     msg_body = _("Task Created (%s): %s", line.product_id.name, line.task_id._get_html_link())
