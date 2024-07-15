@@ -10975,7 +10975,7 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o-tooltip--technical > li")),
-            ["Field:product_id", "Type:many2one", "Context:{}", "Relation:product"]
+            ["Label:Product", "Field:product_id", "Type:many2one", "Context:{}", "Relation:product"]
         );
     });
 
