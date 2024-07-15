@@ -39,7 +39,7 @@ patch(Thread.prototype, {
     },
 
     get membersThatCanSeen() {
-        return super.membersThatCanSeen.filter(({ persona }) => !persona.is_bot);
+        return super.membersThatCanSeen.filter((member) => !member.is_bot);
     },
 
     get avatarUrl() {

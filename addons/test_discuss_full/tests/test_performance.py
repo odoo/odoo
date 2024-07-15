@@ -968,6 +968,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "create_date": member_0_create_date,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "is_bot": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -983,6 +984,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "last_seen_dt": fields.Datetime.to_string(member_1.last_seen_dt),
                 "fetched_message_id": {"id": last_message.id},
                 "id": member_1.id,
+                "is_bot": False,
                 "persona": {"id": self.users[1].partner_id.id, "type": "partner"},
                 "seen_message_id": {"id": last_message.id},
                 "thread": {"id": channel.id, "model": "discuss.channel"},
@@ -992,6 +994,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "create_date": member_0_create_date,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "is_bot": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 1,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1007,6 +1010,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "last_seen_dt": fields.Datetime.to_string(member_g.last_seen_dt),
                 "fetched_message_id": {"id": last_message.id},
                 "id": member_g.id,
+                "is_bot": False,
                 "persona": {"id": guest.id, "type": "guest"},
                 "seen_message_id": {"id": last_message.id},
                 "thread": {"id": channel.id, "model": "discuss.channel"},
@@ -1258,7 +1262,6 @@ class TestDiscussFullPerformance(HttpCase):
                 res.update(
                     {
                         "country": False,
-                        "is_bot": False,
                         "is_public": False,
                     }
                 )
@@ -1275,7 +1278,6 @@ class TestDiscussFullPerformance(HttpCase):
                 },
                 "id": user.partner_id.id,
                 "isInternalUser": True,
-                "is_bot": False,
                 "is_company": False,
                 "is_public": False,
                 "name": "test1",
