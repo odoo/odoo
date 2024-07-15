@@ -457,12 +457,33 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         if (this.productProductID) {
             this.mode = "product.product"
         }
-
         // Different targets
         this.productDetailMain = this.$target[0].querySelector('#product_detail_main');
         this.productPageCarousel = this.$target[0].querySelector("#o-carousel-product");
         this.productPageGrid = this.$target[0].querySelector("#o-grid-product");
         return this._super(...arguments);
+    },
+
+    /**
+     * If an accordion is displayed in the product details, remove the classes that Bootstrap adds
+     * when editing an accordion-item to avoid saving the template with the accordion opened.
+     *
+     * @override
+     */
+    async cleanForSave() {
+        const accordionEl = this.productDetailMain.querySelector('#product_accordion');
+        if (!accordionEl) return;
+
+        const accordionItemsEls = accordionEl.querySelectorAll('.accordion-item');
+        accordionItemsEls.forEach((item, key) => {
+            const accordionButtonEl = item.querySelector('.accordion-button');
+            const accordionCollapseEl = item.querySelector('.accordion-collapse');
+            if (key !== 0 && accordionCollapseEl.classList.contains('show')) {
+                accordionButtonEl.classList.add('collapsed');
+                accordionButtonEl.setAttribute('aria-expanded', 'false');
+                accordionCollapseEl.classList.remove('show');
+            }
+        });
     },
 
     _getZoomOptionData() {

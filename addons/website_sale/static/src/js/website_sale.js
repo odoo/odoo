@@ -692,6 +692,32 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
     },
 });
 
+publicWidget.registry.WebsiteSaleAccordionProduct = publicWidget.Widget.extend({
+    selector: "#product_accordion",
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this._updateAccordionActiveItem();
+    },
+
+    /**
+     * Replace the .SCSS styling applied awaiting Js for the default bootstrap classes,
+     * opening the first accordion entry and restoring flush behavior.
+     *
+     * @private
+     */
+    _updateAccordionActiveItem() {
+        const firstAccordionItemEl = this.el.querySelector('.accordion-item');
+        const firstAccordionItemButtonEl = firstAccordionItemEl.querySelector('.accordion-button');
+        firstAccordionItemButtonEl.classList.remove('collapsed');
+        firstAccordionItemButtonEl.setAttribute('aria-expanded', 'true');
+        firstAccordionItemEl.querySelector('.accordion-collapse').classList.add('show');
+        this.target.classList.remove('o_accordion_not_initialized');
+    },
+});
 
 publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     selector: '#o-carousel-product',
@@ -836,6 +862,7 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
 export default {
     WebsiteSale: publicWidget.registry.WebsiteSale,
     WebsiteSaleLayout: publicWidget.registry.WebsiteSaleLayout,
+    WebsiteSaleProductPage: publicWidget.registry.WebsiteSaleAccordionProduct,
     WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
     WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
 };
