@@ -470,7 +470,7 @@ registry.category("web_tour.tours").add('ChangeRewardValueWithLanguage', {
             ProductScreen.clickDisplayedProduct('Desk Organizer'),
             ProductScreen.selectedOrderlineHas('Desk Organizer', '1.00', '5.10'),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer('Colleen Diaz'),
+            ProductScreen.clickCustomer('Partner Test 1'),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward('$ 2 on your order'),
             PosLoyalty.hasRewardLine('$ 2 on your order', '-2.00'),
