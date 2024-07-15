@@ -4,6 +4,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { expect, test } from "@odoo/hoot";
 import { setupEditor } from "./_helpers/editor";
 import { insertText } from "./_helpers/user_actions";
+import { getContent } from "./_helpers/selection";
 
 test("can get content of an Editor", async () => {
     const { el, editor } = await setupEditor("<p>hel[lo] world</p>", {});
@@ -66,4 +67,31 @@ test("Remove odoo-editor-editable class after every plugin is destroyed", async 
     const { editor } = await setupEditor(`<div><p>a</p></div>`, { config: { Plugins } });
     editor.destroy();
     expect.verifySteps(["operation"]);
+});
+
+test("CLEAN_FOR_SAVE is done last", async () => {
+    // This test uses custom elements tag `c-div` to make sure they won't fall into
+    // a case where they won't be merged anyway.
+    // Without the proper fix, this test fails with sibling elements `c-div` merged together
+    class TestPlugin extends Plugin {
+        setup() {
+            for (const el of this.editable.querySelectorAll("c-div")) {
+                el.classList.add("oe_unbreakable");
+            }
+        }
+        handleCommand(cmd, payload) {
+            if (cmd === "CLEAN_FOR_SAVE") {
+                for (const el of payload.root.querySelectorAll("c-div")) {
+                    el.removeAttribute("class");
+                }
+            }
+        }
+    }
+    const Plugins = [...MAIN_PLUGINS, TestPlugin];
+    const { editor } = await setupEditor(`<div><c-div>a</c-div><c-div>b</c-div></div>`, {
+        config: { Plugins },
+    });
+
+    const el = editor.getElContent();
+    expect(getContent(el)).toBe(`<div><c-div>a</c-div><c-div>b</c-div></div>`);
 });
