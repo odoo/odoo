@@ -1148,24 +1148,43 @@
                                         </div>
                                         <div id="product_option_block" class="d-flex flex-wrap w-100"/>
                                     </div>
-                                    <div id="contact_us_wrapper"
-                                         t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}} oe_structure oe_structure_solo #{_div_classes}">
-                                        <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
-                                            <div class="container">
-                                                <a t-att-href="website.contact_us_button_url"
-                                                   class="btn btn-primary btn_cta">Contact Us
-                                                </a>
-                                            </div>
-                                        </section>
-                                    </div>
-                                    <t t-if="is_view_active('website_sale.product_tags')" t-call="website_sale.product_tags">
-                                        <t t-set="all_product_tags" t-value="product_variant.all_product_tag_ids"/>
-                                    </t>
                                 </div>
                             </form>
+                            <t t-call="website_sale.product_accordion"/>
+                            <div
+                                id="contact_us_wrapper"
+                                t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}} oe_structure oe_structure_solo #{_div_classes}"
+                            >
+                                <section
+                                    class="s_text_block"
+                                    data-snippet="s_text_block"
+                                    data-name="Text"
+                                >
+                                    <div class="container">
+                                        <a
+                                            t-att-href="website.contact_us_button_url"
+                                            class="btn btn-primary btn_cta"
+                                        >
+                                            Contact Us
+                                        </a>
+                                    </div>
+                                </section>
+                            </div>
+                            <t
+                                t-if="is_view_active('website_sale.product_tags')"
+                                t-call="website_sale.product_tags"
+                            >
+                                <t
+                                    t-set="all_product_tags"
+                                    t-value="product_variant.all_product_tag_ids"
+                                />
+                            </t>
                             <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
                             <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
-                            <div id="product_attributes_simple">
+                            <div
+                                t-if="not is_view_active('website_sale_comparison.accordion_specs_item')"
+                                id="product_attributes_simple"
+                            >
                                 <t t-set="single_value_attributes" t-value="product.valid_product_template_attribute_line_ids._prepare_single_value_for_display()"/>
                                 <table t-attf-class="table table-sm text-muted {{'' if single_value_attributes else 'd-none'}}">
                                     <t t-foreach="single_value_attributes" t-as="attribute">
@@ -1208,8 +1227,53 @@
         </t>
     </template>
 
+    <template id="product_accordion" name="Accordion On Product Page">
+        <div
+            t-if="is_view_active('website_sale_comparison.accordion_specs_item')
+                  or is_view_active('website_sale.accordion_more_information')"
+            id="product_accordion"
+            class="o_accordion_not_initialized accordion accordion-flush my-4"
+        >
+            <div
+                id="more_information_accordion_item"
+                t-attf-class="accordion-item {{not is_view_active('website_sale.accordion_more_information') and 'border-bottom-0'}}"
+            />
+        </div>
+    </template>
+
+    <template
+        id="accordion_more_information"
+        name="More Information Accordion Item"
+        inherit_id="website_sale.product_accordion"
+        active="False"
+    >
+        <xpath expr="//div[@id='more_information_accordion_item']" position="inside">
+            <div class="accordion-header my-0 h6">
+                <button
+                    class="accordion-button collapsed fw-medium"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#customizable_item"
+                    aria-expanded="false"
+                    aria-controls="customizable_item"
+                >
+                    More Information
+                </button>
+            </div>
+            <div
+                id="customizable_item"
+                class="accordion-collapse collapse"
+                data-bs-parent="#product_accordion"
+            >
+                <div class="accordion-body pt-0">
+                    <p>This content will be shared across all product pages.</p>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
     <template id="product_tags" name="Product Tags" active="True">
-        <div class="o_product_tags o_field_tags d-flex flex-wrap align-items-center gap-2">
+        <div class="o_product_tags o_field_tags d-flex flex-wrap align-items-center gap-2 mb-4">
             <t t-foreach="all_product_tags" t-as="tag">
                 <t t-if="tag.visible_on_ecommerce">
                     <span t-if="tag.image"
