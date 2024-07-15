@@ -160,6 +160,10 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/discuss/**/web/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
             'mail/static/src/views/fields/**/*',
+            ('remove', 'mail/static/src/views/web/activity/**'),
+        ],
+        'web.assets_backend_lazy': [
+            'mail/static/src/views/web/activity/**',
         ],
         'web_editor.backend_assets_wysiwyg': [
             'mail/static/src/core/web/wysiwyg.js',
