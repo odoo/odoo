@@ -656,3 +656,36 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentLinesPerTax', login="accountman")
+
+    def test_settle_draft_order_service_product(self):
+        """
+        Checks that, when settling a draft order (quotation), the quantity set on the corresponding
+        PoS order, for service products, is set correctly.
+        """
+
+        product_a = self.env['product.product'].create({
+            'name': 'Test service product',
+            'available_in_pos': True,
+            'type': 'service',
+            'invoice_policy': 'order',
+            'lst_price': 50.0,
+            'taxes_id': [],
+        })
+
+        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner_test.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'product_uom': product_a.uom_id.id,
+                'price_unit': product_a.lst_price,
+            })],
+        })
+
+        self.assertEqual(sale_order.state, 'draft')
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleDraftOrder', login="accountman")
