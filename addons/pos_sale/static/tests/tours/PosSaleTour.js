@@ -200,3 +200,21 @@ registry
             ProductScreen.clickSave(),
         ].flat(),
     });
+
+registry
+    .category("web_tour.tours")
+    .add('PosOrderDoesNotRemainInList', {
+        test: true,
+        url: '/pos/ui',
+        steps: () => [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod('Bank'),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.checkOrdersListEmpty(),
+        ].flat(),
+    });

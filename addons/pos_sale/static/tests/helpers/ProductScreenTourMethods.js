@@ -69,3 +69,12 @@ export function checkCustomerNotes(note) {
             }
         ];
 }
+
+export function checkOrdersListEmpty() {
+    return [
+        {
+            content: 'Check that the orders list is empty',
+            trigger: 'body:not(:has(.order-row))',
+        }
+    ];
+}
