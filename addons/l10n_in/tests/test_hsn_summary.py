@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.account.tests.common import TestTaxCommon
 from odoo.tests import tagged
 
@@ -578,3 +579,68 @@ class TestHSNsummary(TestTaxCommon):
             },
         ))
         self._assert_tests(tests)
+
+    def test_l10n_in_hsn_summary_5(self):
+        """ Test with discount on lines. """
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2021-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'discount': 10.0,
+                    'tax_ids': [Command.set([self.gst_18.id])],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 2.0,
+                    'price_unit': 50.0,
+                    'discount': 10.0,
+                    'tax_ids': [Command.set([self.gst_18.id])],
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'discount': 10.0,
+                    'tax_ids': [Command.set([self.gst_18.id])],
+                }),
+            ],
+        })
+        self.assertEqual(
+            move._l10n_in_get_hsn_summary_table(),
+            {
+                'has_igst': False,
+                'has_gst': True,
+                'has_cess': False,
+                'nb_columns': 7,
+                'display_uom': False,
+                'items': [
+                    {
+                        'l10n_in_hsn_code': self.test_hsn_code_1,
+                        'quantity': 3.0,
+                        'uom_name': self.uom_unit.name,
+                        'rate': 18.0,
+                        'amount_untaxed': 180.0,
+                        'tax_amount_igst': 0.0,
+                        'tax_amount_cgst': 16.2,
+                        'tax_amount_sgst': 16.2,
+                        'tax_amount_cess': 0.0,
+                    },
+                    {
+                        'l10n_in_hsn_code': self.test_hsn_code_2,
+                        'quantity': 1.0,
+                        'uom_name': self.uom_dozen.name,
+                        'rate': 18.0,
+                        'amount_untaxed': 90.0,
+                        'tax_amount_igst': 0.0,
+                        'tax_amount_cgst': 8.1,
+                        'tax_amount_sgst': 8.1,
+                        'tax_amount_cess': 0.0,
+                    },
+                ],
+            },
+        )

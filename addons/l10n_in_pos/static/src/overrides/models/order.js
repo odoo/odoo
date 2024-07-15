@@ -3,6 +3,7 @@
 import { Order } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { roundPrecision as round_pr } from "@web/core/utils/numbers";
 
 patch(Order.prototype, {
     export_for_printing() {
@@ -24,6 +25,7 @@ patch(Order.prototype, {
     _prepareL10nInHsnSummary() {
         const fiscalPosition = this.fiscal_position;
         const baseLines = [];
+        var rounding = this.pos.currency.rounding;
         this.orderlines.forEach((line) => {
             const hsnCode = line.get_product()?.l10n_in_hsn_code;
             if (!hsnCode) {
@@ -37,7 +39,10 @@ patch(Order.prototype, {
 
             baseLines.push({
                 l10n_in_hsn_code: hsnCode,
-                price_unit: line.get_unit_price(),
+                price_unit: round_pr(
+                    line.get_unit_price() * (1 - line.get_discount() / 100),
+                    rounding
+                ),
                 quantity: line.get_quantity(),
                 uom: null,
                 taxes_data: this.pos.mapTaxValues(taxes),
