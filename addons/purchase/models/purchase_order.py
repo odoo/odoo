@@ -108,6 +108,7 @@ class PurchaseOrder(models.Model):
     order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', copy=True)
     notes = fields.Html('Terms and Conditions')
 
+    partner_bill_count = fields.Integer(related='partner_id.supplier_invoice_count')
     invoice_count = fields.Integer(compute="_compute_invoice", string='Bill Count', copy=False, default=0, store=True)
     invoice_ids = fields.Many2many('account.move', compute="_compute_invoice", string='Bills', copy=False, store=True)
     invoice_status = fields.Selection([
@@ -579,6 +580,42 @@ class PurchaseOrder(models.Model):
                 }
                 # supplier info should be added regardless of the user access rights
                 line.product_id.product_tmpl_id.sudo().write(vals)
+
+    def action_bill_matching(self):
+        return self.partner_id.action_open_purchase_matching()
+
+    def _prepare_down_payment_section_values(self):
+        self.ensure_one()
+        context = {'lang': self.partner_id.lang}
+        res = {
+            'product_qty': 0.0,
+            'order_id': self.id,
+            'display_type': 'line_section',
+            'is_downpayment': True,
+            'sequence': (self.order_line[-1:].sequence or 9) + 1,
+            'name': _("Down Payments"),
+        }
+        del context
+        return res
+
+    def _create_downpayments(self, line_vals):
+        self.ensure_one()
+
+        # create section
+        if not any(line.display_type and line.is_downpayment for line in self.order_line):
+            section_line = self.order_line.create(self._prepare_down_payment_section_values())
+        else:
+            section_line = self.order_line.filtered(lambda line: line.display_type and line.is_downpayment)
+        vals = [
+            {
+                **line_val,
+                'sequence': section_line.sequence + i,
+            }
+            for i, line_val in enumerate(line_vals, start=1)
+        ]
+        downpayment_lines = self.env['purchase.order.line'].create(vals)
+        self.order_line += downpayment_lines
+        return downpayment_lines
 
     def action_create_invoice(self):
         """Create the invoice associated to the PO.
