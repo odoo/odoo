@@ -268,8 +268,10 @@ export class HistoryPlugin extends Plugin {
      */
     setIdOnRecords(records) {
         for (const record of records) {
-            if (record.type === "childList") {
-                this.setNodeId(record.target);
+            if (record.type === "childList" && record.addedNodes.length) {
+                for (const node of record.addedNodes) {
+                    this.setNodeId(node);
+                }
             }
         }
     }
@@ -439,11 +441,11 @@ export class HistoryPlugin extends Plugin {
             id = node === this.editable ? "root" : this.generateId();
             this.nodeToIdMap.set(node, id);
             this.idToNodeMap.set(id, node);
-        }
-        node = node.firstChild;
-        while (node) {
-            this.setNodeId(node);
-            node = node.nextSibling;
+            node = node.firstChild;
+            while (node) {
+                this.setNodeId(node);
+                node = node.nextSibling;
+            }
         }
         return id;
     }
