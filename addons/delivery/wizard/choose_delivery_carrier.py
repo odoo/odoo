@@ -70,7 +70,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
             self.delivery_message = vals.get('warning_message', False)
             self.delivery_price = vals['price']
             self.display_price = vals['carrier_price']
-            return {}
+            return {'no_rate': vals.get('no_rate', False)}
         return {'error_message': vals['error_message']}
 
     def update_price(self):
@@ -84,6 +84,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
             'res_model': 'choose.delivery.carrier',
             'res_id': self.id,
             'target': 'new',
+            'context': vals,
         }
 
     def button_confirm(self):
