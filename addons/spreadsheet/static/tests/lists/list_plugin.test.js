@@ -612,6 +612,45 @@ test("List record limit is computed during the import and UPDATE_CELL", async fu
     expect(ds.maxPositionFetched).toBe(42);
 });
 
+test("Spec of web_search_read is minimal", async function () {
+    const spreadsheetData = {
+        lists: {
+            1: {
+                id: 1,
+                columns: ["currency_id", "pognon", "foo"],
+                model: "partner",
+                orderBy: [],
+            },
+        },
+    };
+    const model = await createModelWithDataSource({
+        spreadsheetData,
+        mockRPC: function (route, args) {
+            if (args.method === "web_search_read") {
+                expect(args.kwargs.specification).toEqual({
+                    pognon: {},
+                    currency_id: {
+                        fields: {
+                            name: {},
+                            symbol: {},
+                            decimal_places: {},
+                            display_name: {},
+                            position: {},
+                        },
+                    },
+                    foo: {},
+                });
+                expect.step("web_search_read");
+            }
+        },
+    });
+    setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
+    setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
+    setCellContent(model, "A3", '=ODOO.LIST(1, 1, "foo")');
+    await waitForDataLoaded(model);
+    expect.verifySteps(["web_search_read"]);
+});
+
 test("can import (export) contextual domain", async function () {
     const uid = user.userId;
     const spreadsheetData = {
