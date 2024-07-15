@@ -23,7 +23,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation', {
     ...wTourUtils.dragNDrop({id: "s_cover", name: "Cover", groupName: "Intro"}),
     {
         content: "Check that contact us contain Parseltongue",
-        trigger: ':iframe .s_cover .btn-primary:contains("Contact us in Parseltongue")',
+        trigger: ':iframe .s_cover .btn-outline-secondary:contains("Contact us in Parseltongue")',
     },
     {
         content: "Check that the save button contains 'in fu_GB'",
@@ -64,6 +64,6 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
     ...wTourUtils.dragNDrop({name: "Cover", id: "s_cover", groupName: "Intro"}),
     {
         content: "Check that contact us contain Parseltongue",
-        trigger: ':iframe .s_cover .btn-primary:contains("Contact us in Parseltongue")',
+        trigger: ':iframe .s_cover .btn-outline-secondary:contains("Contact us in Parseltongue")',
     },
 ]);
