@@ -418,7 +418,7 @@
             <xpath expr="//field[@name='holiday_status_id']" position="before">
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_user"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="department_id" groups="hr_holidays.group_hr_holidays_user"/>
+                <field name="department_id" groups="hr_holidays.group_hr_holidays_user" readonly="1"/>
             </xpath>
             <field name="name" position="replace"/>
             <field name="user_id" position="before">
