@@ -161,4 +161,13 @@ odoo.define('pos_sale.tour', function (require) {
     ProductScreen.check.selectedOrderlineHas('product_a', '1', '100');
 
     Tour.register('PosSettleCustomPrice', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    ProductScreen.check.selectedOrderlineHas('Test service product', '1.00', '50.00');
+
+    Tour.register('PosSettleDraftOrder', { test: true, url: '/pos/ui' }, getSteps());
 });
