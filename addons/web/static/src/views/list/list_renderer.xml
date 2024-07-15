@@ -26,8 +26,8 @@
                                 t-on-mouseup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
-                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false"
-                                t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
+                                t-att-data-tooltip-info="makeTooltip(column)"
                                 data-tooltip-delay="1000"
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
@@ -286,6 +286,11 @@
                 <td t-else="" tabindex="-1" />
             </t>
         </tr>
+    </t>
+
+    <t t-name="web.ListHeaderTooltip" owl="1">
+        <t t-esc="field.label"/>
+        <div t-if="field.help" class="mt-2" t-esc="field.help"/>
     </t>
 
 </templates>
