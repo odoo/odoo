@@ -2005,7 +2005,8 @@ class PosSession(models.Model):
         categories = self.env['product.category'].search_read(**params['search_params'])
         category_by_id = {category['id']: category for category in categories}
         for category in categories:
-            category['parent'] = category_by_id[category['parent_id'][0]] if category['parent_id'] else None
+            parent_id = category['parent_id'][0] if category['parent_id'] else None
+            category['parent'] = category_by_id.get(parent_id)
         return categories
 
     def _loader_params_res_currency(self):
