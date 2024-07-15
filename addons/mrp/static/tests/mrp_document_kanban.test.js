@@ -39,7 +39,7 @@ test("MRP documents kanban basic rendering", async () => {
     registerArchs(newArchs);
     await start();
     await openView({ res_model: "product.document", views: [[false, "kanban"]] });
-    await contains(".o_mrp_documents_kanban_upload");
+    await contains("button[name='product_upload_document']");
     await contains(".o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost)", { count: 3 });
     // check control panel buttons
     await contains(".o_cp_buttons .btn-primary", { text: "Upload" });
