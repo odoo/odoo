@@ -165,11 +165,6 @@ def main(args):
         import_translation()
         sys.exit(0)
 
-    # This needs to be done now to ensure the use of the multiprocessing
-    # signaling mechanism for registries loaded with -d
-    if config['workers']:
-        odoo.multi_process = True
-
     stop = config["stop_after_init"]
 
     setup_pid_file()
