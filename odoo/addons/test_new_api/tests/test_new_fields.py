@@ -3056,6 +3056,33 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.env.company, company1)
         self.assertEqual(record.foo, False)
 
+    def test_field_set_prefetch(self):
+        records = self.env['test_new_api.prefetch'].create([
+            {'line_ids': [Command.create({})]},
+            {'line_ids': [Command.create({})]},
+            {'line_ids': [Command.create({})]},
+            {'line_ids': [Command.create({})]},
+        ])
+
+        # This test ensures that the prefetch set is preserved when using Field.__set__(),
+        # which calls BaseModel.write().  The prefetch set is important for write() to
+        # ensure that method modified() can batch the fetching of relational fields.
+        # In this case, modifying 'harry' on a record should add a related field to
+        # recompute through the one2many field 'line_ids', which we expect to be fetched
+        # in batch with the prefetch set.
+
+        # one query for modified, one for the records, one for their lines
+        self.env.invalidate_all()
+        with self.assertQueryCount(3):
+            for index, record in enumerate(records):
+                record.harry = index + 1
+
+        # same result by calling write() directly
+        self.env.invalidate_all()
+        with self.assertQueryCount(3):
+            for index, record in enumerate(records):
+                record.write({'harry': index + 2})
+
 
 class TestX2many(TransactionCase):
 
