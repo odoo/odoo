@@ -233,7 +233,7 @@ class Event(models.Model):
         super(Event, self)._compute_website_url()
         for event in self:
             if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
-                event.website_url = '/event/%s' % slug(event)
+                event.website_url = '%s/event/%s' % (event.website_id.get_base_url(), slug(event))
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
