@@ -197,8 +197,17 @@
                                 <field name="pricelist_id" groups="product.group_product_pricelist" readonly="state != 'draft'"/>
                             </group>
                             <group string="Contact Info">
-                                <field name="email"/>
-                                <field name="mobile"/>
+                                <group class="w-75">
+                                    <label for="email"/>
+                                    <div class="o_row">
+                                        <field name="email"/>
+                                        <button name="action_send_mail" icon="fa-envelope fa-lg" type="object" class="btn-link" title="email" invisible="not email"/>
+                                    </div>
+                                    <label for="mobile"/>
+                                    <div class="o_row">
+                                        <field name="mobile"/>
+                                    </div>
+                                </group>
                             </group>
                         </group>
                     </page>
