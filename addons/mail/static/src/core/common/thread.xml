@@ -70,7 +70,7 @@
 </t>
 
 <t t-name="mail.Thread.jumpUnread">
-    <span t-if="props.thread.selfMember?.localMessageUnreadCounter > 0" class="o-mail-Thread-banner d-flex cursor-pointer shadow-sm small fw-bold">
+    <span t-if="props.thread.showUnreadBanner" class="o-mail-Thread-banner d-flex cursor-pointer shadow-sm small fw-bold">
         <t t-set="alertClass" t-value="'alert alert-info m-0 border-start-0 o-mail-Thread-bannerHover rounded-0 py-1'"/>
         <span t-attf-class="{{ alertClass }} flex-grow-1" t-on-click="onClickUnreadMessagesBanner" t-esc="newMessageBannerText"/>
         <span t-attf-class="{{ alertClass }}" t-on-click="() => props.thread.markAsRead({ sync: true })">Mark as Read<i class="ms-2 fa fa-check-square"/></span>
