@@ -248,3 +248,16 @@ registry
             ProductScreen.selectedOrderlineHas('product_a', '1', '100'),
         ].flat(),
     });
+
+registry
+    .category("web_tour.tours")
+    .add("PosSettleDraftOrder", {
+        test: true,
+        url: "/pos/ui",
+        steps: () => [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectedOrderlineHas('Test service product', '1.00', '50.00'),
+        ].flat(),
+    });
