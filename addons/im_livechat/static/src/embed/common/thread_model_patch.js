@@ -68,4 +68,11 @@ patch(Thread.prototype, {
         this.store.env.services["im_livechat.chatbot"].bus.trigger("MESSAGE_POST", message);
         return message;
     },
+
+    get showUnreadBanner() {
+        if (this.chatbot && !this.chatbot.currentStep?.operatorFound) {
+            return false;
+        }
+        return super.showUnreadBanner;
+    },
 });
