@@ -22,13 +22,25 @@ class ChannelMember(models.Model):
         sessions_to_be_unpinned.write({'unpin_dt': fields.Datetime.now()})
         self.env['bus.bus']._sendmany([(member.partner_id, 'discuss.channel/unpin', {'id': member.channel_id.id}) for member in sessions_to_be_unpinned])
 
+    def _to_store(self, store: Store, **kwargs):
+        super()._to_store(store, **kwargs)
+        for member in self.filtered(lambda m: m.channel_id.channel_type == "livechat"):
+            # sudo: mail.channel - reading livechat channel to check whether current member is a bot is allowed
+            store.add(
+                "discuss.channel.member",
+                {
+                    "id": member.id,
+                    "is_bot": member.partner_id
+                    in member.channel_id.sudo().livechat_channel_id.rule_ids.chatbot_script_id.operator_partner_id,
+                },
+            )
+
     def _partner_data_to_store(self, store: Store, fields=None):
         if self.channel_id.channel_type == 'livechat':
             data = {
                 'active': self.partner_id.active,
                 'id': self.partner_id.id,
                 'is_public': self.partner_id.is_public,
-                'is_bot': self.partner_id.id in self.channel_id.livechat_channel_id.rule_ids.mapped('chatbot_script_id.operator_partner_id.id')
             }
             if self.partner_id.user_livechat_username:
                 data['user_livechat_username'] = self.partner_id.user_livechat_username

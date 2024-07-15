@@ -33,7 +33,7 @@ patch(Thread.prototype, {
     },
 
     get correspondents() {
-        return super.correspondents.filter((correspondent) => !correspondent.persona.is_bot);
+        return super.correspondents.filter((correspondent) => !correspondent.is_bot);
     },
 
     computeCorrespondent() {
