@@ -243,7 +243,7 @@ class FSWatcherBase(object):
             except SyntaxError:
                 _logger.error('autoreload: python code change detected, SyntaxError in %s', path)
             else:
-                if not getattr(odoo, 'phoenix', False):
+                if not server_phoenix:
                     _logger.info('autoreload: python code updated, autoreload activated')
                     restart()
                     return True
@@ -394,7 +394,8 @@ class ThreadedServer(CommonServer):
             os._exit(0)
         elif sig == signal.SIGHUP:
             # restart on kill -HUP
-            odoo.phoenix = True
+            global server_phoenix  # noqa: PLW0603
+            server_phoenix = True
             self.quit_signals_received += 1
             # interrupt run() to start shutdown
             raise KeyboardInterrupt()
@@ -528,7 +529,7 @@ class ThreadedServer(CommonServer):
     def stop(self):
         """ Shutdown the WSGI server. Wait for non daemon threads.
         """
-        if getattr(odoo, 'phoenix', None):
+        if server_phoenix:
             _logger.info("Initiating server reload")
         else:
             _logger.info("Initiating shutdown")
@@ -610,7 +611,7 @@ class ThreadedServer(CommonServer):
                         # `reload` increments `self.quit_signals_received`
                         # and the loop will end after this iteration,
                         # therefore leading to the server stop.
-                        # `reload` also sets the `phoenix` flag
+                        # `reload` also sets the `server_phoenix` flag
                         # to tell the server to restart the server after shutting down.
                     else:
                         time.sleep(1)
@@ -830,7 +831,8 @@ class PreforkServer(CommonServer):
                 raise KeyboardInterrupt
             elif sig == signal.SIGHUP:
                 # restart on kill -HUP
-                odoo.phoenix = True
+                global server_phoenix  # noqa: PLW0603
+                server_phoenix = True
                 raise KeyboardInterrupt
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
@@ -1238,6 +1240,7 @@ class WorkerCron(Worker):
 #----------------------------------------------------------
 
 server = None
+server_phoenix = False
 
 def load_server_wide_modules():
     server_wide_modules = {'base', 'web'} | set(odoo.conf.server_wide_modules)
@@ -1393,7 +1396,7 @@ def start(preload=None, stop=False):
     if watcher:
         watcher.stop()
     # like the legend of the phoenix, all ends with beginnings
-    if getattr(odoo, 'phoenix', False):
+    if server_phoenix:
         _reexec()
 
     return rc if rc else 0
