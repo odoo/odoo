@@ -47,6 +47,10 @@ class SaleCommon(
     def _enable_pricelists(cls):
         cls.env.user.groups_id += cls.env.ref('product.group_product_pricelist')
 
+    @classmethod
+    def _enable_discounts(cls):
+        cls.env.user.groups_id += cls.group_discount_per_so_line
+
 
 class TestSaleCommonBase(TransactionCase):
     ''' Setup with sale test configuration. '''
