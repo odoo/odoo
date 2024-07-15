@@ -376,7 +376,7 @@ actual arch.
                 err = ValidationError(_(
                     "Error while parsing or validating view:\n\n%(error)s",
                     error=tools.ustr(e),
-                    view=self.key or self.id,
+                    view=view.key or view.id,
                 )).with_traceback(e.__traceback__)
                 err.context = getattr(e, 'context', None)
                 raise err from None
