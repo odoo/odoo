@@ -19,6 +19,7 @@
         ],
         'spreadsheet.o_spreadsheet': [
             'web/static/src/views/graph/graph_model.js',
+            'web/static/src/views/pivot/pivot_model.js',
             'web/static/src/polyfills/clipboard.js',
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
             'spreadsheet/static/src/**/*.js',

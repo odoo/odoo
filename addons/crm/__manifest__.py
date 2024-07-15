@@ -73,9 +73,11 @@
         'web.assets_backend': [
             'crm/static/src/**',
             ('remove', 'crm/static/src/views/forecast_graph/**'),
+            ('remove', 'crm/static/src/views/forecast_pivot/**'),
         ],
         'web.assets_backend_lazy': [
             'crm/static/src/views/forecast_graph/**',
+            'crm/static/src/views/forecast_pivot/**',
         ],
         'web.assets_tests': [
             'crm/static/tests/tours/**/*',
