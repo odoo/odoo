@@ -249,7 +249,7 @@ export class dragAndDropHelper {
             this.draggedItemEl.style.gridArea = `${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}`;
 
             gridUtils._gridCleanUp(rowEl, this.draggedItemEl);
-            this._removeGridAndDragHelper(rowEl);
+            this._removeDragHelper(rowEl);
         } else if (this.draggedItemEl.classList.contains("o_grid_item") && this.isDropped()) {
             // Case when dropping a grid item in a non-grid dropzone
             this.odooEditor.observerActive(this.observerName);
@@ -318,9 +318,9 @@ export class dragAndDropHelper {
             dragHelperEl.style.gridArea = `1 / 1 / ${1 + columnRowCount} / ${1 + columnColCount}`;
             rowEl.append(dragHelperEl);
 
-            // Creating the background grid and updating the dropzone (in the
-            // case where the column over the dropzone is bigger than the grid).
-            const backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, columnRowCount);
+            // Updating the dropzone (in the case where the column over the
+            // dropzone is bigger than the grid).
+            const backgroundGridEl = rowEl.querySelector(".o_we_background_grid");
             const rowCount = Math.max(rowEl.dataset.rowCount, columnRowCount);
             dropzoneEl.style.gridRowEnd = rowCount + 1;
 
@@ -372,18 +372,23 @@ export class dragAndDropHelper {
             this.dragState.gridMode = false;
             gridUtils._gridCleanUp(rowEl, this.draggedItemEl);
             this.draggedItemEl.style.removeProperty("z-index");
-            this._removeGridAndDragHelper(rowEl);
+            this._removeDragHelper(rowEl);
+            // Resize the current grid dropzone and its associated background
+            // grid.
             const rowCount = parseInt(rowEl.dataset.rowCount);
-            dropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
+            const gridRowEnd = Math.max(rowCount + 1, 1);
+            dropzoneEl.style.gridRowEnd = gridRowEnd;
+            this.dragState.backgroundGridEl.style.gridRowEnd = gridRowEnd;
             if (this.isOriginalSnippet && !!this.draggedItemEl.firstElementChild?.dataset.snippet) {
                 // Unwrap the dragged element from its column ('div') if it is a
                 // wrapped snippet and if the drag and drop originally applied
                 // on the snippet itself.
                 this.draggedItemEl = this.draggedItemEl.firstElementChild;
             }
+        } else {
+            // Show the dropzone if it is not a grid
+            dropzoneEl.classList.remove("invisible");
         }
-        dropzoneEl.classList.remove("invisible");
-
         delete this.dragState.currentDropzoneEl;
     }
     /**
@@ -570,14 +575,13 @@ export class dragAndDropHelper {
         }
     }
     /**
-     * Removes the background grid and the drag helper and resizes the grid.
+     * Removes the drag helper and resizes the grid.
      *
      * @private
      * @param {HTMLElement} rowEl - The row in grid mode.
      */
-    _removeGridAndDragHelper(rowEl) {
+    _removeDragHelper(rowEl) {
         this.dragState.dragHelperEl.remove();
-        this.dragState.backgroundGridEl.remove();
         this.odooEditor.observerActive(this.observerName);
         gridUtils._resizeGrid(rowEl);
         this.odooEditor.observerUnactive(this.observerName);
