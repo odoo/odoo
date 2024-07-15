@@ -24,6 +24,7 @@ export class TourHelpers {
      */
     check(selector) {
         const element = this._get_action_element(selector);
+        this._ensureEnabled(element, "check");
         hoot.check(element);
     }
 
@@ -43,6 +44,7 @@ export class TourHelpers {
      */
     clear(selector) {
         const element = this._get_action_element(selector);
+        this._ensureEnabled(element, "clear");
         hoot.click(element);
         hoot.clear();
     }
@@ -58,6 +60,7 @@ export class TourHelpers {
      */
     click(selector) {
         const element = this._get_action_element(selector);
+        this._ensureEnabled(element, "click");
         hoot.click(element);
     }
 
@@ -72,6 +75,7 @@ export class TourHelpers {
      */
     dblclick(selector) {
         const element = this._get_action_element(selector);
+        this._ensureEnabled(element, "dblclick");
         hoot.dblclick(element);
     }
 
@@ -101,6 +105,7 @@ export class TourHelpers {
             await new Promise((resolve) => setTimeout(resolve, this.delay));
         };
         const element = this.anchor;
+        this._ensureEnabled(element, "drag and drop");
         const { drop, moveTo } = hoot.drag(element);
         await dragEffectDelay();
         hoot.hover(element, {
@@ -145,6 +150,7 @@ export class TourHelpers {
         if (!InEditor) {
             throw new Error("run 'editor' always on an element in an editor");
         }
+        this._ensureEnabled(element, "edit wysiwyg");
         hoot.click(element);
         this._set_range(element, "start");
         hoot.keyDown("_");
@@ -188,6 +194,7 @@ export class TourHelpers {
      */
     range(value, selector) {
         const element = this._get_action_element(selector);
+        this._ensureEnabled(element, "range");
         hoot.click(element);
         hoot.setInputRange(element, value);
     }
@@ -216,6 +223,7 @@ export class TourHelpers {
      */
     select(value, selector) {
         const element = this._get_action_element(selector);
+        this._ensureEnabled(element, "select");
         hoot.click(element);
         hoot.select(value, { target: element });
     }
@@ -230,6 +238,7 @@ export class TourHelpers {
      */
     selectByIndex(index, selector) {
         const element = this._get_action_element(selector);
+        this._ensureEnabled(element, "selectByIndex");
         hoot.click(element);
         const value = hoot.queryValue(`option:eq(${index})`, { root: element });
         if (value) {
@@ -248,6 +257,7 @@ export class TourHelpers {
      */
     selectByLabel(contains, selector) {
         const element = this._get_action_element(selector);
+        this._ensureEnabled(element, "selectByLabel");
         hoot.click(element);
         const values = hoot.queryAllValues(`option:contains(${contains})`, { root: element });
         hoot.select(values, { target: element });
@@ -296,5 +306,18 @@ export class TourHelpers {
         range.setStart(node, length);
         range.setEnd(node, length);
         selection.addRange(range);
+    }
+
+    /**
+     * Return true when element is not disabled
+     * @param {Node} element
+     */
+    _ensureEnabled(element, action = "do action") {
+        if (element.disabled) {
+            throw new Error(
+                `Element can't be disabled when you want to ${action} on it.
+Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`
+            );
+        }
     }
 }

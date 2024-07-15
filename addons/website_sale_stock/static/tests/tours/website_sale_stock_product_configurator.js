@@ -23,12 +23,20 @@ registry
             // Assert that it's impossible to add less than 1 product (only for the main product).
             configuratorTourUtils.setProductQuantity("Main product", 0),
             configuratorTourUtils.assertProductQuantity("Main product", 1),
-            configuratorTourUtils.decreaseProductQuantity("Main product"),
+            {
+                content: "check that decrease button is disabled",
+                trigger: `.modal button[name=sale_product_configurator_quantity_button_minus]:disabled`,
+                allowDisabled: true,
+            },
             configuratorTourUtils.assertProductQuantity("Main product", 1),
             // Assert that it's impossible to add more products than available.
             configuratorTourUtils.setProductQuantity("Main product", 20),
             configuratorTourUtils.assertProductQuantity("Main product", 10),
-            configuratorTourUtils.increaseProductQuantity("Main product"),
+            {
+                content: "check that increase button is disabled",
+                trigger: `.modal button[name=sale_product_configurator_quantity_button_plus]:disabled`,
+                allowDisabled: true,
+            },
             configuratorTourUtils.assertProductQuantity("Main product", 10),
             {
                 content: "Proceed to checkout",
