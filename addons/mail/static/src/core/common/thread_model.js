@@ -562,6 +562,10 @@ export class Thread extends Record {
         return this.isChatChannel ? "@" : "#";
     }
 
+    get showUnreadBanner() {
+        return this.selfMember?.localMessageUnreadCounter > 0;
+    }
+
     /** @type {undefined|number[]} */
     lastMessageSeenByAllId = Record.attr(undefined, {
         compute() {
