@@ -163,3 +163,18 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            PosSale.checkOrdersListEmpty(),
+        ].flat(),
+});
