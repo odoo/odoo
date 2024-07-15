@@ -104,6 +104,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/webclient/icons.scss', # variables required in list_controller.scss
             'web/static/src/views/**/*',
             ('remove', 'web/static/src/views/graph/**'),
+            ('remove', 'web/static/src/views/pivot/**'),
 
             'web/static/src/webclient/**/*',
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
@@ -138,6 +139,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/scss/_maps.scss',
 
             'web/static/src/views/graph/**',
+            'web/static/src/views/pivot/**',
         ],
         'web.assets_web': [
             ('include', 'web.assets_backend'),
