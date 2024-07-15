@@ -69,12 +69,17 @@ export class SelectMenu extends Component {
         required: { type: Boolean, optional: true },
         searchable: { type: Boolean, optional: true },
         autoSort: { type: Boolean, optional: true },
+        placeholder: { type: String, optional: true },
         searchPlaceholder: { type: String, optional: true },
         value: { optional: true },
         multiSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
         onSelect: { type: Function, optional: true },
         slots: { type: Object, optional: true },
+        element: { type: HTMLElement, optional: true },
+        choiceFetchFunction: { type: Function, optional: true },
+        onCreate: { type: Function, optional: true },
+        disabled: { type: Boolean, optional: true },
     };
 
     static SCROLL_SETTINGS = {
@@ -89,7 +94,12 @@ export class SelectMenu extends Component {
             displayedOptions: [],
             searchValue: "",
         });
+        if (this.props.element) {
+            this.props.element.style.display = "none";
+        }
+        this.buttonRef = useRef("buttonRef");
         this.inputRef = useRef("inputRef");
+        this.selectedIds = [];
         this.menuRef = useChildRef();
         this.debouncedOnInput = useDebounced(
             () => this.onInput(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
@@ -100,9 +110,18 @@ export class SelectMenu extends Component {
         this.selectedChoice = this.getSelectedChoice(this.props);
         onWillUpdateProps((nextProps) => {
             if (this.props.value !== nextProps.value) {
+                if (this.props.choiceFetchFunction) {
+                    nextProps.choices = this.state.choices;
+                }
                 this.selectedChoice = this.getSelectedChoice(nextProps);
             }
         });
+        useEffect(
+            () => {
+                this.buttonRef.el.classList.toggle("disabled", !!this.props.disabled);
+            },
+            () => [this.props.disabled]
+        );
         useEffect(
             () => {
                 if (this.isOpen) {
@@ -136,6 +155,7 @@ export class SelectMenu extends Component {
                     const values = [...this.props.value];
                     values.splice(values.indexOf(c.value), 1);
                     this.props.onSelect(values);
+                    this.setValues(values);
                 },
             };
         });
@@ -161,6 +181,7 @@ export class SelectMenu extends Component {
                 await this.executeOnInput("");
             }
         }
+        await this.fetchOptions();
         this.filterOptions();
     }
 
@@ -194,7 +215,8 @@ export class SelectMenu extends Component {
         await this.props.onInput(searchString);
     }
 
-    onInput(searchString) {
+    async onInput(searchString) {
+        await this.fetchOptions(searchString);
         this.filterOptions(searchString);
         this.state.searchValue = searchString;
 
@@ -213,25 +235,71 @@ export class SelectMenu extends Component {
         return choices.find((c) => c.value === props.value);
     }
 
-    onItemSelected(value) {
+    // The props.onCreate should be a valid/empty function to allow user to
+    // create new options.
+    async onCreateOption(searchString) {
+        let choice = {
+            id: `_${searchString.trim()}`,
+            label: searchString.trim(),
+            value: searchString.trim(),
+        };
+        if (this.props.onCreate) {
+            choice = await this.props.onCreate(choice);
+        }
+        this.props.choices.push(choice);
+        this.state.choices = this.props.choices;
+        await this.onItemSelected(choice);
+    }
+
+    onItemSelected(choice) {
         if (this.props.multiSelect) {
             const values = [...this.props.value];
-            const valueIndex = values.indexOf(value);
+            const valueIndex = values.indexOf(choice.value);
 
             if (valueIndex !== -1) {
                 values.splice(valueIndex, 1);
                 this.props.onSelect(values);
+                this.setValues(values);
             } else {
-                this.props.onSelect([...this.props.value, value]);
+                this.props.onSelect([...this.props.value, choice.value]);
+                this.setValues([...this.props.value, choice.value]);
             }
-        } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
-            this.props.onSelect(value);
+        } else if (!this.selectedChoice || this.selectedChoice.value !== choice.value) {
+            this.props.onSelect(choice.value);
+            this.setValues([choice.value]);
+        }
+    }
+
+    setValues(values) {
+        if (this.props.element) {
+            this.props.choices.forEach((choice) => {
+                if (!values.includes(choice.value) && this.selectedIds.includes(choice.id)) {
+                    this.selectedIds.splice(this.selectedIds.indexOf(choice.id), 1);
+                } else if (values.includes(choice.value) && !this.selectedIds.includes(choice.id)) {
+                    this.selectedIds.push(choice.id);
+                }
+            });
+            this.props.element.value = this.selectedIds;
         }
     }
 
     // ==========================================================================================
     // #                                         Search                                         #
     // ==========================================================================================
+
+    /**
+     * Fetches the choices by calling choiceFetchFunction provided in props.
+     * After fetchning the choices set the choices in state and props.
+     *
+     * @param {String} searchString
+     */
+    async fetchOptions(searchString = "") {
+        if (this.props.choiceFetchFunction) {
+            const choices = await this.props.choiceFetchFunction(searchString);
+            this.state.choices = choices;
+            this.props.choices = choices;
+        }
+    }
 
     /**
      * Filters the choices based on the searchString and
