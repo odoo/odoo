@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { migrate, ODOO_VERSION } from "@spreadsheet/o_spreadsheet/migration";
-import { Model } from "@odoo/o-spreadsheet";
+import { ODOO_VERSION } from "@spreadsheet/o_spreadsheet/migration";
+import { Model, load } from "@odoo/o-spreadsheet";
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
 
 defineSpreadsheetModels();
@@ -10,6 +10,7 @@ describe.current.tags("headless");
 
 test("Odoo formulas are migrated", () => {
     const data = {
+        version: 16,
         sheets: [
             {
                 cells: {
@@ -24,7 +25,7 @@ test("Odoo formulas are migrated", () => {
             },
         ],
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     expect(migratedData.sheets[0].cells.A1.content).toBe(`=PIVOT.VALUE("1")`);
     expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1")`);
     expect(migratedData.sheets[0].cells.A3.content).toBe(`=ODOO.FILTER.VALUE("1")`);
@@ -36,6 +37,7 @@ test("Odoo formulas are migrated", () => {
 
 test("Pivot 'day' arguments are migrated", () => {
     const data = {
+        version: 16,
         odooVersion: 1,
         sheets: [
             {
@@ -50,7 +52,7 @@ test("Pivot 'day' arguments are migrated", () => {
             },
         ],
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     expect(migratedData.sheets[0].cells.A1.content).toBe(`=PIVOT.VALUE("1","07/21/2022")`);
     expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1","12/11/2022")`);
     expect(migratedData.sheets[0].cells.A3.content).toBe(`=PIVOT.VALUE("1","07/21/2021")`);
@@ -63,6 +65,7 @@ test("Pivot 'day' arguments are migrated", () => {
 
 test("Global filters: pivot fields is correctly added", () => {
     const data = {
+        version: 16,
         globalFilters: [
             {
                 id: "Filter1",
@@ -85,7 +88,7 @@ test("Global filters: pivot fields is correctly added", () => {
             },
         },
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     const filter = migratedData.globalFilters[0];
     const pivot = migratedData.pivots["1"];
     expect(pivot.fieldMatching).toEqual({
@@ -99,6 +102,7 @@ test("Global filters: pivot fields is correctly added", () => {
 
 test("Global filters: date is correctly migrated", () => {
     const data = {
+        version: 16,
         globalFilters: [
             {
                 id: "1",
@@ -120,7 +124,7 @@ test("Global filters: date is correctly migrated", () => {
             },
         ],
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     const [f1, f2, f3] = migratedData.globalFilters;
     expect(f1.defaultValue).toEqual({ yearOffset: -1 });
     expect(f2.defaultValue).toEqual({ yearOffset: -2 });
@@ -129,6 +133,7 @@ test("Global filters: date is correctly migrated", () => {
 
 test("List name default is model name", () => {
     const data = {
+        version: 16,
         lists: {
             1: {
                 name: "Name",
@@ -139,7 +144,7 @@ test("List name default is model name", () => {
             },
         },
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     expect(Object.values(migratedData.lists).length).toBe(2);
     expect(migratedData.lists["1"].name).toBe("Name");
     expect(migratedData.lists["2"].name).toBe("Model");
@@ -147,6 +152,7 @@ test("List name default is model name", () => {
 
 test("Pivot name default is model name", () => {
     const data = {
+        version: 16,
         pivots: {
             1: {
                 name: "Name",
@@ -163,7 +169,7 @@ test("Pivot name default is model name", () => {
             },
         },
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     expect(Object.values(migratedData.pivots).length).toBe(2);
     expect(migratedData.pivots["1"].name).toBe("Name");
     expect(migratedData.pivots["2"].name).toBe("Model");
@@ -171,6 +177,7 @@ test("Pivot name default is model name", () => {
 
 test("fieldMatchings are moved from filters to their respective datasources", () => {
     const data = {
+        version: 16,
         globalFilters: [
             {
                 id: "Filter",
@@ -223,7 +230,7 @@ test("fieldMatchings are moved from filters to their respective datasources", ()
             },
         ],
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     expect(migratedData.pivots["1"].fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "many2one" },
     });
@@ -237,6 +244,7 @@ test("fieldMatchings are moved from filters to their respective datasources", ()
 
 test("fieldMatchings offsets are correctly preserved after migration", () => {
     const data = {
+        version: 16,
         globalFilters: [
             {
                 id: "Filter",
@@ -292,7 +300,7 @@ test("fieldMatchings offsets are correctly preserved after migration", () => {
             },
         ],
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     expect(migratedData.pivots["1"].fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "date", offset: "-1" },
     });
@@ -348,7 +356,7 @@ test("group year/quarter/month filters to a single filter type", () => {
             },
         ],
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     const filters = migratedData.globalFilters;
     expect(filters).toEqual([
         {
@@ -392,6 +400,7 @@ test("group year/quarter/month filters to a single filter type", () => {
 
 test("Pivot are migrated from 6 to 9", () => {
     const data = {
+        version: 16,
         pivots: {
             1: {
                 name: "Name",
@@ -403,7 +412,7 @@ test("Pivot are migrated from 6 to 9", () => {
             },
         },
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     expect(Object.values(migratedData.pivots).length).toBe(1);
     expect(migratedData.pivots["1"]).toEqual({
         type: "ODOO",
@@ -419,6 +428,7 @@ test("Pivot are migrated from 6 to 9", () => {
 
 test("Pivot are migrated from 9 to 10", () => {
     const data = {
+        version: 16,
         odooVersion: 9,
         pivots: {
             1: {
@@ -432,7 +442,7 @@ test("Pivot are migrated from 9 to 10", () => {
             },
         },
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     expect(Object.values(migratedData.pivots).length).toBe(1);
     expect(migratedData.pivots["1"]).toEqual({
         type: "ODOO",
@@ -447,6 +457,7 @@ test("Pivot are migrated from 9 to 10", () => {
 
 test("Pivot formulas are migrated from 9 to 10", () => {
     const data = {
+        version: 16,
         odooVersion: 9,
         sheets: [
             {
@@ -460,7 +471,7 @@ test("Pivot formulas are migrated from 9 to 10", () => {
             },
         ],
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     expect(migratedData.sheets[0].cells.A1.content).toBe(`=PIVOT.VALUE("1")`);
     expect(migratedData.sheets[0].cells.A2.content).toBe(`=PIVOT.HEADER("1")`);
     expect(migratedData.sheets[0].cells.A3.content).toBe(`=ODOO.PIVOT.POSITION("1")`);
@@ -470,6 +481,7 @@ test("Pivot formulas are migrated from 9 to 10", () => {
 
 test("Pivot formulas using pivot positions are migrated (11 to 12)", () => {
     const data = {
+        version: 16,
         odooVersion: 9,
         sheets: [
             {
@@ -486,7 +498,7 @@ test("Pivot formulas using pivot positions are migrated (11 to 12)", () => {
             },
         ],
     };
-    const migratedData = migrate(data);
+    const migratedData = load(data);
     expect(migratedData.sheets[0].cells.A1.content).toBe(
         `=-PIVOT.VALUE("1","balance","#account_id",12,"date:quarter","4/"&ODOO.FILTER.VALUE("Year"))`
     );
