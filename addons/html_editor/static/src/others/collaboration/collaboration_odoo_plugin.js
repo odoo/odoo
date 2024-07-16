@@ -5,6 +5,8 @@ import { debounce } from "@web/core/utils/timing";
 import { RemoteConnectionError, RemoteConnections } from "./remote/RemoteConnections";
 import { Mutex } from "@web/core/utils/concurrency";
 import { RequestError } from "./remote/remoteHelpers";
+import { ConflictDialog } from "./conflict_dialog";
+import { markup } from "@odoo/owl";
 
 /**
  * @typedef {Object} CollaborationSelection
@@ -600,16 +602,15 @@ export class CollaborationOdooPlugin extends Plugin {
         processSnapshots();
     }
     showConflictDialog() {
-        // todo: implement conflict dialog
-        // if (this.conflictDialogOpened) {
-        //     return;
-        // }
-        // const content = markup(this.odooEditor.editable.cloneNode(true).outerHTML);
-        // this.conflictDialogOpened = true;
-        // this.env.services.dialog.add(ConflictDialog, {
-        //     content,
-        //     close: () => (this.conflictDialogOpened = false),
-        // });
+        if (this.conflictDialogOpened) {
+            return;
+        }
+        const content = markup(this.editable.cloneNode(true).outerHTML);
+        this.conflictDialogOpened = true;
+        this.services.dialog.add(ConflictDialog, {
+            content,
+            close: () => (this.conflictDialogOpened = false),
+        });
     }
 
     getHistorySnapshot() {
