@@ -12,7 +12,7 @@ import selectors
 import threading
 import time
 from collections import defaultdict, deque
-from contextlib import closing, suppress
+from contextlib import contextmanager, suppress
 from enum import IntEnum
 from psycopg2.pool import PoolError
 from urllib.parse import urlparse
@@ -35,15 +35,25 @@ _logger = logging.getLogger(__name__)
 
 
 MAX_TRY_ON_POOL_ERROR = 10
-DELAY_ON_POOL_ERROR = 0.03
+DELAY_ON_POOL_ERROR = 0.3
+JITTER_ON_POOL_ERROR = 0.6
+# Keep 15% of the cursors to handle connection requests, rest can be used to
+# fetch notifications/process incoming messages.
+WS_MAXCONN = int(int(config.get("db_maxconn_gevent") or config["db_maxconn"]) * 0.85)
+WS_CURSORS_SEM = threading.Semaphore(WS_MAXCONN)
 
 
+@contextmanager
 def acquire_cursor(db):
     """ Try to acquire a cursor up to `MAX_TRY_ON_POOL_ERROR` """
-    for tryno in range(1, MAX_TRY_ON_POOL_ERROR + 1):
-        with suppress(PoolError):
-            return odoo.registry(db).cursor()
-        time.sleep(random.uniform(DELAY_ON_POOL_ERROR, DELAY_ON_POOL_ERROR * tryno))
+    with WS_CURSORS_SEM:
+        delay = DELAY_ON_POOL_ERROR + random.uniform(0, JITTER_ON_POOL_ERROR)
+        for _ in range(MAX_TRY_ON_POOL_ERROR):
+            with suppress(PoolError), odoo.registry(db).cursor() as cursor:
+                yield cursor
+                return
+            time.sleep(delay)
+            delay *= 1.5
     raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
 
 
@@ -470,6 +480,7 @@ class Websocket:
         self._send_frame(Frame(opcode, message))
 
     def _send_frame(self, frame):
+        start_time = time.time()
         if frame.opcode in CTRL_OP and len(frame.payload) > 125:
             raise ProtocolError(
                 "Control frames should have a payload length smaller than 126"
@@ -503,6 +514,7 @@ class Websocket:
         output.extend(frame.payload)
         self.__socket.sendall(output)
         self._timeout_manager.acknowledge_frame_sent(frame)
+        _logger.info("[GEVENT.DEBUG] Sending frame took %0.3fms, size: %d bytes", (time.time() - start_time) * 1000, len(output))
         if not isinstance(frame, CloseFrame):
             return
         self.state = ConnectionState.CLOSING
@@ -588,6 +600,7 @@ class Websocket:
                 _logger.warning("Bus operation aborted; registry has been reloaded")
             else:
                 _logger.error(exc, exc_info=True)
+        _logger.info("[GEVENT.DEBUG] Disconnect due to transport error: %s", type(exc).__name__)
         self.disconnect(code, reason)
 
     def _limit_rate(self):
@@ -613,7 +626,7 @@ class Websocket:
         """
         if not self.__event_callbacks[event_type]:
             return
-        with closing(acquire_cursor(self._db)) as cr:
+        with acquire_cursor(self._db) as cr:
             lang = api.Environment(cr, self._session.uid, {})['res.lang']._get_code(self._session.context.get('lang'))
             env = api.Environment(cr, self._session.uid, dict(self._session.context, lang=lang))
             for callback in self.__event_callbacks[event_type]:
@@ -636,7 +649,9 @@ class Websocket:
         session = root.session_store.get(self._session.sid)
         if not session:
             raise SessionExpiredException()
+        sem_start_time = time.time()
         with acquire_cursor(session.db) as cr:
+            _logger.info("[GEVENT.DEBUG] Cursor acquired after %0.3fms", (time.time() - sem_start_time) * 1000)
             env = api.Environment(cr, session.uid, dict(session.context, lang=None))
             if session.uid is not None and not check_session(session, env):
                 raise SessionExpiredException()
@@ -763,7 +778,9 @@ class WebsocketRequest:
         ) as exc:
             raise InvalidDatabaseException() from exc
 
-        with closing(acquire_cursor(self.db)) as cr:
+        start_time = time.time()
+        with acquire_cursor(self.db) as cr:
+            _logger.info("[GEVENT.DEBUG] Cursor aqcuired for ws request after %0.3fms, event_name=%s, data=%s", (time.time() - start_time) * 1000, event_name, data)
             lang = api.Environment(cr, self.session.uid, {})['res.lang']._get_code(self.session.context.get('lang'))
             self.env = api.Environment(cr, self.session.uid, dict(self.session.context, lang=lang))
             threading.current_thread().uid = self.env.uid

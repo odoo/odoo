@@ -34,7 +34,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = "1.0.7";
+export const WORKER_VERSION = "1.0.8";
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
 /**
@@ -45,7 +45,7 @@ const MAXIMUM_RECONNECT_DELAY = 60000;
  * for SharedWorker and this class implements it.
  */
 export class WebsocketWorker {
-    INITIAL_RECONNECT_DELAY = 1000;
+    INITIAL_RECONNECT_DELAY = 10000 * Math.random();
     RECONNECT_JITTER = 1000;
 
     constructor() {
@@ -388,10 +388,10 @@ export class WebsocketWorker {
      * applied to the reconnect attempts.
      */
     _retryConnectionWithDelay() {
+        this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
         this.connectRetryDelay =
             Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) +
             this.RECONNECT_JITTER * Math.random();
-        this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
     }
 
     /**
