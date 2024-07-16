@@ -797,6 +797,8 @@ class ConstantMapping(Mapping):
         return self._value
 
 
+initial_snap = None
+
 def dumpstacks(sig=None, frame=None, thread_idents=None):
     """ Signal handler: dump a stack trace for each existing thread or given
     thread(s) specified through the ``thread_idents`` sequence.
@@ -852,6 +854,22 @@ def dumpstacks(sig=None, frame=None, thread_idents=None):
                 code.append(line)
 
     _logger.info("\n".join(code))
+    import tracemalloc; tracemalloc.start(5)
+    filters = [
+        tracemalloc.Filter(inclusive=False, filename_pattern="*tracemalloc*"),
+        tracemalloc.Filter(inclusive=False, filename_pattern="*linecache*"),
+        tracemalloc.Filter(inclusive=False, filename_pattern="*importlib._bootstrap*"),
+    ]
+    if odoo.evented:
+        global initial_snap
+        initial_snap = initial_snap or tracemalloc.take_snapshot()
+        after_snap = tracemalloc.take_snapshot()
+        stats = after_snap.filter_traces(filters).compare_to(initial_snap.filter_traces(filters), 'traceback')
+        initial_snap = after_snap
+        print(f"\n[GEVENT.DEBUG] Memory usage, time={datetime.datetime.now()}")
+        [print(stat, *(line for line in stat.traceback.format()), sep='\n', end='\n\n') for stat in stats[:5]]
+        from odoo.addons.bus.websocket import Websocket
+        Websocket._dump_stats()
 
 def freehash(arg):
     try:

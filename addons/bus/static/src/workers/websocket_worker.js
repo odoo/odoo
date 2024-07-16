@@ -45,7 +45,7 @@ const MAXIMUM_RECONNECT_DELAY = 60000;
  * for SharedWorker and this class implements it.
  */
 export class WebsocketWorker {
-    INITIAL_RECONNECT_DELAY = 10000 * Math.random();
+    INITIAL_RECONNECT_DELAY = 30000 * Math.random();
     RECONNECT_JITTER = 1000;
 
     constructor() {

@@ -43,17 +43,12 @@ WS_MAXCONN = int(int(config.get("db_maxconn_gevent") or config["db_maxconn"]) * 
 WS_CURSORS_SEM = threading.Semaphore(WS_MAXCONN)
 
 
-@contextmanager
 def acquire_cursor(db):
     """ Try to acquire a cursor up to `MAX_TRY_ON_POOL_ERROR` """
-    with WS_CURSORS_SEM:
-        delay = DELAY_ON_POOL_ERROR + random.uniform(0, JITTER_ON_POOL_ERROR)
-        for _ in range(MAX_TRY_ON_POOL_ERROR):
-            with suppress(PoolError), odoo.registry(db).cursor() as cursor:
-                yield cursor
-                return
-            time.sleep(delay)
-            delay *= 1.5
+    for tryno in range(1, MAX_TRY_ON_POOL_ERROR + 1):
+        with suppress(PoolError):
+            return odoo.registry(db).cursor()
+        time.sleep(random.uniform(DELAY_ON_POOL_ERROR, DELAY_ON_POOL_ERROR * tryno))
     raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
 
 
@@ -319,6 +314,32 @@ class Websocket:
         cls.__event_callbacks[LifecycleEvent.CLOSE].add(func)
         return func
 
+    @classmethod
+    def _dump_stats(cls):
+        """ Print the number of connected websockets and their
+        respective state """
+        count_by_state = defaultdict(int)
+        for websocket in _websocket_instances:
+            count_by_state[websocket.state] += 1
+        _logger.info(
+            '[GEVENT.DEBUG] Number of websockets: %d, Opened: %d, Closing: %d, Closed: %d',
+            len(_websocket_instances),
+            count_by_state[ConnectionState.OPEN],
+            count_by_state[ConnectionState.CLOSING],
+            count_by_state[ConnectionState.CLOSED]
+        )
+        subscribed_websockets = {item for row in dispatch._channels_to_ws.values() for item in row}
+        count_by_state = defaultdict(int)
+        for websocket in subscribed_websockets:
+            count_by_state[websocket.state] += 1
+        _logger.info(
+            '[GEVENT.DEBUG] Number of subscribed websockets: %d, Opened: %d, Closing: %d, Closed: %d',
+            len(subscribed_websockets),
+            count_by_state[ConnectionState.OPEN],
+            count_by_state[ConnectionState.CLOSING],
+            count_by_state[ConnectionState.CLOSED]
+        )
+
     def subscribe(self, channels, last):
         """ Subscribe to bus channels. """
         self._channels = channels
@@ -513,8 +534,8 @@ class Websocket:
             )
         output.extend(frame.payload)
         self.__socket.sendall(output)
+        _logger.info("[GEVENT.DEBUG] WS=%d, GLT=%d, Sending frame took %0.3fms, size: %d bytes", id(self), threading.current_thread().ident, (time.time() - start_time) * 1000, len(output))
         self._timeout_manager.acknowledge_frame_sent(frame)
-        _logger.info("[GEVENT.DEBUG] Sending frame took %0.3fms, size: %d bytes", (time.time() - start_time) * 1000, len(output))
         if not isinstance(frame, CloseFrame):
             return
         self.state = ConnectionState.CLOSING
@@ -600,7 +621,7 @@ class Websocket:
                 _logger.warning("Bus operation aborted; registry has been reloaded")
             else:
                 _logger.error(exc, exc_info=True)
-        _logger.info("[GEVENT.DEBUG] Disconnect due to transport error: %s", type(exc).__name__)
+        _logger.info("[GEVENT.DEBUG] WS=%d, GLT=%d Disconnect due to transport error: %s", id(self), threading.current_thread().ident, type(exc).__name__)
         self.disconnect(code, reason)
 
     def _limit_rate(self):
@@ -651,7 +672,7 @@ class Websocket:
             raise SessionExpiredException()
         sem_start_time = time.time()
         with acquire_cursor(session.db) as cr:
-            _logger.info("[GEVENT.DEBUG] Cursor acquired after %0.3fms", (time.time() - sem_start_time) * 1000)
+            _logger.info("[GEVENT.DEBUG] WS=%d, GLT=%d Cursor acquired for dispatch after %0.3fms", id(self), threading.current_thread().ident, (time.time() - sem_start_time) * 1000)
             env = api.Environment(cr, session.uid, dict(session.context, lang=None))
             if session.uid is not None and not check_session(session, env):
                 raise SessionExpiredException()
@@ -780,14 +801,16 @@ class WebsocketRequest:
 
         start_time = time.time()
         with acquire_cursor(self.db) as cr:
-            _logger.info("[GEVENT.DEBUG] Cursor aqcuired for ws request after %0.3fms, event_name=%s, data=%s", (time.time() - start_time) * 1000, event_name, data)
+            _logger.info("[GEVENT.DEBUG] WS=%d, GLT=%d Cursor aqcuired for request after %0.3fms, event_name=%s, data=%s", id(self), threading.current_thread().ident, (time.time() - start_time) * 1000, event_name, data)
             lang = api.Environment(cr, self.session.uid, {})['res.lang']._get_code(self.session.context.get('lang'))
             self.env = api.Environment(cr, self.session.uid, dict(self.session.context, lang=lang))
             threading.current_thread().uid = self.env.uid
+            start_time = time.time()
             service_model.retrying(
                 functools.partial(self._serve_ir_websocket, event_name, data),
                 self.env,
             )
+            _logger.info("[GEVENT.DEBUG] WS=%d, GLT=%d  Websocket request took %0.3fms", id(self), threading.current_thread().ident, (time.time() - start_time) * 1000)
 
     def _serve_ir_websocket(self, event_name, data):
         """
