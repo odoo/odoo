@@ -29,16 +29,7 @@
                     </t>
 
                     <t t-set-slot="control-panel-additional-actions">
-                        <CogMenu
-                            getActiveIds="() => model.root.isNew ? [] : [model.root.resId]"
-                            context="props.context"
-                            items="props.info.actionMenus ? this.actionMenuItems : {}"
-                            isDomainSelected="model.root.isDomainSelected"
-                            resModel="model.root.resModel"
-                            domain="props.domain"
-                            onActionExecuted="() => model.load({ resId: model.root.resId, resIds: model.root.resIds })"
-                            shouldExecuteAction.bind="shouldExecuteAction"
-                        />
+                        <CogMenu t-props="cogMenuProps"/>
                     </t>
 
                     <t t-set-slot="control-panel-status-indicator">
