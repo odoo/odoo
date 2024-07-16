@@ -62,45 +62,23 @@
                     <page string="Products" name="products">
                       <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'" mode="tree,kanban">
                             <kanban class="o_kanban_mobile">
-                                <field name="price_subtotal"/>
-                                <field name="price_unit"/>
-                                <field name="company_id"/>
-                                <field name="full_product_name"/>
-                                <field name="qty"/>
-                                <field name="product_uom_id"/>
-                                <field name="price_subtotal_incl"/>
-                                <field name="refunded_orderline_id"/>
-                                <t t-name="kanban-box">
-                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                            <div class="row g-0">
-                                                <div class="col-2 pe-3">
-                                                    <img t-att-src="kanban_image('product.product', 'image_128', record.product_id.raw_value)" t-att-title="record.product_id.value" t-att-alt="record.product_id.value" style="max-width: 100%;"/>
-                                                </div>
-                                                <div class="col-8">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <strong t-out="record.full_product_name.value" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12 text-muted">
-                                                            Quantity: <t t-out="record.qty.value"/> <t t-out="record.product_uom_id.value"/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12 text-muted">
-                                                            Unit price: <field name="price_unit" widget="monetary"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-2">
-                                                    <div class="col">
-                                                        <field name="price_subtotal_incl" widget="monetary" />
-                                                    </div>
-                                                </div>
-                                            </div>
+                                <t t-name="kanban-card" class="row g-0">
+                                    <aside class="col-2 pe-3">
+                                        <field name="product_id" widget="image" options="{'preview_image': 'image_128'}"/>
+                                    </aside>
+                                    <main class="col">
+                                        <div class="d-flex">
+                                            <field name="full_product_name" class="fw-bolder"/>
+                                            <field name="price_subtotal_incl" widget="monetary" class="ms-auto me-3"/>
                                         </div>
-                                    </t>
+                                        <div class="text-muted">
+                                            Quantity: <field name="qty"/> <field name="product_uom_id"/>
+                                        </div>
+                                        <div class="text-muted">
+                                            Unit price: <field name="price_unit" widget="monetary"/>
+                                        </div>
+                                    </main>
+                                </t>
                             </kanban>
                             <tree string="Order lines" editable="bottom">
                                 <field name="name" column_invisible="True"/>
@@ -226,47 +204,24 @@
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" create="0" sample="1">
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="amount_total"/>
-                <field name="date_order"/>
-                <field name="state"/>
-                <field name="pos_reference"/>
-                <field name="partner_id"/>
                 <field name="currency_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title">
-                                        <span t-if="record.partner_id.value">
-                                            <t t-esc="record.partner_id.value"/>
-                                        </span>
-                                        <span t-else="">
-                                            <t t-esc="record.name.value"/>
-                                        </span>
-                                    </strong>
-                                </div>
-                                <strong><field name="amount_total" widget="monetary"/></strong>
+                    <t t-name="kanban-card">
+                            <div class="d-flex mb-1">
+                                <span t-if="record.partner_id.value">
+                                    <field name="partner_id" class="fw-bolder"/>
+                                </span>
+                                <span t-else="">
+                                    <field name="name" class="fw-bolder"/>
+                                </span>
+                                <field name="amount_total" widget="monetary" class="fw-bolder ms-auto"/>
                             </div>
-                            <div class="row">
-                                <div class="col-12">
-                                <span><t t-esc="record.pos_reference.value"/></span>
+                            <field name="pos_reference" />
+                            <div class="d-flex">
+                                <field name="date_order" class="text-muted"/>
+                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'default',
+                                'invoiced': 'success', 'cancel': 'danger'}}" class="ms-auto"/>
                             </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-8 text-muted">
-                                    <span><t t-esc="record.date_order.value"/></span>
-                                </div>
-                                <div class="col-4">
-                                    <span class="float-end text-end">
-                                        <field name="state" widget="label_selection" options="{'classes': {'draft': 'default',
-                                        'invoiced': 'success', 'cancel': 'danger'}}"/>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
                     </t>
                 </templates>
             </kanban>
