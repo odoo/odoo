@@ -342,7 +342,10 @@ test("a failing tour with disabled element", async () => {
     await advanceTime(750);
     await advanceTime(10000);
     expect.verifySteps([
-        `error: Tour tour3 failed at step .button1. Element has been found but is disabled.`,
+        `error: Tour tour3 failed at step .button1. Element has been found. The error seems to be with step.run`,
+        `error: Element can't be disabled when you want to click on it.
+Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`,
+        `error: Tour tour3 failed at step .button2. The cause is that trigger (.button2) element cannot be found in DOM.`,
     ]);
 });
 

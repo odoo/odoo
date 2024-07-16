@@ -112,12 +112,10 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_my", {
         },
         {
             trigger: "textarea[disabled]",
-            allowDisabled: true,
         },
         {
             content: "Once sent feedback area is readonly",
             trigger: "fieldset input.o_mailing_subscription_opt_out_reason[disabled]",
-            allowDisabled: true,
         },
         {
             content: "Now exclude me",

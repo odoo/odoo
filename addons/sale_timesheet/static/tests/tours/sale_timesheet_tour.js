@@ -50,7 +50,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     content: 'Wait for the confirmation to finish. State should be "Sales Order"',
     trigger: '.o_field_widget[name=state] .o_arrow_button_current:contains("Sales Order")',
-    allowDisabled: true,
 }, stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
 {

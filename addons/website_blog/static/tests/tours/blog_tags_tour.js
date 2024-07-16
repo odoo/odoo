@@ -34,7 +34,6 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
     }, {
         content: "Verify tag appears in options",
         trigger: "we-customizeblock-option:contains(Tags) we-list input[data-name=testtag]",
-        allowDisabled: true,
     },
     ...wTourUtils.clickOnSave(),
     {

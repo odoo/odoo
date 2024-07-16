@@ -90,8 +90,6 @@ function describeWhyStepFailed(step) {
         return `The cause is that trigger (${step.trigger}) element cannot be found in DOM.`;
     } else if (!stepState.isVisible) {
         return "Element has been found but isn't displayed. (Use 'step.allowInvisible: true,' if you want to skip this check)";
-    } else if (!stepState.isEnabled) {
-        return "Element has been found but is disabled.";
     } else if (stepState.isBlocked) {
         return "Element has been found but DOM is blocked by UI.";
     } else if (!stepState.hasRun) {
@@ -218,14 +216,7 @@ function canContinue(el, step) {
     const isBlocked =
         document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
     state.isBlocked = !!isBlocked;
-    state.isEnabled = step.allowDisabled || !el.disabled;
-    state.canContinue = !!(
-        state.isInDoc &&
-        state.isElement &&
-        state.isVisible &&
-        state.isEnabled &&
-        !state.isBlocked
-    );
+    state.canContinue = !!(state.isInDoc && state.isElement && state.isVisible && !state.isBlocked);
     return state.canContinue;
 }
 
