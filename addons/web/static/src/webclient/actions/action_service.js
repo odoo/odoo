@@ -1101,11 +1101,24 @@ export function makeActionManager(env, router = _router) {
      */
     async function _executeActWindowAction(action, options) {
         const views = [];
+        const unknown = [];
         for (const [, type] of action.views) {
-            if (type !== "search" && session.view_info[type]) {
+            if (type === "search") {
+                continue;
+            }
+            if (session.view_info[type]) {
                 const { icon, display_name, multi_record: multiRecord } = session.view_info[type];
                 views.push({ icon, display_name, multiRecord, type });
+            } else {
+                unknown.push(type);
             }
+        }
+        if (unknown.length) {
+            throw new Error(
+                `View types not defined ${unknown.join(", ")} found in act_window action ${
+                    action.id
+                }`
+            );
         }
         if (!views.length) {
             throw new Error(`No view found for act_window action ${action.id}`);

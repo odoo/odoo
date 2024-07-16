@@ -1484,7 +1484,6 @@ test("switch request to unknown view type", async () => {
 });
 
 test.tags("desktop")("execute action with unknown view type", async () => {
-    Partner._views["unknown,false"] = "<unknown/>";
     defineActions([
         {
             id: 33,
@@ -1500,9 +1499,9 @@ test.tags("desktop")("execute action with unknown view type", async () => {
         },
     ]);
     await mountWithCleanup(WebClient);
-    await getService("action").doAction(33);
-    expect(".o_list_view").toHaveCount(1);
-    expect("nav.o_cp_switch_buttons button").toHaveCount(2);
+    await expect(getService("action").doAction(33)).rejects.toThrow(
+        /View types not defined unknown found in act_window action 33/
+    );
 });
 
 test("flags field of ir.actions.act_window is used", async () => {
