@@ -1,9 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests.common import TransactionCase, tagged
+from odoo.tools._monkeypatches import new_get_soap_client
 from odoo.exceptions import ValidationError
 from unittest.mock import patch
 
 import stdnum.eu.vat
+from lxml import etree
+from zeep import Client, Transport
+from zeep.wsdl import Document
 
 
 class TestStructure(TransactionCase):
@@ -101,6 +105,14 @@ class TestStructure(TransactionCase):
         # Test invalid VAT (should raise a ValidationError)
         with self.assertRaises(ValidationError):
             test_partner.write({'vat': "136695978"})
+
+    def test_soap_client_for_vies_loads(self):
+        # Test of stdnum get_soap_client monkeypatch. This test is mostly to
+        # see that no unexpected import errors are thrown and not caught.
+        with patch.object(Document, '_get_xml_document', return_value=etree.Element("root")), \
+             patch.object(Client, 'service', return_value=None):
+            doc = Document(location=None, transport=Transport())
+            new_get_soap_client(doc, 30)
 
 
 @tagged('-standard', 'external')
