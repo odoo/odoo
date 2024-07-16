@@ -30,7 +30,7 @@ class TeamMember(models.Model):
     @api.depends('user_id', 'crm_team_id')
     def _compute_lead_day_count(self):
         day_date = fields.datetime.now() - datetime.timedelta(hours=24)
-        daily_leads_counts = self._get_lead_from_date(day_date, active_test=True)
+        daily_leads_counts = self._get_lead_from_date(day_date)
 
         for member in self:
             member.lead_day_count = daily_leads_counts.get((member.user_id.id, member.crm_team_id.id), 0)
