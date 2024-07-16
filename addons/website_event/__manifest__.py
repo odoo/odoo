@@ -63,6 +63,7 @@
             ('remove', 'website_event/static/src/snippets/**/options.js'),
         ],
         'web.assets_frontend': [
+            'website_event/static/src/js/website_event.js',
             'website_event/static/src/js/tours/**/*',
             'website_event/static/src/scss/event_templates_common.scss',
             'website_event/static/src/scss/event_templates_list.scss',

@@ -21,9 +21,10 @@
         <div data-selector="main:has(.o_wevent_events_list)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Events Page">
             <we-select string="Layout" data-no-preview="true" data-reload="/">
                 <we-button data-customize-website-views="website_event.opt_events_list_columns">Grid</we-button>
-                <we-button data-customize-website-views="">List</we-button>
+                <we-button data-customize-website-views="website_event.opt_events_list_rows">List</we-button>
+                <we-button data-customize-website-views="website_event.opt_events_list_columns, website_event.opt_events_list_rows">Grid &amp; List</we-button>
             </we-select>
-            <we-checkbox string="Card design"
+            <we-checkbox string="Card border"
                          data-customize-website-views="website_event.opt_events_list_cards"
                          data-no-preview="true"
                          data-reload="/"/>
