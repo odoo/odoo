@@ -1,6 +1,6 @@
 /** @odoo-module alias=@web/../tests/mobile/core/action_swiper_tests default=false */
 
-import { Component, xml } from "@odoo/owl";
+import { Component, onPatched, xml } from "@odoo/owl";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import {
@@ -11,6 +11,8 @@ import {
     patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
+import { swipeRight } from "@web/../tests/mobile/helpers";
+import { Deferred } from "@web/core/utils/concurrency";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { localization } from "@web/core/l10n/localization";
@@ -932,5 +934,51 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             "target doesn't have translateX after action is performed"
         );
         assert.verifySteps(["swipeInvalid"]);
+    });
+
+    QUnit.test("action should be done before a new render", async (assert) => {
+        let executingAction = false;
+        const prom = new Deferred();
+        const { execRegisteredTimeouts } = mockTimeout();
+        patchWithCleanup(ActionSwiper.prototype, {
+            setup() {
+                super.setup();
+                onPatched(() => {
+                    if (executingAction) {
+                        assert.step("ActionSwiper patched");
+                    }
+                });
+            },
+        });
+
+        class Parent extends Component {
+            static props = [];
+            static components = { ActionSwiper };
+            static template = xml`
+                <div class="d-flex">
+                   <ActionSwiper animationType="'forwards'" onRightSwipe = "{
+                       action: onRightSwipe.bind(this),
+                       icon: 'fa-circle',
+                       bgColor: 'bg-warning',
+                   }">
+                       <span>test</span>
+                   </ActionSwiper>
+               </div>
+            `;
+
+            async onRightSwipe() {
+                await nextTick();
+                assert.step("action done");
+                prom.resolve();
+            }
+        }
+
+        await mount(Parent, target, { env });
+        await swipeRight(target, ".o_actionswiper");
+        executingAction = true;
+        execRegisteredTimeouts();
+        await prom;
+        await nextTick();
+        assert.verifySteps(["action done", "ActionSwiper patched"]);
     });
 });
