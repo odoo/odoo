@@ -27,6 +27,8 @@ This module extend the employee form with a organizational chart.
         ],
         'web.assets_backend': [
             'hr_org_chart/static/src/fields/*',
+        ],
+        'web.assets_backend_lazy': [
             'hr_org_chart/static/src/views/**/*',
         ],
         'web.qunit_suite_tests': [
