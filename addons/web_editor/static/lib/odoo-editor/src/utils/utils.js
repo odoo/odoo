@@ -712,6 +712,9 @@ export function getTraversedNodes(editable, range = getDeepRange(editable)) {
         // Handle the case: <p>ab[<br>cd</p><p>ef</p>] => [br, cd, p2, ef]
         node = iterator.nextNode();
     }
+    if (!node) {
+        return [];
+    }
     const traversedNodes = new Set([node, ...descendants(node)]);
     while (node && node !== range.endContainer) {
         node = iterator.nextNode();

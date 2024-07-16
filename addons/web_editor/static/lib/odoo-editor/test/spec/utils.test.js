@@ -1219,6 +1219,16 @@ describe('Utils', () => {
                 },
             });
         });
+        it('selection collapsed after br', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><br>[]</p>',
+                stepFunction: editor => {
+                    const editable = editor.editable;
+                    const result = getTraversedNodes(editable);
+                    window.chai.expect(result).to.eql([]);
+                },
+            });
+        });
     });
     describe('getSelectedNodes', () => {
         it('should return nothing if the range is collapsed', async () => {
