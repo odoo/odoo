@@ -41,13 +41,9 @@ class Partners(models.Model):
         for partner in self:
             partner.user_livechat_username = next(iter(partner.user_ids.mapped('livechat_username')), False)
 
-    def _to_store(self, store: Store, fields=None):
+    def _to_store(self, store: Store, /, *, fields=None):
+        """Override to add name when user_livechat_username is not set."""
         super()._to_store(store, fields=fields)
-        if fields and fields.get("user_livechat_username"):
-            for partner in self:
-                data = {"id": partner.id}
-                if partner.user_livechat_username:
-                    data["user_livechat_username"] = partner.user_livechat_username
-                else:
-                    data["name"] = partner.name
-                store.add("res.partner", data)
+        if fields and "user_livechat_username" in fields:
+            if partners := self.filtered(lambda p: not p.user_livechat_username):
+                super(Partners, partners)._to_store(store, fields=["name"])

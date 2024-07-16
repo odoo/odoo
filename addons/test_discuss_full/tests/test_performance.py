@@ -374,7 +374,7 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_persona(self.users[14]),
                 self._expected_result_for_persona(self.users[15]),
                 self._expected_result_for_persona(self.users[3]),
-                self._expected_result_for_persona(self.users[1]),
+                self._expected_result_for_persona(self.users[1], also_livechat=True),
             ],
         }
 
@@ -1263,13 +1263,14 @@ class TestDiscussFullPerformance(HttpCase):
                     {
                         "country": False,
                         "is_public": False,
+                        "user_livechat_username": False,
                     }
                 )
             if also_notification:
                 res["displayName"] = "Ernest Employee"
             return res
         if user == self.users[1]:
-            return {
+            res = {
                 "active": True,
                 "country": {
                     "code": "IN",
@@ -1284,6 +1285,9 @@ class TestDiscussFullPerformance(HttpCase):
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
+            if also_livechat:
+                res["user_livechat_username"] = False
+            return res
         if user == self.users[2]:
             if only_inviting:
                 return {

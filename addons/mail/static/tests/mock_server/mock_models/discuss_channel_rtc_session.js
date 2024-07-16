@@ -1,6 +1,6 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { getKwArgs, models } from "@web/../tests/web_test_helpers";
+import { getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class DiscussChannelRtcSession extends models.ServerModel {
     _name = "discuss.channel.rtc.session";
@@ -50,24 +50,22 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
-        const rtcSessions = this._filter([["id", "in", ids]]);
-        for (const rtcSession of rtcSessions) {
+        for (const rtcSession of this.browse(ids)) {
+            const [data] = this.read(rtcSession.id, [], makeKwArgs({ load: false }));
             store.add(
-                DiscussChannelMember.browse(rtcSession.channel_member_id).map((record) => record.id)
+                DiscussChannelMember.browse(rtcSession.channel_member_id),
+                makeKwArgs({ fields: { channel: true, persona: ["name", "im_status"] } })
             );
-            const vals = {
-                id: rtcSession.id,
-                channelMember: { id: rtcSession.channel_member_id },
-            };
+            data.channelMember = { id: rtcSession.channel_member_id };
             if (extra) {
-                Object.assign(vals, {
+                Object.assign(data, {
                     isCameraOn: rtcSession.is_camera_on,
                     isDeaf: rtcSession.is_deaf,
                     isSelfMuted: rtcSession.is_self_muted,
                     isScreenSharingOn: rtcSession.is_screen_sharing_on,
                 });
             }
-            store.add("discuss.channel.rtc.session", vals);
+            store.add("discuss.channel.rtc.session", data);
         }
     }
 
@@ -95,9 +93,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const [member] = DiscussChannelMember._filter([["id", "=", session.channel_member_id]]);
         const [channel] = DiscussChannel.search_read([["id", "=", member.channel_id]]);
         BusBus._sendone(channel, "discuss.channel.rtc.session/update_and_broadcast", {
-            data: new mailDataHelpers.Store(
-                DiscussChannelRtcSession.browse(id).map((record) => record.id)
-            ).get_result(),
+            data: new mailDataHelpers.Store(DiscussChannelRtcSession.browse(id)).get_result(),
             channelId: channel.id,
         });
     }

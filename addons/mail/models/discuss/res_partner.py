@@ -82,13 +82,4 @@ class ResPartner(models.Model):
                 ("partner_id", "in", partners.ids),
             ]
         )
-        store = Store(
-            members,
-            fields={
-                "id": True,
-                "channel": {"id": True},
-                "persona": {"partner": {"id": True}},
-            },
-        )
-        store.add(partners)
-        return store.get_result()
+        return Store(members, fields={"channel": [], "persona": []}).add(partners).get_result()

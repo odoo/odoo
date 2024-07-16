@@ -1,4 +1,4 @@
-import { models } from "@web/../tests/web_test_helpers";
+import { getKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class MailGuest extends models.ServerModel {
     _name = "mail.guest";
@@ -12,15 +12,13 @@ export class MailGuest extends models.ServerModel {
      * @param {Number[]} ids
      * @returns {Record<string, ModelRecord>}
      */
-    _to_store(ids, store) {
-        for (const guest of this._filter([["id", "in", ids]], { active_test: false })) {
-            store.add("mail.guest", {
-                id: guest.id,
-                im_status: guest.im_status,
-                name: guest.name,
-                write_date: guest.write_date,
-            });
+    _to_store(ids, store, fields) {
+        const kwargs = getKwArgs(arguments, "ids", "store", "fields");
+        fields = kwargs.fields;
+        if (!fields) {
+            fields = ["im_status", "name", "write_date"];
         }
+        store.add("mail.guest", this.read(ids, fields, false));
     }
 
     _set_auth_cookie(guestId) {

@@ -1,4 +1,4 @@
-import { models } from "@web/../tests/web_test_helpers";
+import { makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class MailFollowers extends models.ServerModel {
     _name = "mail.followers";
@@ -14,16 +14,14 @@ export class MailFollowers extends models.ServerModel {
         followers.sort((f1, f2) => (f1.id < f2.id ? -1 : 1));
         store.add(ResPartner.browse(followers.map((follower) => follower.partner_id)));
         for (const follower of followers) {
-            store.add("mail.followers", {
-                display_name: follower.display_name,
-                email: follower.email,
-                id: follower.id,
-                is_active: follower.is_active,
-                name: follower.name,
-                partner_id: follower.partner_id,
-                partner: { id: follower.partner_id, type: "partner" },
-                thread: { id: follower.res_id, model: follower.res_model },
-            });
+            const [data] = this.read(
+                follower.id,
+                ["display_name", "email", "is_active", "name", "partner_id"],
+                makeKwArgs({ load: false })
+            );
+            data.partner = { id: follower.partner_id, type: "partner" };
+            data.thread = { id: follower.res_id, model: follower.res_model };
+            store.add("mail.followers", data);
         }
     }
 }

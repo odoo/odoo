@@ -81,13 +81,7 @@ class MailMessage(models.Model):
         for message in messages_w_author_livechat:
             store.add(
                 message.author_id,
-                fields={
-                    "id": True,
-                    "is_company": True,
-                    "user_livechat_username": True,
-                    "user": {"id": True},
-                    "write_date": True,
-                },
+                fields=["is_company", "user_livechat_username", "user", "write_date"],
             )
             store.add(
                 "mail.message",

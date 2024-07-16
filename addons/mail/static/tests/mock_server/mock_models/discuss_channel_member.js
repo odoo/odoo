@@ -32,12 +32,14 @@ export class DiscussChannelMember extends models.ServerModel {
         const members = this._filter([["id", "in", ids]]);
         const notifications = [];
         for (const member of members) {
-            const [channel] = DiscussChannel._filter([["id", "=", member.channel_id]]);
-            const store = new mailDataHelpers.Store(
-                DiscussChannelMember.browse(member.id).map((record) => record.id)
-            );
-            store.add("discuss.channel.member", { id: member.id, isTyping: is_typing });
-            notifications.push([channel, "mail.record/insert", store.get_result()]);
+            const [channel] = DiscussChannel.browse(member.channel_id);
+            notifications.push([
+                channel,
+                "mail.record/insert",
+                new mailDataHelpers.Store(DiscussChannelMember.browse(member.id))
+                    .add("discuss.channel.member", { id: member.id, isTyping: is_typing })
+                    .get_result(),
+            ]);
         }
         BusBus._sendmany(notifications);
     }
@@ -108,11 +110,10 @@ export class DiscussChannelMember extends models.ServerModel {
 
         if (!fields) {
             fields = {
-                channel: {},
+                channel: [],
                 create_date: true,
                 fetched_message_id: true,
-                id: true,
-                persona: {},
+                persona: null,
                 seen_message_id: true,
                 last_interest_dt: true,
                 last_seen_dt: true,
@@ -125,26 +126,43 @@ export class DiscussChannelMember extends models.ServerModel {
 
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
 
         const members = this._filter([["id", "in", ids]]);
         for (const member of members) {
-            const data = {};
-            if ("id" in fields) {
-                data.id = member.id;
-            }
+            const [data] = this.read(
+                member.id,
+                Object.keys(fields).filter(
+                    (field) =>
+                        ![
+                            "channel",
+                            "fetched_message_id",
+                            "message_unread_counter",
+                            "seen_message_id",
+                            "persona",
+                        ].includes(field)
+                ),
+                makeKwArgs({ load: false })
+            );
             if ("channel" in fields) {
                 data.thread = { id: member.channel_id, model: "discuss.channel" };
             }
-            if ("create_date" in fields) {
-                data.create_date = member.create_date;
-            }
             if ("persona" in fields) {
                 if (member.partner_id) {
-                    this._partner_data_to_store([member.id], store);
+                    store.add(
+                        ResPartner.browse(member.partner_id),
+                        makeKwArgs({
+                            fields: this._get_store_partner_fields([member.id], fields["persona"]),
+                        })
+                    );
                     data.persona = { id: member.partner_id, type: "partner" };
                 }
                 if (member.guest_id) {
-                    store.add(MailGuest.browse(member.guest_id));
+                    store.add(
+                        MailGuest.browse(member.guest_id),
+                        makeKwArgs({ fields: fields["persona"] })
+                    );
                     data.persona = { id: member.guest_id, type: "guest" };
                 }
             }
@@ -162,30 +180,12 @@ export class DiscussChannelMember extends models.ServerModel {
                 data.message_unread_counter = this._compute_message_unread_counter([member.id]);
                 data.message_unread_counter_bus_id = this.env["bus.bus"].lastBusNotificationId;
             }
-            if ("last_interest_dt" in fields) {
-                data.last_interest_dt = member.last_interest_dt;
-            }
-            if ("last_seen_dt" in fields) {
-                data.last_seen_dt = member.last_seen_dt;
-            }
-            if ("new_message_separator" in fields) {
-                data.new_message_separator = member.new_message_separator;
-            }
             store.add("discuss.channel.member", data);
         }
     }
 
-    /** @param {number[]} ids */
-    _partner_data_to_store(ids, store) {
-        const kwargs = getKwArgs(arguments, "ids", "store");
-        ids = kwargs.ids;
-        store = kwargs.store;
-
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        const [member] = this._filter([["id", "in", ids]]);
-        store.add(ResPartner.browse(member.partner_id));
+    _get_store_partner_fields(ids, fields) {
+        return fields;
     }
 
     /**
@@ -257,22 +257,13 @@ export class DiscussChannelMember extends models.ServerModel {
             if (DiscussChannel._types_allowing_seen_infos().includes(channel.channel_type)) {
                 target = channel;
             }
-            const personaFields = {
-                partner: { id: true, name: true },
-                guest: { id: true, name: true },
-            };
             BusBus._sendone(
                 target,
                 "mail.record/insert",
                 new mailDataHelpers.Store(
-                    DiscussChannelMember.browse(member.id).map((record) => record.id),
+                    DiscussChannelMember.browse(member.id),
                     makeKwArgs({
-                        fields: {
-                            id: true,
-                            channel: {},
-                            persona: personaFields,
-                            seen_message_id: true,
-                        },
+                        fields: { channel: [], persona: ["name"], seen_message_id: true },
                     })
                 ).get_result()
             );
@@ -294,7 +285,7 @@ export class DiscussChannelMember extends models.ServerModel {
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
-        const [member] = this._filter([["id", "in", ids]]);
+        const [member] = DiscussChannelMember.browse(ids);
         if (!member) {
             return;
         }
@@ -303,24 +294,23 @@ export class DiscussChannelMember extends models.ServerModel {
         });
         const message_unread_counter = this._compute_message_unread_counter([member.id]);
         this.env["discuss.channel.member"].write([member.id], { message_unread_counter });
-        const personaFields = {
-            partner: { id: true, name: true },
-            guest: { id: true, name: true },
-        };
-        const store = new mailDataHelpers.Store(
-            DiscussChannelMember.browse(member.id).map((record) => record.id),
-            makeKwArgs({
-                fields: {
-                    id: true,
-                    channel: {},
-                    persona: personaFields,
-                    message_unread_counter: true,
-                    new_message_separator: true,
-                },
-            })
-        );
-        store.add("discuss.channel.member", { id: member.id, syncUnread: sync });
         const [partner, guest] = this.env["res.partner"]._get_current_persona();
-        this.env["bus.bus"]._sendone(guest ?? partner, "mail.record/insert", store.get_result());
+        this.env["bus.bus"]._sendone(
+            guest ?? partner,
+            "mail.record/insert",
+            new mailDataHelpers.Store(
+                DiscussChannelMember.browse(member.id),
+                makeKwArgs({
+                    fields: {
+                        channel: [],
+                        persona: ["name"],
+                        message_unread_counter: true,
+                        new_message_separator: true,
+                    },
+                })
+            )
+                .add("discuss.channel.member", { id: member.id, syncUnread: sync })
+                .get_result()
+        );
     }
 }

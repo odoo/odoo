@@ -3,45 +3,17 @@ import { mailModels } from "@mail/../tests/mail_test_helpers";
 export class DiscussChannelMember extends mailModels.DiscussChannelMember {
     /**
      * @override
-     * @type {typeof mailModels.DiscussChannelMember["prototype"]["_partner_data_to_store"]}
+     * @type {typeof mailModels.DiscussChannelMember["prototype"]["_get_store_partner_fields"]}
      */
-    _partner_data_to_store(ids, store) {
+    _get_store_partner_fields(ids, fields) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").ResCountry} */
-        const ResCountry = this.env["res.country"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
 
-        const [member] = this._filter([["id", "in", ids]]);
-        const [channel] = DiscussChannel._filter([["id", "=", member.channel_id]]);
-        const [partner] = ResPartner._filter([["id", "=", member.partner_id]], {
-            active_test: false,
-        });
+        const [member] = this.browse(ids);
+        const [channel] = DiscussChannel.browse(member.channel_id);
         if (channel.channel_type === "livechat") {
-            const data = {
-                id: partner.id,
-                is_public: partner.is_public,
-            };
-            if (partner.user_livechat_username) {
-                data["user_livechat_username"] = partner.user_livechat_username;
-            } else {
-                data["name"] = partner.name;
-            }
-            if (!partner.is_public) {
-                const [country] = ResCountry._filter([["id", "=", partner.country_id]]);
-                data["country"] = country
-                    ? {
-                          code: country.code,
-                          id: country.id,
-                          name: country.name,
-                      }
-                    : false;
-            }
-            data["write_date"] = partner.write_date;
-            store.add("res.partner", data);
-        } else {
-            super._partner_data_to_store(...arguments);
+            return ["active", "country", "is_public", "user_livechat_username", "write_date"];
         }
+        return super._get_store_partner_fields(...arguments);
     }
 }

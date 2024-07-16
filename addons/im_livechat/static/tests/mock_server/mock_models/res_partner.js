@@ -1,4 +1,4 @@
-import { serverState } from "@web/../tests/web_test_helpers";
+import { getKwArgs, serverState } from "@web/../tests/web_test_helpers";
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 
 export class ResPartner extends mailModels.ResPartner {
@@ -49,20 +49,22 @@ export class ResPartner extends mailModels.ResPartner {
      * @override
      * @type {typeof mailModels.ResPartner["prototype"]["_to_store"]}
      */
-    _to_store(ids, store) {
+    _to_store(ids, store, fields) {
+        const kwargs = getKwArgs(arguments, "id", "store", "fields");
+        fields = kwargs.fields;
+
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
         super._to_store(...arguments);
-        const partners = ResPartner._filter([["id", "in", ids]], {
-            active_test: false,
-        });
-        for (const partner of partners) {
-            store.add("res.partner", {
-                id: partner.id,
-                // Not a real field but ease the testing
-                user_livechat_username: partner.user_livechat_username,
-            });
+        if (fields && fields.includes("user_livechat_username")) {
+            super._to_store(
+                ResPartner.browse(ids)
+                    .filter((partner) => !partner.user_livechat_username)
+                    .map((partner) => partner.id),
+                store,
+                ["name"]
+            );
         }
     }
 }
