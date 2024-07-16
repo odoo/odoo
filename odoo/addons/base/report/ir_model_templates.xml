@@ -32,10 +32,10 @@
                     </tr>
                     <tr t-foreach="o.access_ids" t-as="access">
                         <td colspan="4"><span t-field="access.group_id"/></td>
-                        <td><t t-if="access.perm_read">X</t></td>
-                        <td><t t-if="access.perm_write">X</t></td>
-                        <td><t t-if="access.perm_create">X</t></td>
-                        <td><t t-if="access.perm_unlink">X</t></td>
+                        <td><t t-if="access.for_read">X</t></td>
+                        <td><t t-if="access.for_write">X</t></td>
+                        <td><t t-if="access.for_create">X</t></td>
+                        <td><t t-if="access.for_unlink">X</t></td>
                         <td colspan="12"><span t-field="access.name"/></td>
                     </tr>
                     <tr>

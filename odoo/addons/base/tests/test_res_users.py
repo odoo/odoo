@@ -475,7 +475,7 @@ class TestUsers2(UsersCommonCase):
             self.assertFalse(mock.called)
 
     @users('user_internal', 'portal_1')
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_user_writeable_fields(self):
         """ Check for writeable fields.
 
