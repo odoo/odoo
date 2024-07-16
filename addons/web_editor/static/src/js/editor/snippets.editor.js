@@ -38,7 +38,7 @@ import { RPCError } from "@web/core/network/rpc";
 import { ColumnLayoutUtils } from "@web_editor/js/common/column_layout_mixin";
 import { Tooltip as OdooTooltip } from "@web/core/tooltip/tooltip";
 import { AddSnippetDialog } from "@web_editor/js/editor/add_snippet_dialog";
-import { SnippetOption } from "./snippets.options";
+import { SnippetOption, clearServiceCache } from "./snippets.options";
 
 let cacheSnippetTemplate = {};
 
@@ -2536,6 +2536,7 @@ class SnippetsMenu extends Component {
         this.tooltips.dispose();
         this.buttonTooltips.forEach(tooltip => tooltip.dispose());
         options.clearServiceCache();
+        clearServiceCache();
         options.clearControlledSnippets();
         if (this.$body[0].ownerDocument !== this.ownerDocument) {
             this.$body.off('.snippets_menu');

@@ -99,26 +99,39 @@ const SVG_DUR_TIMECOUNT_VAL_REGEX =
     /(?<attribute_name>\sdur="\s*)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>h|min|ms|s)?\s*"/gm;
 const CSS_ANIMATION_RATIO_REGEX = /(--animation_ratio: (?<ratio>\d*(\.\d+)?));/m;
 /**
- * Caches rpc/orm service
- * @param {Function} service
- * @param  {...any} args
- * @returns
+ * Caches the calls to a service.
+ *
+ * @param {Object} [env] - Object to find services in, if undefined, assume RPC
+ * @param {String} [serviceName] - service name, if empty, assume RPC
+ * @param {String[]} [exclude] - methodNames to exclude from the cache
+ *
+ * @returns {Object|Function} if RPC, a cached function, else a Proxy that
+ * caches the call to the services.
  */
-function serviceCached(service) {
-    const cache = _serviceCache;
-    return Object.assign(Object.create(service), {
-        call() {
-            // FIXME
-            const serviceName = Object.prototype.hasOwnProperty.call(service, "call")
-                ? "orm"
-                : "rpc";
-            const cacheId = JSON.stringify(arguments);
-            if (!cache[serviceName][cacheId]) {
-                cache[serviceName][cacheId] = service.call(...arguments);
+export function serviceCached(env, serviceName, exclude = []) {
+    function cachedCall(func, args, cache) {
+        const cacheId = JSON.stringify(args);
+        if (!cache[cacheId]) {
+            cache[cacheId] = func(...args);
+        }
+        return cache[cacheId];
+    }
+
+    if (!env || !serviceName || serviceName === "rpc") {
+        return (...args) => cachedCall(rpc, args, _serviceCache["rpc"]);
+    } else {
+        const service = env.services[serviceName];
+        if (!_serviceCache[serviceName]) {
+            _serviceCache[serviceName] = {};
+        }
+        return new Proxy(service, {
+            get: (target, prop, receiver) => {
+                if (typeof target[prop] === "function" && !exclude.includes(prop)) {
+                    return (...args) => cachedCall(target[prop].bind(target), args, _serviceCache[serviceName]);
+                }
             }
-            return cache[serviceName][cacheId];
-        },
-    });
+        });
+    }
 }
 // Outdated snippets whose alert has been discarded.
 const controlledSnippets = new Set();
@@ -3085,7 +3098,7 @@ export class Many2oneUserValue extends SelectUserValue {
 
     constructor() {
         super(...arguments);
-        this.orm = serviceCached(this.env.services.orm);
+        this.orm = serviceCached(this.env, "orm");
         this._state.records = [];
         this._state.hasMore = false;
 

@@ -49,6 +49,7 @@ import {
     ReplaceMedia,
     SelectTemplate,
     SelectUserValue,
+    serviceCached,
     SnippetOption,
     SnippetOptionComponent,
     UserValue,
@@ -3449,7 +3450,7 @@ class ConditionalVisibility extends DeviceVisibility {
     constructor() {
         super(...arguments);
         this.optionsAttributes = [];
-        this.orm = this.env.services.orm;
+        this.orm = serviceCached(this.env, "orm");
     }
     /**
      * @override
