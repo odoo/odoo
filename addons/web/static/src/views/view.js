@@ -133,6 +133,7 @@ const CALLBACK_RECORDER_NAMES = [
 const STANDARD_PROPS = [
     "resModel",
     "type",
+    "jsClass",
 
     "arch",
     "fields",
@@ -318,7 +319,7 @@ export class View extends Component {
 
         const jsClass = archXmlDoc.hasAttribute("js_class")
             ? archXmlDoc.getAttribute("js_class")
-            : type;
+            : props.jsClass || type;
         if (!viewRegistry.contains(jsClass)) {
             await loadBundle(DEFAULT_LAZY_BUNDLE);
         }
