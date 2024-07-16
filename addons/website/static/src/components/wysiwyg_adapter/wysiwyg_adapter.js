@@ -1147,7 +1147,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             if (
                 isDirty &&
                 (!canPublish ||
-                    (canPublish && this.websiteService.currentWebsite.metadata.isPublished))
+                    (canPublish && this.websiteService.currentWebsite.metadata.isPublished)) &&
+                this.websiteService.currentWebsite.metadata.canOptimizeSeo
             ) {
                 const {
                     mainObject: { id, model },
