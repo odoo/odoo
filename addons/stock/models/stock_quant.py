@@ -46,7 +46,8 @@ class StockQuant(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=lambda self: self._domain_product_id(),
-        ondelete='restrict', required=True, index=True, check_company=True)
+        ondelete='restrict', required=True, index=True, check_company=True,
+        index_keys='product_id,location_id')
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
         related='product_id.product_tmpl_id')
@@ -65,13 +66,16 @@ class StockQuant(models.Model):
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number', index=True,
         ondelete='restrict', check_company=True,
-        domain=lambda self: self._domain_lot_id())
+        domain=lambda self: self._domain_lot_id(),
+        index_keys='product_id,lot_id,location_id'
+    )
     lot_properties = fields.Properties(related='lot_id.lot_properties', definition='product_id.lot_properties_definition', readonly=True)
     sn_duplicated = fields.Boolean(string="Duplicated Serial Number", compute='_compute_sn_duplicated', help="If the same SN is in another Quant")
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
         domain="[('location_id', '=', location_id)]",
-        help='The package containing this quant', ondelete='restrict', check_company=True, index=True)
+        help='The package containing this quant', ondelete='restrict', check_company=True, index=True,
+        index_keys='product_id,package_id,location_id')
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
         help='This is the owner of the quant', check_company=True,

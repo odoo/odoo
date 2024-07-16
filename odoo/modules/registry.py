@@ -636,7 +636,7 @@ class Registry(Mapping):
                 indexname = sql.make_index_name(tablename, field.name)
             if (index_keys or index) and (indexname not in existing or info) and \
                     ((not field.translate and index != 'trigram') or (index == 'trigram' and self.has_trigram)):
-                index_keys = index_keys and f"{index_keys};{field.name}" or f'{field.name}'
+                index_keys = index_keys and f"{field.name};{index_keys}" or f'{field.name}'
 
                 if field.translate:
                     for lang, iso_code in language:
@@ -651,7 +651,7 @@ class Registry(Mapping):
                 for index_key in index_keys.split(';'):
                     if index_key in language_index.keys():
                         indexname = sql.make_index_name(tablename, index_key)
-                    if index_key.find(',') != -1 and index_key.split(','):
+                    if index_key.find(',') != -1:
                         indexname = sql.make_index_name(tablename, '_'.join(index_key.split(',')))
                     column_expression = f'"{index_key}"'
 
@@ -698,6 +698,8 @@ class Registry(Mapping):
                         expression = f'{column_expression}'
                         method = 'btree'
                         where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
+                    if expression.find(',') != -1:
+                        expression = expression.replace('"', '').split(',')
                     indexes.append((indexname, tablename, expression, method, where, field))
 
             elif not index and tablename == existing.get(indexname):
@@ -709,18 +711,23 @@ class Registry(Mapping):
         # add automatic index_keys in fields.
         indexes = self._check_indexes(cr, model_names)
         for index_name, table_name, expression, method, where, field_name in indexes or []:
+            if not isinstance(expression, list):
+                expression = [expression]
             try:
                 with cr.savepoint(flush=False):
-                    sql.create_index(cr, index_name, table_name, [expression], method, where)
+                    sql.create_index(cr, index_name, table_name, expression, method, where)
             except psycopg2.OperationalError:
                 _schema.error("Unable to add index for %s", self)
 
     def re_index(self, cr, model_names, value_fields=False):
-        indexes = self._check_indexes(cr, model_names, value_fields=value_fields)
-        for index_name, table_name, expression, method, where, field_name in indexes:
+        indexes = self._check_indexes(cr, model_names, info=True, value_fields=value_fields)
+        for index_name, table_name, expression, method, where, field_name in indexes or []:
+            _logger.info(f"{index_name}, {table_name}, {expression}, {method}, {where}, {field_name} {type(expression)} {isinstance(expression, list)}")
+            if not isinstance(expression, list):
+                expression = [expression]
             try:
                 with cr.savepoint(flush=False):
-                    sql.re_index(cr, index_name, table_name, [expression], method, where)
+                    sql.re_index(cr, index_name, table_name, expression, method, where)
             except psycopg2.OperationalError:
                 _schema.error("Unable to reindex for %s", self)
 
