@@ -11,8 +11,8 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2024
 # Petr Vojta <petvoj@gmail.com>, 2024
 # Katerina Horylova, 2024
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Jakub Smolka, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakub Smolka, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5374,6 +5374,12 @@ msgid "No operations found. Let's create a transfer!"
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "Nebyl nalezen žádný produkt. Vytvořme si jeden!"
@@ -7761,7 +7767,7 @@ msgstr "Umístění zmetku"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
-msgstr "Vyřazovací objednávky"
+msgstr "Vyřazovací příkazy"
 
 #. module: stock
 #. odoo-python
@@ -10419,10 +10425,14 @@ msgstr "Nemůžete změnit typ produktu, který byl již použit."
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You can not delete moves linked to another operation"
-msgstr ""
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "Nelze vytvořit odložený bod objednávky, který se nespouští ručně."
 
 #. module: stock
 #. odoo-python
@@ -10474,6 +10484,18 @@ msgstr ""
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Můžete zpracovat pouze 1.0 %s produktů s jednoznačným sériovým číslem."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Doplňovací body můžete odložit pouze ručně. Pokud nechcete, aby byly "
+"spouštěny, měli byste raději archivovat doplňovací body 'automatického "
+"spouštění'."
 
 #. module: stock
 #. odoo-python
@@ -10576,6 +10598,16 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "Nemůžete odstranit zmetek, který je hotový."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
 
 #. module: stock
 #. odoo-python

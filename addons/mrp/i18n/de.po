@@ -1927,7 +1927,7 @@ msgstr "Tage bis zur Lieferung von Komponenten"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__days_to_prepare_mo
 msgid "Days to prepare Manufacturing Order"
-msgstr "Tage bis Vorbereitung des Fertigungsauftrags"
+msgstr "Tage zur Vorbereitung des Fertigungsauftrags"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -7022,6 +7022,13 @@ msgstr "Es ist nicht möglich, dieselbe Seriennummer zweimal zu produzieren."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot start a work order that is already done or cancelled"
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
@@ -7219,7 +7226,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "last"
-msgstr "letztes"
+msgstr "letzten"
 
 #. module: mrp
 #. odoo-python
@@ -7285,4 +7292,4 @@ msgstr "aufgeteilt"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
-msgstr "Arbeitsaufträge"
+msgstr "Arbeitsaufträgen"

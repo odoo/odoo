@@ -6,7 +6,7 @@
 # Ivana Bartonkova, 2023
 # Jakub Smolka, 2023
 # Wil Odoo, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +57,7 @@ msgstr ""
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
-msgstr ""
+msgstr "Při načítání přístupového tokenu došlo k chybě. %s"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
@@ -69,7 +69,7 @@ msgstr "Ověřit s"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "Ověřovací URI"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_config_settings
@@ -84,6 +84,8 @@ msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"Propojte svůj účet Outlook s procesem ověřování OAuth.\n"
+"Ve výchozím nastavení bude moci tento server používat pouze uživatel s odpovídající e-mailovou adresou. Chcete-li rozšířit jeho použití, měli byste nastavit systémový parametr \"mail.default.from\"."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -93,11 +95,13 @@ msgid ""
 "Connect your personal Outlook account using OAuth. \n"
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
+"Připojte svůj osobní účet Outlook pomocí protokolu OAuth.\n"
+"Budete přesměrováni na přihlašovací stránku aplikace Outlook, kde přijmete oprávnění."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back to your mail server"
-msgstr ""
+msgstr "Vraťte se na svůj poštovní server"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -107,7 +111,7 @@ msgstr "ID"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID of your Outlook app"
-msgstr ""
+msgstr "ID vaší Outlook aplikace"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
@@ -122,13 +126,15 @@ msgid ""
 "Incorrect Connection Security for Outlook mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"Nesprávné zabezpečení připojení pro poštovní server Outlook %r. Nastavte jej"
+" na \"TLS (STARTTLS)\"."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr ""
+msgstr "Jsou pověření Outlooku nakonfigurováno"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -145,21 +151,21 @@ msgstr "Microsoft Outlook Mixin"
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr ""
+msgstr "Pouze administrátor může propojit e-mailový server Outlooku."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "Přístupový token Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Časové razítko vypršení platnosti přístupového tokenu Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
@@ -175,28 +181,28 @@ msgstr "Tajný klíč klienta Outlook"
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
 msgid "Outlook OAuth Authentication"
-msgstr ""
+msgstr "Outlook OAuth Ověřování"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "Obnovovací token Outlook"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
-msgstr ""
+msgstr "Nakonfigurujte prosím své Outlook pověření."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
-msgstr ""
+msgstr "Před použitím se připojte ke svému účtu Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -207,6 +213,9 @@ msgid ""
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
+"Vyplňte prosím pole „Uživatelské jméno“ svým uživatelským jménem "
+"Outlooku/Office365 (vaší e-mailovou adresou). Měl by to být stejný účet jako"
+" ten, který se používá pro token OAuthentication Outlooku."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -216,6 +225,8 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"Ponechte pole pro heslo prázdné pro poštovní server Outlook %r. Proces OAuth"
+" to nevyžaduje"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -227,7 +238,7 @@ msgstr "Přečtěte si více"
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required for the server %r."
-msgstr ""
+msgstr "SSL je vyžadován pro server %r."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -237,7 +248,7 @@ msgstr "Tajný klíč"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret of your Outlook app"
-msgstr ""
+msgstr "Tajný klíč vaší Outlook aplikace"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
@@ -251,17 +262,19 @@ msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
 " account."
 msgstr ""
+"Chcete-li propojit účet Outlook, nastavte své přihlašovací údaje k rozhraní "
+"Outlook API v obecných nastaveních."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "Adresa URL pro generování autorizačního kódu od společnosti Outlook"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."
-msgstr ""
+msgstr "Neznámá chyba."
