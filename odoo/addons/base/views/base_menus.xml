@@ -40,7 +40,6 @@
         <menuitem id="menu_users" name="Users &amp; Companies" sequence="1">
             <menuitem id="menu_action_res_users" action="action_res_users" sequence="0"/>
             <menuitem id="menu_action_res_groups" action="action_res_groups" groups="base.group_no_one" sequence="3"/>
-            <menuitem id="menu_action_res_groups_privilege" action="action_res_groups_privilege" groups="base.group_no_one" sequence="5"/>
             <menuitem id="menu_action_res_company_form" action="action_res_company_form"/>
         </menuitem>
 
@@ -106,8 +105,8 @@
                 <menuitem id="ir_config_menu" action="ir_config_list_action"/>
             </menuitem>
             <menuitem id="menu_security" name="Security" sequence="25">
-                <menuitem id="menu_action_rule" action="action_rule" sequence="3"/>
-                <menuitem id="menu_ir_access_act" action="ir_access_act"/>
+                <menuitem id="menu_action_res_groups_privilege" action="action_res_groups_privilege"/>
+                <menuitem id="menu_ir_access" action="ir_access_action"/>
                 <menuitem id="menu_action_user_session" action="action_user_session" sequence="9"/>
                 <menuitem id="menu_action_user_device" action="action_user_device" sequence="10"/>
             </menuitem>

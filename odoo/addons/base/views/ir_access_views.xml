@@ -6,8 +6,7 @@
         <field name="name">ir.access.view.list</field>
         <field name="model">ir.access</field>
         <field name="arch" type="xml">
-            <list string="Access Rights"
-                  decoration-warning="not group_id and operation">
+            <list string="Access Rights">
                 <field name="name" width="200px"/>
                 <field name="model_id" width="200px"/>
                 <field name="group_id" width="200px"/>
@@ -104,7 +103,7 @@
             <kanban>
                 <templates>
                     <t t-name="card">
-                        <div class="oe_kanban_content p-2">
+                        <div class="p-2">
                             <div class="mb-2">
                                 <field name="name" class="fw-bolder"/>
                             </div>
@@ -118,17 +117,21 @@
                                     <field name="group_id" class="text-primary"/>
                                 </div>
                             </t>
-                            <div class="grid mt-2" style="--gap: 5px;">
-                                <div class="g-col-3 d-flex justify-content-center fw-bold">Create</div>
-                                <div class="g-col-3 d-flex justify-content-center fw-bold">Read</div>
-                                <div class="g-col-3 d-flex justify-content-center fw-bold">Update</div>
-                                <div class="g-col-3 d-flex justify-content-center fw-bold">Delete</div>
-                                <field name="for_create" class="g-col-3 d-flex justify-content-center ms-2"/>
-                                <field name="for_read" class="g-col-3 d-flex justify-content-center ms-2"/>
-                                <field name="for_write" class="g-col-3 d-flex justify-content-center ms-2"/>
-                                <field name="for_unlink" class="g-col-3 d-flex justify-content-center ms-2"/>
-                            </div>
                         </div>
+                        <footer class="flex-column">
+                            <div class="d-flex justify-content-evenly w-100">
+                                <div class="text-center fw-bold">Create</div>
+                                <div class="text-center fw-bold">Read</div>
+                                <div class="text-center fw-bold">Update</div>
+                                <div class="text-center fw-bold">Delete</div>
+                            </div>
+                            <div class="d-flex justify-content-evenly w-100">
+                                <field name="for_create" class="ms-2"/>
+                                <field name="for_read" class="ms-2"/>
+                                <field name="for_write" class="ms-2"/>
+                                <field name="for_unlink" class="ms-2"/>
+                            </div>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
@@ -181,7 +184,5 @@
         <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="ir_access_search_view"/>
     </record>
-
-    <menuitem id="menu_ir_access" parent="base.menu_security" action="ir_access_action"/>
 
 </odoo>

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import SetDefinitions
@@ -23,20 +23,21 @@ class ResGroups(models.Model):
     all_users_count = fields.Integer('# Users', help='Number of users having this group (implicitly or explicitly)',
         compute='_compute_all_users_count', compute_sudo=True)
 
-    model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
-    rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
-        'group_id', 'rule_group_id', string='Rules', domain="[('global', '=', False)]")
     access_ids = fields.One2many('ir.access', 'group_id', string="Access Rules", copy=True)
+    access_count = fields.Integer(
+        compute="_compute_access_count"
+    )
     menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
     view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
-    comment = fields.Text(translate=True)
+    comment = fields.Text(string='Notes', translate=True)
     full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
-    share = fields.Boolean(string='Share Group', help="Group created to set access rights for sharing data with some users.")
+    share = fields.Boolean(string='Share Group',
+        help="Indicates that the group is used external data sharing prupose (e.g., portal access to specific records)")
     api_key_duration = fields.Float(string='API Keys maximum duration days',
         help="Determines the maximum duration of an api key created by a user belonging to this group.")
 
     sequence = fields.Integer(string='Sequence')
-    privilege_id = fields.Many2one('res.groups.privilege', string='Privilege', index=True)
+    privilege_id = fields.Many2one('res.groups.privilege', string='Scope', index=True)
     view_group_hierarchy = fields.Json(string='Technical field for default group setting', compute='_compute_view_group_hierarchy')
 
     _check_api_key_duration = models.Constraint(
@@ -68,16 +69,19 @@ class ResGroups(models.Model):
       therefore have all the rights of these groups in addition to their own access rights.
     """
     implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
-        string='Implied Groups', help='Users of this group are also implicitly part of those groups')
+        string='Implied Groups', help='Users in the current group are implicitly part of the implied groups')
+    implied_count = fields.Integer(compute="_compute_implied_count"
+    )
     all_implied_ids = fields.Many2many('res.groups', string='Transitively Implied Groups', recursive=True,
         compute='_compute_all_implied_ids', compute_sudo=True, search='_search_all_implied_ids',
         help="The group itself with all its implied groups.")
     implied_by_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'hid', 'gid',
-        string='Implying Groups', help="Users in those groups are implicitly part of this group.")
+        string='Implying Groups', help="Users in implying groups are implicitly part of the current group")
+    implied_by_count = fields.Integer(compute="_compute_implied_by_count")
     all_implied_by_ids = fields.Many2many('res.groups', string='Transitively Implying Groups', recursive=True,
         compute='_compute_all_implied_by_ids', compute_sudo=True, search='_search_all_implied_by_ids')
     disjoint_ids = fields.Many2many('res.groups', string='Disjoint Groups',
-        help="A user may not belong to this group and one of those.  For instance, users may not be portal users and internal users.",
+        help="Users in the current group cannot be added in disjoint groups. For example, a user cannot be in the \"Internal\" and \"Portal\" groups at the same time.",
         compute='_compute_disjoint_ids')
 
     @api.constrains('implied_ids', 'implied_by_ids')
@@ -229,14 +233,14 @@ class ResGroups(models.Model):
         # field 'share' depends on method has_group()
         # DLE P139
         if any(self._ids):
-            self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env['ir.access']._clear_caches()
 
         res = super().write(vals)
 
         # invalidate caches after the write (if not su) because we check access
         # when writing
         if any(self._ids) and not self.env.su:
-            self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env['ir.access']._clear_caches()
         return res
 
     def _ensure_xml_id(self):
@@ -281,6 +285,11 @@ class ResGroups(models.Model):
     def _search_all_user_ids(self, operator, value):
         return [('all_implied_by_ids.user_ids', operator, value)]
 
+    @api.depends('implied_ids')
+    def _compute_implied_count(self):
+        for group in self:
+            group.implied_count = len(group.implied_ids)
+
     @api.depends('implied_ids.all_implied_ids')
     def _compute_all_implied_ids(self):
         """ Compute the reflexive transitive closure of implied_ids. """
@@ -295,6 +304,11 @@ class ResGroups(models.Model):
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_subset_ids(value)]
         return [('id', operator, ids)]
+
+    @api.depends('implied_by_ids')
+    def _compute_implied_by_count(self):
+        for group in self:
+            group.implied_by_count = len(group.implied_by_ids)
 
     @api.depends('implied_by_ids.all_implied_by_ids')
     def _compute_all_implied_by_ids(self):
@@ -413,6 +427,11 @@ class ResGroups(models.Model):
         for group in self:
             group.all_users_count = len(group.all_user_ids)
 
+    @api.depends('access_ids')
+    def _compute_access_count(self):
+        for group in self:
+            group.access_count = len(group.access_ids)
+
     def action_show_all_users(self):
         self.ensure_one()
         return {
@@ -423,4 +442,34 @@ class ResGroups(models.Model):
             'context': {'create': False, 'delete': False, 'form_view_ref': 'base.view_users_form'},
             'domain': [('all_group_ids', 'in', self.ids)],
             'target': 'current',
+        }
+
+    def action_view_implied_ids(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Implying Groups"),
+            'res_model': 'res.groups',
+            'views': [[False, 'list'], [False, 'form']],
+            'domain': [('implied_by_ids', 'in', self.ids)],
+        }
+
+    def action_view_implied_by_ids(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Implied Groups"),
+            'res_model': 'res.groups',
+            'views': [[False, 'list'], [False, 'form']],
+            'domain': [('implied_ids', 'in', self.ids)],
+        }
+
+    def action_view_access_ids(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Access Rules"),
+            'res_model': 'ir.access',
+            'views': [[False, 'list'], [False, 'kanban'], [False, 'form']],
+            'domain': [('group_id', 'in', self.ids)],
         }
