@@ -25,8 +25,6 @@ class SaleReport(models.Model):
     team_id = fields.Many2one(comodel_name='crm.team', string="Sales Team", readonly=True)
     user_id = fields.Many2one(comodel_name='res.users', string="Salesperson", readonly=True)
     state = fields.Selection(selection=SALE_ORDER_STATE, string="Status", readonly=True)
-    analytic_account_id = fields.Many2one(
-        comodel_name='account.analytic.account', string="Analytic Account", readonly=True)
     invoice_status = fields.Selection(
         selection=[
             ('upselling', "Upselling Opportunity"),
@@ -146,7 +144,6 @@ class SaleReport(models.Model):
             s.source_id AS source_id,
             t.categ_id AS categ_id,
             s.pricelist_id AS pricelist_id,
-            s.analytic_account_id AS analytic_account_id,
             s.team_id AS team_id,
             p.product_tmpl_id,
             partner.commercial_partner_id AS commercial_partner_id,
@@ -220,7 +217,6 @@ class SaleReport(models.Model):
             s.medium_id,
             s.source_id,
             s.pricelist_id,
-            s.analytic_account_id,
             s.team_id,
             p.product_tmpl_id,
             partner.commercial_partner_id,

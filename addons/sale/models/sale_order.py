@@ -258,11 +258,6 @@ class SaleOrder(models.Model):
     source_id = fields.Many2one(ondelete='set null')
 
     # Followup ?
-    analytic_account_id = fields.Many2one(
-        comodel_name='account.analytic.account',
-        string="Analytic Account",
-        copy=False, check_company=True,  # Unrequired company
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tag_ids = fields.Many2many(
         comodel_name='crm.tag',
         relation='sale_order_tag_rel', column1='order_id', column2='tag_id',
@@ -1036,16 +1031,7 @@ class SaleOrder(models.Model):
             This method should be extended when the confirmation should generated
             other documents. In this method, the SO are in 'sale' state (not yet 'done').
         """
-        self._generate_analytic_account()
-
-    def _generate_analytic_account(self):
-        """ Generate an analytic account for the SO confirmed if at least an expense product """
-        for order in self:
-            if (
-                not order.analytic_account_id
-                and any(expense_policy not in [False, 'no'] for expense_policy in order.order_line.product_id.mapped('expense_policy'))
-            ):
-                order._create_analytic_account()
+        pass
 
     def _send_order_confirmation_mail(self):
         """ Send a mail to the SO customer to inform them that their order has been confirmed.
@@ -1808,41 +1794,6 @@ class SaleOrder(models.Model):
                 'sale.mail_act_sale_upsell',
                 user_id=order.user_id.id or order.partner_id.user_id.id,
                 note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
-
-    def _prepare_analytic_account_data(self, prefix=None):
-        """ Prepare SO analytic account creation values.
-
-        :param str prefix: The prefix of the to-be-created analytic account name
-        :return: `account.analytic.account` creation values
-        :rtype: dict
-        """
-        self.ensure_one()
-        name = self.name
-        if prefix:
-            name = prefix + ": " + self.name
-        plan = self.env['account.analytic.plan'].sudo().search([], limit=1)
-        if not plan:
-            plan = self.env['account.analytic.plan'].sudo().create({
-                'name': 'Default',
-            })
-        return {
-            'name': name,
-            'code': self.client_order_ref,
-            'company_id': self.company_id.id,
-            'plan_id': plan.id,
-            'partner_id': self.partner_id.id,
-        }
-
-    def _create_analytic_account(self, prefix=None):
-        """ Create a new analytic account for the given orders.
-
-        :param str prefix: if specified, the account name will be '<prefix>: <so_reference>'.
-            If not, the account name will be the Sales Order reference.
-        :return: None
-        """
-        for order in self:
-            analytic = self.env['account.analytic.account'].create(order._prepare_analytic_account_data(prefix))
-            order.analytic_account_id = analytic
 
     def _prepare_down_payment_section_line(self, **optional_values):
         """ Prepare the values to create a new down payment section.

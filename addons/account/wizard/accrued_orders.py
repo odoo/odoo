@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from dateutil.relativedelta import relativedelta
 import json
@@ -149,9 +148,6 @@ class AccruedExpenseRevenue(models.TransientModel):
                 order_line = order.order_line[0]
                 account = self._get_computed_account(order, order_line.product_id, is_purchase)
                 distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
-                if not is_purchase and order.analytic_account_id:
-                    analytic_account_id = str(order.analytic_account_id.id)
-                    distribution[analytic_account_id] = distribution.get(analytic_account_id, 0) + 100.0
                 values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'), analytic_distribution=distribution)
                 move_lines.append(Command.create(values))
             else:
@@ -214,9 +210,6 @@ class AccruedExpenseRevenue(models.TransientModel):
                             unit_price=formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id),
                         )
                     distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
-                    if not is_purchase and order.analytic_account_id:
-                        analytic_account_id = str(order.analytic_account_id.id)
-                        distribution[analytic_account_id] = distribution.get(analytic_account_id, 0) + 100.0
                     values = _get_aml_vals(order, amount, amount_currency, account.id, label=label, analytic_distribution=distribution)
                     move_lines.append(Command.create(values))
                     total_balance += amount
@@ -229,9 +222,6 @@ class AccruedExpenseRevenue(models.TransientModel):
             total = sum(order.amount_total for order in orders)
             for line in orders.order_line:
                 ratio = line.price_total / total
-                if not is_purchase and line.order_id.analytic_account_id:
-                    account_id = str(line.order_id.analytic_account_id.id)
-                    analytic_distribution.update({account_id: analytic_distribution.get(account_id, 0) +100.0*ratio})
                 if not line.analytic_distribution:
                     continue
                 for account_id, distribution in line.analytic_distribution.items():

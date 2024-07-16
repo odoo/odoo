@@ -14,18 +14,12 @@ class StockMove(models.Model):
         res += self.filtered(lambda m: m.bom_line_id.bom_id.product_tmpl_id.id == product.product_tmpl_id.id)
         return res
 
-    def _get_analytic_distribution(self):
-        distribution = self.raw_material_production_id.analytic_distribution
-        if distribution:
-            return distribution
-        return super()._get_analytic_distribution()
-
     def _should_force_price_unit(self):
         self.ensure_one()
         return self.picking_type_id.code == 'mrp_operation' or super()._should_force_price_unit()
 
     def _ignore_automatic_valuation(self):
-        return bool(self.raw_material_production_id)
+        return super()._ignore_automatic_valuation() or bool(self.raw_material_production_id)
 
     def _get_src_account(self, accounts_data):
         if self._is_production():

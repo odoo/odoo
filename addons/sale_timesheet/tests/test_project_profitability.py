@@ -40,7 +40,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         """
         foreign_company = self.company_data_2['company']
         foreign_company.currency_id = self.foreign_currency
-        self.project_task_rate.analytic_account_id.company_id = False
+        self.project_task_rate.account_id.company_id = False
         self.project_task_rate.company_id = False
 
         # Create and confirm a SO with the main company
@@ -125,11 +125,11 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         # Adding an extra cost/revenue to ensure those are computed correctly.
         self.env['account.analytic.line'].create([{
             'name': 'other revenues line',
-            'account_id': self.project_task_rate.analytic_account_id.id,
+            'account_id': self.project_task_rate.account_id.id,
             'amount': 100,
         }, {
             'name': 'other costs line',
-            'account_id': self.project_task_rate.analytic_account_id.id,
+            'account_id': self.project_task_rate.account_id.id,
             'amount': -100,
         }])
         self.assertDictEqual(

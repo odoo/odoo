@@ -185,7 +185,7 @@ class ResourceCalendarLeaves(models.Model):
             'name': _("Time Off (%(index)s/%(total)s)", index=index + 1, total=len(work_hours_data)),
             'project_id': employee_id.company_id.internal_project_id.id,
             'task_id': employee_id.company_id.leave_timesheet_task_id.id,
-            'account_id': employee_id.company_id.internal_project_id.analytic_account_id.id,
+            'account_id': employee_id.company_id.internal_project_id.account_id.id,
             'unit_amount': work_hours_count,
             'user_id': employee_id.user_id.id,
             'date': day_date,

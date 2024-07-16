@@ -69,7 +69,7 @@ class TestProjectProfitabilityCommon(Common):
 
         cls.project_non_billable = cls.env['project.project'].with_context(tracking_disable=True).create({
             'name': "Non Billable Project",
-            'analytic_account_id': cls.analytic_account_nb.id,
+            'account_id': cls.analytic_account_nb.id,
             'allow_billable': False,
             'partner_id': False,
         })
@@ -92,11 +92,11 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         # Adding an extra cost/revenue to ensure those are not computed either.
         self.env['account.analytic.line'].create([{
             'name': 'other revenues line',
-            'account_id': self.project_non_billable.analytic_account_id.id,
+            'account_id': self.project_non_billable.account_id.id,
             'amount': 100,
         }, {
             'name': 'other costs line',
-            'account_id': self.project_non_billable.analytic_account_id.id,
+            'account_id': self.project_non_billable.account_id.id,
             'amount': -100,
         }])
         self.assertFalse(self.project_non_billable.allow_billable)
@@ -133,11 +133,11 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         # Add extra cost and extra revenues to the analytic account.
         self.env['account.analytic.line'].create([{
             'name': 'other revenues line',
-            'account_id': self.project.analytic_account_id.id,
+            'account_id': self.project.account_id.id,
             'amount': 100,
         }, {
             'name': 'other costs line',
-            'account_id': self.project.analytic_account_id.id,
+            'account_id': self.project.account_id.id,
             'amount': -100,
         }])
 
@@ -706,7 +706,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             "invoice_date": datetime.today(),
             "company_id": foreign_company.id,
             "invoice_line_ids": [Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: analytic_distribution},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: analytic_distribution},
                 "product_id": self.product_a.id,
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
@@ -735,7 +735,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             "partner_id": self.partner.id,
             "invoice_date": datetime.today(),
             "invoice_line_ids": [Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: analytic_distribution},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: analytic_distribution},
                 "product_id": self.product_a.id,
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
@@ -795,19 +795,19 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             "partner_id": self.partner.id,
             "invoice_date": datetime.today(),
             "invoice_line_ids": [Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: analytic_distribution},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: analytic_distribution},
                 "product_id": self.product_a.id,
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
                 "price_unit": self.product_a.standard_price,
             }), Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: analytic_distribution},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: analytic_distribution},
                 "product_id": self.product_b.id,
                 "quantity": 2,
                 "product_uom_id": self.product_b.uom_id.id,
                 "price_unit": self.product_b.standard_price,
             }), Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: analytic_distribution},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: analytic_distribution},
                 "product_id": self.product_b.id,
                 "quantity": 1,
                 "product_uom_id": self.product_b.uom_id.id,
@@ -857,14 +857,14 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             "invoice_date": datetime.today(),
             "company_id": foreign_company.id,
             "invoice_line_ids": [Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: analytic_distribution},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: analytic_distribution},
                 "product_id": self.product_a.id,
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
                 "price_unit": self.product_a.standard_price,
                 "currency_id": self.foreign_currency.id,
             }), Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: analytic_distribution},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: analytic_distribution},
                 "product_id": self.product_b.id,
                 "quantity": 2,
                 "product_uom_id": self.product_b.uom_id.id,
@@ -916,7 +916,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             "invoice_date": datetime.today(),
             "company_id": foreign_company.id,
             "invoice_line_ids": [Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: 100},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: 100},
                 "product_id": self.product_a.id,
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
@@ -927,11 +927,11 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         # Add 2 new AAL to the analytic account. Those costs must be present in the 'other_cost' section
         self.env['account.analytic.line'].create([{
             'name': 'extra costs 1',
-            'account_id': self.project_billable_no_company.analytic_account_id.id,
+            'account_id': self.project_billable_no_company.account_id.id,
             'amount': -50,
         }, {
             'name': 'extra costs 2',
-            'account_id': self.project_billable_no_company.analytic_account_id.id,
+            'account_id': self.project_billable_no_company.account_id.id,
             'amount': -100,
         }])
         # Ensures that the amount of the 'other_purchase_cost' is correctly scale to the currency of the main company.
@@ -961,7 +961,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             "partner_id": self.partner.id,
             "invoice_date": datetime.today(),
             "invoice_line_ids": [Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: 100},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: 100},
                 "product_id": self.product_a.id,
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
@@ -1033,13 +1033,13 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             "partner_id": self.partner.id,
             "invoice_date": datetime.today(),
             "invoice_line_ids": [Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: 100},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: 100},
                 "product_id": self.product_a.id,
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
                 "price_unit": self.product_a.standard_price,
             }), Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: 100},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: 100},
                 "product_id": self.product_b.id,
                 "quantity": 2,
                 "product_uom_id": self.product_b.uom_id.id,
@@ -1099,14 +1099,14 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             "invoice_date": datetime.today(),
             "company_id": foreign_company.id,
             "invoice_line_ids": [Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: 100},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: 100},
                 "product_id": self.product_a.id,
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
                 "price_unit": self.product_a.standard_price,
                 "currency_id": self.foreign_currency.id,
             }), Command.create({
-                "analytic_distribution": {self.project_billable_no_company.analytic_account_id.id: 100},
+                "analytic_distribution": {self.project_billable_no_company.account_id.id: 100},
                 "product_id": self.product_b.id,
                 "quantity": 2,
                 "product_uom_id": self.product_b.uom_id.id,

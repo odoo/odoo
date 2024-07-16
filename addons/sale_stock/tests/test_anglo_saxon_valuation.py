@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import Form, tagged
@@ -1717,9 +1716,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         sale_order.picking_ids.button_validate()
         svl_am = sale_order.order_line.move_ids.stock_valuation_layer_ids.account_move_id
         svl_am.button_draft()
-        svl_line = svl_am.line_ids.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
-
-        svl_line.write({'analytic_distribution': {sale_order.analytic_account_id.id: 100}})
         svl_am.action_post()
 
         # Check no reinvoice line addded to the sale order

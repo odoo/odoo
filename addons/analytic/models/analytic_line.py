@@ -51,6 +51,32 @@ class AnalyticPlanFields(models.AbstractModel):
         project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
         return [fname for plan in project_plan + other_plans if (fname := plan._column_name()) in self]
 
+    def _get_analytic_accounts(self):
+        return self.env['account.analytic.account'].browse([
+            self[fname].id
+            for fname in self._get_plan_fnames()
+            if self[fname]
+        ])
+
+    def _get_analytic_distribution(self):
+        account_ids = self._get_analytic_accounts().ids
+        return {} if not account_ids else {",".join(str(account_id) for account_id in account_ids): 100}
+
+    def _get_mandatory_plans(self, company, business_domain):
+        return [
+            {
+                'name': plan['name'],
+                'column_name': plan['column_name'],
+            }
+            for plan in self.env['account.analytic.plan']
+                .sudo().with_company(company)
+                .get_relevant_plans(business_domain=business_domain, company_id=company.id)
+            if plan['applicability'] == 'mandatory'
+        ]
+
+    def _get_plan_domain(self, plan):
+        return [('plan_id', 'child_of', plan.id)]
+
     @api.constrains(lambda self: self._get_plan_fnames())
     def _check_account_id(self):
         fnames = self._get_plan_fnames()
@@ -67,7 +93,7 @@ class AnalyticPlanFields(models.AbstractModel):
                 fname = plan._column_name()
                 if fname in fields:
                     fields[fname]['string'] = plan.name
-                    fields[fname]['domain'] = f"[('plan_id', 'child_of', {plan.id})]"
+                    fields[fname]['domain'] = repr(self._get_plan_domain(plan))
         return fields
 
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -84,7 +110,7 @@ class AnalyticPlanFields(models.AbstractModel):
 
             # Force domain on main account node as the fields_get doesn't do the trick
             if account_node is not None and view_type == 'search':
-                account_node.set('domain', repr([('plan_id', 'child_of', project_plan.id)]))
+                account_node.set('domain', repr(self._get_plan_domain(project_plan)))
 
             # If there is a main node, append the ones for other plans
             if account_node is not None or account_filter_node is not None:
@@ -95,7 +121,7 @@ class AnalyticPlanFields(models.AbstractModel):
                             'optional': 'show',
                             **account_node.attrib,
                             'name': fname,
-                            'domain': f"[('plan_id', 'child_of', {plan.id})]",
+                            'domain': repr(self._get_plan_domain(plan))
                         }))
                     if account_filter_node is not None:
                         account_filter_node.addnext(E.filter(name=fname, context=f"{{'group_by': '{fname}'}}"))

@@ -8,7 +8,7 @@ from ast import literal_eval
 class IrEmbeddedActions(models.Model):
     _name = 'ir.embedded.actions'
     _description = 'Embedded Actions'
-    _order = 'id, sequence'
+    _order = 'sequence, id'
 
     name = fields.Char(string='Embedded Name', translate=True)
     sequence = fields.Integer()

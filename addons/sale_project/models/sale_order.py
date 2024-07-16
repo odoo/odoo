@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
@@ -27,6 +26,8 @@ class SaleOrder(models.Model):
     show_task_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
     closed_task_count = fields.Integer(compute='_compute_tasks_ids', export_string_translation=False)
     completed_task_percentage = fields.Float(compute="_compute_completed_task_percentage", export_string_translation=False)
+    project_id = fields.Many2one('project.project', domain=[('allow_billable', '=', True)], help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.")
+    project_account_id = fields.Many2one('account.analytic.account', related='project_id.account_id')
 
     def _compute_milestone_count(self):
         read_group = self.env['project.milestone']._read_group(
@@ -130,7 +131,6 @@ class SaleOrder(models.Model):
 
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
-        result = super()._action_confirm()
         if len(self.company_id) == 1:
             # All orders are in the same company
             self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
@@ -138,44 +138,7 @@ class SaleOrder(models.Model):
             # Orders from different companies are confirmed together
             for order in self:
                 order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
-        return result
-
-    def _generate_analytic_account(self):
-        """ Generate Analytic Account for SO confirmed
-
-            This override generates analytic account for the SO if the AA has not been
-            generated in the parent method and the product contained in the SOLs will
-            generate a project and/or task(s)
-        """
-        super()._generate_analytic_account()
-        for order in self:
-            if (
-                not order.analytic_account_id
-                and any(
-                    sol.is_service
-                    and not sol.project_id
-                    and sol.product_id.service_tracking in ['project_only', 'task_in_project']
-                    for sol in order.order_line
-                )
-            ):
-                service_sols = order.order_line.filtered(
-                    lambda sol:
-                        sol.is_service
-                        and not sol.project_id
-                        and sol.product_id.service_tracking in ['project_only', 'task_in_project']
-                )
-                # if one service_product is found then we will generate a project and so we need to create an analytic account
-                service_products = service_sols.product_id.filtered(
-                    lambda p:
-                        p.project_template_id
-                        and (
-                            p.service_tracking == 'task_in_project'
-                            or p.service_tracking != 'no'
-                        )
-                        and p.default_code
-                )
-                default_code = service_products.default_code if len(service_products) == 1 else None
-                order._create_analytic_account(default_code)
+        return super()._action_confirm()
 
     def action_view_task(self):
         self.ensure_one()
@@ -319,10 +282,23 @@ class SaleOrder(models.Model):
         return res
 
     def _prepare_analytic_account_data(self, prefix=None):
-        result = super(SaleOrder, self)._prepare_analytic_account_data(prefix=prefix)
+        """ Prepare SO analytic account creation values.
+
+        :return: `account.analytic.account` creation values
+        :rtype: dict
+        """
+        self.ensure_one()
+        name = self.name
+        if prefix:
+            name = prefix + ": " + self.name
         project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
-        result['plan_id'] = project_plan.id or result['plan_id']
-        return result
+        return {
+            'name': name,
+            'code': self.client_order_ref,
+            'company_id': self.company_id.id,
+            'plan_id': project_plan.id,
+            'partner_id': self.partner_id.id,
+        }
 
     def _compute_completed_task_percentage(self):
         for so in self:

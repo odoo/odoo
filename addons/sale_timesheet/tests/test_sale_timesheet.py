@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, timedelta
 
 from odoo import Command
 from odoo.fields import Date
 from odoo.tools import float_is_zero
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import Form, tagged
@@ -51,7 +50,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         self.assertEqual(sale_order.tasks_count, 1, "One task should have been created on SO confirmation")
         self.assertEqual(len(sale_order.project_ids), 2, "One project should have been created by the SO, when confirmed + the one from SO line 2 'task in global project'")
-        self.assertEqual(sale_order.analytic_account_id, project_serv1.analytic_account_id, "The created project should be linked to the analytic account of the SO")
+        self.assertEqual(sale_order.project_account_id, project_serv1.account_id, "The created project should be linked to the analytic account of the SO")
 
         # create invoice
         invoice1 = sale_order._create_invoices()[0]
@@ -183,10 +182,10 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertTrue(task_serv1, "Sale Timesheet: on SO confirmation, a task should have been created in global project")
         self.assertTrue(task_serv2, "Sale Timesheet: on SO confirmation, a task should have been created in a new project")
         self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" should not need to be invoiced on so confirmation')
-        self.assertEqual(sale_order.analytic_account_id, task_serv2.project_id.analytic_account_id, "SO should have create a project")
+        self.assertEqual(sale_order.project_account_id, task_serv2.project_id.account_id, "SO should have create a project")
         self.assertEqual(sale_order.tasks_count, 2, "Two tasks (1 per SO line) should have been created on SO confirmation")
         self.assertEqual(len(sale_order.project_ids), 2, "One project should have been created by the SO, when confirmed + the one from SO line 1 'task in global project'")
-        self.assertEqual(sale_order.analytic_account_id, project_serv2.analytic_account_id, "The created project should be linked to the analytic account of the SO")
+        self.assertEqual(sale_order.project_account_id, project_serv2.account_id, "The created project should be linked to the analytic account of the SO")
 
         # let's log some timesheets
         timesheet1 = self.env['account.analytic.line'].create({
@@ -303,7 +302,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         project_serv2 = so_line_manual_only_project.project_id
         self.assertTrue(project_serv2, "A second project is created when selling 'project only' after SO confirmation.")
-        self.assertEqual(sale_order.analytic_account_id, project_serv2.analytic_account_id, "The created project should be linked to the analytic account of the SO")
+        self.assertEqual(sale_order.project_account_id, project_serv2.account_id, "The created project should be linked to the analytic account of the SO")
 
         # let's log some timesheets (on task and project)
         timesheet1 = self.env['account.analytic.line'].create({
@@ -1039,3 +1038,90 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         invoices = advance_payment._create_invoices(sale_orders)
 
         self.assertEqual(len(invoices), 2, "The number of invoices created should be equal to the number of sales orders.")
+
+    def test_timesheet_get_accounts_from_sol(self):
+        project_analytic_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+        other_analytic_plan2 = self.env['account.analytic.plan'].create({'name': 'Analytic Plan 2'})
+        analytic_account1, analytic_account2 = self.env['account.analytic.account'].create([
+            {
+                'name': 'Analytic Account 1',
+                'plan_id': project_analytic_plan.id,
+            },
+            {
+                'name': 'Analytic Account 2',
+                'plan_id': other_analytic_plan2.id,
+            },
+        ])
+        sale_order = self.env['sale.order'].create({
+            'name': 'SO Test',
+            'partner_id': self.partner_a.id,
+        })
+        so_line1 = self.env['sale.order.line'].create({
+            'product_id': self.product_order_timesheet4.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+            'analytic_distribution': {f'{analytic_account1.id}, {analytic_account2.id}': 100},
+        })
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': self.project_global.id,
+            'unit_amount': 50,
+            'employee_id': self.employee_manager.id,
+            'so_line': so_line1.id,
+        })
+        self.assertEqual(timesheet.account_id, analytic_account1)
+        self.assertEqual(timesheet[other_analytic_plan2._column_name()], analytic_account2)
+
+        # Create another analytic account and a new SOL to assign it to the timesheet
+        other_analytic_plan3 = self.env['account.analytic.plan'].create({'name': 'Analytic Plan 3'})
+        analytic_account3 = self.env['account.analytic.account'].create({
+            'name': 'Analytic Account 3',
+            'plan_id': other_analytic_plan3.id,
+        })
+        so_line2 = self.env['sale.order.line'].create({
+            'product_id': self.product_order_timesheet4.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+            'analytic_distribution': {f'{analytic_account1.id}, {analytic_account3.id}': 100},
+        })
+        timesheet.so_line = so_line2
+        self.assertEqual(timesheet.account_id, analytic_account1)
+        self.assertFalse(timesheet[other_analytic_plan2._column_name()])
+        self.assertEqual(timesheet[other_analytic_plan3._column_name()], analytic_account3)
+
+    def test_mandatory_plan_timesheet_applicability_from_sol(self):
+        AnalyticPlan = self.env['account.analytic.plan']
+        plan_a = self.analytic_plan
+        plan_b = AnalyticPlan.sudo().search([
+            ('parent_id', '=', False),
+            ('id', '!=', plan_a.id),
+        ], limit=1)
+        plan_b = plan_b or AnalyticPlan.create({'name': 'Q'})
+        analytic_account, _dummy = self.env['account.analytic.account'].create([{
+            'name': 'account',
+            'plan_id': plan.id,
+        } for plan in (plan_a, plan_b)])
+        self.env['account.analytic.applicability'].create({
+            'business_domain': 'timesheet',
+            'applicability': 'mandatory',
+            'analytic_plan_id': plan_b.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'name': 'SO Test',
+            'partner_id': self.partner_a.id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_order_timesheet4.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+            'analytic_distribution': {f'{analytic_account.id}': 100},
+        })
+        with self.assertRaises(ValidationError):
+            # The analytic plan 'other_analytic_plan' is mandatory on the sale order line linked to the timesheet
+            self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': self.project_global.id,
+            'unit_amount': 50,
+            'employee_id': self.employee_manager.id,
+            'so_line': so_line.id,
+        })

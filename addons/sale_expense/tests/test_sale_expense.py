@@ -2,7 +2,7 @@
 from odoo import Command, fields
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
-from odoo.tests import Form, tagged
+from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
@@ -25,7 +25,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             })],
         })
         so.action_confirm()
-        so._create_analytic_account()  # normally created at so confirmation when you use the right products
+        analytic_account = self.env['account.analytic.account'].create(so._prepare_analytic_account_data())
         init_price = so.amount_total
 
         # create some expense and validate it (expense at cost)
@@ -38,7 +38,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         exp = self.env['hr.expense'].create({
             'name': 'Air Travel',
             'product_id': self.company_data['product_delivery_cost'].id,
-            'analytic_distribution': {so.analytic_account_id.id: 100},
+            'analytic_distribution': {analytic_account.id: 100},
             'quantity': 11.30,
             'employee_id': self.expense_employee.id,
             'sheet_id': sheet.id,
@@ -77,7 +77,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         exp = self.env['hr.expense'].create({
             'name': 'Car Travel',
             'product_id': prod_exp_2.id,
-            'analytic_distribution': {so.analytic_account_id.id: 100},
+            'analytic_distribution': {analytic_account.id: 100},
             'product_uom_id': self.env.ref('uom.product_uom_km').id,
             'quantity': 100,
             'employee_id': self.expense_employee.id,
@@ -151,24 +151,3 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         expense_sheet.action_sheet_move_post()
 
         self.assertTrue(self.env['account.move'].search([('expense_sheet_id', '=', expense_sheet.id)], limit=1))
-
-    def test_analytic_account_expense_policy(self):
-        with Form(self.product_a.product_tmpl_id) as product_form:
-            product_form.can_be_expensed = True
-            product_form.expense_policy = 'cost'
-            product_form.can_be_expensed = False
-
-            self.product_a.product_tmpl_id = product_form.save()
-
-        so = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
-                'name': self.product_a.name,
-                'product_id': self.product_a.id,
-                'product_uom_qty': 2,
-                'product_uom': self.product_a.uom_id.id,
-                'price_unit': self.product_a.list_price,
-            })],
-        })
-        so.action_confirm()
-        self.assertFalse(so.analytic_account_id)

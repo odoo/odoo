@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
@@ -323,34 +322,6 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         sale_order.action_confirm()
         pol = sale_order._get_purchase_orders().order_line
         self.assertEqual(pol.name, f"{self.service_purchase_1.display_name}\n\n{product_attribute.name}: {product_attribute_value.name}: {custom_value}")
-
-    def test_pol_analytic_distribution(self):
-        """Confirming SO, analytic account from SO should be set as Analytic Distribution in POL."""
-        self.sale_order_1.analytic_account_id = self.test_analytic_account_1
-        self.sale_order_2.analytic_account_id = self.test_analytic_account_1
-        self.sale_order_2.order_line.analytic_distribution = {str(self.test_analytic_account_2.id): 100}
-
-        (self.sale_order_1 + self.sale_order_2).action_confirm()
-
-        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.supplierinfo1.partner_id.id), ('state', '=', 'draft')])
-        self.assertEqual(len(purchase_order), 1, "Only one PO should have been created, from the 2 Sales orders")
-        self.assertEqual(len(purchase_order.order_line), 2, "The purchase order should have 2 lines")
-        self.assertEqual(purchase_order.state, 'draft', "The created PO should be in draft state")
-
-        purchase_lines_so1 = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_1.order_line.ids)])
-        self.assertEqual(len(purchase_lines_so1), 1, "Only one SO line from SO 1 should have create a PO line")
-        purchase_line1 = purchase_lines_so1[0]
-
-        purchase_lines_so2 = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_2.order_line.ids)])
-        self.assertEqual(len(purchase_lines_so2), 1, "Only one SO line from SO 2 should have create a PO line")
-        purchase_line2 = purchase_lines_so2[0]
-
-        self.assertNotEqual(purchase_line1.product_id, purchase_line2.product_id, "The 2 PO line should have different products")
-        self.assertEqual(purchase_line1.product_id, self.sol1_service_purchase_1.product_id, "The create PO line must have the same product as its mother SO line")
-        self.assertEqual(purchase_line2.product_id, self.sol2_service_purchase_2.product_id, "The create PO line must have the same product as its mother SO line")
-
-        self.assertEqual(purchase_line1.analytic_distribution, {str(self.sale_order_1.analytic_account_id.id): 100}, "Analytic Distribution in PO should be same as Analytic Account set in SO")
-        self.assertEqual(purchase_line2.analytic_distribution, {str(self.test_analytic_account_2.id): 100}, "Analytic Distribution in PO should be same as Analytic Distribution set in SOL")
 
     def test_sale_order_multi_comp(self):
         ''' Test that the purchase service is done on the right company (the one of the SO) '''

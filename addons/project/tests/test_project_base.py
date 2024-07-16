@@ -474,7 +474,7 @@ class TestProjectBase(TestProjectCommon):
             "name": f"Project {x}",
         } for x in range(10)])
         projects._create_analytic_account()
-        self.assertEqual(projects.mapped("name"), projects.analytic_account_id.mapped("name"), "The analytic accounts names should match with the projects.")
+        self.assertEqual(projects.mapped("name"), projects.account_id.mapped("name"), "The analytic accounts names should match with the projects.")
 
     def test_task_count(self):
         project1, project2 = self.env['project.project'].create([
