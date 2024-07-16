@@ -57,6 +57,17 @@
     max-width: 225px;
     right: $o-mail-ChatHub-bubblesWidth;
     z-index: $o-mail-ChatBubble-zindex - 1;
+
+    & + .popover-arrow {
+        // puts arrow above preview border
+        &::before {
+            right: 1px !important;
+        }
+        &::after {
+            border-left-color: $o-view-background-color !important;
+            right: 2px !important;
+        }
+    }
 }
 
 .o-mail-ChatBubble-status {
