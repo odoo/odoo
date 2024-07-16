@@ -416,7 +416,7 @@ class TestUsers2(UsersCommonCase):
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
 
     @users('portal_1')
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_self_writeable_fields(self):
         """Check that a portal user:
             - can write on fields in SELF_WRITEABLE_FIELDS on himself,
