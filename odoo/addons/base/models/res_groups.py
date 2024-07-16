@@ -19,9 +19,6 @@ class ResGroups(models.Model):
     user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', help='Users explicitly in this group')
     all_user_ids = fields.Many2many('res.users', compute='_compute_all_user_ids', search='_search_all_user_ids', string='Users and implied users')
 
-    model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
-    rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
-        'group_id', 'rule_group_id', string='Rules', domain="[('global', '=', False)]")
     access_ids = fields.One2many('ir.access', 'group_id', string="Access Rules", copy=True)
     menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
     view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
@@ -172,7 +169,7 @@ class ResGroups(models.Model):
         # field 'share' depends on method has_group()
         # DLE P139
         if self.ids:
-            self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env['ir.access']._clear_caches()
 
         res = super().write(vals)
 

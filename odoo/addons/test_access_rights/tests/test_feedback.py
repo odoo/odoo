@@ -169,6 +169,7 @@ class TestIRRuleFeedback(Feedback):
             'val': 0,
         }).with_user(cls.user)
         cls.maxDiff = None
+        cls.env['ir.access'].search([('model_id', '=', cls.model.id)]).unlink()
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
         res = self.env['ir.rule'].create({
@@ -207,7 +208,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -223,7 +224,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -241,7 +242,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 1
 
@@ -251,6 +252,7 @@ If you really, really need access, perhaps you can win over your friendly admini
     def test_globals_all(self):
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[("val", "=", 78)]', global_=True)
+        self._make_rule('rule 2', '[]')
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -260,7 +262,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 1
 
@@ -273,6 +275,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         """
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
+        self._make_rule('rule 2', '[]')
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -282,7 +285,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -302,7 +305,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 2
 - rule 3
@@ -326,7 +329,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -357,7 +360,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'read' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -379,7 +382,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'read' access to:
 - %s, %s (%s: %s, company=%s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.
@@ -419,7 +422,7 @@ Sorry, {self.user.name} (id={self.user.id}) doesn't have 'read' access to:
 - {record_1._description}, {record_1.display_name} ({record_1._name}: {record_1.id}, company={record_1.company_id.display_name})
 - {record_2._description}, {record_2.display_name} ({record_2._name}: {record_2.id}, company={record_2.company_id.display_name})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.

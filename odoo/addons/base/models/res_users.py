@@ -249,8 +249,6 @@ class ResUsers(models.Model):
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
                                     compute='_compute_accesses_count', compute_sudo=True)
-    rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
-                                 compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
 
@@ -423,8 +421,7 @@ class ResUsers(models.Model):
     def _compute_accesses_count(self):
         for user in self:
             groups = user.all_group_ids
-            user.accesses_count = len(groups.model_access)
-            user.rules_count = len(groups.rule_groups)
+            user.accesses_count = len(groups.access_ids)
             user.groups_count = len(groups)
 
     @api.depends('res_users_settings_ids')
@@ -573,7 +570,7 @@ class ResUsers(models.Model):
 
         if 'group_ids' in values and self.ids:
             # clear caches linked to the users
-            self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env['ir.access']._clear_caches()
 
         # per-method / per-model caches have been removed so the various
         # clear_cache/clear_caches methods pretty much just end up calling
@@ -1045,22 +1042,10 @@ class ResUsers(models.Model):
         return {
             'name': _('Access Rights'),
             'view_mode': 'list,form',
-            'res_model': 'ir.model.access',
+            'res_model': 'ir.access',
             'type': 'ir.actions.act_window',
             'context': {'create': False, 'delete': False},
-            'domain': [('id', 'in', self.all_group_ids.model_access.ids)],
-            'target': 'current',
-        }
-
-    def action_show_rules(self):
-        self.ensure_one()
-        return {
-            'name': _('Record Rules'),
-            'view_mode': 'list,form',
-            'res_model': 'ir.rule',
-            'type': 'ir.actions.act_window',
-            'context': {'create': False, 'delete': False},
-            'domain': [('id', 'in', self.all_group_ids.rule_groups.ids)],
+            'domain': [('group_id', 'in', self.all_group_ids.ids)],
             'target': 'current',
         }
 

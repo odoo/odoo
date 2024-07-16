@@ -116,7 +116,6 @@ class IrUiMenu(models.Model):
         }
         menu_ids = set(menus._ids)
         visible_ids = set()
-        access = self.env['ir.model.access']
         # process action menus, check whether their action is allowed
         for menu in menus:
             action = menu.action
@@ -124,7 +123,7 @@ class IrUiMenu(models.Model):
                 continue
             model_fname = MODEL_BY_TYPE.get(action._name)
             # action[model_fname] has been fetched in batch in `exists_actions`
-            if model_fname and not access.check(action[model_fname], 'read', False):
+            if model_fname and not self.env[action[model_fname]].has_access('read'):
                 continue
             # make menu visible, and its folder ancestors, too
             menu_id = menu.id
