@@ -24,7 +24,12 @@
                     <CashierName />
                     <ProxyStatus t-if="pos.config.use_proxy" />
                     <button t-if="customerFacingDisplayButtonIsShown" t-on-click="openCustomerDisplay" class="btn btn-light fa fa-fw fa-desktop text-success pe-4" title="Customer Display" />
-                    <SyncNotification />
+                    
+                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light rounded-0 d-flex gap-1" t-on-click="onSyncNotificationClick">
+                        <span t-if="this.pos.data.network.unsyncData.length > 0" t-esc="this.pos.data.network.unsyncData.length" /> 
+                        <div t-if="this.pos.data.network.offline" class="fa fa-fw fa-chain-broken text-danger"/>
+                        <div t-else="" class="fa fa-fw fa-spin fa-circle-o-notch text-warning"/>
+                    </div>
                 </div>
                 <Dropdown>
                     <button class="btn btn-outline fa fa-bars" />

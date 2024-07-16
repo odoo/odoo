@@ -1,4 +1,5 @@
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import { negate } from "@point_of_sale/../tests/tours/utils/common";
 
 export function confirmPopup() {
     return [Dialog.confirm()];
@@ -38,5 +39,10 @@ export function endTour() {
     return {
         content: "Last tour step that avoids error mentioned in commit 443c209",
         trigger: "body",
+    };
+}
+export function isSyncStatusConnected() {
+    return {
+        trigger: negate(".oe_status", ".pos-rightheader .status-buttons"),
     };
 }
