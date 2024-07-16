@@ -116,6 +116,5 @@
         {
             content: 'Verify the expene sheet is submitted',
             trigger: '.o_arrow_button_current:contains("Submitted")',
-            allowDisabled: true,
         },
     ]});

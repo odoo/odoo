@@ -44,7 +44,6 @@ function increaseProductQuantity(productName) {
             td.o_sale_product_configurator_qty
             button:has(i.fa-plus)
         `,
-        allowDisabled: true,
         run: 'click',
     };
 }
@@ -190,7 +189,6 @@ function assertFooterButtonsDisabled() {
     return {
         content: "Assert that the footer buttons are disabled",
         trigger: 'footer.modal-footer button:disabled',
-        allowDisabled: true,
     };
 }
 

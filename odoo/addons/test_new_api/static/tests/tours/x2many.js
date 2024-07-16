@@ -549,7 +549,6 @@
     }, {
         content: "check field not in embedded view received correctly",
         trigger: '.o_field_widget[name=messages] .o_data_row input[type="checkbox"]:checked',
-        allowDisabled: true,
     }, {
         content: "empty discussion title",
         trigger: '.o_field_widget[name=name] input',

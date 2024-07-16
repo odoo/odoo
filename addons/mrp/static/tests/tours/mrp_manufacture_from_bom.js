@@ -19,7 +19,6 @@ registry.category("web_tour.tours").add("test_manufacture_from_bom", {
         },
         {
             trigger: 'button[aria-checked="true"]:contains("Draft")',
-            allowDisabled: true,
         },
     ],
 });

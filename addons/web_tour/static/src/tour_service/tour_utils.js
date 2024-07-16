@@ -138,7 +138,6 @@ export const stepUtils = {
             steps.push({
                 isActive: ["auto", "mobile"],
                 trigger,
-                allowDisabled: true,
             });
         }
         steps.push(
