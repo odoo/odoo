@@ -2,7 +2,6 @@
 // @ts-check
 
 import { parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
-import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
 import { loadBundle } from "@web/core/assets";
 import { OdooSpreadsheetModel } from "@spreadsheet/model";
@@ -28,11 +27,7 @@ export async function fetchSpreadsheetModel(env, resModel, resId) {
 
 export function createSpreadsheetModel({ env, data, revisions }) {
     const odooDataProvider = new OdooDataProvider(env);
-    const model = new OdooSpreadsheetModel(
-        migrate(data),
-        { custom: { odooDataProvider } },
-        revisions
-    );
+    const model = new OdooSpreadsheetModel(data, { custom: { odooDataProvider } }, revisions);
     return model;
 }
 
@@ -149,7 +144,7 @@ function exportGlobalFiltersToSheet(model, data) {
             .flat()
             .filter(isDefined)
             .map(({ value, format }) => formatValue(value, { format, locale }))
-            .filter((formattedValue) =>  formattedValue !== "")
+            .filter((formattedValue) => formattedValue !== "")
             .join(", ");
     }
 }
