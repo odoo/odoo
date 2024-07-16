@@ -15,7 +15,6 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
 }, {
     content: "Check Register button is disabled when no ticket selected",
     trigger: 'button:disabled:contains("Register")',
-    allowDisabled: true,
 }, {
     content: "Select 2 'Free' tickets to buy",
     trigger: 'div.o_wevent_ticket_selector:contains("Free") select.form-select',

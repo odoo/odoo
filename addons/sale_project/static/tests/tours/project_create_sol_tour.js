@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         content: "Create an Sales Order Item in the autocomplete dropdown.",
         run: "click",
     }, {
-        trigger: ".o_form_button_save",
+        trigger: ".o_form_button_save:enabled",
         content: "Save project",
         run: "click",
     },

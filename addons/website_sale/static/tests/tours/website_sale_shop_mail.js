@@ -24,7 +24,6 @@ registry.category("web_tour.tours").add('shop_mail', {
     },
     {
         trigger: '.o_statusbar_status .o_arrow_button_current:contains("Sales Order")',
-        allowDisabled: true,
     },
     {
         content: "click send by email",
