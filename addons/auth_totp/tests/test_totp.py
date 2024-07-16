@@ -57,7 +57,7 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
         # 1. Enable 2FA
-        self.start_tour('/web', 'totp_tour_setup', login='demo')
+        self.start_tour('/odoo', 'totp_tour_setup', login='demo')
 
         # 2. Verify that RPC is blocked because 2FA is on.
         self.assertFalse(
@@ -99,8 +99,8 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
         if not loaded_demo_data(self.env):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
-        self.start_tour('/web', 'totp_tour_setup', login='demo')
-        self.start_tour('/web', 'totp_admin_disables', login='admin')
+        self.start_tour('/odoo', 'totp_tour_setup', login='demo')
+        self.start_tour('/odoo', 'totp_admin_disables', login='admin')
         self.start_tour('/', 'totp_login_disabled', login=None)
 
     @mute_logger('odoo.http')
@@ -114,7 +114,7 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
 
-        self.start_tour('/web', 'totp_tour_setup', login='demo')
+        self.start_tour('/odoo', 'totp_tour_setup', login='demo')
         self.url_open('/web/session/logout')
 
         headers = {

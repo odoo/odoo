@@ -17,5 +17,5 @@ class TestTOTPInvite(TestTOTP):
         if not loaded_demo_data(self.env):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
-        self.start_tour('/web', 'totp_admin_invite', login='admin')
-        self.start_tour('/web', 'totp_admin_self_invite', login='admin')
+        self.start_tour('/odoo', 'totp_admin_invite', login='admin')
+        self.start_tour('/odoo', 'totp_admin_self_invite', login='admin')
