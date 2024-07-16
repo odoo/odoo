@@ -229,6 +229,18 @@ export class ListController extends Component {
         };
     }
 
+    get actionMenuProps() {
+        return {
+            getActiveIds: () => this.model.root.selection.map((r) => r.resId),
+            context: this.props.context,
+            domain: this.props.domain,
+            items: this.actionMenuItems,
+            isDomainSelected: this.model.root.isDomainSelected,
+            resModel: this.model.root.resModel,
+            onActionExecuted: () => this.model.load(),
+        };
+    }
+
     /**
      * onRecordSaved is a callBack that will be executed after the save
      * if it was done. It will therefore not be executed if the record
