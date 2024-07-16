@@ -6,6 +6,10 @@ import { url } from "@web/core/utils/urls";
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
 
+// Match markedown code fences (```xml [...] ```) and inline code (`[...]`),
+// extracted from the marked librairy
+const codeFencesRegexp = /(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/gm;
+
 /**
  * Escape < > & as html entities
  *
@@ -36,6 +40,12 @@ export async function prettifyMessageContent(rawBody, validRecords = []) {
     // And further extended to include Latin-1 Supplement, Latin Extended-A, Latin Extended-B and Latin Extended Additional.
     const escapedAndCompactContent = escapeAndCompactTextContent(rawBody);
     let body = escapedAndCompactContent.replace(/&nbsp;/g, " ").trim();
+    // Extract all code block from the body
+    const codesFences = body.replaceAll("&#x60;", "`").match(codeFencesRegexp);
+    // remove all the code block to avoid processing them
+    if (codesFences) {
+        body = body.replaceAll("&#x60;", "`").replaceAll(codeFencesRegexp, "--code-fence-placeholder--");
+    }
     // This message will be received from the mail composer as html content
     // subtype but the urls will not be linkified. If the mail composer
     // takes the responsibility to linkify the urls we end up with double
@@ -45,6 +55,12 @@ export async function prettifyMessageContent(rawBody, validRecords = []) {
     body = generateMentionsLinks(body, validRecords);
     body = parseAndTransform(body, addLink);
     body = await _generateEmojisOnHtml(body);
+    // add code code block back in the message
+    if (codesFences) {
+        for (const fence of codesFences) {
+            body = body.replace("--code-fence-placeholder--", fence);
+        }
+    }
     return body;
 }
 
@@ -105,7 +121,8 @@ function linkify(text) {
     let curIndex = 0;
     let result = "";
     let match;
-    while ((match = urlRegexp.exec(text)) !== null) {
+    const markdownLinkRegex = /\[.*\](\(.*\))/g;
+    while ((match = urlRegexp.exec(text.replaceAll(markdownLinkRegex, ""))) !== null) {
         result += _escapeEntities(text.slice(curIndex, match.index));
         // Decode the url first, in case it's already an encoded url
         const url = decodeURI(match[0]);
@@ -149,8 +166,6 @@ export function addLink(node, transformChildren) {
 export function escapeAndCompactTextContent(content) {
     //Removing unwanted extra spaces from message
     let value = escape(content).trim();
-    value = value.replace(/(\r|\n){2,}/g, "<br/><br/>");
-    value = value.replace(/(\r|\n)/g, "<br/>");
 
     // prevent html space collapsing
     value = value.replace(/ /g, "&nbsp;").replace(/([^>])&nbsp;([^<])/g, "$1 $2");

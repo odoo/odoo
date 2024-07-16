@@ -44,12 +44,21 @@
 .o-mail-Message-body {
     font-family: "text-emoji", $font-family-base;
 
-    & > p {
+    ul:last-child, ol:last-child {
+        margin-bottom: 0 !important;
+    }
+    p:last-child {
         margin-bottom: 0 !important;
 
         &:last-of-type:has(~ .o-mail-Message-edited) {
             display: inline-block;
         }
+    }
+    pre {
+        padding: 0;
+        margin-bottom: 0;
+        background-color: transparent;
+        white-space: pre-wrap;
     }
 }
 

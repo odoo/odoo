@@ -6,6 +6,9 @@ import {
     prettifyMessageContent,
 } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
+import { markdown } from "@mail/utils/common/markdown";
+
+import { markup } from "@odoo/owl";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -15,6 +18,9 @@ import { omit } from "@web/core/utils/objects";
 import { url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
+
+const parser = new DOMParser();
+
 export class Message extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").Message>} */
@@ -32,7 +38,6 @@ export class Message extends Record {
     update(data) {
         super.update(data);
         if (this.isNotification && !this.notificationType) {
-            const parser = new DOMParser();
             const htmlBody = parser.parseFromString(this.body, "text/html");
             this.notificationType = htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
         }
@@ -41,6 +46,19 @@ export class Message extends Record {
     attachments = Record.many("Attachment", { inverse: "message" });
     author = Record.one("Persona");
     body = Record.attr("", { html: true });
+    bodyHtml = Record.attr("", {
+        compute() {
+            if (!this.isBodyEmpty) {
+                const htmlDoc = parser.parseFromString(this.body, "text/html");
+                const markdownElements = htmlDoc.querySelectorAll("odoo-markdown");
+                for (const markdownElement of markdownElements) {
+                    markdownElement.innerHTML = markdown(markdownElement.innerHTML);
+                }
+                return markup(htmlDoc.body.innerHTML);
+            }
+        },
+        eager: true,
+    });
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {DateTime} */
     date = Record.attr(undefined, { type: "datetime" });
@@ -95,7 +113,7 @@ export class Message extends Record {
                 return false;
             }
             const div = document.createElement("div");
-            div.innerHTML = this.body;
+            div.innerHTML = this.bodyHtml;
             return Boolean(div.querySelector("a:not([data-oe-model])"));
         },
     });
@@ -309,10 +327,10 @@ export class Message extends Record {
     }
 
     get inlineBody() {
-        if (!this.body) {
+        if (!this.bodyHtml) {
             return "";
         }
-        return htmlToTextContentInline(this.body);
+        return htmlToTextContentInline(this.bodyHtml);
     }
 
     get notificationIcon() {
@@ -347,12 +365,16 @@ export class Message extends Record {
             mentionedChannels,
             mentionedPartners,
         });
+        let prettyBody = await prettifyMessageContent(body, validMentions);
+        if (this.thread.model === "discuss.channel") {
+            prettyBody = `<odoo-markdown>${prettyBody}</odoo-markdown>`;
+        }
         const data = await rpc("/mail/message/update_content", {
             attachment_ids: attachments.concat(this.attachments).map((attachment) => attachment.id),
             attachment_tokens: attachments
                 .concat(this.attachments)
                 .map((attachment) => attachment.accessToken),
-            body: await prettifyMessageContent(body, validMentions),
+            body: prettyBody,
             message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
         });

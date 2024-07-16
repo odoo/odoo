@@ -1061,17 +1061,16 @@ export class Thread extends Record {
             if (parentId) {
                 tmpData.parentMessage = this.store.Message.get(parentId);
             }
-            const prettyContent = await prettifyMessageContent(
-                body,
-                this.store.getMentionsFromText(body, {
-                    mentionedChannels,
-                    mentionedPartners,
-                })
-            );
             tmpMsg = this.store.Message.insert(
                 {
                     ...tmpData,
-                    body: prettyContent,
+                    body: await prettifyMessageContent(
+                        body,
+                        this.store.getMentionsFromText(body, {
+                            mentionedChannels,
+                            mentionedPartners,
+                        })
+                    ),
                     isPending: true,
                     thread: this,
                 },
