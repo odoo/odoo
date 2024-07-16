@@ -217,9 +217,6 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='barcode']" position="attributes">
-                <attribute name="widget">productScanner</attribute>
-            </xpath>
             <xpath expr="//div[@name='sales_price']" position="after">
                 <field name="available_in_pos"/>
                 <field name="pos_categ_ids" widget="many2many_tags"/>
