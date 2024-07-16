@@ -868,6 +868,19 @@ class Environment(Mapping):
         self.cr.execute(query)
         return [] if self.cr.description is None else self.cr.fetchall()
 
+    def execute_query_dict(self, query: SQL) -> list[dict]:
+        """ Execute the given query, fetch its results as a list of dicts.
+        The method automatically flushes fields in the metadata of the query.
+        """
+        rows = self.execute_query(query)
+        if not rows:
+            return rows
+        description = self.cr.description
+        return [
+            {column.name: row[index] for index, column in enumerate(description)}
+            for row in rows
+        ]
+
 
 class Transaction:
     """ A object holding ORM data structures for a transaction. """

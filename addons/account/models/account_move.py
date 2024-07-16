@@ -842,8 +842,7 @@ class AccountMove(models.Model):
     @api.depends('name', 'journal_id')
     def _compute_made_sequence_hole(self):
         sql = self._get_query_made_hole(self.ids)
-        self.env.cr.execute(sql)
-        made_sequence_hole = set(r[0] for r in self.env.cr.fetchall())
+        made_sequence_hole = {id_ for id_, in self.env.execute_query(sql)}
         for move in self:
             move.made_sequence_hole = move.id in made_sequence_hole
 
@@ -1030,8 +1029,11 @@ class AccountMove(models.Model):
             self.env['account.payment'].flush_model(['is_matched'])
 
             queries = []
-            for source_field, counterpart_field in (('debit', 'credit'), ('credit', 'debit')):
-                queries.append(f'''
+            for source_field, counterpart_field in (
+                ('debit_move_id', 'credit_move_id'),
+                ('credit_move_id', 'debit_move_id'),
+            ):
+                queries.append(SQL('''
                     SELECT
                         source_line.id AS source_line_id,
                         source_line.move_id AS source_move_id,
@@ -1042,19 +1044,17 @@ class AccountMove(models.Model):
                         BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment,
                         BOOL_OR(COALESCE(BOOL(counterpart_move.statement_line_id), FALSE)) as has_st_line
                     FROM account_partial_reconcile part
-                    JOIN account_move_line source_line ON source_line.id = part.{source_field}_move_id
+                    JOIN account_move_line source_line ON source_line.id = part.%s
                     JOIN account_account account ON account.id = source_line.account_id
-                    JOIN account_move_line counterpart_line ON counterpart_line.id = part.{counterpart_field}_move_id
+                    JOIN account_move_line counterpart_line ON counterpart_line.id = part.%s
                     JOIN account_move counterpart_move ON counterpart_move.id = counterpart_line.move_id
                     LEFT JOIN account_payment pay ON pay.id = counterpart_move.payment_id
                     WHERE source_line.move_id IN %s AND counterpart_line.move_id != source_line.move_id
                     GROUP BY source_line_id, source_move_id, source_line_account_type
-                ''')
+                ''', SQL.identifier(source_field), SQL.identifier(counterpart_field), stored_ids))
 
-            self._cr.execute(' UNION ALL '.join(queries), [stored_ids, stored_ids])
-
-            payment_data = defaultdict(lambda: [])
-            for row in self._cr.dictfetchall():
+            payment_data = defaultdict(list)
+            for row in self.env.execute_query_dict(SQL(" UNION ALL ").join(queries)):
                 payment_data[row['source_move_id']].append(row)
         else:
             payment_data = {}
@@ -1626,29 +1626,30 @@ class AccountMove(models.Model):
 
         self.env["account.move"].flush_model(used_fields)
 
-        move_table_and_alias = "account_move AS move"
-        place_holders = {}
+        move_table_and_alias = SQL("account_move AS move")
         if not moves[0].id:  # check if record is under creation/edition in UI
             # New record aren't searchable in the DB and record in edition aren't up to date yet
             # Replace the table by safely injecting the values in the query
-            place_holders = {
-                "id": moves._origin.id or 0,
-                **{
-                    field_name: moves._fields[field_name].convert_to_write(moves[field_name], moves) or None
-                    for field_name in used_fields
-                },
+            values = {
+                field_name: moves._fields[field_name].convert_to_write(moves[field_name], moves) or None
+                for field_name in used_fields
             }
+            values["id"] = moves._origin.id or 0
             # The amount total depends on the field line_ids and is calculated upon saving, we needed a way to get it even when the
             # invoices has not been saved yet.
-            place_holders['amount_total'] = self.tax_totals.get('amount_total', 0)
-            casted_values = ", ".join([f"%({field_name})s::{moves._fields[field_name].column_type[0]}" for field_name in place_holders])
-            move_table_and_alias = f'(VALUES ({casted_values})) AS move({", ".join(place_holders)})'
+            values['amount_total'] = self.tax_totals.get('amount_total', 0)
+            casted_values = SQL(', ').join(
+                SQL("%s::%s", value, SQL.identifier(moves._fields[field_name].column_type[0]))
+                for field_name, value in values.items()
+            )
+            column_names = SQL(', ').join(SQL.identifier(field_name) for field_name in values)
+            move_table_and_alias = SQL("(VALUES (%s)) AS move(%s)", casted_values, column_names)
 
-        self.env.cr.execute(f"""
+        result = self.env.execute_query(SQL("""
             SELECT
                    move.id AS move_id,
                    array_agg(duplicate_move.id) AS duplicate_ids
-              FROM {move_table_and_alias}
+              FROM %(move_table_and_alias)s
               JOIN account_move AS duplicate_move ON
                    move.company_id = duplicate_move.company_id
                AND move.id != duplicate_move.id
@@ -1675,14 +1676,14 @@ class AccountMove(models.Model):
                )
              WHERE move.id IN %(moves)s
              GROUP BY move.id
-        """, {
-            "matching_states": tuple(matching_states),
-            "moves": tuple(moves.ids or [0]),
-            **place_holders
-        })
+            """,
+            matching_states=tuple(matching_states),
+            moves=tuple(moves.ids or [0]),
+            move_table_and_alias=move_table_and_alias,
+        ))
         return {
-            self.env['account.move'].browse(res['move_id']): self.env['account.move'].browse(res['duplicate_ids'])
-            for res in self.env.cr.dictfetchall()
+            self.env['account.move'].browse(move_id): self.env['account.move'].browse(duplicate_ids)
+            for move_id, duplicate_ids in result
         }
 
     @api.depends('company_id')
@@ -2092,7 +2093,7 @@ class AccountMove(models.Model):
         # are already done. Then, this query MUST NOT depend on computed stored fields.
         # It happens as the ORM calls create() with the 'no_recompute' statement.
         self.env['account.move.line'].flush_model(['debit', 'credit', 'balance', 'currency_id', 'move_id'])
-        self._cr.execute('''
+        return self.env.execute_query(SQL('''
             SELECT line.move_id,
                    ROUND(SUM(line.debit), currency.decimal_places) debit,
                    ROUND(SUM(line.credit), currency.decimal_places) credit
@@ -2103,9 +2104,7 @@ class AccountMove(models.Model):
              WHERE line.move_id IN %s
           GROUP BY line.move_id, currency.decimal_places
             HAVING ROUND(SUM(line.balance), currency.decimal_places) != 0
-        ''', [tuple(moves.ids)])
-
-        return self._cr.fetchall()
+        ''', tuple(moves.ids)))
 
     def _check_fiscalyear_lock_date(self):
         for move in self:
@@ -4053,14 +4052,14 @@ class AccountMove(models.Model):
             'credit_amount_currency', 'credit_move_id', 'debit_amount_currency',
             'debit_move_id', 'exchange_move_id',
         ])
-        query = '''
+        sql = SQL('''
             SELECT
                 part.id,
                 part.exchange_move_id,
                 part.debit_amount_currency AS amount,
                 part.credit_move_id AS counterpart_line_id
             FROM account_partial_reconcile part
-            WHERE part.debit_move_id IN %s
+            WHERE part.debit_move_id IN %(line_ids)s
 
             UNION ALL
 
@@ -4070,14 +4069,13 @@ class AccountMove(models.Model):
                 part.credit_amount_currency AS amount,
                 part.debit_move_id AS counterpart_line_id
             FROM account_partial_reconcile part
-            WHERE part.credit_move_id IN %s
-        '''
-        self._cr.execute(query, [tuple(reconciled_lines.ids)] * 2)
+            WHERE part.credit_move_id IN %(line_ids)s
+        ''', line_ids=tuple(reconciled_lines.ids))
 
         partial_values_list = []
         counterpart_line_ids = set()
         exchange_move_ids = set()
-        for values in self._cr.dictfetchall():
+        for values in self.env.execute_query_dict(sql):
             partial_values_list.append({
                 'aml_id': values['counterpart_line_id'],
                 'partial_id': values['id'],
@@ -4090,13 +4088,13 @@ class AccountMove(models.Model):
 
         if exchange_move_ids:
             self.env['account.move.line'].flush_model(['move_id'])
-            query = '''
+            sql = SQL('''
                 SELECT
                     part.id,
                     part.credit_move_id AS counterpart_line_id
                 FROM account_partial_reconcile part
                 JOIN account_move_line credit_line ON credit_line.id = part.credit_move_id
-                WHERE credit_line.move_id IN %s AND part.debit_move_id IN %s
+                WHERE credit_line.move_id IN %(exchange_move_ids)s AND part.debit_move_id IN %(counterpart_line_ids)s
 
                 UNION ALL
 
@@ -4105,15 +4103,14 @@ class AccountMove(models.Model):
                     part.debit_move_id AS counterpart_line_id
                 FROM account_partial_reconcile part
                 JOIN account_move_line debit_line ON debit_line.id = part.debit_move_id
-                WHERE debit_line.move_id IN %s AND part.credit_move_id IN %s
-            '''
-            self._cr.execute(query, [tuple(exchange_move_ids), tuple(counterpart_line_ids)] * 2)
+                WHERE debit_line.move_id IN %(exchange_move_ids)s AND part.credit_move_id IN %(counterpart_line_ids)s
+            ''', exchange_move_ids=tuple(exchange_move_ids), counterpart_line_ids=tuple(counterpart_line_ids))
 
-            for values in self._cr.dictfetchall():
-                counterpart_line_ids.add(values['counterpart_line_id'])
+            for part_id, line_ids in self.env.execute_query(sql):
+                counterpart_line_ids.add(line_ids)
                 partial_values_list.append({
-                    'aml_id': values['counterpart_line_id'],
-                    'partial_id': values['id'],
+                    'aml_id': line_ids,
+                    'partial_id': part_id,
                     'currency': self.company_id.currency_id,
                 })
 
@@ -4574,7 +4571,7 @@ class AccountMove(models.Model):
         if self:
             self.env['account.full.reconcile'].flush_model(['exchange_move_id'])
             self.env['account.partial.reconcile'].flush_model(['exchange_move_id'])
-            self._cr.execute(
+            sql = SQL(
                 """
                     SELECT DISTINCT sub.exchange_move_id
                     FROM (
@@ -4589,9 +4586,9 @@ class AccountMove(models.Model):
                         WHERE exchange_move_id IN %s
                     ) AS sub
                 """,
-                [tuple(self.ids), tuple(self.ids)],
+                tuple(self.ids), tuple(self.ids),
             )
-            exchange_move_ids = set([row[0] for row in self._cr.fetchall()])
+            exchange_move_ids = {id_ for id_, in self.env.execute_query(sql)}
 
         for move in self:
             if move.id in exchange_move_ids:

@@ -770,7 +770,7 @@ class PosConfig(models.Model):
             return default_limit
 
     def get_limited_partners_loading(self):
-        self.env.cr.execute("""
+        return self.env.execute_query(SQL("""
             WITH pm AS
             (
                      SELECT   partner_id,
@@ -787,9 +787,7 @@ class PosConfig(models.Model):
             )
             ORDER BY  COALESCE(pm.order_count, 0) DESC,
                       NAME limit %s;
-        """, [self.company_id.id, str(100)])
-        result = self.env.cr.fetchall()
-        return result
+        """, self.company_id.id, 100))
 
     def action_pos_config_modal_edit(self):
         return {
