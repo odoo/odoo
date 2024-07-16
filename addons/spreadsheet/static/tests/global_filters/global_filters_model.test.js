@@ -50,7 +50,6 @@ import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
 import { GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { PivotUIGlobalFilterPlugin } from "@spreadsheet/pivot/index";
 
 describe.current.tags("headless");
@@ -355,7 +354,8 @@ test("Domain of date filter with month offset on graph field", async function ()
 });
 
 test("Can import/export filters", async function () {
-    const spreadsheetData = migrate({
+    const spreadsheetData = {
+        version: 16,
         sheets: [
             {
                 id: "sheet1",
@@ -394,7 +394,7 @@ test("Can import/export filters", async function () {
             },
         },
         globalFilters: [LAST_YEAR_LEGACY_FILTER, LAST_YEAR_GLOBAL_FILTER],
-    });
+    };
     const model = await createModelWithDataSource({ spreadsheetData });
 
     expect(model.getters.getGlobalFilters().length).toBe(2);
