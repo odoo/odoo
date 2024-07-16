@@ -1379,7 +1379,10 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
         let maxDiscount = reward.discount_max_amount || Infinity;
         if (reward.discount_mode === 'per_point') {
-            maxDiscount = Math.min(maxDiscount, reward.discount * this._getRealCouponPoints(coupon_id));
+            let points = (["ewallet", "gift_card"].includes(reward.program_id.program_type)) ?
+                this._getRealCouponPoints(coupon_id) :
+                Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
+            maxDiscount = Math.min(maxDiscount, reward.discount * points);
         } else if (reward.discount_mode === 'per_order') {
             maxDiscount = Math.min(maxDiscount, reward.discount);
         } else if (reward.discount_mode === 'percent') {
@@ -1393,9 +1396,13 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
         if (['ewallet', 'gift_card'].includes(reward.program_id.program_type)) {
+            const taxes_to_apply = discountProduct.taxes_id.map(id => { return { ...this.pos.taxes_by_id[id], price_include:true } })
+            const tax_res = this.pos.compute_all(taxes_to_apply, -Math.min(maxDiscount, discountable), 1, this.pos.currency.rounding)
+            let new_price = tax_res['total_excluded']
+            new_price += tax_res.taxes.filter(tax => this.pos.taxes_by_id[tax.id].price_include).reduce((sum,tax) => sum += tax.amount,0)
             return [{
                 product: discountProduct,
-                price: -Math.min(maxDiscount, discountable),
+                price: new_price,
                 quantity: 1,
                 reward_id: reward.id,
                 is_reward_line: true,
@@ -1403,6 +1410,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 points_cost: pointCost,
                 reward_identifier_code: rewardCode,
                 merge: false,
+                taxIds: discountProduct.taxes_id
             }];
         }
         const discountFactor = discountable ? Math.min(1, (maxDiscount / discountable)) : 1;

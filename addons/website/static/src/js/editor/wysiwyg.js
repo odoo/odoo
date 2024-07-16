@@ -71,7 +71,8 @@ const WebsiteWysiwyg = Wysiwyg.extend({
      */
     start: async function () {
         // Bind the _onPageClick handler to click event: to close the dropdown if clicked outside.
-        this.$editable[0].addEventListener("click", this._onPageClick.bind(this), { capture: true });
+        this.__onPageClick = this._onPageClick.bind(this);
+        this.$editable[0].addEventListener("click", this.__onPageClick, { capture: true });
         this.options.toolbarHandler = $('#web_editor-top-edit');
         // Do not insert a paragraph after each column added by the column commands:
         this.options.insertParagraphAfterColumns = false;
@@ -216,7 +217,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         socialMediaOptions.clearDbSocialValuesCache();
 
         this._restoreMegaMenus();
-        this.$editable[0].removeEventListener("click", this._onPageClick.bind(this), { capture: true });
+        this.$editable[0].removeEventListener("click", this.__onPageClick, { capture: true });
         this._super.apply(this, arguments);
     },
 
