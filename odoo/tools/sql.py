@@ -543,6 +543,12 @@ def drop_index(cr, indexname, tablename):
     _schema.debug("Table %r: dropped index %r", tablename, indexname)
 
 
+def re_index(cr, indexname, tablename, expressions, method='btree', where=''):
+    drop_index(cr, indexname, tablename)
+    create_index(cr, indexname, tablename, expressions, method=method, where=where)
+    _schema.debug("Table %r: reindex %r", tablename, indexname)
+
+
 def drop_view_if_exists(cr, viewname):
     kind = table_kind(cr, viewname)
     if kind == TableKind.View:

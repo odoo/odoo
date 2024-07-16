@@ -20,6 +20,7 @@ import warnings
 import psycopg2
 
 import odoo
+from odoo.models import LOG_ACCESS_COLUMNS
 from odoo.modules.db import FunctionStatus
 from odoo.osv.expression import get_unaccent_wrapper
 from .. import SUPERUSER_ID
@@ -598,16 +599,19 @@ class Registry(Mapping):
             del self._foreign_keys
             del self._is_install
 
-    def check_indexes(self, cr, model_names):
+    def _check_indexes(self, cr, model_names, info=False, value_fields=False):
         """ Create or drop column indexes for the given models. """
-
+        # for model in model_names:
+        value_fields = value_fields or []
+        indexes = []
+        language_index = {}
         expected = [
             (sql.make_index_name(Model._table, field.name), Model._table, field, getattr(field, 'unaccent', False))
             for model_name in model_names
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
             for field in Model._fields.values()
-            if field.column_type and field.store
+            if field.column_type and field.store and field.name not in LOG_ACCESS_COLUMNS and (not value_fields or f"field_{field.model_name.replace('.', '_')}__{field.name}" in value_fields)
         ]
         if not expected:
             return
@@ -616,42 +620,109 @@ class Registry(Mapping):
         cr.execute("SELECT indexname, tablename FROM pg_indexes WHERE indexname IN %s",
                    [tuple(row[0] for row in expected)])
         existing = dict(cr.fetchall())
+        # get installed languages
+        cr.execute("SELECT code, iso_code FROM res_lang WHERE active = TRUE")
+        language = cr.fetchall()
 
         for indexname, tablename, field, unaccent in expected:
             index = field.index
-            assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
-            if index and indexname not in existing and \
+            index_keys = field.index_keys
+            assert index in ('btree', 'btree_not_null', 'brin', 'brin_not_null', 'trigram', True, False, None)
+            #  test for many2one fields and force create index brin type
+            if not index and field.type == 'many2one':
+                # In many2one relation ondelete in delete, cascade and update with indexed field the operation will be faster,
+                # for create: brin cost less, for read better to use pgbouncer
+                index = 'brin'
+                indexname = sql.make_index_name(tablename, field.name)
+            if (index_keys or index) and (indexname not in existing or info) and \
                     ((not field.translate and index != 'trigram') or (index == 'trigram' and self.has_trigram)):
-                column_expression = f'"{field.name}"'
-                if index == 'trigram':
-                    if field.translate:
-                        column_expression = f'''(jsonb_path_query_array({column_expression}, '$.*')::text)'''
-                    # add `unaccent` to the trigram index only because the
-                    # trigram indexes are mainly used for (i/=)like search and
-                    # unaccent is added only in these cases when searching
-                    if unaccent and self.has_unaccent:
-                        if self.has_unaccent == FunctionStatus.INDEXABLE:
-                            column_expression = get_unaccent_wrapper(cr)(column_expression)
+                index_keys = index_keys and f"{index_keys};{field.name}" or f'{field.name}'
+
+                if field.translate:
+                    for lang, iso_code in language:
+                        lang_field_name = f"{iso_code.replace('@', '_').lower()}_{field.name}"
+                        index_keys = f"{index_keys};{lang_field_name}"
+                        language_index.update({lang_field_name: (lang, field.name)})
+                    if 'en_US' not in language_index.values():
+                        lang_field_name = f"{'en_US'.lower()}_{field.name}"
+                        index_keys = f"{index_keys};{lang_field_name}"
+                        language_index.update({f"{lang_field_name}": ('en_US', field.name)})
+
+                for index_key in index_keys.split(';'):
+                    if index_key in language_index.keys():
+                        indexname = sql.make_index_name(tablename, index_key)
+                    if index_key.find(',') != -1 and index_key.split(','):
+                        indexname = sql.make_index_name(tablename, '_'.join(index_key.split(',')))
+                    column_expression = f'"{index_key}"'
+
+                    if index == 'trigram':
+                        if field.translate:
+                            if index_key in language_index.keys():
+                                column_expression = f"({language_index[index_key][1]}->>'{language_index[index_key][0]}')"
+                            else:
+                                column_expression = f'''(jsonb_path_query_array({column_expression}, '$.*')::text)'''
+                        # add `unaccent` to the trigram index only because the
+                        # trigram indexes are mainly used for (i/=)like search and
+                        # unaccent is added only in these cases when searching
+                        if unaccent and self.has_unaccent:
+                            if self.has_unaccent == FunctionStatus.INDEXABLE:
+                                column_expression = get_unaccent_wrapper(cr)(column_expression)
+                            else:
+                                warnings.warn(
+                                    "PostgreSQL function 'unaccent' is present but not immutable, "
+                                    "therefore trigram indexes may not be effective.",
+                                )
+                        if field.translate:
+                            if index_key in language_index.keys():
+                                expression = f'{column_expression}'
+                                method = 'btree'
+                                where = f"{language_index[index_key][1]}->'{language_index[index_key][0]}' IS NOT NULL"
+                            else:
+                                expression = f'{column_expression} gin_trgm_ops'
+                                method = 'gin'
+                                where = ''
                         else:
-                            warnings.warn(
-                                "PostgreSQL function 'unaccent' is present but not immutable, "
-                                "therefore trigram indexes may not be effective.",
-                            )
-                    expression = f'{column_expression} gin_trgm_ops'
-                    method = 'gin'
-                    where = ''
-                else:  # index in ['btree', 'btree_not_null'， True]
-                    expression = f'{column_expression}'
-                    method = 'btree'
-                    where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
-                try:
-                    with cr.savepoint(flush=False):
-                        sql.create_index(cr, indexname, tablename, [expression], method, where)
-                except psycopg2.OperationalError:
-                    _schema.error("Unable to add index for %s", self)
+                            expression = f'{column_expression} gin_trgm_ops'
+                            method = 'gin'
+                            where = ''
+
+                    elif index in ['brin', 'brin_not_null']:
+                        expression = f'{column_expression}'
+                        method = 'brin'
+                        where = f'{column_expression} IS NOT NULL' if index == 'brin_not_null' else ''
+                    elif index in ['btree', 'btree_not_null', True]:
+                        expression = f'{column_expression}'
+                        method = 'btree'
+                        where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
+                    else: # default option
+                        expression = f'{column_expression}'
+                        method = 'btree'
+                        where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
+                    indexes.append((indexname, tablename, expression, method, where, field))
 
             elif not index and tablename == existing.get(indexname):
                 _schema.info("Keep unexpected index %s on table %s", indexname, tablename)
+        return indexes
+
+    def check_indexes(self, cr, model_names):
+        # If you use index keys possible to add more combinations. In future is better to add analise of where clause to
+        # add automatic index_keys in fields.
+        indexes = self._check_indexes(cr, model_names)
+        for index_name, table_name, expression, method, where, field_name in indexes:
+            try:
+                with cr.savepoint(flush=False):
+                    sql.create_index(cr, index_name, table_name, [expression], method, where)
+            except psycopg2.OperationalError:
+                _schema.error("Unable to add index for %s", self)
+
+    def re_index(self, cr, model_names, value_fields=False):
+        indexes = self._check_indexes(cr, model_names, value_fields=value_fields)
+        for index_name, table_name, expression, method, where, field_name in indexes:
+            try:
+                with cr.savepoint(flush=False):
+                    sql.re_index(cr, index_name, table_name, [expression], method, where)
+            except psycopg2.OperationalError:
+                _schema.error("Unable to reindex for %s", self)
 
     def add_foreign_key(self, table1, column1, table2, column2, ondelete,
                         model, module, force=True):
