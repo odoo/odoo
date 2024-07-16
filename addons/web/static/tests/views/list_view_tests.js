@@ -19727,17 +19727,22 @@ QUnit.module("Views", (hooks) => {
             string: "Property char",
         };
         const definition1 = {
+            type: "separator",
+            name: "property_separator",
+            string: "Group 1",
+        };
+        const definition2 = {
             type: "boolean",
             name: "property_boolean",
             string: "Property boolean",
         };
         serverData.models.bar.records[0].definitions = [definition0];
-        serverData.models.bar.records[1].definitions = [definition1];
+        serverData.models.bar.records[1].definitions = [definition1, definition2];
         for (const record of serverData.models.foo.records) {
             if (record.m2o === 1) {
                 record.properties = [{ ...definition0, value: "0" }];
             } else if (record.m2o === 2) {
-                record.properties = [{ ...definition1, value: true }];
+                record.properties = [definition1, { ...definition2, value: true }];
             }
         }
 
@@ -19754,6 +19759,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(target, ".o_optional_columns_dropdown_toggle");
+        assert.containsN(target, ".o_optional_columns_dropdown input[type='checkbox']", 2)
 
         await click(
             target.querySelectorAll(".o_optional_columns_dropdown input[type='checkbox']")[0]
