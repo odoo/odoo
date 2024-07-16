@@ -1312,11 +1312,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 # If a picking is found, we'll append `move` to its move list and thus its
                 # `partner_id` and `ref` field will refer to multiple records. In this
                 # case, we chose to wipe them.
-                vals = {}
-                if any(picking.partner_id.id != m.partner_id.id for m in moves):
-                    vals['partner_id'] = False
-                if any(picking.origin != m.origin for m in moves):
-                    vals['origin'] = False
+                vals = moves._assign_picking_values(picking)
                 if vals:
                     picking.write(vals)
             else:
@@ -1331,6 +1327,14 @@ Please change the quantity done or the rounding precision of your unit of measur
             moves.write({'picking_id': picking.id})
             moves._assign_picking_post_process(new=new_picking)
         return True
+
+    def _assign_picking_values(self, picking):
+        vals = {}
+        if any(picking.partner_id != m.partner_id for m in self):
+            vals['partner_id'] = False
+        if any(picking.origin != m.origin for m in self):
+            vals['origin'] = False
+        return vals
 
     def _assign_picking_post_process(self, new=False):
         pass

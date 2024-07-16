@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
@@ -371,34 +370,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_pos_tour('PosSettleOrderWithNote', login="accountman")
-
-    def test_pos_invoice_analytic_account(self):
-        #create a sale order with product_a
-        self.analytic_plan_projects = self.env['account.analytic.plan'].create({'name': 'Projects'})
-        self.analytic_plan_departments = self.env['account.analytic.plan'].create({'name': 'Departments test'})
-
-        self.analytic_account_partner_a_1 = self.env['account.analytic.account'].create({
-            'name': 'analytic_account_partner_a_1',
-            'partner_id': self.partner_a.id,
-            'plan_id': self.analytic_plan_projects.id,
-        })
-        self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
-            'order_line': [(0, 0, {
-                'product_id': self.desk_pad.id,
-                'name': self.desk_pad.name,
-                'product_uom_qty': 3.5,
-                'product_uom': self.desk_pad.uom_id.id,
-                'price_unit': self.desk_pad.lst_price,
-            })],
-            'analytic_account_id': self.analytic_account_partner_a_1.id,
-        })
-        self.main_pos_config.open_ui()
-        self.start_pos_tour('PosSettleAndInvoiceOrder', login="accountman")
-
-        pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
-        self.assertTrue(pos_order.account_move.line_ids[0].analytic_distribution, "Analytic distribution should be set on the invoice line")
-        self.assertEqual(pos_order.account_move.line_ids[0].analytic_distribution.get(str(self.analytic_account_partner_a_1.id)), 100)
 
     def test_order_sales_count(self):
         self.main_pos_config.open_ui()

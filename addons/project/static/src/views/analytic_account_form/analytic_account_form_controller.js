@@ -8,7 +8,7 @@ export class AnalyticAccountFormController extends FormController {
         if (this.model.root.data.project_count) {
             menuItems.archive.callback = async () => {
                 const projects = await this.orm.call("project.project", "search_read", [
-                    [["analytic_account_id", "=", this.props.resId]],
+                    [["account_id", "=", this.props.resId]],
                     ["name"],
                 ]);
                 this.dialogService.add(ConfirmationDialog, {

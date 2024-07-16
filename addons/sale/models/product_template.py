@@ -30,9 +30,9 @@ class ProductTemplate(models.Model):
             ('cost', "At cost"),
             ('sales_price', "Sales price"),
         ],
-        string="Re-Invoice Expenses", default='no',
+        string="Re-Invoice Costs", default='no',
         compute='_compute_expense_policy', store=True, readonly=False,
-        help="Validated expenses can be re-invoiced to a customer at its cost or sales price.")
+        help="Validated expenses, vendor bills, or stock pickings (set up to track costs) can be invoiced to the customer at either cost or sales price.")
     visible_expense_policy = fields.Boolean(
         string="Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
     sales_count = fields.Float(
@@ -98,11 +98,11 @@ class ProductTemplate(models.Model):
         super()._compute_service_tracking()
         self.filtered(lambda pt: not pt.sale_ok).service_tracking = 'no'
 
-    @api.depends('name')
+    @api.depends('purchase_ok')
     def _compute_visible_expense_policy(self):
         visibility = self.env.user.has_group('analytic.group_analytic_accounting')
         for product_template in self:
-            product_template.visible_expense_policy = visibility
+            product_template.visible_expense_policy = visibility and product_template.purchase_ok
 
     @api.depends('sale_ok')
     def _compute_expense_policy(self):

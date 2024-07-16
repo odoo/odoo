@@ -79,7 +79,7 @@
             <field name="name">After-Sales Services</field>
             <field name="description">Services provided to customers who have purchased products.</field>
             <field name="user_id" eval=""/>
-            <field name="analytic_account_id" ref="account_analytic_account_project_support"/>
+            <field name="account_id" ref="account_analytic_account_project_support"/>
             <field name="allow_billable" eval="True" />
             <field name="type_ids" eval="[Command.link(ref('project.project_stage_0')), Command.link(ref('project.project_stage_1')), Command.link(ref('project.project_stage_2'))]"/>
             <field name="label_tasks">Services</field>

@@ -51,7 +51,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             'product_id': self.product_c.id,
             'total_amount_currency': 350.00,
             'company_id': self.env.company.id,
-            'analytic_distribution': {self.project.analytic_account_id.id: 100},
+            'analytic_distribution': {self.project.account_id.id: 100},
         })
 
         expense_sheet = self.check_project_profitability_before_creating_and_approving_expense_sheet(
@@ -77,7 +77,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             'product_id': self.product_c.id,
             'total_amount_currency': 350.00,
             'company_id': foreign_company.id,
-            'analytic_distribution': {self.project.analytic_account_id.id: 100},
+            'analytic_distribution': {self.project.account_id.id: 100},
             'currency_id': self.foreign_currency.id,
         })
         expense_sheet_vals_list = expense_foreign._get_default_expense_sheet_values()
@@ -140,7 +140,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
                 "product_id": self.product_c.id,
                 "total_amount": 50.00,
                 "company_id": self.project.company_id.id,
-                "analytic_distribution": {self.project.analytic_account_id.id: 100},
+                "analytic_distribution": {self.project.account_id.id: 100},
             }
         )
         expense_sheet = self.env["hr.expense.sheet"].create(

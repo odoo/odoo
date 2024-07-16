@@ -14,13 +14,6 @@ class ResConfigSettings(models.TransientModel):
     group_project_task_dependencies = fields.Boolean("Task Dependencies", implied_group="project.group_project_task_dependencies")
     group_project_milestone = fields.Boolean('Milestones', implied_group='project.group_project_milestone', group='base.group_portal,base.group_user')
 
-    # Analytic Accounting
-    analytic_plan_id = fields.Many2one(
-        comodel_name='account.analytic.plan',
-        string="Analytic Plan",
-        config_parameter="analytic.analytic_plan_projects",
-    )
-
     @api.model
     def _get_basic_project_domain(self):
         return []

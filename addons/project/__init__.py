@@ -33,3 +33,6 @@ def _project_post_init(env):
         ['mail_message_id', 'old_value_integer'],
         where=f'field_id={project_task_stage_field_id}'
     )
+
+    # Create analytic plan fields on project model for existing plans
+    env['account.analytic.plan'].search([])._sync_plan_column('project.project')

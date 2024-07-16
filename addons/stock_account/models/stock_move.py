@@ -456,7 +456,7 @@ class StockMove(models.Model):
             self._get_analytic_distribution(), amount, unit_amount, self.analytic_account_line_ids, self)
 
     def _ignore_automatic_valuation(self):
-        return False
+        return bool(self.picking_id)
 
     def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
         self.ensure_one()
@@ -623,7 +623,7 @@ class StockMove(models.Model):
         return anglosaxon_am_vals
 
     def _get_analytic_distribution(self):
-        return False
+        return {}
 
     def _get_related_invoices(self):  # To be overridden in purchase and sale_stock
         """ This method is overrided in both purchase and sale_stock modules to adapt

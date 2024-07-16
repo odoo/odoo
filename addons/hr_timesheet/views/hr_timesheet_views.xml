@@ -503,7 +503,7 @@
 
         <record id="project_embedded_action_timesheets" model="ir.embedded.actions">
             <field name="parent_res_model">project.project</field>
-            <field name="sequence">30</field>
+            <field name="sequence">20</field>
             <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
             <field name="action_id" ref="hr_timesheet.act_hr_timesheet_line_by_project"/>
             <field name="domain">[('allow_timesheets', '=', True)]</field>

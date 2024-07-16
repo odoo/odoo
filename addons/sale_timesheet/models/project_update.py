@@ -14,7 +14,7 @@ class ProjectUpdate(models.Model):
         template_values = super(ProjectUpdate, self)._get_template_values(project)
         services = self._get_services_values(project)
         profitability_values = self._get_profitability_values(project)
-        show_profitability = bool(profitability_values and profitability_values.get('analytic_account_id') and (profitability_values.get('costs') or profitability_values.get('revenues')))
+        show_profitability = bool(profitability_values and profitability_values.get('account_id') and (profitability_values.get('costs') or profitability_values.get('revenues')))
         show_sold = template_values['project'].allow_billable and len(services.get('data', [])) > 0
         return {
             **template_values,
@@ -68,7 +68,7 @@ class ProjectUpdate(models.Model):
 
     @api.model
     def _get_profitability_values(self, project):
-        costs_revenues = project.analytic_account_id and project.allow_billable
+        costs_revenues = project.account_id and project.allow_billable
         if not (self.env.user.has_group('project.group_project_manager') and costs_revenues):
             return {}
         profitability_items = project._get_profitability_items(False)
@@ -76,7 +76,7 @@ class ProjectUpdate(models.Model):
         revenues = sum(profitability_items['revenues']['total'].values())
         margin = revenues + costs
         return {
-            'analytic_account_id': project.analytic_account_id,
+            'account_id': project.account_id,
             'costs': profitability_items['costs'],
             'revenues': profitability_items['revenues'],
             'total': {

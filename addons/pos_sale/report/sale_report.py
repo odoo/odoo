@@ -67,7 +67,6 @@ class SaleReport(models.Model):
             NULL AS source_id,
             t.categ_id AS categ_id,
             pos.pricelist_id AS pricelist_id,
-            NULL AS analytic_account_id,
             pos.crm_team_id AS team_id,
             p.product_tmpl_id,
             partner.commercial_partner_id AS commercial_partner_id,

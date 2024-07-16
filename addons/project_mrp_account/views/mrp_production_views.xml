@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_production_form_view_inherit_project_mrp_account" model="ir.ui.view">
+        <field name="name">mrp.production.view.inherit.project_mrp_account</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp_account.mrp_production_form_view_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_stock_valuation_layers']" position="after">
+                <button class="oe_stat_button" type="object"
+                    name="action_view_analytic_accounts"
+                    icon="fa-bar-chart-o"
+                    invisible="not has_analytic_account or state in ['draft', 'cancel']"
+                    groups="analytic.group_analytic_accounting">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Analytic Account</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
@@ -26,7 +25,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         # Create projects
         cls.project_global = cls.env['project.project'].create({
             'name': 'Global Project',
-            'analytic_account_id': cls.analytic_account_sale.id,
+            'account_id': cls.analytic_account_sale.id,
             'allow_billable': True,
         })
         cls.project_template = cls.env['project.project'].create({
@@ -471,38 +470,22 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'plan_id': self.analytic_plan.id,
             'company_id': self.env.company.id,
         })
-        sale_order.analytic_account_id = analytic_account_company
+        analytic_plan_name = self.analytic_plan._column_name()
+        project = self.env['project.project'].create({
+            'name': 'SO Project',
+            analytic_plan_name: analytic_account_company.id,
+        })
+        sale_order.project_id = project
         self.env['sale.order.line'].create({
             'name': self.product_order_service2.name,
             'product_id': self.product_order_service3.id,
             'order_id': sale_order.id,
         })
-        self.assertTrue(sale_order.analytic_account_id, "The SO should have an analytic account before it is confirmed.")
+        self.assertTrue(sale_order.project_id[analytic_plan_name], "The SO should have an analytic account before it is confirmed.")
         sale_order.action_confirm()
-        self.assertEqual(self.env.company, sale_order.analytic_account_id.company_id, "The company of the account should be the company of the SO.")
-        self.assertEqual(sale_order.analytic_account_id, sale_order.project_ids.analytic_account_id, "The project created for the SO and the SO should have the same account.")
+        self.assertEqual(self.env.company, sale_order.project_id[analytic_plan_name].company_id, "The company of the account should be the company of the SO.")
+        self.assertEqual(sale_order.project_id[analytic_plan_name], sale_order.project_ids[analytic_plan_name], "The project created for the SO and the project of the SO should have the same account.")
         self.assertEqual(self.env.company, sale_order.project_ids.company_id, "The project created for the SO should have the same company as its account.")
-
-    def test_project_creation_on_so_confirm_with_default_plan_with_company_in_setting(self):
-         #This test ensures that the plan of the created account is the default plan of the setting, and that the company is correctly propagated
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
-            'partner_id': self.partner.id,
-            'partner_invoice_id': self.partner.id,
-            'partner_shipping_id': self.partner.id,
-        })
-        self.env['sale.order.line'].create({
-            'name': self.product_order_service2.name,
-            'product_id': self.product_order_service3.id,
-            'order_id': sale_order.id,
-        })
-        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
-
-        self.assertFalse(sale_order.analytic_account_id, "The SO should not have any analytic account before it is confirmed.")
-        sale_order.action_confirm()
-
-        self.assertEqual(sale_order.analytic_account_id.company_id, sale_order.project_ids.company_id, "The company_id of the account created should be the company of the project.")
-        self.assertEqual(sale_order.analytic_account_id.plan_id, project_plan, "The plan of the account created should be the default analytic plan of the setting")
-        self.assertEqual(sale_order.analytic_account_id, sale_order.project_ids.analytic_account_id, "The project created for the SO and the SO should have the same account.")
 
     def test_include_archived_projects_in_stat_btn_related_view(self):
         """Checks if the project stat-button action includes both archived and active projects."""
@@ -697,15 +680,10 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         Checks that the sale order items appearing in the project status display every
         sale.order.line referrencing a product ignores the notes and sections
         """
-        analytic_account = self.env['account.analytic.account'].create({
-            'name': 'Project X',
-            'plan_id': self.env.ref('analytic.analytic_plan_projects').id,
-        })
         project = self.env['project.project'].create({
             'name': 'Project X',
             'partner_id': self.partner.id,
             'allow_billable': True,
-            'analytic_account_id': analytic_account.id,
         })
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
@@ -727,7 +705,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
                     'product_uom_qty': 1,
                 }),
             ],
-            'analytic_account_id': analytic_account.id,
+            'project_id': project.id,
         })
         relevant_sale_order_lines = sale_order.order_line.filtered(lambda sol: sol.product_id)
         reported_sale_order_lines = self.env['sale.order.line'].search(project.action_view_sols()['domain'])
@@ -868,6 +846,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         })
 
         sale_order.action_confirm()
+        self.assertFalse(sale_order.project_account_id)
 
         self.env['sale.order.line'].create({
             'product_id': self.product_order_service4.id,
@@ -875,7 +854,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'order_id': sale_order.id,
         })
 
-        self.assertTrue(sale_order.analytic_account_id)
+        self.assertTrue(sale_order.project_account_id)
 
     def test_cancel_multiple_quotations(self):
         quotations = self.env['sale.order'].create([
@@ -894,3 +873,38 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         ])
         quotations._action_cancel()
         self.assertEqual(set(quotations.mapped('state')), {'cancel'}, "Both quotations are in 'cancel' state.")
+
+    def test_onchange_sale_fields(self):
+        SaleOrder, SaleOrderLine = self.env['sale.order'], self.env['sale.order.line']
+        sale_orders = sale_order_0, sale_order_1 = SaleOrder.create([{'partner_id': self.partner.id}] * 2)
+        sale_order_line_0, sale_order_line_1 = SaleOrderLine.create([{
+            'order_id': sale_order.id,
+            'product_id': self.service_product.id,
+        } for sale_order in sale_orders])
+
+        self.project_global.partner_id = self.partner
+        with Form(self.project_global) as project_form:
+            project_form.sale_line_id = sale_order_line_0
+            self.assertEqual(
+                project_form.reinvoiced_sale_order_id, sale_order_0,
+                "Project's sale order should match its sale order line's order.",
+            )
+            project_form.sale_line_id = SaleOrderLine
+            project_form.reinvoiced_sale_order_id = sale_order_1
+            self.assertEqual(
+                project_form.sale_line_id, sale_order_line_1,
+                "Project's sale order line should match its sale order's first line.",
+            )
+
+            project_form.reinvoiced_sale_order_id = sale_order_0
+            self.assertEqual(
+                project_form.sale_line_id, sale_order_line_1,
+                "Project's sale order line shouldn't have change as it was already set.",
+            )
+
+            project_form.reinvoiced_sale_order_id = sale_order_1
+            project_form.sale_line_id = sale_order_line_0
+            self.assertEqual(
+                project_form.reinvoiced_sale_order_id, sale_order_1,
+                "Project's sale order shouldn't have change as it was already set.",
+            )

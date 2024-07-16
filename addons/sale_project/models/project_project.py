@@ -20,16 +20,19 @@ class ProjectProject(models.Model):
         help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
             " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
             "It can be modified on each task and timesheet entry individually if necessary.")
-    sale_order_id = fields.Many2one(string='Sales Order', related='sale_line_id.order_id', export_string_translation=False)
+    sale_order_id = fields.Many2one(related='sale_line_id.order_id', export_string_translation=False)
     has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice', export_string_translation=False)
     sale_order_line_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman', export_string_translation=False)
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman', export_string_translation=False)
     has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice', export_string_translation=False)
     invoice_count = fields.Integer(compute='_compute_invoice_count', groups='account.group_account_readonly', export_string_translation=False)
-    vendor_bill_count = fields.Integer(related='analytic_account_id.vendor_bill_count', groups='account.group_account_readonly', export_string_translation=False)
+    vendor_bill_count = fields.Integer(related='account_id.vendor_bill_count', groups='account.group_account_readonly', export_string_translation=False)
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons', export_string_translation=False)
     sale_order_state = fields.Selection(related='sale_order_id.state', export_string_translation=False)
+    reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', domain="[('partner_id', '=', partner_id)]",
+        help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
+    )
 
     @api.model
     def _map_tasks_default_values(self, project):
@@ -100,13 +103,13 @@ class ProjectProject(models.Model):
 
     def _compute_invoice_count(self):
         data = self.env['account.move.line']._read_group(
-            [('move_id.move_type', 'in', ['out_invoice', 'out_refund']), ('analytic_distribution', 'in', self.analytic_account_id.ids)],
+            [('move_id.move_type', 'in', ['out_invoice', 'out_refund']), ('analytic_distribution', 'in', self.account_id.ids)],
             groupby=['analytic_distribution'],
             aggregates=['__count'],
         )
         data = {int(account_id): move_count for account_id, move_count in data}
         for project in self:
-            project.invoice_count = data.get(project.analytic_account_id.id, 0)
+            project.invoice_count = data.get(project.account_id.id, 0)
 
     @api.depends('allow_billable', 'partner_id')
     def _compute_display_sales_stat_buttons(self):
@@ -120,6 +123,16 @@ class ProjectProject(models.Model):
             'target': 'self',
             'url': self.get_portal_url(),
         }
+
+    @api.onchange('reinvoiced_sale_order_id')
+    def _onchange_reinvoiced_sale_order_id(self):
+        if not self.sale_line_id and self.reinvoiced_sale_order_id.order_line:
+            self.sale_line_id = self.reinvoiced_sale_order_id.order_line[0]
+
+    @api.onchange('sale_line_id')
+    def _onchange_sale_line_id(self):
+        if not self.reinvoiced_sale_order_id and self.sale_line_id:
+            self.reinvoiced_sale_order_id = self.sale_line_id.order_id
 
     def action_view_sols(self):
         self.ensure_one()
@@ -163,7 +176,7 @@ class ProjectProject(models.Model):
                 "create": self.env.context.get('create_for_project_id', embedded_action_context),
                 "show_sale": True,
                 'default_partner_id': self.partner_id.id,
-                'default_analytic_account_id': self.analytic_account_id.id,
+                'default_project_id': self.id,
                 "create_for_project_id": self.id if embedded_action_context else False,
                 "from_embedded_action": embedded_action_context
             },
@@ -250,7 +263,7 @@ class ProjectProject(models.Model):
         move_lines = self.env['account.move.line'].search_fetch(
             [
                 ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
-                ('analytic_distribution', 'in', self.analytic_account_id.ids),
+                ('analytic_distribution', 'in', self.account_id.ids),
             ],
             ['move_id'],
         )
@@ -262,7 +275,6 @@ class ProjectProject(models.Model):
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', invoice_ids)],
             'context': {
-                'create': self.env.context.get('from_embedded_action', False),
                 'default_move_type': 'out_invoice',
                 'default_partner_id': self.partner_id.id,
                 'project_id': self.id
@@ -353,8 +365,11 @@ class ProjectProject(models.Model):
         SaleOrderLine = self.env['sale.order.line']
         sale_order_line_domain = [
             '&',
-            ('order_id', 'any', [('analytic_account_id', 'in', self.analytic_account_id.ids)]),
-            ('display_type', '=', False),
+                ('display_type', '=', False),
+                ('order_id', 'any', ['|',
+                    ('id', 'in', self.reinvoiced_sale_order_id.ids),
+                    ('project_id', 'in', self.ids),
+                ]),
         ]
         sale_order_line_query = SaleOrderLine._where_calc(sale_order_line_domain)
         sale_order_line_sql = sale_order_line_query.select(
@@ -403,9 +418,7 @@ class ProjectProject(models.Model):
             ('state', '=', 'sale'),
             ('display_type', '=', False),
             '|',
-                '|',
-                    ('project_id', 'in', self.ids),
-                    ('project_id', '=', False),
+                ('project_id', 'in', [*self.ids, False]),
                 ('id', 'in', sale_items.ids),
         ]
         if additional_domain:
@@ -594,7 +607,7 @@ class ProjectProject(models.Model):
         invoices_move_lines = self.env['account.move.line'].sudo().search_fetch(
             expression.AND([
                 self._get_revenues_items_from_invoices_domain([('id', 'not in', excluded_move_line_ids)]),
-                [('analytic_distribution', 'in', self.analytic_account_id.ids)]
+                [('analytic_distribution', 'in', self.account_id.ids)]
             ]),
             ['price_subtotal', 'parent_state', 'currency_id', 'analytic_distribution', 'move_type', 'move_id']
         )
@@ -607,7 +620,7 @@ class ProjectProject(models.Model):
                 # an analytic account can appear several time in an analytic distribution with different repartition percentage
                 analytic_contribution = sum(
                     percentage for ids, percentage in move_line.analytic_distribution.items()
-                    if str(self.analytic_account_id.id) in ids.split(',')
+                    if str(self.account_id.id) in ids.split(',')
                 ) / 100.
                 if move_line.parent_state == 'draft':
                     if move_line.move_type == 'out_invoice':
@@ -713,7 +726,7 @@ class ProjectProject(models.Model):
                 'number': self_sudo.invoice_count,
                 'action_type': 'object',
                 'action': 'action_open_project_invoices',
-                'show': bool(self.analytic_account_id) and self_sudo.invoice_count > 0,
+                'show': bool(self.account_id) and self_sudo.invoice_count > 0,
                 'sequence': 30,
             })
         if self.env.user.has_group('account.group_account_readonly'):
@@ -763,7 +776,7 @@ class ProjectProject(models.Model):
         move_lines = self.env['account.move.line'].search_fetch(
             [
                 ('move_id.move_type', 'in', ['in_invoice', 'in_refund']),
-                ('analytic_distribution', 'in', self.analytic_account_id.ids),
+                ('analytic_distribution', 'in', self.account_id.ids),
             ],
             ['move_id'],
         )

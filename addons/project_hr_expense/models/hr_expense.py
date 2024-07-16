@@ -9,6 +9,6 @@ class HrExpense(models.Model):
         if not project_id:
             super()._compute_analytic_distribution()
         else:
-            analytic_account = self.env['project.project'].browse(project_id).analytic_account_id
+            analytic_distribution = self.env['project.project'].browse(project_id)._get_analytic_distribution()
             for expense in self:
-                expense.analytic_distribution = expense.analytic_distribution or {analytic_account.id: 100}
+                expense.analytic_distribution = expense.analytic_distribution or analytic_distribution

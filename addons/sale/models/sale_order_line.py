@@ -1132,9 +1132,6 @@ class SaleOrderLine(models.Model):
             if line.product_id and line.state == 'sale':
                 msg = _("Extra line with %s", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
-                # create an analytic account if at least an expense product
-                if line.product_id.expense_policy not in [False, 'no'] and not line.order_id.analytic_account_id:
-                    line.order_id._create_analytic_account()
 
         return lines
 
@@ -1290,15 +1287,8 @@ class SaleOrderLine(models.Model):
         return res
 
     def _set_analytic_distribution(self, inv_line_vals, **optional_values):
-        analytic_account_id = self.order_id.analytic_account_id.id
         if self.analytic_distribution and not self.display_type:
             inv_line_vals['analytic_distribution'] = self.analytic_distribution
-        if analytic_account_id and not self.display_type:
-            analytic_account_id = str(analytic_account_id)
-            if 'analytic_distribution' in inv_line_vals:
-                inv_line_vals['analytic_distribution'][analytic_account_id] = inv_line_vals['analytic_distribution'].get(analytic_account_id, 0) + 100
-            else:
-                inv_line_vals['analytic_distribution'] = {analytic_account_id: 100}
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule

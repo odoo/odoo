@@ -133,7 +133,7 @@
             <field name="favorite_user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="tag_ids" eval="[Command.link(ref('project.project_tags_05'))]"/>
             <field name="stage_id" ref="project.project_project_stage_1"/>
-            <field name="analytic_account_id" ref="project.analytic_office_design"/>
+            <field name="account_id" ref="project.analytic_office_design"/>
         </record>
         <record id="project_1_follower_admin" model="mail.followers">
             <field name="res_model">project.project</field>
@@ -149,7 +149,7 @@
             <field name="favorite_user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="tag_ids" eval="[Command.link(ref('project.project_tags_04'))]"/>
             <field name="stage_id" ref="project.project_project_stage_1"/>
-            <field name="analytic_account_id" ref="project.analytic_research_development"/>
+            <field name="account_id" ref="project.analytic_research_development"/>
         </record>
         <record id="project_2_activity_1" model="mail.activity">
             <field name="res_id" ref="project_project_2"/>
@@ -172,7 +172,7 @@
             <field name="favorite_user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="tag_ids" eval="[Command.link(ref('project_tags_04')), Command.link(ref('project_tags_02'))]"/>
             <field name="stage_id" ref="project.project_project_stage_2"/>
-            <field name="analytic_account_id" ref="project.analytic_renovations"/>
+            <field name="account_id" ref="project.analytic_renovations"/>
             <field name="privacy_visibility">employees</field>
         </record>
 
@@ -207,7 +207,7 @@
             <field name="favorite_user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="tag_ids" eval="[Command.link(ref('project_tags_06')), Command.link(ref('project_tags_07')), Command.link(ref('project_tags_08')), Command.link(ref('project_tags_09'))]"/>
             <field name="stage_id" ref="project.project_project_stage_2"/>
-            <field name="analytic_account_id" ref="project.analytic_construction"/>
+            <field name="account_id" ref="project.analytic_construction"/>
             <field name="privacy_visibility">portal</field>
         </record>
 

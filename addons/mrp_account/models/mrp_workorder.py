@@ -39,17 +39,19 @@ class MrpWorkorder(models.Model):
         }
 
     def _create_or_update_analytic_entry(self):
-        for wo in self.filtered(lambda wo: wo.id and (wo.production_id.analytic_distribution or wo.workcenter_id.analytic_distribution or wo.wc_analytic_account_line_ids or wo.mo_analytic_account_line_ids)):
+        for wo in self:
+            if not wo.id:
+                continue
             hours = wo.duration / 60.0
             value = -hours * wo.workcenter_id.costs_hour
+            wo._create_or_update_analytic_entry_for_record(value, hours)
 
-            mo_analytic_line_vals = self.env['account.analytic.account']._perform_analytic_distribution(wo.production_id.analytic_distribution, value, hours, wo.mo_analytic_account_line_ids, wo)
-            if mo_analytic_line_vals:
-                wo.mo_analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(mo_analytic_line_vals)
-
-            wc_analytic_line_vals = self.env['account.analytic.account']._perform_analytic_distribution(wo.workcenter_id.analytic_distribution, value, hours, wo.wc_analytic_account_line_ids, wo)
+    def _create_or_update_analytic_entry_for_record(self, value, hours):
+        self.ensure_one()
+        if self.workcenter_id.analytic_distribution or self.wc_analytic_account_line_ids or self.mo_analytic_account_line_ids:
+            wc_analytic_line_vals = self.env['account.analytic.account']._perform_analytic_distribution(self.workcenter_id.analytic_distribution, value, hours, self.wc_analytic_account_line_ids, self)
             if wc_analytic_line_vals:
-                wo.wc_analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(wc_analytic_line_vals)
+                self.wc_analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(wc_analytic_line_vals)
 
     def unlink(self):
         (self.mo_analytic_account_line_ids | self.wc_analytic_account_line_ids).unlink()

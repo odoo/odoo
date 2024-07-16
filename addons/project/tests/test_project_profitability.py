@@ -26,7 +26,7 @@ class TestProjectProfitabilityCommon(TransactionCase):
         cls.project = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Project',
             'partner_id': cls.partner.id,
-            'analytic_account_id': cls.analytic_account.id,
+            'account_id': cls.analytic_account.id,
         })
         cls.task = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Task',

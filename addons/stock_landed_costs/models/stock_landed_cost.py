@@ -403,6 +403,13 @@ class AdjustmentLines(models.Model):
 
         return self._create_account_move_line(move, credit_account_id, debit_account_id, qty_out, already_out_account_id)
 
+    def _prepare_account_move_line_values(self):
+        return {
+            'name': self.name,
+            'product_id': self.product_id.id,
+            'quantity': 0,
+        }
+
     def _create_account_move_line(self, move, credit_account_id, debit_account_id, qty_out, already_out_account_id):
         """
         Generate the account.move.line values to track the landed cost.
@@ -410,11 +417,7 @@ class AdjustmentLines(models.Model):
         """
         AccountMoveLine = []
 
-        base_line = {
-            'name': self.name,
-            'product_id': self.product_id.id,
-            'quantity': 0,
-        }
+        base_line = self._prepare_account_move_line_values()
         debit_line = dict(base_line, account_id=debit_account_id)
         credit_line = dict(base_line, account_id=credit_account_id)
         diff = self.additional_landed_cost

@@ -215,7 +215,8 @@ class AccountAnalyticPlan(models.Model):
                 "name": plan.name,
                 "color": plan.color,
                 "applicability": plan._get_applicability(**kwargs) if plan in root_plans else 'optional',
-                "all_account_count": plan.all_account_count
+                "all_account_count": plan.all_account_count,
+                "column_name": plan._column_name(),
             }
             for plan in (root_plans + forced_plans).sorted('sequence')
         ]

@@ -215,8 +215,6 @@ class SaleOrderLine(models.Model):
         }
         if self.analytic_distribution:
             purchase_line_vals['analytic_distribution'] = self.analytic_distribution
-        elif self.order_id.analytic_account_id:
-            purchase_line_vals['analytic_distribution'] = {self.order_id.analytic_account_id.id: 100.0}
         return purchase_line_vals
 
     def _purchase_service_match_supplier(self, warning=True):

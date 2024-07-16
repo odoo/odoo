@@ -8,43 +8,14 @@ from odoo.tools import float_round
 
 
 class MrpProduction(models.Model):
-    _name = 'mrp.production'
-    _inherit = ['mrp.production', 'analytic.mixin']
+    _inherit = 'mrp.production'
 
     extra_cost = fields.Float(copy=False, string='Extra Unit Cost')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')
-    analytic_account_ids = fields.Many2many('account.analytic.account', compute='_compute_analytic_account_ids', store=True)
 
     def _compute_show_valuation(self):
         for order in self:
             order.show_valuation = any(m.state == 'done' for m in order.move_finished_ids)
-
-    @api.depends('bom_id', 'product_id')
-    def _compute_analytic_distribution(self):
-        for record in self:
-            if record.bom_id.analytic_distribution:
-                record.analytic_distribution = record.bom_id.analytic_distribution
-            else:
-                record.analytic_distribution = record.env['account.analytic.distribution.model']._get_distribution({
-                    "product_id": record.product_id.id,
-                    "product_categ_id": record.product_id.categ_id.id,
-                    "company_id": record.company_id.id,
-                })
-
-    @api.depends('analytic_distribution')
-    def _compute_analytic_account_ids(self):
-        for record in self:
-            record.analytic_account_ids = bool(record.analytic_distribution) and self.env['account.analytic.account'].browse(
-                list({int(account_id) for ids in record.analytic_distribution for account_id in ids.split(",")})
-            ).exists()
-
-    @api.constrains('analytic_distribution')
-    def _check_analytic(self):
-        for record in self:
-            params = {'business_domain': 'manufacturing_order', 'company_id': record.company_id.id}
-            if record.product_id:
-                params['product'] = record.product_id.id
-            record.with_context({'validate_analytic': True})._validate_distribution(**params)
 
     def write(self, vals):
         res = super().write(vals)
@@ -54,9 +25,6 @@ class MrpProduction(models.Model):
                 for workorder in production.workorder_ids:
                     workorder.mo_analytic_account_line_ids.ref = production.display_name
                     workorder.mo_analytic_account_line_ids.name = _("[WC] %s", workorder.display_name)
-            if 'analytic_distribution' in vals and production.state != 'draft':
-                production.move_raw_ids._account_analytic_entry_move()
-                production.workorder_ids._create_or_update_analytic_entry()
         return res
 
     def action_view_stock_valuation_layers(self):
@@ -68,16 +36,6 @@ class MrpProduction(models.Model):
         context['no_at_date'] = True
         context['search_default_group_by_product_id'] = False
         return dict(action, domain=domain, context=context)
-
-    def action_view_analytic_accounts(self):
-        self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "account.analytic.account",
-            'domain': [('id', 'in', self.analytic_account_ids.ids)],
-            "name": _("Analytic Accounts"),
-            'view_mode': 'tree,form',
-        }
 
     def _cal_price(self, consumed_moves):
         """Set a price unit on the finished move according to `consumed_moves`.

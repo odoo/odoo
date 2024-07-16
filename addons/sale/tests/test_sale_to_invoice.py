@@ -658,45 +658,6 @@ class TestSaleToInvoice(TestSaleCommon):
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
         self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100}}])
 
-    def test_invoice_analytic_account_so_not_default(self):
-        """ Tests whether, when an analytic account rule is set and the so has an analytic account,
-        the default analytic acount doesn't replace the one from the so in the invoice.
-        """
-        # Required for `analytic_account_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        analytic_plan_default = self.env['account.analytic.plan'].create({'name': 'default'})
-        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan_default.id})
-        analytic_account_so = self.env['account.analytic.account'].create({'name': 'so', 'plan_id': analytic_plan_default.id})
-
-        self.env['account.analytic.distribution.model'].create({
-            'analytic_distribution': {analytic_account_default.id: 100},
-            'product_id': self.product_a.id,
-        })
-
-        so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.partner_a
-        so_form.analytic_account_id = analytic_account_so
-
-        with so_form.order_line.new() as sol:
-            sol.product_id = self.product_a
-            sol.product_uom_qty = 1
-
-        so = so_form.save()
-        so.action_confirm()
-        so._force_lines_to_invoice_policy_order()
-
-        so_context = {
-            'active_model': 'sale.order',
-            'active_ids': [so.id],
-            'active_id': so.id,
-            'default_journal_id': self.company_data['default_journal_sale'].id,
-        }
-        down_payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({})
-        down_payment.create_invoices()
-
-        aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
-        self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100, str(analytic_account_so.id): 100}}])
-
     def test_invoice_analytic_rule_with_account_prefix(self):
         """
         Test whether, when an analytic account rule is set within the scope (applicability) of invoice
@@ -804,56 +765,6 @@ class TestSaleToInvoice(TestSaleCommon):
             len(invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'line_note')),
             1,
             'Note SO line should have been pushed to the invoice')
-
-    def test_cost_invoicing(self):
-        """ Test confirming a vendor invoice to reinvoice cost on the so """
-        serv_cost = self.env['product.product'].create({
-            'name': "Ordered at cost",
-            'standard_price': 160,
-            'list_price': 180,
-            'type': 'consu',
-            'invoice_policy': 'order',
-            'expense_policy': 'cost',
-            'default_code': 'PROD_COST',
-            'service_type': 'manual',
-        })
-        prod_gap = self.company_data['product_service_order']
-        so = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-            'partner_invoice_id': self.partner_a.id,
-            'partner_shipping_id': self.partner_a.id,
-            'order_line': [Command.create({
-                'product_id': prod_gap.id,
-                'product_uom_qty': 2,
-                'product_uom': prod_gap.uom_id.id,
-                'price_unit': prod_gap.list_price,
-            })],
-            'pricelist_id': self.company_data['default_pricelist'].id,
-        })
-        so.action_confirm()
-        so._create_analytic_account()
-
-        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
-            'partner_id': self.partner_a.id,
-            'invoice_date': so.date_order,
-            'invoice_line_ids': [
-                Command.create({
-                    'name': serv_cost.name,
-                    'product_id': serv_cost.id,
-                    'product_uom_id': serv_cost.uom_id.id,
-                    'quantity': 2,
-                    'price_unit': serv_cost.standard_price,
-                    'analytic_distribution': {so.analytic_account_id.id: 100},
-                }),
-            ],
-        })
-        inv.action_post()
-        sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
-        self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
-        self.assertEqual(
-            (sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced),
-            (160, 2, 0, 0),
-            'Sale: line is wrong after confirming vendor invoice')
 
     def test_sale_order_standard_flow_with_invoicing(self):
         """ Test the sales order flow (invoicing and quantity updates)

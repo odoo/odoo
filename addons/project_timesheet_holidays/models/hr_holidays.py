@@ -103,7 +103,7 @@ class Holidays(models.Model):
             'name': _("Time Off (%(index)s/%(total)s)", index=index + 1, total=len(work_hours_data)),
             'project_id': project.id,
             'task_id': task.id,
-            'account_id': project.sudo().analytic_account_id.id,
+            'account_id': project.sudo().account_id.id,
             'unit_amount': work_hours_count,
             'user_id': self.employee_id.user_id.id,
             'date': day_date,

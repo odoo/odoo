@@ -9,19 +9,19 @@ class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
 
-    project_ids = fields.One2many('project.project', 'analytic_account_id', string='Projects', export_string_translation=False)
+    project_ids = fields.One2many('project.project', 'account_id', string='Projects', export_string_translation=False)
     project_count = fields.Integer("Project Count", compute='_compute_project_count', export_string_translation=False)
 
     @api.depends('project_ids')
     def _compute_project_count(self):
-        project_data = self.env['project.project']._read_group([('analytic_account_id', 'in', self.ids)], ['analytic_account_id'], ['__count'])
+        project_data = self.env['project.project']._read_group([('account_id', 'in', self.ids)], ['account_id'], ['__count'])
         mapping = {analytic_account.id: count for analytic_account, count in project_data}
         for account in self:
             account.project_count = mapping.get(account.id, 0)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_existing_tasks(self):
-        projects = self.env['project.project'].search([('analytic_account_id', 'in', self.ids)])
+        projects = self.env['project.project'].search([('account_id', 'in', self.ids)])
         has_tasks = self.env['project.task'].search_count([('project_id', 'in', projects.ids)])
         if has_tasks:
             raise UserError(_('Please remove existing tasks in the project linked to the accounts you want to delete.'))
@@ -32,7 +32,7 @@ class AccountAnalyticAccount(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "project.project",
             "views": [[kanban_view_id, "kanban"], [False, "form"]],
-            "domain": [['analytic_account_id', '=', self.id]],
+            "domain": [['account_id', '=', self.id]],
             "context": {"create": False},
             "name": _("Projects"),
         }

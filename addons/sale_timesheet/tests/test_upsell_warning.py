@@ -48,7 +48,7 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
             'allow_timesheets': True,
             'allow_billable': True,
             'partner_id': self.partner_a.id,
-            'analytic_account_id': self.analytic_account_sale.id,
+            'account_id': self.analytic_account_sale.id,
         })
         task = self.env['project.task'].create({
             'name': 'Task Test',
@@ -128,7 +128,7 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
             'allow_timesheets': True,
             'allow_billable': True,
             'partner_id': self.partner_a.id,
-            'analytic_account_id': self.analytic_account_sale.id,
+            'account_id': self.analytic_account_sale.id,
         })
         task = self.env['project.task'].create({
             'name': 'Task Test',
@@ -198,7 +198,7 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
             'allow_timesheets': True,
             'allow_billable': True,
             'partner_id': self.partner_a.id,
-            'analytic_account_id': self.analytic_account_sale.id,
+            'account_id': self.analytic_account_sale.id,
         })
         task = self.env['project.task'].create({
             'name': 'Task Test',

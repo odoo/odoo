@@ -264,12 +264,12 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: "Open embedded actions dropdown",
     run: "click",
 }, {
-    trigger: ".o-dropdown-item div span:contains('Project Updates')",
-    content: "Put Project Updates in the embedded actions",
+    trigger: ".o-dropdown-item div span:contains('Dashboard')",
+    content: "Put Dashboard in the embedded actions",
     run: "click",
 }, {
-    trigger: ".o_embedded_actions button span:contains('Project Updates')",
-    content: "Open Project Updates",
+    trigger: ".o_embedded_actions button span:contains('Dashboard')",
+    content: "Open Dashboard",
     run: "click",
 }, {
     trigger: ".o_rightpanel_section[name='sales'] .o_rightpanel_title:contains('Sales')",

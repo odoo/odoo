@@ -24,12 +24,6 @@ class Expense(models.Model):
         for expense in self.filtered(lambda e: not e.can_be_reinvoiced):
             expense.sale_order_id = False
 
-    def _compute_analytic_distribution(self):
-        super(Expense, self)._compute_analytic_distribution()
-        for expense in self.filtered('sale_order_id'):
-            if expense.sale_order_id.sudo().analytic_account_id:
-                expense.analytic_distribution = {expense.sale_order_id.sudo().analytic_account_id.id: 100}  # `sudo` required for normal employee without sale access rights
-
     @api.onchange('sale_order_id')
     def _onchange_sale_order_id(self):
         to_reset = self.filtered(lambda line: not self.env.is_protected(self._fields['analytic_distribution'], line))

@@ -176,7 +176,7 @@ class TestProject(TestCommonSaleTimesheet):
         })
 
         self.project_global.invalidate_recordset()
-        self.project_global.analytic_account_id.invalidate_recordset()
+        self.project_global.account_id.invalidate_recordset()
         self.assertEqual(self.project_global.analytic_account_balance, expected_analytic_account_balance)
 
     def test_open_product_form_with_default_service_policy(self):

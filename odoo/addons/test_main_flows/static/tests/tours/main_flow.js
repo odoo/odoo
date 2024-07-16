@@ -1080,7 +1080,7 @@ stepUtils.autoExpandMoreButtons(true),
     run: "click",
 },
 {
-    trigger: 'div.o_notebook_headers',
+    trigger: '.o_project_task_form_view div.o_notebook_headers',
 },
 {
     trigger: 'a.nav-link:contains(Timesheets)',

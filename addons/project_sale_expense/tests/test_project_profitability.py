@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import tagged
@@ -21,7 +20,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
     def test_project_profitability(self):
         project = self.env['project.project'].create({'name': 'new project'})
         project._create_analytic_account()
-        account = project.analytic_account_id
+        account = project.account_id
         # Create a new company with the foreign currency.
         foreign_company = self.company_data_2['company']
         foreign_company.currency_id = self.foreign_currency
@@ -57,7 +56,6 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             'name': 'Sale order foreign',
             'partner_id': self.partner_a.id,
             'company_id': foreign_company.id,
-            'analytic_account_id': account.id,
         })
         so_foreign.currency_id = self.foreign_currency
         so_foreign.action_confirm()

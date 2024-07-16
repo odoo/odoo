@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from ast import literal_eval
 from collections import defaultdict
 
 from odoo import models, _lt
@@ -31,7 +31,7 @@ class Project(models.Model):
         """ This method is used in sale_project and project_purchase. Since project_account is the only common module (except project), we create the method here. """
         # calculate the cost of bills without a purchase order
         account_move_lines = self.env['account.move.line'].sudo().search_fetch(
-            domain + [('analytic_distribution', 'in', self.analytic_account_id.ids)],
+            domain + [('analytic_distribution', 'in', self.account_id.ids)],
             ['price_subtotal', 'parent_state', 'currency_id', 'analytic_distribution', 'move_type', 'move_id'],
         )
         if account_move_lines:
@@ -44,7 +44,7 @@ class Project(models.Model):
                 # an analytic account can appear several time in an analytic distribution with different repartition percentage
                 analytic_contribution = sum(
                     percentage for ids, percentage in move_line.analytic_distribution.items()
-                    if str(self.analytic_account_id.id) in ids.split(',')
+                    if str(self.account_id.id) in ids.split(',')
                 ) / 100.
                 if move_line.parent_state == 'draft':
                     if move_line.move_type == 'in_invoice':
@@ -127,7 +127,7 @@ class Project(models.Model):
     def _get_domain_aal_with_no_move_line(self):
         """ this method is used in order to overwrite the domain in sale_timesheet module. Since the field 'project_id' is added to the "analytic line" model
         in the hr_timesheet module, we can't add the condition ('project_id', '=', False) here. """
-        return [('account_id', '=', self.analytic_account_id.id), ('move_line_id', '=', False), ('category', '!=', 'manufacturing_order')]
+        return [('account_id', '=', self.account_id.id), ('move_line_id', '=', False), ('category', '!=', 'manufacturing_order')]
 
     def _get_items_from_aal(self, with_action=True):
         domain = self._get_domain_aal_with_no_move_line()
@@ -172,3 +172,14 @@ class Project(models.Model):
             'revenues': {'data': [revenues], 'total': {'invoiced': total_revenues, 'to_invoice': 0.0}},
             'costs': {'data': [costs], 'total': {'billed': total_costs, 'to_bill': 0.0}},
         }
+
+    def action_open_analytic_items(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('analytic.account_analytic_line_action_entries')
+        action['domain'] = [('account_id', '=', self.account_id.id)]
+        context = literal_eval(action['context'])
+        action['context'] = {
+            **context,
+            'create': self.env.context.get('from_embedded_action', False),
+            'default_account_id': self.account_id.id,
+        }
+        return action
