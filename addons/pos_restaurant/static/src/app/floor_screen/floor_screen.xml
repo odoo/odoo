@@ -12,8 +12,32 @@
                     <i class="fa fa-circle-o" role="img" aria-label="MakeRound" title="Round Shape" />Shape</button>
                 <button t-attf-class="{{editButtonClass}}" t-else="" t-att-disabled="selectedTables.length == 0" t-on-click.stop="() => this.changeShape('square')">
                     <i class="fa fa-square-o" role="img" aria-label="MakeSquare" title="Square Shape" />Shape</button>
-                <button t-attf-class="{{editButtonClass}}" t-att-class="{active: state.isColorPicker}" t-on-click="() => this.state.isColorPicker = !this.state.isColorPicker">
-                    <i class="fa fa-paint-brush" role="img" aria-label="Tint" title="Tint" />Fill</button>
+                <t t-set="noSelectedTable" t-value="selectedTables.length === 0" />
+                <Dropdown menuClass="'pos-dropdown-menu px-1'">
+                    <button t-attf-class="{{editButtonClass}}" t-att-class="{active: state.isColorPicker}" t-on-click="() => this.state.isColorPicker = !this.state.isColorPicker">
+                        <i class="fa fa-paint-brush" role="img" aria-label="Tint" title="Tint" />
+                        Fill
+                    </button>
+                    <t t-set-slot="content">
+                        <div class="d-grid gap-1" style="grid-template-columns: repeat(3, 1fr);">
+                            <t t-foreach="Object.entries(getColors())" t-as="color" t-key="color[0]">
+                                <DropdownItem closingMode="'none'" onSelected="() => this.setColor(noSelectedTable ? this.getLighterShade(color[0]) : color[1])">
+                                    <button
+                                        class="p-4 border-1 rounded"
+                                        t-attf-style="background-color: {{noSelectedTable ? getLighterShade(color[0]) : color[1]}}"
+                                    />
+                                </DropdownItem>
+                            </t>
+                            <DropdownItem closingMode="'none'" t-if="noSelectedTable">
+                                <button class="floor-picture border-1 rounded position-relative text-center overflow-hidden d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fa fa-camera" role="img" aria-label="Picture" title="Picture"></i>
+                                    File
+                                    <input type="file" class="image-uploader" t-on-change="uploadImage" />
+                                </button>
+                            </DropdownItem>
+                        </div>
+                    </t>
+                </Dropdown>
                 <button t-attf-class="{{editButtonClass}}" t-att-disabled="selectedTables.length > 1" t-on-click.stop="rename">
                     <i class="fa fa-pencil-square-o" role="img" aria-label="Rename" title="Rename" />Rename</button>
                 <button t-attf-class="{{editButtonClass}}" t-on-click.stop="duplicateTableOrFloor">
@@ -22,21 +46,6 @@
                     <i class="fa fa-trash" role="img" aria-label="Delete" title="Delete" />Delete</button>
                 <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="closeEditMode">
                     <i class="fa fa-times" role="img" aria-label="Close" title="Close" />Close</button>
-            </div>
-            <div t-if="pos.isEditMode and state.isColorPicker" class="d-flex justify-content-center align-items-center bg-200">
-                <t t-set="lighter" t-value="selectedTables.length === 0" />
-                <button t-foreach="Object.entries(getColors())" t-as="color" t-key="color[0]" class="p-4 border-0"
-                    t-attf-style="background-color: {{lighter ? getLighterShade(color[0]) : color[1]}}" t-on-click.stop="() => this.setColor(lighter ? this.getLighterShade(color[0]) : color[1])" />
-                <div class="floor-picture position-relative text-center overflow-hidden d-flex flex-column align-items-center justify-content-center">
-                    <t t-if="activeFloor?.floor_background_image">
-                        <img t-att-src="floorBackround" style="width: 48px; height: 48px; object-fit: cover;" />
-                    </t>
-                    <t t-else="">
-                        <i class="fa fa-camera" role="img" aria-label="Picture" title="Picture"></i>
-                        File
-                    </t>
-                    <input type="file" class="image-uploader" t-on-change="uploadImage" />
-                </div>
             </div>
             <div class="floor-selector d-flex text-center bg-100 fs-3 w-100">
                 <t t-foreach="pos.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">

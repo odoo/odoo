@@ -17,6 +17,8 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { pick } from "@web/core/utils/objects";
 import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 export function constrain(num, min, max) {
     return Math.min(Math.max(num, min), max);
 }
@@ -53,6 +55,7 @@ const useDraggable = makeDraggableHook({
     onDrop: ({ ctx }) => pick(ctx.current, "element"),
 });
 export class FloorScreen extends Component {
+    static components = { Dropdown, DropdownItem };
     static template = "pos_restaurant.FloorScreen";
     static props = { floor: { type: true, optional: true } };
     static storeOnOrder = false;
@@ -851,6 +854,10 @@ export class FloorScreen extends Component {
     }
     async uploadImage(event) {
         const file = event.target.files[0];
+        if (!file) {
+            // Don't proceed if there are no selected files.
+            return;
+        }
         if (!file.type.match(/image.*/)) {
             this.dialog.add(AlertDialog, {
                 title: _t("Unsupported File Format"),

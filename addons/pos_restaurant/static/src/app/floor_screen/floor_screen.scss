@@ -23,17 +23,8 @@
     }
 }
 .floor-picture {
-    height: 48px;
-    width: 48px;
-    & > img {
-        position: absolute;
-        top: -9999px;
-        bottom: -9999px;
-        right: -9999px;
-        left: -9999px;
-        max-height: 64px;
-        margin: auto;
-    }
+    height: 50px;
+    width: 50px;
     .image-uploader {
         position: absolute;
         z-index: 1000;
@@ -44,4 +35,8 @@
         opacity: 0;
         cursor: pointer;
     }
+}
+
+.pos-dropdown-menu .dropdown-item.o-dropdown-item {
+    padding: 0px;
 }
