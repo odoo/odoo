@@ -305,9 +305,7 @@ export class ProductScreen extends Component {
             list = this.pos.models["product.product"].getAll();
         }
 
-        list = list
-            .filter((product) => !this.getProductListToNotDisplay().includes(product.id))
-            .slice(0, 100);
+        list = list.slice(0, 100);
 
         return this.searchWord !== ""
             ? list
@@ -345,8 +343,10 @@ export class ProductScreen extends Component {
     }
 
     getProductListToNotDisplay() {
-        return [this.pos.config.tip_product_id?.id, ...this.pos.pos_special_products_ids].filter(
-            (id) => !this.pos.models["product.product"].get(id)?.available_in_pos
+        return new Set(
+            [this.pos.config.tip_product_id?.id, ...this.pos.pos_special_products_ids].filter(
+                (id) => !this.pos.models["product.product"].get(id)?.available_in_pos
+            )
         );
     }
 

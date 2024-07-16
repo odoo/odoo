@@ -1408,7 +1408,7 @@ export class PosStore extends Reactive {
                 newTaxIds.push(tax.id);
             }
         }
-        return this.data["account.tax"].filter((tax) => newTaxIds.includes(tax.id));
+        return this.models["account.tax"].filter((tax) => newTaxIds.includes(tax.id));
     }
 
     getPriceUnitAfterFiscalPosition(taxes, priceUnit, product, fiscalPosition) {

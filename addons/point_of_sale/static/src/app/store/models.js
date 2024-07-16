@@ -464,11 +464,12 @@ export class Orderline extends PosModel {
      * @returns {string}
      */
     get_full_product_name_with_variant() {
-        return constructFullProductName(
-            this,
-            this.pos.models["product.template.attribute.value"].getAllBy("id"),
-            this.product.display_name
+        const attributeValueById = Object.fromEntries(
+            this.product.attribute_line_ids
+                .flatMap((line) => line.product_template_value_ids)
+                .map((value) => [value.id, value])
         );
+        return constructFullProductName(this, attributeValueById, this.product.display_name);
     }
     // selects or deselects this orderline
     set_selected(selected) {
