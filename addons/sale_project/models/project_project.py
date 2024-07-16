@@ -58,7 +58,7 @@ class ProjectProject(models.Model):
 
             :param invoice_status: The invoice status.
         """
-        self.env.cr.execute("""
+        result = self.env.execute_query(SQL("""
             SELECT id
               FROM project_project pp
              WHERE pp.active = true
@@ -73,8 +73,8 @@ class ProjectProject(models.Model):
                                 JOIN sale_order_line sol ON sol.order_id = so.id
                                WHERE sol.id = pp.sale_line_id
                                  AND so.invoice_status = %(invoice_status)s))
-               AND id in %(ids)s""", {'ids': tuple(self.ids), 'invoice_status': invoice_status})
-        return self.env['project.project'].browse([x[0] for x in self.env.cr.fetchall()])
+               AND id in %(ids)s""", ids=tuple(self.ids), invoice_status=invoice_status))
+        return self.env['project.project'].browse(id_ for id_, in result)
 
     @api.depends('sale_order_id.invoice_status', 'tasks.sale_order_id.invoice_status')
     def _compute_has_any_so_to_invoice(self):
@@ -278,13 +278,12 @@ class ProjectProject(models.Model):
             return {}
         if len(self) == 1:
             return {self.id: self._fetch_sale_order_items(domain_per_model)}
-        query_str, params = self._get_sale_order_items_query(domain_per_model).select('id', 'ARRAY_AGG(DISTINCT sale_line_id) AS sale_line_ids')
-        query = f"""
-            {query_str}
-            GROUP BY id
-        """
-        self._cr.execute(query, params)
-        return {row['id']: self.env['sale.order.line'].browse(row['sale_line_ids']) for row in self._cr.dictfetchall()}
+        sql = self._get_sale_order_items_query(domain_per_model).select('id', 'ARRAY_AGG(DISTINCT sale_line_id) AS sale_line_ids')
+        sql = SQL("%s GROUP BY id", sql)
+        return {
+            id_: self.env['sale.order.line'].browse(sale_line_ids)
+            for id_, sale_line_ids in self.env.execute_query(sql)
+        }
 
     def _fetch_sale_order_items(self, domain_per_model=None, limit=None, offset=None):
         return self.env['sale.order.line'].browse(self._fetch_sale_order_item_ids(domain_per_model, limit, offset))
@@ -295,8 +294,7 @@ class ProjectProject(models.Model):
         query = self._get_sale_order_items_query(domain_per_model)
         query.limit = limit
         query.offset = offset
-        rows = self.env.execute_query(query.select('DISTINCT sale_line_id'))
-        return [row[0] for row in rows]
+        return [id_ for id_, in self.env.execute_query(query.select('DISTINCT sale_line_id'))]
 
     def _get_sale_orders(self):
         return self._get_sale_order_items().order_id

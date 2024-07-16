@@ -5,7 +5,7 @@ from markupsafe import Markup
 
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import UserError
-from odoo.tools import float_repr, date_utils
+from odoo.tools import float_repr, date_utils, SQL
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
 
 PHONE_CLEAN_TABLE = str.maketrans({" ": None, "-": None, "(": None, ")": None, "+": None})
@@ -132,21 +132,24 @@ class AccountMove(models.Model):
         self.env['account.partial.reconcile'].flush_model()
         invoices_refunded_mapping = {invoice.id: invoice.reversed_entry_id.id for invoice in self}
 
+        stored_ids = tuple(self.ids)
         queries = []
-        for source_field, counterpart_field in (('debit', 'credit'), ('credit', 'debit')):
-            queries.append(f'''
+        for source_field, counterpart_field in (
+            ('debit_move_id', 'credit_move_id'),
+            ('credit_move_id', 'debit_move_id'),
+        ):
+            queries.append(SQL('''
                 SELECT
                     source_line.move_id AS source_move_id,
                     counterpart_line.move_id AS counterpart_move_id
                 FROM account_partial_reconcile part
-                JOIN account_move_line source_line ON source_line.id = part.{source_field}_move_id
-                JOIN account_move_line counterpart_line ON counterpart_line.id = part.{counterpart_field}_move_id
+                JOIN account_move_line source_line ON source_line.id = part.%s
+                JOIN account_move_line counterpart_line ON counterpart_line.id = part.%s
                 WHERE source_line.move_id IN %s AND counterpart_line.move_id != source_line.move_id
                 GROUP BY source_move_id, counterpart_move_id
-            ''')
-        self._cr.execute(' UNION ALL '.join(queries), [tuple(self.ids)] * 2)
-        payment_data = defaultdict(lambda: [])
-        for row in self._cr.dictfetchall():
+            ''', SQL.identifier(source_field), SQL.identifier(counterpart_field), stored_ids))
+        payment_data = defaultdict(list)
+        for row in self.env.execute_query_dict(SQL(" UNION ALL ").join(queries)):
             payment_data[row['source_move_id']].append(row)
 
         for invoice in self:

@@ -1069,7 +1069,7 @@ class AccountRoot(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute('''
+        self.env.execute_query(SQL('''
             CREATE OR REPLACE VIEW %s AS (
             SELECT DISTINCT ASCII(code) * 1000 + ASCII(SUBSTRING(code,2,1)) AS id,
                    LEFT(code,2) AS name,
@@ -1082,5 +1082,5 @@ class AccountRoot(models.Model):
                    NULL::int AS parent_id,
                    company_id
             FROM account_account WHERE code != ''
-            )''' % (self._table,)
-        )
+            )''', SQL.identifier(self._table)
+        ))

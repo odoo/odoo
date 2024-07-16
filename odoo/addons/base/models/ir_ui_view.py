@@ -655,14 +655,14 @@ actual arch.
         initialization phase is completely finished.
         """
         # check that all found ids have a corresponding xml_id in a loaded module
-        check_view_ids = self.env.context['check_view_ids']
+        check_view_ids = set(self.env.context['check_view_ids'])
         ids_to_check = [vid for vid in self.ids if vid not in check_view_ids]
         if not ids_to_check:
             return self
         loaded_modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
         query = self._get_filter_xmlid_query()
-        self.env.cr.execute(query, {'res_ids': tuple(ids_to_check), 'modules': loaded_modules})
-        valid_view_ids = {r[0] for r in self.env.cr.fetchall()} | set(check_view_ids)
+        sql = SQL(query, res_ids=tuple(ids_to_check), modules=loaded_modules)
+        valid_view_ids = {id_ for id_, in self.env.execute_query(sql)} | check_view_ids
         return self.browse(vid for vid in self.ids if vid in valid_view_ids)
 
     def _check_view_access(self):
@@ -2183,16 +2183,15 @@ actual arch.
         """Validate architecture of custom views (= without xml id) for a given model.
             This method is called at the end of registry update.
         """
-        query = """SELECT max(v.id)
+        rec = self.browse(id_ for id_, in self.env.execute_query(SQL("""
+                   SELECT max(v.id)
                      FROM ir_ui_view v
                 LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
                     WHERE md.module IN (SELECT name FROM ir_module_module) IS NOT TRUE
                       AND v.model = %s
                       AND v.active = true
-                 GROUP BY coalesce(v.inherit_id, v.id)"""
-        self._cr.execute(query, [model])
-
-        rec = self.browse(it[0] for it in self._cr.fetchall())
+                 GROUP BY coalesce(v.inherit_id, v.id)
+                 """, model)))
         return rec.with_context({'load_all_views': True})._check_xml()
 
     @api.model
@@ -2215,14 +2214,12 @@ actual arch.
 
         # retrieve the views with an XML id that has not been checked yet, i.e.,
         # the views with noupdate=True on their xml id
-        query = """
+        views = self.browse(id_ for id_, in self.env.execute_query(SQL("""
             SELECT v.id
             FROM ir_ui_view v
             JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
             WHERE md.module = %s AND md.name IN %s AND md.noupdate
-        """
-        self._cr.execute(query, (module, names))
-        views = self.browse([row[0] for row in self._cr.fetchall()])
+        """, module, names)))
 
         for view in views:
             view._check_xml()
@@ -2632,11 +2629,13 @@ class Model(models.AbstractModel):
             if view_ref:
                 if '.' in view_ref:
                     module, view_ref = view_ref.split('.', 1)
-                    query = "SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s"
-                    self._cr.execute(query, (module, view_ref))
-                    view_ref_res = self._cr.fetchone()
-                    if view_ref_res:
-                        view_id = view_ref_res[0]
+
+                    sql = SQL(
+                        "SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s",
+                        module, view_ref,
+                    )
+                    if view_ref_res := self.env.execute_query(sql):
+                        [[view_id]] = view_ref_res
                 else:
                     _logger.warning(
                         '%r requires a fully-qualified external id (got: %r for model %s). '
