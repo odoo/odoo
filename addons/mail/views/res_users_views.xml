@@ -12,6 +12,9 @@
                     <field name="email" position="before">
                         <field name="notification_type" widget="radio" readonly="0"/>
                     </field>
+                    <field name="signature" position="attributes">
+                        <attribute name="widget">html_mail</attribute>
+                    </field>
                 </data>
             </field>
         </record>
@@ -26,6 +29,9 @@
                     <field name="signature" position="before">
                         <field name="notification_type" widget="radio"
                             invisible="share"/>
+                    </field>
+                    <field name="signature" position="attributes">
+                        <attribute name="widget">html_mail</attribute>
                     </field>
                 </data>
             </field>
