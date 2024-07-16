@@ -105,22 +105,17 @@ class TestMergePartner(TransactionCase):
 
     def test_merge_partners_with_peon_user(self):
         """ Test merging partners with a user having the bare minimum access rights"""
-        self.env["ir.model.access"].create({
+        self.env["ir.access"].create([{
             'name': 'peon.access.merge.wizard',
-            'group_id': self.env.ref('base.group_user').id,
             'model_id': self.env.ref('base.model_base_partner_merge_automatic_wizard').id,
-            'perm_read': 1,
-            'perm_write': 1,
-            'perm_create': 1,
-            })
-        self.env["ir.model.access"].create({
-            'name': 'peon.access.merge.wizard.line',
             'group_id': self.env.ref('base.group_user').id,
+            'operation': 'cru',
+        }, {
+            'name': 'peon.access.merge.wizard.line',
             'model_id': self.env.ref('base.model_base_partner_merge_line').id,
-            'perm_read': 1,
-            'perm_write': 1,
-            'perm_create': 1,
-            })
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'cru',
+        }])
         partner_peon = self.env['res.partner'].create({
                 'name': 'Peon',
                 'email': 'mark.peon@example.com',

@@ -476,7 +476,7 @@ class TestUsers2(UsersCommonCase):
             self.assertFalse(mock.called)
 
     @users('user_internal', 'portal_1')
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_user_writeable_fields(self):
         """ Check for writeable fields.
 
@@ -547,21 +547,13 @@ class TestUsers2(UsersCommonCase):
             'user_ids': [],
         })
 
-        # ACL
-        self.env['ir.model.access'].create({
+        # access
+        self.env['ir.access'].create({
             'name': 'Allow user profile update',
             'model_id': self.env['ir.model']._get('res.users').id,
             'group_id': group_portal_user_manager.id,
-            'perm_write': True,
-        })
-
-        # Rules
-        self.env['ir.rule'].create({
-            'name': 'Allow updates by Portal Managers on PORTAL users (only)',
-            'model_id': self.env['ir.model']._get('res.users').id,
-            'groups': [group_portal_user_manager.id],
-            'domain_force': [('share', '=', True)],
-            'perm_write': True,
+            'operation': 'u',
+            'domain': [('share', '=', True)],
         })
 
         # Users
