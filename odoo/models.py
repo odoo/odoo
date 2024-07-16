@@ -4292,7 +4292,7 @@ class BaseModel(metaclass=MetaModel):
 
         # determine ids in database that satisfy ir.rules
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(self.ids)))
-        valid_ids = {id_ for id_, in self.env.execute_query(query.select())}
+        valid_ids = set(query)
 
         # return new ids without origin and ids with origin in valid_ids
         return self.browse([
