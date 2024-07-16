@@ -1,5 +1,6 @@
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import { isSyncStatusConnected } from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 export function clickNewTicket() {
     return [{ trigger: ".ticket-screen .highlight", run: "click" }];
@@ -92,10 +93,7 @@ export function settleTips() {
             trigger: ".ticket-screen .buttons .settle-tips",
             run: "click",
         },
-        {
-            content: "verify that the order has been successfully sent to the backend",
-            trigger: ".js_connected:visible",
-        },
+        isSyncStatusConnected(),
     ];
 }
 export function clickControlButton(name) {

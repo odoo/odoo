@@ -4,11 +4,11 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/navbar/proxy_status/proxy_status";
+import { SyncPopup } from "@point_of_sale/app/navbar/sync_popup/sync_popup";
 import {
     SaleDetailsButton,
     handleSaleDetails,
 } from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
-import { SyncNotification } from "@point_of_sale/app/navbar/sync_notification/sync_notification";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { Component, onMounted, useState } from "@odoo/owl";
@@ -30,10 +30,10 @@ export class Navbar extends Component {
         CashierName,
         ProxyStatus,
         SaleDetailsButton,
-        SyncNotification,
         Input,
         Dropdown,
         DropdownItem,
+        SyncPopup,
     };
     static props = {};
     setup() {
@@ -145,5 +145,17 @@ export class Navbar extends Component {
 
     async showSaleDetails() {
         await handleSaleDetails(this.pos, this.hardwareProxy, this.dialog);
+    }
+
+    onSyncNotificationClick() {
+        if (this.pos.data.network.offline) {
+            this.pos.data.network.warningTriggered = false;
+        }
+
+        if (this.pos.data.network.unsyncData.length > 0) {
+            this.dialog.add(SyncPopup, {
+                confirm: () => this.pos.data.syncData(),
+            });
+        }
     }
 }
