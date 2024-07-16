@@ -500,7 +500,7 @@ class ResourceCalendar(models.Model):
 
         return {
             # Round the number of days to the closest 16th of a day.
-            'days': float_round(sum(day_days[day] for day in day_days), precision_rounding=0.01),
+            'days': float_round(sum(day_days[day] for day in day_days), precision_rounding=0.001),
             'hours': sum(day_hours.values()),
         }
 
@@ -514,11 +514,11 @@ class ResourceCalendar(models.Model):
         for start, stop, meta in intervals:
             day_hours[start.date()] += (stop - start).total_seconds() / 3600
 
-        # compute number of days as quarters
+        # compute number of days the hours span over
         days = float_round(sum(
             day_hours[day] / day_total[day] if day_total[day] else 0
             for day in day_hours
-        ), precision_rounding=0.01)
+        ), precision_rounding=0.001)
         return {
             'days': days,
             'hours': sum(day_hours.values()),
