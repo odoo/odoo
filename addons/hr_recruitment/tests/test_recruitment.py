@@ -13,11 +13,11 @@ class TestRecruitment(TransactionCase):
         self.env['ir.default'].set('res.partner', 'lang', 'en_US')
 
         # Creating an applicant will create a partner (email_from inverse)
+        candidate = self.env['hr.candidate'].sudo().with_context(lang='pl_PL').create({
+            'partner_name': 'Test Applicant', 'email_from': "test_aplicant@example.com"
+        })
         applicant = self.env['hr.applicant'].sudo().with_context(lang='pl_PL').create({
-            'name': 'Test Applicant',
-            'partner_name': 'Test Applicant',
-            'email_from': "test_aplicant@example.com"
-
+            'candidate_id': candidate.id,
         })
         self.assertEqual(applicant.partner_id.lang, 'pl_PL', 'Context langague not used for partner creation')
 
@@ -26,88 +26,94 @@ class TestRecruitment(TransactionCase):
         # And that no match is found when there is none
         dup1, dup2, no_dup = self.env['hr.applicant'].create([
             {
-                'name': 'Application 1',
+                'candidate_id': self.env['hr.candidate'].create({'partner_name': 'Application 1'}).id,
                 'partner_name': 'Application 1',
                 'email_from': 'laurie.poiret@aol.ru',
             },
             {
-                'name': 'Application 2',
+                'candidate_id': self.env['hr.candidate'].create({'partner_name': 'Application 2'}).id,
                 'partner_name': 'Application 2',
                 'email_from': 'laurie.POIRET@aol.ru',
             },
             {
-                'name': 'Application 3',
+                'candidate_id': self.env['hr.candidate'].create({'partner_name': 'Application 3'}).id,
                 'partner_name': 'Application 3',
                 'email_from': 'laure.poiret@aol.ru',
             },
         ])
-        self.assertEqual(dup1.application_count, 1)
-        self.assertEqual(dup2.application_count, 1)
-        self.assertEqual(no_dup.application_count, 0)
+        self.assertEqual(dup1.similar_candidates_count, 1)
+        self.assertEqual(dup2.similar_candidates_count, 1)
+        self.assertEqual(no_dup.similar_candidates_count, 0)
 
-    def test_application_count(self):
-        """ Test that we find same applicants based on simmilar mail,
+    def test_similar_candidates_count(self):
+        """ Test that we find same candidates based on simmilar mail,
             phone or mobile phone.
         """
         A, B, C, D, E, F, _ = self.env['hr.applicant'].create([
             {
                 'active': False,  # Refused/archived application should still count
-                'name': 'Application A',
-                'partner_name': 'Application A',
-                'email_from': 'abc@odoo.com',
-                'partner_phone': '123',
-                'partner_mobile': '14-15-16',
+                'candidate_id': self.env['hr.candidate'].create({
+                    'partner_name': 'Application A',
+                    'email_from': 'abc@odoo.com',
+                    'partner_phone': '123',
+                    'partner_mobile': '14-15-16',
+                }).id,
             },
             {
-                'name': 'Application B',
-                'partner_name': 'Application B',
-                'partner_phone': '456',
-                'partner_mobile': '11-12-13',
+                'candidate_id': self.env['hr.candidate'].create({
+                    'partner_name': 'Application B',
+                    'partner_phone': '456',
+                    'partner_mobile': '11-12-13',
+                }).id,
             },
             {
-                'name': 'Application C',
-                'partner_name': 'Application C',
-                'email_from': 'def@odoo.com',
-                'partner_phone': '123',
-                'partner_mobile': '14-15-16',
+                'candidate_id': self.env['hr.candidate'].create({
+                    'partner_name': 'Application C',
+                    'email_from': 'def@odoo.com',
+                    'partner_phone': '123',
+                    'partner_mobile': '14-15-16',
+                }).id,
             },
             {
-                'name': 'Application D',
-                'partner_name': 'Application D',
-                'email_from': 'def@odoo.com',
-                'partner_phone': '456',
-                'partner_mobile': '14-15-16',
+                'candidate_id': self.env['hr.candidate'].create({
+                    'partner_name': 'Application D',
+                    'email_from': 'def@odoo.com',
+                    'partner_phone': '456',
+                    'partner_mobile': '14-15-16',
+                }).id,
             },
             {
-                'name': 'Application E',
-                'partner_name': 'Application E',
-                'partner_phone': '',
+                'candidate_id': self.env['hr.candidate'].create({
+                    'partner_name': 'Application E',
+                    'partner_phone': '',
+                }).id,
             },
             {
-                'name': 'Application F',
-                'partner_name': 'Application F',
-                'partner_phone': '11-12-13', # In case phone is configured in a wrong field
+                'candidate_id': self.env['hr.candidate'].create({
+                    'partner_name': 'Application F',
+                    'partner_phone': '11-12-13',  # In case phone is configured in a wrong field
+                }).id,
             },
             {
-                'name': 'Application G',
-                'partner_name': 'Application G',
-                'partner_phone': '',
+                'candidate_id': self.env['hr.candidate'].create({
+                    'partner_name': 'Application G',
+                    'partner_phone': '',
+                }).id,
             },
         ])
-
-        self.assertEqual(A.application_count, 2) # C, D
-        self.assertEqual(B.application_count, 2) # D, F
-        self.assertEqual(C.application_count, 2) # A, D
-        self.assertEqual(D.application_count, 3) # A, B, C
-        self.assertEqual(E.application_count, 0) # Should not match with G
-        self.assertEqual(F.application_count, 1) # B
+        self.assertEqual(A.similar_candidates_count, 2)  # C, D
+        self.assertEqual(B.similar_candidates_count, 2)  # D, F
+        self.assertEqual(C.similar_candidates_count, 2)  # A, D
+        self.assertEqual(D.similar_candidates_count, 3)  # A, B, C
+        self.assertEqual(E.similar_candidates_count, 0)  # Should not match with G
+        self.assertEqual(F.similar_candidates_count, 1)  # B
 
     def test_application_no_partner_duplicate(self):
         """ Test that when applying, the existing partner
             doesn't get duplicated.
         """
         applicant_data = {
-            'name': 'Test - CEO',
+            'candidate_id': self.env['hr.candidate'].create({'partner_name': 'Test - CEO'}).id,
             'partner_name': 'Test',
             'email_from': 'test@thisisatest.com',
         }

@@ -52,6 +52,9 @@ class Job(models.Model):
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
     interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]", help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.")
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
+    industry_id = fields.Many2one('res.partner.industry', 'Industry')
+    date_from = fields.Date(help="Is set, update candidates availability once hired for that specific mission.")
+    date_to = fields.Date()
 
     activities_overdue = fields.Integer(compute='_compute_activities')
     activities_today = fields.Integer(compute='_compute_activities')
@@ -136,7 +139,7 @@ class Job(models.Model):
         unfavorited_jobs.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def _compute_document_ids(self):
-        applicants = self.mapped('application_ids').filtered(lambda self: not self.emp_id)
+        applicants = self.mapped('application_ids').filtered(lambda self: not self.employee_id)
         app_to_job = dict((applicant.id, applicant.job_id.id) for applicant in applicants)
         attachments = self.env['ir.attachment'].search([
             '|',
@@ -228,7 +231,7 @@ class Job(models.Model):
             job.old_application_count = job.application_count - job.new_application_count
 
     def _alias_get_creation_values(self):
-        values = super(Job, self)._alias_get_creation_values()
+        values = super()._alias_get_creation_values()
         values['alias_model_id'] = self.env['ir.model']._get('hr.applicant').id
         if self.id:
             values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")

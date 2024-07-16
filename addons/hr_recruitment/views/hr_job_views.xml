@@ -195,6 +195,7 @@
                     <span invisible="address_id" class="oe_read_only">Remote</span>
                     <field name="address_id" context="{'show_address': 1}" placeholder="Remote"/>
                 </div>
+                <field name="industry_id"/>
                 <label for="alias_name" string="Email Alias"
                        help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                 <div name="alias_def">
@@ -208,6 +209,12 @@
             </xpath>
             <xpath expr="//field[@name='contract_type_id']" position="after">
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field
+                    name="date_from"
+                    widget="daterange"
+                    string="Mission Dates"
+                    options="{'end_date_field': 'date_to'}"/>
+                <field name="date_to" invisible="1" />
             </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
@@ -317,9 +324,6 @@
           </p>
         </field>
     </record>
-    <menuitem name="By Job Positions" parent="menu_crm_case_categ0_act_job"
-        id="menu_hr_job_position" action="action_hr_job"
-        sequence="1" groups="hr_recruitment.group_hr_recruitment_user" />
 
     <!-- Job Positions filtered for interviewers -->
     <record model="ir.actions.act_window" id="action_hr_job_interviewer">
@@ -334,9 +338,6 @@
                 ('extended_interviewer_ids', 'in', uid),
         ]</field>
     </record>
-    <menuitem name="By Job Positions" parent="menu_crm_case_categ0_act_job"
-        id="menu_hr_job_position_interviewer" action="action_hr_job_interviewer"
-        sequence="1" groups="hr_recruitment.group_hr_recruitment_interviewer" />
 
     <record id="hr_job_platform_form" model="ir.ui.view">
         <field name="name">hr.job.platform.form</field>
@@ -389,18 +390,4 @@
             </p>
         </field>
     </record>
-
-    <menuitem
-        name="Job Boards"
-        parent="menu_hr_recruitment_configuration"
-        id="menu_hr_job_boards"
-        sequence="50"/>
-
-    <menuitem
-        name="Emails"
-        parent="menu_hr_job_boards"
-        id="menu_hr_recruitment_emails"
-        action="action_hr_job_platforms"
-        sequence="50"/>
-
 </odoo>

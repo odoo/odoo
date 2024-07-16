@@ -93,4 +93,4 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
     @api.depends('applicant_ids')
     def _compute_duplicates_count(self):
-        self.duplicates_count = self.applicant_ids.application_count if len(self.applicant_ids) == 1 else 0
+        self.duplicates_count = self.applicant_ids.other_applications_count if len(self.applicant_ids) == 1 else 0
