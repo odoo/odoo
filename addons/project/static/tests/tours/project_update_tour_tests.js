@@ -89,12 +89,17 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: ".dropdown-item.o_column_edit",
     run: "click",
 }, {
-    trigger: ".o_field_widget[name=fold] input",
+    trigger: ".modal .o_field_widget[name=fold] input",
+    in_modal: false,
     run: "click",
 }, {
-    trigger: ".modal-footer button",
+    trigger: ".modal .modal-footer button",
+    in_modal: false,
     run: "click",
-}, 
+},
+{
+    trigger: "body:not(:has(.modal))",
+},
 {
     trigger: '.o_kanban_project_tasks',
 },

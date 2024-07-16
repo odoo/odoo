@@ -109,7 +109,7 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
-        trigger: "button[name=action_invoice_sent]",
+        trigger: "button[name=action_invoice_sent]:contains(send & print)",
         content: _t("Send the invoice to the customer and check what he'll receive."),
         position: "bottom",
         run: "click",
@@ -119,7 +119,8 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "div.modal-dialog",
     },
     {
-        trigger: "button[name=document_layout_save]",
+        trigger: ".modal button[name=document_layout_save]",
+        in_modal: false,
         content: _t("Configure document layout."),
         run: "click",
     },
@@ -145,7 +146,8 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
     },
     {
-        trigger: "button[name=action_invoice_sent]",
+        trigger: "button[name=action_invoice_sent]:contains(send & print)",
+        in_modal: false,
         content: _t("Send the invoice and check what the customer will receive."),
         run: "click",
     }, 
@@ -154,13 +156,19 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
-        trigger: "button[name=action_send_and_print]",
+        trigger: ".modal button[name=action_send_and_print]",
+        in_modal: false,
         content: _t("Let's send the invoice."),
         position: "top",
         run: "click",
-    }, {
-        trigger: "button[name=action_register_payment]",
+    },
+    {
+        isActive: ["auto"],
+        trigger: "body:has(.o_form_saved)",
+    },
+    {
+        trigger: "button[name=action_register_payment]:contains(register payment):enabled",
         content: _t("The button priority shifted since the invoice has been sent. Let's register the payment now."),
         position: "bottom",
-    }
+    },
 ]});
