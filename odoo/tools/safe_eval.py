@@ -464,6 +464,10 @@ import dateutil
 mods = ['parser', 'relativedelta', 'rrule', 'tz']
 for mod in mods:
     __import__('dateutil.%s' % mod)
+# make sure to patch pytz before exposing
+from odoo._monkeypatches.pytz import patch_pytz  # noqa: E402, F401
+patch_pytz()
+
 datetime = wrap_module(__import__('datetime'), ['date', 'datetime', 'time', 'timedelta', 'timezone', 'tzinfo', 'MAXYEAR', 'MINYEAR'])
 dateutil = wrap_module(dateutil, {
     mod: getattr(dateutil, mod).__all__
