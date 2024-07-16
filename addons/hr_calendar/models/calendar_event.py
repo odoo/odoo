@@ -44,15 +44,18 @@ class CalendarEvent(models.Model):
         global_interval = company_calendar._work_intervals_batch(start, stop)[False]
         interval_by_event = {}
         for event in self:
-            event_interval = Intervals([(
-                timezone_datetime(event.start),
-                timezone_datetime(event.stop),
-                self.env['resource.calendar']
-            )])
             if event.allday:
-                interval_by_event[event] = event_interval & global_interval
+                interval_by_event[event] = Intervals([(
+                    timezone_datetime(event.start).replace(hour=0, minute=0, second=0),
+                    timezone_datetime(event.stop).replace(hour=23, minute=59, second=59),
+                    self.env['resource.calendar']
+                )]) & global_interval
             else:
-                interval_by_event[event] = event_interval
+                interval_by_event[event] = Intervals([(
+                    timezone_datetime(event.start),
+                    timezone_datetime(event.stop),
+                    self.env['resource.calendar']
+                )])
         return interval_by_event
 
     def _check_employees_availability_for_event(self, schedule_by_partner, event_interval):
