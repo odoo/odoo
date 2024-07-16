@@ -60,13 +60,11 @@
             <field name="model">restaurant.floor</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="name"/>
-                    <field name="pos_config_ids" />
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div><strong>Floor Name: </strong><t t-esc="record.name.value"/></div>
-                                <div><strong>Point of Sales: </strong><t t-esc="record.pos_config_ids.value"/></div>
+                        <t t-name="kanban-card">
+                            <div><strong>Floor Name: </strong><field name="name"/></div>
+                            <div class="d-flex">
+                                <strong>Point of Sales:</strong><field name="pos_config_ids" class="ms-1"/>
                             </div>
                         </t>
                     </templates>
