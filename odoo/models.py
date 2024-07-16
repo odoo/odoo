@@ -62,7 +62,7 @@ from .tools import (
     SQL, sql,
 )
 from .tools.lru import LRU
-from .tools.misc import CountingStream, LastOrderedSet, ReversedIterable
+from .tools.misc import CountingStream, LastOrderedSet, ReversedIterable, unquote
 from .tools.translate import _, _lt
 
 _logger = logging.getLogger(__name__)
@@ -170,14 +170,18 @@ def fix_import_export_id_paths(fieldname):
 def to_company_ids(companies):
     if isinstance(companies, BaseModel):
         return companies.ids
-    elif isinstance(companies, (list, tuple)):
+    elif isinstance(companies, (list, tuple, str)):
         return companies
     return [companies]
 
 
 def check_company_domain_parent_of(self, companies):
+    """ A `_check_company_domain` function that lets a record be used if either:
+        - record.company_id = False (which implies that it is shared between all companies), or
+        - record.company_id is a parent of any of the given companies.
+    """
     if isinstance(companies, str):
-        return ['|', ('company_id', '=', False), ('company_id', 'parent_of', [companies])]
+        return ['|', ('company_id', '=', False), ('company_id', 'parent_of', companies)]
 
     companies = [id for id in to_company_ids(companies) if id]
     if not companies:
@@ -188,6 +192,24 @@ def check_company_domain_parent_of(self, companies):
         for rec in self.env['res.company'].sudo().browse(companies)
         for parent in rec.parent_path.split('/')[:-1]
     ] + [False])]
+
+
+def check_companies_domain_parent_of(self, companies):
+    """ A `_check_company_domain` function that lets a record be used if
+        any company in record.company_ids is a parent of any of the given companies.
+    """
+    if isinstance(companies, str):
+        return [('company_ids', 'parent_of', companies)]
+
+    companies = [id_ for id_ in to_company_ids(companies) if id_]
+    if not companies:
+        return []
+
+    return [('company_ids', 'in', [
+        int(parent)
+        for rec in self.env['res.company'].sudo().browse(companies)
+        for parent in rec.parent_path.split('/')[:-1]
+    ])]
 
 
 class MetaModel(api.Meta):
@@ -4159,6 +4181,8 @@ class BaseModel(metaclass=MetaModel):
         """
         if not companies:
             return [('company_id', '=', False)]
+        if isinstance(companies, str):
+            return [('company_id', 'in', unquote(f'{companies} + [False]'))]
         return [('company_id', 'in', to_company_ids(companies) + [False])]
 
     def _check_company(self, fnames=None):
@@ -4175,15 +4199,14 @@ class BaseModel(metaclass=MetaModel):
         User with main company A, having access to company A and B, could be
         assigned or linked to records in company B.
         """
-        if fnames is None or 'company_id' in fnames:
+        if fnames is None or {'company_id', 'company_ids'} & set(fnames):
             fnames = self._fields
 
         regular_fields = []
         property_fields = []
         for name in fnames:
             field = self._fields[name]
-            if field.relational and field.check_company and \
-                    'company_id' in self.env[field.comodel_name]:
+            if field.relational and field.check_company:
                 if not field.company_dependent:
                     regular_fields.append(name)
                 else:
@@ -4194,15 +4217,28 @@ class BaseModel(metaclass=MetaModel):
 
         inconsistencies = []
         for record in self:
-            company = record.company_id if record._name != 'res.company' else record
             # The first part of the check verifies that all records linked via relation fields are compatible
             # with the company of the origin document, i.e. `self.account_id.company_id == self.company_id`
-            for name in regular_fields:
-                corecord = record.sudo()[name]
-                if corecord:
-                    domain = corecord._check_company_domain(company)
-                    if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
-                        inconsistencies.append((record, name, corecord))
+            if regular_fields:
+                if self._name == 'res.company':
+                    companies = record
+                elif 'company_id' in self:
+                    companies = record.company_id
+                elif 'company_ids' in self:
+                    companies = record.company_ids
+                else:
+                    _logger.warning(_(
+                        "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
+                        "but the model doesn't have a `company_id` or `company_ids` field!",
+                        model_name=self.model_name, field_names=regular_fields
+                    ))
+                    continue
+                for name in regular_fields:
+                    corecord = record.sudo()[name]
+                    if corecord:
+                        domain = corecord._check_company_domain(companies)
+                        if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
+                            inconsistencies.append((record, name, corecord))
             # The second part of the check (for property / company-dependent fields) verifies that the records
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
             # the company for which the value is being assigned, i.e:
@@ -5890,6 +5926,8 @@ class BaseModel(metaclass=MetaModel):
         """
         if 'company_id' in self:
             return self.company_id
+        elif 'company_ids' in self:
+            return (self.company_ids & self.env.user.company_ids)[:1]
         return False
 
     #
@@ -6281,12 +6319,12 @@ class BaseModel(metaclass=MetaModel):
             else:
                 (key, comparator, value) = leaf
                 if comparator in ('child_of', 'parent_of'):
-                    if key == 'company_id':  # avoid an explicit search
+                    if key in ['company_id', 'company_ids']:  # avoid an explicit search
                         value_companies = self.env['res.company'].browse(value)
                         if comparator == 'child_of':
-                            stack.append({record.id for record in self if record.company_id.parent_ids & value_companies})
+                            stack.append({record.id for record in self if record[key].parent_ids & value_companies})
                         else:
-                            stack.append({record.id for record in self if record.company_id & value_companies.parent_ids})
+                            stack.append({record.id for record in self if record[key] & value_companies.parent_ids})
                     else:
                         stack.append(set(self.with_context(active_test=False).search([('id', 'in', self.ids), leaf], order='id')._ids))
                     continue
