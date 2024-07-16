@@ -14,9 +14,27 @@ from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
+from odoo.tools.phone_validation import phone_format
 
 
 class WebsiteForm(http.Controller):
+
+    @http.route('/website/format_phone_number', type="json", auth='public')
+    def format_phone_number(self, phone_number, country_code=None, country_phone_code=None, country_select_id=None):
+        if not country_code and not country_phone_code:
+            if country_select_id:
+                country = request.env['res.country'].search([('id', '=', int(country_select_id))], limit=1)
+                country_code = country.code
+                country_phone_code = country.phone_code
+            if not country_code and request.env.user:  # if user is logged in, we can use its country if known
+                country_code = request.env.user.partner_id.country_id.code or None
+                country_phone_code = request.env.user.partner_id.country_id.phone_code or None
+            if not country_code:  # if not, we use the country of the website
+                website = request.env['website'].get_current_website()
+                country_code = website.company_id.country_id.code or None
+                country_phone_code = website.company_id.country_id.phone_code or None
+
+        return phone_format(phone_number, country_code, country_phone_code, raise_exception=False)
 
     @http.route('/website/form', type='http', auth="public", methods=['POST'], multilang=False)
     def website_form_empty(self, **kwargs):
