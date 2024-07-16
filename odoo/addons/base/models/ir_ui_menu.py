@@ -103,7 +103,6 @@ class IrUiMenu(models.Model):
         visible = self.browse()
 
         # process action menus, check whether their action is allowed
-        access = self.env['ir.model.access']
         MODEL_BY_TYPE = {
             'ir.actions.act_window': 'res_model',
             'ir.actions.report': 'model',
@@ -119,7 +118,9 @@ class IrUiMenu(models.Model):
             action = menu.action
             action = action.with_prefetch(prefetch_ids[action._name])
             model_name = action._name in MODEL_BY_TYPE and action[MODEL_BY_TYPE[action._name]]
-            if not model_name or access.check(model_name, 'read', False):
+            if not model_name or (
+                model_name in self.pool and self.env[model_name].has_access('read')
+            ):
                 # make menu visible, and its folder ancestors, too
                 visible += menu
                 menu = menu.parent_id
