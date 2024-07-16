@@ -42,21 +42,14 @@
         <field name="model">pos.category</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
-                <field name="name"/>
-                <field name="id"/>
-                <field name="color"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div class="row">
-                                <div class="col-4">
-                                    <img height="100" width="100" t-att-src="kanban_image('pos.category', 'image_128', record.id.raw_value)" alt="Category"/>
-                                </div>
-                                <div class="col-8">
-                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card" class="row g-0">
+                        <aside class="col-4">
+                            <field name="image_128" widget="image" alt="Category" options="{'size': [100, 100], 'img_class': 'h-100'}"/>
+                        </aside>
+                        <main class="col ms-4">
+                            <field name="name" class="fw-bolder fs-5"/>
+                        </main>
                     </t>
                 </templates>
             </kanban>
