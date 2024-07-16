@@ -377,7 +377,7 @@ var SnippetEditor = Widget.extend({
      * @returns {boolean}
      */
     isTargetVisible: function () {
-        return (this.$target[0].style.visibility = "show");
+        return (this.$target[0].dataset.invisible !== '1');
     },
     /**
      * Removes the associated snippet from the DOM and destroys the associated
@@ -936,9 +936,9 @@ var SnippetEditor = Widget.extend({
             show = !this.isTargetVisible();
         }
         if (show) {
-            this.$target[0].style.visibility = "visible";
+            delete this.$target[0].dataset.invisible;
         } else {
-            this.$target[0].style.visibility = "hidden";
+            this.$target[0].dataset.invisible = '1';
         }
         return show;
     },
@@ -3260,6 +3260,7 @@ class SnippetsMenu extends Component {
      * @returns {Promise<SnippetEditor>}
      */
     _createSnippetEditor($snippet, forceCreate = false) {
+        // check do we need this?
         if (!$snippet) {
             return;
         }

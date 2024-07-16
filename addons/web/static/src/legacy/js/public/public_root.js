@@ -241,6 +241,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStartRequest: function (ev) {
+        // TO-remove : backward compatibility targetEl can be a jQuery object
         const targetEl = ev.data.target instanceof jQuery ? ev.data.target[0] : ev.target.el;
         this._startWidgets(targetEl, ev.data.options)
             .then(ev.data.onSuccess)
@@ -261,6 +262,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} ev
      */
     _onWidgetsStopRequest: function (ev) {
+        // TO-remove : backward compatibility targetEl can be a jQuery object
         const targetEl = ev.data.target instanceof jQuery ? ev.data.target[0] : ev.target.el;
         this._stopWidgets(targetEl);
     },

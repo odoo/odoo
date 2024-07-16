@@ -1348,10 +1348,10 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         this.__onScrollWebsiteAnimate = throttleForAnimation(this._onScrollWebsiteAnimate.bind(this));
         this.$scrollingTarget[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
 
-        $(window)[0].on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.tab.o_animate, shown.bs.collapse.o_animate', () => {
+        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.tab.o_animate, shown.bs.collapse.o_animate', () => {
             this.windowsHeight = $(window).height();
             this._scrollWebsiteAnimate(this.$scrollingElement[0]);
-        });
+        }).trigger("resize");
 
         return this._super(...arguments);
     },
@@ -1367,7 +1367,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
                 'animation-play-state': '',
                 'visibility': '',
             });
-        $(window)[0].off('.o_animate');
+        $(window).off('.o_animate');
         this.__onScrollWebsiteAnimate?.cancel();
         if (this.$scrollingTarget) {
             this.$scrollingTarget[0]?.removeEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
