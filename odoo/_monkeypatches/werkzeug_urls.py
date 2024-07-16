@@ -1,14 +1,24 @@
+# ruff: noqa: PLC0415 (import in function not at top-level)
 from __future__ import annotations
 
+import contextlib
+import operator
 import os
-import sys
 import re
+import sys
 import typing as t
 import warnings
-from werkzeug.datastructures import iter_multi_items
-from werkzeug.urls import _decode_idna
+from shutil import copyfileobj
+from types import CodeType
 
-import operator
+from werkzeug import urls
+from werkzeug.datastructures import FileStorage
+from werkzeug.routing import Rule
+from werkzeug.urls import _decode_idna
+from werkzeug.wrappers import Request, Response
+
+Rule_get_func_code = hasattr(Rule, '_get_func_code') and Rule._get_func_code
+
 
 def _check_str_tuple(value: t.Tuple[t.AnyStr, ...]) -> None:
     """Ensure tuple items are all strings or all bytes."""
@@ -30,7 +40,9 @@ def _make_encode_wrapper(reference: t.AnyStr) -> t.Callable[[str], t.AnyStr]:
 
     return operator.methodcaller("encode", "latin1")
 
+
 _default_encoding = sys.getdefaultencoding()
+
 
 def _to_str(
     x: t.Optional[t.Any],
@@ -49,7 +61,6 @@ def _to_str(
             return x
 
     return x.decode(charset, errors)  # type: ignore
-
 
 
 if t.TYPE_CHECKING:
@@ -98,7 +109,7 @@ class BaseURL(_URLTuple):
     _lbracket: str
     _rbracket: str
 
-    def __new__(cls, *args: t.Any, **kwargs: t.Any) -> BaseURL:
+    def __new__(cls, *args: t.Any, **kwargs: t.Any) -> BaseURL:  # noqa: PYI034
         return super().__new__(cls, *args, **kwargs)
 
     def __str__(self) -> str:
@@ -126,10 +137,8 @@ class BaseURL(_URLTuple):
         """
         rv = self.host
         if rv is not None and isinstance(rv, str):
-            try:
+            with contextlib.suppress(UnicodeError):
                 rv = rv.encode("idna").decode("ascii")
-            except UnicodeError:
-                pass
         return rv
 
     @property
@@ -985,7 +994,7 @@ def url_join(
     if not url:
         return base
 
-    bscheme, bnetloc, bpath, bquery, bfragment = url_parse(
+    bscheme, bnetloc, bpath, bquery, _bfragment = url_parse(
         base, allow_fragments=allow_fragments
     )
     scheme, netloc, path, query, fragment = url_parse(url, bscheme, allow_fragments)
@@ -1031,16 +1040,31 @@ def url_join(
     return url_unparse((scheme, netloc, path, query, fragment))
 
 
-from werkzeug import urls
-# see https://github.com/pallets/werkzeug/compare/2.3.0..3.0.0
-# see https://github.com/pallets/werkzeug/blob/2.3.0/src/werkzeug/urls.py for replacement
-urls.url_decode = url_decode
-urls.url_encode = url_encode
-urls.url_join = url_join
-urls.url_parse = url_parse
-urls.url_quote = url_quote
-urls.url_unquote = url_unquote
-urls.url_quote_plus = url_quote_plus
-urls.url_unquote_plus = url_unquote_plus
-urls.url_unparse = url_unparse
-urls.URL = URL
+def patch_werkzeug():
+    from ..tools.json import scriptsafe  # noqa: PLC0415
+    Request.json_module = Response.json_module = scriptsafe
+
+    FileStorage.save = lambda self, dst, buffer_size=(1 << 20): copyfileobj(self.stream, dst, buffer_size)
+
+    if Rule_get_func_code:
+        @staticmethod
+        def _get_func_code(code, name):
+            assert isinstance(code, CodeType)
+            return Rule_get_func_code(code, name)
+        Rule._get_func_code = _get_func_code
+
+    if hasattr(urls, 'url_join'):
+        # URLs are already patched
+        return
+    # see https://github.com/pallets/werkzeug/compare/2.3.0..3.0.0
+    # see https://github.com/pallets/werkzeug/blob/2.3.0/src/werkzeug/urls.py for replacement
+    urls.url_decode = url_decode
+    urls.url_encode = url_encode
+    urls.url_join = url_join
+    urls.url_parse = url_parse
+    urls.url_quote = url_quote
+    urls.url_unquote = url_unquote
+    urls.url_quote_plus = url_quote_plus
+    urls.url_unquote_plus = url_unquote_plus
+    urls.url_unparse = url_unparse
+    urls.URL = URL
