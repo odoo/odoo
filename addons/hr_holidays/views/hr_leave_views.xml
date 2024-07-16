@@ -358,6 +358,9 @@
         <field name="mode">primary</field>
         <field name="priority">17</field>
         <field name="arch" type="xml">
+            <xpath expr="." position="attributes">
+                <attribute name="js_class">timeoff_dialog_form</attribute>
+            </xpath>
             <xpath expr="//group[@name='col_left']" position="attributes">
                 <attribute name="colspan">5</attribute>
             </xpath>
