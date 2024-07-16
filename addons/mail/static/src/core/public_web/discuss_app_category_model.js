@@ -1,5 +1,5 @@
 import { compareDatetime } from "@mail/utils/common/misc";
-import { Record } from "./record";
+import { Record } from "@mail/core/common/record";
 import { browser } from "@web/core/browser/browser";
 
 export class DiscussAppCategory extends Record {

@@ -1,5 +1,5 @@
 import { patch } from "@web/core/utils/patch";
-import { DiscussAppCategory } from "@mail/core/common/discuss_app_category_model";
+import { DiscussAppCategory } from "@mail/core/public_web/discuss_app_category_model";
 import { Record } from "@mail/core/common/record";
 import { compareDatetime } from "@mail/utils/common/misc";
 

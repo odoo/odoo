@@ -2,7 +2,6 @@ import { AND, Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { assignDefined, compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
-import { router } from "@web/core/browser/router";
 
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -187,10 +186,7 @@ export class Thread extends Record {
     });
     isDisplayed = Record.attr(false, {
         compute() {
-            if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
-                return this.eq(this.store.discuss.thread);
-            }
-            return this.store.ChatWindow.get({ thread: this })?.isOpen;
+            return this.computeIsDisplayed();
         },
         onUpdate() {
             if (this.selfMember && !this.isDisplayed) {
@@ -261,11 +257,6 @@ export class Thread extends Record {
      */
     scrollTop = "bottom";
     transientMessages = Record.many("Message");
-    discussAppCategory = Record.one("DiscussAppCategory", {
-        compute() {
-            return this._computeDiscussAppCategory();
-        },
-    });
     /** @type {string} */
     defaultDisplayMode;
     scrollUnread = true;
@@ -315,15 +306,6 @@ export class Thread extends Record {
     });
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
-
-    _computeDiscussAppCategory() {
-        if (["group", "chat"].includes(this.channel_type)) {
-            return this.store.discuss.chats;
-        }
-        if (this.channel_type === "channel") {
-            return this.store.discuss.channels;
-        }
-    }
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
@@ -420,6 +402,10 @@ export class Thread extends Record {
             return this.channelMembers[0];
         }
         return undefined;
+    }
+
+    computeIsDisplayed() {
+        return this.store.ChatWindow.get({ thread: this })?.isOpen;
     }
 
     get avatarUrl() {
@@ -1103,46 +1089,12 @@ export class Thread extends Record {
         return message;
     }
 
-    /** @param {boolean} pushState */
-    setAsDiscussThread(pushState) {
-        if (pushState === undefined) {
-            pushState = this.notEq(this.store.discuss.thread);
-        }
-        this.store.discuss.thread = this;
-        const activeId =
-            typeof this.id === "string" ? `mail.box_${this.id}` : `discuss.channel_${this.id}`;
-        this.store.discuss.activeTab =
-            !this.store.env.services.ui.isSmall || this.model === "mail.box"
-                ? "main"
-                : ["chat", "group"].includes(this.channel_type)
-                ? "chat"
-                : "channel";
-        if (pushState) {
-            router.pushState({ active_id: activeId });
-        }
-    }
-
     /** @param {number} index */
     async setMainAttachmentFromIndex(index) {
         this.mainAttachment = this.attachmentsInWebClientView[index];
         await this.store.env.services.orm.call("ir.attachment", "register_as_main_attachment", [
             this.mainAttachment.id,
         ]);
-    }
-
-    async unpin() {
-        this.isLocallyPinned = false;
-        if (this.eq(this.store.discuss.thread)) {
-            router.replaceState({ active_id: undefined });
-        }
-        if (this.model === "discuss.channel" && this.is_pinned) {
-            return this.store.env.services.orm.silent.call(
-                "discuss.channel",
-                "channel_pin",
-                [this.id],
-                { pinned: false }
-            );
-        }
     }
 
     /**

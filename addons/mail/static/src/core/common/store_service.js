@@ -3,7 +3,6 @@ import { rpc } from "@web/core/network/rpc";
 import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 
-import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
@@ -64,10 +63,6 @@ export class Store extends BaseStore {
     ChatWindow;
     /** @type {typeof import("@mail/core/common/composer_model").Composer} */
     Composer;
-    /** @type {typeof import("@mail/core/common/discuss_app_model").DiscussApp} */
-    DiscussApp;
-    /** @type {typeof import("@mail/core/common/discuss_app_category_model").DiscussAppCategory} */
-    DiscussAppCategory;
     /** @type {typeof import("@mail/core/common/failure_model").Failure} */
     Failure;
     /** @type {typeof import("@mail/core/common/follower_model").Follower} */
@@ -89,8 +84,6 @@ export class Store extends BaseStore {
     /** @type {typeof import("@mail/core/common/volume_model").Volume} */
     Volume;
 
-    /** @type {number} */
-    action_discuss_id;
     /**
      * Defines channel types that have the message seen indicator/info feature.
      * @see `discuss.channel`._types_allowing_seen_infos()
@@ -129,7 +122,6 @@ export class Store extends BaseStore {
     // messaging menu
     menu = { counter: 0 };
     chatHub = Record.one("ChatHub", { compute: () => ({}) });
-    discuss = Record.one("DiscussApp");
     failures = Record.many("Failure", {
         /**
          * @param {import("models").Failure} f1
@@ -350,16 +342,6 @@ export class Store extends BaseStore {
             return;
         }
         return chat;
-    }
-
-    getDiscussSidebarCategoryCounter(categoryId) {
-        return this.DiscussAppCategory.get({ id: categoryId }).threads.reduce((acc, channel) => {
-            if (categoryId === "channels") {
-                return channel.message_needaction_counter > 0 ? acc + 1 : acc;
-            } else {
-                return channel.selfMember?.message_unread_counter > 0 ? acc + 1 : acc;
-            }
-        }, 0);
     }
 
     /** @returns {number} */
@@ -632,7 +614,6 @@ export const storeService = {
      */
     start(env, services) {
         const store = makeStore(env);
-        store.discuss = { activeTab: "main" };
         store.insert(session.storeData);
         /**
          * Add defaults for `self` and `settings` because in livechat there could be no user and no
@@ -642,17 +623,6 @@ export const storeService = {
          */
         store.self ??= { id: -1, type: "guest" };
         store.settings ??= {};
-        const discussActionIds = ["mail.action_discuss", "discuss"];
-        if (store.action_discuss_id) {
-            discussActionIds.push(store.action_discuss_id);
-        }
-        store.discuss.isActive ||= discussActionIds.includes(router.current.action);
-        services.ui.bus.addEventListener("resize", () => {
-            store.discuss.activeTab = "main";
-            if (services.ui.isSmall && store.discuss.thread?.channel_type) {
-                store.discuss.activeTab = store.discuss.thread.channel_type;
-            }
-        });
         store.initialize();
         store.onStarted();
         return store;
