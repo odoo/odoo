@@ -79,7 +79,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'allow_timesheets': True,
             'allow_billable': True,
             'partner_id': cls.partner_b.id,
-            'analytic_account_id': cls.analytic_account_sale.id,
+            'account_id': cls.analytic_account_sale.id,
         })
 
         cls.project_subtask = Project.create({

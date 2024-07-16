@@ -23,4 +23,15 @@
         </field>
     </record>
 
+    <record id="project_embedded_action_analytic_items" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">105</field>
+        <field name="name">Analytic Items</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_open_analytic_items</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('analytic.group_analytic_accounting'))]" />
+        <field name="domain">[('account_id', '!=', False)]</field>
+    </record>
+
 </odoo>

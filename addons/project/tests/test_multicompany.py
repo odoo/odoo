@@ -221,17 +221,17 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             with self.allow_companies([self.company_a.id, self.company_b.id]):
                 self.project_company_a._create_analytic_account()
 
-                self.assertEqual(self.project_company_a.company_id, self.project_company_a.analytic_account_id.company_id, "The analytic account created from a project should be in the same company.")
+                self.assertEqual(self.project_company_a.company_id, self.project_company_a.account_id.company_id, "The analytic account created from a project should be in the same company.")
 
         project_no_company = self.Project.create({'name': 'Project no company'})
         #ensures that all the existing plan have a company_id
         project_no_company._create_analytic_account()
-        self.assertFalse(project_no_company.analytic_account_id.company_id, "The analytic account created from a project without company_id should have its company_id field set to False.")
+        self.assertFalse(project_no_company.account_id.company_id, "The analytic account created from a project without company_id should have its company_id field set to False.")
 
         project_no_company_2 = self.Project.create({'name': 'Project no company 2'})
         project_no_company_2._create_analytic_account()
-        self.assertNotEqual(project_no_company_2.analytic_account_id, project_no_company.analytic_account_id, "The analytic account created should be different from the account created for the 1st project.")
-        self.assertEqual(project_no_company_2.analytic_account_id.plan_id, project_no_company.analytic_account_id.plan_id, "No new analytic should have been created.")
+        self.assertNotEqual(project_no_company_2.account_id, project_no_company.account_id, "The analytic account created should be different from the account created for the 1st project.")
+        self.assertEqual(project_no_company_2.account_id.plan_id, project_no_company.account_id.plan_id, "No new analytic should have been created.")
 
     def test_analytic_account_company_consistency(self):
         """
@@ -241,21 +241,21 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         """
         project_no_company = self.Project.create({'name': 'Project no company'})
         project_no_company._create_analytic_account()
-        account_no_company = project_no_company.analytic_account_id
+        account_no_company = project_no_company.account_id
         self.project_company_a._create_analytic_account()
-        account_a = self.project_company_a.analytic_account_id
+        account_a = self.project_company_a.account_id
 
         # Set the account of the project to a new account without company_id
-        self.project_company_a.analytic_account_id = account_no_company
-        self.assertEqual(self.project_company_a.analytic_account_id, account_no_company, "The new account should be set on the project.")
+        self.project_company_a.account_id = account_no_company
+        self.assertEqual(self.project_company_a.account_id, account_no_company, "The new account should be set on the project.")
         self.assertFalse(account_no_company.company_id, "The company of the account should not have been updated.")
-        self.project_company_a.analytic_account_id = account_a
+        self.project_company_a.account_id = account_a
 
         # Set the account of the project to a new account with a company_id
-        project_no_company.analytic_account_id = account_a
+        project_no_company.account_id = account_a
         self.assertEqual(project_no_company.company_id, self.company_a, "The company of the project should have been updated to the company of its new account.")
-        self.assertEqual(project_no_company.analytic_account_id, account_a, "The account of the project should have been updated.")
-        project_no_company.analytic_account_id = account_no_company
+        self.assertEqual(project_no_company.account_id, account_a, "The account of the project should have been updated.")
+        project_no_company.account_id = account_no_company
         project_no_company.company_id = False
 
         # Neither the project nor its account have a company_id
@@ -322,7 +322,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         self.assertEqual(self.project_company_a.company_id, self.company_b, "The account of the project contains AAL, its company can not be updated.")
         aal.unlink()
 
-        project_no_company.analytic_account_id = account_a
+        project_no_company.account_id = account_a
         self.assertEqual(project_no_company.company_id, account_a.company_id)
         with self.assertRaises(UserError):
             self.project_company_a.company_id = self.company_a

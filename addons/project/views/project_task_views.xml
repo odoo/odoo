@@ -225,7 +225,7 @@
 
         <record id="project_embedded_action_project_updates" model="ir.embedded.actions">
             <field name="parent_res_model">project.project</field>
-            <field name="sequence">20</field>
+            <field name="sequence">110</field>
             <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
             <field name="action_id" ref="project.project_update_all_action"/>
         </record>
@@ -548,7 +548,6 @@
                             <group>
                                 <group>
                                     <field name="parent_id" groups="base.group_no_one" context="{'search_view_ref' : 'project.view_task_search_form','search_default_project_id': project_id, 'search_default_open_tasks': 1}"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id, 'default_company_id': company_id}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="email_cc" groups="base.group_no_one"/>

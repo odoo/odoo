@@ -63,14 +63,14 @@ class Project(models.Model):
         return move_line_ids + list(query)
 
     def _get_expenses_profitability_items(self, with_action=True):
-        if not self.analytic_account_id:
+        if not self.account_id:
             return {}
         can_see_expense = with_action and self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
 
         expenses_read_group = self.env['hr.expense']._read_group(
             [
                 ('sheet_id.state', 'in', ['post', 'done']),
-                ('analytic_distribution', 'in', self.analytic_account_id.ids),
+                ('analytic_distribution', 'in', self.account_id.ids),
             ],
             groupby=['currency_id'],
             aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],

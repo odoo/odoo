@@ -26,7 +26,7 @@ class TestSaleProjectCommon(TestSaleCommon):
         Project = cls.env['project.project'].with_context(tracking_disable=True)
         cls.project_global = Project.create({
             'name': 'Project Global',
-            'analytic_account_id': cls.analytic_account_sale.id,
+            'account_id': cls.analytic_account_sale.id,
             'allow_billable': True,
         })
         cls.project_template = Project.create({

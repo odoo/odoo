@@ -592,8 +592,6 @@ class TestSaleService(TestCommonSaleTimesheet):
         """ When we have a project with an analytic account and we add a product to the task,
             the consequent invoice line should have the same analytic account as the project.
         """
-        # Ensure the SO has no analytic account to give to its SOLs
-        self.assertFalse(self.sale_order.analytic_account_id)
         Product = self.env['product.product']
         SaleOrderLine = self.env['sale.order.line']
 
@@ -630,7 +628,7 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         # Check that the resulting invoice line and the project have the same analytic account
         invoice_line = self.sale_order.invoice_ids.line_ids.filtered(lambda line: line.product_id == product_add)
-        self.assertEqual(invoice_line.analytic_distribution, {str(self.project_global.analytic_account_id.id): 100},
+        self.assertEqual(invoice_line.analytic_distribution, {str(self.project_global.account_id.id): 100},
              "SOL's analytic distribution should contain the project analytic account")
 
     def test_sale_timesheet_invoice(self):

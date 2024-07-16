@@ -29,6 +29,20 @@
                     </div>
                 </button>
             </xpath>
+            <field name="journal_id" position="before">
+                <field name="project_id" groups="project.group_project_user"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_inherit_sale_project" model="ir.ui.view">
+        <field name="name">sale.order.list.select.inherit.sale_project</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="order_line" position="after">
+                <field name="project_id" groups="project.group_project_user"/>
+            </field>
         </field>
     </record>
 

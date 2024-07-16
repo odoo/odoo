@@ -283,7 +283,7 @@ class ProjectProject(models.Model):
         panel_data = super().get_panel_data()
         return {
             **panel_data,
-            'analytic_account_id': self.analytic_account_id.id,
+            'account_id': self.account_id.id,
         }
 
     def _get_sale_order_items_query(self, domain_per_model=None):

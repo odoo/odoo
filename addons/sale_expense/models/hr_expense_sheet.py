@@ -105,15 +105,11 @@ class HrExpenseSheet(models.Model):
         }
 
     def _do_create_moves(self):
-        """ When posting expense, if the AA is given, we will track cost in that
-            If a SO is set, this means we want to reinvoice the expense. But to do so, we
-            need the analytic entries to be generated, so a AA is required to reinvoice. So,
-            we ensure the AA if a SO is given.
+        """ When posting expense, we need the analytic entries to be generated, so a AA is required to reinvoice.
+            We then ensure a AA is given in the distribution and if not, we create a AA et set the distribution to it.
         """
-        for expense in self.expense_line_ids.filtered(lambda expense: expense.sale_order_id and not expense.analytic_distribution):
-            if not expense.sale_order_id.analytic_account_id:
-                expense.sale_order_id._create_analytic_account()
-            expense.write({
-                'analytic_distribution': {expense.sale_order_id.analytic_account_id.id: 100}
-            })
+        for expense in self.expense_line_ids:
+            if expense.sale_order_id and not expense.analytic_distribution:
+                analytic_account = self.env['account.analytic.account'].create(expense.sale_order_id._prepare_analytic_account_data())
+                expense.analytic_distribution = {analytic_account.id: 100}
         return super()._do_create_moves()

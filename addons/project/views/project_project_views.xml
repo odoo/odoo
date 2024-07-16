@@ -33,7 +33,6 @@
             <field name="arch" type="xml">
                 <form string="Project" class="o_form_project_project" js_class="project_form">
                     <field name="company_id" invisible="1"/>
-                    <field name="analytic_account_id" invisible="1"/>
                     <header>
                         <button name="action_open_share_project_wizard" string="Share Project" type="object" class="oe_highlight" groups="project.group_project_manager"
                         invisible="privacy_visibility != 'portal'" context="{'default_access_mode': 'read'}" data-hotkey="r"/>
@@ -92,7 +91,6 @@
                         <page name="settings" string="Settings">
                             <group>
                                 <group>
-                                    <field name="analytic_account_id" domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id, 'default_company_id': company_id} " groups="analytic.group_analytic_accounting"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                     <span colspan="2" class="text-muted o_row ps-1" invisible="access_instruction_message == ''">
                                         <i class="fa fa-lightbulb-o"/>&amp;nbsp;<field class="d-inline" name="access_instruction_message" nolabel="1"/>
@@ -159,6 +157,13 @@
                                             </div>
                                         </setting>
                                     </div>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="analytic" string="Analytic" groups="analytic.group_analytic_accounting">
+                            <group>
+                                 <group>
+                                    <field name="account_id"/>
                                 </group>
                             </group>
                         </page>
@@ -405,7 +410,6 @@
                     <field name="rating_avg"/>
                     <field name="rating_status"/>
                     <field name="rating_active" />
-                    <field name="analytic_account_id"/>
                     <field name="date"/>
                     <field name="privacy_visibility"/>
                     <field name="last_update_color"/>
@@ -707,7 +711,7 @@
                 </xpath>
                 <xpath expr="//div[hasclass('o_kanban_task_analysis')]" position="before">
                     <div role="menuitem" groups="project.group_project_user">
-                        <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value} }">Project Updates</a>
+                        <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value} }">Dashboard</a>
                     </div>
                 </xpath>
             </field>

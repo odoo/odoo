@@ -341,7 +341,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         rate of the company """
         project = self.env['project.project'].create({'name': 'new project'})
         project._create_analytic_account()
-        account = project.analytic_account_id
+        account = project.account_id
         foreign_company = self.company_data_2['company']
         foreign_company.currency_id = self.foreign_currency
 
@@ -546,20 +546,18 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         project = self.env['project.project'].create({
             'name': 'Test Project'
         })
-        project._create_analytic_account()
-        account = project.analytic_account_id
 
         purchase_order = self.env['purchase.order'].create({
             "name": "A purchase order",
             "partner_id": self.partner_a.id,
             "company_id": self.env.company.id,
             "order_line": [Command.create({
-                "analytic_distribution": {account.id: 100},
                 "product_id": self.product_order.id,
                 "product_qty": 1,
                 "price_unit": self.product_order.standard_price,
                 "currency_id": self.foreign_currency.id,
             })],
+            "project_id": project.id,
         })
 
         action = project.action_open_project_purchase_orders()
@@ -678,7 +676,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             'order_line': [
                 Command.create({
                     'analytic_distribution': {
-                        f"{self.project.analytic_account_id.id},{cross_account.id}": cross_distribution,
+                        f"{self.project.account_id.id},{cross_account.id}": cross_distribution,
                     },
                     "product_id": self.product_order.id,
                     "product_qty": 1,

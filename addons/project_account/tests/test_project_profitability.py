@@ -27,22 +27,22 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
         # Create new AAL with the new company.
         self.env['account.analytic.line'].create([{
             'name': 'extra revenues 1',
-            'account_id': project.analytic_account_id.id,
+            'account_id': project.account_id.id,
             'amount': 100,
             'company_id': foreign_company.id,
         }, {
             'name': 'extra costs 1',
-            'account_id': project.analytic_account_id.id,
+            'account_id': project.account_id.id,
             'amount': -100,
             'company_id': foreign_company.id,
         }, {
             'name': 'extra revenues 2',
-            'account_id': project.analytic_account_id.id,
+            'account_id': project.account_id.id,
             'amount': 50,
             'company_id': foreign_company.id,
         }, {
             'name': 'extra costs 2',
-            'account_id': project.analytic_account_id.id,
+            'account_id': project.account_id.id,
             'amount': -50,
             'company_id': foreign_company.id,
         }])
@@ -59,19 +59,19 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
         )
         self.env['account.analytic.line'].create([{
             'name': 'extra revenues 1',
-            'account_id': project.analytic_account_id.id,
+            'account_id': project.account_id.id,
             'amount': 100,
         }, {
             'name': 'extra costs 1',
-            'account_id': project.analytic_account_id.id,
+            'account_id': project.account_id.id,
             'amount': -100,
         }, {
             'name': 'extra revenues 2',
-            'account_id': project.analytic_account_id.id,
+            'account_id': project.account_id.id,
             'amount': 50,
         }, {
             'name': 'extra costs 2',
-            'account_id': project.analytic_account_id.id,
+            'account_id': project.account_id.id,
             'amount': -50,
         }])
         # Ensures that multiple AAL from different companies are correctly computed for the project profitability

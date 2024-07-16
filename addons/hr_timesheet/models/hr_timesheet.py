@@ -7,6 +7,8 @@ import re
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
+from odoo.tools import format_list
+
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
@@ -177,10 +179,25 @@ class AccountAnalyticLine(models.Model):
         user_ids = []
         employee_ids = []
         # 1/ Collect the user_ids and employee_ids from each timesheet vals
-        vals_list = self._timesheet_preprocess(vals_list)
         for vals in vals_list:
-            if not vals.get('project_id'):
+            task = self.env['project.task'].sudo().browse(vals.get('task_id'))
+            project = self.env['project.project'].sudo().browse(vals.get('project_id'))
+            if not (task or project):
+                # It is not a timesheet
                 continue
+            elif task:
+                if not task.project_id:
+                    raise ValidationError(_('Timesheets cannot be created on a private task.'))
+                if not project:
+                    vals['project_id'] = task.project_id.id
+
+            company = task.company_id or project.company_id or self.env['res.company'].browse(vals.get('company_id'))
+            vals['company_id'] = company.id
+            vals.update(self._timesheet_preprocess_get_accounts(vals))
+
+            if not vals.get('product_uom_id'):
+                vals['product_uom_id'] = company.project_time_mode_id.id
+
             if not vals.get('name'):
                 vals['name'] = '/'
             employee_id = vals.get('employee_id', self._context.get('default_employee_id', False))
@@ -228,7 +245,7 @@ class AccountAnalyticLine(models.Model):
                     vals['user_id'] = valid_employee_per_id[employee_in_id].sudo().user_id.id   # (A) OK
                     continue
                 else:
-                    raise ValidationError(error_msg)                                      # (C) KO
+                    raise ValidationError(error_msg)                                            # (C) KO
             else:
                 user_id = vals.get('user_id', default_user_id)                                  # (B)...
 
@@ -263,7 +280,14 @@ class AccountAnalyticLine(models.Model):
     def write(self, values):
         self._check_can_write(values)
 
-        values = self._timesheet_preprocess([values])[0]
+        task = self.env['project.task'].sudo().browse(values.get('task_id'))
+        project = self.env['project.project'].sudo().browse(values.get('project_id'))
+        if task and not task.project_id:
+            raise ValidationError(_('Timesheets cannot be created on a private task.'))
+        if project or task:
+            values['company_id'] = task.company_id.id or project.company_id.id
+        values.update(self._timesheet_preprocess_get_accounts(values))
+
         if values.get('employee_id'):
             employee = self.env['hr.employee'].browse(values['employee_id'])
             if not employee.active:
@@ -304,66 +328,23 @@ class AccountAnalyticLine(models.Model):
             ('project_id.privacy_visibility', '=', 'portal'),
         ]
 
-    def _timesheet_preprocess(self, vals_list):
-        """ Deduce other field values from the one given.
-            Overrride this to compute on the fly some field that can not be computed fields.
-            :param vals_list: list of dict from `create`or `write`.
-        """
-        timesheet_indices = set()
-        task_ids, project_ids, account_ids = set(), set(), set()
-        for index, vals in enumerate(vals_list):
-            if not vals.get('project_id') and not vals.get('task_id'):
-                continue
-            timesheet_indices.add(index)
-            if vals.get('task_id'):
-                task_ids.add(vals['task_id'])
-            elif vals.get('project_id'):
-                project_ids.add(vals['project_id'])
-            if vals.get('account_id'):
-                account_ids.add(vals['account_id'])
-
-        task_per_id = {}
-        if task_ids:
-            tasks = self.env['project.task'].sudo().browse(task_ids)
-            for task in tasks:
-                task_per_id[task.id] = task
-                if not task.project_id:
-                    raise ValidationError(_('Timesheets cannot be created on a private task.'))
-            account_ids = account_ids.union(tasks.analytic_account_id.ids, tasks.project_id.analytic_account_id.ids)
-
-        project_per_id = {}
-        if project_ids:
-            projects = self.env['project.project'].sudo().browse(project_ids)
-            account_ids = account_ids.union(projects.analytic_account_id.ids)
-            project_per_id = {p.id: p for p in projects}
-
-        accounts = self.env['account.analytic.account'].sudo().browse(account_ids)
-        account_per_id = {account.id: account for account in accounts}
-
-        uom_id_per_company = {
-            company: company.project_time_mode_id.id
-            for company in accounts.company_id
+    def _timesheet_preprocess_get_accounts(self, vals):
+        project = self.env['project.project'].sudo().browse(vals.get('project_id'))
+        if not project:
+            return {}
+        company = self.env['res.company'].browse(vals.get('company_id'))
+        mandatory_plans = self._get_mandatory_plans(company, business_domain='timesheet')
+        missing_plan_names = [plan['name'] for plan in mandatory_plans if not project[plan['column_name']]]
+        if missing_plan_names:
+            raise ValidationError(_(
+                "'%(missing_plan_names)s' analytic plan(s) required on the project '%(project_name)s' linked to the timesheet.",
+                missing_plan_names=format_list(self.env, missing_plan_names),
+                project_name=project.name,
+            ))
+        return {
+            fname: project[fname].id
+            for fname in self._get_plan_fnames()
         }
-
-        for index in timesheet_indices:
-            vals = vals_list[index]
-            data = task_per_id[vals['task_id']] if vals.get('task_id') else project_per_id[vals['project_id']]
-            if not vals.get('project_id'):
-                vals['project_id'] = data.project_id.id
-            if not vals.get('account_id'):
-                account = data._get_task_analytic_account_id() if vals.get('task_id') else data.analytic_account_id
-                if not account or not account.active:
-                    raise ValidationError(_('Timesheets must be created on a project or a task with an active analytic account.'))
-                vals['account_id'] = account.id
-                vals['company_id'] = account.company_id.id or data.company_id.id or vals.get('company_id')
-            if not vals.get('product_uom_id'):
-                company = account_per_id[vals['account_id']].company_id or data.company_id
-                vals['product_uom_id'] = uom_id_per_company.get(company.id, company.project_time_mode_id.id) or self.env.company.project_time_mode_id.id
-            # Set the top-level analytic plan according to the given analytic account
-            plan = self.env['account.analytic.account'].browse(vals.get('account_id')).root_plan_id
-            if plan:
-                vals[plan._column_name()] = vals.get('account_id')
-        return vals_list
 
     def _timesheet_postprocess(self, values):
         """ Hook to update record one by one according to the values of a `write` or a `create`. """
@@ -386,6 +367,17 @@ class AccountAnalyticLine(models.Model):
         # (re)compute the amount (depending on unit_amount, employee_id for the cost, and account_id for currency)
         if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']):
             for timesheet in sudo_self:
+                if not timesheet.account_id.active:
+                    project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+                    raise ValidationError(_(
+                        "Timesheets must be created with at least an active analytic account defined in the plan '%(plan_name)s'.",
+                        plan_name=project_plan.name
+                    ))
+                accounts = timesheet._get_analytic_accounts()
+                companies = timesheet.company_id | accounts.company_id | timesheet.task_id.company_id | timesheet.project_id.company_id
+                if len(companies) > 1:
+                    raise ValidationError(_('The project, the task and the analytic accounts of the timesheet must belong to the same company.'))
+
                 cost = timesheet._hourly_cost()
                 amount = -timesheet.unit_amount * cost
                 amount_converted = timesheet.employee_id.currency_id._convert(

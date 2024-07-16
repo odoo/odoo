@@ -10,6 +10,10 @@
     'demo': [
         'data/project_purchase_demo.xml',
     ],
+    'data': [
+        'views/project_project.xml',
+        'views/purchase_order.xml',
+    ],
     'assets': {
         'web.assets_backend': [
             'project_purchase/static/src/product_catalog/kanban_record.js',
