@@ -835,10 +835,9 @@ class IrActionsServer(models.Model):
 
     @api.depends('state')
     def _compute_available_model_ids(self):
-        allowed_models = self.env['ir.model'].search(
-            [('model', 'in', list(self.env['ir.model.access']._get_allowed_models()))]
-        )
-        self.available_model_ids = allowed_models.ids
+        model_names = [model._name for model in self.env.values() if model.has_access('read')]
+        models = self.env['ir.model'].sudo().search([('model', 'in', model_names)])
+        self.available_model_ids = models
 
     @api.depends('model_id', 'update_path', 'state')
     def _compute_crud_relations(self):
