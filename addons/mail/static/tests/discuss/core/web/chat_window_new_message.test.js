@@ -152,3 +152,31 @@ test('open chat from "new message" should open chat window', async () => {
     await contains(".o-mail-ChatWindow", { count: 0, text: "New message" });
     await contains(".o-mail-Thread");
 });
+
+test("Opening 'new message' twice keeps new message chat window in place", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({
+                fold_state: "folded",
+                partner_id: serverState.partnerId,
+            }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+        name: "John",
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click("button", { text: "New Message" });
+    await contains(".o-mail-ChatWindow", { text: "New message" });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click("button", { text: "New Message" });
+    await contains(".o-mail-ChatWindow", { text: "New message" });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "John" });
+    await contains(".o-mail-ChatWindow", { text: "John" });
+    await contains(".o-mail-ChatWindow", { text: "New message" });
+});
