@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
             content: "Update the email address",
             trigger: 'div[name="email"] input',
             async run() {
-                await insertText("div[name='email'] input", "updatedemail@example.com");
+                await insertText("div[name='email'] input", "updatedemail@example.com", { replace: true });
                 await contains(".o_form_dirty", { count: 1 });
             },
         },
