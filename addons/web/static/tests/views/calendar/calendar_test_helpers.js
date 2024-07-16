@@ -1,5 +1,5 @@
-import { drag, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { click, drag, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
@@ -310,8 +310,8 @@ export function findFilterPanelSectionFilter(sectionName) {
 export async function pickDate(date) {
     const day = date.split("-")[2];
     const iDay = parseInt(day, 10) - 1;
-    const cell = queryFirst`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range):eq(${iDay})`;
-    await contains(cell).click();
+    click(`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range):eq(${iDay})`);
+    await animationFrame();
 }
 
 /**
@@ -321,7 +321,7 @@ export async function pickDate(date) {
 export async function clickAllDaySlot(date) {
     const slot = findAllDaySlot(date);
     instantScrollTo(slot);
-    await contains(slot).click();
+    click(slot);
     await animationFrame();
 }
 
@@ -332,8 +332,8 @@ export async function clickAllDaySlot(date) {
 export async function clickDate(date) {
     const cell = findDateCell(date);
     instantScrollTo(cell);
-    await contains(cell).click();
-    await animationFrame();
+    click(cell);
+    await advanceTime(500);
 }
 
 /**
@@ -343,8 +343,8 @@ export async function clickDate(date) {
 export async function clickEvent(eventId) {
     const event = findEvent(eventId);
     instantScrollTo(event);
-    await contains(event).click();
-    await runAllTimers(); // wait for the popover to open (debounced)
+    click(event);
+    await advanceTime(500); // wait for the popover to open (debounced)
 }
 
 /**
@@ -496,8 +496,7 @@ export async function resizeEventToTime(eventId, dateTime) {
     moveTo(row, { relative: true, position: { y: -1, x: columnRect.x } });
     drop();
 
-    await animationFrame();
-    await animationFrame();
+    await advanceTime(500);
 }
 
 /**
@@ -526,7 +525,8 @@ export async function toggleFilter(sectionName, filterValue) {
     const root = findFilterPanelFilter(sectionName, filterValue);
     const input = queryFirst(`input`, { root });
     instantScrollTo(input);
-    await contains(input).click();
+    click(input);
+    await animationFrame();
 }
 
 /**
@@ -537,7 +537,8 @@ export async function toggleSectionFilter(sectionName) {
     const root = findFilterPanelSectionFilter(sectionName);
     const input = queryFirst(`input`, { root });
     instantScrollTo(input);
-    await contains(input).click();
+    click(input);
+    await animationFrame();
 }
 
 /**
@@ -549,5 +550,6 @@ export async function removeFilter(sectionName, filterValue) {
     const root = findFilterPanelFilter(sectionName, filterValue);
     const button = queryFirst(`.o_remove`, { root });
     instantScrollTo(button);
-    await contains(button).click();
+    click(button);
+    await animationFrame();
 }
