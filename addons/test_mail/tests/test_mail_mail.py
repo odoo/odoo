@@ -19,7 +19,7 @@ from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import common, tagged, users
-from odoo.tools import formataddr, mute_logger
+from odoo.tools import format_email_address, mute_logger
 
 
 @tagged('mail_mail')
@@ -740,8 +740,8 @@ class TestMailMailServer(MailCommon):
         self.assertEqual(
             sorted(sorted(_mail['email_to']) for _mail in self._mails),
             sorted([sorted(['"Raoul, le Grand" <test.email.1@test.example.com>', '"Micheline, l\'immense" <test.email.2@test.example.com>']),
-                    [formataddr((self.user_employee.name, self.user_employee.email_normalized))],
-                    [formataddr(("Tony Customer", 'tony.customer@test.example.com'))]
+                    [format_email_address(self.user_employee.name, self.user_employee.email_normalized)],
+                    [format_email_address("Tony Customer", 'tony.customer@test.example.com')]
                    ]),
             'Mail: formatting issues should have been removed as much as possible'
         )
@@ -772,9 +772,9 @@ class TestMailMailServer(MailCommon):
         self.assertEqual(
             sorted(sorted(_mail['email_to']) for _mail in self._mails),
             sorted([sorted(['test.email.1@test.example.com', 'test.email.2@test.example.com']),
-                   [formataddr((self.user_employee.name, self.user_employee.email_normalized))],
-                    sorted([formataddr(("Tony Customer", 'tony.customer@test.example.com')),
-                            formataddr(("Tony Customer", 'norbert.customer@test.example.com'))]),
+                   [format_email_address(self.user_employee.name, self.user_employee.email_normalized)],
+                    sorted([format_email_address("Tony Customer", 'tony.customer@test.example.com'),
+                            format_email_address("Tony Customer", 'norbert.customer@test.example.com')]),
                    ]),
             'Mail: formatting issues should have been removed as much as possible (multi emails in a single address are managed '
             'like separate emails when sending with recipient_ids'
@@ -802,9 +802,9 @@ class TestMailMailServer(MailCommon):
         self.assertEqual(
             sorted(sorted(_mail['email_to']) for _mail in self._mails),
             sorted([sorted(['test.email.1@test.example.com', 'test.email.2@test.example.com']),
-                   [formataddr((self.user_employee.name, self.user_employee.email_normalized))],
-                    sorted([formataddr(("Tony Customer", 'tony.customer@test.example.com')),
-                            formataddr(("Tony Customer", 'norbert.customer@test.example.com'))]),
+                   [format_email_address(self.user_employee.name, self.user_employee.email_normalized)],
+                    sorted([format_email_address("Tony Customer", 'tony.customer@test.example.com'),
+                            format_email_address("Tony Customer", 'norbert.customer@test.example.com')]),
                    ]),
             'Mail: formatting issues should have been removed as much as possible (multi emails in a single address are managed '
             'like separate emails when sending with recipient_ids (and partner name is always used as name part)'

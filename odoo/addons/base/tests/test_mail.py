@@ -15,7 +15,7 @@ from odoo.tools.mail import (
     email_domain_normalize, email_normalize, email_re,
     email_split, email_split_and_format, email_split_tuples,
     single_email_re,
-    formataddr,
+    format_email_address,
     prepend_html_content,
 )
 
@@ -599,11 +599,11 @@ class TestEmailTools(BaseCase):
         for source, expected, expected_utf8_fmt, expected_ascii_fmt in zip(sources, expected_list, expected_fmt_utf8_list, expected_fmt_ascii_list):
             with self.subTest(source=source):
                 self.assertEqual(email_normalize(source, strict=True), expected)
-                # standard usage of formataddr
-                self.assertEqual(formataddr((format_name, (expected or '')), charset='utf-8'), expected_utf8_fmt)
+                # standard usage of format_email_address
+                self.assertEqual(format_email_address(format_name, (expected or ''), charset='utf-8'), expected_utf8_fmt)
                 # check using INDA at format time, using ascii charset as done when
                 # sending emails (see extract_rfc2822_addresses)
-                self.assertEqual(formataddr((format_name, (expected or '')), charset='ascii'), expected_ascii_fmt)
+                self.assertEqual(format_email_address(format_name, (expected or ''), charset='ascii'), expected_ascii_fmt)
 
     def test_email_re(self):
         """ Test 'email_re', finding emails in a given text """
@@ -773,8 +773,8 @@ class TestEmailTools(BaseCase):
                 'Seems email_split_tuples is broken with %s (expected %r, received %r)' % (src, exp, res)
             )
 
-    def test_email_formataddr(self):
-        """ Test custom 'formataddr', notably with IDNA support """
+    def test_format_email_address(self):
+        """ Test custom 'format_email_address', notably with IDNA support """
         email_base = 'joe@example.com'
         email_idna = 'joe@examplé.com'
         cases = [
@@ -795,7 +795,7 @@ class TestEmailTools(BaseCase):
         for pair, charsets, expected in cases:
             for charset in charsets:
                 with self.subTest(pair=pair, charset=charset):
-                    self.assertEqual(formataddr(pair, charset), expected)
+                    self.assertEqual(format_email_address(*pair, charset), expected)
 
     def test_extract_rfc2822_addresses(self):
         cases = [

@@ -298,15 +298,15 @@ class BaseModel(models.AbstractModel):
         This creates an issue in certain DKIM tech stacks that will
         incorrectly read the reply-to value as empty and fail the verification.
 
-        To avoid that issue when formataddr would return more than 68 chars we
+        To avoid that issue when format_email_address would return more than 68 chars we
         return a simplified name/email to try to stay under 68 chars. If not
-        possible we return only the email and skip the formataddr which causes
+        possible we return only the email and skip the format_email_address which causes
         the issue in python. We do not use hacks like crop the name part as
         encoding and quoting would be error prone.
 
         :param <res.company> company: if given, setup the company used to
-          complete name in formataddr. Otherwise fallback on 'company_id'
-          of self or environment company;
+          complete name in format_email_address.
+          Otherwise fallback on 'company_id' of self or environment company;
         """
         length_limit = 68  # 78 - len('Reply-To: '), 78 per RFC
         # address itself is too long : return only email and log warning
@@ -327,9 +327,9 @@ class BaseModel(models.AbstractModel):
         # try company.name + record_name, or record_name alone (or company.name alone)
         name = f"{company.name} {record_name}" if record_name else company.name
 
-        formatted_email = tools.formataddr((name, record_email))
+        formatted_email = tools.format_email_address(name, record_email)
         if len(formatted_email) > length_limit:
-            formatted_email = tools.formataddr((record_name or company.name, record_email))
+            formatted_email = tools.format_email_address(record_name or company.name, record_email)
         if len(formatted_email) > length_limit:
             formatted_email = record_email
         return formatted_email

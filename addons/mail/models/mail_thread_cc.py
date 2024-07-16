@@ -16,7 +16,7 @@ class MailCCMixin(models.AbstractModel):
         if not cc_string:
             return {}
         return {
-            tools.email_normalize(email): tools.formataddr((name, tools.email_normalize(email)))
+            tools.email_normalize(email): tools.format_email_address(name, tools.email_normalize(email))
             for (name, email) in tools.mail.email_split_tuples(cc_string)
         }
 

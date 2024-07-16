@@ -82,7 +82,7 @@ class WebsiteEventSaleController(WebsiteEventController):
                 if order_sudo.partner_id.is_public:
                     first_registration = registrations[0]
                     if first_registration.get('name') and first_registration.get('email'):
-                        formatted_address = tools.formataddr((first_registration['name'], first_registration['email']))
+                        formatted_address = tools.format_email_address(first_registration['name'], first_registration['email'])
                         partner = request.env['res.partner'].sudo().find_or_create(formatted_address)
                         if not partner.phone and first_registration.get('phone'):
                             partner.phone = first_registration['phone']

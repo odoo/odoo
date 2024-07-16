@@ -26,7 +26,13 @@ from .float_utils import *
 from .func import *
 from .i18n import format_list
 from .image import image_process
-from .mail import *
+from .mail import (
+    email_domain_extract, email_domain_normalize, email_normalize, email_normalize_all,
+    email_split, encapsulate_email, format_email_address,
+    html2plaintext, html_normalize, html_sanitize,
+    is_html_empty, parse_contact_from_email, plaintext2html,
+    single_email_re, email_re,
+)
 from .misc import *
 from .query import Query
 from .sql import *

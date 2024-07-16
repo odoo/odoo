@@ -10,7 +10,7 @@ from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.tests import tagged, users
-from odoo.tools import formataddr, mute_logger
+from odoo.tools import format_email_address, mute_logger
 
 
 @tagged('event_mail', 'post_install', '-at_install')
@@ -154,7 +154,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # check emails effectively sent
         self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / registration)')
         self.assertMailMailWEmails(
-            [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
+            [format_email_address(reg1.name, reg1.email), format_email_address(reg2.name, reg2.email)],
             'outgoing',
             content=None,
             fields_values={
@@ -193,7 +193,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # check emails effectively sent
         self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / registration)')
         self.assertMailMailWEmails(
-            [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
+            [format_email_address(reg1.name, reg1.email), format_email_address(reg2.name, reg2.email)],
             'outgoing',
             content=None,
             fields_values={
@@ -229,7 +229,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # check emails effectively sent
         self.assertEqual(len(self._new_mails), 2, 'event: should have scheduled 2 mails (1 / registration)')
         self.assertMailMailWEmails(
-            [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
+            [format_email_address(reg1.name, reg1.email), format_email_address(reg2.name, reg2.email)],
             'outgoing',
             content=None,
             fields_values={
@@ -285,7 +285,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             self.assertEqual(mail.email_from, self.user_eventmanager.company_id.email_formatted)
             self.assertEqual(mail.subject, f'Confirmation for {test_event.name}')
             self.assertEqual(mail.state, 'outgoing')
-            self.assertEqual(mail.email_to, formataddr((reg3.name, reg3.email)))
+            self.assertEqual(mail.email_to, format_email_address(reg3.name, reg3.email))
 
         # POST SCHEDULERS (MOVE FORWARD IN TIME)
         # --------------------------------------------------
@@ -306,7 +306,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # check emails effectively sent
         self.assertEqual(len(self._new_mails), 3, 'event: should have scheduled 3 mails, one for each registration')
         self.assertMailMailWEmails(
-            [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email)), formataddr((reg3.name, reg3.email))],
+            [format_email_address(reg1.name, reg1.email), format_email_address(reg2.name, reg2.email), format_email_address(reg3.name, reg3.email)],
             'outgoing',
             content=None,
             fields_values={
@@ -398,7 +398,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
              self.mock_mail_gateway():
             cron.sudo().method_direct_trigger()
         self.assertMailMailWEmails(
-            [formataddr((reg.name, reg.email)) for reg in existing],
+            [format_email_address(reg.name, reg.email) for reg in existing],
             "outgoing",
             content=f"Hello your registration to {test_event.name} is confirmed",
             fields_values={

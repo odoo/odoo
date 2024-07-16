@@ -264,7 +264,7 @@ class TestModeration(TestMailListCommon):
         with self.mock_mail_gateway():
             self.format_and_process(
                 GROUP_TEMPLATE,
-                tools.formataddr(("Another Name", "bob.email@test.example.com")),
+                tools.format_email_address("Another Name", "bob.email@test.example.com"),
                 self.test_group.alias_id.display_name,
                 subject='Another email', target_model='mail.group')
 
@@ -272,7 +272,7 @@ class TestModeration(TestMailListCommon):
         self.assertEqual(len(mail_group.mail_group_message_ids), 6)
         new_email_message = mail_group.mail_group_message_ids[-1]
 
-        self.assertEqual(new_email_message.email_from, tools.formataddr(("Another Name", "bob.email@test.example.com")))
+        self.assertEqual(new_email_message.email_from, tools.format_email_address("Another Name", "bob.email@test.example.com"))
         self.assertEqual(new_email_message.moderation_status, 'accepted', msg='Should have automatically accepted the email')
         self.assertEqual(new_email_message.subject, 'Another email')
 
@@ -325,7 +325,7 @@ class TestModeration(TestMailListCommon):
         with self.mock_mail_gateway():
             self.format_and_process(
                 GROUP_TEMPLATE,
-                tools.formataddr(("Another Name", "bob.email@test.example.com")),
+                tools.format_email_address("Another Name", "bob.email@test.example.com"),
                 self.test_group.alias_id.display_name,
                 subject='Another email', target_model='mail.group')
 

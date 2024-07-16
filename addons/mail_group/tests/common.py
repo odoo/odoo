@@ -13,7 +13,7 @@ class TestMailListCommon(MailCommon):
         super(TestMailListCommon, cls).setUpClass()
 
         # Test credentials / from
-        cls.email_from_unknown = tools.formataddr(("Bob Lafrite", "bob.email@test.example.com"))
+        cls.email_from_unknown = tools.format_email_address("Bob Lafrite", "bob.email@test.example.com")
         cls.user_employee_2 = mail_new_test_user(
             cls.env, login='employee_2',
             company_id=cls.company_admin.id,

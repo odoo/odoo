@@ -71,7 +71,7 @@ class TestMailingControllers(TestMailingControllersCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.test_email = tools.formataddr(('Déboulonneur', '<fleurus@example.com>'))
+        cls.test_email = tools.format_email_address('Déboulonneur', '<fleurus@example.com>')
         cls.test_email_normalized = 'fleurus@example.com'
 
     def test_assert_initial_values(self):
@@ -269,7 +269,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         # update user to link it with existing mailing contacts and allow the tour
         # to run; test without and with mailing group
         self.user_marketing.write({
-            'email': tools.formataddr(("Déboulonneur", "fleurus@example.com")),
+            'email': tools.format_email_address("Déboulonneur", "fleurus@example.com"),
             'groups_id': [(3, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         test_mailing = self.test_mailing_on_documents.with_env(self.env)
@@ -478,7 +478,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         test_feedback = "My feedback"
         portal_user = mail_new_test_user(
             self.env,
-            email=tools.formataddr(("Déboulonneur", "fleurus@example.com")),
+            email=tools.format_email_address("Déboulonneur", "fleurus@example.com"),
             groups='base.group_portal',
             login='user_portal_fleurus',
             name='Déboulonneur User',

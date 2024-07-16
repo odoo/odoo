@@ -17,7 +17,7 @@ from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.fields import Datetime as FieldDatetime
 from odoo.exceptions import AccessError
 from odoo.tests import Form, tagged, users
-from odoo.tools import email_normalize, mute_logger, formataddr
+from odoo.tools import email_normalize, mute_logger, format_email_address
 
 
 @tagged('mail_composer')
@@ -2124,12 +2124,12 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
                 # single email event if email field is multi-email
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com')),
+                'email_from': format_email_address(self.user_employee.name, 'email.from.1@test.example.com'),
                 'subject': f'TemplateSubject {self.test_record.name}',
             },
             fields_values={
                 # currently holding multi-email 'email_from'
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
+                'email_from': format_email_address(self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com'),
             },
             mail_message=self.test_record.message_ids[0],
         )
@@ -2145,12 +2145,12 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
                 # single email event if email field is multi-email
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com')),
+                'email_from': format_email_address(self.user_employee.name, 'email.from.1@test.example.com'),
                 'subject': f'TemplateSubject {self.test_record.name}',
             },
             fields_values={
                 # currently holding multi-email 'email_from'
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
+                'email_from': format_email_address(self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com'),
             },
             mail_message=self.test_record.message_ids[0],
         )
@@ -2669,10 +2669,10 @@ class TestComposerResultsMass(TestMailComposer):
                                         fields_values={
                                             'email_from': self.partner_employee_2.email_formatted,
                                             'mail_server_id': self.mail_server_domain,
-                                            'reply_to': formataddr((
+                                            'reply_to': format_email_address(
                                                 f'{self.env.user.company_id.name} {record.name}',
                                                 f'{self.alias_catchall}@{self.alias_domain}'
-                                            )),
+                                            ),
                                             'subject': exp_subject,
                                         },
                                        )
@@ -2683,14 +2683,14 @@ class TestComposerResultsMass(TestMailComposer):
                     # to ease translations checks.
                     sent_mail = self._find_sent_email(
                         self.partner_employee_2.email_formatted,
-                        [formataddr((record.customer_id.name, email_normalize(record.customer_id.email, strict=False)))]
+                        [format_email_address(record.customer_id.name, email_normalize(record.customer_id.email, strict=False))]
                     )
                     debug_info = ''
                     if not sent_mail:
                         debug_info = '-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails)
                     self.assertTrue(
                         bool(sent_mail),
-                        f'Expected mail from {self.partner_employee_2.email_formatted} to {formataddr((record.customer_id.name, record.customer_id.email))} not found in {debug_info}'
+                        f'Expected mail from {self.partner_employee_2.email_formatted} to {format_email_address(record.customer_id.name, record.customer_id.email)} not found in {debug_info}'
                     )
                     if record == self.test_records[0]:
                         self.assertEqual(sent_mail['email_to'], ['"Partner_0" <test_partner_0@example.com>'],
@@ -3078,20 +3078,20 @@ class TestComposerResultsMass(TestMailComposer):
                 email_values={
                     'body_content': f'TemplateBody {record.name}',
                     # single email event if email field is multi-email
-                    'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com')),
-                    'reply_to': formataddr((
+                    'email_from': format_email_address(self.user_employee.name, 'email.from.1@test.example.com'),
+                    'reply_to': format_email_address(
                         f'{self.env.user.company_id.name} {record.name}',
                         f'{self.alias_catchall}@{self.alias_domain}'
-                    )),
+                    ),
                     'subject': f'TemplateSubject {record.name}',
                 },
                 fields_values={
                     # currently holding multi-email 'email_from'
                     'email_from': self.partner_employee.email_formatted,
-                    'reply_to': formataddr((
+                    'reply_to': format_email_address(
                         f'{self.env.user.company_id.name} {record.name}',
                         f'{self.alias_catchall}@{self.alias_domain}'
-                    )),
+                    ),
                 },
                 mail_message=record.message_ids[0],  # message copy is kept
             )
@@ -3188,18 +3188,18 @@ class TestComposerResultsMass(TestMailComposer):
                                 email_values={
                                     'body_content': 'TemplateBody %s' % record.name,
                                     'email_from': self.partner_employee_2.email_formatted,
-                                    'reply_to': formataddr((
+                                    'reply_to': format_email_address(
                                         f'{record.name}',
                                         'dynamic.reply.to@test.mycompany.com'
-                                    )),
+                                    ),
                                     'subject': 'TemplateSubject %s' % record.name,
                                 },
                                 fields_values={
                                     'email_from': self.partner_employee_2.email_formatted,
-                                    'reply_to': formataddr((
+                                    'reply_to': format_email_address(
                                         f'{record.name}',
                                         'dynamic.reply.to@test.mycompany.com'
-                                    )),
+                                    ),
                                 },
                                )
 

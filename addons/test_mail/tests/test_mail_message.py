@@ -9,7 +9,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import tagged, users
-from odoo.tools import is_html_empty, mute_logger, formataddr
+from odoo.tools import is_html_empty, mute_logger, format_email_address
 
 
 @tagged("mail_message", "post_install", "-at_install")
@@ -160,7 +160,7 @@ class TestMessageValues(MailCommon):
         })
         reply_to_email = f"{test_record.alias_name}@{self.alias_domain}"
         self.assertEqual(msg.reply_to, reply_to_email,
-                         'Reply-To: use only email when formataddr > 68 chars')
+                         'Reply-To: use only email when format_email_address > 68 chars')
 
         # name + company_name would make it blow up: keep record_name in formatting
         self.company_admin.name = "Company name being about 33 chars"
@@ -169,7 +169,7 @@ class TestMessageValues(MailCommon):
             'model': test_record._name,
             'res_id': test_record.id
         })
-        self.assertEqual(msg.reply_to, formataddr((test_record.name, reply_to_email)),
+        self.assertEqual(msg.reply_to, format_email_address(test_record.name, reply_to_email),
                          'Reply-To: use recordname as name in format if recordname + company > 68 chars')
 
         # no record_name: keep company_name in formatting if ok
@@ -178,7 +178,7 @@ class TestMessageValues(MailCommon):
             'model': test_record._name,
             'res_id': test_record.id
         })
-        self.assertEqual(msg.reply_to, formataddr((self.env.user.company_id.name, reply_to_email)),
+        self.assertEqual(msg.reply_to, format_email_address(self.env.user.company_id.name, reply_to_email),
                          'Reply-To: use company as name in format when no record name and still < 68 chars')
 
         # no record_name and company_name make it blow up: keep only email
@@ -188,7 +188,7 @@ class TestMessageValues(MailCommon):
             'res_id': test_record.id
         })
         self.assertEqual(msg.reply_to, reply_to_email,
-                         'Reply-To: use only email when formataddr > 68 chars')
+                         'Reply-To: use only email when format_email_address > 68 chars')
 
         # whatever the record and company names, email is too long: keep only email
         test_record.write({
@@ -202,7 +202,7 @@ class TestMessageValues(MailCommon):
             'res_id': test_record.id
         })
         self.assertEqual(msg.reply_to, f"{sanitized_alias_name}@{self.alias_domain}",
-                         'Reply-To: even a long email is ok as only formataddr is problematic')
+                         'Reply-To: even a long email is ok as only format_email_address is problematic')
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_fromto_no_document_values(self):
@@ -220,8 +220,8 @@ class TestMessageValues(MailCommon):
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
         reply_to_name = self.env.user.company_id.name
         reply_to_email = '%s@%s' % (self.alias_catchall, self.alias_domain)
-        self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
-        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(msg.reply_to, format_email_address(reply_to_name, reply_to_email))
+        self.assertEqual(msg.email_from, format_email_address(self.user_employee.name, self.user_employee.email))
 
         # no alias domain -> author
         self.env.company.alias_domain_id = False
@@ -229,8 +229,8 @@ class TestMessageValues(MailCommon):
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, formataddr((self.user_employee.name, self.user_employee.email)))
-        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(msg.reply_to, format_email_address(self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, format_email_address(self.user_employee.name, self.user_employee.email))
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_fromto_document_alias(self):
@@ -241,8 +241,8 @@ class TestMessageValues(MailCommon):
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
         reply_to_name = '%s %s' % (self.env.user.company_id.name, self.alias_record.name)
         reply_to_email = '%s@%s' % (self.alias_record.alias_name, self.alias_domain)
-        self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
-        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(msg.reply_to, format_email_address(reply_to_name, reply_to_email))
+        self.assertEqual(msg.email_from, format_email_address(self.user_employee.name, self.user_employee.email))
 
         # no alias domain, no company catchall -> author
         self.alias_record.alias_domain_id = False
@@ -254,8 +254,8 @@ class TestMessageValues(MailCommon):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        self.assertEqual(msg.reply_to, formataddr((self.user_employee.name, self.user_employee.email)))
-        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(msg.reply_to, format_email_address(self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, format_email_address(self.user_employee.name, self.user_employee.email))
 
         # alias wins over company, hence no catchall is not an issue
         self.alias_record.alias_domain_id = self.mail_alias_domain
@@ -267,8 +267,8 @@ class TestMessageValues(MailCommon):
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
         reply_to_name = '%s %s' % (self.env.company.name, self.alias_record.name)
         reply_to_email = '%s@%s' % (self.alias_record.alias_name, self.alias_domain)
-        self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
-        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(msg.reply_to, format_email_address(reply_to_name, reply_to_email))
+        self.assertEqual(msg.email_from, format_email_address(self.user_employee.name, self.user_employee.email))
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_fromto_document_no_alias(self):
@@ -281,8 +281,8 @@ class TestMessageValues(MailCommon):
         self.assertIn('-openerp-%d-mail.test.simple' % test_record.id, msg.message_id.split('@')[0])
         reply_to_name = '%s %s' % (self.env.user.company_id.name, test_record.name)
         reply_to_email = '%s@%s' % (self.alias_catchall, self.alias_domain)
-        self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
-        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(msg.reply_to, format_email_address(reply_to_name, reply_to_email))
+        self.assertEqual(msg.email_from, format_email_address(self.user_employee.name, self.user_employee.email))
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_fromto_document_manual_alias(self):
@@ -302,8 +302,8 @@ class TestMessageValues(MailCommon):
         self.assertIn('-openerp-%d-mail.test.simple' % test_record.id, msg.message_id.split('@')[0])
         reply_to_name = '%s %s' % (self.env.user.company_id.name, test_record.name)
         reply_to_email = '%s@%s' % (alias.alias_name, self.alias_domain)
-        self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
-        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(msg.reply_to, format_email_address(reply_to_name, reply_to_email))
+        self.assertEqual(msg.email_from, format_email_address(self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_fromto_reply_to_force_new(self):
         msg = self.Message.create({

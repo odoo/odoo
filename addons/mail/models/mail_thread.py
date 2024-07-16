@@ -39,7 +39,7 @@ from odoo.tools import (
 )
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header, email_normalize, email_split,
-    email_split_and_format, formataddr, html_sanitize,
+    email_split_and_format, format_email_address, html_sanitize,
     generate_tracking_message_id, mail_header_msgid_re,
 )
 
@@ -720,13 +720,13 @@ class MailThread(models.AbstractModel):
         # find an email_from for the bounce email
         email_from = False
         if bounce_from := self.env.company.bounce_email:
-            email_from = formataddr(('MAILER-DAEMON', bounce_from))
+            email_from = format_email_address('MAILER-DAEMON', bounce_from)
         if not email_from:
             catchall_aliases = self.env['mail.alias.domain'].search([]).mapped('catchall_email')
             if not any(catchall_email in message['To'] for catchall_email in catchall_aliases):
                 email_from = decode_message_header(message, 'To')
         if not email_from:
-            email_from = formataddr(('MAILER-DAEMON', self.env.user.email_normalized))
+            email_from = format_email_address('MAILER-DAEMON', self.env.user.email_normalized)
 
         bounce_mail_values['email_from'] = email_from
         bounce_mail_values.update(mail_values)

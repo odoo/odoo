@@ -457,11 +457,11 @@ class MailMail(models.Model):
             emails_normalized = tools.email_normalize_all(partner.email)
             if emails_normalized:
                 email_to = [
-                    tools.formataddr((partner.name or "", email or "False"))
+                    tools.format_email_address(partner.name or "", email or "False")
                     for email in emails_normalized
                 ]
             else:
-                email_to = [tools.formataddr((partner.name or "", partner.email or "False"))]
+                email_to = [tools.format_email_address(partner.name or "", partner.email or "False")]
             email_list.append({
                 'email_cc': [],
                 'email_to': email_to,
@@ -692,7 +692,7 @@ class MailMail(models.Model):
                     # see rev. 56596e5240ef920df14d99087451ce6f06ac6d36
                     notifs.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
 
-                # protect against ill-formatted email_from when formataddr was used on an already formatted email
+                # protect against ill-formatted email_from when format_email_address was used on an already formatted email
                 emails_from = tools.mail.email_split_and_format(mail.email_from)
                 email_from = emails_from[0] if emails_from else mail.email_from
 

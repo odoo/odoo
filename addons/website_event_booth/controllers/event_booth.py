@@ -122,7 +122,7 @@ class WebsiteEventBoothController(WebsiteEventController):
     def _prepare_booth_registration_partner_values(self, event, kwargs):
         if request.env.user._is_public():
             conctact_email_normalized = tools.email_normalize(kwargs['contact_email'])
-            contact_name_email = tools.formataddr((kwargs['contact_name'], conctact_email_normalized))
+            contact_name_email = tools.format_email_address(kwargs['contact_name'], conctact_email_normalized)
             partner = request.env['res.partner'].sudo().find_or_create(contact_name_email)
             if not partner.name and kwargs.get('contact_name'):
                 partner.name = kwargs['contact_name']

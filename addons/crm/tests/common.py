@@ -338,11 +338,11 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         partners = []
         if partner_count:
             partners = self.env['res.partner'].create([{
-                'name': 'AutoPartner_%04d' % (x),
-                'email': tools.formataddr((
-                    'AutoPartner_%04d' % (x),
-                    'partner_email_%04d@example.com' % (x),
-                )),
+                'name': f'AutoPartner_{x:04}',
+                'email': tools.format_email_address(
+                    f'AutoPartner_{x:04}',
+                    f'partner_email_{x:04}@example.com',
+                ),
             } for x in range(partner_count)])
 
         # customer information
@@ -354,10 +354,10 @@ class TestCrmCommon(TestSalesCommon, MailCase):
                 if partner_count and idx < partner_count:
                     lead_data['partner_id'] = partners[idx].id
                 else:
-                    lead_data['email_from'] = tools.formataddr((
-                        'TestCustomer_%02d' % (idx),
-                        'customer_email_%04d@example.com' % (idx)
-                    ))
+                    lead_data['email_from'] = tools.format_email_address(
+                        f'TestCustomer_{idx:02}',
+                        f'customer_email_{idx:04}@example.com'
+                    )
 
         # country + phone information
         if country_ids:

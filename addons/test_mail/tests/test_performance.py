@@ -9,7 +9,7 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import Form, users, warmup, tagged
-from odoo.tools import mute_logger, formataddr
+from odoo.tools import mute_logger, format_email_address
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
@@ -775,10 +775,10 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         for record in test_records:
             self.assertEqual(
                 reply_to[record.id],
-                formataddr((
+                format_email_address(
                     f"{record.env.company.name} {record.name}",
                     f"{record.alias_name}@{self.alias_domain}"
-                ))
+                )
             )
 
 

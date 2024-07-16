@@ -19,7 +19,7 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.sql_db import Cursor
 from odoo.tests import tagged, RecordCapturer
 from odoo.tools import mute_logger
-from odoo.tools.mail import email_split_and_format, formataddr
+from odoo.tools.mail import email_split_and_format, format_email_address
 
 
 @tagged('mail_gateway')
@@ -706,10 +706,10 @@ class TestMailgateway(MailCommon):
             'alias_parent_thread_id': self.test_record.id,
         })
         self.test_record.message_subscribe(partner_ids=[self.partner_1.id])
-        email_from = formataddr(("Another Name", self.partner_1.email_normalized))
+        email_from = format_email_address("Another Name", self.partner_1.email_normalized)
 
         for partner_email, passed in [
-            (formataddr((self.partner_1.name, self.partner_1.email_normalized)), True),
+            (format_email_address(self.partner_1.name, self.partner_1.email_normalized), True),
             (f'{self.partner_1.email_normalized}, "Multi Email" <multi.email@test.example.com>', True),
             (f'"Multi Email" <multi.email@test.example.com>, {self.partner_1.email_normalized}', False),
         ]:
@@ -1586,8 +1586,8 @@ class TestMailgateway(MailCommon):
         )
         self.assertEqual(
             record_msg.reply_to,
-            formataddr((f'{self.user_employee.company_id.name} {first_record.name}',
-                        f'{self.alias_catchall}@{self.alias_domain}'))
+            format_email_address(f'{self.user_employee.company_id.name} {first_record.name}',
+                        f'{self.alias_catchall}@{self.alias_domain}')
         )
         mail_msg = first_record.message_post(
             subject='Replies to Record',

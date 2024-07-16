@@ -42,7 +42,7 @@ class Company(models.Model):
         for company in self.filtered('alias_domain_id'):
             bounce_email = company.alias_domain_id.bounce_email
             company.bounce_email = bounce_email
-            company.bounce_formatted = tools.formataddr((company.name, bounce_email))
+            company.bounce_formatted = tools.format_email_address(company.name, bounce_email)
 
     @api.depends('alias_domain_id', 'name')
     def _compute_catchall(self):
@@ -52,7 +52,7 @@ class Company(models.Model):
         for company in self.filtered('alias_domain_id'):
             catchall_email = company.alias_domain_id.catchall_email
             company.catchall_email = catchall_email
-            company.catchall_formatted = tools.formataddr((company.name, catchall_email))
+            company.catchall_formatted = tools.format_email_address(company.name, catchall_email)
 
     @api.depends('partner_id', 'catchall_formatted')
     def _compute_email_formatted(self):

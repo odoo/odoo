@@ -508,7 +508,7 @@ class Partner(models.Model):
 
     @api.depends('name', 'email')
     def _compute_email_formatted(self):
-        """ Compute formatted email for partner, using formataddr. Be defensive
+        """ Compute formatted email for partner, using format_email_address. Be defensive
         in computation, notably
 
           * double format: if email already holds a formatted email like
@@ -529,15 +529,15 @@ class Partner(models.Model):
             if emails_normalized:
                 # note: multi-email input leads to invalid email like "Name" <email1, email2>
                 # but this is current behavior in Odoo 14+ and some servers allow it
-                partner.email_formatted = tools.formataddr((
-                    partner.name or u"False",
+                partner.email_formatted = tools.format_email_address(
+                    partner.name or "False",
                     ','.join(emails_normalized)
-                ))
+                )
             elif partner.email:
-                partner.email_formatted = tools.formataddr((
-                    partner.name or u"False",
+                partner.email_formatted = tools.format_email_address(
+                    partner.name or "False",
                     partner.email
-                ))
+                )
 
     @api.depends('is_company')
     def _compute_company_type(self):

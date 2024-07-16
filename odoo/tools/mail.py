@@ -3,6 +3,7 @@
 
 import base64
 import collections
+import itertools
 import logging
 import random
 import re
@@ -28,7 +29,7 @@ __all__ = [
     "email_normalize_all",
     "email_split",
     "encapsulate_email",
-    "formataddr",
+    "format_email_address",
     "html2plaintext",
     "html_normalize",
     "html_sanitize",
@@ -36,6 +37,7 @@ __all__ = [
     "parse_contact_from_email",
     "plaintext2html",
     "single_email_re",
+    "email_re",
 ]
 
 _logger = logging.getLogger(__name__)
@@ -609,10 +611,11 @@ def email_split(text):
 
 def email_split_and_format(text):
     """ Return a list of email addresses found in ``text``, formatted using
-    formataddr. """
+    format_email_address. """
     if not text:
         return []
-    return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
+    return list(itertools.starmap(format_email_address, email_split_tuples(text)))
+
 
 def email_normalize(text, strict=True):
     """ Sanitize and standardize email address entries. As of rfc5322 section
@@ -711,11 +714,11 @@ def email_escape_char(email_address):
 def decode_message_header(message, header, separator=' '):
     return separator.join(h for h in message.get_all(header, []) if h)
 
-def formataddr(pair, charset='utf-8'):
-    """Pretty format a 2-tuple of the form (realname, email_address).
 
-    If the first element of pair is falsy then only the email address
-    is returned.
+def format_email_address(name: str, address: str, charset='utf-8') -> str:
+    """Pretty format a name and an e-mail address.
+
+    If the first element is falsy then only the email address is returned.
 
     Set the charset to ascii to get a RFC-2822 compliant email. The
     realname will be base64 encoded (if necessary) and the domain part
@@ -723,13 +726,12 @@ def formataddr(pair, charset='utf-8'):
     is left unchanged thus require the SMTPUTF8 extension when there are
     non-ascii characters.
 
-    >>> formataddr(('John Doe', 'johndoe@example.com'))
+    >>> format_email_address(('John Doe', 'johndoe@example.com'))
     '"John Doe" <johndoe@example.com>'
 
-    >>> formataddr(('', 'johndoe@example.com'))
+    >>> format_email_address(('', 'johndoe@example.com'))
     'johndoe@example.com'
     """
-    name, address = pair
     local, _, domain = address.rpartition('@')
 
     try:
@@ -777,10 +779,11 @@ def encapsulate_email(old_email, new_email):
     else:
         name_part = old_email.split("@")[0]
 
-    return formataddr((
+    return format_email_address(
         name_part,
         new_email_split[0][1],
-    ))
+    )
+
 
 def parse_contact_from_email(text):
     """ Parse contact name and email (given by text) in order to find contact

@@ -38,7 +38,7 @@ class TestMailThread(MailCommon, TestRecipients):
         # test data: source email, expected email normalized
         valid_pairs = [
             (base_email, base_email),
-            (tools.formataddr(('Another Name', base_email)), base_email),
+            (tools.format_email_address('Another Name', base_email), base_email),
             (f'Name That Should Be Escaped <{base_email}>', base_email),
             ('test.😊@example.com', 'test.😊@example.com'),
             ('"Name 😊" <test.😊@example.com>', 'test.😊@example.com'),
@@ -49,7 +49,7 @@ class TestMailThread(MailCommon, TestRecipients):
         multi_pairs = [
             (f'{base_email}, other.email@test.example.com',
              base_email),  # multi supports first found
-            (f'{tools.formataddr(("Another Name", base_email))}, other.email@test.example.com',
+            (f'{tools.format_email_address("Another Name", base_email)}, other.email@test.example.com',
              base_email),  # multi supports first found
         ]
         for email_from, exp_email_normalized in valid_pairs + void_pairs + multi_pairs:

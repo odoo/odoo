@@ -10,7 +10,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
 from odoo.tests import users, warmup, tagged
-from odoo.tools import formataddr, mute_logger
+from odoo.tools import format_email_address, mute_logger
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -193,10 +193,10 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                         'body_content': _exp_body_tip,
                         'email_from': self.user_account_other.email_formatted,
                         'subject': _exp_subject,
-                        'reply_to': formataddr((
+                        'reply_to': format_email_address(
                             f'{move.company_id.name} {_exp_move_name}',
                             f'{self.alias_catchall}@{self.alias_domain}'
-                        )),
+                        ),
                     },
                     fields_values={
                         'auto_delete': True,
@@ -204,10 +204,10 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                         'is_notification': True,  # should keep logs by default
                         'mail_server_id': self.mail_server_default,
                         'subject': _exp_subject,
-                        'reply_to': formataddr((
+                        'reply_to': format_email_address(
                             f'{move.company_id.name} {_exp_move_name}',
                             f'{self.alias_catchall}@{self.alias_domain}'
-                        )),
+                        ),
                     },
                 )
 
@@ -278,10 +278,10 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'body_content': f'TemplateBody for {test_move.name}',
                 'email_from': self.user_account_other.email_formatted,
                 'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
-                'reply_to': formataddr((
+                'reply_to': format_email_address(
                     f'{test_move.company_id.name} {test_move.display_name}',
                     f'{self.alias_catchall}@{self.alias_domain}'
-                )),
+                ),
             },
             fields_values={
                 'auto_delete': True,
@@ -289,10 +289,10 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'is_notification': True,  # should keep logs by default
                 'mail_server_id': self.mail_server_default,
                 'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
-                'reply_to': formataddr((
+                'reply_to': format_email_address(
                     f'{test_move.company_id.name} {test_move.display_name}',
                     f'{self.alias_catchall}@{self.alias_domain}'
-                )),
+                ),
             },
         )
 
@@ -364,10 +364,10 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'body_content': f'SpanishBody for {test_move.name}',  # translated version
                 'email_from': self.user_account_other.email_formatted,
                 'subject': f'SpanishSubject for {test_move.name}',  # translated version
-                'reply_to': formataddr((
+                'reply_to': format_email_address(
                     f'{test_move.company_id.name} {test_move.display_name}',
                     f'{self.alias_catchall}@{self.alias_domain}'
-                )),
+                ),
             },
             fields_values={
                 'auto_delete': True,
@@ -375,10 +375,10 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'is_notification': True,  # should keep logs by default
                 'mail_server_id': self.mail_server_default,
                 'subject': f'SpanishSubject for {test_move.name}',  # translated version
-                'reply_to': formataddr((
+                'reply_to': format_email_address(
                     f'{test_move.company_id.name} {test_move.display_name}',
                     f'{self.alias_catchall}@{self.alias_domain}'
-                )),
+                ),
             },
         )
 

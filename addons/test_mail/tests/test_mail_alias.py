@@ -9,7 +9,7 @@ from odoo import exceptions
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
 from odoo.tests.common import users
-from odoo.tools import formataddr, mute_logger
+from odoo.tools import format_email_address, mute_logger
 
 
 class TestMailAliasCommon(MailCommon):
@@ -449,12 +449,12 @@ class TestAliasCompany(TestMailAliasCommon):
         self.assertEqual(self.company_admin.bounce_email, f'{self.alias_bounce}@{self.alias_domain}')
         self.assertEqual(
             self.company_admin.bounce_formatted,
-            formataddr((self.company_admin.name, f'{self.alias_bounce}@{self.alias_domain}'))
+            format_email_address(self.company_admin.name, f'{self.alias_bounce}@{self.alias_domain}')
         )
         self.assertEqual(self.company_admin.catchall_email, f'{self.alias_catchall}@{self.alias_domain}')
         self.assertEqual(
             self.company_admin.catchall_formatted,
-            formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}'))
+            format_email_address(self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}')
         )
         self.assertEqual(self.company_admin.default_from_email, f'{self.default_from}@{self.alias_domain}')
 
@@ -462,12 +462,12 @@ class TestAliasCompany(TestMailAliasCommon):
         self.assertEqual(self.company_2.bounce_email, f'{self.alias_bounce_c2}@{self.alias_domain_c2_name}')
         self.assertEqual(
             self.company_2.bounce_formatted,
-            formataddr((self.company_2.name, f'{self.alias_bounce_c2}@{self.alias_domain_c2_name}'))
+            format_email_address(self.company_2.name, f'{self.alias_bounce_c2}@{self.alias_domain_c2_name}')
         )
         self.assertEqual(self.company_2.catchall_email, f'{self.alias_catchall_c2}@{self.alias_domain_c2_name}')
         self.assertEqual(
             self.company_2.catchall_formatted,
-            formataddr((self.company_2.name, f'{self.alias_catchall_c2}@{self.alias_domain_c2_name}'))
+            format_email_address(self.company_2.name, f'{self.alias_catchall_c2}@{self.alias_domain_c2_name}')
         )
         self.assertEqual(self.company_2.default_from_email, f'{self.alias_default_from_c2}@{self.alias_domain_c2_name}')
 
@@ -475,12 +475,12 @@ class TestAliasCompany(TestMailAliasCommon):
         self.assertEqual(self.company_3.bounce_email, f'{self.alias_bounce_c3}@{self.alias_domain_c3_name}')
         self.assertEqual(
             self.company_3.bounce_formatted,
-            formataddr((self.company_3.name, f'{self.alias_bounce_c3}@{self.alias_domain_c3_name}'))
+            format_email_address(self.company_3.name, f'{self.alias_bounce_c3}@{self.alias_domain_c3_name}')
         )
         self.assertEqual(self.company_3.catchall_email, f'{self.alias_catchall_c3}@{self.alias_domain_c3_name}')
         self.assertEqual(
             self.company_3.catchall_formatted,
-            formataddr((self.company_3.name, f'{self.alias_catchall_c3}@{self.alias_domain_c3_name}'))
+            format_email_address(self.company_3.name, f'{self.alias_catchall_c3}@{self.alias_domain_c3_name}')
         )
         self.assertEqual(self.company_3.default_from_email, f'{self.alias_default_from_c3}@{self.alias_domain_c3_name}')
 

@@ -22,7 +22,7 @@ from urllib3.contrib.pyopenssl import PyOpenSSLContext
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import ustr, pycompat, formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize, human_size
+from odoo.tools import ustr, pycompat, format_email_address, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize, human_size
 
 
 _logger = logging.getLogger(__name__)
@@ -102,7 +102,7 @@ def extract_rfc2822_addresses(text):
     valid_addresses = []
     for c in candidates:
         try:
-            valid_addresses.append(formataddr(('', c), charset='ascii'))
+            valid_addresses.append(format_email_address('', c, charset='ascii'))
         except idna.IDNAError:
             pass
     return valid_addresses

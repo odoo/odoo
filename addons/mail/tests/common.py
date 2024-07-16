@@ -24,7 +24,7 @@ from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.addons.mail.models.res_users import Users
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, new_test_user
-from odoo.tools import email_normalize, formataddr, mute_logger, pycompat
+from odoo.tools import email_normalize, format_email_address, mute_logger, pycompat
 from odoo.tools.translate import code_translations
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
@@ -159,7 +159,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             })
 
         # mailer daemon email preformatting
-        cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', f'{cls.alias_bounce}@{cls.alias_domain}'))
+        cls.mailer_daemon_email = format_email_address('MAILER-DAEMON', f'{cls.alias_bounce}@{cls.alias_domain}')
 
     @classmethod
     def _init_alias_domain(cls, name, values):
@@ -664,7 +664,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             raise NotImplementedError('Unsupported %s' % ', '.join(unknown))
 
         if isinstance(author, self.env['res.partner'].__class__):
-            expected['email_from'] = formataddr((author.name, email_normalize(author.email, strict=False) or author.email))
+            expected['email_from'] = format_email_address(author.name, email_normalize(author.email, strict=False) or author.email)
         else:
             expected['email_from'] = author
 
@@ -674,7 +674,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             email_to_list = []
             for email_to in recipients:
                 if isinstance(email_to, self.env['res.partner'].__class__):
-                    email_to_list.append(formataddr((email_to.name, email_normalize(email_to.email, strict=False) or email_to.email)))
+                    email_to_list.append(format_email_address(email_to.name, email_normalize(email_to.email, strict=False) or email_to.email))
                 else:
                     email_to_list.append(email_to)
         expected['email_to'] = email_to_list

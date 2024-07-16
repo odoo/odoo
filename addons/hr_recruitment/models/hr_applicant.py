@@ -608,7 +608,7 @@ class Applicant(models.Model):
         elif self.email_from:
             email_from = tools.email_normalize(self.email_from)
             if email_from and self.partner_name:
-                email_from = tools.formataddr((self.partner_name, email_from))
+                email_from = tools.format_email_address(self.partner_name, email_from)
                 self._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
         return recipients
 

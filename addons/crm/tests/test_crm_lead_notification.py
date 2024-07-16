@@ -3,7 +3,7 @@
 
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.tests import tagged, users
-from odoo.tools import formataddr, mute_logger
+from odoo.tools import format_email_address, mute_logger
 
 
 @tagged('mail_thread', 'mail_gateway')
@@ -235,7 +235,7 @@ class NewLeadNotification(TestCrmCommon):
             ('Delivery Boy company', 'Test With Company', 'default_create_with_partner@example.com'),
             ('Delivery Boy company', '', 'default_create_with_partner_no_name@example.com'),
         ]:
-            formatted_email = formataddr((name, email)) if name else formataddr((partner_name, email))
+            formatted_email = format_email_address(name or partner_name, email)
             with self.subTest(partner_name=partner_name):
                 lang = self.env['res.lang'].sudo().search([], limit=1)[0]
                 description = '<p>Top</p>'

@@ -18,7 +18,7 @@ from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.api import call_kw
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
-from odoo.tools import mute_logger, formataddr
+from odoo.tools import mute_logger, format_email_address
 from odoo.tests.common import users
 
 
@@ -288,16 +288,16 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         test_record = self.test_record.with_env(self.env)
         self.assertEqual(
             test_record._notify_get_reply_to()[test_record.id],
-            formataddr((
+            format_email_address(
                 f"{self.user_employee_c2.company_id.name} {test_record.name}",
-                f"{self.alias_catchall_c2}@{self.alias_domain_c2_name}"))
+                f"{self.alias_catchall_c2}@{self.alias_domain_c2_name}")
         )
         test_record_c1 = test_record.with_user(self.user_employee)
         self.assertEqual(
             test_record_c1._notify_get_reply_to()[test_record_c1.id],
-            formataddr((
+            format_email_address(
                 f"{self.user_employee.company_id.name} {test_record_c1.name}",
-                f"{self.alias_catchall}@{self.alias_domain}"))
+                f"{self.alias_catchall}@{self.alias_domain}")
         )
 
         # Test2: MC environment get default value from env
@@ -320,7 +320,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
 
             self.assertEqual(
                 res[test_record.id],
-                formataddr((f"{company.name} {test_record.name}", f"{alias_catchall}@{alias_domain}"))
+                format_email_address(f"{company.name} {test_record.name}", f"{alias_catchall}@{alias_domain}")
             )
 
         # Test3: get company from record (company_id field)
@@ -335,9 +335,9 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         for test_record in test_records:
             self.assertEqual(
                 res[test_record.id],
-                formataddr((
+                format_email_address(
                     f"{self.company_3.name} {test_record.name}",
-                    f"{self.alias_catchall_c3}@{self.alias_domain_c3_name}"))
+                    f"{self.alias_catchall_c3}@{self.alias_domain_c3_name}")
             )
 
 
@@ -359,7 +359,7 @@ class TestMessageNotify(TestMessagePostCommon):
                 'message_values': {
                     'author_id': self.partner_employee,
                     'body': '<p>You have received a notification</p>',
-                    'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                    'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                     'message_type': 'user_notification',
                     'model': test_record._name,
                     'notified_partner_ids': self.partner_1 | self.partner_employee_2 | self.partner_admin,
@@ -484,7 +484,7 @@ class TestMessageNotify(TestMessagePostCommon):
                     'message_type': 'user_notification',
                     'message_values': {
                         'author_id': self.partner_employee,
-                        'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                        'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                         'model': test_record._name,
                         'notified_partner_ids': self.partner_employee_2,
                         'res_id': test_record.id,
@@ -550,7 +550,7 @@ class TestMessageNotify(TestMessagePostCommon):
                 'message_values': {
                     'author_id': self.partner_employee,
                     'body': '<p>You have received a notification</p>',
-                    'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                    'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                     'model': False,
                     'res_id': False,
                     'notified_partner_ids': self.partner_1 | self.partner_employee_2 | self.partner_admin,
@@ -599,12 +599,12 @@ class TestMessageLog(TestMessagePostCommon):
                 'message_values': {
                     'author_id': self.partner_employee,
                     'body': '<p>Labrador</p>',
-                    'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                    'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                     'is_internal': True,
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],
                     'partner_ids': self.env['res.partner'],
-                    'reply_to': formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                    'reply_to': format_email_address(self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}'),
                     'res_id': test_record.id,
                 },
                 'notif': [],
@@ -633,12 +633,12 @@ class TestMessageLog(TestMessagePostCommon):
                     'message_values': {
                         'author_id': self.partner_employee,
                         'body': '<p>Test _message_log_batch</p>',
-                        'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                        'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                         'is_internal': True,
                         'model': test_record._name,
                         'notified_partner_ids': self.env['res.partner'],
                         'partner_ids': self.env['res.partner'],
-                        'reply_to': formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                        'reply_to': format_email_address(self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}'),
                         'res_id': test_record.id,
                     },
                     'notif': [],
@@ -670,12 +670,12 @@ class TestMessageLog(TestMessagePostCommon):
                     'message_values': {
                         'author_id': self.partner_employee,
                         'body': '<p>Test _message_log_batch</p>',
-                        'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                        'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                         'is_internal': True,
                         'model': test_record._name,
                         'notified_partner_ids': self.env['res.partner'],
                         'partner_ids': self.test_partners[:5],
-                        'reply_to': formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                        'reply_to': format_email_address(self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}'),
                         'res_id': test_record.id,
                     },
                     'notif': [],
@@ -702,11 +702,11 @@ class TestMessageLog(TestMessagePostCommon):
                     'message_values': {
                         'author_id': self.partner_employee,
                         'body': f'<p>Hello {self.user_employee.name}, this comes from {test_record.name}.</p>',
-                        'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                        'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                         'is_internal': True,
                         'model': test_record._name,
                         'notified_partner_ids': self.env['res.partner'],
-                        'reply_to': formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                        'reply_to': format_email_address(self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}'),
                         'res_id': test_record.id,
                     },
                     'notif': [],
@@ -737,12 +737,12 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     'message_values': {
                         'author_id': self.partner_employee,
                         'body': '<p>Body</p>',
-                        'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                        'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                         'is_internal': False,
                         'message_type': 'comment',
                         'model': test_record._name,
                         'notified_partner_ids': self.partner_employee_2,
-                        'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                        'reply_to': format_email_address(f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}'),
                         'res_id': test_record.id,
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
@@ -812,11 +812,11 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     'content': 'Body',
                     'mail_mail_values': {
                         'author_id': self.partner_employee_2,
-                        'email_from': formataddr((self.partner_employee_2.name, self.partner_employee_2.email_normalized)),
+                        'email_from': format_email_address(self.partner_employee_2.name, self.partner_employee_2.email_normalized),
                     },
                     'message_values': {
                         'author_id': self.partner_employee_2,
-                        'email_from': formataddr((self.partner_employee_2.name, self.partner_employee_2.email_normalized)),
+                        'email_from': format_email_address(self.partner_employee_2.name, self.partner_employee_2.email_normalized),
                         'message_type': 'comment',
                         'notified_partner_ids': self.partner_admin,
                         'subtype_id': self.env.ref('mail.mt_comment'),
@@ -893,13 +893,13 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 'message_values': {
                     'author_id': self.partner_employee,
                     'body': '<p>Body</p>',
-                    'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                    'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                     'is_internal': False,
                     'model': test_record._name,
                     'notified_partner_ids': self.partner_employee_2,
                     'parent_id': creation_msg,
                     'record_name': test_record.name,
-                    'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                    'reply_to': format_email_address(f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}'),
                     'res_id': test_record.id,
                     'subject': test_record.name,
                 },
@@ -984,14 +984,12 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                             },
                             'message_values': {
                                 'author_id': self.user_erp_manager.partner_id,
-                                'email_from': formataddr((self.user_erp_manager.name, self.user_erp_manager.email_normalized)),
+                                'email_from': format_email_address(self.user_erp_manager.name, self.user_erp_manager.email_normalized),
                                 'is_internal': False,
                                 'notified_partner_ids': self.partner_employee_2,
-                                'reply_to': formataddr(
-                                    (
-                                        f'{expected_company.name} {record.name}',
-                                        f'{expected_alias_domain.catchall_alias}@{expected_alias_domain.name}'
-                                    )
+                                'reply_to': format_email_address(
+                                    f'{expected_company.name} {record.name}',
+                                    f'{expected_alias_domain.catchall_alias}@{expected_alias_domain.name}'
                                 ),
                             },
                         }
@@ -1519,7 +1517,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],
                     'subtype_id': self.env['mail.message.subtype'],
-                    'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                    'reply_to': format_email_address(f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}'),
                     'res_id': test_record.id,
                 }
             )
@@ -1560,7 +1558,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'notified_partner_ids': self.env['res.partner'],
                     'recipient_ids': test_record.customer_id,
                     'subtype_id': self.env['mail.message.subtype'],
-                    'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                    'reply_to': format_email_address(f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}'),
                     'res_id': test_record.id,
                 }
             )
@@ -1605,10 +1603,10 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                 'message_type': 'comment',
                 'message_values': {
                     'author_id': self.partner_employee,
-                    'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                    'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                     'is_internal': False,
                     'model': test_record._name,
-                    'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                    'reply_to': format_email_address(f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}'),
                     'res_id': test_record.id,
                 },
                 'notif': [
@@ -1645,10 +1643,10 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             'message_type': 'notification',
             'message_values': {
                 'author_id': self.partner_employee,
-                'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                 'is_internal': False,
                 'model': test_record._name,
-                'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                'reply_to': format_email_address(f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}'),
                 'res_id': test_record.id,
              },
             'notif': [
@@ -1682,11 +1680,11 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             'message_type': 'comment',
             'message_values': {
                 'author_id': self.partner_employee,
-                'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                 'is_internal': False,
                 'message_type': 'comment',
                 'model': test_record._name,
-                'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                'reply_to': format_email_address(f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}'),
                 'res_id': test_record.id,
              },
             'notif': [
@@ -1716,11 +1714,11 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             'message_type': 'notification',
             'message_values': {
                 'author_id': self.partner_employee,
-                'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                'email_from': format_email_address(self.partner_employee.name, self.partner_employee.email_normalized),
                 'is_internal': False,
                 'message_type': 'notification',
                 'model': test_record._name,
-                'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                'reply_to': format_email_address(f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}'),
                 'res_id': test_record.id,
             },
             'notif': [
