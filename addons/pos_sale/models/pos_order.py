@@ -102,6 +102,9 @@ class PosOrder(models.Model):
             for picking in self.env['stock.picking'].browse(waiting_picking_ids):
                 if all(is_product_uom_qty_zero(move) for move in picking.move_ids):
                     picking.action_cancel()
+                else:
+                    # We make sure that the original picking still has the correct quantity reserved
+                    picking.action_assign()
 
         return order_ids
 
