@@ -123,6 +123,12 @@ class ResPartner(models.Model):
         ]
     )
 
+    @api.constrains('peppol_eas')
+    def _check_peppol_eas(self):
+        for partner in self:
+            if partner.peppol_eas in ('0037', '0215'):
+                raise ValidationError(_("Peppol EAS codes 0037, 0215 are deprecated. Please use 0216 instead."))
+
     @api.constrains('peppol_endpoint')
     def _check_peppol_fields(self):
         for partner in self:
