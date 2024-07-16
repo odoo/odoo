@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.5alpha1+e\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-09 17:47+0000\n"
-"PO-Revision-Date: 2023-10-09 17:47+0000\n"
+"POT-Creation-Date: 2024-07-26 14:45+0000\n"
+"PO-Revision-Date: 2024-07-26 14:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,23 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_uy
+#: model_terms:res.company,report_footer:l10n_uy.demo_company_uy
+msgid ""
+"+598 94 231 234 info@company.uyexample.com http://www.uyexample.com "
+"218296790015"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/models/res_partner.py:0
+#, python-format
+msgid "3:402.010-2 or 93:402.010-1 (CI or NIE)"
+msgstr "3:402.010-2 o 93:402.010-1 (CI o NIE)"
+
+#. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Plantilla de Plan de Cuentas"
+msgstr "Plantilla de plan de cuentas"
 
 #. module: l10n_uy
 #: model:account.report.column,name:l10n_uy.tax_report_balance
@@ -66,6 +80,13 @@ msgid "CI"
 msgstr ""
 
 #. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/models/res_partner.py:0
+#, python-format
+msgid "CI/NIE"
+msgstr ""
+
+#. module: l10n_uy
 #: model:l10n_latam.document.type,name:l10n_uy.dc_recibo_cobranza
 msgid "Collection Receipt"
 msgstr "Recibo Cobranza"
@@ -73,7 +94,12 @@ msgstr "Recibo Cobranza"
 #. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_res_company
 msgid "Companies"
-msgstr "Compañías"
+msgstr "Empresas"
+
+#. module: l10n_uy
+#: model:ir.model,name:l10n_uy.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
 
 #. module: l10n_uy
 #: model:l10n_latam.document.type,name:l10n_uy.dc_e_remito_de_exportación_contingencia
@@ -396,10 +422,43 @@ msgid "Taxable income"
 msgstr "Ingreso Imponible"
 
 #. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/models/res_partner.py:0
+#, python-format
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid.\n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"El %(vat_label)s número [%(wrong_vat)s] no parece válido.\n"
+"Nota: el formato esperoado es %(expected_format)s"
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/models/res_partner.py:0
+#, python-format
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] for %(partner_label)s does not seem to be valid.\n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"El %(vat_label)s número [%(wrong_vat)s] para %(partner_label)s no parece válido.\n"
+"Nota: el formato esperoado es %(expected_format)s"
+
+#. module: l10n_uy
+#: model_terms:res.company,company_details:l10n_uy.demo_company_uy
+msgid ""
+"UY Company<br>\n"
+"Calle Falsa 123<br>\n"
+"Montevideo MO 12800<br>\n"
+"Uruguay"
+msgstr ""
+
+#. module: l10n_uy
 #: model:ir.model.fields,help:l10n_uy.field_account_tax__l10n_uy_tax_category
 msgid ""
 "UY: Use to group the transactions in the Financial Reports required by DGI"
-msgstr "UY: Utilizado para agrupar transacciones en Reportes Financieros requeridos por DGI"
+msgstr ""
+"UY: Utilizado para agrupar transacciones en Reportes Financieros requeridos "
+"por DGI"
 
 #. module: l10n_uy
 #: model:l10n_latam.identification.type,description:l10n_uy.it_rut
@@ -526,3 +585,10 @@ msgstr "Nota de Crédito e-Ticket Venta por Cuenta Ajena"
 #: model:l10n_latam.document.type,name:l10n_uy.dc_nota_de_debito_e_ticket_venta_por_cuenta_ajena
 msgid "e-Ticket Sale By Third Party Debit Note"
 msgstr "Nota de Débito e-Ticket Venta por Cuenta Ajena"
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/models/res_partner.py:0
+#, python-format
+msgid "partner [%s]"
+msgstr "empresa [%s]"
