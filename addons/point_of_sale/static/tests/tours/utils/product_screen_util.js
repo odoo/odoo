@@ -539,10 +539,7 @@ export function finishOrder() {
             trigger: ".payment-screen .btn-switchpane:contains('Validate')",
             run: "click",
         },
-        {
-            content: "verify that the order has been successfully sent to the backend",
-            trigger: ".js_connected:visible",
-        },
+        Chrome.isSyncStatusConnected(),
         {
             isActive: ["desktop"],
             content: "click Next Order",
