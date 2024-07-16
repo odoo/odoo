@@ -10,11 +10,13 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Start editing the project.',
     run: "click",
 }, {
-    trigger: 'div[name="collaborator_ids"] .o_field_x2many_list_row_add > a',
+    trigger: '.modal div[name="collaborator_ids"] .o_field_x2many_list_row_add > a',
+    in_modal: false,
     content: 'Add a collaborator to the project.',
     run: "click",
 }, {
-    trigger: 'div[name="collaborator_ids"] div[name="partner_id"] input',
+    trigger: '.modal div[name="collaborator_ids"] div[name="partner_id"] input',
+    in_modal: false,
     content: 'Select the user portal as collaborator to the "Project Sharing" project.',
     run: "edit Georges",
 }, {
@@ -22,14 +24,20 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     in_modal: false,
     run: "click",
 }, {
-    trigger: 'div[name="collaborator_ids"] div[name="access_mode"] select',
+    trigger: '.modal div[name="collaborator_ids"] div[name="access_mode"] select',
+    in_modal: false,
     content: 'Select "Edit" as Access mode in the "Share Project" wizard.',
     run: 'select "edit"',
 }, {
-    trigger: 'footer > button[name="action_share_record"]',
+    trigger: '.modal footer > button[name="action_share_record"]',
+    in_modal: false,
     content: 'Confirm the project sharing with this portal user.',
     run: "click",
-}, {
+},
+{
+    trigger: "body:not(:has(.modal))",
+},
+{
     trigger: '.o_web_client',
     content: 'Go to project portal view to select the "Project Sharing" project',
     run: function () {
