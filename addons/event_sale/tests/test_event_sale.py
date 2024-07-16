@@ -519,7 +519,17 @@ class TestEventSale(TestEventSaleCommon):
         registration = self.event_0.registration_ids
         self.assertEqual(registration.sale_status, 'to_pay')
         registration.sale_order_line_id.price_total = 0.0
-        self.assertEqual(registration.sale_status, 'free', "Price of $0.00 should be free")
+        self.assertEqual(registration.sale_status, 'to_pay', "Free SO line on SO with non zero amount should be paid")
+        registration.sale_order_id.amount_total = 0.0
+        self.assertEqual(registration.sale_status, 'free', "Free SO line on SO with zero amount should be free")
+        # Remove the SO and so_line relations to test the "free ticket without SO" case
+        sale_order = registration.sale_order_id
+        so_line = registration.sale_order_line_id
+        registration.sale_order_id = False
+        registration.sale_order_line_id = False
+        self.assertEqual(registration.sale_status, 'free', "Price of $0.00 without so_line should be free")
+        registration.sale_order_id = sale_order
+        registration.sale_order_line_id = so_line
         registration.sale_order_line_id.price_total = 0.01
         self.assertEqual(registration.sale_status, 'to_pay', "Price of $0.01 should be paid")
         registration.sale_order_id.action_confirm()
