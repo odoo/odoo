@@ -151,7 +151,7 @@
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,kanban,form,activity</field>
         <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
-        <field name="context" eval="{'show_sale': True, 'create': False}"/>
+        <field name="context">{'show_sale': True, 'create': False}</field>
         <field name="view_id" ref="sale.view_quotation_tree"/>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce_unpaid"/>
         <field name="help" type="html">

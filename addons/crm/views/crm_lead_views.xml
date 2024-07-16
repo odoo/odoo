@@ -740,9 +740,9 @@
             <field name="res_model">mail.compose.message</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="context" eval="{
+            <field name="context">{
     'default_composition_mode': 'comment',
-                }"/>
+                }</field>
             <field name="binding_model_id" ref="model_crm_lead"/>
             <field name="binding_view_types">form</field>
         </record>
@@ -752,9 +752,9 @@
             <field name="res_model">mail.compose.message</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="context" eval="{
+            <field name="context">{
     'default_composition_mode': 'mass_mail',
-                }"/>
+                }</field>
             <field name="binding_model_id" ref="model_crm_lead"/>
             <field name="binding_view_types">list</field>
         </record>
