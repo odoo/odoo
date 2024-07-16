@@ -1347,6 +1347,7 @@
                                         <field name="invoice_incoterm_id"/>
                                         <field name="incoterm_location"/>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
+                                        <field name="inalterable_hash" groups="base.group_no_one"/>
                                         <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding" readonly="state != 'draft'"/>
                                         <field name="invoice_source_email"
                                                widget="email"
@@ -1377,6 +1378,7 @@
                                     </group>
                                     <group>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
+                                        <field name="inalterable_hash" groups="base.group_no_one"/>
                                         <field name="company_id" groups="base.group_multi_company" required="1"/>
                                     </group>
                                 </group>

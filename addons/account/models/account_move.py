@@ -3352,8 +3352,8 @@ class AccountMove(models.Model):
         chains_to_hash = self._get_chains_to_hash(force_hash=force_hash)
         for chain in chains_to_hash:
             move_hashes = chain['moves']._calculate_hashes(chain['previous_hash'])
-            for move, move_hash in move_hashes.items():
-                move.inalterable_hash = move_hash
+            for move_id, move_hash in move_hashes.items():
+                self.browse([move_id]).write({'inalterable_hash': move_hash})
             chain['moves']._message_log_batch(bodies={m.id: _("This move has been locked.") for m in chain['moves']})
 
     def _get_chains_to_hash(self, force_hash=False, raise_if_gap=True, raise_if_no_document=True, include_pre_last_hash=False, early_stop=False):
@@ -3450,8 +3450,8 @@ class AccountMove(models.Model):
                     values[k] = _getattrstring(line, fname)
             current_record = dumps(values, sort_keys=True, ensure_ascii=True, indent=None, separators=(',', ':'))
             hash_string = sha256((previous_hash + current_record).encode('utf-8')).hexdigest()
-            move2hash[move] = f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
-            previous_hash = move2hash[move]
+            move2hash[move.id] = f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
+            previous_hash = move2hash[move.id]
         return move2hash
 
     # -------------------------------------------------------------------------

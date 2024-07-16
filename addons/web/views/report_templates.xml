@@ -308,6 +308,14 @@
         <div class="oe_structure" t-else=""></div>
     </template>
 
+    <template id="footer_name_page">
+        <div t-if="report_type == 'pdf'" class="text-muted">
+            <span t-if="o and 'name' in o" t-out="o.name">(document name)</span>
+            <span t-if="o and 'name' in o"> - </span>
+            Page <span class="page"/> of <span class="topage"/>
+        </div>
+    </template>
+
     <template id="external_layout_striped">
         <div t-attf-class="o_company_#{company.id}_layout header" t-att-style="report_header_style">
             <div class="o_background_header">
@@ -352,15 +360,7 @@
                 <ul class="list-inline">
                     <div t-field="company.report_footer"/>
                 </ul>
-                <div t-if="report_type == 'pdf'" class="text-muted">
-                    Page:
-                    <span class="page"/>
-                    of
-                    <span class="topage"/>
-                </div>
-                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
-                    <span t-out="o.name">(document name)</span>
-                </div>
+                <t t-call="web.footer_name_page"/>
             </div>
         </div>
     </template>
@@ -413,12 +413,7 @@
         <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
             <div class="text-center">
                 <div t-field="company.report_footer">Company Report Footer</div>
-                <div t-if="report_type == 'pdf'">
-                    Page: <span class="page"/> / <span class="topage"/>
-                </div>
-                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
-                    <span t-out="o.name">(document name)</span>
-                </div>
+                <t t-call="web.footer_name_page"/>
             </div>
         </div>
     </template>
@@ -466,6 +461,7 @@
             <div class="row">
                 <div class="col-4">
                     <span t-field="company.report_footer"/>
+                    <t t-call="web.footer_name_page"/>
                 </div>
                 <div class="col-4">
                     <span t-if="company.is_company_details_empty" t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
@@ -537,12 +533,7 @@
                     <div t-field="company.report_footer"/>
                 </ul>
 
-                <div t-if="report_type == 'pdf'" class="text-muted">
-                    Page: <span class="page"/> / <span class="topage"/>
-                </div>
-                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
-                    <span t-out="o.name">(document name)</span>
-                </div>
+                <t t-call="web.footer_name_page"/>
             </div>
         </div>
     </template>

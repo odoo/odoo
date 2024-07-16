@@ -16,9 +16,18 @@
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report.xml',
+        'security/ir.model.access.csv',
+        'security/l10n_pt_security.xml',
+        'views/account_move_views.xml',
+        'views/account_tax_views.xml',
+        'views/l10n_pt_at_series_views.xml',
+        'views/report_invoice.xml',
+        'views/report_template.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
+        'demo/ir_config_parameter_data.xml',
     ],
     'license': 'LGPL-3',
 }

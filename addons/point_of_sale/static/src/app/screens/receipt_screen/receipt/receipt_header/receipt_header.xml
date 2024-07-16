@@ -7,15 +7,17 @@
         <div class="d-flex flex-column align-items-center">
             <div class="pos-receipt-contact">
                 <!-- contact address -->
-                <div t-if="props.data.company.partner_id?.[1]" t-esc="props.data.company.partner_id[1]" />
-                <t t-if="props.data.company.phone">
-                    <div>Tel:<t t-esc="props.data.company.phone" /></div>
-                </t>
-                <t t-if="props.data.company.vat">
-                    <div><t t-esc="props.data.company.country_id?.vat_label || 'Tax ID'"/>: <t t-esc="props.data.company.vat" /></div>
-                </t>
-                <div t-if="props.data.company.email" t-esc="props.data.company.email" />
-                <div t-if="props.data.company.website" t-esc="props.data.company.website" />
+                <div id="pos-receipt-contact-company-info">
+                    <div t-if="props.data.company.partner_id?.[1]" t-esc="props.data.company.partner_id[1]" />
+                    <t t-if="props.data.company.phone">
+                        <div>Tel:<t t-esc="props.data.company.phone" /></div>
+                    </t>
+                    <t t-if="props.data.company.vat">
+                        <div><t t-esc="props.data.company.country_id?.vat_label || 'Tax ID'"/>: <t t-esc="props.data.company.vat" /></div>
+                    </t>
+                    <div t-if="props.data.company.email" t-esc="props.data.company.email" />
+                    <div t-if="props.data.company.website" t-esc="props.data.company.website" />
+                </div>
                 <div t-if="props.data.header" style="white-space:pre-line" t-esc="props.data.header" />
                 <div t-if="props.data.cashier" class="cashier">
                     <div>--------------------------------</div>
