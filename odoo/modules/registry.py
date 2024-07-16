@@ -708,7 +708,7 @@ class Registry(Mapping):
         # If you use index keys possible to add more combinations. In future is better to add analise of where clause to
         # add automatic index_keys in fields.
         indexes = self._check_indexes(cr, model_names)
-        for index_name, table_name, expression, method, where, field_name in indexes:
+        for index_name, table_name, expression, method, where, field_name in indexes or []:
             try:
                 with cr.savepoint(flush=False):
                     sql.create_index(cr, index_name, table_name, [expression], method, where)
