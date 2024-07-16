@@ -1,7 +1,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import tagged, new_test_user
 from odoo.tools.mail import html2plaintext
 
 
@@ -121,3 +121,13 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             r"deleted 101402 Bank Suspense Account  \(Account\) -45.0 0.0 \(Balance\) Automatic Balancing Line False \(Label\)",
         ])
         self.assertTrail(self.get_trail(self.move), messages)
+
+    def test_partner_notif(self):
+        """Audit trail should not block partner notification."""
+        user = new_test_user(
+            self.env, 'test-user-notif', groups="base.group_portal",
+            notification_type='email',
+        )
+        # identify that user as being a customer
+        user.partner_id._increase_rank('customer_rank', 1)
+        user.partner_id.message_post(body='Test', partner_ids=user.partner_id.ids)
