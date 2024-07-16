@@ -722,7 +722,6 @@ class Registry(Mapping):
     def re_index(self, cr, model_names, value_fields=False):
         indexes = self._check_indexes(cr, model_names, info=True, value_fields=value_fields)
         for index_name, table_name, expression, method, where, field_name in indexes or []:
-            _logger.info(f"{index_name}, {table_name}, {expression}, {method}, {where}, {field_name} {type(expression)} {isinstance(expression, list)}")
             if not isinstance(expression, list):
                 expression = [expression]
             try:
