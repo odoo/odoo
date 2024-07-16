@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.3\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-03 08:43+0000\n"
-"PO-Revision-Date: 2024-06-03 08:43+0000\n"
+"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"PO-Revision-Date: 2024-07-15 18:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -423,16 +423,6 @@ msgid "<span class=\"fw-normal\"> Tasks</span>"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_form2
-msgid "<span class=\"o_stat_text order-2\">Closed</span>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_form2
-msgid "<span class=\"o_stat_text order-2\">Sub-tasks</span>"
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocking Tasks</span>"
 msgstr ""
@@ -446,6 +436,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_stat_text\">Tasks</span>"
 msgstr ""
 
 #. module: project
@@ -916,8 +916,6 @@ msgid "Assigned to"
 msgstr ""
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -925,7 +923,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "Assignees"
 msgstr ""
 
@@ -1588,6 +1586,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Deadline"
 msgstr ""
@@ -1729,7 +1728,7 @@ msgstr ""
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/components/project_chatter/project_follower_list.js:0
+#: code:addons/project/static/src/core/web/follower_list_patch.js:0
 #: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
 #: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -1761,6 +1760,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "Display the sub-task in your pipeline"
 msgstr ""
 
 #. module: project
@@ -2011,6 +2015,7 @@ msgid "Frequency"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Future"
 msgstr ""
@@ -2099,6 +2104,11 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
 msgid "Hello"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "Hide the sub-task in your pipeline"
 msgstr ""
 
 #. module: project
@@ -3019,7 +3029,6 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
-#, python-format
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
 msgstr ""
 
@@ -3083,6 +3092,7 @@ msgid "Others"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Overdue"
 msgstr ""
@@ -3299,11 +3309,8 @@ msgid "Progress"
 msgstr ""
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
-#: code:addons/project/static/src/views/project_rating_graph/project_rating_graph_view.js:0
-#: code:addons/project/static/src/views/project_rating_pivot/project_rating_pivot_view.js:0
 #: model:ir.model,name:project.model_project_project
 #: model:ir.model.fields,field_description:project.field_project_milestone__project_id
 #: model:ir.model.fields,field_description:project.field_project_task__project_id
@@ -3559,11 +3566,14 @@ msgid "Rating"
 msgstr ""
 
 #. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/views/project_rating_graph/project_rating_graph_view.js:0
-#: code:addons/project/static/src/views/project_rating_pivot/project_rating_pivot_view.js:0
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_pivot
+msgid "Rating (1-5)"
 msgstr ""
 
 #. module: project
@@ -3711,7 +3721,7 @@ msgstr ""
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/components/project_chatter/project_follower_list.js:0
+#: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid "Remove Collaborator"
 msgstr ""
 
@@ -3823,15 +3833,13 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
-#, python-format
-msgid "Save the task to be able to paste images in description"
+msgid "Save the task to be able to drag images in description"
 msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
-#, python-format
-msgid "Save the task to be able to drag images in Description"
+msgid "Save the task to be able to paste images in description"
 msgstr ""
 
 #. module: project
@@ -4005,6 +4013,11 @@ msgid "Share a Project"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__show_display_in_project
+msgid "Show Display In Project"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
@@ -4036,6 +4049,12 @@ msgid ""
 "Archiving these accounts will remove the option to log timesheets for their respective projects.\n"
 "\n"
 "Are you sure you want to proceed?"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid "Sorry. You can't set a task as its parent task."
 msgstr ""
 
 #. module: project
@@ -4210,9 +4229,6 @@ msgid "Tags"
 msgstr ""
 
 #. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/views/project_rating_graph/project_rating_graph_view.js:0
-#: code:addons/project/static/src/views/project_rating_pivot/project_rating_pivot_view.js:0
 #: model:ir.model,name:project.model_project_task
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__task_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
@@ -4386,7 +4402,6 @@ msgstr ""
 #: model:project.project,label_tasks:project.project_project_2
 #: model:project.project,label_tasks:project.project_project_3
 #: model:project.project,label_tasks:project.project_project_4
-#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -4451,6 +4466,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+msgid ""
+"The document does not exist or you do not have the rights to access it."
 msgstr ""
 
 #. module: project
@@ -4604,6 +4626,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_2
 #: model:project.task.type,name:project.project_personal_stage_demo_2
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "This Week"
 msgstr ""
@@ -4622,7 +4645,7 @@ msgstr ""
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/components/project_chatter/project_follower_list.js:0
+#: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
@@ -4663,6 +4686,12 @@ msgid ""
 "associated with %s. There are a couple of options to consider: either change"
 " the project's company to align with the stage's company or remove the "
 "company designation from the stage"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid "This task has sub-tasks, so it can't be private."
 msgstr ""
 
 #. module: project
@@ -4762,6 +4791,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_1
 #: model:project.task.type,name:project.project_personal_stage_demo_1
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Today"
 msgstr ""
@@ -5197,12 +5227,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot read the following fields on tasks: %(field_list)s"
-msgstr ""
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "You cannot set a task as its parent task."
 msgstr ""
 
 #. module: project
