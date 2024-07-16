@@ -8,7 +8,7 @@ import {
     queryLast,
     queryRect,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, advanceTime, animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { Component, onWillRender, onWillStart, xml } from "@odoo/owl";
 import {
     MockServer,
@@ -48,10 +48,10 @@ import {
 
 import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
-import { WebClient } from "@web/webclient/webclient";
-import { calendarView } from "@web/views/calendar/calendar_view";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
+import { calendarView } from "@web/views/calendar/calendar_view";
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
+import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
 
@@ -394,7 +394,7 @@ test(`filter panel autocomplete: updates when typing`, async () => {
     ]);
 
     await contains(`${root} .o-autocomplete--input`).edit("partner 3", { confirm: false });
-    await runAllTimers();
+    await advanceTime(500);
     expect(`${root} .o-autocomplete--dropdown-menu`).toHaveCount(1);
     expect(`${root} .o-autocomplete--dropdown-item`).toHaveCount(1);
     expect(queryAllTexts(`${root} .o-autocomplete--dropdown-item`)).toEqual(["partner 3"]);
@@ -403,7 +403,7 @@ test(`filter panel autocomplete: updates when typing`, async () => {
         "a string that would yield to no result as it is too very much convoluted",
         { confirm: false }
     );
-    await runAllTimers();
+    await advanceTime(500);
     expect(`${root} .o-autocomplete--dropdown-menu`).toHaveCount(1);
     expect(`${root} .o-autocomplete--dropdown-item`).toHaveCount(1);
     expect(queryAllTexts(`${root} .o-autocomplete--dropdown-item`)).toEqual(["No records"]);
@@ -447,7 +447,7 @@ test(`add a filter with the search more dialog`, async () => {
     expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
     expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(0);
     await contains(`${section} .o-autocomplete--input`).click();
-    await runAllTimers();
+    await advanceTime(500);
     expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
     expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
@@ -464,7 +464,7 @@ test(`add a filter with the search more dialog`, async () => {
 
     // Change the search term
     await contains(`.o-autocomplete--input`).edit("foo", { confirm: false });
-    await runAllTimers();
+    await advanceTime(500);
     expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
     expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
@@ -514,7 +514,7 @@ test(`add a filter with the search more dialog`, async () => {
     expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
     expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(0);
     await contains(`${section} .o-autocomplete--input`).click();
-    await runAllTimers();
+    await advanceTime(500);
     expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
     expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
@@ -531,7 +531,7 @@ test(`add a filter with the search more dialog`, async () => {
 
     // Change the search term
     await contains(`.o-autocomplete--input`).edit("foo", { confirm: false });
-    await runAllTimers();
+    await advanceTime(500);
     expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
     expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
@@ -1012,7 +1012,7 @@ test(`render popover: inside fullcalendar popover`, async () => {
     expect(`.o_cw_popover`).toHaveCount(0);
 
     await contains(`.fc-popover .fc-daygrid-event-harness:nth-child(1) .fc-event`).click();
-    await runAllTimers();
+    await advanceTime(500);
     expect(`.o_cw_popover`).toHaveCount(1);
 
     await contains(`.o_cw_popover .o_cw_popover_edit`).click();
