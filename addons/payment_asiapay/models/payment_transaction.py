@@ -80,6 +80,10 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'asiapay':
             return res
 
+        avaliable_currency_name = self.provider_id.available_currency_ids[0].name
+        if not avaliable_currency_name in const.CURRENCY_MAPPING:
+            raise ValidationError(_("Currency '%s' is not supported by asiapay payment provider", avaliable_currency_name))
+
         base_url = self.provider_id.get_base_url()
         # The lang is taken from the context rather than from the partner because it is not required
         # to be logged in to make a payment, and because the lang is not always set on the partner.
@@ -88,7 +92,7 @@ class PaymentTransaction(models.Model):
             'merchant_id': self.provider_id.asiapay_merchant_id,
             'amount': self.amount,
             'reference': self.reference,
-            'currency_code': const.CURRENCY_MAPPING[self.provider_id.available_currency_ids[0].name],
+            'currency_code': const.CURRENCY_MAPPING[avaliable_currency_name],
             'mps_mode': 'SCP',
             'return_url': urls.url_join(base_url, AsiaPayController._return_url),
             'payment_type': 'N',
