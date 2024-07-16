@@ -9,7 +9,6 @@ import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Spreadsheet, Model, registries } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
-import { migrate } from "../o_spreadsheet/migration";
 import { useSpreadsheetPrint } from "../hooks";
 
 registries.topbarMenuRegistry.addChild("download_public_excel", ["file"], {
@@ -62,7 +61,7 @@ export class PublicReadonlySpreadsheet extends Component {
 
     async createModel() {
         this.data = await this.http.get(this.props.dataUrl);
-        this.model = new Model(migrate(this.data), {
+        this.model = new Model(this.data, {
             mode: this.props.mode === "dashboard" ? "dashboard" : "readonly",
         });
         if (this.env.debug) {

@@ -154,6 +154,7 @@ test("load dashboard that doesn't exist", async () => {
 
 test("Last selected spreadsheet is kept when go back from breadcrumb", async function () {
     const spreadsheetData = {
+        version: 16,
         sheets: [
             {
                 id: "sheet1",
