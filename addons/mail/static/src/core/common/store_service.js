@@ -10,6 +10,7 @@ import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
+import { loadBundle } from "@web/core/assets";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -148,6 +149,11 @@ export class Store extends BaseStore {
             description: _t("Notify everyone"),
         },
     ];
+
+    markdownLoaded = false;
+    loadMarkdownBundle() {
+        loadBundle("mail.assets_markdown").then(() => this.markdownLoaded = true);
+    }
 
     get initMessagingParams() {
         return {
@@ -375,6 +381,12 @@ export class Store extends BaseStore {
 
     /**
      * Get the parameters to pass to the message post route.
+     *
+     * @param {Object} options
+     * @param {Array} options.attachments
+     * @param {String} options.body
+     * @param {Boolean} options.isNote
+     * @param {import("models").Thread} options.thread
      */
     async getMessagePostParams({
         attachments,
@@ -415,8 +427,11 @@ export class Store extends BaseStore {
             partner_ids,
             subtype_xmlid: subtype,
         };
-        if (thread.model === "discuss.channel" && validMentions?.specialMentions) {
-            postData.special_mentions = validMentions.specialMentions;
+        if (thread.model === "discuss.channel") {
+            postData.body = `<odoo-markdown>${postData.body}</odoo-markdown>`;
+            if (validMentions?.specialMentions) {
+                postData.special_mentions = validMentions.specialMentions;
+            }
         }
         return {
             context: {

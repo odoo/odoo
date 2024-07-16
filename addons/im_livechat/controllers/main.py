@@ -52,12 +52,17 @@ class LivechatController(http.Controller):
     def odoo_ui_icons(self, **kwargs):
         return http.Stream.from_path('web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2').get_response()
 
+    def _stream_bundle(self, bundle):
+        asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
+        return request.env["ir.binary"]._get_stream_from(asset.js()).get_response()
+
     @http.route('/im_livechat/emoji_bundle', type='http', auth='public', cors='*')
     def get_emoji_bundle(self):
-        bundle = 'web.assets_emoji'
-        asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
-        stream = request.env['ir.binary']._get_stream_from(asset.js())
-        return stream.get_response()
+        return self._stream_bundle("web.assets_emoji")
+
+    @http.route("/im_livechat/markdown_bundle", type="http", auth="public", cors="*")
+    def get_markdown_bundle(self):
+        return self._stream_bundle("mail.assets_markdown")
 
     @http.route('/im_livechat/support/<int:channel_id>', type='http', auth='public')
     def support_page(self, channel_id, **kwargs):

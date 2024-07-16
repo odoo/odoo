@@ -511,8 +511,11 @@ const R_PATH_ADDON = /^[@/]?(\w+)/;
 const WHITE_LISTED_KEYS = [
     "ace", // Ace editor
     "Chart", // Chart.js
+    "hljs", // highlight.js
     "L", // Leaflet
     "lamejs", // LameJS
+    "marked", // marked.js
+    "markedHighlight", // markedHighlight.js
 ];
 
 /** @type {Record<string, string[]} */

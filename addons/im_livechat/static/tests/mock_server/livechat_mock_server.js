@@ -163,6 +163,13 @@ async function get_emoji_bundle(request) {
     return new MockResponse();
 }
 
+registerRoute("/im_livechat/markdown_bundle", get_markdown_bundle);
+/** @type {RouteCallback} */
+async function get_markdown_bundle(request) {
+    await loadBundle("mail.assets_markdown");
+    return new MockResponse();
+}
+
 patch(mailDataHelpers, {
     async processRequest(request) {
         const store = await super.processRequest(...arguments);

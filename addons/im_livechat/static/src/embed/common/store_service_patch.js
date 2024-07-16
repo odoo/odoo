@@ -3,6 +3,9 @@ import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 import { Store, storeService } from "@mail/core/common/store_service";
 
 import { patch } from "@web/core/utils/patch";
+import { loadJS } from "@web/core/assets";
+import { url } from "@web/core/utils/urls";
+import { session } from "@web/session";
 
 storeService.dependencies.push("im_livechat.initialized");
 
@@ -29,4 +32,11 @@ patch(Store.prototype, {
         params.init_messaging.channel_types = ["livechat"];
         return params;
     },
+    loadMarkdownBundle() {
+        return loadJS(
+            url("/im_livechat/markdown_bundle", undefined, {
+                origin: session.livechatData.serverUrl,
+            })
+        ).then(() => this.markdownLoaded = true);
+    }
 });
