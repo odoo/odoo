@@ -9,4 +9,13 @@ patch(PartnerList.prototype, {
     get isBalanceDisplayed() {
         return true;
     },
+
+    async searchPartner() {
+        const res = await super.searchPartner();
+        const coupons = this.pos.fetchCoupons([
+            ["partner_id", "in", res.map((partner) => partner.id)],
+        ]);
+        this.pos.computePartnerCouponIds(coupons);
+        return res;
+    },
 });
