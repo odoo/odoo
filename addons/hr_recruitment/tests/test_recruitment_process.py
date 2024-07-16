@@ -10,22 +10,22 @@ class TestRecruitmentProcess(TestHrCommon):
     def test_00_recruitment_process(self):
         """ Test recruitment process """
 
-        self.dep_rd = self.env['hr.department'].create({
+        dep_rd = self.env['hr.department'].create({
             'name': 'Research & Development',
         })
-        self.job_developer = self.env['hr.job'].create({
+        job_developer = self.env['hr.job'].create({
             'name': 'Experienced Developer',
-            'department_id': self.dep_rd.id,
+            'department_id': dep_rd.id,
             'no_of_recruitment': 5,
         })
-        self.employee_niv = self.env['hr.employee'].create({
+        employee_niv = self.env['hr.employee'].create({
             'name': 'Sharlene Rhodes',
         })
-        self.job_developer = self.job_developer.with_user(self.res_users_hr_officer.id)
-        self.employee_niv = self.employee_niv.with_user(self.res_users_hr_officer.id)
+        job_developer = job_developer.with_user(self.res_users_hr_officer.id)
+        employee_niv = employee_niv.with_user(self.res_users_hr_officer.id)
 
         # Create a new HR Recruitment Officer
-        self.res_users_hr_recruitment_officer = self.env['res.users'].create({
+        res_users_hr_recruitment_officer = self.env['res.users'].create({
             'company_id': self.env.ref('base.main_company').id,
             'name': 'HR Recruitment Officer',
             'login': "hrro",
@@ -37,8 +37,8 @@ class TestRecruitmentProcess(TestHrCommon):
         # In Order to test process of Recruitment so giving HR officer's rights
         with file_open('hr_recruitment/tests/resume.eml', 'rb') as request_file:
             request_message = request_file.read()
-        self.env['mail.thread'].with_user(self.res_users_hr_recruitment_officer).message_process(
-            'hr.applicant', request_message, custom_values={"job_id": self.job_developer.id})
+        self.env['mail.thread'].with_user(res_users_hr_recruitment_officer).message_process(
+            'hr.applicant', request_message, custom_values={"job_id": job_developer.id})
 
         # After getting the mail, I check the details of the new applicant.
         applicant = self.env['hr.applicant'].search([('email_from', 'ilike', 'Richard_Anderson@yahoo.com')], limit=1)
@@ -47,15 +47,16 @@ class TestRecruitmentProcess(TestHrCommon):
             ('name', '=', 'resume.pdf'),
             ('res_model', '=', self.env['hr.applicant']._name),
             ('res_id', '=', applicant.id)])
-        self.assertEqual(applicant.name, 'Application for the post of Jr.application Programmer.', 'Applicant name does not match.')
+        self.assertEqual(applicant.partner_name, 'Application for the post of Jr.application Programmer.', 'Applicant name does not match.')
         self.assertEqual(applicant.stage_id, self.env.ref('hr_recruitment.stage_job0'),
             "Stage should be 'New' and is '%s'." % (applicant.stage_id.name))
         self.assertTrue(resume_ids, 'Resume is not attached.')
+        applicant.candidate_id.partner_name = "Mr. Richard Anderson"
         # I assign the Job position to the applicant
-        applicant.write({'job_id': self.job_developer.id})
+        applicant.write({'job_id': job_developer.id})
         # I schedule meeting with applicant for interview.
-        applicant_meeting = applicant.action_makeMeeting()
-        self.assertEqual(applicant_meeting['context']['default_name'], 'Application for the post of Jr.application Programmer.',
+        applicant_meeting = applicant.action_create_meeting()
+        self.assertEqual(applicant_meeting['context']['default_name'], 'Mr. Richard Anderson',
             'Applicant name does not match.')
 
     def test_01_hr_application_notification(self):
@@ -87,7 +88,7 @@ class TestRecruitmentProcess(TestHrCommon):
             }
         )
         application = self.env["hr.applicant"].create(
-            {"name": "Test Job Application for Notification", "job_id": job.id}
+            {"candidate_id": self.env['hr.candidate'].create({'partner_name': 'Test Job Application for Notification'}).id, "job_id": job.id}
         )
         new_application_message = application.message_ids.filtered(
             lambda m: m.subtype_id == new_application_mt

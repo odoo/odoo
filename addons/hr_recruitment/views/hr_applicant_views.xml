@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-    <data>
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
@@ -14,7 +13,7 @@
                 <field name="type_id" column_invisible="True"/>
                 <field name="job_id" optional="show"/>
                 <field name="stage_id" optional="show"/>
-                <field name="name" readonly="1" optional="show"/>
+                <field name="candidate_id" optional="show"/>
                 <field name="application_status" optional="show" invisible="application_status == 'ongoing'"/>
                 <field name="refuse_reason_id" optional='hide'/>
                 <field name="priority" widget="priority" optional="show"/>
@@ -41,7 +40,6 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <tree string="Next Activities" decoration-danger="activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
-                <field name="name"/>
                 <field name="partner_id"/>
                 <field name="activity_date_deadline"/>
                 <field name="activity_type_id"/>
@@ -59,7 +57,7 @@
           <form string="Jobs - Recruitment Form" class="o_applicant_form">
             <field name="company_id" invisible="1"/>
             <field name="application_status" invisible="1"/>
-            <field name="emp_id" invisible="1"/>
+            <field name="employee_id" invisible="1"/>
             <field name="meeting_ids" invisible="1"/>
             <field name="refuse_reason_id" invisible="1"/>
             <field name="email_normalized" invisible="1"/>
@@ -68,10 +66,10 @@
             <field name="emp_is_active" invisible="1"/>
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr_recruitment.group_hr_recruitment_user"
-                        class="o_create_employee" invisible="emp_id or not active or not date_closed"/>
+                        class="o_create_employee" invisible="employee_id or not active or not date_closed"/>
                 <button string="Refuse" name="archive_applicant" type="object" invisible="not active" data-hotkey="d"/>
                 <button string="Restore" name="toggle_active" type="object" invisible="active" data-hotkey="x"/>
-                <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not active and not emp_id"/>
+                <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not active and not employee_id"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -80,21 +78,29 @@
                             class="oe_stat_button"
                             icon="fa-id-card-o"
                             groups="hr.group_hr_user"
-                            invisible="not (emp_id or emp_is_active)">
+                            invisible="not (employee_id or emp_is_active)">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="employee_name" readonly="1"/></span>
                             <span class="o_stat_text">Employee</span>
                         </div>
                     </button>
-                    <button name="action_applications_email"
+                    <button name="action_open_similar_candidates"
                             class="oe_stat_button"
                             icon="fa-pencil"
                             type="object"
                             context="{'active_test': False}"
-                            invisible="application_count == 0">
-                        <field name="application_count" widget="statinfo" string="Other applications"/>
+                            invisible="similar_candidates_count == 0">
+                        <field name="similar_candidates_count" widget="statinfo" string="Similar Candidates"/>
                     </button>
-                    <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object" invisible="not id">
+                    <button name="action_open_other_applications"
+                            class="oe_stat_button"
+                            icon="fa-pencil"
+                            type="object"
+                            context="{'active_test': False}"
+                            invisible="not other_applications_count">
+                        <field name="other_applications_count" widget="statinfo" string="Other applications"/>
+                    </button>
+                    <button name="action_create_meeting" class="oe_stat_button" icon="fa-calendar" type="object" invisible="not id">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_text"><field name="meeting_display_text" /></span>
                             <span class="o_stat_value"><field name="meeting_display_date" readonly="1"/></span>
@@ -109,29 +115,24 @@
                 <field name="legend_blocked" invisible="1"/>
                 <field name="legend_done" invisible="1"/>
                 <div class="oe_title pe-0">
-                    <label for="name" class="oe_edit_only"/>
+                    <label for="candidate_id" class="oe_edit_only"/>
                     <h1 class="d-flex justify-content-between align-items-center">
-                        <field name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Sales Manager 2 year experience"/>
+                        <field name="candidate_id" options="{'line_breaks': False}"/>
                         <field name="kanban_state" widget="state_selection"/>
                     </h1>
-                    <h2 class="o_row">
-                        <div>
-                            <label for="partner_name" class="oe_edit_only"/>
-                            <field name="partner_name" placeholder="e.g. John Doe"/>
-                        </div>
-                    </h2>
                 </div>
                 <group>
                     <group>
+                        <field name="partner_name" invisible="1"/>
                         <field name="partner_id" invisible="1" />
                         <field name="refuse_reason_id" invisible="active"/>
-                        <field name="email_from" widget="email"/>
-                        <field name="email_cc" groups="base.group_no_one"/>
-                        <field name="partner_phone" widget="phone"/>
-                        <field name="partner_mobile" widget="phone"/>
-                        <field name="linkedin_profile" widget="url"/>
-                        <field name="type_id" placeholder="Degree"/>
-
+                        <field name="email_from" widget="email" invisible="not candidate_id"/>
+                        <field name="email_cc" groups="base.group_no_one" invisible="not candidate_id"/>
+                        <field name="partner_phone" widget="phone" invisible="not candidate_id"/>
+                        <field name="partner_mobile" widget="phone" invisible="not candidate_id"/>
+                        <field name="linkedin_profile" widget="url" invisible="not candidate_id"/>
+                        <field name="type_id" placeholder="Degree" invisible="not candidate_id"/>
+                        <field name="availability" placeholder="Directly Available" invisible="not candidate_id"/>
                     </group>
                     <group>
                         <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" />
@@ -140,7 +141,6 @@
                         <field name="priority" widget="priority"/>
                         <field name="source_id"/>
                         <field name="medium_id"/>
-                        <field name="availability" placeholder="Directly Available"/>
                         <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                     <group string="Job">
@@ -218,7 +218,7 @@
         <field name="arch" type="xml">
             <search string="Search Applicants">
                 <field string="Applicant" name="partner_name"
-                    filter_domain="['|', '|', ('name', 'ilike', self), ('partner_name', 'ilike', self), ('email_from', 'ilike', self)]"/>
+                    filter_domain="['|', ('partner_name', 'ilike', self), ('email_from', 'ilike', self)]"/>
                 <field string="Email" name="email_from" filter_domain="[('email_from', 'ilike', self)]"/>
                 <field name="job_id"/>
                 <field name="department_id" operator="child_of"/>
@@ -238,7 +238,6 @@
                 <separator/>
                 <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
-                <filter string="Reserve" name="reserve" domain="[('job_id', '=', False)]"/>
                 <separator/>
                 <filter string="Directly Available" name="applicant_availability" domain="['|',('availability', '&lt;=', context_today().strftime('%Y-%m-%d')),('availability','=', False)]"/>
                 <separator/>
@@ -298,7 +297,6 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="name"/>
                     <field name="partner_name" placeholder="e.g. John Doe"/>
                     <field name="email_from"/>
                     <field name="job_id" options="{'no_open': True}"/>
@@ -326,20 +324,17 @@
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                 <templates>
                     <t t-name="kanban-menu">
-                        <a role="menuitem" name="action_makeMeeting" type="object" class="dropdown-item">Schedule Interview</a>
+                        <a role="menuitem" name="action_create_meeting" type="object" class="dropdown-item">Schedule Interview</a>
                         <a role="menuitem" name="archive_applicant" type="object" class="dropdown-item">Refuse</a>
                         <a t-if="record.active.raw_value" role="menuitem" type="archive" class="dropdown-item">Archive</a>
                         <a t-if="!record.active.raw_value" role="menuitem" type="unarchive" class="dropdown-item">Unarchive</a>
                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                        <div role="separator" class="dropdown-divider"></div>
-                        <field name="color" widget="kanban_color_picker"/>
                     </t>
                     <t t-name="kanban-card">
                         <widget name="web_ribbon" title="Hired" bg_color="text-bg-success" invisible="not date_closed"/>
                         <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger" invisible="application_status != 'refused'"/>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-secondary" invisible="application_status != 'archived'"/>
                         <field t-if="record.partner_name.raw_value" class="fw-bold fs-5" name="partner_name"/>
-                        <field t-else="" class="fw-bold fs-5" name="name"/>
                         <field name="job_id" invisible="context.get('search_default_job_id', False)"/>
                         <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         <div t-if="record.partner_mobile.raw_value" class="d-flex align-items-center">
@@ -374,7 +369,6 @@
                     <div t-name="activity-box">
                         <field name="user_id" widget="many2one_avatar_user"/>
                         <div class="flex-grow-1">
-                            <field name="name" display="full" class="o_text_block"/>
                             <field name="partner_name" muted="1" display="full" class="o_text_block"/>
                         </div>
                     </div>
@@ -493,68 +487,6 @@
         <field name="act_window_id" ref="crm_case_categ0_act_job"/>
     </record>
 
-    <menuitem
-        name="Recruitment"
-        id="menu_hr_recruitment_root"
-        web_icon="hr_recruitment,static/description/icon.png"
-        groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_interviewer"
-        sequence="210"/>
-
-    <menuitem id="menu_hr_recruitment_configuration" name="Configuration" parent="menu_hr_recruitment_root"
-        groups="group_hr_recruitment_user" sequence="100"/>
-
-    <menuitem id="menu_hr_recruitment_config_jobs" name="Job Positions" parent="menu_hr_recruitment_configuration" sequence="10" />
-
-    <menuitem id="menu_hr_recruitment_config_applications" name="Applications" parent="menu_hr_recruitment_configuration" sequence="20" />
-
-    <menuitem id="menu_hr_recruitment_config_employees" name="Employees" parent="menu_hr_recruitment_configuration" sequence="30" />
-
-    <menuitem id="menu_hr_recruitment_config_activities" name="Activities" parent="menu_hr_recruitment_configuration" sequence="40" />
-
-    <menuitem
-        id="menu_hr_applicant_refuse_reason"
-        action="hr_applicant_refuse_reason_action"
-        parent="menu_hr_recruitment_config_applications"
-        sequence="10"/>
-
-    <menuitem
-        name="Applications"
-        parent="menu_hr_recruitment_root"
-        id="menu_crm_case_categ0_act_job" sequence="2"/>
-
-    <menuitem
-        name="All Applications"
-        parent="menu_crm_case_categ0_act_job"
-        id="menu_crm_case_categ_all_app" action="crm_case_categ0_act_job" sequence="2"/>
-
-    <menuitem
-        id="menu_hr_recruitment_stage"
-        name="Stages"
-        parent="menu_hr_recruitment_config_jobs"
-        action="hr_recruitment_stage_act"
-        groups="base.group_no_one"
-        sequence="1"/>
-
-    <menuitem
-        id="menu_hr_recruitment_contract_type"
-        action="hr.hr_contract_type_action"
-        parent="menu_hr_recruitment_config_jobs"
-        sequence="2"
-        groups="hr.group_hr_user"/>
-
-    <menuitem
-        id="hr_applicant_category_menu"
-        parent="menu_hr_recruitment_config_applications"
-        action="hr_applicant_category_action"
-        sequence="20" groups="base.group_no_one"/>
-
-    <menuitem
-        id="menu_hr_recruitment_degree"
-        name="Degrees"
-        parent="menu_hr_recruitment_config_applications"
-        action="hr_recruitment_degree_action"
-        sequence="1" groups="base.group_no_one"/>
-
     <record id="hr_applicant_view_pivot" model="ir.ui.view">
         <field name="name">hr.applicant.pivot</field>
         <field name="model">hr.applicant</field>
@@ -562,7 +494,7 @@
             <pivot string="Recruitment Analysis" sample="1">
                 <field name="stage_id" type="row"/>
                 <field name="job_id" type="col"/>
-                <field name="name"/>
+                <field name="candidate_id"/>
             </pivot>
         </field>
     </record>
@@ -590,7 +522,6 @@
                 <filter string="Creation Date" name="year" date="create_date" default_period="year"/>
                 <separator/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
-                <filter string="Reserve" name="reserve" domain="[('job_id', '=', False)]"/>
                 <separator/>
                 <filter string="New" name="new" domain="[('stage_id.sequence', '=', 1)]"/>
                 <separator/>
@@ -636,20 +567,6 @@
             </p>
         </field>
     </record>
-
-    <menuitem
-        name="Reporting"
-        id="report_hr_recruitment"
-        parent="menu_hr_recruitment_root"
-        groups="group_hr_recruitment_user"
-        sequence="99"/>
-
-    <menuitem
-        name="Recruitment Analysis"
-        id="hr_applicant_report_menu"
-        parent="report_hr_recruitment"
-        sequence="50"
-        action="hr_applicant_action_analysis"/>
 
     <record id="action_hr_recruitment_report_filtered_department" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>
@@ -727,29 +644,4 @@ if records:
         <field name="action_id" ref="hr_applicant_action_analysis"/>
         <field name="context">{'group_by': ['create_date:month', 'department_id']}</field>
     </record>
-
-    <menuitem
-        id="menu_hr_recruitment_utm"
-        parent="menu_hr_recruitment_configuration"
-        name="UTMs"
-        groups="base.group_no_one"
-        sequence="15"/>
-
-    <menuitem
-        id="menu_hr_recruitment_utm_sources"
-        parent="menu_hr_recruitment_utm"
-        name="Sources"
-        action="utm.utm_source_action"
-        groups="base.group_no_one"
-        sequence="15"/>
-
-    <menuitem
-        id="menu_hr_recruitment_utm_mediums"
-        parent="menu_hr_recruitment_utm"
-        name="Mediums"
-        action="utm.utm_medium_action"
-        groups="base.group_no_one"
-        sequence="15"/>
-
-    </data>
 </odoo>

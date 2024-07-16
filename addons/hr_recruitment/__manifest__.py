@@ -24,6 +24,7 @@
         'data/mail_template_data.xml',
         'data/mail_templates.xml',
         'data/hr_recruitment_data.xml',
+        'views/hr_candidate_views.xml',
         'views/hr_recruitment_degree_views.xml',
         'views/hr_recruitment_source_views.xml',
         'views/hr_recruitment_stage_views.xml',
@@ -39,6 +40,7 @@
         'views/digest_views.xml',
         'wizard/applicant_refuse_reason_views.xml',
         'wizard/applicant_send_mail_views.xml',
+        'views/menuitems.xml',
     ],
     'demo': [
         'data/hr_recruitment_demo.xml',

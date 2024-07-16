@@ -134,7 +134,7 @@ class HrEmployeePrivate(models.Model):
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
-        'emp_id', 'category_id', groups="hr.group_hr_user",
+        'employee_id', 'category_id', groups="hr.group_hr_user",
         string='Tags')
     # misc
     notes = fields.Text('Notes', groups="hr.group_hr_user")

@@ -360,3 +360,21 @@ class WebsiteHrRecruitment(WebsiteForm):
             applicant = request.env[model_name].sudo().browse(record_id)
             applicant[default_field.name] = values.get(default_field.name, '')
         return record_id
+
+    def extract_data(self, model, values):
+        data = super().extract_data(model, values)
+        if model.model == 'hr.applicant':
+            candidate = False
+            if values.get('email_from') and values.get('partner_phone'):
+                candidate = request.env['hr.candidate'].sudo().search([
+                    ('email_from', '=', values['email_from']),
+                    ('partner_phone', '=', values['partner_phone']),
+                ], limit=1)
+            if not candidate:
+                candidate = request.env['hr.candidate'].sudo().create({
+                    'partner_name': values['partner_name'],
+                    'email_from': values.get('email_from'),
+                    'partner_phone': values.get('partner_phone'),
+                })
+            data['record']['candidate_id'] = candidate.id
+        return data
