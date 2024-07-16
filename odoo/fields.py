@@ -3016,15 +3016,32 @@ class _Relational(Field):
     def _description_domain(self, env):
         domain = self.domain(env[self.model_name]) if callable(self.domain) else self.domain  # pylint: disable=not-callable
         if self.check_company:
-            # when using check_company=True on a field on 'res.company', the
-            # company_id comes from the id of the current record
+            field_to_check = None
             if self.company_dependent:
-                cid = 'allowed_company_ids[0]'
+                cids = '[allowed_company_ids[0]]'
+            elif self.model_name == 'res.company':
+                # when using check_company=True on a field on 'res.company', the
+                # company_id comes from the id of the current record
+                cids = '[id]'
+            elif 'company_id' in env[self.model_name]:
+                cids = '[company_id]'
+                field_to_check = 'company_id'
+            elif 'company_ids' in env[self.model_name]:
+                cids = 'company_ids'
+                field_to_check = 'company_ids'
             else:
-                cid = "id" if self.model_name == "res.company" else "company_id"
-            company_domain = env[self.comodel_name]._check_company_domain(companies=unquote(cid))
-            no_company_domain = env[self.comodel_name]._check_company_domain(companies='')
-            return f"({cid} and {company_domain} or {no_company_domain}) + ({domain or []})"
+                _logger.warning(_(
+                    "Couldn't generate a company-dependent domain for field %s. "
+                    "The model doesn't have a 'company_id' or 'company_ids' field, and isn't company-dependent either.",
+                    f'{self.model_name}.{self.name}'
+                ))
+                return domain
+            company_domain = env[self.comodel_name]._check_company_domain(companies=unquote(cids))
+            if not field_to_check:
+                return f"{company_domain} + {domain or []}"
+            else:
+                no_company_domain = env[self.comodel_name]._check_company_domain(companies='')
+                return f"({field_to_check} and {company_domain} or {no_company_domain}) + ({domain or []})"
         return domain
 
 
@@ -3052,8 +3069,12 @@ class Many2one(_Relational):
         accessible from the current model (corresponds to ``_inherits``)
 
     :param bool check_company: Mark the field to be verified in
-        :meth:`~odoo.models.Model._check_company`. Add a default company
-        domain depending on the field attributes.
+        :meth:`~odoo.models.Model._check_company`. Has a different behaviour
+        depending on whether the field is company_dependent or not.
+        Constrains non-company-dependent fields to target records whose
+        company_id(s) are compatible with the record's company_id(s).
+        Constrains company_dependent fields to target records whose
+        company_id(s) are compatible with the currently active company.
     """
     type = 'many2one'
     column_type = ('int4', 'int4')
