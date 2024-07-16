@@ -698,3 +698,16 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(len(res), 1, "The invoice should have one line")
         self.assertEqual(res[0]['product_name'], self.product_storable_serial.display_name, "The product name should be the same")
         self.assertEqual(res[0]['lot_name'], quant.lot_id.name, "The lot name should be the same")
+
+    def test_create_repair_order_from_cross_company_sn(self):
+        """
+        Test that a repair order can be created from a cross-company SN.
+        """
+        sn_01 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_product_3.id})
+        action = sn_01.action_lot_open_repairs()
+        repair_order = self.env['repair.order'].with_context(action.get('context')).create({
+            'product_id': self.product_product_3.id,
+            'product_uom': self.product_product_3.uom_id.id,
+            'partner_id': self.res_partner_12.id,
+        })
+        self.assertEqual(repair_order.company_id, self.env.company)
