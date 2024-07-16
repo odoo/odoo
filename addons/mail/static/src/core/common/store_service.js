@@ -532,8 +532,12 @@ export class Store extends BaseStore {
     }
 
     openNewMessage() {
-        const cw = this.ChatWindow.insert({ thread: undefined, fromMessagingMenu: true });
-        this.chatHub.opened.delete(cw);
+        let cw = this.ChatWindow.get({ thread: undefined });
+        if (cw) {
+            cw.focus();
+            return;
+        }
+        cw = this.ChatWindow.insert({ thread: undefined, fromMessagingMenu: true });
         this.chatHub.opened.unshift(cw);
         cw.focus();
     }
