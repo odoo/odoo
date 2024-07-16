@@ -146,3 +146,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
     def test_user_known_after_reload(self):
         self.start_tour('/', 'website_livechat_user_known_after_reload')
+
+    def test_livechat_message(self):
+        self.start_tour('/', 'website_livechat_message')

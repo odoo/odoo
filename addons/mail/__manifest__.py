@@ -139,6 +139,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/scss/variables/derived_variables.scss',
             'mail/static/src/scss/*.scss',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
+            'mail/static/lib/marked/**/*',
             'mail/static/src/js/**/*',
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
@@ -207,6 +208,7 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_public': [
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/odoo_ui_icons/style.css',
+            'web/static/lib/dompurify/DOMpurify.js',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
@@ -236,6 +238,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/public_web/**/*',
             'mail/static/src/**/public/**/*',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
+            'mail/static/lib/marked/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),

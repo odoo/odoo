@@ -84,7 +84,7 @@ test("Edit message (mobile)", async () => {
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click(".o-mail-Message .fa-paper-plane-o");
-    await contains(".o-mail-Message-content", { text: "edited message (edited)" });
+    await contains(".o-mail-Message-content", { text: "edited message\n (edited)" });
 });
 
 test("Editing message keeps the mentioned channels", async () => {
@@ -108,7 +108,7 @@ test("Editing message keeps the mentioned channels", async () => {
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other" });
     await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-content", { text: "other bye (edited)" });
+    await contains(".o-mail-Message-content", { text: "other bye\n (edited)" });
     await click(".o_channel_redirect", { text: "other" });
     await contains(".o-mail-Discuss-threadName", { value: "other" });
 });
@@ -300,7 +300,7 @@ test("Edit and click save", async () => {
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-body", { text: "Goodbye World (edited)" });
+    await contains(".o-mail-Message-body", { text: "Goodbye World\n (edited)" });
 });
 
 test("Do not call server on save if no changes", async () => {
@@ -397,7 +397,7 @@ test("mentions are kept when editing message", async () => {
     });
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message", {
-        text: "Hi @Mitchell Admin (edited)",
+        text: "Hi @Mitchell Admin\n (edited)",
         contains: ["a.o_mail_redirect", { text: "@Mitchell Admin" }],
     });
 });
@@ -433,7 +433,7 @@ test("can add new mentions when editing message", async () => {
     await contains(".o-mail-Composer-input", { value: "Hello @TestPartner " });
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message", {
-        text: "Hello @TestPartner (edited)",
+        text: "Hello @TestPartner\n (edited)",
         contains: ["a.o_mail_redirect", { text: "@TestPartner" }],
     });
 });

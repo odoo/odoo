@@ -88,11 +88,41 @@
     & > p {
         margin-bottom: 0 !important;
     }
+    & odoo-markdown {
+        p, ul, pre, blockquote {
+            margin-bottom: 0 !important;
+        }
+        blockquote {
+            padding: map-get($spacers, 1) !important;
+        }
+        pre {
+            padding: map-get($spacers, 2) !important;
+        }
+        ul {
+            padding-left: 1rem !important;
+        }
+    }
 
     // overflow: auto can break rendering of next element of a frequent broken Outlook 365
     // warning table. If detected, we prevent the issue by removing flotation.
     table[align="left"][width="100%"] {
         float: none;
+        &:last-of-type:has(~ .o-mail-Message-edited) {
+            display: inline-block;
+        }
+        ul:last-child, ol:last-child {
+            margin-bottom: 0 !important;
+        }
+        p:last-child {
+            margin-bottom: 0 !important;
+
+        }
+        pre {
+            padding: 0;
+            margin-bottom: 0;
+            background-color: transparent;
+            white-space: pre-wrap;
+        }
     }
 }
 
