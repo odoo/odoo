@@ -120,3 +120,14 @@ export function checkAddedLoyaltyPoints(points) {
         },
     ];
 }
+
+export function checkPartnerPoints(name, points) {
+    return [
+        ...ProductScreen.clickPartnerButton(),
+        {
+            content: `Check '${name}' has ${points} Loyalty Points`,
+            trigger: `.partner-list .partner-line:contains(${name}) .partner-line-balance:contains(${points} Loyalty Point(s))`,
+            in_modal: true,
+        },
+    ];
+}

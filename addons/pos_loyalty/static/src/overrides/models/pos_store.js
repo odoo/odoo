@@ -301,29 +301,11 @@ patch(PosStore.prototype, {
                 return;
             }
             order.invalidCoupons = false;
-            const allCoupons = [];
-            for (const pe of Object.values(order.uiState.couponPointChanges)) {
-                if (pe.coupon_id > 0) {
-                    allCoupons.push(pe.coupon_id);
-                }
-            }
-            allCoupons.push(...order._code_activated_coupon_ids.map((coupon) => coupon.id));
-            const couponsToFetch = allCoupons.filter(
-                (elem) => !this.models["loyalty.card"].get(elem)
+            order.uiState.couponPointChanges = Object.fromEntries(
+                Object.entries(order.uiState.couponPointChanges).filter(([k, pe]) =>
+                    this.models["loyalty.card"].get(pe.coupon_id)
+                )
             );
-            if (couponsToFetch.length) {
-                await order.fetchCoupons([["id", "in", couponsToFetch]], couponsToFetch.length);
-                // Remove coupons that could not be loaded from the db
-                // TODO JCB: The following commented code doesn't seem to be necessary. Code activated coupons will always come from the backend.
-                // this.uiState.codeActivatedCoupons = this.uiState.codeActivatedCoupons.filter(
-                //     (coupon) => this.pos.couponCache[coupon.id]
-                // );
-                order.uiState.couponPointChanges = Object.fromEntries(
-                    Object.entries(order.uiState.couponPointChanges).filter(([k, pe]) =>
-                        this.models["loyalty.card"].get(pe.coupon_id)
-                    )
-                );
-            }
         });
     },
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
@@ -522,7 +504,7 @@ patch(PosStore.prototype, {
             const points = order._getRealCouponPoints(couponProgram.coupon_id);
             const hasLine = order.lines.filter((line) => !line.is_reward_line).length > 0;
             for (const reward of program.reward_ids.filter(
-                (reward) => reward.reward_type == "product" && reward.reward_product_ids.length > 0
+                (reward) => reward.reward_type == "product"
             )) {
                 if (points < reward.required_points) {
                     continue;
@@ -563,12 +545,9 @@ patch(PosStore.prototype, {
 
         this.partnerId2CouponIds = {};
 
-        this.computeDiscountProductIdsForAllRewards(this.models["product.product"].getAll());
-
-        this.models["product.product"].addEventListener(
-            "create",
-            this.computeDiscountProductIdsForAllRewards.bind(this)
-        );
+        for (const reward of this.models["loyalty.reward"].getAll()) {
+            this.compute_discount_product_ids(reward, this.models["product.product"].getAll());
+        }
 
         for (const program of this.models["loyalty.program"].getAll()) {
             if (program.date_to) {
@@ -582,11 +561,25 @@ patch(PosStore.prototype, {
         for (const rule of this.models["loyalty.rule"].getAll()) {
             rule.validProductIds = new Set(rule.raw.valid_product_ids);
         }
+
+        this.models["loyalty.card"].addEventListener("create", (records) => {
+            this.computePartnerCouponIds(records);
+        });
+        this.computePartnerCouponIds();
     },
 
-    computeDiscountProductIdsForAllRewards(products) {
-        for (const reward of this.models["loyalty.reward"].getAll()) {
-            this.compute_discount_product_ids(reward, products);
+    computePartnerCouponIds(loyaltyCards = null) {
+        const cards = loyaltyCards || this.models["loyalty.card"].getAll();
+        for (const card of cards) {
+            if (!card.partner_id || card.id < 0) {
+                continue;
+            }
+
+            if (!this.partnerId2CouponIds[card.partner_id.id]) {
+                this.partnerId2CouponIds[card.partner_id.id] = new Set();
+            }
+
+            this.partnerId2CouponIds[card.partner_id.id].add(card.id);
         }
     },
 
@@ -635,20 +628,12 @@ patch(PosStore.prototype, {
      * @param {int} limit Default to 1
      */
     async fetchCoupons(domain, limit = 1) {
-        const result = await this.data.searchRead(
+        return await this.data.searchRead(
             "loyalty.card",
             domain,
             ["id", "points", "code", "partner_id", "program_id", "expiration_date"],
             { limit }
         );
-        const couponList = [];
-        for (const coupon of result) {
-            this.partnerId2CouponIds[coupon.partner_id] =
-                this.partnerId2CouponIds[coupon.partner_id] || new Set();
-            this.partnerId2CouponIds[coupon.partner_id].add(coupon.id);
-            couponList.push(coupon);
-        }
-        return couponList;
     },
     /**
      * Fetches a loyalty card for the given program and partner, put in cache afterwards

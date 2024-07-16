@@ -488,3 +488,24 @@ registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsActive"
             PosLoyalty.finalizeOrder("Cash", "100"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("CustomerLoyaltyPointsDisplayed", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.clickDisplayedProduct("product_a"),
+            ProductScreen.selectedOrderlineHas("product_a", "1.00", "100.00"),
+
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("John Doe"),
+
+            PosLoyalty.orderTotalIs("100.00"),
+            PosLoyalty.pointsAwardedAre("100"),
+            PosLoyalty.finalizeOrder("Cash", "100.00"),
+
+            PosLoyalty.checkPartnerPoints("John Doe", "100.00"),
+        ].flat(),
+});
