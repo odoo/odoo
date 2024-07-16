@@ -524,17 +524,7 @@ class Channel(models.Model):
                             ],
                         },
                     )
-                    .add(
-                        members,
-                        fields={
-                            "id": True,
-                            "channel": {},
-                            "persona": {
-                                "partner": {"id": True, "name": True, "im_status": True},
-                                "guest": {"id": True, "name": True, "im_status": True},
-                            },
-                        },
-                    )
+                    .add(members, fields={"channel": [], "persona": ["name", "im_status"]})
                     .get_result(),
                 )
             )
@@ -904,21 +894,24 @@ class Channel(models.Model):
 
     def _channel_basic_info(self):
         self.ensure_one()
-        return {
-            'avatarCacheKey': self.avatar_cache_key,
-            'channel_type': self.channel_type,
-            'memberCount': self.member_count,
-            'id': self.id,
-            'name': self.name,
-            'defaultDisplayMode': self.default_display_mode,
-            'description': self.description,
-            'uuid': self.uuid,
-            'group_based_subscription': bool(self.group_ids),
-            'create_uid': self.create_uid.id,
-            'authorizedGroupFullName': self.group_public_id.full_name,
-            'allow_public_upload': self.allow_public_upload,
-            'last_interest_dt': fields.Datetime.to_string(self.last_interest_dt),
-        }
+        data = self._read_format(
+            [
+                "allow_public_upload",
+                "channel_type",
+                "create_uid",
+                "description",
+                "last_interest_dt",
+                "name",
+                "uuid",
+            ],
+            load=False,
+        )[0]
+        data["authorizedGroupFullName"] = self.group_public_id.full_name
+        data["avatarCacheKey"] = self.avatar_cache_key
+        data["defaultDisplayMode"] = self.default_display_mode
+        data["group_based_subscription"] = bool(self.group_ids)
+        data["memberCount"] = self.member_count
+        return data
 
     def _to_store(self, store: Store):
         """Adds channel data to the given store."""
@@ -994,17 +987,7 @@ class Channel(models.Model):
                 store.add(members_by_channel[channel] - member)
             # add RTC sessions info
             invited_members = invited_members_by_channel[channel]
-            store.add(
-                invited_members,
-                fields={
-                    "id": True,
-                    "channel": {},
-                    "persona": {
-                        "partner": {"id": True, "name": True, "im_status": True},
-                        "guest": {"id": True, "name": True, "im_status": True},
-                    },
-                },
-            )
+            store.add(invited_members, fields={"channel": [], "persona": ["name", "im_status"]})
             info["invitedMembers"] = [("ADD", [{"id": member.id} for member in invited_members])]
             info["rtcSessions"] = [
                 # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable

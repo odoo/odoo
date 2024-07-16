@@ -68,12 +68,12 @@ class DiscussChannel(models.Model):
                 'id': channel.country_id.id,
                 'name': channel.country_id.name,
             } if channel.country_id else False
-            if operator := channel.livechat_operator_id:
-                store.add(
-                    operator,
-                    fields={"id": True, "user_livechat_username": True, "write_date": True},
+            if channel.channel_type == "livechat":
+                operator = channel.livechat_operator_id
+                store.add(operator, fields=["user_livechat_username", "write_date"])
+                channel_info["operator"] = (
+                    {"id": operator.id, "type": "partner"} if operator else False
                 )
-                channel_info["operator"] = {"id": operator.id, "type": "partner"}
             if channel.channel_type == "livechat" and channel.livechat_channel_id and self.env.user._is_internal():
                 channel_info['livechatChannel'] = {"id": channel.livechat_channel_id.id, "name": channel.livechat_channel_id.name}
             store.add("discuss.channel", channel_info)

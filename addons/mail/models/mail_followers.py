@@ -515,16 +515,9 @@ GROUP BY fol.id%s%s""" % (
     def _to_store(self, store: Store):
         store.add(self.partner_id)
         for follower in self:
-            store.add(
-                "mail.followers",
-                {
-                    "display_name": follower.display_name,
-                    "email": follower.email,
-                    "id": follower.id,
-                    "is_active": follower.is_active,
-                    "name": follower.name,
-                    "partner_id": follower.partner_id.id,
-                    "partner": {"id": follower.partner_id.id, "type": "partner"},
-                    "thread": {"id": follower.res_id, "model": follower.res_model},
-                },
-        )
+            data = follower._read_format(
+                ["display_name", "email", "is_active", "name", "partner_id"], load=False
+            )[0]
+            data["partner"] = {"id": follower.partner_id.id, "type": "partner"}
+            data["thread"] = {"id": follower.res_id, "model": follower.res_model}
+            store.add("mail.followers", data)

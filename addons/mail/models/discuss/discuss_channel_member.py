@@ -234,65 +234,60 @@ class ChannelMember(models.Model):
         members.write({"mute_until_dt": False})
         members._notify_mute()
 
-    def _to_store(self, store: Store, fields=None, extra_fields=None):
-        if not fields:
+    def _to_store(self, store: Store, /, *, fields=None, extra_fields=None):
+        if fields is None:
             fields = {
-                "channel": {},
+                "channel": [],
                 "create_date": True,
                 "fetched_message_id": True,
-                "id": True,
-                "persona": {},
+                "persona": None,
                 "seen_message_id": True,
                 "last_seen_dt": True,
             }
         if extra_fields:
             fields.update(extra_fields)
-        if "message_unread_counter" in fields:
-            bus_last_id = fields.get("message_unread_counter_bus_id")
-            if bus_last_id is None:
-                # sudo: bus.bus: reading non-sensitive last id
-                bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
+        bus_last_id = fields.pop("message_unread_counter_bus_id", None)
+        if "message_unread_counter" in fields and bus_last_id is None:
+            # sudo: bus.bus: reading non-sensitive last id
+            bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         for member in self:
-            data = {}
-            if 'id' in fields:
-                data['id'] = member.id
+            data = member._read_format(
+                [
+                    field
+                    for field in fields
+                    if field not in ["channel", "fetched_message_id", "seen_message_id", "persona"]
+                ],
+                load=False,
+            )[0]
             if 'channel' in fields:
                 data["thread"] = {"id": member.channel_id.id, "model": "discuss.channel"}
-            if 'create_date' in fields:
-                data['create_date'] = odoo.fields.Datetime.to_string(member.create_date)
-            if 'last_seen_dt' in fields:
-                data['last_seen_dt'] = odoo.fields.Datetime.to_string(member.last_seen_dt)
-            if 'persona' in fields:
+            if "persona" in fields:
                 if member.partner_id:
-                    # sudo: res.partner - calling _partner_data_to_store related to a member is considered acceptable
-                    member.sudo()._partner_data_to_store(
-                        store, fields=fields.get("persona", {}).get("partner")
+                    # sudo: res.partner - reading partner related to a member is considered acceptable
+                    store.add(
+                        member.partner_id.sudo(),
+                        fields=member._get_store_partner_fields(fields["persona"]),
                     )
                     data["persona"] = {"id": member.partner_id.id, "type": "partner"}
                 if member.guest_id:
                     # sudo: mail.guest - reading guest related to a member is considered acceptable
-                    store.add(member.guest_id.sudo(), fields=fields.get("persona", {}).get("guest"))
+                    store.add(member.guest_id.sudo(), fields=fields["persona"])
                     data["persona"] = {"id": member.guest_id.id, "type": "guest"}
-            if 'custom_notifications' in fields:
-                data['custom_notifications'] = member.custom_notifications
-            if 'mute_until_dt' in fields:
-                data['mute_until_dt'] = member.mute_until_dt
-            if 'fetched_message_id' in fields:
-                data['fetched_message_id'] = {'id': member.fetched_message_id.id} if member.fetched_message_id else False
-            if 'seen_message_id' in fields:
-                data['seen_message_id'] = {'id': member.seen_message_id.id} if member.seen_message_id else False
-            if 'new_message_separator' in fields:
-                data['new_message_separator'] = member.new_message_separator
+            if "fetched_message_id" in fields:
+                data["fetched_message_id"] = (
+                    {"id": member.fetched_message_id.id} if member.fetched_message_id else False
+                )
+            if "seen_message_id" in fields:
+                data["seen_message_id"] = (
+                    {"id": member.seen_message_id.id} if member.seen_message_id else False
+                )
             if "message_unread_counter" in fields:
-                data["message_unread_counter"] = member.message_unread_counter
                 data["message_unread_counter_bus_id"] = bus_last_id
-            if fields.get("last_interest_dt"):
-                data['last_interest_dt'] = odoo.fields.Datetime.to_string(member.last_interest_dt)
             store.add("discuss.channel.member", data)
 
-    def _partner_data_to_store(self, store: Store, fields=None):
+    def _get_store_partner_fields(self, fields):
         self.ensure_one()
-        store.add(self.partner_id, fields=fields)
+        return fields
 
     def _channel_fold(self, state, state_count):
         """Update the fold_state of the given member. The change will be
@@ -475,17 +470,7 @@ class ChannelMember(models.Model):
                         "invitedMembers": [("ADD", [{"id": member.id} for member in members])],
                     },
                 )
-                .add(
-                    members,
-                    fields={
-                        "id": True,
-                        "channel": {},
-                        "persona": {
-                            "partner": {"id": True, "name": True, "im_status": True},
-                            "guest": {"id": True, "name": True, "im_status": True},
-                        },
-                    },
-                )
+                .add(members, fields={"channel": [], "persona": ["name", "im_status"]})
                 .get_result(),
             )
         return members
@@ -530,19 +515,13 @@ class ChannelMember(models.Model):
         target = self.partner_id or self.guest_id
         if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
             target = self.channel_id
-        store = Store(
-            self,
-            fields={
-                "id": True,
-                "channel": {},
-                "persona": {
-                    "partner": {"id": True, "name": True},
-                    "guest": {"id": True, "name": True},
-                },
-                "seen_message_id": True,
-            },
+        self.env["bus.bus"]._sendone(
+            target,
+            "mail.record/insert",
+            Store(
+                self, fields={"channel": [], "persona": ["name"], "seen_message_id": True}
+            ).get_result(),
         )
-        self.env["bus.bus"]._sendone(target, "mail.record/insert", store.get_result())
 
     def _set_new_message_separator(self, message_id, sync=False):
         """
@@ -557,18 +536,18 @@ class ChannelMember(models.Model):
             return
         self.new_message_separator = message_id
         target = self.partner_id or self.guest_id
-        store = Store(
-            self,
-            fields={
-                "id": True,
-                "channel": {},
-                "message_unread_counter": True,
-                "new_message_separator": True,
-                "persona": {
-                    "partner": {"id": True, "name": True},
-                    "guest": {"id": True, "name": True},
+        self.env["bus.bus"]._sendone(
+            target,
+            "mail.record/insert",
+            Store(
+                self,
+                fields={
+                    "channel": [],
+                    "message_unread_counter": True,
+                    "new_message_separator": True,
+                    "persona": ["name"],
                 },
-            },
+            )
+            .add("discuss.channel.member", {"id": self.id, "syncUnread": sync})
+            .get_result(),
         )
-        store.add("discuss.channel.member", {"id": self.id, "syncUnread": sync})
-        self.env["bus.bus"]._sendone(target, "mail.record/insert", store.get_result())

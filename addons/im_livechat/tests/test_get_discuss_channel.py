@@ -124,6 +124,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "name": "Roger",
                     "notification_preference": "email",
                     "userId": test_user.id,
+                    "user_livechat_username": False,
                     "write_date": fields.Datetime.to_string(test_user.write_date),
                 },
                 {

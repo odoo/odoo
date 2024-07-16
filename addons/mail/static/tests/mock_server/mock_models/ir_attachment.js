@@ -1,4 +1,4 @@
-import { getKwArgs, webModels } from "@web/../tests/web_test_helpers";
+import { getKwArgs, makeKwArgs, webModels } from "@web/../tests/web_test_helpers";
 
 export class IrAttachment extends webModels.IrAttachment {
     /**
@@ -35,24 +35,24 @@ export class IrAttachment extends webModels.IrAttachment {
         const DiscussVoiceMetadata = this.env["discuss.voice.metadata"];
 
         for (const attachment of this.browse(ids)) {
-            const res = {
-                checksum: attachment.checksum,
-                create_date: attachment.create_date,
+            const [data] = this.read(
+                attachment.id,
+                ["checksum", "create_date", "mimetype", "name"],
+                makeKwArgs({ load: false })
+            );
+            Object.assign(data, {
                 filename: attachment.name,
-                id: attachment.id,
-                mimetype: attachment.mimetype,
-                name: attachment.name,
                 size: attachment.file_size,
                 thread:
                     attachment.res_id && attachment.model !== "mail.compose.message"
                         ? { id: attachment.res_id, model: attachment.res_model }
                         : false,
-            };
+            });
             const voice = DiscussVoiceMetadata._filter([["attachment_id", "=", attachment.id]])[0];
             if (voice) {
-                res.voice = true;
+                data.voice = true;
             }
-            store.add("ir.attachment", res);
+            store.add("ir.attachment", data);
         }
     }
 }

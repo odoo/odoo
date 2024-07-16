@@ -178,15 +178,13 @@ test("should display invitations", async () => {
         "mail.record/insert",
         new mailDataHelpers.Store("discuss.channel.rtc.session", {
             id: sessionId,
-            channelMember: {
-                id: memberId,
-                channel_id: channelId,
-                persona: {
-                    id: partnerId,
-                    type: "partner",
-                },
-            },
+            channelMember: { id: memberId },
         })
+            .add("discuss.channel.member", {
+                id: memberId,
+                persona: { id: partnerId, type: "partner" },
+                thread: { id: channelId, model: "discuss.channel" },
+            })
             .add("discuss.channel", {
                 id: channelId,
                 rtcInvitingSession: { id: sessionId },

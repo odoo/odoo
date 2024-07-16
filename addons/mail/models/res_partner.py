@@ -213,22 +213,20 @@ class Partner(models.Model):
     # ------------------------------------------------------------
 
     def _to_store(self, store: Store, /, *, fields=None):
-        if not fields:
-            fields = {'id': True, 'name': True, 'email': True, 'active': True, 'im_status': True, 'is_company': True, 'user': {}, "write_date": True}
+        if fields is None:
+            fields = ["active", "email", "im_status", "is_company", "name", "user", "write_date"]
+        if not self.env.user._is_internal() and "email" in fields:
+            fields.remove("email")
         for partner in self:
-            data = {"id": partner.id}
-            if 'name' in fields:
-                data['name'] = partner.name
-            if "email" in fields and self.env.user._is_internal():
-                data["email"] = partner.email
-            if 'active' in fields:
-                data['active'] = partner.active
-            if 'im_status' in fields:
-                data['im_status'] = partner.im_status
-            if 'is_company' in fields:
-                data['is_company'] = partner.is_company
-            if "write_date" in fields:
-                data["write_date"] = odoo.fields.Datetime.to_string(partner.write_date)
+            data = partner._read_format(
+                [field for field in fields if field not in ["country", "display_name", "user"]],
+                load=False,
+            )[0]
+            if "country" in fields:
+                c = partner.country_id
+                data["country"] = {"code": c.code, "id": c.id, "name": c.name} if c else False
+            if "display_name" in fields:
+                data["displayName"] = partner.display_name
             if 'user' in fields:
                 users = partner.with_context(active_test=False).user_ids
                 internal_users = users - users.filtered('share')

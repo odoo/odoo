@@ -1,4 +1,4 @@
-import { models } from "@web/../tests/web_test_helpers";
+import { makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class MailNotification extends models.ServerModel {
     _name = "mail.notification";
@@ -36,21 +36,20 @@ export class MailNotification extends models.ServerModel {
 
         const notifications = this._filter([["id", "in", ids]]);
         for (const notification of notifications) {
-            const partner = ResPartner._filter([["id", "=", notification.res_partner_id]])[0];
-            if (partner) {
-                store.add("res.partner", {
-                    displayName: partner.display_name,
-                    id: partner.id,
-                });
-            }
-            store.add("mail.notification", {
-                failure_type: notification.failure_type,
-                id: notification.id,
-                message: { id: notification.mail_message_id },
-                notification_status: notification.notification_status,
-                notification_type: notification.notification_type,
-                persona: partner ? { id: partner.id, type: "partner" } : false,
-            });
+            const [data] = this.read(
+                notification.id,
+                ["failure_type", "notification_status", "notification_type"],
+                makeKwArgs({ load: false })
+            );
+            store.add(
+                ResPartner.browse(notification.res_partner_id),
+                makeKwArgs({ fields: ["display_name"] })
+            );
+            data.message = { id: notification.mail_message_id };
+            data.persona = notification.res_partner_id
+                ? { id: notification.res_partner_id, type: "partner" }
+                : false;
+            store.add("mail.notification", data);
         }
     }
 }
