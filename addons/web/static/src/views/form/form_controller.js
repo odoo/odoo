@@ -312,6 +312,20 @@ export class FormController extends Component {
         });
     }
 
+    get cogMenuProps() {
+        return {
+            getActiveIds: () => (this.model.root.isNew ? [] : [this.model.root.resId]),
+            context: this.props.context,
+            items: this.props.info.actionMenus ? this.actionMenuItems : {},
+            isDomainSelected: this.model.root.isDomainSelected,
+            resModel: this.model.root.resModel,
+            domain: this.props.domain,
+            onActionExecuted: () =>
+                this.model.load({ resId: this.model.root.resId, resIds: this.model.root.resIds }),
+            shouldExecuteAction: this.shouldExecuteAction.bind(this),
+        };
+    }
+
     get modelParams() {
         let mode = this.props.mode || "edit";
         if (!this.canEdit && this.props.resId) {

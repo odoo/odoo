@@ -58,14 +58,7 @@
                             />
                         </t>
                         <t t-if="props.info.actionMenus">
-                            <ActionMenus
-                                getActiveIds="() => model.root.selection.map((r) => r.resId)"
-                                context="props.context"
-                                domain="props.domain"
-                                items="actionMenuItems"
-                                isDomainSelected="model.root.isDomainSelected"
-                                resModel="model.root.resModel"
-                                onActionExecuted="() => model.load()"/>
+                            <ActionMenus t-props="actionMenuProps"/>
                         </t>
                     </div>
                 </t>
