@@ -377,45 +377,35 @@ class IoTboxHomepage(Home):
     def check_version(self):
         return helpers.get_version()
 
-    @http.route('/hw_proxy/perform_flashing_create_partition', type='http', auth='none')
-    def perform_flashing_create_partition(self):
+    @http.route('/hw_proxy/perform_flashing/<string:method>', type='http', auth='none')
+    def perform_flashing_create_partition(self, method):
+        if method not in ['create_partition', 'download_raspios', 'copy_raspios']:
+            return Response('Invalid method', status=400)
+        known_error_messages = [
+            'Error_Card_Size',
+            'Error_Upgrade_Already_Started',
+            'Error_Raspios_Download',
+            'Error_Iotbox_Download',
+        ]
         try:
-            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; create_partition']).decode().split('\n')[-2]
-            if response in ['Error_Card_Size', 'Error_Upgrade_Already_Started']:
-                raise Exception(response)
-            return Response('success', status=200)
-        except subprocess.CalledProcessError as e:
-            raise Exception(e.output)
-        except Exception as e:
-            _logger.error('A error encountered : %s ' % e)
-            return Response(str(e), status=500)
-
-    @http.route('/hw_proxy/perform_flashing_download_raspios', type='http', auth='none')
-    def perform_flashing_download_raspios(self):
-        try:
-            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; download_raspios']).decode().split('\n')[-2]
-            if response == 'Error_Raspios_Download':
-                raise Exception(response)
-            return Response('success', status=200)
-        except subprocess.CalledProcessError as e:
-            raise Exception(e.output)
-        except Exception as e:
-            self.clean_partition()
-            _logger.error('A error encountered : %s ' % e)
-            return Response(str(e), status=500)
-
-    @http.route('/hw_proxy/perform_flashing_copy_raspios', type='http', auth='none')
-    def perform_flashing_copy_raspios(self):
-        try:
-            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; copy_raspios']).decode().split('\n')[-2]
-            if response == 'Error_Iotbox_Download':
+            response = subprocess.run(
+                [
+                    'sudo',
+                    'bash',
+                    '-c',
+                    '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; %s' % method
+                ],
+                check=True,
+                stdout=subprocess.PIPE
+            ).stdout.decode('utf-8').split('\n')[-2]
+            if response in known_error_messages:
                 raise Exception(response)
             return Response('success', status=200)
         except subprocess.CalledProcessError as e:
             raise Exception(e.output)
         except Exception as e:
             self.clean_partition()
-            _logger.error('A error encountered : %s ' % e)
+            _logger.exception('An error occurred while flashing')
             return Response(str(e), status=500)
 
     @http.route('/iot_restart_odoo_or_reboot', type='json', auth='none', cors='*', csrf=False)

@@ -30,27 +30,26 @@
                     $('.message-title').text('IoTBox perform a self flashing it take a lot of time (~30min).');
                     $('.message-status').text('Prepare space for IoTBox.');
                     try {
-                        await $.ajax({url: '/hw_proxy/perform_flashing_create_partition/'}).promise();
-                        $('.message-status').text('Prepare new boot partition.');
-                        await $.ajax({url: '/hw_proxy/perform_flashing_download_raspios/'}).promise();
-                        $('.message-status').text('Download file for new boot partition.');
-                        await $.ajax({url: '/hw_proxy/perform_flashing_copy_raspios/'}).promise();
-                        $('.message-status').text('Prepare to restart and installation of the new version of the IoT Box.');
+                        $('.message-status').text('Preparing the new boot partition.');
+                        await $.ajax({url: '/hw_proxy/perform_flashing/create_partition'}).promise();
+                        $('.message-status').text('Downloading files for the new boot partition.');
+                        await $.ajax({url: '/hw_proxy/perform_flashing/download_raspios'}).promise();
+                        $('.message-status').text('Preparing to restart and install the new version of the IoT Box.');
+                        await $.ajax({url: '/hw_proxy/perform_flashing/copy_raspios'}).promise();
                         setTimeout(function() {
-                        $('.message-status').text('The auto flash is almost finished - the page will be automatically reloaded');
-                        setInterval(function() {
-                            $.ajax({
-                                url: '/hw_proxy/get_version',
-                                timeout: 4000,
-                            }).done(function(version) {
-                                if (version == {{ flashToVersion }}) {
-                                    window.location = '/';
-                                }
-                            });
-                        } , 2000);
-                    }, 240000);
-                    }
-                    catch(error) {
+                            $('.message-status').text('Auto flash is almost finished - the page will automatically reload.');
+                            setInterval(function() {
+                                $.ajax({
+                                    url: '/hw_proxy/get_version',
+                                    timeout: 4000,
+                                }).done(function(version) {
+                                    if (version == {{ flashToVersion }}) {
+                                        window.location = '/';
+                                    }
+                                });
+                            } , 2000);
+                        }, 240000);
+                    } catch(error) {
                         $('.loading-block').addClass('o_hide');
                         $('.error-message').text(error.responseText);
                     }
