@@ -4,6 +4,7 @@
     margin-right: $o-mail-ChatHub-bubblesMargin + $o-mail-ChatHub-bubblesStart;
     margin-bottom: $o-mail-ChatHub-bubblesMargin;
     margin-left: $o-mail-ChatHub-bubblesMargin;
+    z-index:  $o-mail-NavigableList-zIndex - 1;
 }
 
 .o-mail-ChatHub-bubbleBtn {
@@ -28,7 +29,7 @@
 
 .o-mail-ChatHub-hiddenBtnCounter {
     padding: 4px 8px;
-    z-index: 7;
+    z-index: $o-mail-NavigableList-zIndex - 1;
     right: 4px;
 }
 
