@@ -179,6 +179,10 @@ class Message(models.Model):
                 raise UserError(_("You cannot remove parts of the audit trail. Archive the record instead."))
 
     def write(self, vals):
-        if vals.keys() & {'res_id', 'res_model', 'subject', 'message_type', 'subtype_id'}:
+        if (
+            vals.keys() & {'res_id', 'res_model', 'message_type', 'subtype_id'}
+            or ('subject' in vals and any(self.mapped('subject')))
+            or ('body' in vals and any(self.mapped('body')))
+        ):
             self._except_audit_log()
         return super().write(vals)
