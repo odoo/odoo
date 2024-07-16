@@ -10,6 +10,7 @@ export class Store extends Record {
     [STORE_SYM] = true;
     /** @type {Map<string, Record>} */
     recordByLocalId;
+    localStorage;
     storeReady = false;
     /**
      * @param {string} localId

@@ -11,6 +11,8 @@ export class ModelInternal {
     fieldsMany = new Map();
     /** @type {Map<string, boolean>} */
     fieldsHtml = new Map();
+    /** @type {Map<string, boolean>} */
+    fieldsLocalStorage = new Map();
     /** @type {Map<string, string>} */
     fieldsTargetModel = new Map();
     /** @type {Map<string, () => any>} */
@@ -88,6 +90,10 @@ export class ModelInternal {
                 }
                 case "type": {
                     this.fieldsType.set(fieldName, value);
+                    break;
+                }
+                case "localStorage": {
+                    this.fieldsLocalStorage.set(fieldName, value);
                     break;
                 }
             }

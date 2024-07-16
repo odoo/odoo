@@ -204,6 +204,7 @@ export class Record {
             }
             Model._rawStore.recordByLocalId.set(record.localId, recordProxy);
             for (const fieldName of record.Model._.fields.keys()) {
+                record._.requestSyncLocalStorage?.(record, fieldName, { operation: "read" });
                 record._.requestCompute?.(record, fieldName);
                 record._.requestSort?.(record, fieldName);
             }
@@ -274,6 +275,7 @@ export class Record {
      *   behaviour of OWL reactive.
      * @param {boolean} [param1.html] if set, the field value contains html value.
      *   Useful to automatically markup when the insert is trusted.
+     * @param {boolean} [param1.localStorage] if set, the field value is stored in browser localStorage.
      * @param {(this: Record) => void} [param1.onUpdate] function that is called when the field value is updated.
      *   This is called at least once at record creation.
      * @param {(this: Record, Object, Object) => number} [param1.sort] if defined, this field is automatically sorted

@@ -1,13 +1,15 @@
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { Store } from "./store";
 import { STORE_SYM, isFieldDefinition, isMany, isRelation, modelRegistry } from "./misc";
+import { loadIdbAssets, LocalStorage } from "./local_storage";
 import { Record } from "./record";
 import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
 import { RecordInternal } from "./record_internal";
+import { browser } from "@web/core/browser/browser";
 
 /** @returns {import("models").Store} */
-export function makeStore(env, { localRegistry } = {}) {
+export async function makeStore(env, { localRegistry } = {}) {
     const recordByLocalId = reactive(new Map());
     // fake store for now, until it becomes a model
     /** @type {import("models").Store} */
@@ -201,6 +203,27 @@ export function makeStore(env, { localRegistry } = {}) {
         Model.store = store._proxy;
         store._proxy[Model.name] = Model;
     }
+    await loadIdbAssets();
+    store.localStorage = new LocalStorage(env);
+    browser.addEventListener(
+        "beforeunload",
+        function () {
+            for (const Model of Object.values(Models)) {
+                if (!Model._.fieldsLocalStorage.size) {
+                    continue;
+                }
+                for (const record of Object.values(Model.records)) {
+                    for (const fieldName of Model._.fieldsLocalStorage.keys()) {
+                        if (!record.exists()) {
+                            record._.requestSyncLocalStorage(record, fieldName, { operation: "delete" });
+                            continue;
+                        }
+                        record._.requestSyncLocalStorage(record, fieldName, { operation: "write" });
+                    }
+                }
+            }
+        }.bind(this)
+    );
     Object.assign(store, { Models, storeReady: true });
     return store._proxy;
 }

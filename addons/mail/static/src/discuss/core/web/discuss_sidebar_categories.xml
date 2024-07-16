@@ -61,6 +61,7 @@
                 </div>
                 <span class="mx-2 text-truncate" t-att-class="thread.selfMember?.message_unread_counter > 0 and !thread.mute_until_dt ? 'o-item-unread fw-bolder' : 'text-muted'">
                     <t t-esc="thread.displayName"/>
+                    <span t-esc="thread.hey" t-on-click="()=>thread.hey=thread.hey+1"/>
                 </span>
             </button>
             <div class="flex-grow-1"/>
