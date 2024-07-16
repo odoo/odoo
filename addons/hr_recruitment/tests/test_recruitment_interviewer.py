@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import new_test_user
 
 from odoo.addons.mail.tests.common import MailCommon
@@ -46,8 +46,7 @@ class TestRecruitmentInterviewer(MailCommon):
         self.assertFalse(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be removed from interviewer")
 
         applicant = self.env['hr.applicant'].create({
-            'name': 'toto',
-            'partner_name': 'toto',
+            'candidate_id': self.env['hr.candidate'].create({'partner_name': 'toto'}).id,
             'job_id': self.job.id,
             'interviewer_ids': self.simple_user.ids,
         })
@@ -71,17 +70,17 @@ class TestRecruitmentInterviewer(MailCommon):
         self.assertFalse(interviewer_group.id in self.simple_user.groups_id.ids, "Simple User should be removed from interviewer")
 
     def test_interviewer_access_rights(self):
+        candidate = self.env['hr.candidate'].create({'partner_name': 'toto'})
+
         applicant = self.env['hr.applicant'].create({
-            'name': 'toto',
-            'partner_name': 'toto',
+            'candidate_id': candidate.id,
             'job_id': self.job.id,
         })
         with self.assertRaises(AccessError):
             applicant.with_user(self.interviewer_user).read()
 
         applicant = self.env['hr.applicant'].create({
-            'name': 'toto',
-            'partner_name': 'toto',
+            'candidate_id': candidate.id,
             'job_id': self.job.id,
             'interviewer_ids': self.interviewer_user.ids,
         })
@@ -89,8 +88,7 @@ class TestRecruitmentInterviewer(MailCommon):
 
         self.job.interviewer_ids = self.interviewer_user.ids
         applicant = self.env['hr.applicant'].create({
-            'name': 'toto',
-            'partner_name': 'toto',
+            'candidate_id': candidate.id,
             'job_id': self.job.id,
         })
         applicant.with_user(self.interviewer_user).read()
@@ -99,5 +97,5 @@ class TestRecruitmentInterviewer(MailCommon):
         applicant.with_user(self.interviewer_user).interviewer_ids = self.simple_user.ids
         self.assertEqual(self.simple_user, applicant.interviewer_ids)
 
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             applicant.with_user(self.interviewer_user).create_employee_from_applicant()

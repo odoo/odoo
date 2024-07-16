@@ -1414,7 +1414,7 @@ class MailThread(models.AbstractModel):
             data = custom_values.copy()
         model_fields = self.fields_get()
         name_field = self._rec_name or 'name'
-        if name_field in model_fields and not data.get('name'):
+        if name_field in model_fields and not data.get(name_field):
             data[name_field] = msg_dict.get('subject', '')
 
         primary_email = self._mail_get_primary_email_field()

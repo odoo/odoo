@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from random import randint
+
 from odoo import fields, models
 
-from random import randint
 
 class ApplicantCategory(models.Model):
     _name = "hr.applicant.category"

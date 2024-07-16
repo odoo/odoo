@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="hr_applicant_skill_view_form" model="ir.ui.view">
-        <field name="name">hr.applicant.skill.view.form</field>
-        <field name="model">hr.applicant.skill</field>
+        <field name="name">hr.candidate.skill.view.form</field>
+        <field name="model">hr.candidate.skill</field>
         <field name="arch" type="xml">
             <form string="Skills" class="o_hr_skills_dialog_form">
                 <sheet>
                     <group>
                         <group>
-                            <field name="applicant_id" invisible="1"/>
+                            <field name="candidate_id" invisible="1"/>
                             <field name="skill_type_id" widget="radio" />
                         </group>
                         <group>
