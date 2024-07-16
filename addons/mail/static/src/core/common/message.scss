@@ -93,9 +93,24 @@
     // warning table. If detected, we prevent the issue by removing flotation.
     table[align="left"][width="100%"] {
         float: none;
+        &:last-of-type:has(~ .o-mail-Message-edited) {
+            display: inline-block;
+        }
+        ul:last-child, ol:last-child {
+            margin-bottom: 0 !important;
+        }
+        p:last-child {
+            margin-bottom: 0 !important;
+
+        }
+        pre {
+            padding: 0;
+            margin-bottom: 0;
+            background-color: transparent;
+            white-space: pre-wrap;
+        }
     }
 }
-
 .o-mail-Message-bubble {
     --border-opacity: 0.15;
 

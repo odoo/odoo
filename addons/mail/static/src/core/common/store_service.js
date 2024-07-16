@@ -491,6 +491,12 @@ export class Store extends BaseStore {
 
     /**
      * Get the parameters to pass to the message post route.
+     *
+     * @param {Object} options
+     * @param {Array} options.attachments
+     * @param {String} options.body
+     * @param {Boolean} options.isNote
+     * @param {import("models").Thread} options.thread
      */
     async getMessagePostParams({ body, postData, thread }) {
         const { attachments, cannedResponseIds, isNote, mentionedChannels, mentionedPartners } =
@@ -526,8 +532,11 @@ export class Store extends BaseStore {
         if (partner_ids.length) {
             Object.assign(postData, { partner_ids });
         }
-        if (thread.model === "discuss.channel" && validMentions?.specialMentions.length) {
-            postData.special_mentions = validMentions.specialMentions;
+        if (thread.model === "discuss.channel") {
+            if (validMentions?.specialMentions.length) {
+                postData.special_mentions = validMentions.specialMentions;
+            }
+            postData.body = `<odoo-markdown>${postData.body}</odoo-markdown>`;
         }
         const params = {
             context: {
