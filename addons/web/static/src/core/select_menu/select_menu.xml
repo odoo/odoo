@@ -11,7 +11,7 @@
                 onStateChanged.bind="onStateChanged"
                 navigationOptions="{ virtualFocus: this.props.searchable }"
             >
-                <button t-att-class="`o_select_menu_toggler btn w-100 bg-light ${props.togglerClass || ''} ${canDeselect ? 'o_can_deselect' : ''}`">
+                <button t-att-class="`o_select_menu_toggler btn btn-light w-100 bg-light ${props.togglerClass || ''} ${canDeselect ? 'o_can_deselect' : ''}`">
                     <t t-if="props.multiSelect">
                         <div class="text-wrap text-start">
                             <TagsList tags="multiSelectChoices"/>
