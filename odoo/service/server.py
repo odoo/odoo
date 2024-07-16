@@ -496,14 +496,13 @@ class ThreadedServer(CommonServer):
             t.start()
             _logger.debug("cron%d started!" % i)
 
-    def http_thread(self):
-        self.httpd = ThreadedWSGIServerReloadable(self.interface, self.port, self.app)
-        self.httpd.serve_forever()
-
     def http_spawn(self):
-        t = threading.Thread(target=self.http_thread, name="odoo.service.httpd")
-        t.daemon = True
-        t.start()
+        self.httpd = ThreadedWSGIServerReloadable(self.interface, self.port, self.app)
+        threading.Thread(
+            target=self.httpd.serve_forever,
+            name="odoo.service.httpd",
+            daemon=True,
+        ).start()
 
     def start(self, stop=False):
         _logger.debug("Setting signal handlers")
