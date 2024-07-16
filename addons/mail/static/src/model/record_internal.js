@@ -230,6 +230,33 @@ export class RecordInternal {
         }
         this.fieldsSorting.delete(fieldName);
     }
+    async requestSyncLocalStorage(record, fieldName, { operation = "read" }) {
+        const Model = record.Model;
+        const fieldsLocalStorage = [...Model._.fieldsLocalStorage.keys()];
+        const localStorage = Model.store.localStorage;
+        if (!fieldsLocalStorage.includes(fieldName)) {
+            return;
+        }
+        switch (operation) {
+            case "write": {
+                localStorage.update(record, {
+                    [fieldName]: record[fieldName],
+                });
+                break;
+            }
+            // case "read": {
+            //     if (!localRecord) {
+            //         return;
+            //     }
+            //     record[fieldName] = localRecord[fieldName];
+            //     break;
+            // }
+            case "delete":
+                break;
+            default:
+                return;
+        }
+    }
     onUpdate(record, fieldName) {
         const Model = record.Model;
         if (!Model._.fieldsOnUpdate.get(fieldName)) {

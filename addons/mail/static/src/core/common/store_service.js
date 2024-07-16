@@ -630,8 +630,8 @@ export const storeService = {
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
      */
-    start(env, services) {
-        const store = makeStore(env);
+    async start(env, services) {
+        const store = await makeStore(env);
         store.discuss = { activeTab: "main" };
         store.insert(session.storeData);
         /**
