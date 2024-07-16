@@ -1325,7 +1325,7 @@
                                         <field name="invoice_origin" string="Source Document" force_save="1" invisible="1"/>
                                         <field name="partner_bank_id"
                                                context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
-                                               domain="[('partner_id', '=', bank_partner_id)]"
+                                               domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]"
                                                readonly="state != 'draft'"/>
                                         <field name="qr_code_method"
                                                invisible="not display_qr_code"/>
