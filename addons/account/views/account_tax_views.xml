@@ -203,7 +203,6 @@
             <field name="name">Taxes</field>
             <field name="res_model">account.tax</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="domain" eval="False"/> <!-- Force empty -->
             <field name="context">{'search_default_sale': True, 'search_default_purchase': True, 'active_test': False}</field>
             <field name="view_id" ref="view_tax_tree"/>
             <field name="help" type="html">
