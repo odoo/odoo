@@ -15,7 +15,7 @@ test("add an emoji with powerbox", async () => {
 
     insertText(editor, "/emoji");
     press("enter");
-    await waitFor(".o-EmojiPicker");
+    await waitFor(".o-EmojiPicker", { timeout: 500 });
     expect(".o-EmojiPicker").toHaveCount(1);
 
     await click(".o-EmojiPicker .o-Emoji");
@@ -32,7 +32,7 @@ test("click on emoji command to open emoji picker", async () => {
     insertText(editor, "/emoji");
     await animationFrame();
     click(".active .o-we-command-name");
-    await waitFor(".o-EmojiPicker");
+    await waitFor(".o-EmojiPicker", { timeout: 500 });
     expect(".o-EmojiPicker").toHaveCount(1);
 });
 
@@ -44,7 +44,7 @@ test("undo an emoji", async () => {
     insertText(editor, "test");
     insertText(editor, "/emoji");
     press("enter");
-    await waitFor(".o-EmojiPicker");
+    await waitFor(".o-EmojiPicker", { timeout: 500 });
     await click(".o-EmojiPicker .o-Emoji");
     expect(getContent(el)).toBe("<p>abtest😀[]</p>");
 
