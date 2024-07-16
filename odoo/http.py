@@ -140,7 +140,6 @@ import hmac
 import inspect
 import json
 import logging
-import mimetypes
 import os
 import re
 import threading
@@ -206,25 +205,6 @@ from .tools._vendor.useragents import UserAgent
 
 
 _logger = logging.getLogger(__name__)
-
-
-# =========================================================
-# Lib fixes
-# =========================================================
-
-# Add potentially missing (older ubuntu) font mime types
-mimetypes.add_type('application/font-woff', '.woff')
-mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
-mimetypes.add_type('application/x-font-ttf', '.ttf')
-mimetypes.add_type('image/webp', '.webp')
-# Add potentially wrong (detected on windows) svg mime types
-mimetypes.add_type('image/svg+xml', '.svg')
-# this one can be present on windows with the value 'text/plain' which
-# breaks loading js files from an addon's static folder
-mimetypes.add_type('text/javascript', '.js')
-
-# To remove when corrected in Babel
-babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 
 
 # =========================================================

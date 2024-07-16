@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tools.sql import make_identifier, SQL
+from .sql import make_identifier, SQL
 
 
 def _sql_from_table(alias: str, table: SQL) -> SQL:

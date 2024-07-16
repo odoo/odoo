@@ -15,7 +15,6 @@ import re
 import subprocess
 from datetime import datetime, timedelta
 
-import pytz
 from dateutil.relativedelta import relativedelta
 from lxml import etree, builder
 try:
@@ -24,16 +23,19 @@ except ImportError:
     jingtrang = None
 
 import odoo
-from . import pycompat
 from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from .translate import _
 from odoo.exceptions import ValidationError
 
+from .safe_eval import safe_eval as s_eval, pytz, time
+
 _logger = logging.getLogger(__name__)
 
-from .safe_eval import safe_eval as s_eval, pytz, time
-safe_eval = lambda expr, ctx={}: s_eval(expr, ctx, nocopy=True)
+
+def safe_eval(expr, ctx={}):
+    return s_eval(expr, ctx, nocopy=True)
+
 
 class ParseError(Exception):
     ...
