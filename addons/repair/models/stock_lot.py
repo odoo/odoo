@@ -46,7 +46,7 @@ class StockLot(models.Model):
             'context': {
                 'default_product_id': self.product_id.id,
                 'default_lot_id': self.id,
-                'default_company_id': self.company_id.id,
+                'default_company_id': self.company_id.id or self.env.company.id,
             },
         })
         return action
