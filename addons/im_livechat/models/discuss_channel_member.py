@@ -35,23 +35,8 @@ class ChannelMember(models.Model):
                 },
             )
 
-    def _partner_data_to_store(self, store: Store, fields=None):
+    def _get_store_partner_fields(self, fields):
+        self.ensure_one()
         if self.channel_id.channel_type == 'livechat':
-            data = {
-                'active': self.partner_id.active,
-                'id': self.partner_id.id,
-                'is_public': self.partner_id.is_public,
-            }
-            if self.partner_id.user_livechat_username:
-                data['user_livechat_username'] = self.partner_id.user_livechat_username
-            else:
-                data['name'] = self.partner_id.name
-            if not self.partner_id.is_public:
-                data['country'] = {
-                    'code': self.partner_id.country_id.code,
-                    'id': self.partner_id.country_id.id,
-                    'name': self.partner_id.country_id.name,
-                } if self.partner_id.country_id else False
-            store.add("res.partner", data)
-        else:
-            super()._partner_data_to_store(store, fields=fields)
+            return ["active", "country", "is_public", "user_livechat_username", "write_date"]
+        return super()._get_store_partner_fields(fields)

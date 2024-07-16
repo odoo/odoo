@@ -171,24 +171,12 @@ class MailRtcSession(models.Model):
         return self.env['bus.bus']._sendmany([(target, 'discuss.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
 
     def _to_store(self, store: Store, extra=False):
-        store.add(
-            self.channel_member_id,
-            fields={
-                "id": True,
-                "channel": {},
-                "persona": {
-                    "partner": {"id": True, "name": True, "im_status": True},
-                    "guest": {"id": True, "name": True, "im_status": True},
-                },
-            },
-        )
+        store.add(self.channel_member_id, fields={"channel": [], "persona": ["name", "im_status"]})
         for rtc_session in self:
-            vals = {
-                "id": rtc_session.id,
-                "channelMember": {"id": rtc_session.channel_member_id.id},
-            }
+            data = rtc_session._read_format([], load=False)[0]
+            data["channelMember"] = {"id": rtc_session.channel_member_id.id}
             if extra:
-                vals.update(
+                data.update(
                     {
                         "isCameraOn": rtc_session.is_camera_on,
                         "isDeaf": rtc_session.is_deaf,
@@ -196,7 +184,7 @@ class MailRtcSession(models.Model):
                         "isScreenSharingOn": rtc_session.is_screen_sharing_on,
                     }
                 )
-            store.add("discuss.channel.rtc.session", vals)
+            store.add("discuss.channel.rtc.session", data)
 
     @api.model
     def _inactive_rtc_session_domain(self):

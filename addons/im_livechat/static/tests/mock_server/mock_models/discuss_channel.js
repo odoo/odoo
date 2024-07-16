@@ -23,12 +23,14 @@ export class DiscussChannel extends mailModels.DiscussChannel {
             if (channel.channel_type === "livechat") {
                 // add the operator id
                 if (channel.livechat_operator_id) {
-                    const [operator] = ResPartner._filter([
-                        ["id", "=", channel.livechat_operator_id],
-                    ]);
-                    store.add(ResPartner.browse(operator.id));
+                    store.add(
+                        ResPartner.browse(channel.livechat_operator_id),
+                        makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
+                    );
                     // livechat_username ignored for simplicity
-                    channelInfo.operator = { id: operator.id, type: "partner" };
+                    channelInfo.operator = { id: channel.livechat_operator_id, type: "partner" };
+                } else {
+                    channelInfo.operator = false;
                 }
                 if (channel.livechat_channel_id) {
                     channelInfo.livechatChannel = LivechatChannel.search_read([

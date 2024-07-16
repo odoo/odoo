@@ -992,6 +992,21 @@ class Message(models.Model):
                     thread_data["selfFollower"] = False
             store.add("mail.thread", thread_data)
         for message in self:
+            # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
+            data = message._read_format(
+                [
+                    "body",
+                    "create_date",
+                    "date",
+                    "message_type",
+                    "model",  # keep for iOS app
+                    "pinned_at",
+                    "res_id",  # keep for iOS app
+                    "subject",
+                    "write_date",
+                ],
+                load=False,
+            )[0]
             record = record_by_message.get(message)
             if record:
                 # sudo: if mentionned in a non accessible thread, user should be able to see the name
@@ -1003,6 +1018,7 @@ class Message(models.Model):
             else:
                 record_name = False
                 default_subject = False
+            data["default_subject"] = default_subject
             reactions_per_content = defaultdict(self.env["mail.message.reaction"].sudo().browse)
             # sudo: mail.message - reading reactions on accessible message is allowed
             for reaction in message.sudo().reaction_ids:
@@ -1025,16 +1041,7 @@ class Message(models.Model):
             ]
             # sudo: mail.message - reading link preview on accessible message is allowed
             link_previews = message.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden)
-            # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
             vals = {
-                "body": message.body,
-                "date": message.date,
-                "id": message.id,
-                "message_type": message.message_type,
-                "model": message.model,  # keep for iOS app
-                "res_id": message.res_id,  # keep for iOS app
-                "subject": message.subject,
-                "default_subject": default_subject,
                 "notifications": [
                     {"id": notif.id}
                     for notif in message.notification_ids._filtered_for_web_client()
@@ -1043,10 +1050,7 @@ class Message(models.Model):
                 "attachments": [{"id": a.id} for a in message.sudo().attachment_ids.sorted("id")],
                 "linkPreviews": [{"id": p.id} for p in link_previews],
                 "reactions": reaction_groups,
-                "pinned_at": message.pinned_at,
                 "record_name": record_name,  # keep for iOS app
-                "create_date": message.create_date,
-                "write_date": message.write_date,
                 "is_note": message.subtype_id.id == note_id,
                 "is_discussion": message.subtype_id.id == com_id,
                 "subtype_description": message.subtype_id.description,
@@ -1074,7 +1078,8 @@ class Message(models.Model):
                 )
                 vals["starred"] = message.starred
                 vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
-            store.add("mail.message", vals)
+            data.update(vals)
+            store.add("mail.message", data)
         # sudo: mail.message: access to author is allowed
         self.sudo()._author_to_store(store)
         store.add(self.notification_ids._filtered_for_web_client())
@@ -1096,20 +1101,11 @@ class Message(models.Model):
             }
             # sudo: mail.message: access to author is allowed
             if guest_author := message.sudo().author_guest_id:
-                store.add(guest_author, fields={"id": True, "name": True})
+                store.add(guest_author, fields=["name"])
                 data["author"] = {"id": guest_author.id, "type": "guest"}
             # sudo: mail.message: access to author is allowed
             elif author := message.sudo().author_id:
-                store.add(
-                    author,
-                    fields={
-                        "id": True,
-                        "name": True,
-                        "is_company": True,
-                        "user": {"id": True},
-                        "write_date": True,
-                    },
-                )
+                store.add(author, fields=["name", "is_company", "user", "write_date"])
                 data["author"] = {"id": author.id, "type": "partner"}
             store.add("mail.message", data)
 

@@ -1811,7 +1811,7 @@ export class Model extends Array {
                 } else if (isM2OField(field)) {
                     const relRecord = modelMap[getRelation(field, record)._name][record[fieldName]];
                     if (relRecord) {
-                        if (field.type === "many2one_reference") {
+                        if (field.type === "many2one_reference" || load !== "_classic_read") {
                             result[fieldName] = record[fieldName];
                         } else {
                             result[fieldName] = [record[fieldName], relRecord.display_name];

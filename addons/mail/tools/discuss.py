@@ -2,8 +2,9 @@
 
 import os
 from collections import defaultdict
+from datetime import date, datetime
 
-from odoo import models
+from odoo import fields, models
 
 
 def get_twilio_credentials(env) -> (str, str):
@@ -82,7 +83,7 @@ class Store:
             assert isinstance(values, dict), f"expected dict for singleton {model_name}: {values}"
             if model_name not in self.data:
                 self.data[model_name] = {}
-            self.data[model_name].update(values)
+            self._add_values(values, model_name)
             return self
         # handle model with ids: add or update existing records based on ids
         if model_name not in self.data:
@@ -95,11 +96,22 @@ class Store:
             for i in ids:
                 assert vals.get(i), f"missing id {i} in {model_name}: {vals}"
             index = tuple(vals[i] for i in ids)
-            if record := self.data[model_name].get(index):
-                record.update(vals)
-            else:
-                self.data[model_name][index] = vals
+            if index not in self.data[model_name]:
+                self.data[model_name][index] = {}
+            self._add_values(vals, model_name, index)
         return self
+
+    def _add_values(self, values, model_name, index=None):
+        """Adds values to the store for a given model name and index."""
+        for key, val in values.items():
+            if isinstance(val, datetime):
+                val = fields.Datetime.to_string(val)
+            elif isinstance(val, date):
+                val = fields.Date.to_string(val)
+            if index:
+                self.data[model_name][index][key] = val
+            else:
+                self.data[model_name][key] = val
 
     def get_result(self):
         """Gets resulting data built from adding all data together."""

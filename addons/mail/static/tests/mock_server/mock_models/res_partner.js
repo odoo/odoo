@@ -1,6 +1,6 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { fields, getKwArgs, webModels } from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, makeKwArgs, webModels } from "@web/../tests/web_test_helpers";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
 
 /** @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord */
@@ -164,7 +164,10 @@ export class ResPartner extends webModels.ResPartner {
                 ["channel_id", "=", channel_id],
                 ["partner_id", "=", partner.id],
             ]);
-            store.add(DiscussChannelMember.browse(member.id).map((record) => record.id));
+            store.add(
+                DiscussChannelMember.browse(member.id),
+                makeKwArgs({ fields: { channel: [], persona: [] } })
+            );
         }
         return store.get_result();
     }
@@ -219,33 +222,50 @@ export class ResPartner extends webModels.ResPartner {
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}
      */
-    _to_store(ids, store) {
+    _to_store(ids, store, fields) {
+        const kwargs = getKwArgs(arguments, "id", "store", "fields");
+        fields = kwargs.fields;
+        if (!fields) {
+            fields = ["name", "email", "active", "im_status", "is_company", "user", "write_date"];
+        }
+
+        /** @type {import("mock_models").ResCountry} */
+        const ResCountry = this.env["res.country"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        const partners = this._filter([["id", "in", ids]], {
-            active_test: false,
-        });
-        for (const partner of partners) {
-            const users = ResUsers._filter([["id", "in", partner.user_ids]]);
-            const internalUsers = users.filter((user) => !user.share);
-            let mainUser;
-            if (internalUsers.length > 0) {
-                mainUser = internalUsers[0];
-            } else if (users.length > 0) {
-                mainUser = users[0];
+        for (const partner of this.browse(ids)) {
+            const [data] = this.read(
+                partner.id,
+                fields.filter((field) => !["country", "display_name", "user"].includes(field)),
+                false
+            );
+            if (fields.includes("country")) {
+                const [country] = ResCountry.browse(partner.country_id);
+                data.country = country
+                    ? {
+                          code: country.code,
+                          id: country.id,
+                          name: country.name,
+                      }
+                    : false;
             }
-            store.add("res.partner", {
-                active: partner.active,
-                email: partner.email,
-                id: partner.id,
-                im_status: partner.im_status,
-                is_company: partner.is_company,
-                name: partner.name,
-                userId: mainUser ? mainUser.id : false,
-                isInternalUser: mainUser ? !mainUser.share : false,
-                write_date: partner.write_date,
-            });
+            if (fields.includes("display_name")) {
+                data.displayName = partner.display_name || partner.name;
+            }
+            if (fields.includes("user")) {
+                const users = ResUsers._filter([["id", "in", partner.user_ids]]);
+                const internalUsers = users.filter((user) => !user.share);
+                let mainUser;
+                if (internalUsers.length > 0) {
+                    mainUser = internalUsers[0];
+                } else if (users.length > 0) {
+                    mainUser = users[0];
+                }
+                data.userId = mainUser ? mainUser.id : false;
+                data.isInternalUser = mainUser ? !mainUser.share : false;
+            }
+            store.add("res.partner", data);
         }
     }
 

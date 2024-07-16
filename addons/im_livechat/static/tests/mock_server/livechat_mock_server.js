@@ -6,7 +6,7 @@ import {
 import { patch } from "@web/core/utils/patch";
 import { MockResponse } from "@web/../lib/hoot/mock/network";
 import { loadBundle } from "@web/core/assets";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
 
 /**
  * @template [T={}]
@@ -63,21 +63,21 @@ async function get_session(request) {
         return false;
     }
     if (!persisted) {
-        const [operatorPartner] = ResPartner.search_read([
-            ["id", "=", channelVals.livechat_operator_id],
-        ]);
         const store = new mailDataHelpers.Store();
         ResUsers._init_store_data(store);
-        store.add(ResPartner.browse(operatorPartner.id));
+        store.add(
+            ResPartner.browse(channelVals.livechat_operator_id),
+            makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
+        );
         store.add("discuss.channel", {
+            channel_type: "livechat",
+            chatbot_current_step_id: channelVals.chatbot_current_step_id,
             id: -1,
             isLoaded: true,
             name: channelVals["name"],
-            chatbot_current_step_id: channelVals.chatbot_current_step_id,
-            state: "open",
+            operator: { id: channelVals.livechat_operator_id, type: "partner" },
             scrollUnread: false,
-            operator: { id: operatorPartner.id, type: "partner" },
-            channel_type: "livechat",
+            state: "open",
         });
         return store.get_result();
     }

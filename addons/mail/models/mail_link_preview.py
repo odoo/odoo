@@ -125,21 +125,21 @@ class LinkPreview(models.Model):
 
     def _to_store(self, store: Store, /):
         for preview in self:
-            store.add(
-                "mail.link.preview",
-                {
-                    "id": preview.id,
-                    "image_mimetype": preview.image_mimetype,
-                    "message": {"id": preview.message_id.id} if preview.message_id else False,
-                    "og_description": preview.og_description,
-                    "og_image": preview.og_image,
-                    "og_mimetype": preview.og_mimetype,
-                    "og_site_name": preview.og_site_name,
-                    "og_title": preview.og_title,
-                    "og_type": preview.og_type,
-                    "source_url": preview.source_url,
-                },
-            )
+            data = preview._read_format(
+                [
+                    "image_mimetype",
+                    "og_description",
+                    "og_image",
+                    "og_mimetype",
+                    "og_site_name",
+                    "og_title",
+                    "og_type",
+                    "source_url",
+                ],
+                load=False,
+            )[0]
+            data["message"] = {"id": preview.message_id.id} if preview.message_id else False
+            store.add("mail.link.preview", data)
 
     @api.autovacuum
     def _gc_mail_link_preview(self):

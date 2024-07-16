@@ -82,25 +82,18 @@ class IrAttachment(models.Model):
             and request.httprequest.user_agent.browser == "safari"
         )
         for attachment in self:
-            res = {
-                "checksum": attachment.checksum,
-                "create_date": attachment.create_date,
-                "filename": attachment.name,
-                "id": attachment.id,
-                "mimetype": (
-                    "application/octet-stream"
-                    if safari and attachment.mimetype and "video" in attachment.mimetype
-                    else attachment.mimetype
-                ),
-                "name": attachment.name,
-                "res_name": attachment.res_name,
-                "size": attachment.file_size,
-                "thread": (
-                    {"id": attachment.res_id, "model": attachment.res_model}
-                    if attachment.res_id and attachment.res_model != "mail.compose.message"
-                    else False
-                ),
-            }
+            data = attachment._read_format(
+                ["checksum", "create_date", "mimetype", "name", "res_name"], load=False
+            )[0]
+            data["filename"] = attachment.name
+            if safari and attachment.mimetype and "video" in attachment.mimetype:
+                data["mimetype"] = "application/octet-stream"
+            data["size"] = attachment.file_size
+            data["thread"] = (
+                {"id": attachment.res_id, "model": attachment.res_model}
+                if attachment.res_id and attachment.res_model != "mail.compose.message"
+                else False
+            )
             if access_token:
-                res["accessToken"] = attachment.access_token
-            store.add("ir.attachment", res)
+                data["accessToken"] = attachment.access_token
+            store.add("ir.attachment", data)

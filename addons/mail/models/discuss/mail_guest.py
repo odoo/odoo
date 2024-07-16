@@ -126,17 +126,9 @@ class MailGuest(models.Model):
         self.env.cr.execute(query, (timezone, self.id))
 
     def _to_store(self, store: Store, /, *, fields=None):
-        if not fields:
-            fields = {"name": True, "im_status": True, "write_date": True}
-        for guest in self:
-            data = {"id": guest.id}
-            if 'name' in fields:
-                data['name'] = guest.name
-            if 'im_status' in fields:
-                data['im_status'] = guest.im_status
-            if "write_date" in fields:
-                data["write_date"] = odoo.fields.Datetime.to_string(guest.write_date)
-            store.add("mail.guest", data)
+        if fields is None:
+            fields = ["im_status", "name", "write_date"]
+        store.add("mail.guest", self._read_format(fields, load=False))
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route
