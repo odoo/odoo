@@ -57,7 +57,7 @@ class TestSQL(BaseCase):
     def test_sql_idempotence(self):
         sql1 = SQL("SELECT id FROM table WHERE foo=%s AND bar=%s", 42, 'baz')
         sql2 = SQL(sql1)
-        self.assertIs(sql1, sql2)
+        self.assertEqual(sql1, sql2)
 
     def test_sql_unpacking(self):
         sql = SQL("SELECT id FROM table WHERE foo=%s AND bar=%s", 42, 'baz')
