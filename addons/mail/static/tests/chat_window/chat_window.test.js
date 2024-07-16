@@ -664,40 +664,6 @@ test("chat window should remain folded when new message is received", async () =
     await contains(".o-mail-ChatBubble");
 });
 
-// test("should not have chat window hidden menu in mobile (transition from 3 chat windows in desktop to mobile)", async () => {
-//     const pyEnv = await startServer();
-//     pyEnv["discuss.channel"].create([
-//         { name: "Channel-1" },
-//         { name: "Channel-2" },
-//         { name: "Channel-3" },
-//     ]);
-//     patchUiSize({ width: 900 });
-//     await start();
-//     const store = getService("mail.store");
-//     expect(
-//         store.chatHub.WINDOW_GAP * 2 + store.chatHub.WINDOW * 2 + store.chatHub.WINDOW_INBETWEEN
-//     ).toBeLessThan(900, {
-//         message: "should have enough space to open 2 chat windows simultaneously",
-//     });
-//     expect(
-//         store.chatHub.WINDOW_GAP * 2 + store.chatHub.WINDOW * 3 + store.chatHub.WINDOW_INBETWEEN * 2
-//     ).toBeGreaterThan(900, {
-//         message: "should not have enough space to open 3 chat windows simultaneously",
-//     });
-//     await openDiscuss();
-//     // open, from systray menu, chat windows of channels with id 1, 2, 3
-//     await click(".o_menu_systray i[aria-label='Messages']");
-//     await click(".o-mail-NotificationItem", { text: "Channel-1" });
-//     await click(".o_menu_systray i[aria-label='Messages']");
-//     await click(".o-mail-NotificationItem", { text: "Channel-2" });
-//     await click(".o_menu_systray i[aria-label='Messages']");
-//     await click(".o-mail-NotificationItem", { text: "Channel-3" });
-//     // simulate resize to go into mobile
-//     patchUiSize({ size: SIZES.SM });
-//     window.dispatchEvent(new UIEvent("resize"));
-//     await contains(".o-mail-ChatWindowHiddenToggler", { count: 0 });
-// });
-
 test("chat window: composer state conservation on toggle discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
