@@ -70,6 +70,10 @@ export class ChatHub extends Component {
         return counter;
     }
 
+    get isShown() {
+        return !this.ui.isSmall;
+    }
+
     expand() {
         this.chatHub.compact = false;
         Object.assign(this.compactPosition, { left: "auto", top: "auto" });

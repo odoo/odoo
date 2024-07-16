@@ -24,6 +24,12 @@ patch(Thread.prototype, {
         const chatWindow = this.store.ChatWindow.get({ thread: this });
         chatWindow?.close({ notifyState: false });
     },
+    computeIsDisplayed() {
+        if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
+            return this.eq(this.store.discuss.thread);
+        }
+        return super.computeIsDisplayed();
+    },
     async leave() {
         this.closeChatWindow();
         super.leave(...arguments);

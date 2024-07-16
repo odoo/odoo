@@ -6,8 +6,6 @@ declare module "models" {
     import { ChatWindow as ChatWindowClass } from "@mail/core/common/chat_window_model";
     import { Composer as ComposerClass } from "@mail/core/common/composer_model";
     import { Country as CountryClass } from "@mail/core/common/country_model";
-    import { DiscussApp as DiscussAppClass } from "@mail/core/common/discuss_app_model";
-    import { DiscussAppCategory as DiscussAppCategoryClass } from "@mail/core/common/discuss_app_category_model";
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
@@ -28,8 +26,6 @@ declare module "models" {
     export interface ChatWindow extends ChatWindowClass {}
     export interface Composer extends ComposerClass {}
     export interface Country extends CountryClass {}
-    export interface DiscussApp extends DiscussAppClass {}
-    export interface DiscussAppCategory extends DiscussAppCategoryClass {}
     export interface Failure extends FailureClass {}
     export interface Follower extends FollowerClass {}
     export interface LinkPreview extends LinkPreviewClass {}
@@ -51,8 +47,6 @@ declare module "models" {
         "ChatWindow": ChatWindow,
         "Composer": Composer,
         "Country": Country,
-        "DiscussApp": DiscussApp,
-        "DiscussAppCategory": DiscussAppCategory,
         "Failure": Failure,
         "Follower": Follower,
         "LinkPreview": LinkPreview,
