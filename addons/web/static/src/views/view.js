@@ -229,6 +229,10 @@ export class View extends Component {
     async loadView(props) {
         const type = props.type;
 
+        if (!session.view_info[type]) {
+            throw new Error(`Invalid view type: ${type}`);
+        }
+
         // determine views for which descriptions should be obtained
         let { viewId, searchViewId } = props;
 
