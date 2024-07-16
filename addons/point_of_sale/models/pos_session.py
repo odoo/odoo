@@ -286,7 +286,6 @@ class PosSession(models.Model):
         response['custom'] = {}
 
         if not only_data:
-
             response['custom'] = {
                 'partner_commercial_fields': self.env['res.partner']._commercial_fields(),
                 'server_version': exp_version(),
@@ -358,6 +357,9 @@ class PosSession(models.Model):
                             load=False)
 
                 if not only_data:
+                    if len(value['fields']) and 'id' not in value['fields']:
+                        value['fields'].append('id')
+
                     model_fields = self.env[key].fields_get(allfields=value['fields'] or None)
                     for name, params in model_fields.items():
                         if not response['relations'].get(key):
