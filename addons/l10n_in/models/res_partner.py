@@ -72,3 +72,28 @@ class ResPartner(models.Model):
         if vat == TEST_GST_NUMBER:
             return True
         return super().check_vat_in(vat)
+
+    @api.model
+    def l10n_in_get_partner_vals_by_vat(self, vat):
+        partner_details = self.env['res.partner'].read_by_vat(vat)
+        partner_data = partner_details[0] if partner_details else {}
+        if partner_data:
+            partner_gid = partner_data.get('partner_gid')
+            if partner_gid:
+                partner_data = self.env['res.partner'].enrich_company(company_domain=None, partner_gid=partner_gid, vat=partner_data.get('vat'))
+                partner_data = self.env['res.partner']._iap_replace_logo(partner_data)
+            return {
+                'name': partner_data.get('name'),
+                'company_type': 'company',
+                'partner_gid': partner_gid,
+                'vat': partner_data.get('vat'),
+                'l10n_in_gst_treatment': 'regular',
+                'image_1920': partner_data.get('image_1920'),
+                'street': partner_data.get('street'),
+                'street2': partner_data.get('street2'),
+                'city': partner_data.get('city'),
+                'state_id': partner_data.get('state_id') and partner_data.get('state_id').get('id') or False,
+                'country_id': partner_data.get('country_id') and partner_data.get('country_id').get('id') or False,
+                'zip': partner_data.get('zip'),
+            }
+        return {}
