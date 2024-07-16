@@ -40,10 +40,14 @@
                         <h2 class="lh-1" t-if="attendee" t-field="attendee.name"/>
                         <h2 class="lh-1" t-elif="not attendee">John Doe</h2>
                         <div t-if="attendee" class="mt-3 py-2">
-                            <span t-foreach="attendee.registration_answer_choice_ids" t-as="answer"
-                                t-attf-class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer">
-                                <t t-out="answer.display_name"/>
-                            </span>
+                            <span t-foreach="attendee.registration_answer_choice_ids"
+                                class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer"
+                                t-as="answer" t-out="answer.display_name"/>
+                        </div>
+                        <div t-else="">
+                            <span t-foreach="event.question_ids.filtered(lambda q: q.question_type == 'simple_choice' and q.answer_ids)"
+                                class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer"
+                                t-as="question" t-out="question.answer_ids[0].name"/>
                         </div>
                     </div>
                 </div>
@@ -155,13 +159,15 @@
                                 <h4 t-elif="first_ticket" t-out="first_ticket.name" class="o_event_full_page_ticket_font_faded pe-4"/>
                                 <h4 class="fw-bold mb-3 pb-2" t-if="attendee" t-field="attendee.name"/>
                                 <h4 class="fw-bold mb-3 pb-2" t-elif="not attendee"><span>John Doe</span></h4>
-                                <div t-if="attendee">
-                                    <div class="mb-3">
-                                        <span t-foreach="attendee.registration_answer_choice_ids" t-as="answer"
-                                            t-attf-class="#{'badge' if responsive_html else 'px-2 py-1 d-inline-block'} bg-200 text-black my-1 me-1 fw-semibold o_event_full_page_ticket_answer">
-                                            <t t-out="answer.display_name"/>
-                                        </span>
-                                    </div>
+                                <t t-set="answer_badge_classes" t-valuef="#{'badge' if responsive_html else 'px-2 py-1 d-inline-block'} bg-200 text-black my-1 me-1 fw-semibold o_event_full_page_ticket_answer"/>
+                                <div t-if="attendee" class="mb-3">
+                                    <span t-foreach="attendee.registration_answer_choice_ids" t-att-class="answer_badge_classes"
+                                        t-as="answer" t-out="answer.display_name"/>
+                                </div>
+                                <div t-else="" class="mb-3">
+                                    <span t-foreach="event.question_ids.filtered(lambda q: q.question_type == 'simple_choice' and q.answer_ids)"
+                                        t-att-class="answer_badge_classes"
+                                        t-as="question" t-out="question.answer_ids[0].name"/>
                                 </div>
                             </div>
                             <div t-attf-class="row gy-0 gx-2 #{'o_event_full_page_left_details_bottom_qr_only' if not event.use_barcode else ''}">
