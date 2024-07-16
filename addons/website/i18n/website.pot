@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.3\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-03 08:43+0000\n"
-"PO-Revision-Date: 2024-06-03 08:43+0000\n"
+"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"PO-Revision-Date: 2024-07-15 18:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -184,12 +184,6 @@ msgid "'. Showing results for '"
 msgstr ""
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/page_properties.xml:0
-msgid "(could be used in"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "+ Field"
 msgstr ""
@@ -229,14 +223,6 @@ msgstr ""
 msgid ""
 ".\n"
 "                                                The website will still work if you reject or discard those cookies."
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/page_properties.xml:0
-msgid ""
-".\n"
-"                    Changing its name will break these calls."
 msgstr ""
 
 #. module: website
@@ -577,12 +563,6 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
-msgid "<b>Double click on an icon</b> to change it with one of your choice."
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/js/tours/tour_utils.js:0
 msgid "<b>Double click on an image</b> to change it with one of your choice."
 msgstr ""
 
@@ -883,6 +863,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "<small class=\"text-muted\">\n"
+"                                        Block 3rd-party services that track users (e.g. YouTube, Google Maps, Facebook...) when the user has not given their consent.\n"
+"                                    </small>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<small class=\"text-muted\">\n"
 "                                    <i class=\"fa fa-info\"/>: type some of the first chars after 'google' is enough, we'll guess the rest.\n"
 "                                </small>"
 msgstr ""
@@ -999,13 +987,6 @@ msgid ""
 "<span class=\"d-block p-2 small\">\n"
 "                            <b>Discover our new products</b>\n"
 "                        </span>"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
-msgid ""
-"<span class=\"fa fa-check-circle\"/>\n"
-"                                            <span>Your message has been sent <b>successfully</b></span>"
 msgstr ""
 
 #. module: website
@@ -1234,6 +1215,25 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
 msgid "<span>/model/</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
+msgid ""
+"<strong>Google services:</strong> Google Maps, Google Analytics, Google Tag "
+"Manager, etc."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
+msgid ""
+"<strong>Social platforms:</strong> Facebook, Instagram, Twitter, TikTok"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
+msgid ""
+"<strong>Video hosting platforms:</strong> YouTube, Vimeo, Dailymotion, Youku"
 msgstr ""
 
 #. module: website
@@ -1495,6 +1495,13 @@ msgid "Add"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
+msgid ""
+"Add 3rd-party service domains <em>(\"www.example.com\" or "
+"\"example.com\")</em>, one per line."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
 msgid "Add Elements"
 msgstr ""
@@ -1619,6 +1626,17 @@ msgid "Add a new field at the end"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Add domains to the block list"
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+msgid "Add external websites"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Add groups in the \"Access Rights\" tab below."
 msgstr ""
@@ -1633,6 +1651,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 msgid "Add new %s"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
+msgid "Add other domains here"
 msgstr ""
 
 #. module: website
@@ -2325,6 +2348,24 @@ msgid "Block"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_block_third_party_domains
+#: model:ir.model.fields,field_description:website.field_website__block_third_party_domains
+msgid "Block 3rd-party domains"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_block_third_party_domains
+#: model:ir.model.fields,help:website.field_website__block_third_party_domains
+msgid ""
+"Block 3rd-party domains that may track users (YouTube, Google Maps, etc.)."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Block tracking 3rd-party services"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -2527,6 +2568,11 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
+msgid "By default, the domains of the following services are already blocked:"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
 #: model:ir.model.fields,field_description:website.field_website__cdn_url
 msgid "CDN Base URL"
@@ -2584,6 +2630,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
+#: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 #: model_terms:ir.ui.view,arch_db:website.view_website_form_view_themes_modal
 msgid "Cancel"
 msgstr ""
@@ -3163,6 +3210,7 @@ msgid "Contains"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__content
 #: model:ir.model.fields,field_description:website.field_website_robots__content
 #: model:ir.ui.menu,name:website.menu_content
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
@@ -3242,6 +3290,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Copyright"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
+msgid "Could be used in many places, see here:"
 msgstr ""
 
 #. module: website
@@ -3364,6 +3418,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website__create_uid
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__create_uid
 #: model:ir.model.fields,field_description:website.field_website_controller_page__create_uid
+#: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__create_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__create_uid
 #: model:ir.model.fields,field_description:website.field_website_page__create_uid
 #: model:ir.model.fields,field_description:website.field_website_rewrite__create_uid
@@ -3393,6 +3448,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website__create_date
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__create_date
 #: model:ir.model.fields,field_description:website.field_website_controller_page__create_date
+#: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__create_date
 #: model:ir.model.fields,field_description:website.field_website_menu__create_date
 #: model:ir.model.fields,field_description:website.field_website_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_rewrite__create_date
@@ -3931,6 +3987,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website__display_name
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__display_name
 #: model:ir.model.fields,field_description:website.field_website_controller_page__display_name
+#: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__display_name
 #: model:ir.model.fields,field_description:website.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website.field_website_page__display_name
 #: model:ir.model.fields,field_description:website.field_website_rewrite__display_name
@@ -4177,6 +4234,12 @@ msgid "E.g. https://www.mydomain.com"
 msgstr ""
 
 #. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+msgid "EXTERNAL SUBMISSION - Customer not verified"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid ""
 "Easily design your own Odoo templates thanks to clean HTML\n"
@@ -4372,7 +4435,7 @@ msgstr ""
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_snippet_filter.py:0
-msgid "Empty field name in %r"
+msgid "Empty field name in “%s”"
 msgstr ""
 
 #. module: website
@@ -5159,6 +5222,11 @@ msgid "Go to"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
+msgid "Go to Homepage"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Go to Page Manager"
 msgstr ""
@@ -5517,7 +5585,6 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_popup/000.js:0
-#, python-format
 msgid "Hide the cookies bar"
 msgstr ""
 
@@ -5692,6 +5759,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website__id
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__id
+#: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__id
 #: model:ir.model.fields,field_description:website.field_website_menu__id
 #: model:ir.model.fields,field_description:website.field_website_page__id
 #: model:ir.model.fields,field_description:website.field_website_rewrite__id
@@ -6301,12 +6369,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/page_properties.xml:0
-msgid "It looks like your file is being called by"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_block_2nd
 msgid ""
 "It's time to elevate your fitness journey with coaching that's as unique as "
@@ -6503,6 +6565,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website__write_uid
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__write_uid
 #: model:ir.model.fields,field_description:website.field_website_controller_page__write_uid
+#: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__write_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__write_uid
 #: model:ir.model.fields,field_description:website.field_website_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website_rewrite__write_uid
@@ -6522,6 +6585,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website__write_date
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__write_date
 #: model:ir.model.fields,field_description:website.field_website_controller_page__write_date
+#: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__write_date
 #: model:ir.model.fields,field_description:website.field_website_menu__write_date
 #: model:ir.model.fields,field_description:website.field_website_page__write_date
 #: model:ir.model.fields,field_description:website.field_website_rewrite__write_date
@@ -6774,6 +6838,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website.selection__website_controller_page__default_layout__list
 #: model_terms:ir.ui.view,arch_db:website.s_website_controller_page_listing_layout
 msgid "List"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__blocked_third_party_domains
+msgid "List of blocked 3rd-party domains"
 msgstr ""
 
 #. module: website
@@ -7944,6 +8013,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
+#: code:addons/website/static/src/js/utils.js:0
 #: model:ir.ui.menu,name:website.menu_optimize_seo
 msgid "Optimize SEO"
 msgstr ""
@@ -8062,6 +8132,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_three_columns
 msgid "Our Values"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+msgid "Our cookies bar was blocked by your browser or an extension."
 msgstr ""
 
 #. module: website
@@ -8265,6 +8341,18 @@ msgstr ""
 msgid ""
 "Page code used to tell IAP website_service for which page a snippet list "
 "should be generated"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/utils.js:0
+msgid "Page description not set."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/utils.js:0
+msgid "Page title not set."
 msgstr ""
 
 #. module: website
@@ -9254,6 +9342,7 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
+#: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid "Save"
 msgstr ""
 
@@ -9734,7 +9823,6 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_popup/000.js:0
-#, python-format
 msgid "Show the cookies bar"
 msgstr ""
 
@@ -10443,16 +10531,16 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. odoo-python
-#: code:addons/website/models/res_company.py:0
-msgid ""
-"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
-"Change that website's company first."
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "The company this website belongs to"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "The company this website belongs to"
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+msgid ""
+"The company “%(company_name)s” cannot be archived because it has a linked website “%(website_name)s”.\n"
+"Change that website's company first."
 msgstr ""
 
 #. module: website
@@ -10483,6 +10571,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 msgid "The field “%(field)s” is mandatory for the action “%(action)s”."
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/wizard/blocked_third_party_domains.py:0
+msgid "The following domain is not valid:"
 msgstr ""
 
 #. module: website
@@ -10715,6 +10809,14 @@ msgid "Third Menu"
 msgstr ""
 
 #. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+msgid ""
+"This %(model_name)s was submitted by %(user_name)s (%(user_email)s) on "
+"behalf of %(form_email)s"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid "This URL is contained in the '%s' of the following '%s'"
@@ -10894,6 +10996,13 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
+msgid ""
+"Those services will be blocked on your website for users until they accept "
+"optional cookies."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Thumbnails"
 msgstr ""
@@ -11013,6 +11122,12 @@ msgid ""
 "Google. With the built-in SEO tool, once you define a few keywords, Odoo "
 "will recommend you the best keywords to target. Then adapt your title and "
 "description accordingly to boost your traffic."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.cookies_warning.xml:0
+msgid "To see the interactive content, you need to accept optional cookies."
 msgstr ""
 
 #. module: website
@@ -11496,6 +11611,12 @@ msgid "User"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_website_custom_blocked_third_party_domains
+#: model:ir.model.fields,field_description:website.field_website__custom_blocked_third_party_domains
+msgid "User list of blocked 3rd-party domains"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_menu__group_ids
 msgid "User needs to be at least in one of these groups to see the menu"
 msgstr ""
@@ -11746,6 +11867,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Warning"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_controller_page__warning_info
+#: model:ir.model.fields,field_description:website.field_website_page__warning_info
+msgid "Warning information"
 msgstr ""
 
 #. module: website
@@ -12523,6 +12650,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_instagram_page_options
 msgid ""
 "Your instagram page must be public to be integrated into an Odoo website."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
+msgid "Your message has been sent."
 msgstr ""
 
 #. module: website

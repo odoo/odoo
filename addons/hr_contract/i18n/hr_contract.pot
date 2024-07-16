@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.3\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-03 08:43+0000\n"
-"PO-Revision-Date: 2024-06-03 08:43+0000\n"
+"POT-Creation-Date: 2024-07-15 18:11+0000\n"
+"PO-Revision-Date: 2024-07-15 18:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,22 +49,6 @@ msgstr ""
 msgid ""
 "<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
 "title=\"In Contract Since\"> In Contract Since</span>"
-msgstr ""
-
-#. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
-msgid ""
-"<span class=\"o_stat_text\">\n"
-"                                            To\n"
-"                                        </span>"
-msgstr ""
-
-#. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
-msgid ""
-"<span class=\"o_stat_text\">\n"
-"                                        From\n"
-"                                    </span>"
 msgstr ""
 
 #. module: hr_contract
@@ -571,18 +555,13 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "From"
+msgstr ""
+
+#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Future Activities"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__done
-msgid "Green"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__normal
-msgid "Grey"
 msgstr ""
 
 #. module: hr_contract
@@ -794,6 +773,11 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__normal
+msgid "Ongoing"
+msgstr ""
+
+#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Open Contract"
 msgstr ""
@@ -814,8 +798,8 @@ msgid "Ratings"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__blocked
-msgid "Red"
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__done
+msgid "Ready"
 msgstr ""
 
 #. module: hr_contract
@@ -948,6 +932,11 @@ msgid "The work permit of %s is about to expire."
 msgstr ""
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "To"
+msgstr ""
+
+#. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
 msgstr ""
@@ -989,6 +978,11 @@ msgid "Wage"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__blocked
+msgid "Warning"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
 msgid "Website Messages"
 msgstr ""
@@ -1022,7 +1016,7 @@ msgid "Working Schedule"
 msgstr ""
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_employee.py:0
-#, python-format
 msgid "You cannot delete an employee with a running contract."
 msgstr ""
