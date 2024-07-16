@@ -7,10 +7,21 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//page[@name='general_information']/group" position="inside">
+                    <xpath expr="//page[@name='general_information']/group" position="after">
                         <group>
-                            <field name="custom_field_1"/>
-                            <field name="custom_field_2"/>
+                            <field name="tenant_id"/>
+                            <field name="sku_code"/>
+                            <field name="description"/>
+                            <field name="ean"/>
+                            <field name="brand"/>
+                            <field name="season_code"/>
+                            <field name="color"/>
+                            <field name="size"/>
+                            <field name="merchandise_category_code"/>
+                            <field name="style"/>
+                            <field name="style_code"/>
+                            <field name="weight"/>
+                            <field name="returnable"/>
                         </group>
                     </xpath>
                 </data>
