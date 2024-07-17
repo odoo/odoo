@@ -13,7 +13,7 @@ class SupplierInfo(models.Model):
     def _compute_is_subcontractor(self):
         for supplier in self:
             boms = supplier.product_id.variant_bom_ids
-            boms |= supplier.product_tmpl_id.bom_ids.filtered(lambda b: not b.product_id)
+            boms |= supplier.product_tmpl_id.bom_ids
             supplier.is_subcontractor = supplier.name in boms.subcontractor_ids
 
 
