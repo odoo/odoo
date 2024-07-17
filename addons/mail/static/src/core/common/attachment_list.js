@@ -97,8 +97,12 @@ export class AttachmentList extends Component {
         this.props.unlinkAttachment(attachment);
     }
 
-    onImageLoaded() {
-        this.env.onImageLoaded?.();
+    onImageLoaded({ ev, attachment }) {
+        this.env?.onImageLoaded?.();
+        const image = ev.target;
+        if (image) {
+            attachment.isSmallImg = image.height <= 30;
+        }
     }
 
     get isInChatWindowAndIsAlignedRight() {

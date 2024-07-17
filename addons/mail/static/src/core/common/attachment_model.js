@@ -28,13 +28,23 @@ export class Attachment extends FileModelMixin(Record) {
         return attachment;
     }
 
+    author;
     originThread = Record.one("Thread", { inverse: "attachments" });
     res_name;
     message = Record.one("Message");
     /** @type {string} */
     create_date;
+    /** @type {string} */
+    isSmallImg;
 
     get isDeletable() {
+        if (this.originThread?.type === "chatter") {
+            if (this._store.user?.isAdmin) {
+                return true;
+            } else if (this.author?.partnerId !== this._store.user.id) {
+                return false;
+            }
+        }
         return true;
     }
 
