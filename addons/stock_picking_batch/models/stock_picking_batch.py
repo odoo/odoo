@@ -37,7 +37,7 @@ class StockPickingBatch(models.Model):
         'stock.move', string="Stock moves", compute='_compute_move_ids')
     move_line_ids = fields.One2many(
         'stock.move.line', string='Stock move lines',
-        compute='_compute_move_ids', inverse='_set_move_line_ids')
+        compute='_compute_move_line_ids', inverse='_set_move_line_ids')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'In progress'),
@@ -93,8 +93,12 @@ class StockPickingBatch(models.Model):
     def _compute_move_ids(self):
         for batch in self:
             batch.move_ids = batch.picking_ids.move_ids
-            batch.move_line_ids = batch.picking_ids.move_line_ids
             batch.show_check_availability = any(m.state not in ['assigned', 'cancel', 'done'] for m in batch.move_ids)
+
+    @api.depends('picking_ids', 'picking_ids.move_line_ids')
+    def _compute_move_line_ids(self):
+        for batch in self:
+            batch.move_line_ids = batch.picking_ids.move_line_ids
 
     @api.depends('state', 'move_ids', 'picking_type_id')
     def _compute_show_allocation(self):
