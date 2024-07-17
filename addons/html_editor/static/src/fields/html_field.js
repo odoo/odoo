@@ -85,7 +85,7 @@ export class HtmlField extends Component {
             const value = record.data[this.props.dynamicPlaceholderModelReferenceField || "model"];
             // update Dynamic Placeholder reference model
             if (this.props.dynamicPlaceholder && this.editor) {
-                this.editor.shared.updateDphDefaultModel(value);
+                this.editor.shared.updateDphDefaultModel?.(value);
             }
         });
     }
