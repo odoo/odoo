@@ -2272,6 +2272,9 @@ class Date(Field):
             return ''
         return self.from_string(value)
 
+    def convert_to_display_name(self, value, record):
+        return Date.to_string(value)
+
 
 class Datetime(Field):
     """ Encapsulates a python :class:`datetime <datetime.datetime>` object. """
