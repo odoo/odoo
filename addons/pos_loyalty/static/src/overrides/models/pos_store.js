@@ -182,7 +182,7 @@ patch(PosStore.prototype, {
             const points = order._getRealCouponPoints(couponProgram.coupon_id);
             const hasLine = order.orderlines.filter((line) => !line.is_reward_line).length > 0;
             for (const reward of program.reward_ids.filter(
-                (reward) => reward.reward_type == "product"
+                (reward) => reward.reward_type == "product" && reward.reward_product_ids.length > 0
             )) {
                 if (points < reward.required_points) {
                     continue;
