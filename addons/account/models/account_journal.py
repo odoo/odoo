@@ -126,6 +126,7 @@ class AccountJournal(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
+    change_sequence = fields.Char(string="Change Sequence", compute="_compute_change_sequence", default=False, store=True)
     payment_sequence = fields.Boolean(
         string='Dedicated Payment Sequence',
         compute='_compute_payment_sequence', readonly=False, store=True, precompute=True,
@@ -420,6 +421,13 @@ class AccountJournal(models.Model):
             temp_move = self.env['account.move'].new({'journal_id': journal.id})
             journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
 
+    @api.depends("refund_sequence")
+    def _compute_change_sequence(self):
+        for journal in self:
+            if journal.change_sequence:
+                journal.change_sequence = False
+            else:
+                journal.change_sequence = True
 
     @api.onchange('type')
     def _onchange_type_for_alias(self):
