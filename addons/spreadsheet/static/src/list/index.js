@@ -24,10 +24,12 @@ coreTypes.add("RENAME_ODOO_LIST");
 coreTypes.add("REMOVE_ODOO_LIST");
 coreTypes.add("RE_INSERT_ODOO_LIST");
 coreTypes.add("UPDATE_ODOO_LIST_DOMAIN");
+coreTypes.add("UPDATE_ODOO_LIST");
 coreTypes.add("ADD_LIST_DOMAIN");
 coreTypes.add("DUPLICATE_ODOO_LIST");
 
 invalidateEvaluationCommands.add("UPDATE_ODOO_LIST_DOMAIN");
+invalidateEvaluationCommands.add("UPDATE_ODOO_LIST");
 invalidateEvaluationCommands.add("INSERT_ODOO_LIST");
 invalidateEvaluationCommands.add("REMOVE_ODOO_LIST");
 
@@ -51,6 +53,7 @@ cellMenuRegistry.add(
 inverseCommandRegistry
     .add("INSERT_ODOO_LIST", identity)
     .add("UPDATE_ODOO_LIST_DOMAIN", identity)
+    .add("UPDATE_ODOO_LIST", identity)
     .add("RE_INSERT_ODOO_LIST", identity)
     .add("RENAME_ODOO_LIST", identity)
     .add("REMOVE_ODOO_LIST", identity);
