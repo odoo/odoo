@@ -27,7 +27,6 @@ export class MentionPlugin extends Plugin {
 
     setup() {
         this.mentionList = this.shared.createOverlay(EditorMentionList, {
-            position: "bottom-start",
             hasAutofocus: true,
         });
         this.addDomListener(this.document, "pointerdown", () => {
