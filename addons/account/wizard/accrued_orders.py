@@ -181,7 +181,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                         account = self._get_computed_account(order, order_line.product_id, is_purchase)
                         amount_currency = order_line.currency_id.round(order_line.qty_to_invoice * order_line.price_unit)
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
-                        fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'account_move_line_ids']
+                        fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
                         label = _(
                             '%(order)s - %(order_line)s; %(quantity_billed)s Billed, %(quantity_received)s Received at %(unit_price)s each',
                             order=order.name,
@@ -194,7 +194,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                         account = self._get_computed_account(order, order_line.product_id, is_purchase)
                         amount_currency = order_line.untaxed_amount_to_invoice
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
-                        fnames = ['qty_to_invoice', 'untaxed_amount_to_invoice', 'qty_invoiced', 'qty_delivered', 'account_move_line_ids']
+                        fnames = ['qty_to_invoice', 'untaxed_amount_to_invoice', 'qty_invoiced', 'qty_delivered', 'invoice_lines']
                         label = _(
                             '%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %(quantity_delivered)s Delivered at %(unit_price)s each',
                             order=order.name,

@@ -28,7 +28,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'product_uom': uom_dozen.id,
                     'price_unit': 100.0,
                     'date_planned': datetime.today(),
-                    'tax_ids': False,
+                    'taxes_id': False,
                 }),
                 (0, 0, {
                     'name': self.product_b.name,
@@ -37,7 +37,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'product_uom': uom_dozen.id,
                     'price_unit': 200.0,
                     'date_planned': datetime.today(),
-                    'tax_ids': False,
+                    'taxes_id': False,
                 }),
             ],
         })
@@ -138,7 +138,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'product_qty': 0.0,
                     'product_uom': False,
                     'price_unit': 0.0,
-                    'tax_ids': False,
+                    'taxes_id': False,
                 }),
                 (0, 0, {
                     'name': 'This is a section',
@@ -147,7 +147,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'product_qty': 0.0,
                     'product_uom': False,
                     'price_unit': 0.0,
-                    'tax_ids': False,
+                    'taxes_id': False,
                 }),
             ],
         })

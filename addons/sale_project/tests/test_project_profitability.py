@@ -599,7 +599,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         # Therefore, the amount of the dp is higher than the amount of the sol created.
         down_payment_invoiced = 100.00
         downpayment.create_invoices()
-        self.sale_order.account_move_ids[2].action_post()
+        self.sale_order.invoice_ids[2].action_post()
         # Ensures the down payment is correctly computed for the project profitability.
         self._assert_dict_equal(invoice_type, sequence_per_invoice_type, material_order_line, service_sols, manual_service_order_line, down_payment_invoiced)
 
@@ -610,7 +610,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         })
         down_payment_invoiced = 2 * down_payment_invoiced
         downpayment.create_invoices()
-        self.sale_order.account_move_ids[3].action_post()
+        self.sale_order.invoice_ids[3].action_post()
         # Ensures the 2 down payments are correctly computed for the project profitability.
         self._assert_dict_equal(invoice_type, sequence_per_invoice_type, material_order_line, service_sols, manual_service_order_line, down_payment_invoiced)
 

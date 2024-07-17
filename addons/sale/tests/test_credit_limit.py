@@ -78,7 +78,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
                 'product_uom_qty': 1,
                 'product_uom': self.company_data['product_order_no'].uom_id.id,
                 'price_unit': 1000.0,
-                'tax_ids': False,
+                'tax_id': False,
             })]
         })
 
@@ -103,7 +103,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
             'amount': 50,
         }).create_invoices()
 
-        invoice = sale_order.account_move_ids
+        invoice = sale_order.invoice_ids
 
         # Check that the warning does not appear even though we are creating an invoice
         # that should bring partner_a's credit above its limit.
@@ -131,7 +131,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
             'journal_id': invoice.journal_id.id,
         }).reverse_moves()
 
-        credit_note = sale_order.account_move_ids[1]
+        credit_note = sale_order.invoice_ids[1]
         credit_note.action_post()
 
         # Check that the credit note is accounted for correctly for the amount_to_invoice
@@ -153,7 +153,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
                     'product_id': self.company_data['product_order_no'].id,
                     'product_uom_qty': 1,
                     'price_unit': 45.0,
-                    'tax_ids': False,
+                    'tax_id': False,
                 })
             ]
         })
@@ -166,7 +166,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
                     'product_id': self.company_data['product_order_no'].id,
                     'product_uom_qty': 1,
                     'price_unit': 65.0,
-                    'tax_ids': False,
+                    'tax_id': False,
                 })
             ],
         })
