@@ -148,7 +148,6 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/public_web/**/*',
             'mail/static/src/**/web_portal/**/*',
             'mail/static/src/**/web/**/*',
-            ('remove', 'mail/static/src/core/web/wysiwyg.js'),
             ('remove', 'mail/static/src/**/*.dark.scss'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
@@ -160,9 +159,6 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/discuss/**/web/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
             'mail/static/src/views/fields/**/*',
-        ],
-        'web_editor.backend_assets_wysiwyg': [
-            'mail/static/src/core/web/wysiwyg.js',
         ],
         "web.assets_web_dark": [
             'mail/static/src/**/*.dark.scss',

@@ -35,6 +35,7 @@ export class EmojiPlugin extends Plugin {
     setup() {
         this.overlay = this.shared.createOverlay(EditorEmojiPicker, {
             position: "bottom-start",
+            hasAutofocus: true,
         });
         this.addDomListener(this.document, "mousedown", () => {
             this.overlay.close();
