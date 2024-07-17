@@ -796,6 +796,9 @@ class SaleOrder(models.Model):
                     active_products_domain
                 ):
                     continue
+                # Skip discount that has already been applied
+                if reward.reward_type == 'discount' and coupon in self.order_line.coupon_id:
+                    continue
                 if points >= reward.required_points:
                     result[coupon] |= reward
         return result
