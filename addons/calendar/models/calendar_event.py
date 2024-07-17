@@ -293,7 +293,7 @@ class Meeting(models.Model):
             # Right before saving the event, old partners must be able to save changes.
             if event._origin:
                 editor_candidates += event._origin.partner_ids.user_ids
-            event.user_can_edit = self.env.user in editor_candidates
+            event.user_can_edit = self.env.user.id in editor_candidates.ids
 
     @api.depends('attendee_ids')
     def _compute_invalid_email_partner_ids(self):

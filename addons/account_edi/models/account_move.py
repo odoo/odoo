@@ -330,7 +330,7 @@ class AccountMove(models.Model):
             if is_move_marked:
                 move.message_post(body=_("A request for cancellation of the EDI has been called off."))
 
-        documents.write({'state': 'sent'})
+        documents.write({'state': 'sent', 'error': False, 'blocking_level': False})
 
     def _get_edi_document(self, edi_format):
         return self.edi_document_ids.filtered(lambda d: d.edi_format_id == edi_format)
