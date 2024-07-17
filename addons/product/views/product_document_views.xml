@@ -55,51 +55,34 @@
                 <field name="mimetype"/>
                 <field name="type"/>
                 <field name="name"/>
-                <field name="create_uid"/>
                 <field name="active"/>
+                <field name="res_model"/>
                 <templates>
                     <t t-name="kanban-menu">
-                        <a t-if="widget.editable" type="edit" class="dropdown-item">Edit</a>
+                        <a t-if="widget.editable" type="open" class="dropdown-item">Edit</a>
                         <a t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
                         <a t-attf-href="/web/content/#{record.ir_attachment_id.raw_value}?download=true" download="" class="dropdown-item">Download</a>
                     </t>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_area o_kanban_attachment">
-                            <field name="res_model" invisible="True"/>
-                            <div class="ribbon ribbon-top-right" invisible="active">
-                                <span class="text-bg-danger">Archived</span>
+                    <t t-name="kanban-card" class="o_kanban_attachment flex-row">
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <widget name="web_ribbon" title="Variant" bg_color="text-bg-secondary" invisible="not active or res_model != 'product.product'" groups="product.group_product_variant"/>
+                        <aside class="o_kanban_image m-2">
+                            <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"/>
+                            <t t-set="binaryPreviewable"
+                                t-value="new RegExp('(image|video|application/pdf|text)').test(record.mimetype.value) &amp;&amp; record.type.raw_value === 'binary'"/>
+                            <div t-attf-class="o_kanban_image_wrapper #{(webimage or binaryPreviewable) ? 'o_kanban_previewer' : ''}">
+                                <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted" aria-label="Image is a link"/>
+                                <img t-elif="webimage" t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
+                                <div t-else="" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
                             </div>
-                            <div class="ribbon ribbon-top-right" invisible="not active or res_model != 'product.product'" groups="product.group_product_variant">
-                                <span class="text-bg-secondary">Variant</span>
+                        </aside>
+                        <main class="ms-2 p-2">
+                            <field name="name" class=" fw-bolder fs-5 text-truncate"/>
+                            <field  t-if="record.type.raw_value == 'url'" name="url" widget="url"/>
+                            <div class="d-flex flex-column mt-2">
+                                <field name="res_name" class="text-decoration-underline fst-italic" invisible="res_model != 'product.product'"/>
                             </div>
-                            <div class="o_kanban_image">
-                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"/>
-                                <t t-set="binaryPreviewable"
-                                   t-value="new RegExp('(image|video|application/pdf|text)').test(record.mimetype.value) &amp;&amp; record.type.raw_value === 'binary'"/>
-                                <div t-attf-class="o_kanban_image_wrapper #{(webimage or binaryPreviewable) ? 'o_kanban_previewer' : ''}">
-                                    <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted" aria-label="Image is a link"/>
-                                    <img t-elif="webimage" t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
-                                    <div t-else="" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
-                                </div>
-                            </div>
-                            <div class="o_kanban_details h-100">
-                                <div class="o_kanban_details_wrapper h-100 justify-content-between">
-                                    <div class="o_kanban_record_title">
-                                        <field name="name" class="o_text_overflow"/>
-                                    </div>
-                                    <div class="o_kanban_record_body"
-                                         name="body"
-                                         t-if="record.type.raw_value == 'url'">
-                                        <field name="url" widget="url" invisible="type == 'binary'"/>
-                                    </div>
-                                    <div class="o_kanban_record_bottom flex-column" name="bottom">
-                                        <div class="mt-2" invisible="res_model != 'product.product'">
-                                            <field name="res_name" style="font-style: italic; text-decoration-line: underline;"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </main>
                     </t>
                 </templates>
             </kanban>

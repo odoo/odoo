@@ -10,11 +10,11 @@ registry.category("web_tour.tours").add('test_mrp_bom_product_catalog', {
             run: "click",
         },
         {
-            trigger: 'div.o_kanban_record:nth-child(1)',
+            trigger: '.o_kanban_record:nth-child(1)',
             run: "click",
         },
         {
-            trigger: 'div.o_product_added',
+            trigger: '.o_product_added',
             run: "click",
         },
         {
@@ -34,11 +34,11 @@ registry.category("web_tour.tours").add('test_mrp_production_product_catalog', {
             run: "click",
         },
         {
-            trigger: 'div.o_kanban_record:nth-child(1)',
+            trigger: '.o_kanban_record:nth-child(1)',
             run: "click",
         },
         {
-            trigger: 'div.o_product_added',
+            trigger: '.o_product_added',
             run: "click",
         },
         {

@@ -255,8 +255,8 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
             <field name="arch" type="xml">
-                <field name="default_code" invisible="1" position="after">
-                    <field name="is_storable" invisible="1"/>
+                <field name="id" position="after">
+                    <field name="is_storable"/>
                 </field>
                 <div name="o_kanban_price" position="after">
                     <div t-if="record.is_storable.raw_value"
@@ -266,7 +266,7 @@
                         <field name="uom_id" class="ms-1" groups="uom.group_uom"/>
                     </div>
                 </div>
-                <a role="menuitem" type="edit" position="after">
+                <a role="menuitem" type="open" position="after">
                     <a role="menuitem" type="object" name="action_product_forecast_report" class="dropdown-item border-top-0">View Availability</a>
                 </a>
             </field>
