@@ -606,15 +606,16 @@ class Partner(models.Model):
             self.write(sync_vals)
             self._commercial_sync_to_children()
 
-    def _commercial_sync_to_children(self):
+    def _commercial_sync_to_children(self, fields_to_sync=None):
         """ Handle sync of commercial fields to descendants """
         commercial_partner = self.commercial_partner_id
-        sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
+        if fields_to_sync is None:
+            fields_to_sync = self._commercial_fields()
+        sync_vals = commercial_partner._update_fields_values(fields_to_sync)
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
-            child._commercial_sync_to_children()
+            child._commercial_sync_to_children(fields_to_sync)
         res = sync_children.write(sync_vals)
-        sync_children._compute_commercial_partner()
         return res
 
     def _fields_sync(self, values):
@@ -638,13 +639,8 @@ class Partner(models.Model):
             return
         # 2a. Commercial Fields: sync if commercial entity
         if self.commercial_partner_id == self:
-            commercial_fields = self._commercial_fields()
-            if any(field in values for field in commercial_fields):
-                self.sudo()._commercial_sync_to_children()
-        for child in self.child_ids.filtered(lambda c: not c.is_company):
-            if child.commercial_partner_id != self.commercial_partner_id:
-                self.sudo()._commercial_sync_to_children()
-                break
+            fields_to_sync = values.keys() & self._commercial_fields()
+            self.sudo()._commercial_sync_to_children(fields_to_sync)
         # 2b. Address fields: sync if address changed
         address_fields = self._address_fields()
         if any(field in values for field in address_fields):
