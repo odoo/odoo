@@ -148,6 +148,7 @@ class Meeting(models.Model):
             'description': google_event.description and tools.html_sanitize(google_event.description),
             'location': google_event.location,
             'user_id': google_event.owner(self.env).id,
+            'partner_id': google_event.partner_id,
             'privacy': google_event.visibility or False,
             'attendee_ids': attendee_commands,
             'alarm_ids': alarm_commands,
@@ -193,9 +194,9 @@ class Meeting(models.Model):
         partner_commands = []
         google_attendees = google_event.attendees or []
         if len(google_attendees) == 0 and google_event.organizer and google_event.organizer.get('self', False):
-            user = google_event.owner(self.env)
+            partner = self.env['res.partner'].browse(google_event.partner_id) or google_event.owner(self.env).partner_id
             google_attendees += [{
-                'email': user.partner_id.email,
+                'email': partner.email,
                 'responseStatus': 'accepted',
             }]
         emails = [a.get('email') for a in google_attendees]
@@ -315,7 +316,7 @@ class Meeting(models.Model):
             'description': tools.html_sanitize(self.description) if not tools.is_html_empty(self.description) else '',
             'location': self.location or '',
             'guestsCanModify': not self.guests_readonly,
-            'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},
+            'organizer': {'email': self.partner_id.email, 'self': self.user_id == self.env.user},
             'attendees': attendee_values,
             'extendedProperties': {
                 'shared': {

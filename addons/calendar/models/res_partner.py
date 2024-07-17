@@ -17,6 +17,12 @@ class Partner(models.Model):
     calendar_last_notif_ack = fields.Datetime(
         'Last notification marked as read from base Calendar', default=fields.Datetime.now)
 
+    calendar_settings = fields.One2many('calendar.settings', 'partner_id')
+
+    @property
+    def calendar_user_ids(self):
+        return (self.parent_id or self).user_ids
+
     def _compute_meeting_count(self):
         result = self._compute_meeting()
         for p in self:

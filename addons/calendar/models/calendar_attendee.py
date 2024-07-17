@@ -60,7 +60,8 @@ class Attendee(models.Model):
         for values in vals_list:
             # by default, if no state is given for the attendee corresponding to the current user
             # that means he's the event organizer so we can set his state to "accepted"
-            if 'state' not in values and values.get('partner_id') == self.env.user.partner_id.id:
+            if 'state' not in values and (values.get('partner_id') == self.env.user.partner_id.id
+                    or self.env.user.id in self.env['res.partner'].browse(values.get('partner_id')).calendar_user_ids.ids):
                 values['state'] = 'accepted'
             if not values.get("email") and values.get("common_name"):
                 common_nameval = values.get("common_name").split(':')

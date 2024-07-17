@@ -123,8 +123,10 @@ class Meeting(models.Model):
     name = fields.Char('Meeting Subject', required=True)
     description = fields.Html('Description')
     user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user)
+    user_partner_id = fields.Many2one('res.partner', store=False, default=lambda self: self.env.user.partner_id)
     partner_id = fields.Many2one(
-        'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
+        'res.partner', string='Calendar', store=True, readonly=False, default=lambda self: self.env.user.partner_id,
+        compute='_compute_partner_id', domain="['|', ('id', '=', user_partner_id), ('parent_id', '=', user_partner_id)]")
     location = fields.Char('Location', tracking=True)
     videocall_location = fields.Char('Meeting URL', compute='_compute_videocall_location', store=True, copy=True)
     access_token = fields.Char('Invitation Token', store=True, copy=False, index=True)
@@ -250,6 +252,21 @@ class Meeting(models.Model):
     tentative_count = fields.Integer(compute='_compute_attendees_count')
     awaiting_count = fields.Integer(compute="_compute_attendees_count")
     user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
+
+    @api.onchange('user_id')
+    def _compute_partner_id(self):
+        for event in self:
+            event.partner_id = event.user_id.partner_id
+
+    @api.onchange('user_id')
+    def onchange_user_id(self):
+        for event in self:
+            event.user_partner_id = event.user_id.partner_id
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        for event in self:
+            event.partner_ids = event.partner_ids._origin.filtered(lambda partner_id: event.user_id not in partner_id.calendar_user_ids) + event.partner_id
 
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):
@@ -558,7 +575,9 @@ class Meeting(models.Model):
         # Automatically add the current partner when creating an event if there is none (happens when we quickcreate an event)
         default_partners_ids = defaults.get('partner_ids') or ([(4, self.env.user.partner_id.id)])
         vals_list = [
-            dict(vals, attendee_ids=self._attendees_values(vals.get('partner_ids', default_partners_ids)))
+            dict(vals, attendee_ids=self._attendees_values(
+                vals.get('partner_ids') or (vals.get('partner_id') and [(4, vals['partner_id'])]) or default_partners_ids
+            ))
             if not vals.get('attendee_ids')
             else vals
             for vals in vals_list

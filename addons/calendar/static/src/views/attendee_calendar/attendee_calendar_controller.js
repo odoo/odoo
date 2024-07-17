@@ -35,6 +35,20 @@ export class AttendeeCalendarController extends CalendarController {
         );
     }
 
+    onClickAddCalendar() {
+        this.actionService.doAction(
+            {
+                type: "ir.actions.act_window",
+                res_model: "calendar.add.calendar",
+                views: [[false, "form"]],
+                target: "new",
+            },
+            {
+                additionalContext: this.props.context,
+            }
+        );
+    }
+
     goToFullEvent(resId, additionalContext) {
         this.actionService.doAction(
             {

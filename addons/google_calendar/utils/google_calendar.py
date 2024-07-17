@@ -29,19 +29,28 @@ class GoogleCalendarService():
         self.google_service = google_service
 
     @requires_auth_token
-    def get_events(self, sync_token=None, token=None, event_id=None, timeout=TIMEOUT):
-        url = "/calendar/v3/calendars/primary/events"
+    def get_events(self, calendar, token=None, primary=False, full_sync=False, event_id=None, timeout=TIMEOUT):
+        if not primary:
+            url = f"/calendar/v3/calendars/{calendar.google_calendar_cal_id}/events"
+        else:
+            url = "/calendar/v3/calendars/primary/events"
         if event_id:
             url += f"/{event_id}"
         headers = {'Content-type': 'application/json'}
         params = {'access_token': token}
-        if sync_token:
-            params['syncToken'] = sync_token
+        if event_id:
+            # We force the sync_token parameter to avoid doing a full sync.
+            # Other events are fetched when the calendar view is displayed.
+            params['syncToken'] = token
+            full_sync = False
+        elif not full_sync and calendar.calendar_settings.google_calendar_sync_token:
+            params['syncToken'] = calendar.calendar_settings.google_calendar_sync_token
         else:
             # full sync, limit to a range of 1y in past to 1y in the futur by default
+            full_sync = True
             ICP = self.google_service.env['ir.config_parameter'].sudo()
             day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))
-            _logger.info("Full cal sync, restricting to %s days range", day_range)
+            _logger.info("Calendar: Full cal sync for %s, restricting to %s days range", calendar, day_range)
             lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
             upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
             params['timeMin'] = lower_bound.isoformat() + 'Z'  # Z = UTC (RFC3339)
@@ -56,7 +65,7 @@ class GoogleCalendarService():
         if event_id:
             next_sync_token = None
             default_reminders = ()
-            return GoogleEvent([data]), next_sync_token, default_reminders
+            return GoogleEvent([data]), next_sync_token, default_reminders, full_sync
 
         events = data.get('items', [])
         next_page_token = data.get('nextPageToken')
@@ -68,8 +77,9 @@ class GoogleCalendarService():
 
         next_sync_token = data.get('nextSyncToken')
         default_reminders = data.get('defaultReminders')
-
-        return GoogleEvent(events), next_sync_token, default_reminders
+        for event in events:
+            event['partner_id'] = calendar.id
+        return GoogleEvent(events), next_sync_token, default_reminders, full_sync
 
     @requires_auth_token
     def insert(self, values, token=None, timeout=TIMEOUT, need_video_call=True):
@@ -106,6 +116,23 @@ class GoogleCalendarService():
                 raise e
             _logger.info("Google event %s was already deleted" % event_id)
 
+    ########################
+    ##  MANAGE CALENDARS  ##
+    ########################
+
+    def get_extra_calendars(self, token=None, timeout=TIMEOUT):
+        if not token:
+            return {}
+        url = "/calendar/v3/users/me/calendarList"
+        headers = {'Content-type': 'application/json'}
+        params = {'access_token': token}
+        try:
+            _, data, _ = self.google_service._do_request(url, params, headers, method='GET', timeout=timeout)
+        except requests.HTTPError as e:
+            if e.response.status_code == 410 and 'fullSyncRequired' in str(e.response.content):
+                raise InvalidSyncToken("Invalid sync token. Full sync required")
+            raise requests.HTTPError(e)
+        return {d['id']: d['summary'] for d in data['items'] if d['accessRole'] == 'owner' and not d.get('primary')}
 
     #################################
     ##  MANAGE CONNEXION TO GMAIL  ##
