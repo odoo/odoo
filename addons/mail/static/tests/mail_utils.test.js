@@ -77,6 +77,117 @@ test("addLink: utility function and special entities", () => {
     }
 });
 
+test("markdown should not affect addlink", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create([
+        {
+            body: `<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/?&amp;currency_id">https://example.com/?&amp;currency_id</a></p>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: `<odoo-markdown><p><a target="_blank" rel="noreferrer noopener" href="https://example.com/?&amp;currency_id">https://example.com/?&amp;currency_id</a></p></odoo-markdown>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+
+            body: "&amp; &amp;amp; &gt; &lt;",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: "<odoo-markdown>&amp; &amp;amp; &gt; &lt;</odoo-markdown>",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+
+            body: `<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>&gt;</p>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: `<odoo-markdown><p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>&gt;</p></odoo-markdown>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+
+            body: `<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>"hello"&gt;</p>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: `<odoo-markdown><p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>"hello"&gt;</p></odoo-markdown>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: `<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/&amp;hello">https://example.com/&amp;hello</a></p>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: `<odoo-markdown><p><a target="_blank" rel="noreferrer noopener" href="https://example.com/&amp;hello">https://example.com/&amp;hello</a></p></odoo-markdown>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: `<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/'yeah'">https://example.com/'yeah'</a></p>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: `<odoo-markdown><p><a target="_blank" rel="noreferrer noopener" href="https://example.com/'yeah'">https://example.com/'yeah'</a></p></odoo-markdown>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: ":'(",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: "<odoo-markdown>:'(</odoo-markdown>",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: "&lt;3",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: "<odoo-markdown>&lt;3</odoo-markdown>",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/%5B%5D">https://odoo.com/[]</a>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: `<odoo-markdown><a target="_blank" rel="noreferrer noopener" href="https://odoo.com/%5B%5D">https://odoo.com/[]</a></odoo-markdown>`,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message-content a", { text: "https://example.com/?&currency_id", count: 2 });
+    await contains(".o-mail-Message-content", { text: "& &amp; > <", count: 2 });
+    await contains(".o-mail-Message-content", { text: "https://example.com/>", count: 2 });
+    await contains(".o-mail-Message-content", { text: `https://example.com/"hello">`, count: 2 });
+    await contains(".o-mail-Message-content", { text: "https://example.com/&hello", count: 2 });
+    await contains(".o-mail-Message-content", { text: "https://example.com/'yeah'", count: 2 });
+    await contains(".o-mail-Message-content", { text: ":'(", count: 2 });
+    await contains(".o-mail-Message-content", { text: "<3", count: 2 });
+    await contains(".o-mail-Message-content", { text: "https://odoo.com/[]", count: 2 });
+});
+
 test("addLink: linkify inside text node (1 occurrence)", async () => {
     const content = "<p>some text https://somelink.com</p>";
     const linkified = parseAndTransform(content, addLink);
