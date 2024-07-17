@@ -1412,6 +1412,8 @@ class HrLeave(models.Model):
         ).create(new_leaves_vals)
 
     def _action_validate(self, check_state=True):
+        if not self:
+            return True
         current_employee = self.env.user.employee_id
         leaves = self._get_leaves_on_public_holiday()
         if check_state and any(not holiday.can_validate for holiday in self):
@@ -1701,7 +1703,7 @@ class HrLeave(models.Model):
         return ['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval']
 
     def activity_update(self):
-        if self.env.context.get('mail_activity_automation_skip'):
+        if not self or self.env.context.get('mail_activity_automation_skip'):
             return
 
         to_clean, to_do, to_do_confirm_activity = self.env['hr.leave'], self.env['hr.leave'], self.env['hr.leave']
