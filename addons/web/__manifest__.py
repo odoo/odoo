@@ -446,6 +446,7 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/lib/hoot/**/*',
             'web/static/lib/hoot-dom/**/*',
+            ('remove', 'web/static/lib/hoot/ui/hoot_style.css'),
             ('remove', 'web/static/lib/hoot/tests/**/*'),
 
             # Odoo mocks

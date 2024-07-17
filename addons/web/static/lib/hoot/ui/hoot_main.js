@@ -44,10 +44,12 @@ export class HootMain extends Component {
 
     static template = xml`
         <t t-if="env.runner.config.headless">
-            Running in headless mode
-            <a class="text-primary hoot-link" t-att-href="createURL({ headless: null })">
-                Run with UI
-            </a>
+            <div class="flex justify-center items-center text-3xl w-full h-full gap-3">
+                Running in headless mode
+                <a class="text-primary hoot-link" t-att-href="createURL({ headless: null })">
+                    Run with UI
+                </a>
+            </div>
         </t>
         <t t-else="">
             <main
