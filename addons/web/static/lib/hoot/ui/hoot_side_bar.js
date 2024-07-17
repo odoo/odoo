@@ -81,7 +81,10 @@ export class HootSideBarCounter extends Component {
 
     static template = xml`
         <t t-set="info" t-value="getCounterInfo()" />
-        <span t-att-class="info[1] ? info[0] : 'text-muted'" t-esc="info[1]" />
+        <span
+            t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-muted' }}"
+            t-esc="info[1]"
+        />
     `;
 
     getCounterInfo() {
@@ -118,13 +121,11 @@ export class HootSideBar extends Component {
                 <t t-foreach="state.items" t-as="item" t-key="item.id">
                     <li class="flex items-center h-7 animate-slide-down">
                         <button
-                            class="flex items-center w-full h-full px-2 overflow-hidden"
-                            t-att-class="{ 'bg-gray-300 dark:bg-gray-700': state.hovered === item.id or uiState.selectedSuiteId === item.id }"
+                            class="hoot-sidebar-suite flex items-center w-full h-full px-2 overflow-hidden hover:bg-gray-300 dark:hover:bg-gray-700"
+                            t-att-class="{ 'bg-gray-300 dark:bg-gray-700': uiState.selectedSuiteId === item.id }"
                             t-attf-style="margin-left: {{ (item.path.length - 1) + 'rem' }};"
                             t-att-title="item.name"
                             t-on-click="() => this.toggleItem(item.id)"
-                            t-on-pointerenter="() => state.hovered = item.id"
-                            t-on-pointerleave="() => state.hovered = null"
                         >
                             <div class="flex items-center truncate gap-1 flex-1">
                                 <HootSideBarSuite
@@ -135,12 +136,8 @@ export class HootSideBar extends Component {
                                     unfolded="state.unfolded.has(item.id)"
                                 />
                             </div>
-                            <t t-if="state.hovered === item.id">
-                                <HootJobButtons job="item" />
-                            </t>
-                            <t t-else="">
-                                <HootSideBarCounter reporting="item.reporting" statusFilter="uiState.statusFilter" />
-                            </t>
+                            <HootJobButtons hidden="true" job="item" />
+                            <HootSideBarCounter reporting="item.reporting" statusFilter="uiState.statusFilter" />
                         </button>
                     </li>
                 </t>
@@ -153,7 +150,6 @@ export class HootSideBar extends Component {
 
         this.uiState = useState(ui);
         this.state = useState({
-            hovered: null,
             items: [],
             /** @type {Set<string>} */
             unfolded: new Set(),
