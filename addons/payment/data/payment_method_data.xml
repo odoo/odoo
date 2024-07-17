@@ -174,6 +174,75 @@
         />
     </record>
 
+    <record id="payment_method_alipay_plus" model="payment.method">
+        <field name="name">Alipay+</field>
+        <field name="code">alipay_plus</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/alipay_plus.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.at'),
+                         ref('base.au'),
+                         ref('base.be'),
+                         ref('base.bg'),
+                         ref('base.ch'),
+                         ref('base.cr'),
+                         ref('base.cy'),
+                         ref('base.de'),
+                         ref('base.dk'),
+                         ref('base.ee'),
+                         ref('base.es'),
+                         ref('base.fi'),
+                         ref('base.fr'),
+                         ref('base.gr'),
+                         ref('base.hk'),
+                         ref('base.hr'),
+                         ref('base.hu'),
+                         ref('base.ie'),
+                         ref('base.is'),
+                         ref('base.it'),
+                         ref('base.kr'),
+                         ref('base.li'),
+                         ref('base.lt'),
+                         ref('base.lu'),
+                         ref('base.lv'),
+                         ref('base.mt'),
+                         ref('base.my'),
+                         ref('base.nl'),
+                         ref('base.no'),
+                         ref('base.ph'),
+                         ref('base.pl'),
+                         ref('base.pt'),
+                         ref('base.ro'),
+                         ref('base.se'),
+                         ref('base.si'),
+                         ref('base.sk'),
+                         ref('base.th'),
+                         ref('base.uk'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.AUD'),
+                         ref('base.CHF'),
+                         ref('base.DKK'),
+                         ref('base.EUR'),
+                         ref('base.GBP'),
+                         ref('base.HKD'),
+                         ref('base.KRW'),
+                         ref('base.MYR'),
+                         ref('base.NOK'),
+                         ref('base.PHP'),
+                         ref('base.SEK'),
+                         ref('base.THB'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_method_alma" model="payment.method">
         <field name="name">Alma</field>
         <field name="code">alma</field>
@@ -877,6 +946,27 @@
         />
     </record>
 
+    <record id="payment_method_cimb_niaga" model="payment.method">
+        <field name="name">CIMB Niaga</field>
+        <field name="code">cimb_niaga</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/cimb_niaga.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.id'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.IDR'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_method_clearpay" model="payment.method">
         <field name="name">Clearpay</field>
         <field name="code">clearpay</field>
@@ -898,39 +988,19 @@
         />
     </record>
 
-     <record id="payment_method_cimb_niaga" model="payment.method">
-        <field name="name">CIMB Niaga</field>
-        <field name="code">cimb_niaga</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cimb_niaga.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund">none</field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
-                         ref('base.id'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.IDR'),
-                     ])]"
-        />
-    </record>
-
     <record id="payment_method_cofidis" model="payment.method">
         <field name="name">cofidis</field>
         <field name="code">cofidis</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cofidis.png"/>
+        <field name="image" type="base64" file="payment/static/img/clearpay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
         <field name="supported_country_ids"
                eval="[Command.set([
                          ref('base.be'),
+                         ref('base.fr'),
                      ])]"
         />
         <field name="supported_currency_ids"
@@ -1077,7 +1147,11 @@
         <field name="support_refund">none</field>
         <field name="supported_country_ids"
                eval="[Command.set([
+                         ref('base.br'),
+                         ref('base.es'),
                          ref('base.fr'),
+                         ref('base.it'),
+                         ref('base.pt'),
                      ])]"
         />
         <field name="supported_currency_ids"
@@ -2631,6 +2705,56 @@
                eval="[Command.set([
                          ref('base.AUD'),
                          ref('base.NZD'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_method_post_finance" model="payment.method">
+        <field name="name">PostFinance Pay</field>
+        <field name="code">post_finance_pay</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/pf_pay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.at'),
+                         ref('base.be'),
+                         ref('base.bg'),
+                         ref('base.ch'),
+                         ref('base.cy'),
+                         ref('base.cz'),
+                         ref('base.de'),
+                         ref('base.dk'),
+                         ref('base.ee'),
+                         ref('base.es'),
+                         ref('base.fi'),
+                         ref('base.fr'),
+                         ref('base.gr'),
+                         ref('base.hr'),
+                         ref('base.hu'),
+                         ref('base.ie'),
+                         ref('base.it'),
+                         ref('base.lt'),
+                         ref('base.lu'),
+                         ref('base.lv'),
+                         ref('base.mt'),
+                         ref('base.nl'),
+                         ref('base.pl'),
+                         ref('base.pt'),
+                         ref('base.ro'),
+                         ref('base.se'),
+                         ref('base.si'),
+                         ref('base.sk'),
+                         ref('base.uk'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.CHF'),
+                         ref('base.EUR'),
                      ])]"
         />
     </record>
