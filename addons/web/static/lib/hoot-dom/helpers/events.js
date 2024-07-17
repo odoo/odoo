@@ -837,7 +837,7 @@ const _fill = (target, value, options) => {
 
     if (options?.instantly) {
         // Simulates filling the clipboard with the value (can be from external source)
-        globalThis.navigator.clipboard.writeTextSync(value);
+        globalThis.navigator.clipboard.writeText(value);
         _press(target, { ctrlKey: true, key: "v" });
     } else {
         if (options?.composition) {
@@ -1100,7 +1100,7 @@ const _keyDown = (target, eventInit) => {
             if (ctrlKey) {
                 // Get selection from window
                 const text = globalThis.getSelection().toString();
-                globalThis.navigator.clipboard.writeTextSync(text);
+                globalThis.navigator.clipboard.writeText(text);
 
                 dispatch(target, "copy", {
                     clipboardData: eventInit.dataTransfer || new DataTransfer(),
@@ -1158,9 +1158,10 @@ const _keyDown = (target, eventInit) => {
         case "v": {
             if (ctrlKey && isEditable(target)) {
                 // Set target value (synchonously)
-                const value = globalThis.navigator.clipboard.readTextSync();
-                nextValue = value;
-
+                nextValue = globalThis.navigator.clipboard._value;
+                if (typeof nextValue !== "string") {
+                    throw new HootDomError("cannot read text value from clipboard");
+                }
                 inputType = "insertFromPaste";
 
                 dispatch(target, "paste", {
@@ -1178,7 +1179,7 @@ const _keyDown = (target, eventInit) => {
             if (ctrlKey && isEditable(target)) {
                 // Get selection from window
                 const text = globalThis.getSelection().toString();
-                globalThis.navigator.clipboard.writeTextSync(text);
+                globalThis.navigator.clipboard.writeText(text);
 
                 nextValue = deleteSelection(target);
                 inputType = "deleteByCut";
