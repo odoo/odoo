@@ -16,7 +16,7 @@ export class AccountMoveController extends FormController {
     }
 
     async deleteRecord() {
-        if ( !await this.account_move_service.addDeletionDialog(this, this.model.root.resId)) {
+        if (!await this.account_move_service.addDeletionDialog(this, this.model.root.resId)) {
             return super.deleteRecord(...arguments);
         }
     }
