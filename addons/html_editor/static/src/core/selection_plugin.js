@@ -158,14 +158,7 @@ export class SelectionPlugin extends Plugin {
                     const containerSelector = "#wrap>*, .oe_structure>*, [contenteditable]";
                     const container =
                         selection && closestElement(selection.anchorNode, containerSelector);
-                    let [anchorNode, anchorOffset] = startPos(container);
-                    if (
-                        anchorNode.firstChild &&
-                        anchorNode.firstChild.isContentEditable === false
-                    ) {
-                        anchorNode = anchorNode.firstChild.nextSibling;
-                        anchorOffset = 0;
-                    }
+                    const [anchorNode, anchorOffset] = startPos(container);
                     const [focusNode, focusOffset] = endPos(container);
                     this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
                 }
