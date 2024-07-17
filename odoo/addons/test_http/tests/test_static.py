@@ -363,6 +363,10 @@ class TestHttpStatic(TestHttpStaticCommon):
                 },
             )
 
+    def test_static21_download_false(self):
+        self.assertDownloadGizeh('/web/content/test_http.gizeh_png?download=0')
+        self.assertDownloadGizeh('/web/image/test_http.gizeh_png?download=0')
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
