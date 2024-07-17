@@ -390,6 +390,11 @@ class IrFieldsConverter(models.AbstractModel):
             {'moreinfo': [_label or str(item) for item, _label in selection if _label or item]}
         )
 
+    def _get_base_name_search_domain(self, model):
+        if hasattr(model, "company_id"):
+            return ["|", ("company_id", "=", False), ("company_id", "=", self.env.company.id)]
+        return []
+
     @api.model
     def db_id_for(self, model, field, subfield, value):
         """ Finds a database id for the reference ``value`` in the referencing
@@ -459,7 +464,8 @@ class IrFieldsConverter(models.AbstractModel):
             if value == '':
                 return False, field_type, warnings
             flush(model=field.comodel_name)
-            ids = RelatedModel.name_search(name=value, operator='=')
+            args = self._get_base_name_search_domain(RelatedModel)
+            ids = RelatedModel.name_search(name=value, operator='=', args=args)
             if ids:
                 if len(ids) > 1:
                     warnings.append(ImportWarning(
