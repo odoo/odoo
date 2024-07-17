@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit, queryAll, queryFirst, select } from "@odoo/hoot-dom";
+import { click, edit, queryAll, queryFirst, select, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -496,4 +496,53 @@ test("datetime field: use picker with arabic numbering system", async () => {
     select(45, { target: getTimePickers()[0][1] });
     await animationFrame();
     expect(queryFirst("[name=datetime] input")).toHaveValue("٠٢/٠٨/٢٠١٧ ١١:٤٥:٠٠");
+});
+
+test("datetime field in list view with show_seconds option", async () => {
+    mockTimeZone(+2);
+    onRpc("has_group", () => true);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <tree>
+                <field name="datetime" widget="datetime" options="{'show_seconds': false}" string="show_seconds as false"/>
+                <field name="datetime" widget="datetime" string="show_seconds as true"/>
+            </tree>`,
+    });
+
+    expect(queryAllTexts(".o_data_row:first .o_field_datetime")).toEqual([
+        "02/08/2017 12:00",
+        "02/08/2017 12:00:00",
+    ]);
+});
+
+test("edit a datetime field in form view with show_seconds option", async () => {
+    mockTimeZone(+2);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="datetime" widget="datetime" options="{'show_seconds': false}" string="show_seconds as false"/>
+                <field name="datetime" widget="datetime" string="show_seconds as true"/>
+            </form>`,
+    });
+
+    const [dateField1, dateField2] = queryAll(".o_input.cursor-pointer");
+    click(dateField1);
+    await animationFrame();
+    expect(".o_time_picker_select").toHaveCount(3);  // 3rd 'o_time_picker_select' is for the seconds
+    edit("02/08/2017 11:00:00", { confirm: "Enter" });
+    await animationFrame();
+
+    expect(dateField1).toHaveValue("02/08/2017 11:00", {
+        message: "seconds should be hidden for showSeconds false",
+    });
+
+    expect(dateField2).toHaveValue("02/08/2017 11:00:00", {
+        message: "seconds should be visible for showSeconds true",
+    });
 });
