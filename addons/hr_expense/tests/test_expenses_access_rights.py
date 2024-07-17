@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import HttpCase, tagged, new_test_user
+
+from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('-at_install', 'post_install')
@@ -89,6 +91,32 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         # An expense manager having accounting access rights is able to post the journal entry.
         expense_sheet_approve.with_user(self.env.user).action_sheet_move_post()
         self.assertRecordValues(expense_sheet_approve, [{'state': 'post'}])
+
+    def test_corner_case_expense_sheet_only_accountant_can_unlink_expenses(self):
+        """
+        Test that only accountant can add/remove expenses from an approved sheet (to manually synchronize the model with the account.move)
+        """
+        accountant_user = mail_new_test_user(
+            self.env,
+            name='Accountant',
+            login='accountant_for_expense',
+            email='accountant_for_expense@example.com',
+            notification_type='email',
+            groups='base.group_user,account.group_account_user',
+            company_ids=[Command.set(self.env.companies.ids)],
+        )
+        sheet = self.create_expense_report()
+        sheet._do_submit()
+        sheet._do_approve()
+
+        new_expense = self.create_expense()
+        with self.assertRaises(UserError):
+            sheet.with_user(self.expense_user_employee).expense_line_ids = [Command.link(new_expense.id)]
+
+        with self.assertRaises(UserError):
+            sheet.with_user(self.expense_user_manager).expense_line_ids = [Command.link(new_expense.id)]
+
+        sheet.with_user(accountant_user).expense_line_ids = [Command.link(new_expense.id)]
 
     def test_expense_sheet_access_rights_user(self):
         # The expense base user (without other rights) is able to create and read sheet
