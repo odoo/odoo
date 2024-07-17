@@ -3,6 +3,7 @@
 
 from lxml import etree
 from lxml.html import builder as html
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -26,16 +27,19 @@ class Invite(models.TransientModel):
         if model and res_id:
             document = self.env['ir.model']._get(model).display_name
             title = self.env[model].browse(res_id).display_name
-            msg_fmt = _('%(user_name)s invited you to follow %(document)s document: %(title)s')
+            text = _(
+                '%(user_name)s invited you to follow %(document)s document: %(title)s',
+                user_name=user_name,
+                document=document,
+                title=title,
+            )
         else:
-            msg_fmt = _('%(user_name)s invited you to follow a new document.')
+            text = _('%(user_name)s invited you to follow a new document.', user_name=user_name)
 
-        text = msg_fmt % locals()
-        message = html.DIV(
-            html.P(_('Hello,')),
-            html.P(text)
+        result['message'] = Markup("<div><p>%s</p><p>%s</p></div>") % (
+            _('Hello,'),
+            text,
         )
-        result['message'] = etree.tostring(message)
         return result
 
     res_model = fields.Char('Related Document Model', required=True, help='Model of the followed resource')
