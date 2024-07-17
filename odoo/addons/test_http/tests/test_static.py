@@ -317,6 +317,10 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertNotEqual(location.path, bad_path, "loop detected")
         self.assertEqual(res.status_code, 404)
 
+    def test_static20_download_false(self):
+        self.assertDownloadGizeh('/web/content/test_http.gizeh_png?download=0')
+        self.assertDownloadGizeh('/web/image/test_http.gizeh_png?download=0')
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
