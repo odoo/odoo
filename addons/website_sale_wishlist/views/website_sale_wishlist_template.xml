@@ -18,6 +18,31 @@
         </xpath>
     </template>
 
+    <template id="product_cart_lines" inherit_id="website_sale.cart_lines" active="True">
+        <div name="o_wsale_cart_line_button_container" position="inside">
+            <span class="d-none d-md-inline-block ms-1">
+                <a
+                    href="#"
+                    class="small o_add_wishlist js_delete_product px-2 border-start"
+                    t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
+                    t-att-data-product-product-id="line.product_id.id"
+                    data-action="o_wishlist"
+                >
+                    Save for Later
+                </a>
+            </span>
+            <button
+                class="o_add_wishlist js_delete_product btn btn-light d-inline-block d-md-none"
+                t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
+                t-att-data-product-product-id="line.product_id.id"
+                data-action="o_wishlist"
+                title="Wishlist"
+            >
+                <i class="fa fa-heart-o"/>
+            </button>
+        </div>
+    </template>
+
     <template id="product_add_to_wishlist" inherit_id="website_sale.product" name="Wishlist Button" priority="20">
         <xpath expr="//div[@id='product_option_block']" position="inside">
             <t t-nocache="The wishlist depends on the user and must not be shared with other users. The product come from the controller.">
