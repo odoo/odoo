@@ -17,6 +17,7 @@
                                             <t t-esc="formatLineAmount(line)" />
                                     </t>
                                 </div>
+                                <input type="number" class="hidden-numpad-input form-control" style="display: none;" />
                             </div>
                             <t t-if="!line.payment_status or !['done', 'reversed', 'waitingCard', 'waitingCapture'].includes(line.payment_status)">
                                 <button class="delete-button btn btn-link mx-2 px-3"

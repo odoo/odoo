@@ -1,10 +1,7 @@
-import { _t } from "@web/core/l10n/translation";
-import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
-import { enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
@@ -37,14 +34,24 @@ export class PaymentScreenPaymentLines extends Component {
     async selectLine(paymentline) {
         this.props.selectLine(paymentline.uuid);
         if (this.ui.isSmall) {
-            this.dialog.add(NumberPopup, {
-                title: _t("New amount"),
-                buttons: enhancedButtons(),
-                startingValue: this.env.utils.formatCurrency(paymentline.get_amount(), false),
-                getPayload: (num) => {
-                    this.props.updateSelectedPaymentline(parseFloat(num));
-                },
-            });
+            const hiddenInput = document.querySelector(".hidden-numpad-input");
+            const amountElement = document.querySelector(".payment-amount");
+            if (hiddenInput) {
+                hiddenInput.value = paymentline.get_amount();
+                hiddenInput.style.display = "block";
+                amountElement.style.visibility = "hidden";
+                hiddenInput.focus();
+                hiddenInput.addEventListener("blur", () => {
+                    hiddenInput.style.display = "none";
+                    amountElement.style.visibility = "visible";
+                });
+                hiddenInput.addEventListener("change", (event) => {
+                    const newValue = parseFloat(event.target.value);
+                    if (!isNaN(newValue)) {
+                        this.props.updateSelectedPaymentline(newValue);
+                    }
+                });
+            }
         }
     }
 }

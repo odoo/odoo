@@ -1,7 +1,5 @@
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
-import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
-import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
 import { back } from "@point_of_sale/../tests/tours/utils/common";
 
 /**
@@ -192,14 +190,27 @@ export function fillPaymentLineAmountMobile(lineName, keys) {
             trigger: `.paymentlines .paymentline .payment-infos:contains("${lineName}")`,
             run: "click",
         },
-        ...NumberPopup.enterValue(keys).map((step) => ({
-            ...step,
-            isActive: ["mobile"],
-            run: "click",
-        })),
         {
-            ...Dialog.confirm(),
             isActive: ["mobile"],
+            content: "type value into input",
+            trigger: ".paymentlines .paymentline.selected .hidden-numpad-input",
+            run: function () {
+                var input = document.querySelector(".paymentlines .paymentline.selected .hidden-numpad-input");
+                input.style.display = "block";
+                input.focus();
+                input.value = "";
+            },
+        },
+        {
+            isActive: ["mobile"],
+            content: "type value into input",
+            trigger: ".paymentlines .paymentline.selected .hidden-numpad-input",
+            run: `edit ${keys}`,
+        },
+        {
+            isActive: ["mobile"],
+            content: "click outside to hide input",
+            trigger: ".paymentlines",
             run: "click",
         },
     ];
