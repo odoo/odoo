@@ -844,6 +844,43 @@ test(`group containing both a field and a group`, async () => {
     expect(`.o_field_widget[name=foo]`).toHaveClass(["o_field_char", "col-lg-6"]);
 });
 
+test(`field ids are unique (same field name in 2 form views)`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="foo"/>
+                    </group>
+                    <field name="child_ids">
+                        <form>
+                            <sheet>
+                                <group>
+                                    <field name="bar"/>
+                                    <field name="foo"/>
+                                </group>
+                            </sheet>
+                        </form>
+                        <tree>
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget input#foo_0").toHaveCount(1);
+
+    await contains(".o_field_x2many_list_row_add a").click();
+    expect(".modal .o_form_view").toHaveCount(1);
+    expect(".o_field_widget input#foo_0").toHaveCount(1);
+    expect(".modal .o_field_widget input#foo_0").toHaveCount(1);
+    expect(".modal .o_field_widget input#bar_0").toHaveCount(1);
+});
+
 test(`Form and subview with _view_ref contexts`, async () => {
     Product._fields.type_ids = fields.One2many({ relation: "partner.type" });
     Product._records = [{ id: 1, name: "Tromblon", type_ids: [12, 14] }];
