@@ -84,9 +84,9 @@
                 <field name="driver_id"/>
             </field>
             <xpath expr="//filter[@name='state']" position="after">
-                <filter name="vehicle_category_id" string="Vehicle Category" context="{'group_by':'vehicle_category_id'}"/>
-                <filter name="scheduled_date" string="Scheduled Date" context="{'group_by':'scheduled_date'}"/>
-                <filter name="picking_type_id" string="Operation Type" context="{'group_by':'picking_type_id'}"/>
+                <filter name="group_by_vehicle_category_id" string="Vehicle Category" context="{'group_by':'vehicle_category_id'}"/>
+                <filter name="group_by_scheduled_date" string="Scheduled Date" context="{'group_by':'scheduled_date'}"/>
+                <filter name="group_by_picking_type_id" string="Operation Type" context="{'group_by':'picking_type_id'}"/>
                 <filter name="group_by_dock_id" string="Dock Location" context="{'group_by':'dock_id'}" groups="stock.group_stock_multi_locations"/>
             </xpath>
             <xpath expr="//filter[@name='done']" position="after">
