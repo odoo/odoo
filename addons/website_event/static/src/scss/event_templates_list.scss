@@ -66,6 +66,28 @@
             &.left{
                 left: $card-spacer-x;
             }
+
+            &.o_wevent_date_with_flag {
+                .o_wevent_event_country_flag {
+                    height: 20px;
+                    margin-top: 2px;
+                    i {
+                        font-size: 20px;
+                    }
+                    img {
+                        max-width: 2.4rem;
+                    }
+                }
+                .o_wevent_event_date_text {
+                    line-height: .8rem;
+                }
+                .o_wevent_event_day, .o_wevent_event_month {
+                    @include font-size(.8rem);
+                }
+                .o_wevent_event_day {
+                    font-weight: 400;
+                }
+            }
         }
     }
     .o_wevent_sidebar_title {
@@ -95,5 +117,10 @@
     .o_half_screen_height {
         // Set min-height to the same value as the header
         min-height: 200px !important;
+    }
+    .o_wevent_search {
+        @include media-breakpoint-up(lg) {
+            max-width: 300px;
+        }
     }
 }
