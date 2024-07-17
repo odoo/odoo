@@ -1037,6 +1037,16 @@ export class ListRenderer extends Component {
         }
     }
 
+    onRemoveCellClicked(record, ev) {
+        const element = ev.target.closest(".o_list_record_remove");
+        if (element.dataset.clicked) {
+            return;
+        }
+        element.dataset.clicked = true;
+
+        this.onDeleteRecord(record, ev);
+    }
+
     async onDeleteRecord(record) {
         this.keepColumnWidths = true;
         const editedRecord = this.props.list.editedRecord;
