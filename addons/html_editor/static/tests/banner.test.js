@@ -80,7 +80,7 @@ test("remove all content should preserves the first paragraph tag inside the ban
     );
 });
 
-test("first element of an editable that is contenteditable='false' must not be selected with ctrl+a", async () => {
+test("Everything gets selected with ctrl+a, including a contenteditable=false as first element", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
     insertText(editor, "/bannerinfo");
     press("enter");
@@ -93,22 +93,32 @@ test("first element of an editable that is contenteditable='false' must not be s
     insertText(editor, "Test2");
     press(["ctrl", "a"]);
     expect(getContent(el)).toBe(
-        `<div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
+        `[<div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
                 <div class="w-100 ms-3" contenteditable="true">
                     <p><br></p>
                 </div>
-            </div><p>[Test1</p><p>Test2<br></p>]`,
-        { message: "should not select the banner if it s the first element in the editable" }
+            </div><p>Test1</p><p>Test2<br></p>]`,
+        { message: "should select everything" }
     );
 
     press("Backspace");
     expect(getContent(el)).toBe(
-        `<div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 ms-3" contenteditable="true">
-                    <p><br></p>
-                </div>
-            </div><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+        `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+    );
+});
+
+test("Everything gets selected with ctrl+a, including a contenteditable=false as first two elements", async () => {
+    const { el } = await setupEditor(
+        '<div contenteditable="false">a</div><div contenteditable="false">b</div><p>cd[]</p>'
+    );
+    press(["ctrl", "a"]);
+    expect(getContent(el)).toBe(
+        '[<div contenteditable="false">a</div><div contenteditable="false">b</div><p>cd</p>]'
+    );
+
+    press("Backspace");
+    expect(getContent(el)).toBe(
+        `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
     );
 });
