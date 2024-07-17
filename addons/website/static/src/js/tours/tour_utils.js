@@ -60,8 +60,8 @@ function changeBackgroundColor(position = "bottom") {
 
 function selectColorPalette(position = "left") {
     return {
-        trigger: ".o_we_customize_panel .o_we_so_color_palette we-selection-items",
-        alt_trigger: ".o_we_customize_panel .o_we_color_preview",
+        trigger:
+            ".o_we_customize_panel .o_we_so_color_palette we-selection-items, .o_we_customize_panel .o_we_color_preview",
         content: markup(_t(`<b>Select</b> a Color Palette.`)),
         position: position,
         run: 'click',
@@ -108,13 +108,12 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
     };
 }
 
-function selectNested(trigger, optionName, alt_trigger = null, optionTooltipLabel = '', position = "top", allowPalette = false) {
+function selectNested(trigger, optionName, altTrigger = null, optionTooltipLabel = '', position = "top", allowPalette = false) {
     const noPalette = allowPalette ? '' : '.o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened))';
     const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
-        trigger: trigger,
+        trigger: trigger + (altTrigger ? `, ${option_block} ${altTrigger}` : ""),
         content: markup(_t("<b>Select</b> a %s.", optionTooltipLabel)),
-        alt_trigger: alt_trigger == null ? undefined : `${option_block} ${alt_trigger}`,
         position: position,
         run: 'click',
     };

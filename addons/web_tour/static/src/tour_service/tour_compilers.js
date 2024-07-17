@@ -56,32 +56,18 @@ function findTrigger(selector, inModal) {
     return nodes;
 }
 
-/**
- * @param {Tour} tour
- * @param {TourStep} step
- * @param {"trigger"|"alt_trigger"} elKey
- * @returns {HTMLElement|null}
- */
-function tryFindTrigger(tour, step, elKey) {
-    const selector = step[elKey];
-    const in_modal = step.in_modal;
+function findStepTriggers(tour, step) {
+    step.state = step.state || {};
     try {
-        const nodes = findTrigger(selector, in_modal);
+        const nodes = findTrigger(step.trigger, step.in_modal);
         //TODO : change _legacyIsVisible by isVisible (hoot lib)
         //Failed with tour test_snippet_popup_with_scrollbar_and_animations > snippet_popup_and_animations
-        return !step.allowInvisible ? nodes.find(_legacyIsVisible) : nodes.at(0);
+        const triggerEl = !step.allowInvisible ? nodes.find(_legacyIsVisible) : nodes.at(0);
+        step.state.triggerFound = !!triggerEl;
+        return triggerEl;
     } catch (error) {
-        throwError(tour, step, [`Trigger was not found : ${selector} : ${error.message}`]);
+        throwError(tour, step, [`Trigger was not found : ${step.trigger} : ${error.message}`]);
     }
-}
-
-function findStepTriggers(tour, step) {
-    const triggerEl = tryFindTrigger(tour, step, "trigger");
-    const altEl = tryFindTrigger(tour, step, "alt_trigger");
-    step.state = step.state || {};
-    step.state.triggerFound = !!triggerEl;
-    step.state.altTriggerFound = !!altEl;
-    return { triggerEl, altEl };
 }
 
 /**
@@ -102,8 +88,6 @@ function describeWhyStepFailed(step) {
     const stepState = step.state || {};
     if (!stepState.triggerFound) {
         return `The cause is that trigger (${step.trigger}) element cannot be found in DOM.`;
-    } else if (step.alt_trigger && !stepState.altTriggerFound) {
-        return `The cause is that alt(ernative) trigger (${step.alt_trigger}) element cannot be found in DOM.`;
     } else if (!stepState.isVisible) {
         return "Element has been found but isn't displayed. (Use 'step.allowInvisible: true,' if you want to skip this check)";
     } else if (!stepState.isEnabled) {
@@ -629,8 +613,7 @@ export function compileStepAuto(stepIndex, step, options) {
                     step.state.canContinue = true;
                     return true;
                 }
-                const { triggerEl, altEl } = findStepTriggers(tour, step);
-                const stepEl = triggerEl || altEl;
+                const stepEl = findStepTriggers(tour, step);
                 if (!stepEl) {
                     return false;
                 }
