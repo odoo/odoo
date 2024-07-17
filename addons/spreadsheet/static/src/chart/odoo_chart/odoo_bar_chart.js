@@ -6,12 +6,8 @@ import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
 
-const {
-    getDefaultChartJsRuntime,
-    getChartAxisTitleRuntime,
-    chartFontColor,
-    ColorGenerator
-} = spreadsheet.helpers;
+const { getDefaultChartJsRuntime, getChartAxisTitleRuntime, chartFontColor, ColorGenerator } =
+    spreadsheet.helpers;
 
 export class OdooBarChart extends OdooChart {
     constructor(definition, sheetId, getters) {
@@ -47,6 +43,10 @@ function createOdooChartRuntime(chart, getters) {
     const { datasets, labels } = chart.dataSource.getData();
     const locale = getters.getLocale();
     const chartJsConfig = getBarConfiguration(chart, labels, locale);
+    chartJsConfig.options = {
+        ...chartJsConfig.options,
+        ...getters.getChartDatasetActionCallbacks(chart),
+    };
     const colors = new ColorGenerator();
     for (const { label, data } of datasets) {
         const color = colors.next();
