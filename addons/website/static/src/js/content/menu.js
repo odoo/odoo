@@ -890,7 +890,7 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
 });
 
 publicWidget.registry.SearchModal = publicWidget.Widget.extend({
-    selector: "#o_shared_blocks #o_search_modal",
+    selector: "#o_search_modal_block #o_search_modal",
     disabledInEditableMode: false,
     events: {
         "show.bs.modal": "_onSearchModalShow",
