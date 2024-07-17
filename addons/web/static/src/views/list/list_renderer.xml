@@ -291,7 +291,7 @@
                 <t t-if="hasX2ManyAction">
                     <td class="o_list_record_remove text-center"
                         t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
-                        t-on-click.stop="() => this.onDeleteRecord(record)"
+                        t-on-click.stop="(ev) => this.onDeleteRecord(record, ev)"
                         tabindex="-1"
                     >
                         <button class="fa"
