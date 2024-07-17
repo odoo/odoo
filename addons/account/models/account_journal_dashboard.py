@@ -536,11 +536,13 @@ class account_journal(models.Model):
             query, params = journals._get_open_sale_purchase_query(journal_type).select(
                 SQL("account_move_line.journal_id"),
                 SQL("account_move_line.company_id"),
+                SQL("account_move_line.currency_id AS currency"),
                 SQL("account_move_line.date_maturity < %s AS late", fields.Date.context_today(self)),
                 SQL("SUM(account_move_line.amount_residual) AS amount_total_company"),
+                SQL("SUM(account_move_line.amount_residual_currency) AS amount_total"),
                 SQL("COUNT(*)"),
             )
-            query += " GROUP BY company_id, journal_id, late"
+            query += " GROUP BY company_id, journal_id, currency, late"
             self.env.cr.execute(query, params)
             query_result = group_by_journal(self.env.cr.dictfetchall())
             for journal in journals:
@@ -604,7 +606,7 @@ class account_journal(models.Model):
                 'number_draft': number_draft,
                 'number_waiting': number_waiting,
                 'number_late': number_late,
-                'sum_draft': currency.format(sum_draft * (1 if journal.type == 'sale' else -1)),
+                'sum_draft': currency.format(sum_draft),  # sign is already handled by the SQL query
                 'sum_waiting': currency.format(sum_waiting * (1 if journal.type == 'sale' else -1)),
                 'sum_late': currency.format(sum_late * (1 if journal.type == 'sale' else -1)),
                 'has_sequence_holes': journal.has_sequence_holes,
