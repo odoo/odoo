@@ -198,3 +198,17 @@ registry.category("web_tour.tours").add("PosQuotationSaving", {
             ProductScreen.controlButton("Park Order"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoadOrder", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            Dialog.is({ title: "Products not available in POS" }),
+            Dialog.confirm("Yes"),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00", "10.00"),
+        ].flat(),
+});
