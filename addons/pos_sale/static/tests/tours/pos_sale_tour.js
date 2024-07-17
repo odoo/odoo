@@ -163,3 +163,49 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+<<<<<<< HEAD:addons/pos_sale/static/tests/tours/pos_sale_tour.js
+||||||| parent of 3d5e36476be0 (temp):addons/pos_sale/static/tests/tours/PosSaleTour.js
+
+registry.category("web_tour.tours").add("PosQuotationSaving", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectedOrderlineHas("Product", "4.00", "40.00"),
+            ProductScreen.controlButton("More..."),
+            ProductScreen.controlButton("Park Order"),
+        ].flat(),
+});
+=======
+
+registry.category("web_tour.tours").add("PosQuotationSaving", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectedOrderlineHas("Product", "4.00", "40.00"),
+            ProductScreen.controlButton("More..."),
+            ProductScreen.controlButton("Park Order"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoadOrder", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            Dialog.is({ title: "Products not available in POS" }),
+            Dialog.confirm("Yes"),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00", "10.00"),
+        ].flat(),
+});
+>>>>>>> 3d5e36476be0 (temp):addons/pos_sale/static/tests/tours/PosSaleTour.js
