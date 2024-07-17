@@ -5,6 +5,8 @@ import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { BOLD_TAGS, notStrong, span, strong } from "../_helpers/tags";
 import { bold, tripleClick } from "../_helpers/user_actions";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -43,19 +45,29 @@ test("should make two paragraphs not bold", async () => {
 test("should make qweb tag bold", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
+        contentBeforeEdit: `<div>[<p t-esc="'Test'" contenteditable="false">Test</p>]</div>`,
         stepFunction: bold,
-        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`,
+        contentAfterEdit: `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-esc="'Test'" style="font-weight: bolder;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
+});
+
+test("should make qweb tag bold (2)", async () => {
     await testEditor({
         contentBefore: `<div><p t-field="record.name" contenteditable="false">[Test]</p></div>`,
+        contentBeforeEdit: `<div>[<p t-field="record.name" contenteditable="false">Test</p>]</div>`,
         stepFunction: bold,
-        contentAfter: `<div>[<p t-field="record.name" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`,
+        contentAfterEdit: `<div>[<p t-field="record.name" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-field="record.name" style="font-weight: bolder;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
 test("should make qweb tag bold even with partial selection", async () => {
     const { editor, el } = await setupEditor(
-        `<div><p t-esc="'Test'" contenteditable="false">T[e]st</p></div>`
+        `<div><p t-esc="'Test'" contenteditable="false">T[e]st</p></div>`,
+        { config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] } }
     );
     bold(editor);
     expect(getContent(el)).toBe(

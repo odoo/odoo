@@ -445,7 +445,7 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test.todo("should not delete in contenteditable=false", async () => {
+        test("should not delete in contenteditable=false", async () => {
             await testEditor({
                 contentBefore: `<p contenteditable="false">ab[]cdef</p>`,
                 stepFunction: deleteBackward,
@@ -2008,7 +2008,7 @@ describe("Selection not collapsed", () => {
             });
         });
 
-        test.todo("should not delete in contenteditable=false 1", async () => {
+        test("should not delete in contenteditable=false 1", async () => {
             await testEditor({
                 contentBefore: `<p contenteditable="false">ab[cd]ef</p>`,
                 stepFunction: deleteBackward,
@@ -2016,7 +2016,7 @@ describe("Selection not collapsed", () => {
             });
         });
 
-        test.todo("should not delete in contenteditable=false 2", async () => {
+        test("should not delete in contenteditable=false 2", async () => {
             await testEditor({
                 contentBefore: `<div contenteditable="false">
                                     <p>a[b</p>

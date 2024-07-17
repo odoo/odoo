@@ -3,6 +3,8 @@ import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { strong } from "../_helpers/tags";
 import { setFontSize } from "../_helpers/user_actions";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 test("should change the font size of a few characters", async () => {
     await testEditor({
@@ -16,7 +18,8 @@ test("should change the font size the qweb tag", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: setFontSize("36px"),
-        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="font-size: 36px;">Test</p>]</div>`,
+        contentAfterEdit: `<div>[<p t-esc="'Test'" contenteditable="false" style="font-size: 36px;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 

@@ -3,6 +3,8 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
 import { s, span } from "../_helpers/tags";
 import { insertText, strikeThrough, tripleClick } from "../_helpers/user_actions";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 test("should make a few characters strikeThrough", async () => {
     await testEditor({
@@ -95,7 +97,8 @@ test("should make qweb tag strikeThrough", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: strikeThrough,
-        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="text-decoration-line: line-through;">Test</p>]</div>`,
+        contentAfterEdit: `<div>[<p t-esc="'Test'" contenteditable="false" style="text-decoration-line: line-through;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
