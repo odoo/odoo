@@ -6285,8 +6285,17 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         });
 
         switch (methodName) {
-            case 'selectFormat':
-                return img.naturalWidth + ' ' + this._getImageMimetype(img);
+            case "selectFormat": {
+                const currentImageMimetype = this._getImageMimetype(img);
+                const availableFormats = (await this._computeAvailableFormats()).map(
+                    ([value, [, targetFormat]]) => `${Math.round(value)} ${targetFormat}`
+                );
+                const currentFormatSize = img.naturalWidth.toString();
+                const currentFormat = `${currentFormatSize} ${currentImageMimetype}`;
+                return availableFormats.includes(currentFormat)
+                    ? currentFormat
+                    : availableFormats.find((format) => format.startsWith(currentFormatSize));
+            }
             case 'setFilter':
                 return img.dataset.filter;
             case 'glFilter':
@@ -6385,11 +6394,16 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             delete img.dataset.mimetype;
             return;
         }
-        const dataURL = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
+        const { dataURL, mimetype } = await applyModifications(
+            img,
+            { mimetype: this._getImageMimetype(img) },
+            true // TODO: remove in master
+        );
         this._filesize = getDataURLBinarySize(dataURL) / 1024;
 
         if (update) {
             img.classList.add('o_modified_image_to_save');
+            this._setImageMimetype(img, mimetype);
             const loadedImg = await loadImage(dataURL, img);
             this._applyImage(loadedImg);
             // Also apply to carousel thumbnail if applicable.
@@ -6466,6 +6480,14 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     _getImageMimetype(img) {
         return img.dataset.mimetype;
+    },
+    /**
+     * @private
+     * @param {HTMLImageElement} img
+     * @param {string} mimetype
+     */
+    _setImageMimetype(img, mimetype) {
+        img.dataset.mimetype = mimetype;
     },
     /**
      * @private
@@ -6586,6 +6608,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
+            mimetypeOutputAttribute: img.dataset.shape ? "originalMimetype" : "mimetype",
         });
 
         await new Promise(resolve => {
@@ -6660,6 +6683,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
+            mimetypeOutputAttribute: img.dataset.shape ? "originalMimetype" : "mimetype",
         });
         await imageCropWrapper.component.mountedPromise;
         await imageCropWrapper.component.reset();
@@ -6696,15 +6720,13 @@ registry.ImageTools = ImageHandlerOption.extend({
             if (previewMode === 'reset' && img.dataset.shapeColors) {
                 // When we reset the shape we need to reapply the colors the
                 // user had selected.
+                this._applyShapeAndColors__previewMode = previewMode; // TODO: remove in master
                 await this._applyShapeAndColors(false, img.dataset.shapeColors.split(';'));
             } else {
                 // If the preview mode === false we want to save the colors
                 // as the user chose their shape
+                this._applyShapeAndColors__previewMode = previewMode; // TODO: remove in master
                 await this._applyShapeAndColors(saveData);
-                if (saveData && img.dataset.mimetype !== 'image/svg+xml') {
-                    img.dataset.originalMimetype = img.dataset.mimetype;
-                    img.dataset.mimetype = 'image/svg+xml';
-                }
                 // When the user selects a shape, we remove the data attributes
                 // that are not compatible with this shape.
                 if (saveData) {
@@ -6723,14 +6745,21 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
         } else {
             // Re-applying the modifications and deleting the shapes
-            img.src = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
+            const { dataURL, mimetype } = await applyModifications(
+                img,
+                {
+                    mimetype: this._getImageMimetype(img),
+                },
+                true // TODO: remove in master
+            );
+            img.src = dataURL;
             delete img.dataset.shape;
             delete img.dataset.shapeColors;
             delete img.dataset.fileName;
             delete img.dataset.shapeFlip;
             delete img.dataset.shapeRotate;
             if (saveData) {
-                img.dataset.mimetype = img.dataset.originalMimetype;
+                img.dataset.mimetype = mimetype;
                 delete img.dataset.originalMimetype;
             }
             // Also apply to carousel thumbnail if applicable.
@@ -6750,6 +6779,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const oldColors = img.dataset.shapeColors.split(';');
         const newColors = oldColors.slice(0);
         newColors[newColorId] = this._getCSSColorValue(widgetValue === '' ? `o-color-${(newColorId + 1)}` : widgetValue);
+        this._applyShapeAndColors__previewMode = previewMode; // TODO: remove in master
         await this._applyShapeAndColors(true, newColors);
         img.classList.add('o_modified_image_to_save');
     },
@@ -6979,6 +7009,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      * theme colors are applied if not supplied
      */
     async _applyShapeAndColors(save, newColors) {
+        const previewMode = this._applyShapeAndColors__previewMode || false; // TODO: in master, replace with parameter
         const img = this._getImg();
         let shape = this.shapeCache[img.dataset.shape.split('/')[2]];
 
@@ -6992,12 +7023,14 @@ registry.ImageTools = ImageHandlerOption.extend({
             newColors = oldColors.map((color, i) => color !== null ? this._getCSSColorValue(`o-color-${(i + 1)}`) : null);
         }
         newColors.forEach((color, i) => shape = shape.replace(new RegExp(oldColors[i], 'g'), this._getCSSColorValue(color)));
+        this._writeShape__previewMode = previewMode; // TODO: remove in master, pass previewMode to _writeShape
         await this._writeShape(shape);
         if (save) {
             img.dataset.shapeColors = newColors.join(';');
         }
         // Also apply to carousel thumbnail if applicable.
         weUtils.forwardToThumbnail(img);
+        delete this._applyShapeAndColors__previewMode; // TODO: remove in master
     },
     /**
      * Sets the image in the supplied SVG and replace the src with a dataURL
@@ -7007,6 +7040,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      * in the document
      */
     async _writeShape(svgText) {
+        const previewMode = this._writeShape__previewMode; // TODO: in master, replace with parameter
         const img = this._getImg();
         let needToRefreshPublicWidgets = false;
         let hasHoverEffect = false;
@@ -7019,6 +7053,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             hasHoverEffect = true;
         }
 
+        this.computeShape__previewMode = previewMode; // TODO: replace with parameter in master
         const dataURL = await this.computeShape(svgText, img);
 
         let clonedImgEl = null;
@@ -7044,6 +7079,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (needToRefreshPublicWidgets) {
             await this._refreshPublicWidgets();
         }
+        delete this._writeShape__previewMode; // TODO: remove in master
         return loadedImg;
     },
     /**
@@ -7055,6 +7091,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      * in the document
      */
     async computeShape(svgText, img) {
+        const previewMode = this.computeShape__previewMode; // TODO: in master, replace with parameter
         const initialImageWidth = img.naturalWidth;
 
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
@@ -7087,13 +7124,16 @@ registry.ImageTools = ImageHandlerOption.extend({
         // We will store the image in base64 inside the SVG.
         // applyModifications will return a dataURL with the current filters
         // and size options.
-        const options = {
-            mimetype: this._getImageMimetype(img),
-            perspective: svg.dataset.imgPerspective || null,
-            imgAspectRatio: svg.dataset.imgAspectRatio || null,
-            svgAspectRatio: svgAspectRatio,
-        };
-        const imgDataURL = await applyModifications(img, options);
+        const { dataURL: imgDataURL, mimetype } = await applyModifications(
+            img,
+            {
+                mimetype: this._getImageMimetype(img),
+                perspective: svg.dataset.imgPerspective || null,
+                imgAspectRatio: svg.dataset.imgAspectRatio || null,
+                svgAspectRatio: svgAspectRatio,
+            },
+            true /* TODO: remove in master */
+        );
         svg.removeChild(svg.querySelector('#preview'));
         svg.querySelectorAll("image").forEach(image => {
             image.setAttribute("xlink:href", imgDataURL);
@@ -7120,6 +7160,11 @@ registry.ImageTools = ImageHandlerOption.extend({
         const dataURL = await createDataURL(blob);
         const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
         img.dataset.fileName = `${imgFilename}.svg`;
+        if (previewMode === false) {
+            img.dataset.mimetype = "image/svg+xml";
+            img.dataset.originalMimetype = mimetype;
+        }
+        delete this.computeShape__previewMode; // TODO: remove in master
         return dataURL;
     },
     /**
@@ -7304,6 +7349,16 @@ registry.ImageTools = ImageHandlerOption.extend({
             return img.dataset.originalMimetype;
         }
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _setImageMimetype(img, mimetype) {
+        if (img.dataset.shape) {
+            img.dataset.originalMimetype = mimetype;
+        } else {
+            this._super(...arguments);
+        }
     },
     /**
      * Gets the CSS value of a color variable name so it can be used on shapes.

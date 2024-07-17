@@ -521,17 +521,22 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                         const imgEl = $img[0];
                         imagePromises.push(new Promise(resolve => {
                             loadImageInfo(imgEl, this.rpc).then(() => {
-                                if (imgEl.dataset.mimetype && ![
+                                const originalMimetype = imgEl.dataset.mimetype;
+                                if (originalMimetype && ![
                                     "image/gif",
                                     "image/svg+xml",
                                     "image/webp",
-                                ].includes(imgEl.dataset.mimetype)) {
+                                ].includes(originalMimetype)) {
                                     // Convert to webp but keep original width.
-                                    imgEl.dataset.mimetype = "image/webp";
-                                    applyModifications(imgEl, {
-                                        mimetype: "image/webp",
-                                    }).then(src => {
-                                        imgEl.src = src;
+                                    applyModifications(
+                                        imgEl,
+                                        {
+                                            mimetype: "image/webp",
+                                        },
+                                        true // TODO: remove in master
+                                    ).then(({ dataURL, mimetype }) => {
+                                        imgEl.dataset.mimetype = mimetype;
+                                        imgEl.src = dataURL;
                                         imgEl.classList.add("o_modified_image_to_save");
                                         resolve();
                                     });

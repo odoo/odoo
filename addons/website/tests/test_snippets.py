@@ -129,3 +129,50 @@ class TestSnippets(HttpCase):
 
     def test_dropdowns_and_header_hide_on_scroll(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin')
+
+    def test_image_mimetype(self):
+        self.start_tour('/', "website_image_mimetype", login='admin', timeout=90)
+
+    def test_image_mimetype_no_webp(self):
+        self.start_tour('/', "website_image_mimetype_no_webp", login='admin', timeout=90)
+
+    def test_image_mimetype_bigger_output(self):
+        self.start_tour('/', "website_image_mimetype_bigger_output", login='admin', timeout=90)
+
+    def test_image_mimetype_image_gallery(self):
+        self.start_tour('/', "website_image_mimetype_image_gallery", login='admin')
+
+    def test_image_mimetype_image_gallery_no_webp(self):
+        self.start_tour('/', "website_image_mimetype_image_gallery_no_webp", login='admin')
+
+    def test_image_mimetype_image_gallery_bigger_output(self):
+        self.start_tour('/', "website_image_mimetype_image_gallery_bigger_output", login='admin')
+
+    def test_image_mimetype_crop(self):
+        self.start_tour('/', "website_image_mimetype_crop", login='admin')
+
+    def test_image_mimetype_shape(self):
+        self.start_tour('/', "website_image_mimetype_shape", login='admin')
+
+    def assert_wysiwyg_logo_attachments(self, jpeg_count, webp_count):
+        jpegs = self.env['ir.attachment'].search([
+            ('res_model', '=', 'ir.attachment'),
+            ('name', '=', 'test.jpg'),
+        ])
+        webps = self.env['ir.attachment'].search([
+            ('res_model', '=', 'ir.attachment'),
+            ('name', '=', 'test.webp'),
+        ])
+        # Desktop + mobile logo
+        self.assertEqual(len(jpegs), jpeg_count,
+                         "Should have " + str(jpeg_count) + " alternative jpeg")
+        self.assertEqual(len(webps), webp_count,
+                         "Should have " + str(webp_count) + " alternative webp")
+
+    def test_image_mimetype_wysiwyg(self):
+        self.start_tour('/', "website_image_mimetype_wysiwyg", login='admin')
+        self.assert_wysiwyg_logo_attachments(3, 2)
+
+    def test_image_mimetype_wysiwyg_no_webp(self):
+        self.start_tour('/', "website_image_mimetype_wysiwyg_no_webp", login='admin')
+        self.assert_wysiwyg_logo_attachments(3, 0)

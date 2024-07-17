@@ -1,5 +1,9 @@
 /** @odoo-module **/
 
+import {
+    convertCanvasToDataURL,
+    extractMimetypeFromDataURL,
+} from "@web/core/utils/image_processing";
 import { pick } from "@web/core/utils/objects";
 import {getAffineApproximation, getProjective} from "@web_editor/js/editor/perspective_utils";
 
@@ -200,9 +204,12 @@ const glFilters = {
  * containing the result. This function does not modify the original image.
  *
  * @param {HTMLImageElement} img the image to which modifications are applied
- * @returns {string} dataURL of the image with the applied modifications
+ * @param {boolean} returnResultWithMimetype false by default to not break
+ * compatibility, *must* be set to true. TODO: remove in master
+ * @returns {Promise<{dataURL: string, mimetype: string}>} dataURL of the image
+ * with the applied modifications and the actual output mimetype.
  */
-export async function applyModifications(img, dataOptions = {}) {
+export async function applyModifications(img, dataOptions = {}, returnResultWithMimetype = false) {
     const data = Object.assign({
         glFilter: '',
         filter: '#0000',
@@ -338,13 +345,32 @@ export async function applyModifications(img, dataOptions = {}) {
     ctx.fillRect(0, 0, result.width, result.height);
 
     // Quality
-    const dataURL = result.toDataURL(mimetype, quality / 100);
-    const newSize = getDataURLBinarySize(dataURL);
+    const imageData = convertCanvasToDataURL(result, mimetype, quality / 100);
+    const newSize = getDataURLBinarySize(imageData.dataURL);
     const originalSize = _getImageSizeFromCache(originalSrc);
     const isChanged = !!perspective || !!glFilter ||
         original.width !== result.width || original.height !== result.height ||
         original.width !== croppedImg.width || original.height !== croppedImg.height;
-    return (isChanged || originalSize >= newSize) ? dataURL : await _loadImageDataURL(originalSrc);
+
+    // TODO: remove in master, see jsdoc for returnResultWithMimetype parameter
+    if (!returnResultWithMimetype) {
+        return isChanged || originalSize >= newSize
+            ? imageData.dataURL
+            : await _loadImageDataURL(originalSrc);
+    }
+
+    if (isChanged || originalSize >= newSize) {
+        return {
+            dataURL: imageData.dataURL,
+            mimetype: imageData.mimetype,
+        };
+    } else {
+        const originalDataURL = await _loadImageDataURL(originalSrc);
+        return {
+            dataURL: originalDataURL,
+            mimetype: extractMimetypeFromDataURL(originalDataURL),
+        };
+    }
 }
 
 /**
