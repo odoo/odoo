@@ -1,9 +1,10 @@
 import { Component, useEffect, useExternalListener, useRef, xml } from "@odoo/owl";
 import { usePosition } from "@web/core/position/position_hook";
+import { useActiveElement } from "@web/core/ui/ui_service";
 
 export class EditorOverlay extends Component {
     static template = xml`
-        <div t-ref="root" class="overlay position-absolute">
+        <div t-ref="root" class="overlay">
             <t t-component="props.Component" t-props="props.props"/>
         </div>`;
 
@@ -27,6 +28,10 @@ export class EditorOverlay extends Component {
                 position.unlock();
             });
             getTarget = this.getCurrentRect.bind(this);
+        }
+
+        if (this.props.config.hasAutofocus) {
+            useActiveElement("root");
         }
 
         const rootRef = useRef("root");
