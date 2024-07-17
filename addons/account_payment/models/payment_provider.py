@@ -24,7 +24,7 @@ class Paymentprovider(models.Model):
             return
 
         pay_method_line = self.env['account.payment.method.line'].search(
-            [('code', '=', self.code), ('payment_provider_id', '=', self.id)],
+            [('payment_provider_id', '=', self.id)],
             limit=1,
         )
 
