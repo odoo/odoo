@@ -18,11 +18,11 @@ test("Can have positional args in pivot formula", async function () {
     const { model } = await createSpreadsheetWithPivot();
 
     // Columns
-    setCellContent(model, "H1", `=PIVOT.VALUE(1,"probability","#foo", 1)`);
-    setCellContent(model, "H2", `=PIVOT.VALUE(1,"probability","#foo", 2)`);
-    setCellContent(model, "H3", `=PIVOT.VALUE(1,"probability","#foo", 3)`);
-    setCellContent(model, "H4", `=PIVOT.VALUE(1,"probability","#foo", 4)`);
-    setCellContent(model, "H5", `=PIVOT.VALUE(1,"probability","#foo", 5)`);
+    setCellContent(model, "H1", `=PIVOT.VALUE(1,"probability:avg","#foo", 1)`);
+    setCellContent(model, "H2", `=PIVOT.VALUE(1,"probability:avg","#foo", 2)`);
+    setCellContent(model, "H3", `=PIVOT.VALUE(1,"probability:avg","#foo", 3)`);
+    setCellContent(model, "H4", `=PIVOT.VALUE(1,"probability:avg","#foo", 4)`);
+    setCellContent(model, "H5", `=PIVOT.VALUE(1,"probability:avg","#foo", 5)`);
     expect(getCellValue(model, "H1")).toBe(11);
     expect(getCellValue(model, "H2")).toBe(15);
     expect(getCellValue(model, "H3")).toBe(10);
@@ -30,9 +30,9 @@ test("Can have positional args in pivot formula", async function () {
     expect(getCellValue(model, "H5")).toBe("");
 
     // Rows
-    setCellContent(model, "I1", `=PIVOT.VALUE(1,"probability","#bar", 1)`);
-    setCellContent(model, "I2", `=PIVOT.VALUE(1,"probability","#bar", 2)`);
-    setCellContent(model, "I3", `=PIVOT.VALUE(1,"probability","#bar", 3)`);
+    setCellContent(model, "I1", `=PIVOT.VALUE(1,"probability:avg","#bar", 1)`);
+    setCellContent(model, "I2", `=PIVOT.VALUE(1,"probability:avg","#bar", 2)`);
+    setCellContent(model, "I3", `=PIVOT.VALUE(1,"probability:avg","#bar", 3)`);
     expect(getCellValue(model, "I1")).toBe(15);
     expect(getCellValue(model, "I2")).toBe(116);
     expect(getCellValue(model, "I3")).toBe("");
@@ -46,7 +46,7 @@ test("Can have positional args in pivot headers formula", async function () {
     setCellContent(model, "H3", `=PIVOT.HEADER(1,"#foo",3)`);
     setCellContent(model, "H4", `=PIVOT.HEADER(1,"#foo",4)`);
     setCellContent(model, "H5", `=PIVOT.HEADER(1,"#foo",5)`);
-    setCellContent(model, "H6", `=PIVOT.HEADER(1,"#foo",5, "measure", "probability")`);
+    setCellContent(model, "H6", `=PIVOT.HEADER(1,"#foo",5, "measure", "probability:avg")`);
     expect(getCellValue(model, "H1")).toBe(1);
     expect(getCellValue(model, "H2")).toBe(2);
     expect(getCellValue(model, "H3")).toBe(12);
@@ -58,7 +58,7 @@ test("Can have positional args in pivot headers formula", async function () {
     setCellContent(model, "I1", `=PIVOT.HEADER(1,"#bar",1)`);
     setCellContent(model, "I2", `=PIVOT.HEADER(1,"#bar",2)`);
     setCellContent(model, "I3", `=PIVOT.HEADER(1,"#bar",3)`);
-    setCellContent(model, "I4", `=PIVOT.HEADER(1,"#bar",3, "measure", "probability")`);
+    setCellContent(model, "I4", `=PIVOT.HEADER(1,"#bar",3, "measure", "probability:avg")`);
     expect(getCellValue(model, "I1")).toBe("No");
     expect(getCellValue(model, "I2")).toBe("Yes");
     expect(getCellValue(model, "I3")).toBe("");
@@ -88,8 +88,16 @@ test("pivot positional with two levels of group bys in rows", async () => {
     expect(getCellValue(model, "H5")).toBe("");
 
     // Cells
-    setCellContent(model, "H1", `=PIVOT.VALUE(1,"probability","#bar",1,"#product_id",1,"#foo",2)`);
-    setCellContent(model, "H2", `=PIVOT.VALUE(1,"probability","#bar",1,"#product_id",2,"#foo",2)`);
+    setCellContent(
+        model,
+        "H1",
+        `=PIVOT.VALUE(1,"probability:avg","#bar",1,"#product_id",1,"#foo",2)`
+    );
+    setCellContent(
+        model,
+        "H2",
+        `=PIVOT.VALUE(1,"probability:avg","#bar",1,"#product_id",2,"#foo",2)`
+    );
     expect(getCellValue(model, "H1")).toBe(15);
     expect(getCellValue(model, "H2")).toBe("");
 });
@@ -108,14 +116,14 @@ test("sort first pivot column (ascending)", async () => {
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
-                rows: [{ name: "bar" }],
+                columns: [{ fieldName: "foo" }],
+                rows: [{ fieldName: "bar" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
                 sortedColumn: {
                     groupId: [[], [1]],
-                    measure: "probability",
+                    measure: "probability:avg",
                     order: "asc",
                 },
             },
@@ -124,12 +132,12 @@ test("sort first pivot column (ascending)", async () => {
     const model = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
-    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
-    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
-    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
-    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
-    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
-    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
+    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",1)`);
+    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability:sum","#bar",2,"#foo",1)`);
+    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",2)`);
+    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability:sum","#bar",2,"#foo",2)`);
+    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability:sum","#bar",1)`);
+    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability:sum","#bar",2)`);
     await waitForDataLoaded(model);
     expect(getCellValue(model, "A1")).toBe("No");
     expect(getCellValue(model, "A2")).toBe("Yes");
@@ -146,10 +154,10 @@ test("sort first pivot column (descending)", async () => {
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
-                rows: [{ name: "bar" }],
+                columns: [{ fieldName: "foo" }],
+                rows: [{ fieldName: "bar" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
                 sortedColumn: {
                     groupId: [[], [1]],
@@ -162,12 +170,12 @@ test("sort first pivot column (descending)", async () => {
     const model = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
-    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
-    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
-    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
-    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
-    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
-    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
+    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",1)`);
+    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability:sum","#bar",2,"#foo",1)`);
+    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",2)`);
+    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability:sum","#bar",2,"#foo",2)`);
+    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability:sum","#bar",1)`);
+    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability:sum","#bar",2)`);
     await waitForDataLoaded(model);
     expect(getCellValue(model, "A1")).toBe("Yes");
     expect(getCellValue(model, "A2")).toBe("No");
@@ -184,11 +192,11 @@ test("sort second pivot column (ascending)", async () => {
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
                 name: "Partners by Foo",
                 sortedColumn: {
                     groupId: [[], [2]],
@@ -201,12 +209,12 @@ test("sort second pivot column (ascending)", async () => {
     const model = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
-    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
-    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
-    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
-    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
-    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
-    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
+    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",1)`);
+    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability:sum","#bar",2,"#foo",1)`);
+    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",2)`);
+    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability:sum","#bar",2,"#foo",2)`);
+    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability:sum","#bar",1)`);
+    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability:sum","#bar",2)`);
     await waitForDataLoaded(model);
     expect(getCellValue(model, "A1")).toBe("Yes");
     expect(getCellValue(model, "A2")).toBe("No");
@@ -223,11 +231,11 @@ test("sort second pivot column (descending)", async () => {
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
                 name: "Partners by Foo",
                 sortedColumn: {
                     groupId: [[], [2]],
@@ -240,12 +248,12 @@ test("sort second pivot column (descending)", async () => {
     const model = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
-    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",1)`);
-    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",1)`);
-    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability","#bar",1,"#foo",2)`);
-    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability","#bar",2,"#foo",2)`);
-    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability","#bar",1)`);
-    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability","#bar",2)`);
+    setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",1)`);
+    setCellContent(model, "B2", `=PIVOT.VALUE(1,"probability:sum","#bar",2,"#foo",1)`);
+    setCellContent(model, "C1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",2)`);
+    setCellContent(model, "C2", `=PIVOT.VALUE(1,"probability:sum","#bar",2,"#foo",2)`);
+    setCellContent(model, "D1", `=PIVOT.VALUE(1,"probability:sum","#bar",1)`);
+    setCellContent(model, "D2", `=PIVOT.VALUE(1,"probability:sum","#bar",2)`);
     await waitForDataLoaded(model);
     expect(getCellValue(model, "A1")).toBe("No");
     expect(getCellValue(model, "A2")).toBe("Yes");
@@ -262,12 +270,12 @@ test("sort second pivot measure (ascending)", async () => {
         pivots: {
             1: {
                 type: "ODOO",
-                rows: [{ name: "product_id" }],
+                rows: [{ fieldName: "product_id" }],
                 columns: [],
                 domain: [],
                 measures: [
-                    { name: "probability", aggregator: "sum" },
-                    { name: "foo", aggregator: "sum" },
+                    { id: "probability:sum", fieldName: "probability", aggregator: "sum" },
+                    { id: "foo:sum", fieldName: "foo", aggregator: "sum" },
                 ],
                 model: "partner",
                 sortedColumn: {
@@ -281,10 +289,10 @@ test("sort second pivot measure (ascending)", async () => {
     const model = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A10", `=PIVOT.HEADER(1,"#product_id",1)`);
     setCellContent(model, "A11", `=PIVOT.HEADER(1,"#product_id",2)`);
-    setCellContent(model, "B10", `=PIVOT.VALUE(1,"probability","#product_id",1)`);
-    setCellContent(model, "B11", `=PIVOT.VALUE(1,"probability","#product_id",2)`);
-    setCellContent(model, "C10", `=PIVOT.VALUE(1,"foo","#product_id",1)`);
-    setCellContent(model, "C11", `=PIVOT.VALUE(1,"foo","#product_id",2)`);
+    setCellContent(model, "B10", `=PIVOT.VALUE(1,"probability:sum","#product_id",1)`);
+    setCellContent(model, "B11", `=PIVOT.VALUE(1,"probability:sum","#product_id",2)`);
+    setCellContent(model, "C10", `=PIVOT.VALUE(1,"foo:sum","#product_id",1)`);
+    setCellContent(model, "C11", `=PIVOT.VALUE(1,"foo:sum","#product_id",2)`);
     await waitForDataLoaded(model);
     expect(getCellValue(model, "A10")).toBe("xphone");
     expect(getCellValue(model, "A11")).toBe("xpad");
@@ -302,11 +310,11 @@ test("sort second pivot measure (descending)", async () => {
                 columns: [],
                 domain: [],
                 measures: [
-                    { name: "probability", aggregator: "sum" },
-                    { name: "foo", aggregator: "sum" },
+                    { id: "probability:sum", fieldName: "probability", aggregator: "sum" },
+                    { id: "foo:sum", fieldName: "foo", aggregator: "sum" },
                 ],
                 model: "partner",
-                rows: [{ name: "product_id" }],
+                rows: [{ fieldName: "product_id" }],
                 sortedColumn: {
                     groupId: [[], []],
                     measure: "foo",
@@ -318,10 +326,10 @@ test("sort second pivot measure (descending)", async () => {
     const model = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A10", `=PIVOT.HEADER(1,"#product_id",1)`);
     setCellContent(model, "A11", `=PIVOT.HEADER(1,"#product_id",2)`);
-    setCellContent(model, "B10", `=PIVOT.VALUE(1,"probability","#product_id",1)`);
-    setCellContent(model, "B11", `=PIVOT.VALUE(1,"probability","#product_id",2)`);
-    setCellContent(model, "C10", `=PIVOT.VALUE(1,"foo","#product_id",1)`);
-    setCellContent(model, "C11", `=PIVOT.VALUE(1,"foo","#product_id",2)`);
+    setCellContent(model, "B10", `=PIVOT.VALUE(1,"probability:sum","#product_id",1)`);
+    setCellContent(model, "B11", `=PIVOT.VALUE(1,"probability:sum","#product_id",2)`);
+    setCellContent(model, "C10", `=PIVOT.VALUE(1,"foo:sum","#product_id",1)`);
+    setCellContent(model, "C11", `=PIVOT.VALUE(1,"foo:sum","#product_id",2)`);
     await waitForDataLoaded(model);
     expect(getCellValue(model, "A10")).toBe("xpad");
     expect(getCellValue(model, "A11")).toBe("xphone");

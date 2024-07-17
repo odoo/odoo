@@ -189,16 +189,16 @@ export class OdooPivot extends OdooViewsDataSource {
     }
 
     /**
-     * Get the measure object from its name
+     * Get the measure object from its id
      *
-     * @param {string} name
+     * @param {string} id
      * @returns {PivotMeasure}
      */
-    getMeasure(name) {
+    getMeasure(id) {
         const measures = this.definition.measures;
-        const measure = measures.find((m) => m.name === name);
+        const measure = measures.find((m) => m.id === id);
         if (!measure) {
-            throw new EvaluationError(_t("Field %s does not exist", name));
+            throw new EvaluationError(_t("Field %s does not exist", id));
         }
         return measure;
     }
@@ -244,17 +244,17 @@ export class OdooPivot extends OdooViewsDataSource {
     }
 
     /**
-     * @param {string} measureName
+     * @param {string} measureId
      * @param {PivotDomain} domain
      * @returns {FPayload}
      */
-    getPivotCellValueAndFormat(measureName, domain) {
+    getPivotCellValueAndFormat(measureId, domain) {
         this.assertIsValid();
         if (domain.filter((node) => node.value === NO_RECORD_AT_THIS_POSITION).length) {
             return { value: "" };
         }
-        const value = this._model.getPivotCellValue(measureName, domain);
-        const measure = this.getMeasure(measureName);
+        const measure = this.getMeasure(measureId);
+        const value = this._model.getPivotCellValue(measure.fieldName, domain);
         let format;
         switch (measure.aggregator) {
             case "count":
@@ -263,9 +263,9 @@ export class OdooPivot extends OdooViewsDataSource {
                 break;
             default:
                 format =
-                    measure.name === "__count"
+                    measure.fieldName === "__count"
                         ? "0"
-                        : this._getPivotFieldFormat(measure.name, value);
+                        : this._getPivotFieldFormat(measure.fieldName, value);
         }
         return { value, format };
     }
@@ -348,7 +348,7 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
                 !dimension.granularity
             ) {
                 dimension.granularity = "month";
-                dimension.nameWithGranularity = `${dimension.name}:month`;
+                dimension.nameWithGranularity = `${dimension.fieldName}:month`;
             }
         }
     }
@@ -386,7 +386,7 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
             },
             metaData: {
                 sortedColumn: this.sortedColumn,
-                activeMeasures: this.measures.map((m) => m.name),
+                activeMeasures: this.measures.map((m) => m.fieldName),
                 resModel: this.model,
                 colGroupBys: this.columns.map((c) => c.nameWithGranularity),
                 rowGroupBys: this.rows.map((r) => r.nameWithGranularity),

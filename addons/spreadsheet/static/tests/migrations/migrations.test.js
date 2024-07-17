@@ -448,9 +448,9 @@ test("Pivot are migrated from 9 to 10", () => {
         type: "ODOO",
         name: "Name",
         model: "res.model",
-        measures: [{ name: "probability" }],
-        columns: [{ name: "foo" }],
-        rows: [{ name: "create_date", granularity: "month" }],
+        measures: [{ id: "probability", fieldName: "probability", aggregator: undefined }],
+        columns: [{ fieldName: "foo", granularity: undefined, order: undefined }],
+        rows: [{ fieldName: "create_date", granularity: "month", order: undefined }],
         formulaId: "1",
     });
 });
