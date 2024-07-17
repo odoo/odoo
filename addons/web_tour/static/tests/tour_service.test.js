@@ -927,3 +927,56 @@ test("manual tour with inactive steps", async () => {
     expect(".counter .value").toHaveText("5");
     await advanceTime(10000);
 });
+
+test("automatic tour with alternative trigger", async () => {
+    patchWithCleanup(browser.console, {
+        log: (s) => {
+            if (s.includes("on step")) {
+                expect.step("on step");
+            } else if (s.toLowerCase().includes("tour tour_des_flandres succeeded")) {
+                expect.step("succeeded");
+            }
+        },
+    });
+    registry.category("web_tour.tours").add("tour_des_flandres", {
+        test: true,
+        sequence: 17,
+        steps: () => [
+            {
+                trigger: ".interval, .button1",
+            },
+            {
+                trigger: ".interval, .button3",
+            },
+            {
+                trigger: ".interval1, .interval2, .button4",
+            },
+            {
+                trigger: ".button5",
+            },
+        ],
+    });
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <button class="button0">Button 0</button>
+                    <button class="button1">Button 1</button>
+                    <button class="button2">Button 2</button>
+                    <button class="button3">Button 3</button>
+                    <button class="button4">Button 4</button>
+                    <button class="button5">Button 5</button>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    getService("tour_service").startTour("tour_des_flandres", { mode: "auto" });
+    for (let i = 0; i <= 5; i++) {
+        await advanceTime(750);
+    }
+    await advanceTime(10000);
+    expect.verifySteps(["on step", "on step", "on step", "on step", "succeeded"]);
+});
