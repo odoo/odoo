@@ -19,7 +19,7 @@ export class OverlayPlugin extends Plugin {
         }
     }
 
-    createOverlay(Component, config) {
+    createOverlay(Component, config = {}) {
         const overlay = new Overlay(this, Component, config);
         this.overlays.push(overlay);
         return overlay;

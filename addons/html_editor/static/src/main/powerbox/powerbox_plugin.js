@@ -48,10 +48,7 @@ export class PowerboxPlugin extends Plugin {
 
     setup() {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.overlay = this.shared.createOverlay(Powerbox, {
-            position: "bottom-start",
-            onClose: () => this.onClose?.(),
-        });
+        this.overlay = this.shared.createOverlay(Powerbox);
 
         this.state = reactive({});
         this.overlayProps = {
