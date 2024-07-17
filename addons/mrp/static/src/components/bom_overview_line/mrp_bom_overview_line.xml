@@ -4,7 +4,7 @@
     <tr t-name="mrp.BomOverviewLine" t-on-click="() => this.props.toggleFolded(identifier)">
         <td name="td_mrp_bom">
             <div class="text-truncate" t-attf-style="margin-left: {{ marginMultiplicator * 20 }}px">
-                <t t-if="data.level > 0 &amp;&amp; hasComponents">
+                <t t-if="hasFoldButton">
                     <span class="o_mrp_bom_unfoldable btn btn-light p-0" t-attf-aria-label="{{ props.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ props.isFolded ? 'Unfold' : 'Fold' }}" style="margin-right: 1px">
                         <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
                     </span>
@@ -32,7 +32,9 @@
         <td t-if="showAvailabilities" class="text-center">
             <t t-if="data.hasOwnProperty('availability_state')">
                 <span t-attf-class="{{availabilityColorClass}}" t-esc="data.availability_display"/>
-                <a href="#" role="button" t-on-click.prevent="goToForecast" title="Forecast Report" t-attf-class="fa fa-fw fa-area-chart o_mrp_bom_forecast ms-1 {{availabilityColorClass}}"/>
+                <t t-if="['bom', 'component'].includes(data.type)">
+                    <a href="#" role="button" t-on-click.prevent="goToForecast" title="Forecast Report" t-attf-class="fa fa-fw fa-area-chart o_mrp_bom_forecast ms-1 {{availabilityColorClass}}"/>
+                </t>
             </t>
         </td>
         <td t-if="showLeadTimes" class="text-end">

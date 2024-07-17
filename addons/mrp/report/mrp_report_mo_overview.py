@@ -263,10 +263,7 @@ class ReportMoOverview(models.AbstractModel):
                 real_cost = current_cost
             elif workorder.operation_id:
                 operation = workorder.operation_id
-                capacity = operation.workcenter_id._get_capacity(production.product_id)
-                operation_cycle = float_round(production.product_uom_qty / capacity, precision_rounding=1, rounding_method='UP')
-                bom_duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + \
-                    operation.workcenter_id._get_expected_duration(production.product_id)
+                bom_duration_expected = operation._get_duration_expected(production.product_id, production.product_uom_qty, production.product_uom_id)
                 real_cost = expected_cost / (workorder.duration_expected or 1) * bom_duration_expected
             else:
                 real_cost = expected_cost

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _, tools
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import float_round
 
 
 class MrpRoutingWorkcenter(models.Model):
@@ -88,7 +89,7 @@ class MrpRoutingWorkcenter(models.Model):
             for item in data:
                 total_duration += item['duration']
                 capacity = item['workcenter_id']._get_capacity(item.product_id)
-                cycle_number += tools.float_round((item['qty_produced'] / capacity or 1.0), precision_digits=0, rounding_method='UP')
+                cycle_number += float_round((item['qty_produced'] / capacity or 1.0), precision_digits=0, rounding_method='UP')
             if cycle_number:
                 operation.time_cycle = total_duration / cycle_number
             else:
@@ -171,3 +172,14 @@ class MrpRoutingWorkcenter(models.Model):
         if product._name == 'product.template':
             return False
         return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
+
+    def _get_duration_expected(self, product, quantity, unit=False, workcenter=False):
+        product = product or self.bom_id.product_tmpl_id
+        if self._skip_operation_line(product):
+            return 0
+        unit = unit or product.uom_id
+        quantity = self.bom_id.product_uom_id._compute_quantity(quantity, unit)
+        workcenter = workcenter or self.workcenter_id
+        capacity = workcenter._get_capacity(product)
+        cycle_number = float_round(quantity / capacity, precision_digits=0, rounding_method='UP')
+        return workcenter._get_expected_duration(product) + cycle_number * self.time_cycle * 100.0 / workcenter.time_efficiency

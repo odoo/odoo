@@ -112,6 +112,10 @@ export class BomOverviewLine extends Component {
         return this.data.components && this.data.components.length > 0;
     }
 
+    get hasOperations() {
+        return this.data.operations && this.data.operations.length > 0;
+    }
+
     get hasQuantity() {
         return this.data.hasOwnProperty('quantity_available') && this.data.quantity_available !== false;
     }
@@ -121,7 +125,7 @@ export class BomOverviewLine extends Component {
     }
 
     get hasFoldButton() {
-        return this.data.level > 0 && this.hasComponents;
+        return this.data.level > 0 && (this.hasComponents || this.hasOperations);
     }
 
     get marginMultiplicator() {

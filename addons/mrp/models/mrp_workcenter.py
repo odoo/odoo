@@ -229,7 +229,7 @@ class MrpWorkcenter(models.Model):
         unavailability_ressources = self.resource_id._get_unavailable_intervals(start_datetime, end_datetime)
         return {wc.id: unavailability_ressources.get(wc.resource_id.id, []) for wc in self}
 
-    def _get_first_available_slot(self, start_datetime, duration, backward=False, leaves_to_ignore=False):
+    def _get_first_available_slot(self, start_datetime, duration, forward=True, leaves_to_ignore=False, extra_leaves_slots=[]):
         """Get the first available interval for the workcenter in `self`.
 
         The available interval is disjoinct with all other workorders planned on this workcenter, but
@@ -239,61 +239,63 @@ class MrpWorkcenter(models.Model):
 
         :param duration: minutes needed to make the workorder (float)
         :param start_datetime: begin the search at this datetime
-        :param backward: search from start_datetime to now (default is from start_datetime to 700 days after)
+        :param forward: forward scheduling (search from start_datetime to 700 days after), or backward (from start_datetime to now)
         :param leaves_to_ignore: typically, ignore allocated leave when re-planning a workorder
+        :param extra_leaves_slots: extra time slots (start, stop) to consider
         :rtype: tuple
         """
         self.ensure_one()
         resource = self.resource_id
         start_datetime, revert = make_aware(start_datetime)
-        available_intervals_domain = [('time_type', 'in', ['other', 'leave'])]
-        workorder_intervals_domain = [('time_type', '=', 'other')]
+        get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, resources=resource, tz=timezone(self.resource_calendar_id.tz))
+        workorder_intervals_leaves_domain = [('time_type', '=', 'other')]
         if leaves_to_ignore:
-            available_intervals_domain.append(('id', 'not in', leaves_to_ignore.ids))
-            workorder_intervals_domain.append(('id', 'not in', leaves_to_ignore.ids))
-
-        get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, domain=available_intervals_domain, resources=resource, tz=timezone(self.resource_calendar_id.tz))
-        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=workorder_intervals_domain, resources=resource, tz=timezone(self.resource_calendar_id.tz))
+            workorder_intervals_leaves_domain.append(('id', 'not in', leaves_to_ignore.ids))
+        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=workorder_intervals_leaves_domain, resources=resource, tz=timezone(self.resource_calendar_id.tz))
+        extra_leaves_slots_intervals = Intervals([(make_aware(start)[0], make_aware(stop)[0], self.env['resource.calendar.attendance']) for start, stop in extra_leaves_slots])
 
         remaining = duration
-        start_interval = start_datetime
         now = make_aware(datetime.now())[0]
-        delta = timedelta(days=-14 if backward else +14)
+        delta = timedelta(days=14)
+        start_interval, stop_interval = None, None
         for n in range(50):  # 50 * 14 = 700 days in advance (hardcoded)
-            date_start = start_datetime + delta * n
-            date_stop = date_start + delta
-            if backward:
-                date_stop, date_start = date_start, date_stop
-
-            available_intervals = get_available_intervals(date_start, date_stop)[resource.id]
-            workorder_intervals = get_workorder_intervals(date_start, date_stop)[resource.id]
-            if backward:
-                available_intervals = reversed(available_intervals)
-
-            for start, stop, dummy in available_intervals:
-                # Shouldn't loop more than 2 times because the available_intervals contains the workorder_intervals
-                # And remaining == duration can only occur at the first loop and at the interval intersection (cannot happen several time because available_intervals > workorder_intervals
-                for _i in range(2):
+            if forward:
+                date_start = start_datetime + delta * n
+                date_stop = date_start + delta
+                available_intervals = get_available_intervals(date_start, date_stop)[resource.id]
+                workorder_intervals = get_workorder_intervals(date_start, date_stop)[resource.id]
+                for start, stop, _records in available_intervals:
+                    start_interval = start_interval or start
                     interval_minutes = (stop - start).total_seconds() / 60
-                    # If the remaining minutes has never decrease update start_interval
-                    if remaining == duration:
-                        start_interval = start
-                        stop_interval = stop
-                    # If there is a overlap between the possible available interval and a others WO
-                    if Intervals([(start_interval, start + timedelta(minutes=min(remaining, interval_minutes)), dummy)]) & workorder_intervals:
-                        remaining = duration
-                    elif float_compare(interval_minutes, remaining, precision_digits=3) >= 0:
-                        if backward:
-                            return revert(stop - timedelta(minutes=remaining)), revert(stop_interval)
+                    while (interval := Intervals([(start_interval or start, start + timedelta(minutes=min(remaining, interval_minutes)), _records)])) \
+                      and (conflict := interval & workorder_intervals or interval & extra_leaves_slots_intervals):
+                        (_start, start, _records) = conflict._items[0]  # restart available interval at conflicting interval stop
+                        interval_minutes = (stop - start).total_seconds() / 60
+                        start_interval, remaining = start if interval_minutes else None, duration
+                    if float_compare(interval_minutes, remaining, precision_digits=3) >= 0:
                         return revert(start_interval), revert(start + timedelta(minutes=remaining))
-                    else:
-                        # Decrease a part of the remaining duration
-                        remaining -= interval_minutes
-                        # Go to the next available interval because the possible current interval duration has been used
-                        break
-            if backward and date_start <= now:
-                break
-        return False, 'Not available slot 700 days after the planned start'
+                    remaining -= interval_minutes
+            else:
+                # same process but starting from end on reversed intervals
+                date_stop = start_datetime - delta * n
+                date_start = date_stop - delta
+                available_intervals = get_available_intervals(date_start, date_stop)[resource.id]
+                available_intervals = reversed(available_intervals)
+                workorder_intervals = get_workorder_intervals(date_start, date_stop)[resource.id]
+                for start, stop, _records in available_intervals:
+                    stop_interval = stop_interval or stop
+                    interval_minutes = (stop - start).total_seconds() / 60
+                    while (interval := Intervals([(stop - timedelta(minutes=min(remaining, interval_minutes)), stop_interval or stop, _records)])) \
+                      and (conflict := interval & workorder_intervals or interval & extra_leaves_slots_intervals):
+                        (stop, _stop, _records) = conflict._items[0]  # restart available interval at conflicting interval start
+                        interval_minutes = (stop - start).total_seconds() / 60
+                        stop_interval, remaining = stop if interval_minutes else None, duration
+                    if float_compare(interval_minutes, remaining, precision_digits=3) >= 0:
+                        return revert(stop - timedelta(minutes=remaining)), revert(stop_interval)
+                    remaining -= interval_minutes
+                if date_start <= now:
+                    break
+        return False, 'No available slot 700 days after the planned start'
 
     def action_archive(self):
         res = super().action_archive()
