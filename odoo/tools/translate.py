@@ -304,7 +304,7 @@ def xml_translate(callback, value):
         root = parse_xml(value)
         result = translate_xml_node(root, callback, parse_xml, serialize_xml)
         return serialize_xml(result)
-    except etree.ParseError:
+    except (etree.ParseError, ValueError):
         # fallback for translated terms: use an HTML parser and wrap the term
         root = parse_html(u"<div>%s</div>" % value)
         result = translate_xml_node(root, callback, parse_xml, serialize_xml)
