@@ -230,12 +230,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
 
         if (typeof ownerRecord !== "object") {
             const model = field.model;
-            ownerRecord = records[model][ownerRecord];
+            ownerRecord = records[model].get(ownerRecord);
         }
 
         if (typeof recordToConnect !== "object") {
             const model = field.relation;
-            recordToConnect = records[model][recordToConnect];
+            recordToConnect = records[model].get(recordToConnect);
         }
 
         if (field.type === "many2one") {
@@ -285,7 +285,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
     }
 
     function exists(model, id) {
-        return id in records[model];
+        return records[model].has(id);
     }
 
     function create(model, vals, ignoreRelations = false, fromSerialized = false) {
@@ -363,7 +363,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                         const ids = vals[name];
                         for (const id of ids) {
                             if (exists(comodelName, id)) {
-                                connect(field, record, records[comodelName][id]);
+                                connect(field, record, records[comodelName].get(id));
                             }
                         }
                     } else {
@@ -387,7 +387,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                     const val = vals[name];
                     if (fromSerialized) {
                         if (exists(comodelName, val)) {
-                            connect(field, record, records[comodelName][val]);
+                            connect(field, record, records[comodelName].get(val));
                         }
                     } else {
                         if (val instanceof Base) {
@@ -593,7 +593,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 if (!(model in records)) {
                     return [];
                 }
-                return ids.map((id) => records[model][id]);
+                return ids.map((id) => records[model].get(id));
             },
             serialize(record) {
                 const result = {};
