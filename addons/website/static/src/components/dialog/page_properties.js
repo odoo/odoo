@@ -176,7 +176,6 @@ export class PagePropertiesDialog extends FormViewDialog {
 
         this.viewProps = {
             ...this.viewProps,
-            type: "page_properties_dialog_form",
             resId: this.resId,
             buttonTemplate: "website.PagePropertiesDialogButtons",
             clonePage: this.clonePage.bind(this),
