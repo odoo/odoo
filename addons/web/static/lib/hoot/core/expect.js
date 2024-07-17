@@ -1997,6 +1997,7 @@ export class Matcher {
             [options, ["object", null]],
         ]);
 
+        options = { type: "html", ...options };
         if (!(expected instanceof RegExp)) {
             expected = formatXml(expected, options);
         }
