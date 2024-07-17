@@ -333,7 +333,7 @@ export class Runner {
      * @type {boolean}
      */
     get hasFilter() {
-        return this._hasExcludeFilter || this._hasIncludeFilter;
+        return this._hasRemovableFilter;
     }
 
     // Private properties
@@ -341,7 +341,7 @@ export class Runner {
     /** @type {Job[]} */
     _currentJobs = [];
     _failed = 0;
-    _hasExcludeFilter = false;
+    _hasRemovableFilter = false;
     _hasIncludeFilter = false;
     /** @type {(() => MaybePromise<void>)[]} */
     _missedCallbacks = [];
@@ -1241,11 +1241,13 @@ export class Runner {
      * @param {number} [priority=1]
      */
     _include(type, ids, priority = INCLUDE_LEVEL.url) {
+        if (priority === INCLUDE_LEVEL.url) {
+            this._hasRemovableFilter = true;
+        }
         const values = this.state.includeSpecs[type];
         for (const id of ids) {
             const nId = normalize(id);
             if (id.startsWith(EXCLUDE_PREFIX)) {
-                this._hasExcludeFilter = true;
                 values[nId.slice(EXCLUDE_PREFIX.length)] = Math.abs(priority) * -1;
             } else if ((values[nId]?.[0] || 0) >= 0) {
                 this._hasIncludeFilter = true;
