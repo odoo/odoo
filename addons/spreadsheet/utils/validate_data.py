@@ -66,9 +66,10 @@ def domain_fields(domain):
 def pivot_measure_fields(pivot):
     measures = [
         measure if isinstance(measure, str)
-        # "field" has been renamed to "name"
+        # "field" has been renamed to "name" and "name" to "fieldName"
         else measure["field"] if "field" in measure
-        else measure["name"]
+        else measure["name"] if "name" in measure
+        else measure["fieldName"]
         for measure in pivot["measures"]
     ]
     return [
@@ -82,9 +83,9 @@ def pivot_fields(pivot):
     """return all field names used in a pivot definition"""
     model = pivot["model"]
     fields = set(
-        # colGroupBys and rowGroupBys were renamed to columns and rows
-        pivot.get("colGroupBys", []) + [col["name"] for col in pivot.get("columns", [])]
-        + pivot.get("rowGroupBys", []) + [row["name"] for row in pivot.get("rows", [])]
+        # colGroupBys and rowGroupBys were renamed to columns and rows, name to fieldName
+        pivot.get("colGroupBys", []) + [col.get("name", col.get("fieldName")) for col in pivot.get("columns", [])]
+        + pivot.get("rowGroupBys", []) + [row.get("name", row.get("fieldName")) for row in pivot.get("rows", [])]
         + pivot_measure_fields(pivot)
         + domain_fields(pivot["domain"])
     )

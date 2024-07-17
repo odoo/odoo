@@ -238,11 +238,11 @@ test("invalid group dimensions", async function () {
                 </pivot>`,
     });
     const invalids = [
-        '=PIVOT.VALUE(1,"probability", "product_id", 1, "bar", false, "foo", 1)', // inverted col dimensions
-        '=PIVOT.VALUE(1,"probability", "product_id", 1, "bar", false, "f"&"oo", 1)', // inverted col dimensions, "foo" computed
-        '=PIVOT.VALUE(1,"probability", "product_id", 1, "bar", false)', // missing first col dimension
-        '=PIVOT.VALUE(1,"probability", "#product_id", 1, "#bar", 1, "#foo", 1)',
-        '=PIVOT.VALUE(1,"probability", "bar", false, "foo", 1, "product_id", 1)', // columns before rows
+        '=PIVOT.VALUE(1,"probability:avg", "product_id", 1, "bar", false, "foo", 1)', // inverted col dimensions
+        '=PIVOT.VALUE(1,"probability:avg", "product_id", 1, "bar", false, "f"&"oo", 1)', // inverted col dimensions, "foo" computed
+        '=PIVOT.VALUE(1,"probability:avg", "product_id", 1, "bar", false)', // missing first col dimension
+        '=PIVOT.VALUE(1,"probability:avg", "#product_id", 1, "#bar", 1, "#foo", 1)',
+        '=PIVOT.VALUE(1,"probability:avg", "bar", false, "foo", 1, "product_id", 1)', // columns before rows
 
         '=PIVOT.HEADER(1, "product_id", 1, "bar", false, "foo", 1)', // inverted col dimensions
         '=PIVOT.HEADER(1, "product_id", 1, "bar", false)', // missing first col dimension
@@ -280,11 +280,11 @@ test("user context is combined with pivot context to fetch data", async function
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability" }],
+                measures: [{ fieldName: "probability" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
                 context: {
                     allowed_company_ids: [16],
                     default_stage_id: 9,
@@ -338,20 +338,20 @@ test("fetch metadata only once per model", async function () {
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
                 context: {},
             },
             2: {
                 type: "ODOO",
-                columns: [{ name: "bar" }],
+                columns: [{ fieldName: "bar" }],
                 domain: [],
                 measures: [{ field: "probability", operator: "max" }],
                 model: "partner",
-                rows: [{ name: "foo" }],
+                rows: [{ fieldName: "foo" }],
                 context: {},
             },
         },
@@ -375,11 +375,11 @@ test("don't fetch pivot data if no formula use it", async function () {
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
             },
         },
     };
@@ -393,7 +393,7 @@ test("don't fetch pivot data if no formula use it", async function () {
         },
     });
     expect.verifySteps([]);
-    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability")`);
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:sum")`);
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await animationFrame();
     expect.verifySteps([
@@ -412,19 +412,19 @@ test("evaluates only once when two pivots are loading", async function () {
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
             },
             2: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
             },
         },
     };
@@ -434,8 +434,8 @@ test("evaluates only once when two pivots are loading", async function () {
     model.config.custom.odooDataProvider.addEventListener("data-source-updated", () =>
         expect.step("data-source-notified")
     );
-    setCellContent(model, "A1", '=PIVOT.VALUE("1", "probability")');
-    setCellContent(model, "A2", '=PIVOT.VALUE("2", "probability")');
+    setCellContent(model, "A1", '=PIVOT.VALUE("1", "probability:sum")');
+    setCellContent(model, "A2", '=PIVOT.VALUE("2", "probability:sum")');
     expect(getCellValue(model, "A1")).toBe("Loading...");
     expect(getCellValue(model, "A2")).toBe("Loading...");
     await animationFrame();
@@ -451,11 +451,11 @@ test("concurrently load the same pivot twice", async function () {
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
             },
         },
     };
@@ -463,7 +463,7 @@ test("concurrently load the same pivot twice", async function () {
         spreadsheetData,
     });
     // the data loads first here, when we insert the first pivot function
-    setCellContent(model, "A1", '=PIVOT.VALUE("1", "probability")');
+    setCellContent(model, "A1", '=PIVOT.VALUE("1", "probability:sum")');
     expect(getCellValue(model, "A1")).toBe("Loading...");
     // concurrently reload the same pivot
     model.dispatch("REFRESH_ALL_DATA_SOURCES");
@@ -479,18 +479,18 @@ test("display loading while data is not fully available", async function () {
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.HEADER(1, "measure", "probability")` },
+                    A1: { content: `=PIVOT.HEADER(1, "measure", "probability:sum")` },
                     A2: { content: `=PIVOT.HEADER(1, "product_id", 37)` },
-                    A3: { content: `=PIVOT.VALUE(1, "probability")` },
+                    A3: { content: `=PIVOT.VALUE(1, "probability:sum")` },
                 },
             },
         ],
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "product_id" }],
+                columns: [{ fieldName: "product_id" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
                 rows: [],
             },
@@ -561,9 +561,9 @@ test("pivot grouped by char field which represents numbers", async function () {
     expect(getEvaluatedCell(model, "A3").value).toBe("000111");
     expect(getEvaluatedCell(model, "A4").value).toBe("111");
     expect(getEvaluatedCell(model, "A5").value).toBe("14.0");
-    expect(getCell(model, "B3").content).toBe('=PIVOT.VALUE(1,"probability","name","000111")');
-    expect(getCell(model, "B4").content).toBe('=PIVOT.VALUE(1,"probability","name","111")');
-    expect(getCell(model, "B5").content).toBe('=PIVOT.VALUE(1,"probability","name","14.0")');
+    expect(getCell(model, "B3").content).toBe('=PIVOT.VALUE(1,"probability:avg","name","000111")');
+    expect(getCell(model, "B4").content).toBe('=PIVOT.VALUE(1,"probability:avg","name","111")');
+    expect(getCell(model, "B5").content).toBe('=PIVOT.VALUE(1,"probability:avg","name","14.0")');
     expect(getEvaluatedCell(model, "B3").value).toBe(15);
     expect(getEvaluatedCell(model, "B4").value).toBe(11);
     expect(getEvaluatedCell(model, "B5").value).toBe(16);
@@ -643,7 +643,7 @@ test("invalid pivot measure", async function () {
     setCellContent(model, "F10", formula);
     expect(getCellValue(model, "F10")).toBe("#ERROR", { message: formula });
     expect(getEvaluatedCell(model, "F10").message).toBe(
-        "The argument count is not a valid measure. Here are the measures: (probability)",
+        "The argument count is not a valid measure. Here are the measures: (probability:avg)",
         { message: formula }
     );
 });
@@ -663,9 +663,9 @@ test("aggregate to 0", async function () {
                     <field name="probability" type="measure"/>
                 </pivot>`,
     });
-    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability", "name", "A")');
-    setCellContent(model, "A2", '=PIVOT.VALUE(1, "probability", "name", "B")');
-    setCellContent(model, "A3", '=PIVOT.VALUE(1, "probability")');
+    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability:avg", "name", "A")');
+    setCellContent(model, "A2", '=PIVOT.VALUE(1, "probability:avg", "name", "B")');
+    setCellContent(model, "A3", '=PIVOT.VALUE(1, "probability:avg")');
     expect(getEvaluatedCell(model, "A1").value).toBe(10);
     expect(getEvaluatedCell(model, "A2").value).toBe(-10);
     expect(getEvaluatedCell(model, "A3").value).toBe(0);
@@ -694,8 +694,8 @@ test("pivot formula for total should return empty string instead of 'FALSE' when
     });
     await waitForDataLoaded(model);
 
-    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability", "name", "A")');
-    setCellContent(model, "A2", '=PIVOT.VALUE(1, "probability")');
+    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability:avg", "name", "A")');
+    setCellContent(model, "A2", '=PIVOT.VALUE(1, "probability:avg")');
     expect(getEvaluatedCell(model, "A1").value).toBe("");
     expect(getEvaluatedCell(model, "A2").value).toBe("");
 
@@ -717,11 +717,11 @@ test("can import/export sorted pivot", async () => {
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
                 sortedColumn: {
                     measure: "probability",
                     order: "asc",
@@ -751,7 +751,7 @@ test("can import (export) contextual domain", async () => {
                 type: "ODOO",
                 columns: [],
                 domain: '[("foo", "=", uid)]',
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
                 rows: [],
                 name: "A pivot",
@@ -767,7 +767,7 @@ test("can import (export) contextual domain", async () => {
             }
         },
     });
-    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability")'); // load the data (and check the rpc domain)
+    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability:sum")'); // load the data (and check the rpc domain)
     await animationFrame();
     expect(model.exportData().pivots[1].domain).toBe('[("foo", "=", uid)]', {
         message: "the domain is exported with the dynamic parts",
@@ -788,16 +788,24 @@ test("Can group by many2many field ", async () => {
     expect(getCellFormula(model, "A4")).toBe('=PIVOT.HEADER(1,"tag_ids",67)');
     expect(getCellFormula(model, "A5")).toBe('=PIVOT.HEADER(1,"tag_ids",FALSE)');
 
-    expect(getCellFormula(model, "B3")).toBe('=PIVOT.VALUE(1,"probability","tag_ids",42,"foo",1)');
-    expect(getCellFormula(model, "B4")).toBe('=PIVOT.VALUE(1,"probability","tag_ids",67,"foo",1)');
+    expect(getCellFormula(model, "B3")).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","tag_ids",42,"foo",1)'
+    );
+    expect(getCellFormula(model, "B4")).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","tag_ids",67,"foo",1)'
+    );
     expect(getCellFormula(model, "B5")).toBe(
-        '=PIVOT.VALUE(1,"probability","tag_ids",FALSE,"foo",1)'
+        '=PIVOT.VALUE(1,"probability:avg","tag_ids",FALSE,"foo",1)'
     );
 
-    expect(getCellFormula(model, "C3")).toBe('=PIVOT.VALUE(1,"probability","tag_ids",42,"foo",2)');
-    expect(getCellFormula(model, "C4")).toBe('=PIVOT.VALUE(1,"probability","tag_ids",67,"foo",2)');
+    expect(getCellFormula(model, "C3")).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","tag_ids",42,"foo",2)'
+    );
+    expect(getCellFormula(model, "C4")).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","tag_ids",67,"foo",2)'
+    );
     expect(getCellFormula(model, "C5")).toBe(
-        '=PIVOT.VALUE(1,"probability","tag_ids",FALSE,"foo",2)'
+        '=PIVOT.VALUE(1,"probability:avg","tag_ids",FALSE,"foo",2)'
     );
 
     expect(getCellValue(model, "A3")).toBe("isCool");
@@ -821,7 +829,7 @@ test("PIVOT.HEADER grouped by date field without value", async function () {
     });
     for (const granularity of ["day", "week", "month", "quarter"]) {
         updatePivot(model, pivotId, {
-            columns: [{ name: "date", granularity, order: "asc" }],
+            columns: [{ fieldName: "date", granularity, order: "asc" }],
         });
         await animationFrame();
         setCellContent(model, "A1", `=PIVOT.HEADER(1, "date:${granularity}", "false")`);
@@ -840,11 +848,19 @@ test("PIVOT functions can accept spreadsheet dates", async function () {
     setCellContent(model, "A1", '=PIVOT.HEADER(1, "date:quarter",DATE(2016, 4, 1))');
     expect(getCellValue(model, "A1")).toBe("Q2 2016");
 
-    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability", "date:quarter",DATE(2016, 4, 1))');
+    setCellContent(
+        model,
+        "A1",
+        '=PIVOT.VALUE(1, "probability:avg", "date:quarter",DATE(2016, 4, 1))'
+    );
     expect(getCellValue(model, "A1")).toBe(10);
 
     // not the first day of the quarter
-    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability", "date:quarter",DATE(2016, 4, 2))');
+    setCellContent(
+        model,
+        "A1",
+        '=PIVOT.VALUE(1, "probability:avg", "date:quarter",DATE(2016, 4, 2))'
+    );
     expect(getCellValue(model, "A1")).toBe(10);
 });
 
@@ -883,7 +899,7 @@ test("PIVOT.HEADER day_of_month are correctly formatted at evaluation", async fu
                 </pivot>`,
     });
     updatePivot(model, pivotId, {
-        columns: [{ name: "date", granularity: "day_of_month", order: "asc" }],
+        columns: [{ fieldName: "date", granularity: "day_of_month", order: "asc" }],
     });
     await animationFrame();
     setCellContent(model, "B1", `=PIVOT.HEADER(1, "date:day_of_month", 1)`);
@@ -914,7 +930,7 @@ test("PIVOT.HEADER iso_week_number are correctly formatted at evaluation", async
                 </pivot>`,
     });
     updatePivot(model, pivotId, {
-        columns: [{ name: "date", granularity: "iso_week_number", order: "asc" }],
+        columns: [{ fieldName: "date", granularity: "iso_week_number", order: "asc" }],
     });
     await animationFrame();
     setCellContent(model, "B1", `=PIVOT.HEADER(1, "date:iso_week_number", 1)`);
@@ -945,7 +961,7 @@ test("PIVOT.HEADER month_number are correctly formatted at evaluation", async fu
                 </pivot>`,
     });
     updatePivot(model, pivotId, {
-        columns: [{ name: "date", granularity: "month_number", order: "asc" }],
+        columns: [{ fieldName: "date", granularity: "month_number", order: "asc" }],
     });
     await animationFrame();
     setCellContent(model, "B1", `=PIVOT.HEADER(1, "date:month_number", 1)`);
@@ -976,7 +992,7 @@ test("PIVOT.HEADER quarter_number are correctly formatted at evaluation", async 
                 </pivot>`,
     });
     updatePivot(model, pivotId, {
-        columns: [{ name: "date", granularity: "quarter_number", order: "asc" }],
+        columns: [{ fieldName: "date", granularity: "quarter_number", order: "asc" }],
     });
     await animationFrame();
     setCellContent(model, "B1", `=PIVOT.HEADER(1, "date:quarter_number", 1)`);
@@ -1113,8 +1129,8 @@ test("can edit pivot groups", async () => {
     const { model } = await createSpreadsheetWithPivot();
     const [pivotId] = model.getters.getPivotIds();
     let definition = model.getters.getPivotCoreDefinition(pivotId);
-    expect(definition.columns).toEqual([{ name: "foo" }]);
-    expect(definition.rows).toEqual([{ name: "bar" }]);
+    expect(definition.columns).toEqual([{ fieldName: "foo" }]);
+    expect(definition.rows).toEqual([{ fieldName: "bar" }]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1128,8 +1144,8 @@ test("can edit pivot groups", async () => {
     expect(definition.rows).toEqual([]);
     model.dispatch("REQUEST_UNDO");
     definition = model.getters.getPivotCoreDefinition(pivotId);
-    expect(definition.columns).toEqual([{ name: "foo" }]);
-    expect(definition.rows).toEqual([{ name: "bar" }]);
+    expect(definition.columns).toEqual([{ fieldName: "foo" }]);
+    expect(definition.rows).toEqual([{ fieldName: "bar" }]);
 });
 
 test("field matching is removed when filter is deleted", async function () {
@@ -1315,7 +1331,7 @@ test("changing measure aggregates", async () => {
         pivotId,
         pivot: {
             ...model.getters.getPivotCoreDefinition(pivotId),
-            measures: [{ name: "probability", aggregator: "sum" }],
+            measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
         },
     });
     await animationFrame();
@@ -1324,7 +1340,7 @@ test("changing measure aggregates", async () => {
         pivotId,
         pivot: {
             ...model.getters.getPivotCoreDefinition(pivotId),
-            measures: [{ name: "foo", aggregator: "sum" }],
+            measures: [{ fieldName: "foo", aggregator: "sum" }],
         },
     });
     await animationFrame();
@@ -1348,7 +1364,7 @@ test("many2one measures are aggregated with count_distinct by default", async ()
         pivotId,
         pivot: {
             ...model.getters.getPivotCoreDefinition(pivotId),
-            measures: [{ name: "product_id" }], // no aggregator specified
+            measures: [{ id: "product_id", fieldName: "product_id" }], // no aggregator specified
         },
     });
     setCellContent(model, "A1", '=PIVOT.VALUE(1, "product_id")');
@@ -1364,17 +1380,23 @@ test("changing measure aggregates changes the format", async () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
     });
-    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability")');
-    expect(getEvaluatedCell(model, "A1").format).toBe("#,##0.00");
+    setCellContent(model, "G1", "=PIVOT(1)");
+    expect(getEvaluatedCell(model, "H3").format).toBe("#,##0.00");
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
             ...model.getters.getPivotCoreDefinition(pivotId),
-            measures: [{ name: "probability", aggregator: "count_distinct" }],
+            measures: [
+                {
+                    id: "probability:count_distinct",
+                    fieldName: "probability",
+                    aggregator: "count_distinct",
+                },
+            ],
         },
     });
     await animationFrame();
-    expect(getEvaluatedCell(model, "A1").format).toBe("0");
+    expect(getEvaluatedCell(model, "H3").format).toBe("0");
 });
 
 test("changing order of group by", async () => {
@@ -1395,11 +1417,11 @@ test("changing order of group by", async () => {
         pivotId,
         pivot: {
             ...model.getters.getPivotCoreDefinition(pivotId),
-            columns: [{ name: "foo", order: "asc" }],
+            columns: [{ fieldName: "foo", order: "asc" }],
         },
     });
     expect(model.getters.getPivotCoreDefinition(pivotId).columns).toEqual([
-        { name: "foo", order: "asc" },
+        { fieldName: "foo", order: "asc" },
     ]);
     await animationFrame();
     expect.verifySteps(["NO_ORDER", "foo asc"]);
@@ -1407,7 +1429,7 @@ test("changing order of group by", async () => {
         pivotId,
         pivot: {
             ...model.getters.getPivotCoreDefinition(pivotId),
-            columns: [{ name: "foo" }],
+            columns: [{ fieldName: "foo" }],
         },
     });
     await animationFrame();
@@ -1432,8 +1454,8 @@ test("change date order", async () => {
         pivot: {
             ...model.getters.getPivotCoreDefinition(pivotId),
             columns: [
-                { name: "date", granularity: "year", order: "asc" },
-                { name: "date", granularity: "month", order: "desc" },
+                { fieldName: "date", granularity: "year", order: "asc" },
+                { fieldName: "date", granularity: "month", order: "desc" },
             ],
         },
     });
@@ -1457,9 +1479,9 @@ test("duplicated dimension on col and row with different granularity", async () 
     setCellContent(
         model,
         "A1",
-        '=PIVOT.VALUE(1,"probability","date:month","3/2024","date:year",2024)'
+        '=PIVOT.VALUE(1,"probability:avg","date:month","3/2024","date:year",2024)'
     );
-    setCellContent(model, "A2", '=PIVOT.VALUE(1,"probability","#date:month",1,"#date:year",1)'); // positional
+    setCellContent(model, "A2", '=PIVOT.VALUE(1,"probability:avg","#date:month",1,"#date:year",1)'); // positional
     expect(getEvaluatedCell(model, "A1").value).toBe(11);
     expect(getEvaluatedCell(model, "A2").value).toBe(11);
 });
@@ -1485,11 +1507,11 @@ test("changing granularity of group by", async () => {
         pivotId,
         pivot: {
             ...model.getters.getPivotCoreDefinition(pivotId),
-            columns: [{ name: "date", granularity: "day" }],
+            columns: [{ fieldName: "date", granularity: "day" }],
         },
     });
     expect(model.getters.getPivotCoreDefinition(pivotId).columns).toEqual([
-        { name: "date", granularity: "day" },
+        { fieldName: "date", granularity: "day" },
     ]);
     await animationFrame();
     expect.verifySteps(["date:day"]);

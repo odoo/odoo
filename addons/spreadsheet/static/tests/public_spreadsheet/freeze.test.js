@@ -25,7 +25,9 @@ defineSpreadsheetModels();
 test("odoo pivot functions are replaced with their value", async function () {
     const { model } = await createSpreadsheetWithPivot();
     expect(getCell(model, "A3").content).toBe('=PIVOT.HEADER(1,"bar",FALSE)');
-    expect(getCell(model, "C3").content).toBe('=PIVOT.VALUE(1,"probability","bar",FALSE,"foo",2)');
+    expect(getCell(model, "C3").content).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",2)'
+    );
     expect(getEvaluatedCell(model, "A3").value).toBe("No");
     expect(getEvaluatedCell(model, "C3").value).toBe(15);
     const data = await freezeOdooData(model);
@@ -61,14 +63,14 @@ test("Pivot with a type different of ODOO is not converted", async function () {
         },
     };
     const model = await createModelWithDataSource({ spreadsheetData });
-    setCellContent(model, "A1", `=PIVOT.VALUE(1, "probability")`);
-    setCellContent(model, "A2", `=PIVOT.HEADER(1, "measure", "probability")`);
+    setCellContent(model, "A1", `=PIVOT.VALUE(1, "probability:avg")`);
+    setCellContent(model, "A2", `=PIVOT.HEADER(1, "measure", "probability:avg")`);
     const data = await freezeOdooData(model);
     const cells = data.sheets[0].cells;
-    expect(cells.A1.content).toBe(`=PIVOT.VALUE(1, "probability")`, {
+    expect(cells.A1.content).toBe(`=PIVOT.VALUE(1, "probability:avg")`, {
         message: "the content is not replaced with the value",
     });
-    expect(cells.A2.content).toBe(`=PIVOT.HEADER(1, "measure", "probability")`, {
+    expect(cells.A2.content).toBe(`=PIVOT.HEADER(1, "measure", "probability:avg")`, {
         message: "the content is not replaced with the value",
     });
 });
@@ -76,7 +78,9 @@ test("Pivot with a type different of ODOO is not converted", async function () {
 test("values are not exported formatted", async function () {
     const { model } = await createSpreadsheetWithPivot();
     expect(getCell(model, "A3").content).toBe('=PIVOT.HEADER(1,"bar",FALSE)');
-    expect(getCell(model, "C3").content).toBe('=PIVOT.VALUE(1,"probability","bar",FALSE,"foo",2)');
+    expect(getCell(model, "C3").content).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",2)'
+    );
     setCellFormat(model, "C3", "mmmm yyyy");
     setCellContent(model, "C4", "=C3+31");
     expect(getEvaluatedCell(model, "C3").value).toBe(15);
@@ -104,7 +108,7 @@ test("invalid expression with pivot function", async function () {
 
 test("odoo pivot functions detection is not case sensitive", async function () {
     const { model } = await createSpreadsheetWithPivot();
-    setCellContent(model, "A1", '=pivot.value(1,"probability")');
+    setCellContent(model, "A1", '=pivot.value(1,"probability:avg")');
     const data = await freezeOdooData(model);
     const A1 = data.sheets[0].cells.A1;
     expect(A1.content).toBe("131", { message: "the content is replaced with the value" });
@@ -118,7 +122,7 @@ test("computed format is exported", async function () {
               </pivot>
             `,
     });
-    setCellContent(model, "A1", '=PIVOT.VALUE(1,"pognon")');
+    setCellContent(model, "A1", '=PIVOT.VALUE(1,"pognon:avg")');
     expect(getCell(model, "A1").format).toBe(undefined);
     expect(getEvaluatedCell(model, "A1").format).toBe("#,##0.00[$€]");
     const data = await freezeOdooData(model);
