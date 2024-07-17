@@ -349,7 +349,10 @@ export function formatDateTime(value, options = {}) {
     if (!value) {
         return "";
     }
-    const format = options.format || localization.dateTimeFormat;
+    var format = options.format || localization.dateTimeFormat;
+    if (options.showSeconds === false) {
+        format = `${localization.dateFormat} ${localization.shortTimeFormat}`;
+    }
     return value.setZone(options.tz || "default").toFormat(format);
 }
 
