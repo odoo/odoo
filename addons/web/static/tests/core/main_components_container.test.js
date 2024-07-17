@@ -27,9 +27,13 @@ test("simple rendering", async () => {
     mainComponentsRegistry.add("MainComponentB", { Component: MainComponentB, props: {} });
     await mountWithCleanup(MainComponentsContainer);
     expect("div.o-main-components-container").toHaveCount(1);
-    expect(".o-main-components-container").toHaveInnerHTML(
-        '<span>MainComponentA</span><span>MainComponentB</span><div class="o-overlay-container"/><div/><div class="o_notification_manager"/>'
-    );
+    expect(".o-main-components-container").toHaveInnerHTML(`
+        <span>MainComponentA</span>
+        <span>MainComponentB</span>
+        <div class="o-overlay-container"></div>
+        <div></div>
+        <div class="o_notification_manager"></div>
+    `);
 });
 
 test("unmounts erroring main component", async () => {
@@ -61,9 +65,12 @@ test("unmounts erroring main component", async () => {
     mainComponentsRegistry.add("MainComponentB", { Component: MainComponentB, props: {} });
     await mountWithCleanup(MainComponentsContainer);
     expect("div.o-main-components-container").toHaveCount(1);
-    expect(".o-main-components-container").toHaveInnerHTML(
-        '<span>MainComponentA</span><span>MainComponentB</span><div class="o-overlay-container"/><div/><div class="o_notification_manager"/>'
-    );
+    expect(".o-main-components-container").toHaveInnerHTML(`
+        <span>MainComponentA</span><span>MainComponentB</span>
+        <div class="o-overlay-container"></div>
+        <div></div>
+        <div class="o_notification_manager"></div>
+    `);
     compA.state.shouldThrow = true;
     await animationFrame();
     expect.verifySteps([
@@ -105,9 +112,12 @@ test("unmounts erroring main component: variation", async () => {
     mainComponentsRegistry.add("MainComponentB", { Component: MainComponentB, props: {} });
     await mountWithCleanup(MainComponentsContainer);
     expect("div.o-main-components-container").toHaveCount(1);
-    expect(".o-main-components-container").toHaveInnerHTML(
-        '<span>MainComponentA</span><span>MainComponentB</span><div class="o-overlay-container"/><div/><div class="o_notification_manager"/>'
-    );
+    expect(".o-main-components-container").toHaveInnerHTML(`
+        <span>MainComponentA</span><span>MainComponentB</span>
+        <div class="o-overlay-container"></div>
+        <div></div>
+        <div class="o_notification_manager"></div>
+    `);
     compB.state.shouldThrow = true;
     await animationFrame();
     expect.verifySteps([
