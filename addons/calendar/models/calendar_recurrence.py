@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, time
-import pytz
-
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
+import pytz
+import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -364,23 +364,12 @@ class RecurrenceRule(models.Model):
         # Skip X-named RRULE extensions
         # TODO Remove patch when dateutils contains the fix
         # HACK https://github.com/dateutil/dateutil/pull/1374
-        try:
-            prefix, suffix = rule_str.split(':', 1)
-        except ValueError:
-            # No special params, that's OK
-            pass
-        else:
-            new_prefix = ";".join(
-                part for part in prefix.split(';') if not part.startswith('X-')
-            )
-            if new_prefix:
-                # If there are non-X-named params, keep only those. FWIW it
-                # will mean an ValueError in dateutil
-                rule_str = f"{new_prefix}:{suffix}"
-            else:
-                # If all RRULE params were X-extensions, just keep the suffix
-                rule_str = suffix
-
+        # Optional parameters starts with X- and they can be placed anywhere in the RRULE string.
+        # RRULE:FREQ=MONTHLY;INTERVAL=3;X-RELATIVE=1
+        # RRULE;X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
+        # (X\\-([A-Z]+-?)+=.*?(;|$))  almost working but it leaves ; at the end
+        rule_str = re.sub('(X\\-([A-Z]+-?)+=.*?(:|;|$))', '', rule_str)
+        rule_str = rule_str.rstrip(';') # remove remaining closing ;
         if 'Z' in rule_str and date_start and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)
         rule = rrule.rrulestr(rule_str, dtstart=date_start)
