@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import werkzeug
 from werkzeug.exceptions import NotFound
 
 from odoo import http, _
@@ -33,7 +34,9 @@ class MailingSMSController(http.Controller):
             return request.redirect('/odoo')
         return request.render('mass_mailing_sms.blacklist_main', {
             'mailing_id': mailing_id,
+            'sms_number': post.get('sms_number', '').strip(' '),
             'trace_code': trace_code,
+            'unsubscribe_error': post.get('unsubscribe_error', False),
         })
 
     @http.route(['/sms/<int:mailing_id>/unsubscribe/<string:trace_code>'], type='http', website=True, auth='public')
@@ -82,13 +85,18 @@ class MailingSMSController(http.Controller):
         else:
             unsubscribe_error = _('Invalid number %s', post.get('sms_number', ''))
 
+        if unsubscribe_error:
+            params = werkzeug.urls.url_encode(
+                dict(**post, unsubscribe_error=unsubscribe_error)
+            )
+            return request.redirect(f'/sms/{mailing_id}/{trace_code}?{params}')
+
         return request.render('mass_mailing_sms.blacklist_number', {
             'mailing_id': mailing_id,
             'trace_code': trace_code,
             'sms_number': sms_number,
             'lists_optin': lists_optin,
             'lists_optout': lists_optout,
-            'unsubscribe_error': unsubscribe_error,
         })
 
     @http.route('/r/<string:code>/s/<int:sms_id_int>', type='http', auth="public")

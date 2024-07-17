@@ -89,7 +89,7 @@
             .o_mailing_list_kanban_stats > a {
                 flex-wrap: wrap;
                 &:hover {
-                    font-weight: normal !important;
+                    color: rgb(1, 126, 132) !important;
                 }
                 @include media-breakpoint-down(sm) {
                     font-size: 1.4rem !important;
@@ -105,14 +105,14 @@
                 outline: 0;
                 padding: 0;
                 font-weight: 300;
-                &:hover {
-                    font-weight: normal;
-                }
                 &.o_mailing_list_kanban_big_nb {
                     text-align: left;
                     font-size: 300%;
                     @include media-breakpoint-up(sm) {
                         text-align: right;
+                    }
+                    &:hover {
+                        color: rgb(113, 75, 103) !important;
                     }
                 }
             }

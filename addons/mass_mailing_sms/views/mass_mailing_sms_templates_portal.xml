@@ -24,6 +24,10 @@
                                 </div>
                             </div>
                         </form>
+                        <div t-if="unsubscribe_error" class="alert alert-danger text-center" role="alert">
+                            <p>There was an error when trying to unsubscribe <strong t-out="sms_number"/></p>
+                            <p t-out="unsubscribe_error"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -37,15 +41,14 @@
                     <div class="col-lg-6 offset-lg-3">
                         <h3>SMS Subscription</h3>
 
-                        <div t-if="unsubscribe_error" class="alert alert-danger text-center" role="alert">
-                            <p>There was an error when trying to unsubscribe <strong t-esc="sms_number"/></p>
-                            <p t-esc="unsubscribe_error"/>
-                        </div>
-                        <div t-else="" class="alert alert-success text-center" role="status">
+                        <div class="alert alert-success text-center" role="status">
                             <t t-if="lists_optout">
                                 <p><strong t-esc="sms_number"/> has been successfully removed from</p>
                                 <t t-foreach="lists_optout" t-as="list_id">
-                                    <strong t-esc="list_id.name"/><br />
+                                    <t t-if="list_id.is_public">
+                                        <strong t-out="list_id.name"/><br />
+                                    </t>
+                                    <t t-else=""><strong>Mailing List</strong></t>
                                 </t>
                             </t>
                             <p t-else="">
