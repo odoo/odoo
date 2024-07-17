@@ -254,6 +254,10 @@ class TestMassSMSInternals(TestMassSMSCommon):
             mailing, self.records,
         )
 
+
+@tagged('mass_mailing', 'mass_mailing_sms', 'mailing_test')
+class TestMassSMSTest(TestMassSMSCommon):
+
     @mute_logger('odoo.addons.mail.models.mail_render_mixin')
     def test_mass_sms_test_button(self):
         mailing = self.env['mailing.mailing'].create({
@@ -264,15 +268,23 @@ class TestMassSMSInternals(TestMassSMSCommon):
             'mailing_type': 'sms',
             'body_plaintext': 'Hello {{ object.name }}',
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+            'sms_allow_unsubscribe': True,
         })
         mailing_test = self.env['mailing.sms.test'].with_user(self.user_marketing).create({
-            'numbers': '+32456001122',
+            'numbers': '+32456001122\n+32455334455\nwrong\n\n',
             'mailing_id': mailing.id,
         })
 
         with self.with_user('user_marketing'):
             with self.mockSMSGateway():
                 mailing_test.action_send_sms()
+        new_traces = self.env['mailing.trace'].search([('mass_mailing_id', '=', mailing.id)])
+        self.assertEqual(len(new_traces), 2, 'Should have create 1 trace / valid number')
+        self.assertEqual(new_traces.mapped('is_test_trace'), [True, True], 'Traces should be flagged as test')
+        self.assertEqual(
+            sorted(new_traces.mapped('sms_number')),
+            ['+32455334455', '+32456001122']
+        )
 
         # Test if bad inline_template in the body raises an error
         mailing.write({
