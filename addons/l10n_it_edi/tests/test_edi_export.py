@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+from odoo.addons.l10n_it_edi.models.account_move import get_float
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
@@ -364,3 +367,65 @@ class TestItEdiExport(TestItEdi):
 
         with self.assertRaises(UserError, msg="You have negative lines that we can't dispatch on others. They need to have the same tax."):
             self._assert_export_invoice(invoice, 'invoice_negative_price.xml')
+
+    def test_invoice_more_product_price_digits_no_discount(self):
+        decimal_places = self.company.currency_id.decimal_places
+
+        price_unit_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')])
+        price_unit_precision.digits = decimal_places + 1
+
+        line_price_unit = float(f"1.{'1' * price_unit_precision.digits}")
+
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'precise line no discount',
+                    'price_unit': line_price_unit,
+                    'quantity': 999999,
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        parsed_xml = etree.fromstring(invoice._l10n_it_edi_render_xml())
+        price_unit = get_float(parsed_xml, './/PrezzoUnitario')
+        quantity = get_float(parsed_xml, './/Quantita')
+        subtotal = get_float(parsed_xml, './/PrezzoTotale')
+
+        self.assertLess(abs(price_unit * quantity - subtotal), 0.01)
+
+    def test_invoice_more_product_price_digits_with_discount(self):
+        decimal_places = self.company.currency_id.decimal_places
+
+        price_unit_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')])
+        price_unit_precision.digits = decimal_places + 1
+
+        line_price_unit = float(f"1.{'1' * price_unit_precision.digits}")
+
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'precise line with discount',
+                    'price_unit': line_price_unit,
+                    'quantity': 999999,
+                    'discount': 32.6
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        parsed_xml = etree.fromstring(invoice._l10n_it_edi_render_xml())
+        price_unit = get_float(parsed_xml, './/PrezzoUnitario')
+        quantity = get_float(parsed_xml, './/Quantita')
+        subtotal = get_float(parsed_xml, './/PrezzoTotale')
+        discount = get_float(parsed_xml, './/Percentuale')
+
+        self.assertLess(abs(price_unit * quantity * (1 - discount / 100) - subtotal), 0.01)

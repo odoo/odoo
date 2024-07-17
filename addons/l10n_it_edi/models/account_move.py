@@ -251,7 +251,7 @@ class AccountMove(models.Model):
                 gross_price = line['price_subtotal'] / (1 - line['discount'] / 100.0)
                 line['discount_amount_before_dispatching'] = (gross_price - line['price_subtotal']) * inverse_factor
                 line['gross_price_subtotal'] = line['currency'].round(gross_price * inverse_factor)
-                line['price_unit'] = line['currency'].round(gross_price / abs(line['quantity']))
+                line['price_unit'] = gross_price / abs(line['quantity'])
             else:
                 line['gross_price_subtotal'] = line['currency'].round(line['price_unit'] * line['quantity'])
                 line['discount_amount_before_dispatching'] = line['gross_price_subtotal']
