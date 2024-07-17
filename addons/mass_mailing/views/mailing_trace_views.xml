@@ -20,6 +20,7 @@
                 <filter string="Replied" name="filter_replied" domain="[('trace_status', '=', 'reply')]"/>
                 <filter string="Bounced" name="filter_bounced" domain="[('trace_status', '=', 'bounce')]"/>
                 <filter string="Failed" name="filter_failed" domain="[('trace_status', '=', 'error')]"/>
+                <filter string="Test Traces" name="filter_is_test_trace" domain="[('is_test_trace', '=', 'True')]"/>
                 <group expand="0" string="Group By">
                     <filter string="State" name="state" domain="[]" context="{'group_by': 'trace_status'}"/>
                     <filter string="Open Date" name="group_open_date" domain="[('trace_status', 'in', ['open', 'reply'])]" context="{'group_by': 'open_datetime:day'}"/>
@@ -45,6 +46,7 @@
                 <field name="failure_type" optional="show"/>
                 <field name="open_datetime" optional="hide"/>
                 <field name="reply_datetime" optional="hide"/>
+                <field name="is_test_trace" optional="hide"/>
                 <button name="action_view_contact" type="object"
                         string="Open Recipient" icon="fa-user"/>
             </list>
@@ -66,6 +68,7 @@
                 <field name="failure_type" optional="show"/>
                 <field name="open_datetime" optional="hide"/>
                 <field name="reply_datetime" optional="hide"/>
+                <field name="is_test_trace" optional="hide"/>
                 <button name="action_view_contact" type="object"
                         string="Open Recipient" icon="fa-user"/>
             </list>
@@ -89,6 +92,8 @@
                                 </div>
                         </button>
                     </div>
+                    <field name="is_test_trace" invisible="1"/>
+                    <widget name="web_ribbon" title="Test" bg_color="text-bg-danger" invisible="is_test_trace != True"/>
                     <group>
                         <group string="Status">
                             <field name="failure_type" invisible="not failure_type"/>

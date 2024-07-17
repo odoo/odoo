@@ -41,6 +41,7 @@
                 <field name="failure_type" optional="show"/>
                 <field name="open_datetime" optional="hide"/>
                 <field name="reply_datetime" optional="hide"/>
+                <field name="is_test_trace" optional="hide"/>
                 <button name="action_view_contact" type="object"
                         string="Open Recipient" icon="fa-user"/>
             </list>
@@ -90,6 +91,8 @@
                             <span widget="statinfo">Open Recipient</span>
                         </button>
                     </div>
+                    <field name="is_test_trace" invisible="1"/>
+                    <widget name="web_ribbon" title="Test" bg_color="text-bg-danger" invisible="is_test_trace != True"/>
                     <div class="alert alert-info text-center"
                         invisible="trace_status != 'error' or
                                    failure_type in ('sms_not_delivered', 'sms_not_allowed', 'sms_invalid_destination', 'sms_rejected', 'sms_rejected')"
