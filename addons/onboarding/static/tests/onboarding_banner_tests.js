@@ -66,6 +66,9 @@ QUnit.module("Onboarding banner", (hooks) => {
             ...session,
             onboarding_to_display: ["animal"],
         });
+        patchWithCleanup(session.view_info, {
+            toy: { multi_record: true, display_name: "Toy", icon: "fab fa-android" },
+        });
 
         const mockRPC = (route) => {
             if (route === "/onboarding/animal") {
@@ -89,6 +92,9 @@ QUnit.module("Onboarding banner", (hooks) => {
 
     QUnit.test("OnboardingBanner does not fetch the banner when the route is not in the session", async (assert) => {
         assert.expect(2);
+        patchWithCleanup(session.view_info, {
+            toy: { multi_record: true, display_name: "Toy", icon: "fab fa-android" },
+        });
 
         const mockRPC = (route) => {
             if (route === "/onboarding/animal") {
