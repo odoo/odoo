@@ -366,7 +366,14 @@
             </we-row>
         </div>
         <!-- Checkout page  -->
-        <div data-selector="main:has(.oe_website_sale .o_wizard)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Checkout Pages">
+        <div
+            string="Checkout Pages"
+            name="o_wsale_checkout_pages"
+            data-selector="main:has(.oe_website_sale .o_wizard)"
+            data-page-options="true"
+            data-no-check="true"
+            groups="website.group_website_designer"
+        >
             <we-checkbox string="Extra Step"
                          data-customize-website-views="website_sale.extra_info"
                          data-no-preview="true"
