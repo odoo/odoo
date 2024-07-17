@@ -446,8 +446,8 @@
                                         <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging"/>
                                         <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                         <field name="price_unit"/>
-                                        <field name="tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
-                                               readonly="qty_invoiced &gt; 0"/>
+                                        <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
+                                            readonly="qty_invoiced &gt; 0"/>
                                         <t groups="sale.group_discount_per_so_line">
                                             <label for="discount"/>
                                             <div name="discount">
@@ -477,8 +477,8 @@
                                 <label for="name" string="Note" invisible="display_type != 'line_note'"/>
                                 <field name="name"/>
                                 <div name="invoice_lines" groups="base.group_no_one" invisible="display_type">
-                                    <label for="account_move_line_ids"/>
-                                    <field name="account_move_line_ids"/>
+                                    <label for="invoice_lines"/>
+                                    <field name="invoice_lines"/>
                                 </div>
                                 <field name="state" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
@@ -605,7 +605,7 @@
                                     name="price_unit"
                                     readonly="qty_invoiced &gt; 0"/>
                                 <field
-                                    name="tax_ids"
+                                    name="tax_id"
                                     widget="many2many_tags"
                                     options="{'no_create': True}"
                                     domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
@@ -639,7 +639,7 @@
                                 <field name="price_total"/>
                                 <field name="price_unit"/>
                                 <field name="display_type"/>
-                                <field name="tax_ids"/>
+                                <field name="tax_id"/>
                                 <field name="company_id"/>
                                 <field name="tax_calculation_rounding_method"/>
                                 <field name="currency_id"/>

@@ -423,7 +423,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
         delivery_line = sale_order.order_line.filtered(lambda l: l.is_delivery)
 
         # delivery line should have taxes from the branch company
-        self.assertRecordValues(delivery_line, [{'product_id': delivery_product.id, 'tax_ids': tax_b.ids}])
+        self.assertRecordValues(delivery_line, [{'product_id': delivery_product.id, 'tax_id': tax_b.ids}])
 
         # update delivery product by setting only the tax from parent company
         delivery_product.write({'taxes_id': [Command.set((tax_a).ids)]})
@@ -437,7 +437,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
         delivery_line = sale_order.order_line.filtered(lambda l: l.is_delivery)
 
         # delivery line should have taxes from the parent company as there is no tax from the branch company
-        self.assertRecordValues(delivery_line, [{'product_id': delivery_product.id, 'tax_ids': tax_a.ids}])
+        self.assertRecordValues(delivery_line, [{'product_id': delivery_product.id, 'tax_id': tax_a.ids}])
 
     def test_update_weight_in_shipping_when_change_quantity(self):
         product_test = self.env['product.product'].create({

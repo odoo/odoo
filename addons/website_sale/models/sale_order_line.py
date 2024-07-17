@@ -51,7 +51,7 @@ class SaleOrderLine(models.Model):
         show_tax = self.order_id.website_id.show_line_subtotals_tax_selection
         tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
 
-        return self.tax_ids.compute_all(
+        return self.tax_id.compute_all(
             self.price_unit, self.currency_id, 1, self.product_id, self.order_partner_id,
         )[tax_display]
 

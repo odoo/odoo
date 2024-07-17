@@ -63,7 +63,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
                 'name': self.product_a.name,
                 'product_qty': 2.0,
                 'price_unit': 100,
-                'tax_ids': False,
+                'taxes_id': False,
             })],
         })
         po.button_confirm()
