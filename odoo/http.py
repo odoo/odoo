@@ -890,7 +890,7 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
     default_mode = submethod.original_routing.get('readonly', default_auth == 'none')
     parent_readonly = merged_routing.setdefault('readonly', default_mode)
     child_readonly = submethod.original_routing.get('readonly')
-    if child_readonly not in (None, parent_readonly):
+    if child_readonly not in (None, parent_readonly) and not callable(child_readonly):
         _logger.warning(
             "The endpoint %s made the route %s altough its parent was defined as %s. Setting the route read/write.",
             f'{controller_cls.__module__}.{controller_cls.__name__}.{submethod.__name__}',
@@ -1899,7 +1899,7 @@ class Request:
         self._set_request_dispatcher(rule)
         readonly = rule.endpoint.routing['readonly']
         if callable(readonly):
-            readonly = readonly(self.registry, request)
+            readonly = readonly(rule.endpoint.func.__self__, self.registry, request)
         return self._transactioning(
             functools.partial(self._serve_ir_http, rule, args),
             readonly=readonly,

@@ -14,20 +14,20 @@ from .utils import clean_action
 _logger = logging.getLogger(__name__)
 
 
-def _call_kw_readonly(registry, request):
-    params = request.get_json_data()['params']
-    try:
-        model_class = registry[params['model']]
-    except KeyError as e:
-        raise NotFound() from e
-    method_name = params['method']
-    for cls in model_class.mro():
-        method = getattr(cls, method_name, None)
-        if method is not None and hasattr(method, '_readonly'):
-            return method._readonly
-    return False
-
 class DataSet(http.Controller):
+
+    def _call_kw_readonly(self, registry, request):
+        params = request.get_json_data()['params']
+        try:
+            model_class = registry[params['model']]
+        except KeyError as e:
+            raise NotFound() from e
+        method_name = params['method']
+        for cls in model_class.mro():
+            method = getattr(cls, method_name, None)
+            if method is not None and hasattr(method, '_readonly'):
+                return method._readonly
+        return False
 
     @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', auth="user", readonly=_call_kw_readonly)
     def call_kw(self, model, method, args, kwargs, path=None):
