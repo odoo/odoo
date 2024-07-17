@@ -24,6 +24,10 @@ function createOdooChartRuntime(chart, getters) {
     const { datasets, labels } = chart.dataSource.getData();
     const locale = getters.getLocale();
     const chartJsConfig = getPieConfiguration(chart, labels, locale);
+    chartJsConfig.options = {
+        ...chartJsConfig.options,
+        ...getters.getChartDatasetActionCallbacks(chart),
+    };
     const colors = new ColorGenerator();
     for (const { label, data } of datasets) {
         const backgroundColor = getPieColors(colors, datasets);
