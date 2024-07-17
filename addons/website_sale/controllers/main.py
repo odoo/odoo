@@ -1637,6 +1637,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if redirection:
             return redirection
 
+        # Prevents a pickup point from remaining selected when
+        # editing an address after a pickup point has been chosen.
+        order.access_point_address = {}
+
         order.order_line._compute_tax_id()
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
