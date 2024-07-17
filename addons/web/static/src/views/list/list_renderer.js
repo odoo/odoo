@@ -1189,7 +1189,7 @@ export class ListRenderer extends Component {
         }
     }
 
-    async onDeleteRecord(record) {
+    async onDeleteRecord(record, ev) {
         this.keepColumnWidths = true;
         const editedRecord = this.props.list.editedRecord;
         if (editedRecord && editedRecord !== record) {
@@ -1199,6 +1199,14 @@ export class ListRenderer extends Component {
             }
         }
         if (this.activeActions.onDelete) {
+            if (ev) {
+                const element = ev.target.closest(".o_list_record_remove");
+                if (element.dataset.clicked) {
+                    return;
+                }
+                element.dataset.clicked = true;
+            }
+
             this.activeActions.onDelete(record);
         }
     }
