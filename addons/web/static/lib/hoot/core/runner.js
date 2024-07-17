@@ -388,6 +388,9 @@ export class Runner {
         });
 
         this.config = reactiveConfig;
+        for (const key in this.config) {
+            this.config[key];
+        }
 
         // Debug
         this.debug = Boolean(this.config.debugTest);
