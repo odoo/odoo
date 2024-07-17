@@ -146,6 +146,11 @@ def _mock_update_user_data(func, self, *args, **kwargs):
 def _mock_migrate_participant(func, self, *args, **kwargs):
     self.account_peppol_migration_key = 'I9cz9yw*ruDM%4VSj94s'
 
+
+def _mock_check_company_on_peppol(func, self, *args, **kwargs):
+    pass
+
+
 _demo_behaviour = {
     '_make_request': _mock_make_request,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
@@ -155,6 +160,7 @@ _demo_behaviour = {
     'button_update_peppol_user_data': _mock_update_user_data,
     'button_peppol_smp_registration': _mock_receiver_registration,
     'button_check_peppol_verification_code': _mock_check_verification_code,
+    '_check_company_on_peppol': _mock_check_company_on_peppol,
 }
 
 # -------------------------------------------------------------------------
