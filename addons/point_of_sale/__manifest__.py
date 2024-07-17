@@ -112,7 +112,6 @@
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
-            'web_editor/static/lib/html2canvas.js',
             'web/static/lib/zxing-library/zxing-library.js',
 
 
