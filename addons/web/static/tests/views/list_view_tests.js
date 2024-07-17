@@ -5997,6 +5997,31 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tbody td.o_list_record_selector", 3, "should have 3 records");
     });
 
+    QUnit.test("Duplicate one record and verify context key", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            actionMenus: {},
+            arch: '<tree><field name="foo"/></tree>',
+            mockRPC(route, args) {
+                if (args.method === "copy_multi") {
+                    assert.step("duplicate");
+                    const { context } = args.kwargs;
+                    assert.strictEqual(context.ctx_key, "ctx_val");
+                }
+            },
+            context: {
+                ctx_key: "ctx_val",
+            },
+        });
+
+        await click(target.querySelector("tbody td.o_list_record_selector:first-child input"));
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Duplicate");
+        assert.verifySteps(["duplicate"]);
+    });
+
     QUnit.test("custom delete confirmation dialog", async (assert) => {
         const listView = registry.category("views").get("list");
         class CautiousController extends listView.Controller {
