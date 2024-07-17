@@ -1,6 +1,7 @@
 import { Component, useEffect, useExternalListener, useRef, xml } from "@odoo/owl";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
+import { omit } from "@web/core/utils/objects";
 
 export class EditorOverlay extends Component {
     static template = xml`
@@ -30,10 +31,6 @@ export class EditorOverlay extends Component {
             getTarget = this.getCurrentRect.bind(this);
         }
 
-        if (this.props.config.hasAutofocus) {
-            useActiveElement("root");
-        }
-
         const rootRef = useRef("root");
         const resizeObserver = new ResizeObserver(() => {
             position.unlock();
@@ -48,7 +45,14 @@ export class EditorOverlay extends Component {
             () => [rootRef.el]
         );
 
-        position = usePosition("root", getTarget, this.props.config);
+        if (this.props.config.hasAutofocus) {
+            useActiveElement("root");
+        }
+        const positionConfig = {
+            position: "bottom-start",
+            ...omit(this.props.config, "hasAutofocus"),
+        };
+        position = usePosition("root", getTarget, positionConfig);
     }
 
     getCurrentRect() {

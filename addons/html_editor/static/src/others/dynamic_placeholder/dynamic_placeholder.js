@@ -37,7 +37,6 @@ export class DynamicPlaceholderPlugin extends Plugin {
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.overlay = this.shared.createOverlay(EditorDynamicPlaceholder, {
-            position: "bottom-start",
             hasAutofocus: true,
         });
 

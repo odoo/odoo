@@ -34,7 +34,6 @@ export class TableUIPlugin extends Plugin {
     setup() {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.picker = this.shared.createOverlay(TablePicker, {
-            position: "bottom-start",
             onPositioned: (picker, position) => {
                 const popperRect = picker.getBoundingClientRect();
                 const { left } = position;
@@ -56,13 +55,10 @@ export class TableUIPlugin extends Plugin {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.colMenu = this.shared.createOverlay(TableMenu, {
             position: "top-fit",
-            offsetY: 0,
-            sequence: 30,
         });
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.rowMenu = this.shared.createOverlay(TableMenu, {
             position: "left-fit",
-            sequence: 30,
         });
         this.addDomListener(this.document, "pointermove", this.onMouseMove);
         this.addDomListener(this.document, "click", () => {
