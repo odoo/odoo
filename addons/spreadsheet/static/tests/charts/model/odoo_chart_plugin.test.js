@@ -1,4 +1,3 @@
-import { makeServerError } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { describe, expect, test } from "@odoo/hoot";
 
@@ -14,6 +13,7 @@ import { insertListInSpreadsheet } from "@spreadsheet/../tests/helpers/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
+import { mockService, makeServerError } from "@web/../tests/web_test_helpers";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
 import { user } from "@web/core/user";
@@ -627,4 +627,185 @@ test("Remove odoo chart when sheet is deleted", async () => {
     expect(model.getters.getOdooChartIds().length).toBe(1);
     model.dispatch("DELETE_SHEET", { sheetId });
     expect(model.getters.getOdooChartIds().length).toBe(0);
+});
+
+test("See records when clicking on a bar chart bar", async () => {
+    const action = {
+        domain: [
+            ["date", ">=", "2022-01-01"],
+            ["date", "<", "2022-02-01"],
+            "&",
+            ["date", ">=", "2022-01-01"],
+            ["date", "<=", "2022-12-31"],
+        ],
+        name: "January 2022 / Probability",
+        res_model: "partner",
+        target: "current",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "list"],
+            [false, "form"],
+        ],
+    };
+    const fakeActionService = {
+        doAction: async (request, options = {}) => {
+            if (request.type === "ir.actions.act_window") {
+                expect.step("do-action");
+                expect(request).toEqual(action);
+            }
+        },
+        loadAction(actionRequest) {
+            expect.step("load-action");
+            expect(actionRequest).toEqual("test.my_action");
+            return action;
+        },
+    };
+    mockService("action", fakeActionService);
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { date: "2020-01-01", probability: 10 },
+        { date: "2021-01-01", probability: 2 },
+        { date: "2022-01-01", probability: 3 },
+        { date: "2022-03-01", probability: 4 },
+        { date: "2022-06-01", probability: 5 },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        serverData,
+        definition: {
+            type: "odoo_bar",
+            metaData: {
+                groupBy: ["date"],
+                measure: "probability",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams: {
+                comparison: null,
+                context: {},
+                domain: [
+                    ["date", ">=", "2022-01-01"],
+                    ["date", "<=", "2022-12-31"],
+                ],
+                groupBy: [],
+                orderBy: [],
+            },
+            actionXmlId: "test.my_action",
+            cumulative: true,
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect.verifySteps([]);
+
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
+    await animationFrame();
+    expect.verifySteps(["load-action", "do-action"]);
+});
+
+test("See records when clicking on a pie chart slice", async () => {
+    const fakeActionService = {
+        doAction: async (request, options = {}) => {
+            if (request.type === "ir.actions.act_window") {
+                expect.step("do-action");
+                expect(request).toEqual({
+                    domain: [
+                        ["date", ">=", "2022-01-01"],
+                        ["date", "<", "2022-02-01"],
+                        "&",
+                        ["date", ">=", "2022-01-01"],
+                        ["date", "<=", "2022-12-31"],
+                    ],
+                    name: "January 2022",
+                    res_model: "partner",
+                    target: "current",
+                    type: "ir.actions.act_window",
+                    views: [
+                        [false, "list"],
+                        [false, "form"],
+                    ],
+                });
+            }
+        },
+    };
+    mockService("action", fakeActionService);
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { date: "2020-01-01", probability: 10 },
+        { date: "2021-01-01", probability: 2 },
+        { date: "2022-01-01", probability: 3 },
+        { date: "2022-03-01", probability: 4 },
+        { date: "2022-06-01", probability: 5 },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_pie",
+        serverData,
+        definition: {
+            type: "odoo_pie",
+            metaData: {
+                groupBy: ["date"],
+                measure: "probability",
+                resModel: "partner",
+            },
+            searchParams: {
+                context: {},
+                domain: [
+                    ["date", ">=", "2022-01-01"],
+                    ["date", "<=", "2022-12-31"],
+                ],
+                groupBy: [],
+                orderBy: [],
+            },
+            cumulative: true,
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect.verifySteps([]);
+
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
+    await animationFrame();
+    expect.verifySteps(["do-action"]);
+});
+
+test("import/export action xml id", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            type: "odoo_bar",
+            metaData: {
+                groupBy: [],
+                measure: "probability",
+                resModel: "partner",
+            },
+            searchParams: {
+                domain: [],
+                groupBy: [],
+                orderBy: [],
+            },
+            actionXmlId: "test.my_action",
+            cumulative: true,
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+        },
+    });
+    const exported = model.exportData();
+    expect(exported.sheets[0].figures[0].data.actionXmlId).toBe("test.my_action");
+
+    const model2 = await createModelWithDataSource({ spreadsheetData: exported });
+    const sheetId = model2.getters.getActiveSheetId();
+    const chartId = model2.getters.getChartIds(sheetId)[0];
+    expect(model2.getters.getChartDefinition(chartId).actionXmlId).toBe("test.my_action");
 });
