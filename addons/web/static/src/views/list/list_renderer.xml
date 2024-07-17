@@ -300,7 +300,7 @@
                 <t t-if="hasX2ManyAction">
                     <td class="o_list_record_remove w-print-0 p-print-0 text-center"
                         t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
-                        t-on-click.stop="() => this.onDeleteRecord(record)"
+                        t-on-click.stop="(ev) => this.onRemoveCellClicked(record, ev)"
                         tabindex="-1"
                     >
                         <button class="fa d-print-none"

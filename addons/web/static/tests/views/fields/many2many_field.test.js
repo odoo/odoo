@@ -1191,6 +1191,47 @@ test("many2many with a domain", async () => {
     expect(".modal .o_data_row").toHaveCount(0);
 });
 
+test("many2many list (editable): edition concurrence", async () => {
+    Partner._records[0].timmy = [1, 2];
+    PartnerType._records.push({ id: 15, name: "bronze", color: 6 });
+    PartnerType._fields.float_field = fields.Float({string: "Float"});
+    PartnerType._views = {
+        list: '<tree><field name="name"/></tree>',
+        search: '<search><field name="name" string="Name"/></search>',
+    };
+
+
+    onRpc((args) => {
+        expect.step(args.method);
+        if (args.method === "web_save") {
+            expect(args.args[1]).toEqual({
+                timmy: [[3, 1]],
+            });
+        }
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+                <form>
+                    <field name="timmy">
+                        <tree editable="top">
+                            <field name="display_name"/>
+                            <field name="float_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+        resId: 1,
+    });
+
+    const removeButton = contains(".o_list_record_remove");
+    removeButton.click();
+    removeButton.click();
+    await clickSave();
+    expect.verifySteps(["get_views", "web_read", "web_save"]);
+});
+
 test("many2many list with onchange and edition of a record", async () => {
     Partner._fields.turtles = fields.Many2many({
         relation: "turtle",
