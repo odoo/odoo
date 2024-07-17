@@ -942,6 +942,44 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "col-lg-6");
     });
 
+    QUnit.test("field ids are unique (same field name in 2 form views)", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo"/>
+                        </group>
+                        <field name="p">
+                            <form>
+                                <sheet>
+                                    <group>
+                                        <field name="bar"/>
+                                        <field name="foo"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <tree>
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_field_widget input#foo");
+
+        await click(target, ".o_field_x2many_list_row_add a");
+        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsOnce(target, ".o_field_widget input#foo");
+        assert.containsOnce(target, ".modal .o_field_widget input#foo");
+        assert.containsOnce(target, ".modal .o_field_widget input#bar");
+    });
+
     QUnit.test("Form and subview with _view_ref contexts", async function (assert) {
         assert.expect(3);
 
@@ -11396,7 +11434,7 @@ QUnit.module("Views", (hooks) => {
                 if (obj.display_name === "first line") {
                     if (onChangeCount === 0) {
                         onChangeCount += 1;
-                        assert.step("resequence onChange crash")
+                        assert.step("resequence onChange crash");
                         throw makeErrorFromResponse({
                             code: 200,
                             message: "Odoo Server Error",
@@ -11440,8 +11478,9 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
         await nextTick();
 
-        let getNames = () => [...target.querySelectorAll(".o_list_char")].map((el) => el.textContent)
-        assert.deepEqual(getNames(), ["first line", "second line"])
+        const getNames = () =>
+            [...target.querySelectorAll(".o_list_char")].map((el) => el.textContent);
+        assert.deepEqual(getNames(), ["first line", "second line"]);
 
         // drag and drop first line to the second, should crash because of onchange
         await dragAndDrop(
@@ -11449,7 +11488,7 @@ QUnit.module("Views", (hooks) => {
             "tbody.ui-sortable tr:nth-child(2)"
         );
         await nextTick();
-        assert.deepEqual(getNames(), ["first line", "second line"])
+        assert.deepEqual(getNames(), ["first line", "second line"]);
 
         // drag and drop first line to the second, should work
         await dragAndDrop(
@@ -11457,7 +11496,7 @@ QUnit.module("Views", (hooks) => {
             "tbody.ui-sortable tr:nth-child(2)"
         );
         await nextTick();
-        assert.deepEqual(getNames(), ["second line", "first line"])
+        assert.deepEqual(getNames(), ["second line", "first line"]);
 
         assert.verifySteps(["resequence onChange crash", "resequence onChange ok"]);
     });
@@ -13788,7 +13827,7 @@ QUnit.module("Views", (hooks) => {
                 assert.deepEqual(params, { title: "Invalid fields: ", type: "danger" });
             },
         });
-        await editInput(target, ".o_field_widget[name=json_field] input", "{}")
+        await editInput(target, ".o_field_widget[name=json_field] input", "{}");
         await clickSave(target);
         assert.hasClass(
             target.querySelector(".o_field_widget[name=json_field]"),
