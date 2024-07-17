@@ -2665,4 +2665,67 @@ QUnit.module("Fields", (hooks) => {
             ["Hello"]
         );
     });
+
+    QUnit.test("new property, change record, change property type", async (assert) => {
+        const records = serverData.models.partner.records;
+        records[0].properties = [];
+        records[1].properties = [];
+        async function mockRPC(route, { method, args }) {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
+                return true;
+            }
+            if (method === "web_save") {
+                if (args[0][0] === 1) {
+                    // On property creation in first record, add a copy with empty value in
+                    // second record
+                    records[1].properties.push({
+                        ...args[1].properties[0],
+                    });
+                    records[1].properties[0].value = "";
+                } else {
+                    // When changing type of second record's properties, also apply it to
+                    // first record and the property's value should be reset on name change
+                    records[0].properties[0].type = args[1].properties[0].type;
+                    if (records[0].properties[0].name !== args[1].properties[0].name) {
+                        records[0].properties[0].value = null;
+                    }
+                    records[0].properties[0].name = args[1].properties[0].name;
+                }
+            }
+        }
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            resIds: [1, 2],
+            serverData,
+            arch: `
+                <form>
+                    <field name="company_id"/>
+                    <field name="properties"/>
+                </form>`,
+            mockRPC,
+            actionMenus: {},
+        });
+        // Add a new property
+        await toggleActionMenu(target);
+        await click(target, ".o_popover span .fa-cogs");
+
+        await editInput(target, ".o_property_field .o_property_field_value input", "aze");
+        await click(target, ".o_pager_next");
+        assert.strictEqual(
+            target.querySelector(".o_property_field .o_property_field_value input").value,
+            ""
+        );
+        // Change second record's property type
+        await click(target, ".o_property_field:nth-child(1) .o_field_property_open_popover");
+        await changeType(target, "integer");
+
+        await click(target, ".o_pager_previous");
+        assert.strictEqual(
+            target.querySelector(".o_property_field .o_property_field_value input").value,
+            "0"
+        );
+    });
 });
