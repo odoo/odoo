@@ -3,7 +3,7 @@
 import { EventBus, whenReady } from "@odoo/owl";
 import { getCurrentDimensions, mockedMatchMedia } from "@web/../lib/hoot-dom/helpers/dom";
 import { getRunner } from "../main_runner";
-import { mockNavigator } from "./navigator";
+import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
     MockBroadcastChannel,
     MockRequest,
@@ -19,6 +19,7 @@ import {
 } from "./network";
 import { MockNotification } from "./notification";
 import { MockStorage } from "./storage";
+import { MockBlob } from "./sync_values";
 import {
     MockDate,
     mockedCancelAnimationFrame,
@@ -153,10 +154,12 @@ const DOCUMENT_MOCK_DESCRIPTORS = {
 };
 const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 const WINDOW_MOCK_DESCRIPTORS = {
+    Blob: { value: MockBlob },
     BroadcastChannel: { value: MockBroadcastChannel },
     cancelAnimationFrame: { value: mockedCancelAnimationFrame, writable: false },
     clearInterval: { value: mockedClearInterval, writable: false },
     clearTimeout: { value: mockedClearTimeout, writable: false },
+    ClipboardItem: { value: MockClipboardItem },
     Date: { value: MockDate, writable: false },
     fetch: { value: mockedFetch, writable: false },
     history: { value: mockHistory },
