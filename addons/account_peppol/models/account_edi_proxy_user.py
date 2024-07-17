@@ -79,6 +79,7 @@ class AccountEdiProxyClientUser(models.Model):
     def _get_can_send_domain(self):
         return ('sender', 'smp_registration', 'receiver')
 
+    @handle_demo
     def _check_company_on_peppol(self, company, edi_identification):
         if (
             not company.account_peppol_migration_key
