@@ -107,10 +107,10 @@ export class HootReporting extends Component {
 
             <!-- "No test" panel -->
             <t t-if="!filteredResults.length">
-                <em class="text-center text-muted w-full p-4 whitespace-nowrap">
+                <div class="flex items-center justify-center h-full">
                     <t t-set="message" t-value="getEmptyMessage()" />
                     <t t-if="message">
-                        <div>
+                        <em class="p-5 rounded bg-gray-200 dark:bg-gray-800 whitespace-nowrap text-muted">
                             No
                             <span
                                 t-if="message.statusFilter"
@@ -126,21 +126,69 @@ export class HootReporting extends Component {
                                 in suite
                                 <strong class="text-primary" t-esc="message.selectedSuiteName" />
                             </t>.
-                        </div>
+                        </em>
                     </t>
                     <t t-else="">
-                        <div class="mb-2">
-                            No tests to show.
-                        </div>
-                        <div>
-                            Click on a
-                            <span class="text-primary">suite</span>
-                            or toggle
-                            <span class="text-primary">filters</span>
-                            to see tests.
+                        <div class="flex flex-col gap-3 p-5 rounded bg-gray-200 dark:bg-gray-800">
+                            <h3 class="border-b border-muted pb-1">
+                                <strong class="text-primary" t-esc="runnerReporting.tests" />
+                                /
+                                <span class="text-primary" t-esc="runnerState.tests.length" />
+                                tests completed
+                            </h3>
+                            <ul class="flex flex-col gap-2">
+                                <t t-if="runnerReporting.passed">
+                                    <li class="flex gap-1">
+                                        <button
+                                            class="flex items-center gap-1 text-pass"
+                                            t-on-click="() => this.filterResults('passed')"
+                                        >
+                                            <i class="fa fa-check-circle" />
+                                            <strong t-esc="runnerReporting.passed" />
+                                        </button>
+                                        tests passed
+                                    </li>
+                                </t>
+                                <t t-if="runnerReporting.failed">
+                                    <li class="flex gap-1">
+                                        <button
+                                            class="flex items-center gap-1 text-fail"
+                                            t-on-click="() => this.filterResults('failed')"
+                                        >
+                                            <i class="fa fa-times-circle" />
+                                            <strong t-esc="runnerReporting.failed" />
+                                        </button>
+                                        tests failed
+                                    </li>
+                                </t>
+                                <t t-if="runnerReporting.skipped">
+                                    <li class="flex gap-1">
+                                        <button
+                                            class="flex items-center gap-1 text-skip"
+                                            t-on-click="() => this.filterResults('skipped')"
+                                        >
+                                            <i class="fa fa-pause-circle" />
+                                            <strong t-esc="runnerReporting.skipped" />
+                                        </button>
+                                        tests skipped
+                                    </li>
+                                </t>
+                                <t t-if="runnerReporting.todo">
+                                    <li class="flex gap-1">
+                                        <button
+                                            class="flex items-center gap-1 text-todo"
+                                            t-on-click="() => this.filterResults('todo')"
+                                        >
+                                            <i class="fa fa-exclamation-circle" />
+                                            <strong t-esc="runnerReporting.todo" />
+                                        </button>
+                                        tests to do
+                                    </li>
+                                </t>
+                            </ul>
                         </div>
                     </t>
-                </em>
+                </div>
             </t>
         </div>
     `;
@@ -152,6 +200,7 @@ export class HootReporting extends Component {
         const { runner, ui } = this.env;
 
         this.config = useState(runner.config);
+        this.runnerReporting = useState(runner.reporting);
         this.runnerState = useState(runner.state);
         this.state = useState({
             /** @type {string[]} */
@@ -236,6 +285,18 @@ export class HootReporting extends Component {
         return results.sort(
             sortResults === "asc" ? sortByDurationAscending : sortByDurationDescending
         );
+    }
+
+    /**
+     * @param {typeof this.uiState.statusFilter} status
+     */
+    filterResults(status) {
+        this.uiState.resultsPage = 0;
+        if (this.uiState.statusFilter === status) {
+            this.uiState.statusFilter = null;
+        } else {
+            this.uiState.statusFilter = status;
+        }
     }
 
     getEmptyMessage() {
