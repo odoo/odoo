@@ -1,5 +1,5 @@
 import { expect, test, beforeEach, describe } from "@odoo/hoot";
-import { click, edit, keyDown, keyUp, queryOne } from "@odoo/hoot-dom";
+import { click, edit, keyDown, keyUp, press, queryOne } from "@odoo/hoot-dom";
 import { Deferred, advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
@@ -14,6 +14,9 @@ import { WebClient } from "@web/webclient/webclient";
 import { browser } from "@web/core/browser/browser";
 import { TourRecorder } from "@web_tour_recorder/tour_recorder/tour_recorder";
 import { TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY } from "@web_tour_recorder/tour_recorder/tour_recorder_service";
+import { Component, xml } from "@odoo/owl";
+import { useAutofocus } from "@web/core/utils/hooks";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 describe.current.tags("desktop");
 
@@ -549,4 +552,67 @@ test("Run a custom tour twice doesn't trigger traceback", async () => {
 
     click(".o_parent > div");
     await animationFrame();
+});
+
+test("Selecting item in autocomplete field though Enter", async () => {
+    class Dummy extends Component {
+        static components = { AutoComplete };
+        static template = xml`
+            <t>
+                <AutoComplete
+                    id="'autocomplete'"
+                    value="'World'"
+                    sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
+                    onSelect="() => {}"
+                />
+            </t>
+        `;
+        static props = ["*"];
+    }
+
+    expect(".o_tour_recorder").toHaveCount(1);
+    click(".o_button_record");
+    await animationFrame();
+
+    await mountWithCleanup(Dummy);
+    click("#autocomplete");
+    await animationFrame();
+    press("Enter");
+    checkTourSteps([
+        ".o-autocomplete--input",
+        ".o-autocomplete--dropdown-item > a:contains('World')",
+    ]);
+    expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["click", "click"]);
+});
+
+test("Edit input after autofocus", async () => {
+    class Dummy extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <input type="text" class="o_input" t-ref="input"/>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+
+        setup() {
+            useAutofocus({ refName: "input" });
+        }
+    }
+
+    expect(".o_tour_recorder").toHaveCount(1);
+    click(".o_button_record");
+    await animationFrame();
+
+    await mountWithCleanup(Dummy);
+
+    expect(".o_input").toBeFocused();
+    expect(".o_button_record").toHaveText("Record");
+    edit("Bismillah");
+    await animationFrame();
+    expect(".o_button_record").toHaveText("Record (recording keyboard)");
+    checkTourSteps([".o_input"]);
+    expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["edit Bismillah"]);
 });

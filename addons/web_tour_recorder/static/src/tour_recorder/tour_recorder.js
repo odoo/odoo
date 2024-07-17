@@ -2,16 +2,17 @@ import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { browser } from "@web/core/browser/browser";
-import { queryAll, queryOne } from "@odoo/hoot-dom";
+import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { Component, useState, useExternalListener } from "@odoo/owl";
 
 export class TourRecorderError extends Error {}
 
 const PRECISE_IDENTIFIERS = ["data-menu-xmlid", "name", "contenteditable"];
 const ODOO_CLASS_REGEX = /^oe?(-|_)[\w-]+$/;
+const VALIDATING_KEYS = ["Enter", "Tab"];
 
 /**
- * @param {Element[]} paths composedPath of an click event
+ * @param {EventTarget[]} paths composedPath of an click event
  * @returns {string}
  */
 const getShortestSelector = (paths) => {
@@ -46,9 +47,9 @@ const getShortestSelector = (paths) => {
             }
         }
 
-        const siblingNodes = currentElem.parentElement.querySelectorAll(
-            ":scope > " + currentPredicate
-        );
+        const siblingNodes = queryAll(":scope > " + currentPredicate, {
+            root: currentElem.parentElement,
+        });
         if (siblingNodes.length > 1) {
             currentPredicate += `:nth-child(${
                 [...currentElem.parentElement.children].indexOf(currentElem) + 1
@@ -110,6 +111,9 @@ export class TourRecorder extends Component {
 
         useExternalListener(document, "pointerdown", this.setStartingEvent, { capture: true });
         useExternalListener(document, "pointerup", this.recordClickEvent, { capture: true });
+        useExternalListener(document, "keydown", this.recordConfirmationKeyboardEvent, {
+            capture: true,
+        });
         useExternalListener(document, "keyup", this.recordKeyboardEvent, { capture: true });
     }
 
@@ -147,10 +151,64 @@ export class TourRecorder extends Component {
         }
     }
 
-    recordKeyboardEvent() {
-        if (!this.state.recording || !this.state.editedElement) {
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    recordConfirmationKeyboardEvent(ev) {
+        if (
+            !this.state.recording ||
+            !this.state.editedElement ||
+            ev.target.closest(".o_tour_recorder")
+        ) {
             return;
         }
+
+        if (
+            [...this.state.editedElement.classList].includes("o-autocomplete--input") &&
+            VALIDATING_KEYS.includes(ev.key)
+        ) {
+            const selectedRow = queryFirst(".ui-state-active", {
+                root: this.state.editedElement.parentElement,
+            });
+            this.state.steps.push({
+                trigger: `.o-autocomplete--dropdown-item > a:contains('${selectedRow.textContent}')`,
+                run: "click",
+            });
+            this.state.editedElement = undefined;
+        }
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    recordKeyboardEvent(ev) {
+        if (
+            !this.state.recording ||
+            VALIDATING_KEYS.includes(ev.key) ||
+            ev.target.closest(".o_tour_recorder")
+        ) {
+            return;
+        }
+
+        if (!this.state.editedElement) {
+            if (
+                ev.target.matches(
+                    "input:not(:disabled), textarea:not(:disabled), [contenteditable=true]"
+                )
+            ) {
+                this.state.editedElement = ev.target;
+                this.state.steps.push({
+                    trigger: getShortestSelector(ev.composedPath()),
+                });
+            } else {
+                return;
+            }
+        }
+
+        if (!this.state.editedElement) {
+            return;
+        }
+
         const lastStep = this.state.steps.at(-1);
         if (this.state.editedElement.contentEditable === "true") {
             lastStep.run = `editor ${this.state.editedElement.textContent}`;
