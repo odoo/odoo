@@ -8,6 +8,9 @@
             <xpath expr="//field[@name='currency_id']" position="after">
                 <field name="l10n_in_upi_id" invisible="country_code != 'IN'"/>
             </xpath>
+            <xpath expr="//sheet" position="before">
+                <field name ="l10n_in_gst_state_warning"  widget="actionable_errors"/>
+            </xpath>
         </field>
     </record>
 </odoo>

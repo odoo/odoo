@@ -29,6 +29,27 @@ class ResPartner(models.Model):
 
     display_pan_warning = fields.Boolean(string="Display pan warning", compute="_compute_display_pan_warning")
 
+    l10n_in_gst_state_warning = fields.Json(compute="_compute_l10n_in_gst_state_warning")
+
+    @api.depends('vat', 'state_id', 'country_code')
+    def _compute_l10n_in_gst_state_warning(self):
+        warnings = {}
+        if self.vat and self.check_vat_in(self.vat) and self.country_code == "IN":
+            if self.vat[:2] == "99":
+                warnings['invalid_gst_type_on_overseas_invoice'] = {
+                    'message': "As per GSTN the country should be other than India, so it's recommended to update it.",
+                    'level': 'warning',
+                }
+
+            else:
+                state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', self.vat[:2])], limit=1)
+                if state_id and state_id != self.state_id:
+                    warnings['invalid_gst_type_on_overseas_invoice'] = {
+                        'message': f"As per GSTN the state should be {state_id.name}, so it's recommended to update it.",
+                        'level': 'warning',
+                    }
+        self.l10n_in_gst_state_warning = warnings
+
     @api.depends('l10n_in_pan')
     def _compute_display_pan_warning(self):
         self.display_pan_warning = self.vat and self.l10n_in_pan and self.l10n_in_pan != self.vat[2:12]

@@ -17,6 +17,7 @@
                 <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" invisible="'IN' not in fiscal_country_codes" />
             </xpath>
             <xpath expr="//sheet" position="before">
+                <field name ="l10n_in_gst_state_warning"  widget="actionable_errors"/>
                 <field name="display_pan_warning" invisible="1"/>
                 <div class="alert alert-warning" role="alert"
                         invisible="not display_pan_warning">
