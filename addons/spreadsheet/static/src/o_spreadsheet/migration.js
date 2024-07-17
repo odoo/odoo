@@ -2,9 +2,8 @@
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
-const { tokenize, parse, convertAstNodes, astToFormula, helpers } = spreadsheet;
+const { tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry, migrationStepRegistry } = spreadsheet.registries;
-const { parseDimension } = helpers;
 
 export const ODOO_VERSION = 12;
 
@@ -71,6 +70,14 @@ function migrateOdooData(data) {
         data = migrate11to12(data);
     }
     return data;
+}
+
+function parseDimension(dimension) {
+    const [name, granularity] = dimension.split(":");
+    if (granularity) {
+        return { name, granularity };
+    }
+    return { name };
 }
 
 function renameFunctions(data, map) {

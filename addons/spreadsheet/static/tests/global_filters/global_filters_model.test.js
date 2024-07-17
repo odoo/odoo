@@ -1183,18 +1183,18 @@ test("load data only once if filter is not active (without default value)", asyn
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.VALUE("1", "probability")` },
+                    A1: { content: `=PIVOT.VALUE("1", "probability:sum")` },
                 },
             },
         ],
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
                 context: {},
             },
         },
@@ -1232,18 +1232,18 @@ test("load data only once if filter is active (with a default value)", async fun
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.VALUE("1", "probability")` },
+                    A1: { content: `=PIVOT.VALUE("1", "probability:sum")` },
                 },
             },
         ],
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
                 context: {},
                 fieldMatching: { filterId: { chain: "date", type: "date" } },
             },
@@ -1277,18 +1277,18 @@ test("don't reload data if an empty filter is added", async function () {
             {
                 id: "sheet1",
                 cells: {
-                    A1: { content: `=PIVOT.VALUE("1", "probability")` },
+                    A1: { content: `=PIVOT.VALUE("1", "probability:sum")` },
                 },
             },
         ],
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
                 context: {},
             },
         },
@@ -1325,11 +1325,11 @@ test("don't load data if a filter is added but the data is not needed", async fu
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
                 context: {},
                 fieldMatching: {},
             },
@@ -1357,7 +1357,7 @@ test("don't load data if a filter is added but the data is not needed", async fu
         },
     });
     expect.verifySteps([]);
-    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability")`);
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:sum")`);
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("");
@@ -1369,11 +1369,11 @@ test("don't load data if a filter is activated but the data is not needed", asyn
         pivots: {
             1: {
                 type: "ODOO",
-                columns: [{ name: "foo" }],
+                columns: [{ fieldName: "foo" }],
                 domain: [],
-                measures: [{ name: "probability", aggregator: "sum" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                rows: [{ name: "bar" }],
+                rows: [{ fieldName: "bar" }],
                 context: {},
                 fieldMatching: { filterId: { chain: "date", type: "date" } },
             },
@@ -1403,7 +1403,7 @@ test("don't load data if a filter is activated but the data is not needed", asyn
     });
 
     expect.verifySteps([]);
-    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability")`);
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:sum")`);
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("");
