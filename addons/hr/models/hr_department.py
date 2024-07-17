@@ -111,6 +111,8 @@ class Department(models.Model):
     def _update_employee_manager(self, manager_id):
         employees = self.env['hr.employee']
         for department in self:
+            if department.manager_id.id == manager_id:
+                continue
             employees = employees | self.env['hr.employee'].search([
                 ('id', '!=', manager_id),
                 ('department_id', '=', department.id),
