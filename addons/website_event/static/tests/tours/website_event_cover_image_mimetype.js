@@ -77,7 +77,7 @@ wTourUtils.registerWebsitePreviewTour(
         mockCanvasToDataURLStep,
         ...testPngUploadImplicitConversion(
             extractBase64PartFromDataURL(generateTestImage(1024, "image/jpeg")),
-            "image/png"
+            "image/jpeg"
         ),
     ]
 );

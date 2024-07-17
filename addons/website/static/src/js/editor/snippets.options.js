@@ -4,6 +4,7 @@ import { loadCSS } from "@web/core/assets";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef } from "@web/core/utils/hooks";
+import { canExportCanvasAsWebp } from "@web/core/utils/image_processing";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
@@ -2991,7 +2992,7 @@ options.registry.CoverProperties = options.Class.extend({
                     "image/gif",
                     "image/svg+xml",
                     "image/webp",
-                ].includes(originalMimetype)) {
+                ].includes(originalMimetype) && canExportCanvasAsWebp()) {
                     // Convert to webp but keep original width.
                     const { dataURL, mimetype } = await applyModifications(
                         imgEl,

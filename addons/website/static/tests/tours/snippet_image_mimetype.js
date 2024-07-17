@@ -300,13 +300,19 @@ function reloadUnmock(selectImageStep) {
 }
 
 function testImageSnippet(imageFormat, originalMimetype, formatMimetype) {
-    const testStepOnOff = (on, off, wrapOn = false, wrapOff = false) => {
-        const test = (fn, mimetype, wrap) => [
-            ...fn(wrap ? "image/svg+xml" : mimetype),
-            ...testImageMimetypeIs(mimetype, !!wrap),
+    const testStepOnOff = (
+        on,
+        off,
+        wrapOn = false,
+        wrapOff = false,
+        overrideOffMimetype = undefined
+    ) => {
+        const test = (fn, mimetype, wrap, overrideMimetype) => [
+            ...fn(wrap ? "image/svg+xml" : overrideMimetype || mimetype),
+            ...testImageMimetypeIs(overrideMimetype || mimetype, !!wrap),
         ];
         const testOn = (mimetype) => test(on, mimetype, wrapOn);
-        const testOff = (mimetype) => test(off, mimetype, wrapOff);
+        const testOff = (mimetype) => test(off, mimetype, wrapOff, overrideOffMimetype);
         return [
             ...setOriginalImageFormat(),
             ...testOn(originalMimetype),
@@ -316,10 +322,12 @@ function testImageSnippet(imageFormat, originalMimetype, formatMimetype) {
             ...testOn(formatMimetype),
             ...testOff(formatMimetype),
 
+            ...setImageFormat(imageFormat),
             ...testOn(formatMimetype),
             ...setOriginalImageFormat(),
             ...testOff(originalMimetype),
 
+            ...setOriginalImageFormat(),
             ...testOn(originalMimetype),
             ...setImageFormat(imageFormat),
             ...testOff(formatMimetype),
@@ -346,12 +354,12 @@ function testImageSnippet(imageFormat, originalMimetype, formatMimetype) {
         ...testStepOnOff(setImageShape, removeImageShape, true),
 
         // Image crop
-        ...testStepOnOff(cropImage, removeImageCrop),
+        ...testStepOnOff(cropImage, removeImageCrop, false, false, "image/jpeg"),
 
         // Image crop while shape on
         ...setImageShape(),
-        ...testStepOnOff(cropImage, removeImageCrop, true, true),
-        ...removeImageShape(formatMimetype),
+        ...testStepOnOff(cropImage, removeImageCrop, true, true, "image/jpeg"),
+        ...removeImageShape("image/jpeg"),
     ];
 }
 
@@ -384,7 +392,7 @@ wTourUtils.registerWebsitePreviewTour(
             id: "s_text_image",
             name: "Text - Image",
         }),
-        ...testImageSnippet("128 image/webp", "image/jpeg", "image/png"),
+        ...testImageSnippet("128 image/jpeg", "image/jpeg", "image/jpeg"),
     ]
 );
 
@@ -500,7 +508,7 @@ wTourUtils.registerWebsitePreviewTour(
         ...testImageGallerySnippet(
             extractBase64PartFromDataURL(generateTestImage(1024, "image/jpeg")),
             "image/jpeg",
-            "image/png",
+            "image/jpeg",
             false
         ),
     ]
@@ -535,18 +543,18 @@ wTourUtils.registerWebsitePreviewTour(
         ...cropImage("image/webp"),
         ...testImageMimetypeIs("image/webp"),
         mockCanvasToDataURLStep,
-        ...removeImageCrop("image/png"), // !isChanged && Original format is smaller
-        ...testImageMimetypeIs("image/png"),
-        testFormatSnippetOption("800px webp"),
+        ...removeImageCrop("image/jpeg"), // !isChanged && Original format is smaller
+        ...testImageMimetypeIs("image/jpeg"),
+        testFormatSnippetOption("800px (Original) jpeg"),
+        ...setImageFormat("512 image/jpeg"),
 
         // No webp -> webp
-        ...setImageFormat("512 image/webp"),
-        ...cropImage("image/png"),
-        ...testImageMimetypeIs("image/png"),
+        ...cropImage("image/jpeg"),
+        ...testImageMimetypeIs("image/jpeg"),
         unmockCanvasToDataURLStep,
-        ...removeImageCrop("image/webp"),
-        ...testImageMimetypeIs("image/webp"),
-        testFormatSnippetOption("800px webp"),
+        ...removeImageCrop("image/jpeg"),
+        ...testImageMimetypeIs("image/jpeg"),
+        testFormatSnippetOption("800px (Original) jpeg"),
     ]
 );
 
@@ -581,17 +589,17 @@ wTourUtils.registerWebsitePreviewTour(
         ...testImageMimetypeIs("image/webp", true), // Wait for html update
         ...reloadMock(selectTextImageSnippetImage),
         testFormatSnippetOption("512px webp"),
-        ...removeImageShape("image/png"),
-        ...testImageMimetypeIs("image/png"),
-        testFormatSnippetOption("512px webp"),
+        ...removeImageShape("image/jpeg"),
+        ...testImageMimetypeIs("image/jpeg"),
+        testFormatSnippetOption("512px jpeg"),
 
         // No webp browser -> webp browser
         ...setImageShape(),
-        ...setImageFormat("512 image/webp"),
-        ...testImageMimetypeIs("image/png", true),
-        testFormatSnippetOption("512px webp"),
+        ...setImageFormat("512 image/jpeg"),
+        ...testImageMimetypeIs("image/jpeg", true),
+        testFormatSnippetOption("512px jpeg"),
         ...reloadUnmock(selectTextImageSnippetImage),
-        testFormatSnippetOption("512px webp"),
+        testFormatSnippetOption("512px jpeg"),
         ...removeImageShape("image/webp"),
         ...testImageMimetypeIs("image/webp"),
         testFormatSnippetOption("512px webp"),
@@ -599,8 +607,8 @@ wTourUtils.registerWebsitePreviewTour(
         // Set shape webp -> no webp
         ...reloadMock(selectTextImageSnippetImage),
         ...setImageShape(),
-        ...testImageMimetypeIs("image/png", true),
-        testFormatSnippetOption("512px webp"),
+        ...testImageMimetypeIs("image/jpeg", true),
+        testFormatSnippetOption("512px jpeg"),
     ]
 );
 

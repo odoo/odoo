@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { canExportCanvasAsWebp } from "@web/core/utils/image_processing";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
 import wUtils from '@website/js/utils';
@@ -526,7 +527,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                                     "image/gif",
                                     "image/svg+xml",
                                     "image/webp",
-                                ].includes(originalMimetype)) {
+                                ].includes(originalMimetype) && canExportCanvasAsWebp()) {
                                     // Convert to webp but keep original width.
                                     applyModifications(
                                         imgEl,
