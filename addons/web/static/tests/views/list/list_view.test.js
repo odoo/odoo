@@ -15734,3 +15734,24 @@ test(`list: remove a record from sorted recordlist`, async () => {
     expect(queryAllTexts`.o_data_cell[name="name"]`).toEqual(["f", "d"]);
     expect(`.o_list_view .o_pager_counter`).toHaveText("1-2 / 5");
 });
+
+test("Pass context when duplicating data in list view", async () => {
+    onRpc("copy", ({ kwargs }) => {
+        expect(kwargs.context.ctx_key).toBe("ctx_val");
+        expect.step("copy");
+    });
+    await mountView({
+        type: "list",
+        resModel: "res.partner",
+        actionMenus: {},
+        arch: `
+            <tree>
+                <field name="name" />
+            </tree>`,
+        context: { ctx_key: "ctx_val" },
+    });
+    await contains(`.o_data_row .o_list_record_selector input`).click();
+    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleMenuItem("Duplicate");
+    expect.verifySteps(["copy"]);
+});
