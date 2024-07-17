@@ -3,7 +3,6 @@ import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setContent, getContent, setSelection } from "../_helpers/selection";
 import { setupEditor } from "../_helpers/editor";
 import { waitUntil, waitFor, click, queryOne, press, select } from "@odoo/hoot-dom";
-import { browser } from "@web/core/browser/browser";
 import { insertText, splitBlock, insertLineBreak } from "../_helpers/user_actions";
 import { contains } from "@web/../tests/web_test_helpers";
 import { cleanLinkArtifacts } from "../_helpers/format";
@@ -142,7 +141,7 @@ describe("popover should edit,copy,remove the link", () => {
         expect(".o_notification_body").toHaveCount(1);
         await animationFrame();
         expect(".o-we-linkpopover").toHaveCount(0);
-        expect(browser.navigator.clipboard.readTextSync()).toBe("http://test.com/");
+        await expect(navigator.clipboard.readText()).resolves.toBe("http://test.com/");
     });
     test("when edit a link's label and URL to '', the link should be removed", async () => {
         const { editor, el } = await setupEditor(

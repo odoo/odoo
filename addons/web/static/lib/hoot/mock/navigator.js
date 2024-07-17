@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { createMock, makePublicListeners } from "../hoot_utils";
+import { getSyncValue, setSyncValue } from "./sync_values";
 
 /**
  * @typedef {"android" | "ios" | "linux" | "mac" | "windows"} Platform
@@ -11,6 +12,8 @@ import { createMock, makePublicListeners } from "../hoot_utils";
 //-----------------------------------------------------------------------------
 
 const {
+    Blob,
+    ClipboardItem,
     EventTarget,
     navigator,
     Object: { assign: $assign },
@@ -22,6 +25,17 @@ const { userAgent: $userAgent } = navigator;
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+const getBlobValue = (value) => (value instanceof Blob ? value.text() : value);
+
+/**
+ * Returns the final synchronous value of several item types.
+ *
+ * @param {unknown} value
+ * @param {string} type
+ */
+const getClipboardValue = (value, type) =>
+    getBlobValue(value instanceof ClipboardItem ? value.getType(type) : value);
 
 const getUserAgentBrowser = () => {
     if (/Firefox/i.test($userAgent)) {
@@ -158,50 +172,33 @@ export class MockClipboard {
     _value = null;
 
     async read() {
-        return this.readSync();
-    }
-
-    async readText() {
-        return this.readTextSync();
-    }
-
-    async write(value) {
-        return this.writeSync(value);
-    }
-
-    async writeText(value) {
-        return this.writeTextSync(value);
-    }
-
-    // Methods below are not part of the Clipboard API but are useful to make
-    // test events synchronous.
-
-    /**
-     * @returns {unknown}
-     */
-    readSync() {
         return this._value;
     }
 
-    /**
-     * @returns {string}
-     */
-    readTextSync() {
-        return String(this._value ?? "");
+    async readText() {
+        return String(getClipboardValue(this._value, "text/plain") ?? "");
     }
 
-    /**
-     * @param {unknown} value
-     */
-    writeSync(value) {
+    async write(value) {
         this._value = value;
     }
 
-    /**
-     * @param {string} value
-     */
-    writeTextSync(value) {
-        this._value = String(value ?? "");
+    async writeText(value) {
+        this._value = String(getClipboardValue(value, "text/plain") ?? "");
+    }
+}
+
+export class MockClipboardItem extends ClipboardItem {
+    constructor(items) {
+        super(items);
+
+        setSyncValue(this, items);
+    }
+
+    // Added synchronous methods to enhance speed in tests
+
+    async getType(type) {
+        return getSyncValue(this)[type];
     }
 }
 
@@ -209,17 +206,7 @@ export class MockPermissions {
     /**
      * @param {PermissionDescriptor} permissionDesc
      */
-    async query(permissionDesc) {
-        return this.querySync(permissionDesc);
-    }
-
-    // Methods below are not part of the Permissions API but are useful to make
-    // test events synchronous.
-
-    /**
-     * @param {PermissionDescriptor} permissionDesc
-     */
-    querySync({ name }) {
+    async query({ name }) {
         if (!(name in currentPermissions)) {
             throw new TypeError(
                 `The provided value '${name}' is not a valid enum value of type PermissionName`
