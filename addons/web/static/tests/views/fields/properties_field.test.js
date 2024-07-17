@@ -2504,3 +2504,55 @@ test.tags("desktop")("properties: onChange return new properties", async () => {
     expect("[name='properties'] .o_property_field").toHaveText("My New Char");
     expect("[name='properties'] .o_property_field input").toHaveValue("Hello");
 });
+
+test("new property, change record, change property type", async () => {
+    const records = Partner._records;
+    records[0].properties = [];
+    records[1].properties = [];
+    onRpc("check_access_rights", () => true);
+    onRpc("check_access_rule", () => true);
+    onRpc("web_save", ({ args }) => {
+        if (args[0][0] === 1) {
+            // On property creation in first record, add a copy with empty value in
+            // second record
+            records[1].properties.push({
+                ...args[1].properties[0],
+            });
+            records[1].properties[0].value = "";
+        } else {
+            // When changing type of second record's properties, also apply it to
+            // first record and the property's value should be reset on name change
+            records[0].properties[0].type = args[1].properties[0].type;
+            if (records[0].properties[0].name !== args[1].properties[0].name) {
+                records[0].properties[0].value = null;
+            }
+            records[0].properties[0].name = args[1].properties[0].name;
+        }
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        resIds: [1, 2],
+        arch: `
+            <form>
+                <field name="company_id"/>
+                <field name="properties"/>
+            </form>`,
+        actionMenus: {},
+    });
+    // Add a new property
+    await toggleActionMenu();
+    await click(".o_popover span .fa-cogs");
+
+    await contains(".o_property_field .o_property_field_value input").edit("aze");
+    await contains(".o_pager_next").click();
+    expect(".o_property_field .o_property_field_value input").toHaveValue("");
+    // Change second record's property type
+    await contains(".o_property_field .o_field_property_open_popover", { visible: false }).click();
+    await changeType("integer");
+
+    await contains(".o_pager_previous").click();
+    expect(".o_property_field .o_property_field_value input").toHaveValue("0");
+});

@@ -10,6 +10,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { exprToBoolean } from "@web/core/utils/strings";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 import { uuid } from "../../utils";
 import { standardFieldProps } from "../standard_field_props";
 import { PropertyDefinition } from "./property_definition";
@@ -46,7 +47,13 @@ export class PropertiesField extends Component {
         });
         this.propertiesRef = useRef("properties");
 
-        this._saveInitialPropertiesValues();
+        let currentResId;
+        useRecordObserver((record) => {
+            if (currentResId !== record.resId) {
+                currentResId = record.resId;
+                this._saveInitialPropertiesValues();
+            }
+        });
 
         const field = this.props.record.fields[this.props.name];
         this.definitionRecordField = field.definition_record;
