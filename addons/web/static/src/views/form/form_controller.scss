@@ -632,10 +632,12 @@
             visibility: hidden;
     }
 
-    div {
-        div:focus-within > span.o_field_translate, div:hover > span.o_field_translate {
-            visibility: visible !important;
-        }
+    div:focus-within > span.o_field_translate, div:hover > span.o_field_translate {
+        visibility: visible;
+    }
+
+    div.o_field_html:focus-within span.o_field_translate, div.o_field_html:hover span.o_field_translate {
+        visibility: visible;
     }
 
     input, textarea {
