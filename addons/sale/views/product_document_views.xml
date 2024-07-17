@@ -19,12 +19,12 @@
         <field name="model">product.document</field>
         <field name="inherit_id" ref="product.product_document_kanban"/>
         <field name="arch" type="xml">
-            <div name="bottom" position="inside">
-                <div class="mt-2">
+            <xpath expr="//main/div" position="inside">
+                <div class="d-flex mt-2">
                     <span>Sales visibility</span>
                     <field name="attached_on_sale" class="ms-2" widget="selection"/>
                 </div>
-            </div>
+            </xpath>
         </field>
     </record>
 
