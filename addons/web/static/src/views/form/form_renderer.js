@@ -16,7 +16,16 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-import { Component, onMounted, onWillUnmount, useEffect, useSubEnv, useRef, useState, xml } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    useEffect,
+    useSubEnv,
+    useRef,
+    useState,
+    xml,
+} from "@odoo/owl";
 
 export class FormRenderer extends Component {
     setup() {
@@ -40,8 +49,8 @@ export class FormRenderer extends Component {
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
 
         const { autofocusFieldId } = archInfo;
+        const rootRef = useRef("compiled_view_root");
         if (this.shouldAutoFocus) {
-            const rootRef = useRef("compiled_view_root");
             useEffect(
                 (isVirtual, rootEl) => {
                     if (!rootEl) {
@@ -49,10 +58,18 @@ export class FormRenderer extends Component {
                     }
                     let elementToFocus;
                     if (isVirtual) {
-                        const focusableSelectors = ['input[type="text"]', 'textarea', '[contenteditable]'];
+                        const focusableSelectors = [
+                            'input[type="text"]',
+                            "textarea",
+                            "[contenteditable]",
+                        ];
                         elementToFocus =
                             (autofocusFieldId && rootEl.querySelector(`#${autofocusFieldId}`)) ||
-                            rootEl.querySelector(focusableSelectors.map(sel => `.o_content .o_field_widget ${sel}`).join(', '));
+                            rootEl.querySelector(
+                                focusableSelectors
+                                    .map((sel) => `.o_content .o_field_widget ${sel}`)
+                                    .join(", ")
+                            );
                     }
                     if (elementToFocus) {
                         elementToFocus.focus();
@@ -60,6 +77,34 @@ export class FormRenderer extends Component {
                 },
                 () => [this.props.record.isVirtual, rootRef.el]
             );
+        }
+
+        if (this.env.inDialog) {
+            // try to ensure ids unicity by temporarily removing similar ids that could already
+            // exist in the DOM (e.g. in a form view displayed below this dialog which contains
+            // same field names as this form view)
+            const fieldNodeIds = Object.keys(this.props.archInfo.fieldNodes);
+            const elementsByNodeIds = {};
+            onMounted(() => {
+                if (!rootRef.el) {
+                    // t-ref is sometimes set on a <t> node, resulting in a null ref (e.g. footer case)
+                    return;
+                }
+                for (const id of fieldNodeIds) {
+                    const els = [...document.querySelectorAll(`[id=${id}]`)].filter(
+                        (el) => !rootRef.el.contains(el)
+                    );
+                    if (els.length) {
+                        els[0].removeAttribute("id");
+                        elementsByNodeIds[id] = els[0];
+                    }
+                }
+            });
+            onWillUnmount(() => {
+                for (const [id, el] of Object.entries(elementsByNodeIds)) {
+                    el.setAttribute("id", id);
+                }
+            });
         }
     }
 
