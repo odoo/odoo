@@ -3,8 +3,28 @@
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY } from "@web_tour_recorder/tour_recorder/tour_recorder_service";
+import {
+    CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY,
+    TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
+} from "@web_tour_recorder/tour_recorder/tour_recorder_service";
 import { user } from "@web/core/user";
+import { disableTours } from "@web_tour/debug/debug_manager";
+
+function disableToursAndCustom({ env }) {
+    const disableTourMenuItem = disableTours({ env });
+
+    if (!disableTourMenuItem) {
+        return null;
+    } else {
+        return {
+            ...disableTourMenuItem,
+            callback: async () => {
+                browser.localStorage.removeItem(CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY);
+                await disableTourMenuItem.callback();
+            },
+        };
+    }
+}
 
 function tourRecorder() {
     if (!user.isSystem) {
@@ -15,7 +35,7 @@ function tourRecorder() {
         return {
             type: "item",
             description: _t("Start Tour Recorder"),
-            callback: async () => {
+            callback: () => {
                 browser.localStorage.setItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY, "1");
                 browser.location.reload();
             },
@@ -34,7 +54,8 @@ function tourRecorder() {
     }
 }
 
-registry
-    .category("debug")
-    .category("default")
-    .add("web_tour_recorder.tour_recorder", tourRecorder)
+registry.category("debug").category("default").add("web_tour_recorder.tour_recorder", tourRecorder);
+
+registry.category("debug").category("default").remove("web_tour.disableTours");
+
+registry.category("debug").category("default").add("web_tour.disableTours", disableToursAndCustom);

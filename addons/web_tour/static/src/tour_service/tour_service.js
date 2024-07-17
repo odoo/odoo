@@ -389,6 +389,7 @@ export const tourService = {
         return {
             bus,
             startTour,
+            resumeTour,
             getSortedTours,
         };
     },
