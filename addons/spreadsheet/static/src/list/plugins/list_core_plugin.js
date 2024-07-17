@@ -87,6 +87,7 @@ export class ListCorePlugin extends OdooCorePlugin {
                     return CommandResult.EmptyName;
                 }
                 break;
+            case "UPDATE_ODOO_LIST":
             case "UPDATE_ODOO_LIST_DOMAIN":
                 if (!(cmd.listId in this.lists)) {
                     return CommandResult.ListIdNotFound;
@@ -147,6 +148,10 @@ export class ListCorePlugin extends OdooCorePlugin {
                     "domain",
                     cmd.domain
                 );
+                break;
+            }
+            case "UPDATE_ODOO_LIST": {
+                this.history.update("lists", cmd.listId, "definition", cmd.list);
                 break;
             }
             case "ADD_GLOBAL_FILTER":

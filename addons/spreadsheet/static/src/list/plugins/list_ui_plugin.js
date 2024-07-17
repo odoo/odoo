@@ -89,6 +89,7 @@ export class ListUIPlugin extends OdooUIPlugin {
             case "CLEAR_GLOBAL_FILTER_VALUE":
                 this._addDomains();
                 break;
+            case "UPDATE_ODOO_LIST":
             case "UPDATE_ODOO_LIST_DOMAIN": {
                 const listDefinition = this.getters.getListModelDefinition(cmd.listId);
                 const dataSourceId = this._getListDataSourceId(cmd.listId);
@@ -123,11 +124,13 @@ export class ListUIPlugin extends OdooUIPlugin {
                     this._addDomains();
                 }
 
-                const domainEditionCommands = cmd.commands.filter(
+                const updateCommands = cmd.commands.filter(
                     (cmd) =>
-                        cmd.type === "UPDATE_ODOO_LIST_DOMAIN" || cmd.type === "INSERT_ODOO_LIST"
+                        cmd.type === "UPDATE_ODOO_LIST_DOMAIN" ||
+                        cmd.type === "UPDATE_ODOO_LIST" ||
+                        cmd.type === "INSERT_ODOO_LIST"
                 );
-                for (const cmd of domainEditionCommands) {
+                for (const cmd of updateCommands) {
                     if (!this.getters.isExistingList(cmd.listId)) {
                         continue;
                     }

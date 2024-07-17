@@ -6,6 +6,8 @@ import {
     addGlobalFilter,
     selectCell,
     setCellContent,
+    undo,
+    redo,
 } from "@spreadsheet/../tests/helpers/commands";
 import {
     getBorders,
@@ -15,6 +17,7 @@ import {
     getCellValue,
     getCells,
     getEvaluatedCell,
+    getEvaluatedGrid,
 } from "@spreadsheet/../tests/helpers/getters";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 import { createSpreadsheetWithList } from "@spreadsheet/../tests/helpers/list";
@@ -110,7 +113,16 @@ test("Can remove a list with undo after editing a cell", async function () {
 
 test("List formulas are correctly formatted at evaluation", async function () {
     const { model } = await createSpreadsheetWithList({
-        columns: ["foo", "probability", "bar", "date", "create_date", "product_id", "pognon", "name"],
+        columns: [
+            "foo",
+            "probability",
+            "bar",
+            "date",
+            "create_date",
+            "product_id",
+            "pognon",
+            "name",
+        ],
         linesNumber: 2,
     });
     await waitForDataLoaded(model);
@@ -394,6 +406,74 @@ test("Can undo/redo a delete list", async function () {
     expect(B4.value).toBe("#ERROR");
 });
 
+test("can update a list", async () => {
+    let spreadsheetLoaded = false;
+    let isInitialUpdate = true;
+    let isUndoUpdate = false;
+    const { model } = await createSpreadsheetWithList({
+        mockRPC: async function (route, args) {
+            if (
+                spreadsheetLoaded &&
+                args.method === "web_search_read" &&
+                args.model === "partner"
+            ) {
+                expect.step("data-fetched");
+                if (isInitialUpdate) {
+                    expect(args.kwargs.order).toEqual("name DESC");
+                    expect(args.kwargs.domain).toEqual([["name", "in", ["hola"]]]);
+                }
+                if (isUndoUpdate) {
+                    expect(args.kwargs.order).toEqual("");
+                    expect(args.kwargs.domain).toEqual([]);
+                }
+            }
+        },
+    });
+    const [listId] = model.getters.getListIds();
+    spreadsheetLoaded = true;
+    const listDef = model.getters.getListDefinition(listId);
+    const newListDef = {
+        name: "My Updated List",
+        metaData: {
+            resModel: listDef.model,
+            columns: listDef.columns,
+        },
+        searchParams: {
+            context: {},
+            orderBy: [{ name: "name", asc: false }],
+            domain: [["name", "in", ["hola"]]],
+        },
+    };
+    model.dispatch("UPDATE_ODOO_LIST", {
+        listId,
+        list: newListDef,
+    });
+    await waitForDataLoaded(model);
+    expect.verifySteps(["data-fetched"]);
+    const updatedListDef = model.getters.getListDefinition(listId);
+    expect(updatedListDef).toEqual({
+        id: listId,
+        name: newListDef.name,
+        model: newListDef.metaData.resModel,
+        actionXmlId: undefined,
+        columns: newListDef.metaData.columns,
+        context: {},
+        domain: newListDef.searchParams.domain,
+        orderBy: newListDef.searchParams.orderBy,
+    });
+    isInitialUpdate = false;
+    isUndoUpdate = true;
+    undo(model);
+    await waitForDataLoaded(model);
+    expect.verifySteps(["data-fetched"]);
+    expect(model.getters.getListDefinition(listId)).toEqual(listDef);
+    isUndoUpdate = false;
+    redo(model);
+    await waitForDataLoaded(model);
+    expect.verifySteps(["data-fetched"]);
+    expect(model.getters.getListDefinition(listId)).toEqual(updatedListDef);
+});
+
 test("can edit list domain", async () => {
     const { model } = await createSpreadsheetWithList();
     const [listId] = model.getters.getListIds();
@@ -417,6 +497,66 @@ test("can edit list domain", async () => {
     expect(getCellValue(model, "B2")).toBe("");
 });
 
+test("can edit list sorting", async () => {
+    const { model } = await createSpreadsheetWithList({
+        columns: ["foo", "bar", "date", "probability", "pognon"],
+    });
+    // prettier-ignore
+    const initialGrid = [
+        ["Foo", "Bar",   "Date", "Probability", "Money!"],
+        [12,    "TRUE",  42474,  10,                74.4],
+        [1,     "TRUE",  42669,  11,                74.8],
+        [17,    "TRUE",  42719,  95,                   4],
+        [2,     "FALSE", 42715,  15,                1000],
+    ]
+    // prettier-ignore
+    const orderedGrid = [
+        ["Foo", "Bar",   "Date", "Probability", "Money!"],
+        [17,    "TRUE",  42719,   95,                  4],
+        [12,    "TRUE",  42474,   10,               74.4],
+        [1,     "TRUE",  42669,   11,               74.8],
+        [2,     "FALSE", 42715,   15,               1000],
+    ]
+    const [listId] = model.getters.getListIds();
+    expect(model.getters.getListDefinition(listId).orderBy).toEqual([]);
+    expect(getEvaluatedGrid(model, "A1:E5")).toEqual(initialGrid);
+    const orderBy = [
+        { name: "bar", asc: false },
+        { name: "pognon", asc: true },
+    ];
+    const listDefinition = model.getters.getListModelDefinition(listId);
+    model.dispatch("UPDATE_ODOO_LIST", {
+        listId,
+        list: {
+            ...listDefinition,
+            searchParams: {
+                ...listDefinition.searchParams,
+                orderBy,
+            },
+        },
+    });
+    await waitForDataLoaded(model);
+    expect(model.getters.getListDefinition(listId).orderBy).toEqual(orderBy);
+    expect(getEvaluatedGrid(model, "A1:E5")).toEqual(orderedGrid);
+    undo(model);
+    expect(model.getters.getListDefinition(listId).orderBy).toEqual([]);
+    await waitForDataLoaded(model);
+    expect(getEvaluatedGrid(model, "A1:E5")).toEqual(initialGrid);
+    redo(model);
+    await waitForDataLoaded(model);
+    expect(model.getters.getListDefinition(listId).orderBy).toEqual(orderBy);
+    expect(getEvaluatedGrid(model, "A1:E5")).toEqual(orderedGrid);
+});
+
+test("editing the sorting of a list of that does not exist should throw an error", async () => {
+    const { model } = await createSpreadsheetWithList();
+    const result = model.dispatch("UPDATE_ODOO_LIST", {
+        listId: "invalid",
+        list: undefined,
+    });
+    expect(result.reasons).toEqual([CommandResult.ListIdNotFound]);
+});
+
 test("edited domain is exported", async () => {
     const { model } = await createSpreadsheetWithList();
     const [listId] = model.getters.getListIds();
@@ -430,6 +570,27 @@ test("edited domain is exported", async () => {
         domain: [],
     });
     expect(result.reasons).toEqual([CommandResult.ListIdNotFound]);
+});
+
+test("edited list sorting is exported", async () => {
+    const { model } = await createSpreadsheetWithList();
+    const [listId] = model.getters.getListIds();
+    const orderBy = [
+        { name: "foo", asc: true },
+        { name: "bar", asc: false },
+    ];
+    const listDefinition = model.getters.getListModelDefinition(listId);
+    model.dispatch("UPDATE_ODOO_LIST", {
+        listId,
+        list: {
+            ...listDefinition,
+            searchParams: {
+                ...listDefinition.searchParams,
+                orderBy,
+            },
+        },
+    });
+    expect(model.exportData().lists["1"].orderBy).toEqual(orderBy);
 });
 
 test("Cannot see record of a list in dashboard mode if wrong list formula", async function () {
