@@ -73,4 +73,3 @@ export class ImageCropPlugin extends Plugin {
         });
     }
 }
-registry.category("phoenix_plugins").add(ImageCropPlugin.name, ImageCropPlugin);

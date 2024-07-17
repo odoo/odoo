@@ -1,4 +1,3 @@
-import { registry } from "@web/core/registry";
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { isImageUrl } from "@html_editor/utils/url";
@@ -373,4 +372,3 @@ export class ImagePlugin extends Plugin {
         }
     }
 }
-registry.category("phoenix_plugins").add(ImagePlugin.name, ImagePlugin);
