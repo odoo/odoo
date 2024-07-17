@@ -13,7 +13,10 @@ import {
 import { WebClient } from "@web/webclient/webclient";
 import { browser } from "@web/core/browser/browser";
 import { TourRecorder } from "@web_tour_recorder/tour_recorder/tour_recorder";
-import { TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY } from "@web_tour_recorder/tour_recorder/tour_recorder_service";
+import {
+    CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY,
+    TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
+} from "@web_tour_recorder/tour_recorder/tour_recorder_service";
 import { Component, xml } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -615,4 +618,50 @@ test("Edit input after autofocus", async () => {
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
     checkTourSteps([".o_input"]);
     expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["edit Bismillah"]);
+});
+
+test("'Disable Tours' clean the custom running tour", async () => {
+    onRpc("/web/dataset/call_kw/web_tour.tour/consume", async () => {
+        return Promise.resolve(true);
+    });
+
+    await mountWithCleanup(
+        `
+        <div class="o_parent">
+            <div class="click">Bishmillah</div>
+        </div>
+    `,
+        { noMainContainer: true }
+    );
+
+    expect(".o_tour_recorder").toHaveCount(1);
+    click(".o_button_record");
+    await animationFrame();
+    click(".click");
+    await animationFrame();
+    checkTourSteps([".o_parent > div"]);
+
+    click(".o_button_save");
+    await animationFrame();
+    await contains("input[name='name']").click();
+    edit("tour_name");
+    await animationFrame();
+    click(".o_button_save_confirm");
+    await animationFrame();
+    expect(".o_notification_manager .o_notification_body").toHaveText(
+        "Custom tour 'tour_name' has been added."
+    );
+
+    click(".o_debug_manager > button");
+    await contains(".o-dropdown-item:contains('Start Tour')").click();
+
+    expect("table tr td:contains('tour_name')").toHaveCount(1);
+    click(".o_start_tour");
+    await animationFrame();
+
+    click(".o_debug_manager > button");
+    await contains(".o-dropdown-item:contains('Disable Tours')").click();
+    await animationFrame();
+
+    expect(browser.localStorage.getItem(CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY)).toBe(null);
 });

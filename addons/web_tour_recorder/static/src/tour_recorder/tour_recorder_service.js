@@ -15,7 +15,7 @@ import { _t } from "@web/core/l10n/translation";
  */
 
 const CUSTOM_TOURS_LOCAL_STORAGE_KEY = "custom_tours";
-const CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY = "custom_running_tours";
+export const CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY = "custom_running_tours";
 export const TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY = "tour_recorder.active";
 
 export const tourRecorderService = {
@@ -104,6 +104,23 @@ export const tourRecorderService = {
                 );
             }
             tour_service.startTour(customTour.name, options);
+        }
+
+        if (!window.frameElement) {
+            // Resume running tours.
+            let runningCustomTour = browser.localStorage.getItem(
+                CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY
+            );
+            if (runningCustomTour) {
+                runningCustomTour = JSON.parse(runningCustomTour);
+                if (!registry.category("web_tour.tours").contains(runningCustomTour.name)) {
+                    registry.category("web_tour.tours").add(runningCustomTour.name, {
+                        ...runningCustomTour,
+                        steps: () => runningCustomTour.steps,
+                    });
+                }
+                tour_service.resumeTour(runningCustomTour.name);
+            }
         }
 
         return {
