@@ -358,7 +358,10 @@ class IrAttachment(models.Model):
                     nw, nh = map(int, max_resolution.split('x'))
                     if w > nw or h > nh:
                         img = img.resize(nw, nh)
-                        quality = int(ICP('base.image_autoresize_quality', 80))
+                        if _subtype == 'jpeg':  # Do not affect PNGs color palette
+                            quality = int(ICP('base.image_autoresize_quality', 80))
+                        else:
+                            quality = 0
                         image_data = img.image_quality(quality=quality)
                         if is_raw:
                             values['raw'] = image_data
