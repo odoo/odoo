@@ -187,6 +187,20 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         return this._super.apply(this, arguments);
     },
 
+    /**
+     * Check if the user is public, if it's true send a warning alert saying the action cannot be performed.
+     **/
+    _warnIfPublicUser: function() {
+        if (session.is_website_user) {
+            this._displayAccessDeniedNotification(
+                markup(_t('Oh no! Please <a href="%s">sign in</a> to perform this action', "/web/login"))
+            );
+            return true;
+        }
+        return false;
+    },
+
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -271,10 +285,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             return;
         }
         ev.preventDefault();
-        if (session.is_website_user) {
-            this._displayAccessDeniedNotification(
-                markup(`<p>${_t('Oh no! Please <a href="%s">sign in</a> to vote', "/web/login")}</p>`)
-            );
+        if (this._warnIfPublicUser()) {
             return;
         }
         const forumId = parseInt(document.getElementById('wrapwrap').dataset.forum_id);
@@ -343,18 +354,19 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onFlagAlertClick: function (ev) {
         ev.preventDefault();
+        if (this._warnIfPublicUser()) {
+            return;
+        }
         const elem = ev.currentTarget;
         rpc(
             elem.dataset.href || (elem.getAttribute('href') !== '#' && elem.getAttribute('href')) || elem.closest('form').getAttribute('action'),
         ).then(data => {
             if (data.error) {
-                const message = data.error === 'anonymous_user'
-                    ? _t("Sorry you must be logged to flag a post")
-                    : data.error === 'post_already_flagged'
-                        ? _t("This post is already flagged")
-                        : data.error === 'post_non_flaggable'
-                            ? _t("This post can not be flagged")
-                            : data.error;
+                const message = data.error === 'post_already_flagged'
+                    ? _t("This post is already flagged")
+                    : data.error === 'post_non_flaggable'
+                        ? _t("This post can not be flagged")
+                        : data.error;
                 this._displayAccessDeniedNotification(message);
             } else if (data.success) {
                 const child = elem.firstElementChild;
@@ -385,14 +397,13 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onVotePostClick: function (ev) {
         ev.preventDefault();
+        if (this._warnIfPublicUser()) {
+            return;
+        }
         var $btn = $(ev.currentTarget);
         rpc($btn.data('href')).then(data => {
             if (data.error) {
-                const message = data.error === 'own_post'
-                    ? _t('Sorry, you cannot vote for your own posts')
-                    : data.error === 'anonymous_user'
-                        ? markup(`<p>${_t('Oh no! Please <a href="%s">sign in</a> to vote', "/web/login")}</p>`)
-                        : data.error;
+                const message = data.error === 'own_post' ? _t('Sorry, you cannot vote for your own posts') : data.error;
                 this._displayAccessDeniedNotification(message);
             } else {
                 var $container = $btn.closest('.vote');
@@ -482,15 +493,14 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onAcceptAnswerClick: async function (ev) {
         ev.preventDefault();
+        if (this._warnIfPublicUser()) {
+            return;
+        }
         const link = ev.currentTarget;
         const target = link.dataset.target;
         const data = await rpc(link.dataset.href);
         if (data.error) {
-            const message = data.error === 'anonymous_user'
-                ? _t('Sorry, anonymous users cannot choose correct answers.')
-                : data.error === 'own_post'
-                    ? _t('Sorry, you cannot select your own posts as best answer')
-                    : data.error;
+            const message = data.error === 'own_post' ? _t('Sorry, you cannot select your own posts as best answer') : data.error;
             this._displayAccessDeniedNotification(message);
             return;
         }
@@ -533,6 +543,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onDeleteCommentClick: function (ev) {
         ev.preventDefault();
+        if (this._warnIfPublicUser()) {
+            return;
+        }
         this.call("dialog", "add", ConfirmationDialog, {
             body: _t("Are you sure you want to delete this comment?"),
             confirmLabel: _t("Delete"),

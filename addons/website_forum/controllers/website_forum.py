@@ -348,8 +348,6 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", methods=['POST'], website=True)
     def question_toggle_favorite(self, forum, question, **post):
-        if not request.session.uid:
-            return {'error': 'anonymous_user'}
         favourite = not question.user_favourite
         question.sudo().favourite_ids = [(favourite and 4 or 3, request.uid)]
         if favourite:
@@ -449,14 +447,12 @@ class WebsiteForum(WebsiteProfile):
             question._update_last_activity()
         return request.redirect(f'/forum/{slug(forum)}/{slug(question)}')
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="user", website=True)
     def post_toggle_correct(self, forum, post, **kwargs):
         if post.parent_id is False:
             return request.redirect('/')
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
-        if not request.session.uid:
-            return {'error': 'anonymous_user'}
 
         # set all answers to False, only one can be accepted
         (post.parent_id.child_ids - post).write(dict(is_correct=False))
@@ -508,19 +504,15 @@ class WebsiteForum(WebsiteProfile):
     #  JSON utilities
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='json', auth="public", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='json', auth="user", website=True)
     def post_upvote(self, forum, post, **kwargs):
-        if not request.session.uid:
-            return {'error': 'anonymous_user'}
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
         upvote = True if not post.user_vote > 0 else False
         return post.vote(upvote=upvote)
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='json', auth="public", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='json', auth="user", website=True)
     def post_downvote(self, forum, post, **kwargs):
-        if not request.session.uid:
-            return {'error': 'anonymous_user'}
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
         upvote = True if post.user_vote < 0 else False
@@ -621,10 +613,8 @@ class WebsiteForum(WebsiteProfile):
         post._refuse()
         return self.question_ask_for_close(forum, post)
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/flag', type='json', auth="public", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/flag', type='json', auth="user", website=True)
     def post_flag(self, forum, post, **kwargs):
-        if not request.session.uid:
-            return {'error': 'anonymous_user'}
         return post._flag()[0]
 
     @http.route('/forum/<model("forum.post"):post>/ask_for_mark_as_offensive', type='json', auth="user", website=True)
@@ -798,6 +788,4 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete', type='json', auth="user", website=True)
     def delete_comment(self, forum, post, comment, **kwarg):
-        if not request.session.uid:
-            return {'error': 'anonymous_user'}
         return post.unlink_comment(comment.id)[0]
