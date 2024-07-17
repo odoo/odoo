@@ -9,6 +9,19 @@ from odoo.tools.misc import format_amount
 @tagged('post_install', '-at_install')
 class TestAccountJournalDashboard(AccountTestInvoicingCommon):
 
+    def assertDashboardPurchaseSaleData(self, journal, number_draft, sum_draft, number_waiting, sum_waiting, number_late, sum_late, currency, **kwargs):
+        expected_values = {
+            'number_draft': number_draft,
+            'sum_draft': format_amount(self.env, sum_draft, currency),
+            'number_waiting': number_waiting,
+            'sum_waiting': format_amount(self.env, sum_waiting, currency),
+            'number_late': number_late,
+            'sum_late': format_amount(self.env, sum_late, currency),
+            **kwargs
+        }
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertDictEqual({**dashboard_data, **expected_values}, dashboard_data)
+
     @freeze_time("2019-01-22")
     def test_customer_invoice_dashboard(self):
         journal = self.company_data['default_journal_sale']
@@ -96,40 +109,46 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         self.assertEqual(dashboard_data['number_late'], 2)
         self.assertIn('78.42', dashboard_data['sum_late'])
 
-    def test_sale_purchase_journal_for_multi_currency_purchase(self):
-        currency = self.currency_data['currency']
+    def test_sale_purchase_journal_for_purchase(self):
+        """
+        Test different purchase journal setups with or without multicurrency:
+            1) Journal with no currency, bills in foreign currency -> dashboard data should be displayed in company currency
+            2) Journal in foreign currency, bills in foreign currency -> dashboard data should be displayed in foreign currency
+            3) Journal in foreign currency, bills in company currency -> dashboard data should be displayed in foreign currency
+            4) Journal in company currency, bills in company currency -> dashboard data should be displayed in company currency
+            5) Journal in company currency, bills in foreign currency -> dashboard data should be displayed in company currency
+        """
+        foreign_currency = self.currency_data['currency']
         company_currency = self.company_data['currency']
 
-        invoice = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'invoice_date': '2017-01-01',
-            'date': '2017-01-01',
-            'partner_id': self.partner_a.id,
-            'currency_id': currency.id,
-            'invoice_line_ids': [
-                (0, 0, {'name': 'test', 'price_unit': 200})
-            ],
-        })
-        invoice.action_post()
+        setup_values = [
+            [self.company_data['default_journal_purchase'], foreign_currency],
+            [self.company_data['default_journal_purchase'].copy({'currency_id': foreign_currency.id, 'default_account_id': self.company_data['default_account_expense'].id}), foreign_currency],
+            [self.company_data['default_journal_purchase'].copy({'currency_id': foreign_currency.id, 'default_account_id': self.company_data['default_account_expense'].id}), company_currency],
+            [self.company_data['default_journal_purchase'].copy({'currency_id': company_currency.id, 'default_account_id': self.company_data['default_account_expense'].id}), company_currency],
+            [self.company_data['default_journal_purchase'].copy({'currency_id': company_currency.id, 'default_account_id': self.company_data['default_account_expense'].id}), foreign_currency],
+        ]
 
-        payment = self.env['account.payment'].create({
-            'amount': 90.0,
-            'date': '2016-01-01',
-            'payment_type': 'outbound',
-            'partner_type': 'supplier',
-            'partner_id': self.partner_a.id,
-            'currency_id': currency.id,
-        })
-        payment.action_post()
+        expected_vals_list = [
+            # number_draft, sum_draft, number_waiting, sum_waiting, number_late, sum_late, currency
+            [            1,       100,              1,          55,            1,      55, company_currency],
+            [            1,       200,              1,         110,            1,     110, foreign_currency],
+            [            1,       400,              1,         220,            1,     220, foreign_currency],
+            [            1,       200,              1,         110,            1,     110, company_currency],
+            [            1,       100,              1,          55,            1,      55, company_currency],
+        ]
 
-        (invoice + payment.move_id).line_ids.filtered_domain([
-            ('account_id', '=', self.company_data['default_account_payable'].id)
-        ]).reconcile()
+        for (purchase_journal, bill_currency), expected_vals in zip(setup_values, expected_vals_list):
+            with self.subTest(purchase_journal_currency=purchase_journal.currency_id, bill_currency=bill_currency, expected_vals=expected_vals):
+                bill = self.init_invoice('in_invoice', invoice_date='2017-01-01', post=True, amounts=[200], currency=bill_currency, journal=purchase_journal)
+                _draft_bill = self.init_invoice('in_invoice', invoice_date='2017-01-01', post=False, amounts=[200], currency=bill_currency, journal=purchase_journal)
 
-        default_journal_purchase = self.company_data['default_journal_purchase']
-        dashboard_data = default_journal_purchase._get_journal_dashboard_data_batched()[default_journal_purchase.id]
-        self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_waiting'])
-        self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_late'])
+                payment = self.init_payment(-90, post=True, date='2017-01-01', currency=bill_currency)
+                (bill + payment.move_id).line_ids.filtered_domain([
+                    ('account_id', '=', self.company_data['default_account_payable'].id)
+                ]).reconcile()
+
+                self.assertDashboardPurchaseSaleData(purchase_journal, *expected_vals)
 
     def test_sale_purchase_journal_for_multi_currency_sale(self):
         currency = self.currency_data['currency']

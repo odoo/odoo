@@ -465,6 +465,8 @@ class account_journal(models.Model):
             "account_move_line.journal_id",
             "account_move_line.move_id",
             "-account_move_line.amount_residual AS amount_total_company",
+            "-account_move_line.amount_residual_currency AS amount_total",
+            "account_move_line.currency_id AS currency",
         ]
         # DRAFTS
         query, params = sale_purchase_journals._get_draft_bills_query().select(*bills_field_list)
