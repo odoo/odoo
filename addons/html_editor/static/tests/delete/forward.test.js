@@ -1569,11 +1569,11 @@ describe("Selection not collapsed", () => {
         });
     });
 
-    test.todo("should keep empty line and delete prefix of second line", async () => {
+    test("should remove empty paragraph and content from the second one", async () => {
         await testEditor({
             contentBefore: "<p>ab</p><p>[<br></p><p>d]ef</p>",
             stepFunction: deleteForward,
-            contentAfter: "<p>ab</p><p>[]<br></p><p>ef</p>",
+            contentAfter: "<p>ab</p><p>[]ef</p>",
         });
     });
 });
