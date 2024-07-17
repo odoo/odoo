@@ -166,9 +166,15 @@ export class SaleOrderManagementScreen extends Component {
                     cancelLabel: _t("No"),
                 });
                 if (confirmed) {
-                    await this.pos.data.ormWrite("product.product", product_to_add_in_pos, {
-                        available_in_pos: true,
-                    });
+                    try {
+                        await this.pos.data.ormWrite("product.product", product_to_add_in_pos, {
+                            available_in_pos: true,
+                        });
+                    } catch (e) {
+                        if (e.exceptionName !== "odoo.exceptions.AccessError") {
+                            throw e;
+                        }
+                    }
                     await this.pos.loadProducts([...product_to_add_in_pos]);
                 }
             }
