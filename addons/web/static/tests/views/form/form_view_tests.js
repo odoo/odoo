@@ -1044,6 +1044,44 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "col-lg-6");
     });
 
+    QUnit.test("field ids are unique (same field name in 2 form views)", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo"/>
+                        </group>
+                        <field name="p">
+                            <form>
+                                <sheet>
+                                    <group>
+                                        <field name="bar"/>
+                                        <field name="foo"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <tree>
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_field_widget input#foo_0");
+
+        await click(target, ".o_field_x2many_list_row_add a");
+        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsOnce(target, ".o_field_widget input#foo_0");
+        assert.containsOnce(target, ".modal .o_field_widget input#foo_0");
+        assert.containsOnce(target, ".modal .o_field_widget input#bar_0");
+    });
+
     QUnit.test("Form and subview with _view_ref contexts", async function (assert) {
         assert.expect(3);
 
