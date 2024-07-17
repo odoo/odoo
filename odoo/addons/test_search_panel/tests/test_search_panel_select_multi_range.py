@@ -590,6 +590,25 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
+        result = self.SourceModel.search_panel_select_multi_range(
+            'computed_tag_ids',
+            search_domain=[['id', '=', r5_id]],
+            limit=2,
+        )
+        self.assertEqual(result, SEARCH_PANEL_ERROR)
+
+        result = self.SourceModel.search_panel_select_multi_range(
+            'computed_tag_ids',
+            search_domain=[['id', '=', r6_id]],
+            limit=2,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Tag 3', 'id': t3_id},
+            ]
+        )
+
     # Selection case
 
     def test_selection_empty(self):
