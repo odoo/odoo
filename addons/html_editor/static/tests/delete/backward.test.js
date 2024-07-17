@@ -1609,6 +1609,28 @@ describe("Selection not collapsed", () => {
         });
     });
 
+    test("should remove a fully selected nested table", async () => {
+        await testEditor({
+            contentBefore: unformat(
+                `<p>a[b</p>
+                    <table><tbody>
+                        <tr>
+                            <td>
+                                <table><tbody>
+                                    <tr><td><br></td><td><br></td></tr>
+                                    <tr><td><br></td><td><br></td></tr>
+                                </tbody></table>
+                            </td>
+                        <td>ef</td></tr>
+                        <tr><td>gh</td><td>ij</td></tr>
+                    </tbody></table>
+                    <p>k]l</p>`
+            ),
+            stepFunction: deleteBackward,
+            contentAfter: "<p>a[]l</p>",
+        });
+    });
+
     test("should delete nothing when in an empty table cell", async () => {
         await testEditor({
             contentBefore:

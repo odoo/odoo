@@ -363,8 +363,10 @@ export class TablePlugin extends Plugin {
         // optimized by keeping in memory the state of selected cells/tables.
         const fullySelectedTables = [...this.editable.querySelectorAll(".o_selected_table")].filter(
             (table) =>
-                [...table.querySelectorAll("td")].every((td) =>
-                    td.classList.contains("o_selected_td")
+                [...table.querySelectorAll("td")].every(
+                    (td) =>
+                        closestElement(td, "table") !== table ||
+                        td.classList.contains("o_selected_td")
                 )
         );
         if (fullySelectedTables.length) {
