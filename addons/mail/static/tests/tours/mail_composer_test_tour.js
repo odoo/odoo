@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Check the earlier provided attachment is listed",
-            trigger: '.o_attachment[title="text.txt"]',
+            trigger: ".o_field_mail_composer_attachment_list a:contains(text.txt)",
         },
         {
             content: "Check subject is autofilled",
