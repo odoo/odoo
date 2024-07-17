@@ -1,3 +1,4 @@
+import { OfflineDetection } from "../offline_detection";
 import { PeerToPeer } from "./PeerToPeer";
 import { RemoteInterface, dispatchEvent } from "./remoteHelpers";
 
@@ -10,6 +11,12 @@ export class RemotePeerToPeer extends RemoteInterface {
             onNotification: this.handleNotification.bind(this),
         });
         this.peerTryingToJoin = new Set();
+        this.offlineDetection = new OfflineDetection({
+            ptp: this.ptp,
+            onReconnect: () => {
+                dispatchEvent(this, "ptp-ping-all");
+            },
+        });
     }
     stop() {
         this.ptp.stop();

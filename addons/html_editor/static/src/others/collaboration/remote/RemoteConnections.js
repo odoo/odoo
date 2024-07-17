@@ -21,6 +21,9 @@ export class RemoteConnections {
             this.remoteInterface.addEventListener("ptp-ping", ({ detail: toPeerId }) => {
                 this.notifyPeer(toPeerId, "remote_ping", this.config.getRemotePingPayload());
             });
+            this.remoteInterface.addEventListener("ptp-ping-all", () => {
+                this.notifyAllPeers("remote_ping", this.config.getRemotePingPayload());
+            });
             await this.remoteInterface.start();
         } else {
             throw new Error("Invalid params. Must provide either sfuConfig or peerToPeerConfig.");

@@ -15,20 +15,6 @@ import { markup } from "@odoo/owl";
  * @property {string} peerId
  */
 
-// Time to consider a user offline in ms. This fixes the problem of the
-// navigator closing rtc connection when the mac laptop screen is closed.
-// const CONSIDER_OFFLINE_TIME = 1000;
-// Check wether the computer could be offline. This fixes the problem of the
-// navigator closing rtc connection when the mac laptop screen is closed.
-// This case happens on Mac OS on every browser when the user close it's laptop
-// screen. At first, the os/navigator closes all rtc connection, and after some
-// times, the os/navigator internet goes offline without triggering an
-// offline/online event.
-// However, if the laptop screen is open and the connection is properly remove
-// (e.g. disconnect wifi), the event is properly triggered.
-// const CHECK_OFFLINE_TIME = 1000;
-// const PTP_PEER_DISCONNECTED_STATES = ["failed", "closed", "disconnected"];
-
 // Time in ms to wait when trying to aggregate snapshots from other peers and
 // potentially recover from a missing step before trying to apply those
 // snapshots or recover from the server.
@@ -93,8 +79,6 @@ export class CollaborationOdooPlugin extends Plugin {
                 this.stopRemote();
             });
         }
-        // todo: to implement
-        // clearInterval(this.collaborationInterval);
         super.destroy();
     }
 
@@ -141,42 +125,6 @@ export class CollaborationOdooPlugin extends Plugin {
 
         this.listenCollaborationBus(modelName, fieldName, resId);
         this.startCollaborationTime = new Date().getTime();
-
-        // todo: handle this feature
-        // this.checkConnectionChange = () => {
-        //     if (!this.ptp) {
-        //         return;
-        //     }
-        //     if (!navigator.onLine) {
-        //         this.signalOffline();
-        //     } else {
-        //         this.signalOnline();
-        //     }
-        // };
-
-        // window.addEventListener("online", this.checkConnectionChange);
-        // window.addEventListener("offline", this.checkConnectionChange);
-
-        // this.collaborationInterval = setInterval(async () => {
-        //     if (this.offlineTimeout || this.preSavePromise || !this.ptp) {
-        //         return;
-        //     }
-
-        //     const peersInfos = Object.values(this.ptp.peersInfos);
-        //     const couldBeDisconnected =
-        //         Boolean(peersInfos.length) &&
-        //         peersInfos.every((x) =>
-        //             PTP_PEER_DISCONNECTED_STATES.includes(
-        //                 x.peerConnection && x.peerConnection.connectionState
-        //             )
-        //         );
-
-        //     if (couldBeDisconnected) {
-        //         this.offlineTimeout = setTimeout(() => {
-        //             this.signalOffline();
-        //         }, CONSIDER_OFFLINE_TIME);
-        //     }
-        // }, CHECK_OFFLINE_TIME);
 
         const loadCollabInfos = async () => {
             const infos = await rpc("/html_editor/get_collab_infos", {
