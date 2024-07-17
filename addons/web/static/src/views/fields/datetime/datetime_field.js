@@ -27,6 +27,7 @@ import { standardFieldProps } from "../standard_field_props";
  *  rounding?: number;
  *  startDateField?: string;
  *  warnFuture?: boolean;
+ *  showSeconds?: boolean;
  * }} DateTimeFieldProps
  *
  * @typedef {import("@web/core/datetime/datetime_picker").DateTimePickerProps} DateTimePickerProps
@@ -45,7 +46,9 @@ export class DateTimeField extends Component {
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
         warnFuture: { type: Boolean, optional: true },
+        showSeconds: { type: Boolean, optional: true },
     };
+    static defaultProps = { showSeconds: true };
 
     static template = "web.DateTimeField";
 
@@ -94,12 +97,15 @@ export class DateTimeField extends Component {
             }
             if (!isNaN(this.props.rounding)) {
                 pickerProps.rounding = this.props.rounding;
+            } else if (!this.props.showSeconds) {
+                pickerProps.rounding = 0;
             }
             return pickerProps;
         };
 
         const dateTimePicker = useDateTimePicker({
             target: "root",
+            showSeconds: this.props.showSeconds,
             get pickerProps() {
                 return getPickerProps();
             },
@@ -162,7 +168,7 @@ export class DateTimeField extends Component {
         return value
             ? this.field.type === "date"
                 ? formatDate(value)
-                : formatDateTime(value)
+                : formatDateTime(value, { showSeconds: this.props.showSeconds })
             : "";
     }
 
@@ -334,7 +340,18 @@ export const dateTimeField = {
                 `Control the number of minutes in the time selection. E.g. set it to 15 to work in quarters.`
             ),
         },
+        {
+            label: _t("Show seconds"),
+            name: "show_seconds",
+            type: "boolean",
+            default: true,
+            help: _t(`Displays or hides the seconds in the datetime value.`),
+        },
     ],
+    extractProps: ({ attrs, options }, dynamicInfo) => ({
+        ...dateField.extractProps({ attrs, options }, dynamicInfo),
+        showSeconds: exprToBoolean(options.show_seconds ?? true),
+    }),
     supportedTypes: ["datetime"],
 };
 
