@@ -74,6 +74,7 @@ _ref_vat = {
     'sk': 'SK2022749619',
     'sm': 'SM24165',
     'tr': _('TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)'),  # Levent Karakas @ Eska Yazilim A.S.
+    'uy': _("'219999830019' (should be 12 digits)"),
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
     'sa': _('310175397400003 [Fifteen digits, first and last digits should be "3"]')
