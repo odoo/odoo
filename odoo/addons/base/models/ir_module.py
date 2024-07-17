@@ -196,7 +196,7 @@ class Module(models.Model):
                     for element, attribute, link, pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
-                    module.description_html = tools.html_sanitize(lxml.html.tostring(html))
+                    module.description_html = tools.html_sanitize(lxml.html.tostring(html, encoding='unicode'))
             except FileNotFoundError:
                 overrides = {
                     'embed_stylesheet': False,
