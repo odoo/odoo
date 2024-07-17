@@ -4,13 +4,21 @@ import { FileSelector } from "@html_editor/main/media/file_selector";
 import { uploadService } from "@html_editor/main/media/upload_progress_toast/upload_service";
 import { HtmlComposerMessageField } from "@mail/views/web/fields/html_composer_message_field/html_composer_message_field";
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, press, queryAll, queryOne } from "@odoo/hoot-dom";
+import {
+    manuallyDispatchProgrammaticEvent,
+    press,
+    queryAll,
+    queryAllTexts,
+    queryOne,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
     makeMockServer,
     mockService,
     mountView,
+    mountViewInDialog,
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -127,4 +135,64 @@ test("media dialog: upload", async function () {
 
     await contains(".o_form_button_save").click();
     expect.verifySteps(["web_save"]);
+});
+
+test("mention a partner", async () => {
+    onRpc("res.partner", "get_mention_suggestions", ({ kwargs }) => {
+        expect.step(`get_mention_suggestions: ${kwargs.search}`);
+    });
+    await mountViewInDialog({
+        type: "form",
+        resModel: "mail.compose.message",
+        arch: `
+        <form>
+            <field name="body" type="html" widget="html_composer_message"/>
+        </form>`,
+    });
+
+    const anchorNode = queryOne(`[name='body'] .odoo-editor-editable p`);
+    setSelection({ anchorNode, anchorOffset: 0 });
+    insertText(htmlEditor, "@");
+    await animationFrame();
+    expect(".overlay .search input[placeholder='Search for a user...']").toBeFocused();
+    expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
+
+    press("a");
+    await waitFor(".overlay .o-mail-NavigableList .o-mail-NavigableList-item");
+    expect(queryAllTexts(".overlay .o-mail-NavigableList .o-mail-NavigableList-item")).toEqual([
+        "Mitchell Admin",
+    ]);
+    expect.verifySteps(["get_mention_suggestions: a"]);
+
+    press("enter");
+    expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
+    <p>
+        <a target="_blank" data-oe-protected="true" contenteditable="false" href="https://www.hoot.test/web#model=res.partner&amp;id=17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner">
+            @Mitchell Admin
+        </a>
+    </p>`);
+});
+
+test("mention a channel", async () => {
+    onRpc("discuss.channel", "get_mention_suggestions", ({ kwargs }) => {
+        expect.step(`get_mention_suggestions: ${kwargs.search}`);
+    });
+    await mountViewInDialog({
+        type: "form",
+        resModel: "mail.compose.message",
+        arch: `
+        <form>
+            <field name="body" type="html" widget="html_composer_message"/>
+        </form>`,
+    });
+    const anchorNode = queryOne(`[name='body'] .odoo-editor-editable p`);
+    setSelection({ anchorNode, anchorOffset: 0 });
+    insertText(htmlEditor, "#");
+    await animationFrame();
+    expect(".overlay .search input[placeholder='Search for a channel...']").toBeFocused();
+    expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
+
+    press("a");
+    await animationFrame();
+    expect.verifySteps(["get_mention_suggestions: a"]);
 });
