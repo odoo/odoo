@@ -80,6 +80,8 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
         self.assertEqual(len(purchase_order), 1, "Only one PO should have been created, from the 2 Sales orders")
         self.assertEqual(len(purchase_order.order_line), 2, "The purchase order should have 2 lines")
+        self.assertIn(self.sale_order_1.name, purchase_order.origin, "The PO should have SO 1 in its source documents")
+        self.assertIn(self.sale_order_2.name, purchase_order.origin, "The PO should have SO 2 in its source documents")
         self.assertEqual(len(purchase_lines_so1), 1, "Only one SO line from SO 1 should have create a PO line")
         self.assertEqual(len(purchase_lines_so2), 1, "Only one SO line from SO 2 should have create a PO line")
         self.assertEqual(len(purchase_order.activity_ids), 0, "No activity should be scheduled on the PO")
