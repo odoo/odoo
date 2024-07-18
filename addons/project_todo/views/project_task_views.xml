@@ -106,6 +106,12 @@
                 <field name="priority" invisible="1"/>
                 <header>
                     <div class="py-1 px-2 border rounded bg-view">
+                        <field name="name"
+                               options="{'color_field': 'color', 'no_create_edit': True, 'line_breaks': False}"
+                               class="o_todo_breadcrumb_name_input me-2 mb-0 w-100"
+                               placeholder="Untitled to-do"/>
+                    </div>
+                    <div class="py-1 px-2 border rounded bg-view">
                         <field name="tag_ids"
                                widget="many2many_tags"
                                options="{'color_field': 'color', 'no_create_edit': True}"
