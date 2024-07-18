@@ -68,7 +68,7 @@
         <field name="arch" type="xml">
             <tree string="Contract logs"
                 decoration-warning="expires_today"
-                decoration-danger="days_left==0 and not expires_today"
+                decoration-danger="days_left==0 and not expires_today and not has_open_contract"
                 decoration-muted="state=='closed'"
                 default_order="expiration_date"
                 sample="1">
@@ -84,7 +84,7 @@
                 <field name="cost_generated" widget="monetary"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="cost_frequency"/>
-                <field name="state" widget="badge" decoration-info="state == 'open'" decoration-danger="state == 'expired'" />
+                <field name="state" widget="badge" decoration-info="state == 'open'" decoration-danger="state == 'expired' and not has_open_contract" />
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>

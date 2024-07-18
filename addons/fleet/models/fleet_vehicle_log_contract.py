@@ -39,6 +39,7 @@ class FleetVehicleLogContract(models.Model):
         help='Date when the coverage of the contract expirates (by default, one year after begin date)')
     days_left = fields.Integer(compute='_compute_days_left', string='Warning Date')
     expires_today = fields.Boolean(compute='_compute_days_left')
+    has_open_contract = fields.Boolean(compute='_compute_has_open_contract')
     insurer_id = fields.Many2one('res.partner', 'Vendor')
     purchaser_id = fields.Many2one(related='vehicle_id.driver_id', string='Driver')
     ins_ref = fields.Char('Reference', size=64, copy=False)
@@ -69,6 +70,17 @@ class FleetVehicleLogContract(models.Model):
             if name and record.cost_subtype_id.name:
                 name = record.cost_subtype_id.name + ' ' + name
             record.name = name
+
+    @api.depends('vehicle_id')
+    def _compute_has_open_contract(self):
+        today = fields.Date.today()
+        open_contracts = self.env['fleet.vehicle.log.contract'].search([
+            ('vehicle_id', 'in', self.vehicle_id.ids),
+            ('state', '=', 'open'),
+            ('expiration_date', '>=', today)
+        ])
+        for log_contract in self:
+            log_contract.has_open_contract = log_contract.vehicle_id in open_contracts.vehicle_id
 
     @api.depends('expiration_date', 'state')
     def _compute_days_left(self):
