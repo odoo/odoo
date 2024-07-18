@@ -11,9 +11,7 @@ export class ResPartner extends mailModels.ResPartner {
      */
     _to_store(ids, store) {
         super._to_store(...arguments);
-        const partners = this._filter([["id", "in", ids]], {
-            active_test: false,
-        });
+        const partners = this.browse(ids);
         for (const partner of partners) {
             store.add("res.partner", {
                 id: partner.id,

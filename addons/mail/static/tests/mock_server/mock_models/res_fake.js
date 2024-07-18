@@ -29,7 +29,7 @@ export class ResFake extends models.Model {
      * @returns {Object}
      */
     _get_customer_information(ids) {
-        const record = this._filter([["id", "in", ids]])[0];
+        const record = this.browse(ids)[0];
         const [name, email] = parseEmail(record.email_cc);
         return {
             name,
@@ -46,7 +46,7 @@ export class ResFake extends models.Model {
         const ResPartner = this.env["res.partner"];
 
         const result = [];
-        const records = this._filter([["id", "in", ids]]);
+        const records = this.browse(ids);
         for (const id of ids) {
             const record = records.find((record) => record.id === id);
             if (record.email_cc) {
@@ -62,7 +62,7 @@ export class ResFake extends models.Model {
                     })
                 );
             }
-            const partners = ResPartner._filter([["id", "in", record.partner_ids]]);
+            const partners = ResPartner.browse(record.partner_ids);
             if (partners.length) {
                 for (const partner of partners) {
                     MailThread._message_add_suggested_recipient.call(
