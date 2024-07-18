@@ -271,6 +271,13 @@ class StockQuant(models.Model):
                     # Merge quants later, to make sure one line = one record during batch import
                     quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
                 if lot_id:
+                    if self.env.context.get('import_file') and lot_id.product_id != product:
+                        lot_name = lot_id.name
+                        lot_id = self.env['stock.lot'].search([('product_id', '=', product.id), ('name', '=', lot_name)], limit=1)
+                        if not lot_id:
+                            company_id = location.company_id or self.env.company
+                            lot_id = self.env['stock.lot'].create({'name': lot_name, 'product_id': product.id, 'company_id': company_id.id})
+                        vals['lot_id'] = lot_id.id
                     quant = quant.filtered(lambda q: q.lot_id)
                 if quant:
                     quant = quant[0].sudo()
@@ -612,6 +619,12 @@ class StockQuant(models.Model):
         for quant in self:
             if quant.location_id.usage == 'view':
                 raise ValidationError(_('You cannot take products from or deliver products to a location of type "view" (%s).', quant.location_id.name))
+
+    @api.constrains('lot_id')
+    def check_lot_id(self):
+        for quant in self:
+            if quant.lot_id.product_id and quant.lot_id.product_id != quant.product_id:
+                raise ValidationError(_('The Lot/Serial number (%s) is linked to another product.', quant.location_id.name))
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
