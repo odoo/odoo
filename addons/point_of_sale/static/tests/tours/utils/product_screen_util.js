@@ -393,7 +393,7 @@ export function productIsDisplayed(name) {
     ];
 }
 export function totalAmountIs(amount) {
-    return inLeftSide(Order.hasTotal(amount));
+    return inLeftSide(...Order.hasTotal(amount));
 }
 export function modeIsActive(mode) {
     return inLeftSide(Numpad.isActive(mode));

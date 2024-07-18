@@ -237,11 +237,10 @@
         run: "edit admin",
     },
     {
-        trigger: `.oe_login_form input[name="redirect"]`,
+        trigger: `.oe_login_form input[name="redirect"]:not(:visible)`,
         run(helpers) {
             this.anchor.value = "/";
         },
-        allowInvisible: true,
     },
     {
         content: "Submit login",
@@ -429,11 +428,10 @@
         run: "edit admin",
     },
     {
-        trigger: `.oe_login_form input[name="redirect"]`,
+        trigger: `.oe_login_form input[name="redirect"]:not(:visible)`,
         run(helpers) {
             this.anchor.value = "/shop/cart";
         },
-        allowInvisible: true,
     },
     {
         content: "Submit login",
@@ -473,11 +471,10 @@
         run: "edit 1admin@admin",
     },
     {
-        trigger: `.oe_login_form input[name="redirect"]`,
+        trigger: `.oe_login_form input[name="redirect"]:not(:visible)`,
         run(helpers) {
             this.anchor.value = "/shop?search=Storage Box Test";
         },
-        allowInvisible: true,
     },
     {
         content: "Submit login",

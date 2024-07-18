@@ -34,13 +34,11 @@ registry.category("web_tour.tours").add("website_event_pages_seo", {
             trigger: "body:not(:has(.modal))",
         },
         {
-            trigger: ":iframe head:has(title:contains(/^Hello, world!$/))",
-            allowInvisible: true,
+            trigger: ":iframe head:has(title:contains(/^Hello, world!$/)):not(:visible)",
         },
         {
             content: "Check that the page title is adapted, inside and outside the iframe",
-            trigger: "head:has(title:contains(/^Hello, world!$/))",
-            allowInvisible: true,
+            trigger: "head:has(title:contains(/^Hello, world!$/)):not(:visible)",
         },
     ],
 });

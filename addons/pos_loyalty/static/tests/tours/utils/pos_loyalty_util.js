@@ -64,7 +64,7 @@ export function hasRewardLine(rewardName, amount, qty) {
     });
 }
 export function orderTotalIs(total_str) {
-    return [Order.hasTotal(total_str)];
+    return [...Order.hasTotal(total_str)];
 }
 export function isRewardButtonHighlighted(isHighlighted) {
     return [

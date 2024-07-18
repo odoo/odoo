@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { _legacyIsVisible, isVisible } from "@web/core/utils/ui";
+import { _legacyIsVisible } from "@web/core/utils/ui";
 import { omit } from "@web/core/utils/objects";
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
@@ -29,31 +29,27 @@ import { TourHelpers } from "./tour_helpers";
  */
 
 /**
- * @param {string} selector - any valid Hoot selector
- * @param {boolean} inModal
- * @returns {Array<Element>}
+ * @param {Tour} tour
+ * @param {TourStep} step
+ * @returns {HTMLElement}
  */
-function findTrigger(selector, inModal) {
-    let nodes;
-    if (inModal !== false) {
+function findTrigger(tour, step) {
+    step.state = step.state || {};
+    if (!step.trigger) {
+        return null;
+    }
+    const options = {};
+    if (step.in_modal !== false) {
         const visibleModal = hoot.queryAll(".modal", { visible: true }).at(-1);
         if (visibleModal) {
-            nodes = hoot.queryAll(selector, { root: visibleModal });
+            options.root = visibleModal;
         }
     }
-    if (!nodes) {
-        nodes = hoot.queryAll(selector);
-    }
-    return nodes;
-}
-
-function findStepTriggers(tour, step) {
-    step.state = step.state || {};
     try {
-        const nodes = findTrigger(step.trigger, step.in_modal);
-        //TODO : change _legacyIsVisible by isVisible (hoot lib)
-        //Failed with tour test_snippet_popup_with_scrollbar_and_animations > snippet_popup_and_animations
-        const triggerEl = !step.allowInvisible ? nodes.find(_legacyIsVisible) : nodes.at(0);
+        const nodes = hoot.queryAll(step.trigger, options);
+        const triggerEl = step.trigger.includes(":visible")
+            ? nodes.at(0)
+            : nodes.find(_legacyIsVisible);
         step.state.triggerFound = !!triggerEl;
         return triggerEl;
     } catch (error) {
@@ -78,9 +74,7 @@ function describeFailedStepSimple(tour, step) {
 function describeWhyStepFailed(step) {
     const stepState = step.state || {};
     if (!stepState.triggerFound) {
-        return `The cause is that trigger (${step.trigger}) element cannot be found in DOM.`;
-    } else if (!stepState.isVisible) {
-        return "Element has been found but isn't displayed. (Use 'step.allowInvisible: true,' if you want to skip this check)";
+        return `The cause is that trigger (${step.trigger}) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`;
     } else if (stepState.isBlocked) {
         return "Element has been found but DOM is blocked by UI.";
     } else if (!stepState.hasRun) {
@@ -139,11 +133,10 @@ function canContinue(el, step) {
             ? el.ownerDocument.contains(rootNode.host)
             : el.ownerDocument.contains(el);
     state.isElement = el instanceof el.ownerDocument.defaultView.Element || el instanceof Element;
-    state.isVisible = step.allowInvisible || isVisible(el);
     const isBlocked =
         document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
     state.isBlocked = !!isBlocked;
-    state.canContinue = !!(state.isInDoc && state.isElement && state.isVisible && !state.isBlocked);
+    state.canContinue = !!(state.isInDoc && state.isElement && !state.isBlocked);
     return state.canContinue;
 }
 
@@ -230,7 +223,7 @@ export function compileStepAuto(stepIndex, step, options) {
                     step.state.canContinue = true;
                     return true;
                 }
-                const stepEl = findStepTriggers(tour, step);
+                const stepEl = findTrigger(tour, step);
                 if (!stepEl) {
                     return false;
                 }

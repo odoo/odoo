@@ -79,11 +79,18 @@ export function doesNotHaveLine(options = {}) {
 // TODO: there are instances where we have no selected orderline. Fix those instances
 
 export function hasTotal(amount) {
-    return {
-        content: `order total amount is '${amount}'`,
-        trigger: `.product-screen .order-summary .total:contains("${amount}")`,
-        allowInvisible: true,
-    };
+    return [
+        {
+            isActive: ["desktop"],
+            content: `order total amount is '${amount}'`,
+            trigger: `.product-screen .order-summary .total:contains("${amount}")`,
+        },
+        {
+            isActive: ["mobile"],
+            content: `order total amount is '${amount}'`,
+            trigger: `.product-screen .order-summary .total:contains("${amount}"):not(:visible)`,
+        },
+    ];
 }
 export function hasTax(amount) {
     return {

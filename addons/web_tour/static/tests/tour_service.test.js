@@ -348,7 +348,7 @@ test("a failing tour with disabled element", async () => {
         `error: Tour tour3 failed at step .button1. Element has been found. The error seems to be with step.run`,
         `error: Element can't be disabled when you want to click on it.
 Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`,
-        `error: Tour tour3 failed at step .button2. The cause is that trigger (.button2) element cannot be found in DOM.`,
+        `error: Tour tour3 failed at step .button2. The cause is that trigger (.button2) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`,
     ]);
 });
 
@@ -442,7 +442,7 @@ test("a failing tour logs the step that failed", async () => {
     expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .wrong_selector)'"]);
     await advanceTime(10000);
     const expectedWarning = `warn: Tourtour1failedatstepcontent(trigger:.wrong_selector){"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILINGSTEP(59){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`;
-    const expectedError = `error: Tour tour1 failed at step content (trigger: .wrong_selector). The cause is that trigger (.wrong_selector) element cannot be found in DOM.`;
+    const expectedError = `error: Tour tour1 failed at step content (trigger: .wrong_selector). The cause is that trigger (.wrong_selector) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`;
     expect.verifySteps([expectedWarning, expectedError]);
 });
 
@@ -878,6 +878,108 @@ test("scroller pointer to reach next step", async () => {
     click("button.inc");
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("automatic tour with invisible element", async () => {
+    patchWithCleanup(browser.console, {
+        warn: (s) => {},
+        error: (s) => expect.step(`error: ${s}`),
+    });
+    await makeMockEnv();
+
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <button class="button0">Button 0</button>
+                    <button class="button1" style="display:none;">Button 1</button>
+                    <button class="button2">Button 2</button>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Root);
+    registry.category("web_tour.tours").add("tour_de_wallonie", {
+        test: true,
+        steps: () => [
+            {
+                trigger: ".button0",
+                run: "click",
+            },
+            {
+                trigger: ".button1",
+                run: "click",
+            },
+            {
+                trigger: ".button2",
+                run: "click",
+            },
+        ],
+    });
+    getService("tour_service").startTour("tour_de_wallonie", { mode: "auto" });
+    await animationFrame();
+    await advanceTime(750);
+    await advanceTime(750);
+    await advanceTime(750);
+    await advanceTime(10000);
+    expect.verifySteps([
+        "error: Tour tour_de_wallonie failed at step .button1. The cause is that trigger (.button1) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+    ]);
+});
+
+test("automatic tour with invisible element but use :not(:visible))", async () => {
+    patchWithCleanup(browser.console, {
+        log: (s) => {
+            s.includes("tour succeeded") ? expect.step(`succeeded`) : false;
+        },
+        warn: (s) => {},
+        error: (s) => expect.step(`error: ${s}`),
+    });
+    await makeMockEnv();
+
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <button class="button0">Button 0</button>
+                    <button class="button1" style="display:none;">Button 1</button>
+                    <button class="button2">Button 2</button>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Root);
+    registry.category("web_tour.tours").add("tour_de_wallonie", {
+        test: true,
+        steps: () => [
+            {
+                trigger: ".button0",
+                run: "click",
+            },
+            {
+                trigger: ".button1:not(:visible)",
+                run: "click",
+            },
+            {
+                trigger: ".button2",
+                run: "click",
+            },
+        ],
+    });
+    getService("tour_service").startTour("tour_de_wallonie", { mode: "auto" });
+    await animationFrame();
+    await advanceTime(750);
+    await animationFrame();
+    await advanceTime(750);
+    await animationFrame();
+    await advanceTime(750);
+    expect.verifySteps(["succeeded"]);
 });
 
 test("manual tour with inactive steps", async () => {
