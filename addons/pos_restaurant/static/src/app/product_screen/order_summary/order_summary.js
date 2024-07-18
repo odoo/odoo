@@ -7,9 +7,11 @@ patch(OrderSummary.prototype, {
         this.pos.showScreen("FloorScreen");
     },
     showBookButton() {
+        if (!this.pos.selectedTable) {
+            return false;
+        }
         return (
             this.pos.config.module_pos_restaurant &&
-            this.pos.selectedTable &&
             !this.pos.models["pos.order"].some(
                 (o) =>
                     o.table_id?.id === this.pos.selectedTable.id &&
@@ -23,16 +25,24 @@ patch(OrderSummary.prototype, {
         this.pos.showScreen("FloorScreen");
     },
     showUnbookButton() {
+        if (this.pos.selectedTable) {
+            return (
+                this.pos.config.module_pos_restaurant &&
+                !this.pos.models["pos.order"].some(
+                    (o) =>
+                        o.table_id?.id === this.pos.selectedTable.id &&
+                        o.finalized === false &&
+                        !o.isBooked
+                ) &&
+                this.pos.get_order().lines.length === 0
+            );
+        }
+        const currentOrder = this.pos.get_order();
         return (
             this.pos.config.module_pos_restaurant &&
-            this.pos.selectedTable &&
-            !this.pos.models["pos.order"].some(
-                (o) =>
-                    o.table_id?.id === this.pos.selectedTable.id &&
-                    o.finalized === false &&
-                    !o.isBooked
-            ) &&
-            this.pos.get_order().lines.length === 0
+            !currentOrder.finalized &&
+            currentOrder.isBooked &&
+            currentOrder.lines.length === 0
         );
     },
 });
