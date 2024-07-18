@@ -50,7 +50,13 @@
             </div>
             <div t-ref="floor-map-scroll" class="overflow-scroll flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" t-attf-style="background: {{activeFloor?.background_color}}"> 
                 <div t-on-click="onClickFloorMap" t-on-touchstart="_onPinchStart" t-on-touchmove="_onPinchMove" t-on-touchend="_onPinchEnd"
+<<<<<<< HEAD
                     t-attf-class="floor-map position-relative w-100 h-100 overflow-scroll {{ pos.isEditMode ? 'floor-grid' : ''}}"
+||||||| parent of 5046842549b1 (temp)
+                    class="floor-map position-relative w-100 h-100 overflow-hidden"
+=======
+                    class="floor-map position-relative w-100 h-100 overflow-auto"
+>>>>>>> 5046842549b1 (temp)
                     t-ref="floor-map-ref"
                     t-attf-style="
                         -webkit-touch-callout: none; // for iOS
