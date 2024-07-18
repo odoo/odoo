@@ -1298,6 +1298,108 @@ class AccountGroup(models.Model):
             children_ids.write({'parent_id': record.parent_id.id})
         return super().unlink()
 
+<<<<<<< master
+||||||| 5d7c0cca397bf057d1440a9293e1cdffd6f03e54
+    def _adapt_accounts_for_account_groups(self, account_ids=None, company=None):
+        """Ensure consistency between accounts and account groups.
+
+        Find and set the most specific group matching the code of the account.
+        The most specific is the one with the longest prefixes and with the starting
+        prefix being smaller than the account code and the ending prefix being greater.
+        """
+        if self.env.context.get('delay_account_group_sync'):
+            return
+
+        self.flush_model()
+        self.env['account.account'].flush_model(['code'])
+
+        if company:
+            company_ids = company.root_id.ids
+        elif account_ids:
+            company_ids = account_ids.company_id.root_id.ids
+            account_ids = account_ids.ids
+        else:
+            company_ids = self.company_id.ids
+            account_ids = []
+        if not company_ids and not account_ids:
+            return
+        account_where_clause = SQL('account.company_id IN %s', tuple(company_ids))
+        if account_ids:
+            account_where_clause = SQL('%s AND account.id IN %s', account_where_clause, tuple(account_ids))
+
+        self._cr.execute(SQL("""
+            WITH relation AS (
+                 SELECT DISTINCT ON (account.id)
+                        account.id AS account_id,
+                        agroup.id AS group_id
+                   FROM account_account account
+                   JOIN res_company account_company ON account_company.id = account.company_id
+              LEFT JOIN account_group agroup
+                     ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
+                    AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
+                    AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
+                  WHERE %s
+               ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
+            )
+            UPDATE account_account
+               SET group_id = rel.group_id
+              FROM relation rel
+             WHERE account_account.id = rel.account_id
+        """, account_where_clause))
+        self.env['account.account'].invalidate_model(['group_id'], flush=False)
+
+=======
+    def _adapt_accounts_for_account_groups(self, account_ids=None, company=None):
+        """Ensure consistency between accounts and account groups.
+
+        Find and set the most specific group matching the code of the account.
+        The most specific is the one with the longest prefixes and with the starting
+        prefix being smaller than the account code and the ending prefix being greater.
+        """
+        if self.env.context.get('delay_account_group_sync'):
+            return
+
+        self.flush_model()
+        self.env['account.account'].flush_model(['code'])
+
+        if company:
+            company_ids = company.root_id.ids
+        elif account_ids:
+            company_ids = account_ids.company_id.root_id.ids
+            account_ids = account_ids.ids
+        else:
+            company_ids = []
+            for company in self.company_id:
+                company_ids.extend(company._accessible_branches().ids)
+            account_ids = []
+        if not company_ids and not account_ids:
+            return
+        account_where_clause = SQL('account.company_id IN %s', tuple(company_ids))
+        if account_ids:
+            account_where_clause = SQL('%s AND account.id IN %s', account_where_clause, tuple(account_ids))
+
+        self._cr.execute(SQL("""
+            WITH relation AS (
+                 SELECT DISTINCT ON (account.id)
+                        account.id AS account_id,
+                        agroup.id AS group_id
+                   FROM account_account account
+                   JOIN res_company account_company ON account_company.id = account.company_id
+              LEFT JOIN account_group agroup
+                     ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
+                    AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
+                    AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
+                  WHERE %s
+               ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
+            )
+            UPDATE account_account
+               SET group_id = rel.group_id
+              FROM relation rel
+             WHERE account_account.id = rel.account_id
+        """, account_where_clause))
+        self.env['account.account'].invalidate_model(['group_id'], flush=False)
+
+>>>>>>> 02e541876e3c4c9ff0266894897d4cf0455f5ed9
     def _adapt_parent_account_group(self, company=None):
         """Ensure consistency of the hierarchy of account groups.
 
