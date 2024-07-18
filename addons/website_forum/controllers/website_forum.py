@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import logging
 
 import lxml
 import requests
-import werkzeug.exceptions
+from werkzeug.exceptions import BadRequest, NotFound
 import werkzeug.urls
 import werkzeug.wrappers
 
@@ -16,8 +15,6 @@ from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
-
-_logger = logging.getLogger(__name__)
 
 
 class WebsiteForum(WebsiteProfile):
@@ -228,7 +225,7 @@ class WebsiteForum(WebsiteProfile):
         """
         if not isinstance(tag_char, str) or len(tag_char) > 1 or (tag_char and not tag_char.isalpha()):
             # So that further development does not miss this. Users shouldn't see it with normal usage.
-            raise werkzeug.exceptions.BadRequest(_('Bad "tag_char" value "%(tag_char)s"', tag_char=tag_char))
+            raise BadRequest(_('Bad "tag_char" value "%(tag_char)s"', tag_char=tag_char))
 
         if tag_char and request.httprequest.method == 'GET' and not post.get('prevent_redirect'):
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
@@ -262,7 +259,7 @@ class WebsiteForum(WebsiteProfile):
             if not search:
                 tags = request.env['forum.tag'].search(domain, limit=None, order=order)
         else:
-            raise werkzeug.exceptions.BadRequest(_('Bad "filters" value "%(filters)s".', filters=filters))
+            raise BadRequest(_('Bad "filters" value "%(filters)s".', filters=filters))
 
         first_char_tag = forum._get_tags_first_char(tags=tags)
         first_char_list = [(t, t.lower()) for t in first_char_tag if t.isalnum()]
@@ -330,12 +327,12 @@ class WebsiteForum(WebsiteProfile):
 
         # Hide posts from abusers (negative karma), except for moderators
         if not question.can_view:
-            raise werkzeug.exceptions.NotFound()
+            raise NotFound()
 
         # Hide pending posts from non-moderators and non-creator
         user = request.env.user
         if question.state == 'pending' and user.karma < forum.karma_post and question.create_uid != user:
-            raise werkzeug.exceptions.NotFound()
+            raise NotFound()
 
         if question.parent_id:
             redirect_url = "/forum/%s/%s" % (slug(forum), slug(question.parent_id))
@@ -376,7 +373,7 @@ class WebsiteForum(WebsiteProfile):
                 answer = record
                 break
         else:
-            raise werkzeug.exceptions.NotFound()
+            raise NotFound()
         return request.redirect(f'/forum/{slug(forum)}/post/{slug(answer)}/edit')
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close', type='http', auth="user", methods=['POST'], website=True)
@@ -525,7 +522,7 @@ class WebsiteForum(WebsiteProfile):
     def validation_queue(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
-            raise werkzeug.exceptions.NotFound()
+            raise NotFound()
 
         Post = request.env['forum.post']
         domain = [('forum_id', '=', forum.id), ('state', '=', 'pending')]
@@ -543,7 +540,7 @@ class WebsiteForum(WebsiteProfile):
     def flagged_queue(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
-            raise werkzeug.exceptions.NotFound()
+            raise NotFound()
 
         Post = request.env['forum.post']
         domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
@@ -564,7 +561,7 @@ class WebsiteForum(WebsiteProfile):
     def offensive_posts(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
-            raise werkzeug.exceptions.NotFound()
+            raise NotFound()
 
         Post = request.env['forum.post']
         domain = [('forum_id', '=', forum.id), ('state', '=', 'offensive'), ('active', '=', False)]
@@ -581,7 +578,7 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/closed_posts', type='http', auth="user", website=True)
     def closed_posts(self, forum, **kwargs):
         if request.env.user.karma < forum.karma_moderate:
-            raise werkzeug.exceptions.NotFound()
+            raise NotFound()
 
         closed_posts_ids = request.env['forum.post'].search(
             [('forum_id', '=', forum.id), ('state', '=', 'close')],

@@ -3,7 +3,7 @@
 from psycopg2 import IntegrityError
 
 from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import mute_logger
 
 
