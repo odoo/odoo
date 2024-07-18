@@ -46,27 +46,6 @@
         />
     </record>
 
-    <record id="payment_method_acss_debit" model="payment.method">
-        <field name="name">Pre-authorized debit in Canada</field>
-        <field name="code">acss_debit</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_refund">partial</field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
-                         ref('base.ca'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.CAD'),
-                     ])]"
-        />
-    </record>
-
     <record id="payment_method_affirm" model="payment.method">
         <field name="name">Affirm</field>
         <field name="code">affirm</field>
