@@ -26,6 +26,13 @@ class TestPointOfSale(TransactionCase):
             "company_id": self.company2.id,
             "sequence": 1,  # force this pricelist to be first
         })
+        self.bank_journal = self.env['account.journal'].create({
+            'name': 'Bank',
+            'type': 'bank',
+            'company_id': self.company1.id,
+            'code': 'BNK',
+            'sequence': 11,
+        })
 
         self.env.user.company_id = self.company1
 
