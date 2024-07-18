@@ -63,7 +63,7 @@ export class Navbar extends Component {
         return Boolean(this.pos.config.cash_control && this.pos.session._has_cash_move_perm);
     }
     getOrderTabs() {
-        return this.pos.get_open_orders();
+        return this.pos.get_open_orders().filter((order) => !order.table_id);
     }
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
