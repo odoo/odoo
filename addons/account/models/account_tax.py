@@ -751,19 +751,20 @@ class AccountTax(models.Model):
             """ Recompute the new base amount based on included fixed/percent amounts and the current base amount. """
             fixed_amount = incl_tax_amounts['fixed_amount']
             division_amount = sum(tax_factor for _i, tax_factor in incl_tax_amounts['division_taxes'])
-            percent_amount = sum(tax_factor for _i, tax_factor in incl_tax_amounts['percent_taxes'])
+            percent_amount = sum(tax_amount * sum_repartition_factor for _i, tax_amount, sum_repartition_factor in incl_tax_amounts['percent_taxes'])
 
             if company.country_code == 'IN':
                 # For the indian case, when facing two percent price-included taxes having the same percentage,
                 # both need to produce the same tax amounts. To do that, the tax amount of those taxes are computed
                 # directly during the first traveling in reversed order.
                 total_tax_amount = 0.0
-                for i, tax_factor in incl_tax_amounts['percent_taxes']:
-                    tax_amount = float_round(base * tax_factor / (100 + percent_amount), precision_rounding=prec)
-                    total_tax_amount += tax_amount
-                    cached_tax_amounts[i] = tax_amount
-                    fixed_amount += tax_amount
-                for i, tax_factor in incl_tax_amounts['percent_taxes']:
+                for i, tax_amount, sum_repartition_factor in incl_tax_amounts['percent_taxes']:
+                    gross_tax_amount = float_round(base * tax_amount / (100 + percent_amount), precision_rounding=prec)
+                    factored_tax_amount = float_round(gross_tax_amount * sum_repartition_factor, precision_rounding=prec)
+                    total_tax_amount += factored_tax_amount
+                    cached_tax_amounts[i] = gross_tax_amount
+                    fixed_amount += factored_tax_amount
+                for i, _tax_amount, _sum_repartition_factor in incl_tax_amounts['percent_taxes']:
                     cached_base_amounts[i] = base - total_tax_amount
                 percent_amount = 0.0
 
@@ -842,7 +843,7 @@ class AccountTax(models.Model):
                     store_included_tax_total = True
                 if self._context.get('force_price_include', tax.price_include):
                     if tax.amount_type == 'percent':
-                        incl_tax_amounts['percent_taxes'].append((i, tax.amount * sum_repartition_factor))
+                        incl_tax_amounts['percent_taxes'].append((i, tax.amount, sum_repartition_factor))
                     elif tax.amount_type == 'division':
                         incl_tax_amounts['division_taxes'].append((i, tax.amount * sum_repartition_factor))
                     elif tax.amount_type == 'fixed':
