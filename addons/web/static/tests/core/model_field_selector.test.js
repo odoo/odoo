@@ -25,7 +25,7 @@ import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_s
 class Partner extends models.Model {
     foo = fields.Char();
     bar = fields.Boolean();
-    product_id = fields.Many2one({ relation: "product", searchable: true });
+    product_id = fields.Many2one({ relation: "product" });
 
     _records = [
         { id: 1, foo: "yop", bar: true, product_id: 37 },
@@ -35,7 +35,7 @@ class Partner extends models.Model {
 }
 
 class Product extends models.Model {
-    name = fields.Char({ string: "Product Name", searchable: true });
+    name = fields.Char({ string: "Product Name" });
 
     _records = [
         { id: 37, name: "xphone" },
@@ -50,7 +50,6 @@ function addProperties() {
         string: "Properties",
         definition_record: "product_id",
         definition_record_field: "definitions",
-        searchable: true,
     });
     Product._fields.definitions = fields.PropertiesDefinition({
         string: "Definitions",
@@ -262,7 +261,6 @@ test("cache fields_get", async () => {
     Partner._fields.partner_id = fields.Many2one({
         string: "Partner",
         relation: "partner",
-        searchable: true,
     });
 
     onRpc("fields_get", ({ method }) => expect.step(method));
@@ -281,7 +279,6 @@ test("Using back button in popover", async () => {
     Partner._fields.partner_id = fields.Many2one({
         string: "Partner",
         relation: "partner",
-        searchable: true,
     });
 
     class Parent extends Component {
@@ -436,7 +433,6 @@ test("Edit path in popover debug input", async () => {
     Partner._fields.partner_id = fields.Many2one({
         string: "Partner",
         relation: "partner",
-        searchable: true,
     });
 
     class Parent extends Component {
@@ -475,7 +471,6 @@ test("title on first four pages", async () => {
         mother_id = fields.Many2one({
             string: "Mother",
             relation: "turtle",
-            searchable: true,
         });
     }
     defineModels([Turtle]);
@@ -505,12 +500,10 @@ test("start on complex path and click prev", async () => {
         mother_id = fields.Many2one({
             string: "Mother",
             relation: "turtle",
-            searchable: true,
         });
         father_id = fields.Many2one({
             string: "Father",
             relation: "turtle",
-            searchable: true,
         });
     }
     defineModels([Turtle]);
@@ -795,7 +788,6 @@ test("search on field string and name in debug mode", async () => {
     Partner._fields.ucit = fields.Char({
         type: "char",
         string: "Some string",
-        searchable: true,
     });
     class Parent extends Component {
         static components = { ModelFieldSelector };

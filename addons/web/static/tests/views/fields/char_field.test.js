@@ -14,9 +14,9 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 class Currency extends models.Model {
-    digits = fields.Integer({ string: "Digits" });
-    symbol = fields.Char({ string: "Currency Symbol", searchable: true });
-    position = fields.Char({ string: "Currency Position", searchable: true });
+    digits = fields.Integer();
+    symbol = fields.Char({ string: "Currency Symbol" });
+    position = fields.Char({ string: "Currency Position" });
 
     _records = [
         {
@@ -41,16 +41,14 @@ class Partner extends models.Model {
     name = fields.Char({
         string: "Name",
         default: "My little Name Value",
-        searchable: true,
         trim: true,
     });
-    int_field = fields.Integer({ string: "int_field", sortable: true, searchable: true });
+    int_field = fields.Integer();
     partner_ids = fields.One2many({
         string: "one2many field",
         relation: "res.partner",
-        searchable: true,
     });
-    product_id = fields.Many2one({ string: "Product", relation: "product", searchable: true });
+    product_id = fields.Many2one({ relation: "product" });
 
     _records = [
         {
@@ -90,8 +88,8 @@ class Partner extends models.Model {
 }
 
 class PartnerType extends models.Model {
-    color = fields.Integer({ string: "Color index", searchable: true });
-    name = fields.Char({ string: "Partner Type", searchable: true });
+    color = fields.Integer({ string: "Color index" });
+    name = fields.Char({ string: "Partner Type" });
 
     _records = [
         { id: 12, display_name: "gold", color: 2 },
@@ -100,7 +98,7 @@ class PartnerType extends models.Model {
 }
 
 class Product extends models.Model {
-    name = fields.Char({ string: "Product Name", searchable: true });
+    name = fields.Char({ string: "Product Name" });
 
     _records = [
         {
@@ -166,13 +164,7 @@ test("setting a char field to empty string is saved as a false value", async () 
 });
 
 test("char field with size attribute", async () => {
-    Partner._fields.name = fields.Char({
-        string: "Name",
-        default: "My little Name Value",
-        searchable: true,
-        trim: true,
-        size: 5,
-    });
+    Partner._fields.name.size = 5;
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
     expect("input").toHaveAttribute("maxlength", "5", {
@@ -214,7 +206,7 @@ test.tags("desktop")("char field in editable list view", async () => {
 });
 
 test("char field translatable", async () => {
-    Partner._fields.name = fields.Char({ string: "Name", translate: true });
+    Partner._fields.name.translate = true;
 
     serverState.lang = "en_US";
     serverState.multiLang = true;
@@ -315,7 +307,7 @@ test("translation dialog should close if field is not there anymore", async () =
     expect.assertions(4);
     // In this test, we simulate the case where the field is removed from the view
     // this can happen for example if the user click the back button of the browser.
-    Partner._fields.name = fields.Char({ string: "Name", translate: true });
+    Partner._fields.name.translate = true;
 
     serverState.lang = "en_US";
     serverState.multiLang = true;
@@ -371,7 +363,7 @@ test("translation dialog should close if field is not there anymore", async () =
 
 test("html field translatable", async () => {
     expect.assertions(5);
-    Partner._fields.name = fields.Char({ string: "Name", translate: true });
+    Partner._fields.name.translate = true;
 
     serverState.lang = "en_US";
     serverState.multiLang = true;
@@ -452,7 +444,7 @@ test("html field translatable", async () => {
 });
 
 test("char field translatable in create mode", async () => {
-    Partner._fields.name = fields.Char({ string: "Name", translate: true });
+    Partner._fields.name.translate = true;
 
     serverState.multiLang = true;
 
@@ -473,7 +465,7 @@ test("char field does not allow html injections", async () => {
 });
 
 test("char field trim (or not) characters", async () => {
-    Partner._fields.foo2 = fields.Char({ string: "Foo2", trim: false });
+    Partner._fields.foo2 = fields.Char({ trim: false });
 
     await mountView({
         type: "form",
@@ -540,17 +532,13 @@ test.tags("desktop")("input field: change value before pending onchange returns"
 });
 
 test("input field: change value before pending onchange returns (2)", async () => {
-    Partner._fields.int_field = fields.Integer({
-        string: "Foo2",
-        trim: false,
-        onChange: (obj) => {
-            if (obj.int_field === 7) {
-                obj.name = "blabla";
-            } else {
-                obj.name = "tralala";
-            }
-        },
-    });
+    Partner._onChanges.int_field = (obj) => {
+        if (obj.int_field === 7) {
+            obj.name = "blabla";
+        } else {
+            obj.name = "tralala";
+        }
+    };
 
     const def = new Deferred();
     await mountView({
@@ -595,13 +583,9 @@ test.tags("desktop")(
         // this test is exactly the same as the previous one, except that in
         // this scenario the onchange return *before* we validate the change
         // on the input field (before the "change" event is triggered).
-        Partner._fields.product_id = fields.Many2one({
-            string: "Product",
-            relation: "product",
-            onChange: (obj) => {
-                obj.int_field = obj.product_id ? 7 : false;
-            },
-        });
+        Partner._onChanges.product_id = (obj) => {
+            obj.int_field = obj.product_id ? 7 : false;
+        };
         let def;
 
         await mountView({
@@ -646,14 +630,9 @@ test.tags("desktop")(
 );
 
 test("onchange return value before editing input", async () => {
-    Partner._fields.name = fields.Char({
-        string: "Name",
-        default: "My little Name Value",
-        trim: true,
-        onChange: (obj) => {
-            obj.name = "yop";
-        },
-    });
+    Partner._onChanges.name = (obj) => {
+        obj.name = "yop";
+    };
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
     expect(".o_field_widget[name='name'] input").toHaveValue("yop");
     await fieldInput("name").edit("tralala");
@@ -661,13 +640,9 @@ test("onchange return value before editing input", async () => {
 });
 
 test.tags("desktop")("input field: change value before pending onchange renaming", async () => {
-    Partner._fields.product_id = fields.Many2one({
-        string: "Product",
-        relation: "product",
-        onChange: (obj) => {
-            obj.name = "on change value";
-        },
-    });
+    Partner._onChanges.product_id = (obj) => {
+        obj.name = "on change value";
+    };
 
     await mountView({
         type: "form",
@@ -812,13 +787,9 @@ test("input field: empty password", async () => {
 });
 
 test.tags("desktop")("input field: set and remove value, then wait for onchange", async () => {
-    Partner._fields.product_id = fields.Many2one({
-        string: "Product",
-        relation: "product",
-        onChange: (obj) => {
-            obj.name = obj.product_id ? "onchange value" : false;
-        },
-    });
+    Partner._onChanges.product_id = (obj) => {
+        obj.name = obj.product_id ? "onchange value" : false;
+    };
 
     await mountView({
         type: "form",
@@ -847,7 +818,7 @@ test.tags("desktop")("input field: set and remove value, then wait for onchange"
 });
 
 test("char field with placeholder", async () => {
-    Partner._fields.name = fields.Char({ string: "Name", default: false });
+    Partner._fields.name.default = false;
     await mountView({
         type: "form",
         resModel: "res.partner",
@@ -868,16 +839,13 @@ test("char field with placeholder", async () => {
 test("char field: correct value is used to evaluate the modifiers", async () => {
     Partner._records[0].name = false;
     Partner._records[0].display_name = false;
-    Partner._fields.name = fields.Char({
-        string: "Name",
-        onChange: (obj) => {
-            if (obj.name === "a") {
-                obj.display_name = false;
-            } else if (obj.name === "b") {
-                obj.display_name = "";
-            }
-        },
-    });
+    Partner._onChanges.name = (obj) => {
+        if (obj.name === "a") {
+            obj.display_name = false;
+        } else if (obj.name === "b") {
+            obj.display_name = "";
+        }
+    };
     await mountView({
         type: "form",
         resModel: "res.partner",
@@ -901,12 +869,9 @@ test("char field: correct value is used to evaluate the modifiers", async () => 
 
 test("edit a char field should display the status indicator buttons without flickering", async () => {
     Partner._records[0].partner_ids = [2];
-    Partner._fields.name = fields.Char({
-        string: "Name",
-        onChange: (obj) => {
-            obj.display_name = "cc";
-        },
-    });
+    Partner._onChanges.name = (obj) => {
+        obj.display_name = "cc";
+    };
 
     const def = new Deferred();
     await mountView({

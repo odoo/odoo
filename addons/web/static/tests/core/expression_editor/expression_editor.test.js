@@ -208,7 +208,6 @@ test("create a new branch from a complex condition control panel", async () => {
 });
 
 test("rendering of a valid fieldName in fields", async () => {
-    Partner._fields.foo = fields.Char({ string: "Foo", searchable: true });
     const parent = await makeExpressionEditor({ fieldFilters: ["foo"] });
 
     const toTests = [
@@ -239,8 +238,7 @@ test("rendering of a valid fieldName in fields", async () => {
 });
 
 test("rendering of simple conditions", async () => {
-    Partner._fields.foo = fields.Char({ string: "Foo", searchable: true });
-    Partner._fields.bar = fields.Char({ string: "Bar", searchable: true });
+    Partner._fields.bar = fields.Char();
     Partner._records = [];
     const parent = await makeExpressionEditor({ fieldFilters: ["foo", "bar"] });
 
@@ -380,9 +378,8 @@ test("no field of type properties in model field selector", async () => {
         string: "Properties",
         definition_record: "product_id",
         definition_record_field: "definitions",
-        searchable: true,
     });
-    Product._fields.definitions = fields.PropertiesDefinition({ string: "Definitions" });
+    Product._fields.definitions = fields.PropertiesDefinition();
     await makeExpressionEditor({
         expression: `properties`,
         fieldFilters: ["foo", "bar", "properties"],

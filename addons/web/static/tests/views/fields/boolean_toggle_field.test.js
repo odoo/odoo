@@ -40,7 +40,7 @@ test("BooleanToggleField is disabled with a readonly attribute", async () => {
 });
 
 test("BooleanToggleField is disabled if readonly in editable list", async () => {
-    Partner._fields.bar = fields.Boolean({ readonly: true });
+    Partner._fields.bar.readonly = true;
 
     onRpc("has_group", () => true);
     await mountView({

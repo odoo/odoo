@@ -16,7 +16,7 @@ import { redirect } from "@web/core/utils/urls";
 
 class ResConfigSettings extends models.Model {
     _name = "res.config.settings";
-    bar = fields.Boolean({ string: "Bar" });
+    bar = fields.Boolean();
 }
 defineModels([ResConfigSettings]);
 

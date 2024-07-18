@@ -85,17 +85,15 @@ const camelToPascal = (name) =>
     name[0].toUpperCase() + name.slice(1).replace(/_([a-z])/g, (_, char) => char.toUpperCase());
 
 /**
- * This function spawns a 3-level process to create field definitions: it's a function
- * returning a function returning a function.
+ * This function spawns a 2-level process to create field definitions: it's a function
+ * returning a function returning a field descriptor.
  *
  * - this function ("generator") is called at the end of this file with pre-defined
  * parameters to configure the "constructor" functions, i.e. the ones that will
  * be called in the tests model definitions;
  *
  * - those "constructor" functions will then be called in model definitions and will
- * return "definition getter" functions. The reason they do not return the definition
- * directly is so that the mock server can easily spawn new definition for each
- * test instead of cleaning the previous ones.
+ * return the actual field descriptors.
  *
  * @template {FieldType} T
  * @template [RK=never]
@@ -132,35 +130,36 @@ const makeFieldGenerator = (type, { groupOperator, requiredKeys = [] } = {}) => 
          * } [fieldDefinition]
          */
         [constructorFnName](fieldDefinition) {
-            // 3rd level: returns the "definition getter" function
-            // This function is also enriched with a symbol to recognize the resulting
-            // property as a field definition.
-            const fieldGetter = () => ({ ...defaultDef, ...fieldDefinition });
-
-            // Pre-check to validate definition keys
-            const fullDef = fieldGetter();
+            // Creates a pre-version of the field definition
+            const preDef = {
+                ...defaultDef,
+                ...fieldDefinition,
+                [FIELD_SYMBOL]: true,
+            };
             for (const key of requiredKeys) {
-                if (!(key in fullDef)) {
+                if (!(key in preDef)) {
                     throw new MockServerError(
                         `missing key "${key}" in ${type || "generic"} field definition`
                     );
                 }
             }
 
+            const toAssign = {};
+
             // Fill default values in definition based on given properties
-            if (isComputed(fullDef)) {
+            if (isComputed(preDef)) {
                 // By default: computed fields are readonly and not stored
-                fieldDefinition.readonly ??= true;
-                fieldDefinition.store ??= false;
+                toAssign.readonly = fieldDefinition.readonly ?? true;
+                toAssign.store = fieldDefinition.store ?? false;
             }
 
             // Remove aggregator for no-store expect related ones
-            if (!fullDef.store && !fullDef.related) {
-                fieldDefinition.aggregator ??= undefined;
-                fieldDefinition.groupable ??= false;
+            if (!preDef.store && !preDef.related) {
+                toAssign.aggregator = fieldDefinition.aggregator ?? undefined;
+                toAssign.groupable = fieldDefinition.groupable ?? false;
             }
 
-            return Object.assign(fieldGetter, { [FIELD_SYMBOL]: true });
+            return Object.assign(preDef, toAssign);
         },
     }[constructorFnName];
 };

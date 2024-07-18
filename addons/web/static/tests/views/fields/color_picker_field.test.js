@@ -5,8 +5,8 @@ import { contains, defineModels, fields, models, mountView } from "@web/../tests
 class Partner extends models.Model {
     _name = "res.partner";
 
-    name = fields.Char({ string: "Name" });
-    int_field = fields.Integer({ string: "int_field" });
+    name = fields.Char();
+    int_field = fields.Integer();
 
     _records = [
         {
