@@ -59,7 +59,7 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const channel = this._filter([["id", "in", ids]])[0];
+        const [channel] = this.browse(ids);
         const custom_store = {
             Thread: [
                 {
@@ -123,8 +123,8 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const [channel] = this._filter([["id", "in", ids]]);
-        const partners = ResPartner._filter([["id", "in", partner_ids]]);
+        const [channel] = this.browse(ids);
+        const partners = ResPartner.browse(partner_ids);
         for (const partner of partners) {
             if (partner.id === this.env.user.partner_id) {
                 continue; // adding 'yourself' to the conversation is handled below
@@ -167,9 +167,7 @@ export class DiscussChannel extends models.ServerModel {
                 memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
                 model: "discuss.channel",
             });
-            store.add(
-                DiscussChannelMember.browse(insertedChannelMembers).map((record) => record.id)
-            );
+            store.add(DiscussChannelMember.browse(insertedChannelMembers));
             BusBus._sendone(channel, "mail.record/insert", store.get_result());
         }
     }
@@ -184,7 +182,7 @@ export class DiscussChannel extends models.ServerModel {
         delete kwargs.ids;
         description = kwargs.description || "";
 
-        const channel = this._filter([["id", "in", ids]])[0];
+        const [channel] = this.browse(ids);
         this.write([channel.id], { description });
     }
 
@@ -218,9 +216,7 @@ export class DiscussChannel extends models.ServerModel {
         );
         const [partner] = ResPartner.read(this.env.user.partner_id);
         this._broadcast([id], [partner]);
-        return new mailDataHelpers.Store(
-            DiscussChannel.browse(id).map((record) => record.id)
-        ).get_result();
+        return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
     }
 
     /** @param {number[]} ids */
@@ -234,7 +230,7 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").ResGroups} */
         const ResGroups = this.env["res.groups"];
 
-        const [channel] = this._filter([["id", "in", ids]]);
+        const [channel] = this.browse(ids);
         const res = assignDefined({}, channel, [
             "allow_public_upload",
             "avatarCacheKey", // mock server simplification
@@ -246,7 +242,7 @@ export class DiscussChannel extends models.ServerModel {
             "name",
             "uuid",
         ]);
-        const [group_public_id] = ResGroups._filter([["id", "=", channel.group_public_id]]);
+        const [group_public_id] = ResGroups.browse(channel.group_public_id);
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         Object.assign(res, {
             authorizedGroupFullName: group_public_id ? group_public_id.name : false,
@@ -281,7 +277,7 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
 
-        const channels = this._filter([["id", "in", ids]]);
+        const channels = this.browse(ids);
         for (const channel of channels) {
             if (!["chat", "whatsapp"].includes(channel.channel_type)) {
                 continue;
@@ -331,7 +327,7 @@ export class DiscussChannel extends models.ServerModel {
         if (!partners_to.includes(this.env.user.partner_id)) {
             partners_to.push(this.env.user.partner_id);
         }
-        const partners = ResPartner._filter([["id", "in", partners_to]], { active_test: false });
+        const partners = ResPartner.browse(partners_to);
         const channels = this.search_read([["channel_type", "=", "chat"]]);
         for (const channel of channels) {
             const channelMemberIds = DiscussChannelMember.search([
@@ -342,9 +338,7 @@ export class DiscussChannel extends models.ServerModel {
                 channelMemberIds.length === partners.length &&
                 channel.channel_member_ids.length === partners.length
             ) {
-                return new mailDataHelpers.Store(
-                    DiscussChannel.browse(channel.id).map((record) => record.id)
-                ).get_result();
+                return new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result();
             }
         }
         const id = this.create({
@@ -362,9 +356,7 @@ export class DiscussChannel extends models.ServerModel {
             [id],
             partners.map(({ id }) => id)
         );
-        return new mailDataHelpers.Store(
-            DiscussChannel.browse(id).map((record) => record.id)
-        ).get_result();
+        return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
     }
 
     /** @param {number[]} ids */
@@ -383,11 +375,9 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
 
-        const channels = this._filter([["id", "in", ids]]);
+        const channels = this.browse(ids);
         for (const channel of channels) {
-            const members = DiscussChannelMember._filter([
-                ["id", "in", channel.channel_member_ids],
-            ]);
+            const members = DiscussChannelMember.browse(channel.channel_member_ids);
             const messages = MailMessage._filter([
                 ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],
@@ -424,7 +414,7 @@ export class DiscussChannel extends models.ServerModel {
                     };
                 }
                 store.add(
-                    DiscussChannelMember.browse(memberOfCurrentUser.id).map((record) => record.id),
+                    DiscussChannelMember.browse(memberOfCurrentUser.id),
                     makeKwArgs({ extra_fields: { message_unread_counter: true } })
                 );
             }
@@ -435,7 +425,7 @@ export class DiscussChannel extends models.ServerModel {
                 store.add(otherMembers.map((member) => member.id));
             }
             store.add(
-                DiscussChannelRtcSession.browse(channel.rtc_session_ids).map((record) => record.id),
+                DiscussChannelRtcSession.browse(channel.rtc_session_ids),
                 makeKwArgs({ extra: true })
             );
             res.rtcSessions = [
@@ -468,7 +458,7 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const [channel] = this._filter([["id", "in", ids]]);
+        const [channel] = this.browse(ids);
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         if (memberOfCurrentUser && memberOfCurrentUser.is_pinned !== pinned) {
             DiscussChannelMember.write([memberOfCurrentUser.id], {
@@ -484,9 +474,7 @@ export class DiscussChannel extends models.ServerModel {
             BusBus._sendone(
                 partner,
                 "mail.record/insert",
-                new mailDataHelpers.Store(
-                    DiscussChannel.browse(channel.id).map((record) => record.id)
-                ).get_result()
+                new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result()
             );
         }
     }
@@ -501,7 +489,7 @@ export class DiscussChannel extends models.ServerModel {
         delete kwargs.ids;
         name = kwargs.name || "";
 
-        const channel = this._filter([["id", "in", ids]])[0];
+        const [channel] = this.browse(ids);
         this.write([channel.id], { name });
     }
 
@@ -550,7 +538,7 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const partners = ResPartner._filter([["id", "in", partners_to]], { active_test: false });
+        const partners = ResPartner.browse(partners_to);
         const id = this.create({
             channel_type: "group",
             channel_member_ids: partners.map((partner) =>
@@ -562,9 +550,7 @@ export class DiscussChannel extends models.ServerModel {
             [id],
             partners.map((partner) => partner.id)
         );
-        return new mailDataHelpers.Store(
-            DiscussChannel.browse(id).map((record) => record.id)
-        ).get_result();
+        return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
     }
 
     /** @param {number} id */
@@ -612,7 +598,7 @@ export class DiscussChannel extends models.ServerModel {
         ids = kwargs.ids;
         delete kwargs.ids;
 
-        const channel = this._filter([["id", "in", ids]])[0];
+        const [channel] = this.browse(ids);
         if (channel.channel_type === "channel") {
             this.action_unfollow([channel.id]);
         } else {
@@ -633,17 +619,15 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const channels = this._filter([["id", "in", ids]]);
+        const channels = this.browse(ids);
         for (const channel of channels) {
-            const members = DiscussChannelMember._filter([
-                ["id", "in", channel.channel_member_ids],
-            ]);
+            const members = DiscussChannelMember.browse(channel.channel_member_ids);
             const otherPartnerIds = members
                 .filter(
                     (member) => member.partner_id && member.partner_id !== this.env.user.partner_id
                 )
                 .map((member) => member.partner_id);
-            const otherPartners = ResPartner._filter([["id", "in", otherPartnerIds]]);
+            const otherPartners = ResPartner.browse(otherPartnerIds);
             let message = "You are alone in this channel.";
             if (otherPartners.length > 0) {
                 message = `Users in this channel: ${otherPartners
@@ -776,7 +760,7 @@ export class DiscussChannel extends models.ServerModel {
         const MailThread = this.env["mail.thread"];
 
         kwargs.message_type ||= "notification";
-        const channel = this._filter([["id", "=", id]])[0];
+        const [channel] = this.browse(id);
         this.write([id], {
             last_interest_dt: serializeDateTime(today()),
         });
@@ -862,7 +846,7 @@ export class DiscussChannel extends models.ServerModel {
             });
         }
         const notifications = [];
-        const [channel] = this._filter([["id", "=", firstId]]);
+        const [channel] = this.browse(firstId);
         if (channel) {
             const diff = {};
             for (const key in values) {
@@ -936,9 +920,7 @@ export class DiscussChannel extends models.ServerModel {
                 notifications.push([
                     relatedPartner,
                     "mail.record/insert",
-                    new mailDataHelpers.Store(
-                        DiscussChannel.browse(channelId).map((record) => record.id)
-                    ).get_result(),
+                    new mailDataHelpers.Store(DiscussChannel.browse(channelId)).get_result(),
                 ]);
             }
         }

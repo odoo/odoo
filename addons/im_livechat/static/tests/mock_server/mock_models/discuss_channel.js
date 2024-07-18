@@ -15,7 +15,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         const ResPartner = this.env["res.partner"];
 
         super._to_store(...arguments);
-        const channels = this._filter([["id", "in", ids]]);
+        const channels = this.browse(ids);
         for (const channel of channels) {
             const channelInfo = { id: channel.id, model: "discuss.channel" };
             channelInfo["anonymous_name"] = channel.anonymous_name;
@@ -23,9 +23,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
             if (channel.channel_type === "livechat") {
                 // add the operator id
                 if (channel.livechat_operator_id) {
-                    const [operator] = ResPartner._filter([
-                        ["id", "=", channel.livechat_operator_id],
-                    ]);
+                    const [operator] = ResPartner.browse(channel.livechat_operator_id);
                     store.add(ResPartner.browse(operator.id));
                     // livechat_username ignored for simplicity
                     channelInfo.operator = { id: operator.id, type: "partner" };

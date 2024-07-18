@@ -48,7 +48,7 @@ export async function withGuest(guestId, fn) {
     /** @type {import("mock_models").MailGuest} */
     const MailGuest = env["mail.guest"];
     const currentUser = env.user;
-    const [targetGuest] = MailGuest._filter([["id", "=", guestId]], { active_test: false });
+    const [targetGuest] = MailGuest.browse(guestId);
     const OLD_SESSION_USER_ID = session.user_id;
     authenticateGuest(targetGuest);
     session.user_id = false;
@@ -230,7 +230,7 @@ async function channel_call_leave(request) {
     const notifications = [];
     const sessionsByChannelId = {};
     for (const session of rtcSessions) {
-        const [member] = DiscussChannelMember._filter([["id", "=", session.channel_member_id]]);
+        const [member] = DiscussChannelMember.browse(session.channel_member_id);
         if (!sessionsByChannelId[member.channel_id]) {
             sessionsByChannelId[member.channel_id] = [];
         }
@@ -693,7 +693,7 @@ async function mail_thread_partner_from_email(request) {
         }
     }
     return partners.map((partner_id) => {
-        const partner = ResPartner._filter([["id", "=", partner_id]])[0];
+        const [partner] = ResPartner.browse(partner_id);
         return { id: partner_id, name: partner.name, email: partner.email };
     });
 }
@@ -707,7 +707,7 @@ async function read_subscription_data(request) {
     const MailMessageSubtype = this.env["mail.message.subtype"];
 
     const { follower_id } = await parseRequestParams(request);
-    const follower = MailFollowers._filter([["id", "=", follower_id]])[0];
+    const [follower] = MailFollowers.browse(follower_id);
     const subtypes = MailMessageSubtype._filter([
         "&",
         ["hidden", "=", false],
@@ -716,7 +716,7 @@ async function read_subscription_data(request) {
         ["res_model", "=", false],
     ]);
     const subtypes_list = subtypes.map((subtype) => {
-        const parent = MailMessageSubtype._filter([["id", "=", subtype.parent_id]])[0];
+        const [parent] = MailMessageSubtype.browse(subtype.parent_id);
         return {
             default: subtype.default,
             followed: follower.subtype_ids.includes(subtype.id),
@@ -861,9 +861,7 @@ async function processRequest(request) {
         store.add(DiscussChannel.search(channelsDomain));
     }
     if (args.failures && this.env.user?.partner_id) {
-        const partner = ResPartner._filter([["id", "=", this.env.user.partner_id]], {
-            active_test: false,
-        })[0];
+        const [partner] = ResPartner.browse(this.env.user.partner_id);
         const messages = MailMessage._filter([
             ["author_id", "=", partner.id],
             ["res_id", "!=", 0],

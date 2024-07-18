@@ -24,10 +24,10 @@ export class WebsiteVisitor extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const visitors = this._filter([["id", "in", ids]]);
+        const visitors = this.browse(ids);
         for (const visitor of visitors) {
             const country = visitor.country_id
-                ? ResCountry._filter([["id", "=", visitor.country_id]])
+                ? ResCountry.browse(visitor.country_id)
                 : undefined;
             const visitor_name = `${visitor.display_name}${country ? `(${country.name})` : ""}`;
             const membersToAdd = [Command.create({ partner_id: serverState.partnerId })];
@@ -52,7 +52,7 @@ export class WebsiteVisitor extends models.ServerModel {
                 partner,
                 "website_livechat.send_chat_request",
                 new mailDataHelpers.Store(
-                    DiscussChannel.browse(livechatId).map((record) => record.id)
+                    DiscussChannel.browse(livechatId)
                 ).get_result()
             );
         }

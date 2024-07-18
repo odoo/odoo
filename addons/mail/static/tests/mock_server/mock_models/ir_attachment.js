@@ -11,7 +11,7 @@ export class IrAttachment extends webModels.IrAttachment {
         delete kwargs.ids;
         force = kwargs.force ?? true;
 
-        const [attachment] = this._filter([["id", "in", ids]]);
+        const [attachment] = this.browse(ids);
         if (!attachment.res_model) {
             return true; // dummy value for mock server
         }
