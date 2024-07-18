@@ -1,0 +1,1504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_kr_simplified_tp_vat" model="account.report">
+        <field name="name">VAT Report - Simplified Taxpayer</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.kr"/>
+        <field name="filter_multi_company">tax_units</field>
+        <field name="filter_fiscal_position" eval="1"/>
+        <field name="default_opening_date_filter">previous_tax_period</field>
+        <field name="only_tax_exigible" eval="True"/>
+        <field name="sequence" eval="10"/>
+        <field name="column_ids">
+            <record id="l10n_kr_simplified_tp_vat_column_balance" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">balance</field>
+            </record>
+            <record id="l10n_kr_simplified_tp_vat_column_tax" model="account.report.column">
+                <field name="name">Tax Amount</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_kr_simplified_tp_vat_sfi" model="account.report.line">
+                <field name="name">1. Filing Information</field>
+                <field name="code">SFI</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kr_simplified_tp_vat_stbot" model="account.report.line">
+                        <field name="name">Tax Base and Output Tax</field>
+                        <field name="code">STBOT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_kr_simplified_tp_vat_stbb" model="account.report.line">
+                                <field name="name">Tax base before 2021.06.30</field>
+                                <field name="code">STBB</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_segsw" model="account.report.line">
+                                        <field name="name">(1) Electricity, gas, steam and water supply</field>
+                                        <field name="code">SEGSW</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_segsw_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST1a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_segsw_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST1b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_srtcw" model="account.report.line">
+                                        <field name="name">(2) Retail trade. collection and wholesale of recycling
+                                            materials and restaurants
+                                        </field>
+                                        <field name="code">SRTCW</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_srtcw_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST2a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_srtcw_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST2b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_smgf" model="account.report.line">
+                                        <field name="name">(3) Manufacture, agriculture, forestry, fishing,
+                                            accommodation, transportation and communications
+                                        </field>
+                                        <field name="code">SMGF</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_smgf_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST3a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_smgf_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST3b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sclo" model="account.report.line">
+                                        <field name="name">(4)Construction, leasing and other services</field>
+                                        <field name="code">SCLO</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sclo_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST4a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sclo_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST4b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stba" model="account.report.line">
+                                <field name="name">Tax base after 2021.07.01</field>
+                                <field name="code">STBA</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_srtcwr" model="account.report.line">
+                                        <field name="name">(5) Retail trade. collection and wholesale of recycling
+                                            materials and restaurants
+                                        </field>
+                                        <field name="code">SRTCWR</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_srtcwr_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST5a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_srtcwr_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST5b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_smafft" model="account.report.line">
+                                        <field name="name">(6) Manufacture, agriculture, forestry, fishing and transport
+                                            of parcels
+                                        </field>
+                                        <field name="code">SMAFFT</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_smafft_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST6a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_smafft_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST6b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sacc" model="account.report.line">
+                                        <field name="name">(7) Accommodations</field>
+                                        <field name="code">SACC</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sacc_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST7a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sacc_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST7b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sctsic" model="account.report.line">
+                                        <field name="name">(8) Construction, transporation and storage (excluding
+                                            transportation of parcels), information and communication and other services
+                                        </field>
+                                        <field name="code">SCTSIC</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sctsic_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST8a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sctsic_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST8b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sfipsctb" model="account.report.line">
+                                        <field name="name">(9) Finance and insurance related services, professional,
+                                            scientific and technical activities (excluding photography and videotaping
+                                            of events services), business facilities management and business support
+                                            services, activities related to real estate and leasing
+                                        </field>
+                                        <field name="code">SFIPSCTB</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sfipsctb_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST9a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfipsctb_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST9b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_szr" model="account.report.line">
+                                <field name="name">Zero Rate</field>
+                                <field name="code">SZR</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_szrti" model="account.report.line">
+                                        <field name="name">(10) Tax Invoice Issued</field>
+                                        <field name="code">SZRTI</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_szrti_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST10a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_szro" model="account.report.line">
+                                        <field name="name">(11) Others</field>
+                                        <field name="code">SZRO</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_szro_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST11a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stroi" model="account.report.line">
+                                <field name="name">(12) Tax received on inventory</field>
+                                <field name="code">STROI</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_stroi_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stbott" model="account.report.line">
+                                <field name="name">(13) Total</field>
+                                <field name="code">STBOTT</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_stbott_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SEGSW.balance + SRTCW.balance + SMGF.balance +
+                                            SCLO.balance + SRTCWR.balance + SMAFFT.balance + SACC.balance +
+                                            SCTSIC.balance + SFIPSCTB.balance + SZRTI.balance + SZRO.balance
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_stbott_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SEGSW.tax + SRTCW.tax + SMGF.tax + SCLO.tax + SRTCWR.tax +
+                                            SMAFFT.tax + SACC.tax + SCTSIC.tax + SFIPSCTB.tax + STROI.tax
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_stred" model="account.report.line">
+                        <field name="name">Tax reduction/exemption or deduction</field>
+                        <field name="code">STRED</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_kr_simplified_tp_vat_siticr" model="account.report.line">
+                                <field name="name">Input tax invoice credit received</field>
+                                <field name="code">SITICR</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_sticrb" model="account.report.line">
+                                        <field name="name">(14) Received before 2021.06.30</field>
+                                        <field name="code">STICRB</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sticrb_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sticrb_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sticra" model="account.report.line">
+                                        <field name="name">(15) Received after 2021.07.01</field>
+                                        <field name="code">STICRA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sticra_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST15a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sticra_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST15b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_sdit" model="account.report.line">
+                                <field name="name">(16) Deemed input tax</field>
+                                <field name="code">SDIT</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_sdit_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ST16a</field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sdit_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ST16b</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stibp" model="account.report.line">
+                                <field name="name">Tax invoice issued by purchaser</field>
+                                <field name="code">STIBP</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_stibpb" model="account.report.line">
+                                        <field name="name">(17) Received before 2021.06.30</field>
+                                        <field name="code">STIBPB</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_stibpb_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_stibpb_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_stibpa" model="account.report.line">
+                                        <field name="name">(18) Received after 2021.07.01</field>
+                                        <field name="code">STIBPA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_stibpa_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST18a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_stibpa_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST18b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stcer" model="account.report.line">
+                                <field name="name">(19) Tax credits for electronic returns</field>
+                                <field name="code">STCER</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_stcer_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stceii" model="account.report.line">
+                                <field name="name">(20) Tax credits for electronic invoice issuance</field>
+                                <field name="code">STCEII</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_stceii_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stccss" model="account.report.line">
+                                <field name="name">Tax credits for credit card sales slip and etc issuance</field>
+                                <field name="code">STCCSS</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_stccssb" model="account.report.line">
+                                        <field name="name">(21) Received before 2021.06.30</field>
+                                        <field name="code">STCCSSB</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_stccssb_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_stccssb_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_stccssa" model="account.report.line">
+                                        <field name="name">(22) Received after 2021.07.01</field>
+                                        <field name="code">STCCSSA</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_stccssa_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST22a</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_stccssa_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST22b</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_siticro" model="account.report.line">
+                                <field name="name">(23) Others</field>
+                                <field name="code">SITICRO</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_siticro_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ST23a</field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_siticro_tax"
+                                            model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_siticrt" model="account.report.line">
+                                <field name="name">(24) Total</field>
+                                <field name="code">SITICRT</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_siticrt_tax"
+                                            model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">STICRB.tax + STICRA.tax + SDIT.tax + STIBPB.tax +
+                                            STIBPA.tax + STCER.tax + STCEII.tax + STCCSSB.tax + STCCSSA.tax +
+                                            SITICRO.tax
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_sptapsp" model="account.report.line">
+                        <field name="name">(25) Pre-paid tax amount for purchaser's special payment</field>
+                        <field name="code">SPTAPSP</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_sptapsp_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_seta" model="account.report.line">
+                        <field name="name">(26) Estimated tax amount</field>
+                        <field name="code">SETA</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_seta_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_sata" model="account.report.line">
+                        <field name="name">(27) Additional tax amount</field>
+                        <field name="code">SATA</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_sata_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SPT.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_stpad" model="account.report.line">
+                        <field name="name">(28) Tax payable after deduction (tax receivable)</field>
+                        <field name="code">STPAD</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_stpad_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">STBOTT.tax - SITICRT.tax - SPTAPSP.tax - SETA.tax + SATA.tax
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kr_simplified_tp_vat_stbi" model="account.report.line">
+                <field name="name">2. Tax Base Information</field>
+                <field name="code">STBI</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kr_simplified_tp_vat_sbt1" model="account.report.line">
+                        <field name="name">(29)</field>
+                        <field name="code">SBT1</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_sbt1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ST29a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_sbt2" model="account.report.line">
+                        <field name="name">(30)</field>
+                        <field name="code">SBT2</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_sbt2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ST30a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_sbto" model="account.report.line">
+                        <field name="name">(31) Others(Import amount exemption)</field>
+                        <field name="code">SBTO</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_sbto_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ST31a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_sbtt" model="account.report.line">
+                        <field name="name">(32) Total</field>
+                        <field name="code">SBTT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_sbtt_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SBT1.balance + SBT2.balance - SBTO.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kr_simplified_tp_vat_stosvb" model="account.report.line">
+                <field name="name">3. Turnover of sales of VAT-free business</field>
+                <field name="code">STOSVB</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kr_simplified_tp_vat_sbt3" model="account.report.line">
+                        <field name="name">(33)</field>
+                        <field name="code">SBT3</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_sbt3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ST33a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_sbt4" model="account.report.line">
+                        <field name="name">(34)</field>
+                        <field name="code">SBT4</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_sbt4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ST34a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_siae" model="account.report.line">
+                        <field name="name">(35) Import amount exemption</field>
+                        <field name="code">SIAE</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_siae_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ST35a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_stosvbt" model="account.report.line">
+                        <field name="name">(36) Total</field>
+                        <field name="code">STOSVBT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_stosvbt_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SBT3.balance + SBT4.balance - SIAE.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kr_simplified_tp_vat_sbatr" model="account.report.line">
+                <field name="name">4. Bank Account for Tax Refund</field>
+                <field name="code">SBATR</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_kr_simplified_tp_vat_sbatr_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=0</field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_sbatr_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=0</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kr_simplified_tp_vat_srbc" model="account.report.line">
+                <field name="name">5. Report for Business Closure</field>
+                <field name="code">SRBC</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_kr_simplified_tp_vat_srbc_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=0</field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_srbc_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=0</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kr_simplified_tp_vat_srzrt" model="account.report.line">
+                <field name="name">6. Reciprocity of Zero Rate Tax</field>
+                <field name="code">SRZRT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_kr_simplified_tp_vat_srzrt_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=0</field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_srzrt_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=0</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kr_simplified_tp_vat_soia" model="account.report.line">
+                <field name="name">Only If Applicable</field>
+                <field name="code">SOIA</field>
+                <field name="hierarchy_level">1</field>
+                <field name="children_ids">
+                    <record id="l10n_kr_simplified_tp_vat_soiaa" model="account.report.line">
+                        <field name="name">Tax base after 2021.07.01 (5)~(9)</field>
+                        <field name="code">SOIAA</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="children_ids">
+                            <record id="l10n_kr_simplified_tp_vat_s5" model="account.report.line">
+                                <field name="name">(5) Retail trade. collection and wholesale of recycling materials and
+                                    restaurants
+                                </field>
+                                <field name="code">S5</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_s5tii" model="account.report.line">
+                                        <field name="name">(37) Tax Invoice Issued</field>
+                                        <field name="code">S5TII</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s5tii_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST37a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s5tiip" model="account.report.line">
+                                        <field name="name">(38) Tax invoice issued by purchasee</field>
+                                        <field name="code">S5TIIP</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s5tiip_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST38a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s5tccri" model="account.report.line">
+                                        <field name="name">(39) Card or Cash Receipt Issued</field>
+                                        <field name="code">S5TCCRI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s5tccri_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST39a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s5o" model="account.report.line">
+                                        <field name="name">(40) Others</field>
+                                        <field name="code">S5O</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s5o_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST40a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s5t" model="account.report.line">
+                                        <field name="name">(41) Total</field>
+                                        <field name="code">S5T</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s5t_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">S5TII.balance + S5TIIP.balance + S5TCCRI.balance +
+                                                    S5O.balance
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_s6" model="account.report.line">
+                                <field name="name">(6) Manufacture, agriculture, forestry, fishing and transport of
+                                    parcels
+                                </field>
+                                <field name="code">S6</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_s6tii" model="account.report.line">
+                                        <field name="name">(42) Tax Invoice Issued</field>
+                                        <field name="code">S6TII</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s6tii_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST42a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s6tiip" model="account.report.line">
+                                        <field name="name">(43) Tax invoice issued by purchasee</field>
+                                        <field name="code">S6TIIP</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s6tiip_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST43a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s6tccri" model="account.report.line">
+                                        <field name="name">(44) Card or Cash Receipt Issued</field>
+                                        <field name="code">S6TCCRI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s6tccri_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST44a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s6o" model="account.report.line">
+                                        <field name="name">(45) Others</field>
+                                        <field name="code">S6O</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s6o_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST45a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s6t" model="account.report.line">
+                                        <field name="name">(46) Total</field>
+                                        <field name="code">S6T</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s6t_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">S6TII.balance + S6TIIP.balance + S6TCCRI.balance +
+                                                    S6O.balance
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_s7" model="account.report.line">
+                                <field name="name">(7) Accommodations</field>
+                                <field name="code">S7</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_s7tii" model="account.report.line">
+                                        <field name="name">(47) Tax Invoice Issued</field>
+                                        <field name="code">S7TII</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s7tii_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST47a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s7tiip" model="account.report.line">
+                                        <field name="name">(48) Tax invoice issued by purchasee</field>
+                                        <field name="code">S7TIIP</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s7tiip_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST48a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s7tccri" model="account.report.line">
+                                        <field name="name">(49) Card or Cash Receipt Issued</field>
+                                        <field name="code">S7TCCRI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s7tccri_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST49a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s7o" model="account.report.line">
+                                        <field name="name">(50) Others</field>
+                                        <field name="code">S7O</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s7o_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST50a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s7t" model="account.report.line">
+                                        <field name="name">(51) Total</field>
+                                        <field name="code">S7T</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s7t_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">S7TII.balance + S7TIIP.balance + S7TCCRI.balance +
+                                                    S7O.balance
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_s8" model="account.report.line">
+                                <field name="name">(8) Construction, transporation and storage (excluding transportation
+                                    of parcels), information and communication and other services
+                                </field>
+                                <field name="code">S8</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_s8tii" model="account.report.line">
+                                        <field name="name">(52) Tax Invoice Issued</field>
+                                        <field name="code">S8TII</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s8tii_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST52a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s8tiip" model="account.report.line">
+                                        <field name="name">(53) Tax invoice issued by purchasee</field>
+                                        <field name="code">S8TIIP</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s8tiip_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST53a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s8tccri" model="account.report.line">
+                                        <field name="name">(54) Card or Cash Receipt Issued</field>
+                                        <field name="code">S8TCCRI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s8tccri_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST54a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s8o" model="account.report.line">
+                                        <field name="name">(55) Others</field>
+                                        <field name="code">S8O</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s8o_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST55a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s8t" model="account.report.line">
+                                        <field name="name">(56) Total</field>
+                                        <field name="code">S8T</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s8t_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">S8TII.balance + S8TIIP.balance + S8TCCRI.balance +
+                                                    S8O.balance
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_s9" model="account.report.line">
+                                <field name="name">(9) Finance eand insurance related services, professional, scientific
+                                    and technical activities (excluding photography and videotaping of events services),
+                                    business facilities management and business support services, activities related to
+                                    real estate and leasing
+                                </field>
+                                <field name="code">S9</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_s9tii" model="account.report.line">
+                                        <field name="name">(57) Tax Invoice Issued</field>
+                                        <field name="code">S9TII</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s9tii_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST57a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s9tiip" model="account.report.line">
+                                        <field name="name">(58) Tax invoice issued by purchasee</field>
+                                        <field name="code">S9TIIP</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s9tiip_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST58a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s9tccri" model="account.report.line">
+                                        <field name="name">(59) Card or Cash Receipt Issued</field>
+                                        <field name="code">S9TCCRI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s9tccri_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST59a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s9o" model="account.report.line">
+                                        <field name="name">(60) Others</field>
+                                        <field name="code">S9O</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s9o_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ST60a</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_s9t" model="account.report.line">
+                                        <field name="name">(61) Total</field>
+                                        <field name="code">S9T</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_s9t_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">S9TII.balance + S9TIIP.balance + S9TCCRI.balance +
+                                                    S9O.balance
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_sp" model="account.report.line">
+                        <field name="name">Penalties</field>
+                        <field name="code">SP</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="children_ids">
+                            <record id="l10n_kr_simplified_tp_vat_sfiti" model="account.report.line">
+                                <field name="name">(62) Failure to issue tax invoice</field>
+                                <field name="code">SFITI</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_sfiti_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sfiti_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SFITI.balance * 0.005</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_sfiei" model="account.report.line">
+                                <field name="name">Failure to issue e-tax invoice</field>
+                                <field name="code">SFIEI</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_sfdoi" model="account.report.line">
+                                        <field name="name">(63) Delay of issuance</field>
+                                        <field name="code">SFDOI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sfdoi_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfdoi_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">SFDOI.balance * 0.01</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sffoi" model="account.report.line">
+                                        <field name="name">(64) Failure of issuance</field>
+                                        <field name="code">SFFOI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sffoi_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sffoi_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sffor" model="account.report.line">
+                                        <field name="name">(65) Failure of reception</field>
+                                        <field name="code">SFFOR</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sffor_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sffor_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">SFFOR.balance * 0.005</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_sfags" model="account.report.line">
+                                <field name="name">Failure to aggregate summary of tax invoice</field>
+                                <field name="code">SFAGS</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_sffs" model="account.report.line">
+                                        <field name="name">(66) Failure to submit</field>
+                                        <field name="code">SFFS</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sffs_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sffs_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">SFFS.balance * 0.005</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sfds" model="account.report.line">
+                                        <field name="name">(67) Delayed Submission</field>
+                                        <field name="code">SFDS</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sfds_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfds_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">SFDS.balance * 0.003</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_sffr" model="account.report.line">
+                                <field name="name">Failure to file returns/under-reporting</field>
+                                <field name="code">SFFR</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_sfftsg" model="account.report.line">
+                                        <field name="name">(68) Failure to submit (General)</field>
+                                        <field name="code">SFFTSG</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sfftsg_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfftsg_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sfftsi" model="account.report.line">
+                                        <field name="name">(69) Failure to submit (Intentional)</field>
+                                        <field name="code">SFFTSI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sfftsi_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfftsi_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sfurg" model="account.report.line">
+                                        <field name="name">(70) Understatement/Excess Report (General)</field>
+                                        <field name="code">SFURG</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sfurg_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfurg_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sfuri" model="account.report.line">
+                                        <field name="name">(71) Understatement/Excess Report (Intentional)</field>
+                                        <field name="code">SFURI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sfuri_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfuri_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_sdpot" model="account.report.line">
+                                <field name="name">(72) Delayed Payment of tax</field>
+                                <field name="code">SDPOT</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_sdpot_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sdpot_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_scit" model="account.report.line">
+                                <field name="name">(73) Credit for input tax confirmed by decision correction agency
+                                </field>
+                                <field name="code">SCIT</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_scit_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_scit_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SCIT.balance * 0.005</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_sftrur" model="account.report.line">
+                                <field name="name">(74) Failure to report or under-reporting of tax base for
+                                    zero-rating
+                                </field>
+                                <field name="code">SFTRUR</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_sftrur_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sftrur_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SFTRUR.balance * 0.005</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_sstpvtp" model="account.report.line">
+                                <field name="name">Special Taxation for Payment of Value-Added Tax by Purchasers</field>
+                                <field name="code">SSTPVTP</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_sftuta" model="account.report.line">
+                                        <field name="name">(75) Failure to use transaction account</field>
+                                        <field name="code">SFTUTA</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sftuta_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sftuta_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sdpta" model="account.report.line">
+                                        <field name="name">(76) Delayed payment to the transaction account</field>
+                                        <field name="code">SDPTA</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sdpta_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sdpta_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_spt" model="account.report.line">
+                                <field name="name">(77) Total</field>
+                                <field name="code">SPT</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_spt_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SFITI.tax + SFDOI.tax + SFFOI.tax + SFFOR.tax + SFFS.tax +
+                                            SFDS.tax + SFFTSG.tax + SFFTSI.tax + SFURG.tax + SFURI.tax + SDPOT.tax +
+                                            SCIT.tax + SFTRUR.tax + SFTUTA.tax + SDPTA.tax
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
