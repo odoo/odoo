@@ -2,7 +2,7 @@ import { defineModels, fields, models, mountView } from "@web/../tests/web_test_
 import { expect, test } from "@odoo/hoot";
 
 class Partner extends models.Model {
-    bar = fields.Boolean({ string: "Bar" });
+    bar = fields.Boolean();
 }
 
 defineModels([Partner]);

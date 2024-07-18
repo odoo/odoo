@@ -47,7 +47,6 @@ function addProductIds() {
     Partner._fields.product_ids = fields.Many2many({
         string: "Products",
         relation: "product",
-        searchable: true,
     });
 }
 
@@ -215,7 +214,6 @@ test("building a domain with an invalid path (3)", async () => {
     Partner._fields.user_id = fields.Many2one({
         string: "User",
         relation: "users",
-        searchable: true,
     });
     defineModels([class Users extends models.Model {}]);
     await makeDomainSelector({
@@ -561,7 +559,6 @@ test("default condition depends on available fields", async () => {
     Partner._fields.user_id = fields.Many2one({
         string: "User",
         relation: "users",
-        searchable: true,
     });
     defineModels([class Users extends models.Model {}]);
     await makeDomainSelector({
@@ -949,7 +946,6 @@ test("support properties", async () => {
         string: "Properties",
         definition_record: "product_id",
         definition_record_field: "definitions",
-        searchable: true,
     });
     Product._fields.definitions = fields.PropertiesDefinition({
         string: "Definitions",
@@ -1076,7 +1072,6 @@ test("support properties (mode readonly)", async () => {
         string: "Properties",
         definition_record: "product_id",
         definition_record_field: "definitions",
-        searchable: true,
     });
     Product._fields.definitions = fields.PropertiesDefinition({
         string: "Definitions",
@@ -1421,7 +1416,6 @@ test("selection property (readonly)", async () => {
         string: "Properties",
         definition_record: "product_id",
         definition_record_field: "definitions",
-        searchable: true,
     });
     Product._fields.definitions = fields.PropertiesDefinition({
         string: "Definitions",
@@ -1897,10 +1891,7 @@ test("many2many field: operator set/not set (edit)", async () => {
 });
 
 test("Include archived button basic use", async () => {
-    Partner._fields.active = fields.Boolean({
-        string: "Active",
-        searchable: true,
-    });
+    Partner._fields.active = fields.Boolean();
     await makeDomainSelector({
         isDebugMode: true,
         domain: `["&", ("foo", "=", "test"), ("bar", "=", True)]`,
@@ -1930,10 +1921,7 @@ test("Include archived button basic use", async () => {
 });
 
 test("Include archived on empty tree", async () => {
-    Partner._fields.active = fields.Boolean({
-        string: "Active",
-        searchable: true,
-    });
+    Partner._fields.active = fields.Boolean();
     await makeDomainSelector({
         isDebugMode: true,
         domain: `[("foo", "=", "test")]`,
