@@ -780,13 +780,13 @@ export function makeDraggableHook(hookParams) {
              */
             const updateElementPosition = () => {
                 const { containerRect, element, elementRect, offset } = ctx.current;
-                const { width: ew } = elementRect;
+                const { width: ew, height: eh } = elementRect;
                 const { x: cx, y: cy, width: cw, height: ch } = containerRect;
 
                 // Updates the position of the dragged element.
                 dom.addStyle(element, {
                     left: `${clamp(ctx.pointer.x - offset.x, cx, cx + cw - ew)}px`,
-                    top: `${clamp(ctx.pointer.y - offset.y, cy, cy + ch)}px`,
+                    top: `${clamp(ctx.pointer.y - offset.y, cy, cy + ch - eh)}px`,
                 });
             };
 

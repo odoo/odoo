@@ -1,11 +1,16 @@
-import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
-import { useDraggable } from "@web/core/utils/draggable";
 import { expect, test } from "@odoo/hoot";
-import { drag } from "@odoo/hoot-dom";
+import { drag, queryRect } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, mockTouch } from "@odoo/hoot-mock";
+import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { useDraggable } from "@web/core/utils/draggable";
 
-async function dragAndDrop(source, target, delay) {
+/**
+ * @param {import("@odoo/hoot-dom").Target} source
+ * @param {import("@odoo/hoot-dom").Target} target
+ * @param {number} [delay]
+ */
+const dragAndDrop = async (source, target, delay) => {
     const { drop, moveTo } = drag(source);
     if (delay) {
         advanceTime(delay);
@@ -13,7 +18,7 @@ async function dragAndDrop(source, target, delay) {
     moveTo(target);
     await animationFrame();
     drop();
-}
+};
 
 test("Parameters error handling", async () => {
     expect.assertions(2);
@@ -343,4 +348,68 @@ test("Dragging element with touch event: initiation delay can be overrided", asy
     await dragAndDrop(".item:first-child", ".item:nth-child(2)", 1200);
     // Should DnD, if the timing value is higher then the delay value (1000ms)
     expect.verifySteps(["drag"]);
+});
+
+test("Elements are confined within their container", async () => {
+    class List extends Component {
+        static template = xml`
+            <div t-ref="root" class="root">
+                <ul class="list list-unstyled m-0 d-flex flex-column">
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item w-50" />
+                </ul>
+            </div>
+        `;
+        static props = ["*"];
+
+        setup() {
+            useDraggable({
+                ref: useRef("root"),
+                elements: ".item",
+            });
+        }
+    }
+
+    await mountWithCleanup(List);
+
+    const containerRect = queryRect(".root");
+
+    const { moveTo, drop } = drag(".item:first");
+
+    expect(".item:first").toHaveRect({
+        x: containerRect.x,
+        y: containerRect.y,
+        width: containerRect.width / 2,
+    });
+
+    moveTo(".item:last-child", {
+        position: { y: 9999 },
+    });
+    await animationFrame();
+
+    expect(".item:first").toHaveRect({
+        x: containerRect.x,
+        y: containerRect.y + containerRect.height - queryRect(".item:first").height,
+    });
+
+    moveTo(".item:last-child", {
+        position: { x: 9999, y: 9999 },
+    });
+    await animationFrame();
+
+    expect(".item:first").toHaveRect({
+        x: containerRect.x + containerRect.width - queryRect(".item:first").width,
+        y: containerRect.y + containerRect.height - queryRect(".item:first").height,
+    });
+
+    moveTo(".item:last-child", {
+        position: { x: -9999, y: -9999 },
+    });
+    await animationFrame();
+
+    expect(".item:first").toHaveRect({
+        x: containerRect.x,
+        y: containerRect.y,
+    });
+
+    drop();
 });
