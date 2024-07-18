@@ -329,11 +329,12 @@ export class HootStatusPanel extends Component {
         const ctx = canvas.getContext("2d");
         const { width, height } = canvas;
         const { done, tests } = this.runnerState;
+        const doneList = [...done];
         const cellSize = width / tests.length;
         const colors = getColors();
 
-        while (this.progressBarIndex < done.length) {
-            const test = done[this.progressBarIndex];
+        while (this.progressBarIndex < done.size) {
+            const test = doneList[this.progressBarIndex];
             const x = $floor(this.progressBarIndex * cellSize);
             switch (test.status) {
                 case Test.ABORTED:

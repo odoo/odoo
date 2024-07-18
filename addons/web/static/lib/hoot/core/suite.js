@@ -23,6 +23,7 @@ export function suiteError({ name, parent }, ...message) {
 
 export class Suite extends Job {
     callbacks = new Callbacks();
+    currentJobIndex = 0;
     /** @type {(Suite | Test)[]} */
     currentJobs = [];
     /** @type {(Suite | Test)[]} */
@@ -35,5 +36,34 @@ export class Suite extends Job {
         if (this.parent) {
             this.parent.increaseWeight();
         }
+    }
+
+    resetIndex() {
+        this.currentJobIndex = 0;
+
+        for (const job of this.jobs) {
+            job.runCount = 0;
+
+            if (job instanceof Suite) {
+                job.resetIndex();
+            }
+        }
+    }
+
+    /**
+     * @override
+     * @type {Job["willRunAgain"]}
+     */
+    willRunAgain(child) {
+        if (this.config.multi) {
+            let count = this.runCount;
+            if (this.currentJobs.at(-1) === child) {
+                count++;
+            }
+            if (count < this.config.multi) {
+                return true;
+            }
+        }
+        return Boolean(this.parent?.willRunAgain(this));
     }
 }

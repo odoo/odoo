@@ -109,30 +109,6 @@ const memoize = (instanceGetter) => {
     };
 };
 
-/**
- * @param {unknown} number
- */
-const ordinal = (number) => {
-    const strNumber = String(number);
-    if (strNumber.at(-2) === "1") {
-        return `${strNumber}th`;
-    }
-    switch (strNumber.at(-1)) {
-        case "1": {
-            return `${strNumber}st`;
-        }
-        case "2": {
-            return `${strNumber}nd`;
-        }
-        case "3": {
-            return `${strNumber}rd`;
-        }
-        default: {
-            return `${strNumber}th`;
-        }
-    }
-};
-
 const R_OBJECT = /^\[object \w+\]$/;
 
 const dmp = new DiffMatchPatch();
@@ -744,24 +720,6 @@ export function isOfType(value, type) {
 }
 
 /**
- * @param {unknown} value
- */
-export function toExplicitString(value) {
-    const strValue = String(value);
-    switch (strValue) {
-        case "\n":
-            return "\\n";
-        case "\t":
-            return "\\t";
-    }
-    // replace zero-width spaces with their explicit representation
-    return strValue.replace(
-        /[\u200B-\u200D\uFEFF]/g,
-        (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`
-    );
-}
-
-/**
  * Returns a list of items that match the given pattern, ordered by their 'score'
  * (descending). A higher score means that the match is closer (e.g. consecutive
  * letters).
@@ -875,6 +833,30 @@ export function normalize(string) {
         .replace(/[\u0300-\u036f]/g, "");
 }
 
+/**
+ * @param {unknown} number
+ */
+export function ordinal(number) {
+    const strNumber = String(number);
+    if (strNumber.at(-2) === "1") {
+        return `${strNumber}th`;
+    }
+    switch (strNumber.at(-1)) {
+        case "1": {
+            return `${strNumber}st`;
+        }
+        case "2": {
+            return `${strNumber}nd`;
+        }
+        case "3": {
+            return `${strNumber}rd`;
+        }
+        default: {
+            return `${strNumber}th`;
+        }
+    }
+}
+
 export async function paste() {
     try {
         await $readText();
@@ -908,6 +890,24 @@ export function stringToNumber(string) {
  */
 export function title(string) {
     return string[0].toUpperCase() + string.slice(1);
+}
+
+/**
+ * @param {unknown} value
+ */
+export function toExplicitString(value) {
+    const strValue = String(value);
+    switch (strValue) {
+        case "\n":
+            return "\\n";
+        case "\t":
+            return "\\t";
+    }
+    // replace zero-width spaces with their explicit representation
+    return strValue.replace(
+        /[\u200B-\u200D\uFEFF]/g,
+        (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`
+    );
 }
 
 /** @type {EventTarget["addEventListener"]} */

@@ -6,6 +6,7 @@ import { HootJobButtons } from "./hoot_job_buttons";
 
 /**
  * @typedef {{
+ *  multi?: number;
  *  name: string;
  *  hasSuites: boolean;
  *  reporting: import("../hoot_utils").Reporting;
@@ -37,6 +38,7 @@ const { Boolean, Object, String } = globalThis;
  */
 export class HootSideBarSuite extends Component {
     static props = {
+        multi: { type: Number, optional: true },
         name: String,
         hasSuites: Boolean,
         reporting: Object,
@@ -55,6 +57,11 @@ export class HootSideBarSuite extends Component {
             />
         </t>
         <span t-att-class="getClassName()" t-esc="props.name" />
+        <t t-if="props.multi">
+            <strong class="text-abort whitespace-nowrap me-1">
+                x<t t-esc="props.multi" />
+            </strong>
+        </t>
     `;
 
     getClassName() {
@@ -129,6 +136,7 @@ export class HootSideBar extends Component {
                         >
                             <div class="flex items-center truncate gap-1 flex-1">
                                 <HootSideBarSuite
+                                    multi="item.config.multi"
                                     name="item.name"
                                     hasSuites="hasSuites(item)"
                                     reporting="item.reporting"
