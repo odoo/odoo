@@ -16,15 +16,13 @@ export class DiscussChannel extends mailModels.DiscussChannel {
 
         const channelInfos = super._channel_info(...arguments);
         for (const channelInfo of channelInfos) {
-            const [channel] = this._filter([["id", "=", channelInfo.id]]);
+            const [channel] = this.browse(channelInfo.id);
             channelInfo["anonymous_name"] = channel.anonymous_name;
             // add the last message date
             if (channel.channel_type === "livechat") {
                 // add the operator id
                 if (channel.livechat_operator_id) {
-                    const [operator] = ResPartner._filter([
-                        ["id", "=", channel.livechat_operator_id],
-                    ]);
+                    const [operator] = ResPartner.browse(channel.livechat_operator_id);
                     // livechat_username ignored for simplicity
                     channelInfo.operator = ResPartner.mail_partner_format([operator.id])[
                         operator.id

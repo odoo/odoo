@@ -22,13 +22,11 @@ export class DiscussChannel extends livechatModels.DiscussChannel {
 
         const channelInfos = super._channel_info(...arguments);
         for (const channelInfo of channelInfos) {
-            const [channel] = this._filter([["id", "=", channelInfo.id]]);
+            const [channel] = this.browse(channelInfo.id);
             if (channel.channel_type === "livechat" && channel.livechat_visitor_id) {
-                const [visitor] = WebsiteVisitor._filter([
-                    ["id", "=", channel.livechat_visitor_id],
-                ]);
-                const [partner] = ResPartner._filter([["id", "=", visitor.partner_id]]);
-                const [country] = ResCountry._filter([["id", "=", visitor.country_id]]);
+                const [visitor] = WebsiteVisitor.browse(channel.livechat_visitor_id);
+                const [partner] = ResPartner.browse(visitor.partner_id);
+                const [country] = ResCountry.browse(visitor.country_id);
                 channelInfo.visitor = {
                     country: country ? { id: country.id, code: country.code } : false,
                     name: partner?.name ?? partner?.display_name ?? visitor.display_name,

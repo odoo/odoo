@@ -21,7 +21,7 @@ export class MailGuest extends models.ServerModel {
      * @returns {Record<string, ModelRecord>}
      */
     _guest_format(ids) {
-        const guests = this._filter([["id", "in", ids]], { active_test: false });
+        const guests = this.browse(ids);
         return Object.fromEntries(
             guests.map((guest) => {
                 return [

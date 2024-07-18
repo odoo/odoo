@@ -50,7 +50,7 @@ export class MailMessage extends models.ServerModel {
                 messageIds.push(notification.mail_message_id);
             }
         }
-        const messages = this._filter([["id", "in", messageIds]]);
+        const messages = this.browse(messageIds);
         // simulate compute that should be done based on notifications
         for (const message of messages) {
             this.write([message.id], {
@@ -91,22 +91,19 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const messages = this._filter([["id", "in", ids]]);
+        const messages = this.browse(ids);
         // sorted from highest ID to lowest ID (i.e. from most to least recent)
         messages.sort((m1, m2) => (m1.id < m2.id ? 1 : -1));
         return messages.map((message) => {
-            const thread =
-                message.model && this.env[message.model]._filter([["id", "=", message.res_id]])[0];
+            const thread = message.model && this.env[message.model].browse(message.res_id)[0];
             let author;
             if (message.author_id) {
-                const [partner] = ResPartner._filter([["id", "=", message.author_id]], {
-                    active_test: false,
-                });
+                const [partner] = ResPartner.browse(message.author_id);
                 author = ResPartner.mail_partner_format([partner.id])[partner.id];
             } else {
                 author = false;
             }
-            const attachments = IrAttachment._filter([["id", "in", message.attachment_ids]]);
+            const attachments = IrAttachment.browse(message.attachment_ids);
             const formattedAttachments = IrAttachment._attachment_format(
                 attachments.map((attachment) => attachment.id)
             ).sort((a1, a2) => (a1.id < a2.id ? -1 : 1)); // sort attachments from oldest to most recent
@@ -125,19 +122,17 @@ export class MailMessage extends models.ServerModel {
             notifications = MailNotification._notification_format(
                 notifications.map((notification) => notification.id)
             );
-            const trackingValues = MailTrackingValue._filter([
-                ["id", "in", message.tracking_value_ids],
-            ]);
+            const trackingValues = MailTrackingValue.browse(message.tracking_value_ids);
             const formattedTrackingValues =
                 MailTrackingValue._tracking_value_format(trackingValues);
-            const partners = ResPartner._filter([["id", "in", message.partner_ids]]);
-            const linkPreviews = MailLinkPreview._filter([["id", "in", message.link_preview_ids]]);
+            const partners = ResPartner.browse(message.partner_ids);
+            const linkPreviews = MailLinkPreview.browse(message.link_preview_ids);
             const linkPreviewsFormatted = linkPreviews.map((linkPreview) =>
                 MailLinkPreview._link_preview_format(linkPreview)
             );
             const reactionsPerContent = {};
             for (const reactionId of message.reaction_ids ?? []) {
-                const [reaction] = MailMessageReaction._filter([["id", "=", reactionId]]);
+                const [reaction] = MailMessageReaction.browse(reactionId);
                 if (reactionsPerContent[reaction.content]) {
                     reactionsPerContent[reaction.content].push(reaction);
                 } else {
@@ -148,10 +143,10 @@ export class MailMessage extends models.ServerModel {
             for (const content in reactionsPerContent) {
                 const reactions = reactionsPerContent[content];
                 const guests = reactions
-                    .map((reaction) => MailGuest._filter([["id", "=", reaction.guest_id]])[0])
+                    .map((reaction) => MailGuest.browse(reaction.guest_id)[0])
                     .filter((guest) => !!guest);
                 const partners = reactions
-                    .map((reaction) => ResPartner._filter([["id", "=", reaction.partner_id]])[0])
+                    .map((reaction) => ResPartner.browse(reaction.partner_id)[0])
                     .filter((partner) => !!partner);
                 reactionGroups.push({
                     content: content,
@@ -185,7 +180,7 @@ export class MailMessage extends models.ServerModel {
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
                 parentMessage: message.parent_id
-                    ? this.message_format([message.parent_id])[0]
+                    ? this.message_format(message.parent_id)[0]
                     : false,
                 recipients: partners.map((p) => ({ id: p.id, name: p.name, type: "partner" })),
                 record_name:
@@ -196,7 +191,7 @@ export class MailMessage extends models.ServerModel {
             };
             delete response.author_id;
             if (message.subtype_id) {
-                const subtype = MailMessageSubtype._filter([["id", "=", message.subtype_id]])[0];
+                const [subtype] = MailMessageSubtype.browse(message.subtype_id);
                 response.subtype_description = subtype.description;
             }
             let guestAuthor;
@@ -239,7 +234,7 @@ export class MailMessage extends models.ServerModel {
         if (!this.env.user) {
             return;
         }
-        const messages = this._filter([["id", "in", ids]]);
+        const messages = this.browse(ids);
         const notifications = MailNotification._filter([
             ["res_partner_id", "=", this.env.user.partner_id],
             ["is_read", "=", false],
@@ -277,7 +272,7 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const messages = this._filter([["id", "in", ids]]);
+        const messages = this.browse(ids);
         for (const message of messages) {
             const wasStarred = message.starred_partner_ids.includes(this.env.user.partner_id);
             this.write([message.id], {
@@ -484,7 +479,7 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
 
-        const messages = this._filter([["id", "in", ids]]);
+        const messages = this.browse(ids);
         return messages.map((message) => {
             let notifications = MailNotification._filter([["mail_message_id", "=", message.id]]);
             notifications = MailNotification._filtered_for_web_client(
@@ -518,9 +513,9 @@ export class MailMessage extends models.ServerModel {
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
-        const [message] = this._filter([["id", "=", id]]);
+        const [message] = this.browse(id);
         const outdatedStarredPartners = message.starred_partner_ids
-            ? ResPartner._filter([["id", "in", message.starred_partner_ids]])
+            ? ResPartner.browse(message.starred_partner_ids)
             : [];
         this.write([id], { starred_partner_ids: [Command.clear()] });
         if (outdatedStarredPartners.length === 0) {

@@ -9,7 +9,7 @@ export class MailFollowers extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const followers = MailFollowers._filter([["id", "in", ids]]);
+        const followers = MailFollowers.browse(ids);
         // sorted from lowest ID to highest ID (i.e. from least to most recent)
         followers.sort((f1, f2) => (f1.id < f2.id ? -1 : 1));
         const partnerFormats = ResPartner.mail_partner_format(

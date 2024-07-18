@@ -11,9 +11,7 @@ export class ResPartner extends mailModels.ResPartner {
      */
     mail_partner_format(ids) {
         const partnerFormats = super.mail_partner_format(...arguments);
-        const partners = this._filter([["id", "in", ids]], {
-            active_test: false,
-        });
+        const partners = this.browse(ids);
         for (const partner of partners) {
             // Not a real field but ease the testing
             partnerFormats[partner.id].out_of_office_date_end = partner.out_of_office_date_end;

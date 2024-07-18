@@ -37,7 +37,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
-        const [rtcSession] = this._filter([["id", "=", id]]);
+        const [rtcSession] = this.browse(id);
         const vals = {
             id: rtcSession.id,
             channelMember: DiscussChannelMember._discuss_channel_member_format([
@@ -68,7 +68,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         /** @type {import("mock_models").DiscussChanneleMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
-        const rtcSessions = this._filter([["id", "in", ids]]);
+        const rtcSessions = this.browse(ids);
         /** @type {Record<string, any>} */
         const data = {};
         for (const rtcSession of rtcSessions) {

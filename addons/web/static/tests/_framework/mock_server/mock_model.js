@@ -83,8 +83,11 @@ const { DateTime } = luxon;
  *  | "form"
  *  | "gantt"
  *  | "graph"
+ *  | "grid"
+ *  | "hierarchy"
  *  | "kanban"
  *  | "list"
+ *  | "map"
  *  | "pivot"
  *  | "search"
  * } ViewType
@@ -1441,12 +1444,32 @@ export class Model extends Array {
 
     /**
      * @param {MaybeIterable<number>} idOrIds
-     * @param {{ active_test?: boolean }} [options]
      */
-    browse(idOrIds, options) {
+    browse(idOrIds) {
         const ids = ensureArray(idOrIds);
-        const activeTest = (options?.active_test ?? true) && this._fields.active;
-        return this.filter((record) => ids.includes(record.id) && (!activeTest || record.active));
+        const records = new this.constructor();
+        if (ids.length > 1) {
+            const recordSet = new Map();
+            for (const id of ids) {
+                recordSet.set(id, undefined);
+            }
+            for (const record of this) {
+                if (recordSet.has(record.id)) {
+                    recordSet.set(record.id, record);
+                }
+            }
+            for (const record of recordSet.values()) {
+                if (record) {
+                    records.push(record);
+                }
+            }
+        } else if (ids.length === 1) {
+            const record = this.find((rec) => rec.id === ids[0]);
+            if (record) {
+                records.push(record);
+            }
+        }
+        return records;
     }
 
     /**
@@ -2114,7 +2137,7 @@ export class Model extends Array {
             offset,
             order,
         });
-        return records.map((r) => r.id);
+        return records.map((record) => record.id);
     }
 
     /**
@@ -2456,17 +2479,19 @@ export class Model extends Array {
         const kwargs = getKwArgs(arguments, "domain", "fields", "offset", "limit", "order");
         ({ domain, fields, offset, limit, order } = kwargs);
 
-        const { fieldNames, records } = this._search({
+        if (!fields?.length) {
+            fields = Object.keys(this._fields);
+        }
+        const { records } = this._search({
             context: kwargs.context,
             domain,
-            fields,
             limit,
             offset,
             order,
         });
         return this.read(
             records.map((r) => r.id),
-            fieldNames
+            unique([...fields, "id"])
         );
     }
 
@@ -2590,14 +2615,10 @@ export class Model extends Array {
         );
         ({ domain, specification, offset, limit, order, count_limit: countLimit } = kwargs);
 
-        let fields = Object.keys(specification);
-        if (!fields.length) {
-            fields = ["id"];
-        }
-        const { fieldNames, length, records } = this._search({
+        const fieldNames = Object.keys(specification);
+        const { length, records } = this._search({
             context: kwargs.context,
             domain,
-            fields,
             limit,
             offset,
             order,
@@ -2606,7 +2627,7 @@ export class Model extends Array {
             length,
             records: this.read(
                 records.map((r) => r.id),
-                fieldNames
+                unique(["id", ...fieldNames])
             ),
         };
         if (countLimit) {
@@ -2699,8 +2720,49 @@ export class Model extends Array {
         if (!Array.isArray(domain)) {
             throw new TypeError(`domain must be an array, got: ${domain}`);
         }
-        // add ['active', '=', true] to the domain if 'active' is not yet present in domain
-        if ((options?.active_test ?? true) && this._fields.active) {
+        const activeTest = (options?.active_test ?? true) && this._fields.active;
+        if (domain.length === 1) {
+            // Fast simplification for simple domains
+            const [[field, operator, value]] = domain;
+            let simpleFilter;
+            switch (typeof field) {
+                case "boolean":
+                case "number": {
+                    let shouldBeIncluded;
+                    if (domain[0].length === 1) {
+                        // Single boolean/number (?)
+                        shouldBeIncluded = Boolean(field);
+                    } else {
+                        // TRUE/FALSE leaf
+                        shouldBeIncluded = field === value;
+                        if (operator === "!=") {
+                            shouldBeIncluded = !shouldBeIncluded;
+                        }
+                    }
+                    if (activeTest) {
+                        simpleFilter = () => shouldBeIncluded;
+                    } else {
+                        return shouldBeIncluded ? this : new this.constructor();
+                    }
+                    break;
+                }
+                case "string": {
+                    if (!field.includes(".") && ("in", "=").includes(operator)) {
+                        // Simple "in" or "=" domain
+                        const values = ensureArray(value);
+                        simpleFilter = (record) => values.includes(record[field]);
+                    }
+                    break;
+                }
+            }
+            if (simpleFilter) {
+                return this.filter(
+                    (record) => simpleFilter(record) && (!activeTest || record.active)
+                );
+            }
+        }
+        if (activeTest) {
+            // add ['active', '=', true] to the domain if 'active' is not yet present in domain
             const activeInDomain = domain.some((subDomain) => subDomain[0] === "active");
             if (!activeInDomain) {
                 domain = [...domain, ["active", "=", true]];
@@ -2785,21 +2847,15 @@ export class Model extends Array {
      * @param {SearchParams} params
      */
     _search(params) {
-        let fieldNames = params.fields;
         const offset = params.offset || 0;
-        if (!fieldNames || !fieldNames.length) {
-            fieldNames = Object.keys(this._fields);
-        }
-        fieldNames = unique([...fieldNames, "id"]);
-        const { context } = params;
-        let records = this._filter(params.domain, { active_test: context?.active_test });
+        const records = this._filter(params.domain, {
+            active_test: params.context?.active_test,
+        });
         orderByField(records, params.order);
-        const nbRecords = records.length;
-        records = records.slice(offset, params.limit ? offset + params.limit : nbRecords);
+        const endLimit = params.limit ? offset + params.limit : undefined;
         return {
-            fieldNames,
-            length: nbRecords,
-            records,
+            length: records.length,
+            records: records.slice(offset, endLimit),
         };
     }
 
