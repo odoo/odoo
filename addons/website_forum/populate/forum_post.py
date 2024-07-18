@@ -8,6 +8,7 @@ from odoo.tools import populate
 QA_WEIGHTS = {0: 25, 1: 35, 2: 20, 3: 10, 4: 4, 5: 3, 6: 2, 7: 1}
 _logger = logging.getLogger(__name__)
 
+
 class Post(models.Model):
     _inherit = 'forum.post'
     # Include an additional average of 2 post answers for each given size

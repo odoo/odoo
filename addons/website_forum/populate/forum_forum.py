@@ -4,6 +4,7 @@
 from odoo import Command, models
 from odoo.tools import populate
 
+
 class Forum(models.Model):
     _inherit = 'forum.forum'
     _populate_sizes = {'small': 1, 'medium': 3, 'large': 10}

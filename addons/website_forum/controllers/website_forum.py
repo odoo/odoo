@@ -25,7 +25,7 @@ class WebsiteForum(WebsiteProfile):
     _user_per_page = 30
 
     def _prepare_user_values(self, **kwargs):
-        values = super(WebsiteForum, self)._prepare_user_values(**kwargs)
+        values = super()._prepare_user_values(**kwargs)
         values['forum_welcome_message'] = request.httprequest.cookies.get('forum_welcome_message', False)
         values.update({
             'header': kwargs.get('header', dict()),
@@ -288,7 +288,7 @@ class WebsiteForum(WebsiteProfile):
             req.raise_for_status()
             arch = lxml.html.fromstring(req.content)
             return arch.find(".//title").text
-        except IOError:
+        except OSError:
             return False
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
@@ -349,7 +349,7 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", methods=['POST'], website=True)
     def question_toggle_favorite(self, forum, question, **post):
         favourite = not question.user_favourite
-        question.sudo().favourite_ids = [(favourite and 4 or 3, request.uid)]
+        question.sudo().favourite_ids = [(4 if favourite else 3, request.uid)]
         if favourite:
             # Automatically add the user as follower of the posts that he
             # favorites (on unfavorite we chose to keep him as a follower until
@@ -416,7 +416,7 @@ class WebsiteForum(WebsiteProfile):
         if post.get('content', '') == '<p><br></p>':
             return request.render('http_routing.http_error', {
                 'status_code': _('Bad Request'),
-                'status_message': post_parent and _('Reply should not be empty.') or _('Question should not be empty.')
+                'status_message': _('Reply should not be empty.') if post_parent else _('Question should not be empty.')
             })
 
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
@@ -427,7 +427,7 @@ class WebsiteForum(WebsiteProfile):
             'forum_id': forum.id,
             'name': post.get('post_name') or (post_parent and 'Re: %s' % (post_parent.name or '')) or '',
             'content': post.get('content', False),
-            'parent_id': post_parent and post_parent.id or False,
+            'parent_id': post_parent.id if post_parent else False,
             'tag_ids': post_tag_ids
         })
         if post_parent:
@@ -498,7 +498,7 @@ class WebsiteForum(WebsiteProfile):
             vals['name'] = kwargs.get('post_name')
         vals['tag_ids'] = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         post.write(vals)
-        question = post.parent_id if post.parent_id else post
+        question = post.parent_id or post
         return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     #  JSON utilities
@@ -508,14 +508,14 @@ class WebsiteForum(WebsiteProfile):
     def post_upvote(self, forum, post, **kwargs):
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
-        upvote = True if not post.user_vote > 0 else False
+        upvote = post.user_vote <= 0
         return post.vote(upvote=upvote)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='json', auth="user", website=True)
     def post_downvote(self, forum, post, **kwargs):
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
-        upvote = True if post.user_vote < 0 else False
+        upvote = not (post.user_vote >= 0)
         return post.vote(upvote=upvote)
 
     # Moderation Tools
@@ -659,7 +659,7 @@ class WebsiteForum(WebsiteProfile):
         return request.redirect(f'/profile/user/{user_id}{forum_origin_query}')
 
     def _prepare_user_profile_values(self, user, **post):
-        values = super(WebsiteForum, self)._prepare_user_profile_values(user, **post)
+        values = super()._prepare_user_profile_values(user, **post)
         if not post.get('no_forum'):
             if post.get('forum'):
                 forums = post['forum']
@@ -740,7 +740,7 @@ class WebsiteForum(WebsiteProfile):
         for act in activities:
             posts[act.res_id] = True
         posts_ids = Post.search([('id', 'in', list(posts))])
-        posts = {x.id: (x.parent_id or x, x.parent_id and x or False) for x in posts_ids}
+        posts = {x.id: (x.parent_id or x, x if x.parent_id else False) for x in posts_ids}
 
         if user != request.env.user:
             kwargs['users'] = True
@@ -775,7 +775,7 @@ class WebsiteForum(WebsiteProfile):
         post = request.env['forum.post'].convert_comment_to_answer(comment.id)
         if not post:
             return request.redirect("/forum/%s" % slug(forum))
-        question = post.parent_id if post.parent_id else post
+        question = post.parent_id or post
         return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", methods=['POST'], website=True)
