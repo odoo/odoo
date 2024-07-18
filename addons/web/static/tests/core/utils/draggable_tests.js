@@ -8,10 +8,10 @@ import {
     nextTick,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
-import { useDraggable } from "@web/core/utils/draggable";
-import { browser } from "@web/core/browser/browser";
 
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { useDraggable } from "@web/core/utils/draggable";
 
 let target;
 QUnit.module("Draggable", ({ beforeEach }) => {
@@ -382,4 +382,71 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             await drop();
         }
     );
+
+    QUnit.test("Elements are confined within their container", async (assert) => {
+        /**
+         * @param {string} selector
+         */
+        const getRect = (selector) => document.querySelector(selector).getBoundingClientRect();
+
+        class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list list-unstyled m-0 d-flex flex-column">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item w-50" />
+                    </ul>
+                </div>
+            `;
+
+            setup() {
+                useDraggable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                });
+            }
+        }
+
+        // Reset fixture style to test coordinates properly
+        Object.assign(target.style, {
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            "z-index": -1,
+        });
+        await mount(List, target);
+
+        const containerRect = getRect(".root");
+
+        const { moveTo, drop } = await drag(".item:first-child");
+
+        let itemRect = getRect(".item:first-child");
+
+        assert.strictEqual(itemRect.x, containerRect.x);
+        assert.strictEqual(itemRect.y, containerRect.y);
+        assert.strictEqual(itemRect.width, containerRect.width / 2);
+
+        await moveTo(".item:last-child", { y: 9999 });
+
+        itemRect = getRect(".item:first-child");
+
+        assert.strictEqual(itemRect.x, containerRect.x);
+        assert.strictEqual(itemRect.y, containerRect.y + containerRect.height - itemRect.height);
+
+        await moveTo(".item:last-child", { x: 9999, y: 9999 });
+
+        itemRect = getRect(".item:first-child");
+
+        assert.strictEqual(itemRect.x, containerRect.x + containerRect.width - itemRect.width);
+        assert.strictEqual(itemRect.y, containerRect.y + containerRect.height - itemRect.height);
+
+        await moveTo(".item:last-child", { x: -9999, y: -9999 });
+
+        itemRect = getRect(".item:first-child");
+
+        assert.strictEqual(itemRect.x, containerRect.x);
+        assert.strictEqual(itemRect.y, containerRect.y);
+
+        await drop();
+    });
 });
