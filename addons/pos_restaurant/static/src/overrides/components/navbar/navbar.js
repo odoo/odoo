@@ -85,11 +85,49 @@ patch(Navbar.prototype, {
         this.pos.floorPlanStyle = mode;
     },
     newFloatingOrder() {
-        this.pos.add_new_order();
+        const order = this.pos.add_new_order();
+        order.setBooked(true);
         this.pos.showScreen("ProductScreen");
     },
     getFloatingOrders() {
-        return this.pos.get_open_orders().filter((order) => !order.table_id);
+        return this.pos
+            .get_open_orders()
+            .filter((order) => !order.table_id)
+            .sort((a, b) => {
+                const noteA = a.note || "";
+                const noteB = b.note || "";
+                if (noteA && noteB) {
+                    // Both have notes
+                    const timePattern = /^\d{1,2}:\d{2}/;
+
+                    const aMatch = noteA.match(timePattern);
+                    const bMatch = noteB.match(timePattern);
+
+                    if (aMatch && bMatch) {
+                        // Both have times, compare by time
+                        const aTime = aMatch[0];
+                        const bTime = bMatch[0];
+                        // add padding to make sure the time is always 4 characters long
+                        // such that, for example, 9:45 does not come after 10:00
+                        const [aHour, aMinute] = aTime.split(":");
+                        const [bHour, bMinute] = bTime.split(":");
+                        const formattedATime = aHour.padStart(2, "0") + aMinute.padStart(2, "0");
+                        const formattedBTime = bHour.padStart(2, "0") + bMinute.padStart(2, "0");
+                        return formattedATime.localeCompare(formattedBTime);
+                    } else if ((aMatch && !bMatch) || (bMatch && !aMatch)) {
+                        // One has time, the other does not
+                        return bMatch ? -1 : 1;
+                    }
+                    // Neither have times, compare by note
+                    return noteA.localeCompare(noteB);
+                } else if (noteA || noteB) {
+                    // a has note, b does not
+                    return noteA ? -1 : 1;
+                } else {
+                    // Neither have notes, compare by tracking number
+                    return a.tracking_number > b.tracking_number ? 1 : -1;
+                }
+            });
     },
     selectFloatingOrder(order) {
         this.pos.set_order(order);
@@ -97,9 +135,9 @@ patch(Navbar.prototype, {
     },
     editOrderNote(order) {
         this.dialog.add(TextInputPopup, {
-            title: _t("Edit order note"),
-            placeholder: _t("Emma's Birthday Party"),
-            startingValue: order.note,
+            title: _t("Edit order name"),
+            placeholder: _t("18:45 John 4P"),
+            startingValue: order.note || "",
             getPayload: async (newName) => {
                 if (typeof order.id == "number") {
                     this.pos.data.write("pos.order", [order.id], {
