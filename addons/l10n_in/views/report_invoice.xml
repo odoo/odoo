@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document" primary="True">
-        <xpath expr="//address[@t-field='o.partner_id']" position="after">
-            <span t-field="o.l10n_in_gstin" t-if="o.company_id.account_fiscal_country_id.code == 'IN'"/>
+        <xpath expr="//div[@name='shipping_address_block']" position="inside">
+            <div t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.partner_shipping_id.vat">
+                GSTIN: <span t-field="o.partner_shipping_id.vat"/>
+            </div>
         </xpath>
         <xpath expr="//div[@name='address_not_same_as_shipping']//t[@t-set='address']" position="inside">
             <t t-call="l10n_in.place_of_supply"/>
