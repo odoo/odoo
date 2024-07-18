@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
@@ -1213,4 +1214,36 @@ class TestTax(TestTaxCommon):
         self.assertListEqual(
             [x[0] for x in self.env["account.tax"].name_search("Ten \"tix\"")],
             ten_fixed_tax_tix.ids,
+        )
+
+    def test_repartition_line_in(self):
+        tax = self.env['account.tax'].create({
+            'name': 'tax20',
+            'amount_type': 'percent',
+            'amount': 20,
+            'type_tax_use': 'none',
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+        })
+        self.env.company.country_id = self.env.ref('base.in')
+        res = tax.with_context(force_price_include=True).compute_all(1000.0)
+        self._check_compute_all_results(
+            1000,         # 'total_included'
+            1000,         # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (1000, 200.0),
+                (1000, -200.0),
+                # ---------------
+            ],
+            res
         )
