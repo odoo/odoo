@@ -23,6 +23,7 @@ setup(
     package_dir={'%s' % lib_name: 'odoo'},
     include_package_data=True,
     install_requires=[
+        'asn1crypto',
         'babel >= 1.0',
         'cbor2',
         'chardet',
