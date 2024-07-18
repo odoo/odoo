@@ -11,13 +11,13 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
-    sun = fields.Boolean({ string: "Sun" });
-    mon = fields.Boolean({ string: "Mon" });
-    tue = fields.Boolean({ string: "Tue" });
-    wed = fields.Boolean({ string: "Wed" });
-    thu = fields.Boolean({ string: "Thu" });
-    fri = fields.Boolean({ string: "Fri" });
-    sat = fields.Boolean({ string: "Sat" });
+    sun = fields.Boolean();
+    mon = fields.Boolean();
+    tue = fields.Boolean();
+    wed = fields.Boolean();
+    thu = fields.Boolean();
+    fri = fields.Boolean();
+    sat = fields.Boolean();
 
     _records = [
         {

@@ -102,7 +102,7 @@ test("set row on text fields", async () => {
 });
 
 test("is translatable", async () => {
-    Product._fields.description = fields.Text({ translate: true });
+    Product._fields.description.translate = true;
     Product._records = [{ id: 1, description: "Description as text" }];
 
     serverState.multiLang = true;
@@ -136,7 +136,7 @@ test("is translatable", async () => {
 });
 
 test("is translatable on new record", async () => {
-    Product._fields.description = fields.Text({ translate: true });
+    Product._fields.description.translate = true;
     Product._records = [{ id: 1, description: "Description as text" }];
 
     serverState.multiLang = true;
