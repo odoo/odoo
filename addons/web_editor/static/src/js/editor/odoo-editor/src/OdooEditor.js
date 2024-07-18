@@ -84,6 +84,8 @@ import {
     ZERO_WIDTH_CHARS_REGEX,
     getAdjacentCharacter,
     isLinkEligibleForZwnbsp,
+    chooseForeground,
+    ancestorsBackground,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -3488,6 +3490,7 @@ export class OdooEditor extends EventTarget {
             block &&
             block.closest('P') &&
             block.classList.contains('oe-command-temporary-hint') &&
+            !block.classList.contains('display-1') && 
             !block.closest('TD, .o_editor_banner, div.o_text_columns') &&
             !block.style.textAlign &&
             !this.isMobile &&
@@ -4675,6 +4678,18 @@ export class OdooEditor extends EventTarget {
             block.classList.add('oe-hint');
             if (temporary) {
                 block.classList.add('oe-command-temporary-hint');
+            }
+            const color = ancestorsBackground(block, this.editable);
+            const foregroundColor = color ? chooseForeground(color) : false;
+            if (foregroundColor === "light") {
+                block.style.setProperty("--placeholder-text", "white");
+                this.magicButtonUiContainer.style.color = "white";
+            } else if (this.magicButtonUiContainer.style.color) {
+                this.magicButtonUiContainer.style.color = "";
+            }
+        } else {
+            if (block.style.getPropertyValue("--placeholder-text")) {
+                block.style.removeProperty("--placeholder-text");
             }
         }
         this._positionMagicButtons();

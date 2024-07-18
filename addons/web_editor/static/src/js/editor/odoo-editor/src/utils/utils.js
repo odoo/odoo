@@ -3079,6 +3079,56 @@ export function rgbToHex(rgb = '', node = null) {
     }
 }
 
+/**
+ * Calculate the relative luminance of a given color using "W3 sRGB equations".
+ *
+ * @param {string} color - The color in hex, rgb, or rgba format.
+ * @returns {number} - The relative luminance of the color.
+ */
+function relativeLuminance(bgColor) {
+    bgColor = rgbToHex(bgColor);
+    bgColor = bgColor.replace(/#/, "").match(/.{1,2}/g);
+    for (let x = 0; x < bgColor.length; x++) {
+        bgColor[x] = parseInt(bgColor[x], 16) / 255;
+        bgColor[x] =
+            bgColor[x] <= 0.03928 ? bgColor[x] / 12.92 : ((bgColor[x] + 0.055) / 1.055) ** 2.4;
+    }
+    return 0.2126 * bgColor[0] + 0.7152 * bgColor[1] + 0.0722 * bgColor[2];
+}
+
+/**
+ * Choose a foreground color (light or dark) based on the background color's
+ * luminance.
+ *
+ * @param {string} backgroundColor - The background color in hex, rgb, or rgba
+ * format.
+ * @returns {string} - The recommended foreground color
+ * ('inherit' or '#ffffff').
+ */
+export function chooseForeground(backgroundColor) {
+    const luminance = relativeLuminance(backgroundColor);
+    const contrastWithBlack = (luminance + 0.05) / 0.05;
+    const contrastWithWhite = 1.05 / (luminance + 0.05);
+    return contrastWithBlack > contrastWithWhite ? "inherit" : "light";
+}
+
+/**
+ * Check if any ancestor element has a background color set and return the
+ * background color.
+ *
+ * @param {Node} node - The starting node.
+ * @param {Node} editable - The root editable node.
+ * @returns {string|boolean} - The background color if found, false otherwise.
+ */
+export function ancestorsBackground(node, editable) {
+    if (!node || !node.parentElement || node === editable) return false;
+    const backgroundColor = getComputedStyle(node).backgroundColor;
+    if (backgroundColor !== "rgba(0, 0, 0, 0)") {
+        return backgroundColor;
+    }
+    return ancestorsBackground(node.parentElement, editable);
+}
+
 export function parseHTML(document, html) {
     const fragment = document.createDocumentFragment();
     const parser = new document.defaultView.DOMParser();
