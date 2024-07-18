@@ -457,6 +457,8 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
     def product(self, product, category='', search='', **kwargs):
+        if not product.website_published or request.env.user.has_group("base.group_user"):
+            raise Forbidden()
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
