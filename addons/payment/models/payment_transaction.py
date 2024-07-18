@@ -310,8 +310,10 @@ class PaymentTransaction(models.Model):
         if any(tx.state != 'done' for tx in self):
             raise ValidationError(_("Only confirmed transactions can be refunded."))
 
+        payment_utils.check_rights_on_recordset(self)
         for tx in self:
-            tx._send_refund_request(amount_to_refund=amount_to_refund)
+            # In sudo mode because we need to be able to read on provider fields.
+            tx.sudo()._send_refund_request(amount_to_refund=amount_to_refund)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
