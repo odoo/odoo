@@ -108,9 +108,17 @@ class AccountMoveReversal(models.TransientModel):
         moves = self.move_ids
 
         # Create default values.
+        bank_ids = self.env['res.partner.bank'].search([
+            ('partner_id', 'in', moves.commercial_partner_id.ids),
+            ('company_id', 'in', moves.company_id.ids + [False]),
+        ], order='sequence DESC')
+        partner_to_bank = {bank.partner_id: bank for bank in bank_ids}
         default_values_list = []
         for move in moves:
-            default_values_list.append(self._prepare_default_reversal(move))
+            default_values_list.append({
+                'partner_bank_id': partner_to_bank.get(move.commercial_partner_id, self.env['res.partner.bank']).id,
+                **self._prepare_default_reversal(move),
+            })
 
         batches = [
             [self.env['account.move'], [], True],   # Moves to be cancelled by the reverses.
