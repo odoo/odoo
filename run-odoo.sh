@@ -1,5 +1,7 @@
 #!/bin/bash
 
+clear
+printf "\033c"
 # Activate the virtual environment
 echo "Activating virtual environment..."
 source ~/dev/venv_odoo/bin/activate

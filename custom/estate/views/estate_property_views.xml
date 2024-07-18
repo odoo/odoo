@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="estate_property_model_action" model="ir.actions.act_window">
+        <field name="name">Estate action</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">tree,form</field>
+        <field name="type">ir.actions.act_window</field> 
+    </record>
+
+      <record id="estate_property_model_create_action" model="ir.actions.act_window">
+        <field name="name">Create Estate Property</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">form</field>
+        <field name="type">ir.actions.act_window</field> 
+        <field name="context">{'default_res_model': 'estate.property'}</field>
+    </record>
+</odoo>
