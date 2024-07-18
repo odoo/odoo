@@ -81,6 +81,8 @@ class IrModule(models.Model):
                 terp.update(ast.literal_eval(f.read().decode()))
         if not terp:
             return False
+        if self.env.context.get('data_module') and 'author' not in terp:
+            terp['author'] = "Odoo S.A."
         if not terp.get('icon'):
             icon_path = 'static/description/icon.png'
             module_icon = module if os.path.exists(opj(path, icon_path)) else 'base'
