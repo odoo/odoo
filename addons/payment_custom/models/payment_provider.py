@@ -5,6 +5,8 @@ from odoo.osv.expression import AND
 
 from odoo.addons.payment_custom import const
 
+from odoo.addons.payment_custom import const
+
 
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
@@ -75,6 +77,11 @@ class PaymentProvider(models.Model):
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """
         default_codes = super()._get_default_payment_method_codes()
+<<<<<<< HEAD
         if self.code != 'custom' or self.custom_mode != 'wire_transfer':
+||||||| parent of 16c1fe59eebb (temp)
+=======
+        if self.custom_mode != 'wire_transfer':
+>>>>>>> 16c1fe59eebb (temp)
             return default_codes
         return const.DEFAULT_PAYMENT_METHOD_CODES
