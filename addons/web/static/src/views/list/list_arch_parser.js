@@ -1,5 +1,5 @@
 import { exprToBoolean } from "@web/core/utils/strings";
-import { visitXML } from "@web/core/utils/xml";
+import { createElement, visitXML } from "@web/core/utils/xml";
 import { combineModifiers } from "@web/model/relational_model/utils";
 import { stringToOrderBy } from "@web/search/utils/order_by";
 import { Field } from "@web/views/fields/field";
@@ -217,6 +217,43 @@ export class ListArchParser {
                 treeAttr.openAction = action && type ? { action, type } : null;
             }
         });
+
+        if (odoo.debug && !columns.some((col) => col.name === "id")) {
+            const idField = createElement("field", {
+                name: "id",
+                optional: "hide",
+                widget: "id",
+            });
+            const fieldInfo = this.parseFieldNode(idField, models, modelName);
+            if (!(fieldInfo.name in fieldNextIds)) {
+                fieldNextIds[fieldInfo.name] = 0;
+            }
+            const fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
+            fieldNodes[fieldId] = fieldInfo;
+            idField.setAttribute("field_id", fieldId);
+            if (fieldInfo.isHandle) {
+                handleField = fieldInfo.name;
+            }
+            const label = fieldInfo.field.label;
+            const column = {
+                ...fieldInfo,
+                id: `column_${nextId++}`,
+                className: null,
+                optional: "debug",
+                type: "field",
+                fieldType: fieldInfo.type,
+                hasLabel: !(
+                    fieldInfo.field.label === false ||
+                    exprToBoolean(fieldInfo.attrs.nolabel) === true
+                ),
+                label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
+            };
+            if (columns[0].widget === "handle") {
+                columns.splice(1, 0, column);
+            } else {
+                columns.unshift(column);
+            }
+        }
 
         if (!treeAttr.defaultOrder.length && handleField) {
             const handleFieldSort = `${handleField}, id`;
