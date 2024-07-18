@@ -8,7 +8,7 @@ class ProductReplenishMixin(models.AbstractModel):
     _inherit = 'stock.replenish.mixin'
 
     supplier_id = fields.Many2one('product.supplierinfo', string="Supplier", check_company=True)
-    show_vendor = fields.Boolean(compute='_compute_show_vendor')
+    show_supplier = fields.Boolean(compute='_compute_show_supplier')
 
     @api.model
     def default_get(self, fields):
@@ -38,9 +38,9 @@ class ProductReplenishMixin(models.AbstractModel):
         return domain
 
     @api.depends('route_id')
-    def _compute_show_vendor(self):
+    def _compute_show_supplier(self):
         for rec in self:
-            rec.show_vendor = rec._get_show_vendor(rec.route_id)
+            rec.show_supplier = rec._get_show_supplier(rec.route_id)
 
-    def _get_show_vendor(self, route):
+    def _get_show_supplier(self, route):
         return any(r.action == 'buy' for r in route.rule_ids)
