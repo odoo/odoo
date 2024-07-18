@@ -386,7 +386,7 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
             },
             metaData: {
                 sortedColumn: this.sortedColumn,
-                activeMeasures: this.measures.map((m) => m.fieldName),
+                activeMeasures: this.measures.filter((m) => !m.computedBy).map((m) => m.fieldName),
                 resModel: this.model,
                 colGroupBys: this.columns.map((c) => c.nameWithGranularity),
                 rowGroupBys: this.rows.map((r) => r.nameWithGranularity),

@@ -71,6 +71,7 @@ def pivot_measure_fields(pivot):
         else measure["name"] if "name" in measure
         else measure["fieldName"]
         for measure in pivot["measures"]
+        if "computedBy" not in measure
     ]
     return [
         measure
