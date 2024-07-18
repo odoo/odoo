@@ -397,6 +397,46 @@
     </t>
 </template>
 
+<template id="registration_ticket_access" name="Registration Ticket Access">
+    <div class="row mb-3 o_wevent_registration_ticket_access">
+        <div class="col-12 mb-2">
+            <h5>Get your Tickets</h5>
+        </div>
+        <div class="col-12 mb-2 d-flex flex-column flex-md-row align-items-stretch align-items-md-baseline justify-content-md-start">
+            <a class="btn btn-primary o_wevent_download_ticket_btn" title="Download All Tickets" target="_blank"
+                t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
+                Download <i class="ms-1 fa fa-download"/>
+            </a>
+            <span class="mx-3 d-flex justify-content-center">or</span>
+            <div class="o_wevent_send_by_email_widget ms-md-2 mt-2 mt-md-0">
+                <div class="o_wevent_send_by_email_input_container">
+                    <div class="input-group">
+                        <input id="o_wevent_send_by_email_input" type="text"
+                            placeholder="john@doe.com" class="form-control"/>
+                        <button class="o_wevent_send_by_email_button btn btn-primary"
+                            type="button"
+                            t-att-data-event-id="event.id"
+                            t-att-data-attendees-ids="attendees.ids"
+                            t-att-data-tickets-hash="event._get_tickets_access_hash(attendees.ids)">
+                            <i class="fa fa-circle-o-notch fa-spin me-1 d-none"></i>
+                            Send by Email
+                        </button>
+                    </div>
+                    <div class="invalid-feedback">
+                        Please enter valid email(s)
+                    </div>
+                </div>
+                <div class="o_wevent_send_by_email_info alert alert-info ms-md-2 mt-2 mt-md-0 mb-0 px-3 py-1 d-inline-flex align-items-center justify-content-center d-none" role="alert">
+                    <span class="d-flex">
+                        <span><strong>See you soon!</strong> Your tickets have been sent.</span>
+                        <button aria-label="Close" class="btn-close ms-2" type="button"/>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
 <!-- Button to configure Tickets -->
 <template id="registration_configure_tickets_button" name="Registration Configure Ticket Button">
     <a t-attf-class="o_not_editable text-nowrap {{linkClasses or '' }}" t-attf-href="/web#id=#{event.id}&amp;menu_id=#{backend_menu_id}&amp;view_type=form&amp;model=event.event" role="link"  title="Configure event tickets">
