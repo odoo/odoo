@@ -2,9 +2,9 @@ import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
 
 export class Foo extends models.Model {
     bar = fields.Many2one({ relation: "partner" });
-    foo = fields.Char({ store: true, sortable: true, groupable: true });
-    birthday = fields.Date({ store: true, sortable: true, groupable: true });
-    date_field = fields.Date({ string: "Date", store: true, sortable: true, groupable: true });
+    foo = fields.Char();
+    birthday = fields.Date();
+    date_field = fields.Date({ string: "Date" });
     parent_id = fields.Many2one({ string: "Parent", relation: "parent.model" });
     properties = fields.Properties({
         definition_record: "parent_id",
