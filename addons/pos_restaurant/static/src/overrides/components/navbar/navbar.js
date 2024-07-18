@@ -43,9 +43,6 @@ patch(Navbar.prototype, {
     get showEditPlanButton() {
         return true;
     },
-    getOrderTabs() {
-        return this.pos.get_open_orders().filter((order) => !order.table_id);
-    },
     setFloatingOrder(floatingOrder) {
         this.pos.selectedTable = null;
         this.pos.set_order(floatingOrder);

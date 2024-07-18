@@ -196,7 +196,7 @@ export class PosOrder extends Base {
     }
 
     get isBooked() {
-        return this.uiState.booked || !this.is_empty() || typeof this.id === "number";
+        return Boolean(this.uiState.booked || !this.is_empty() || typeof this.id === "number");
     }
 
     _getPrintingCategoriesChanges(categories, currentOrderChange) {
