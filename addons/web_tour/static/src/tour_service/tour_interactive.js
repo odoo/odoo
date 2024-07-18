@@ -17,33 +17,6 @@ export class TourInteractive {
         this.currentAction;
         this.currentActionIndex;
         this.removeListeners = () => {};
-        this.observerOptions = {
-            attributes: true,
-            childList: true,
-            subtree: true,
-            characterData: true,
-        };
-        this.observer = new MutationObserver(() => {
-            if (this.currentAction) {
-                let tempAnchor = hoot.queryFirst(this.currentAction.anchor, { visible: true });
-                tempAnchor = tempAnchor && this.getAnchorEl(tempAnchor, this.currentAction.event);
-                if (
-                    (!this.anchorEl && tempAnchor) ||
-                    (this.anchorEl && tempAnchor && tempAnchor !== this.anchorEl)
-                ) {
-                    this.anchorEl = tempAnchor;
-                    this.removeListeners();
-                    this.setActionListeners();
-                } else if (!tempAnchor && this.anchorEl) {
-                    this.pointer.hide();
-                    this.anchorEl = tempAnchor;
-                    if (!hoot.queryFirst(".o_home_menu", { visible: true })) {
-                        this.backward();
-                    }
-                }
-                this.updatePointer();
-            }
-        });
     }
 
     /**
@@ -65,7 +38,7 @@ export class TourInteractive {
      */
     start(stepAt = 0) {
         this.pointer.start();
-        this.observer.observe(document.body, this.observerOptions);
+        this.observerDisconnect = hoot.observe(document.body, () => this._onMutation());
         this.currentActionIndex = stepAt;
         this.play();
     }
@@ -92,7 +65,7 @@ export class TourInteractive {
     play() {
         this.removeListeners();
         if (this.currentActionIndex === this.actions.length) {
-            this.observer.disconnect();
+            this.observerDisconnect();
             this.onTourEnd();
             return;
         }
@@ -383,5 +356,27 @@ export class TourInteractive {
             return el.closest(".ui-sortable, .o_sortable");
         }
         return el;
+    }
+
+    _onMutation() {
+        if (this.currentAction) {
+            let tempAnchor = hoot.queryFirst(this.currentAction.anchor, { visible: true });
+            tempAnchor = tempAnchor && this.getAnchorEl(tempAnchor, this.currentAction.event);
+            if (
+                (!this.anchorEl && tempAnchor) ||
+                (this.anchorEl && tempAnchor && tempAnchor !== this.anchorEl)
+            ) {
+                this.anchorEl = tempAnchor;
+                this.removeListeners();
+                this.setActionListeners();
+            } else if (!tempAnchor && this.anchorEl) {
+                this.pointer.hide();
+                this.anchorEl = tempAnchor;
+                if (!hoot.queryFirst(".o_home_menu", { visible: true })) {
+                    this.backward();
+                }
+            }
+            this.updatePointer();
+        }
     }
 }
