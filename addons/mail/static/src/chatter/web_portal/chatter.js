@@ -1,4 +1,5 @@
 import { Composer } from "@mail/core/common/composer";
+import { JumpToPresentBanner } from "@mail/core/common/jump_to_present_banner";
 import { Thread } from "@mail/core/common/thread";
 
 import {
@@ -20,7 +21,7 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
  */
 export class Chatter extends Component {
     static template = "mail.Chatter";
-    static components = { Thread, Composer };
+    static components = { Thread, Composer, JumpToPresentBanner };
     static props = ["threadId?", "threadModel"];
     static defaultProps = { threadId: false };
 

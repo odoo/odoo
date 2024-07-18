@@ -8,7 +8,7 @@ import { RecipientList } from "@mail/core/web/recipient_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
-import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
+import { useHover, useMessageHighlight, useJumpToPresent } from "@mail/utils/common/hooks";
 
 import { markup, useEffect } from "@odoo/owl";
 
@@ -71,6 +71,7 @@ Object.assign(Chatter.defaultProps, {
 patch(Chatter.prototype, {
     setup() {
         this.messageHighlight = useMessageHighlight();
+        this.jumpToPresent = useJumpToPresent();
         super.setup(...arguments);
         this.orm = useService("orm");
         this.mailPopoutService = useService("mail.popout");
@@ -165,7 +166,11 @@ patch(Chatter.prototype, {
     },
 
     get childSubEnv() {
-        return { ...super.childSubEnv, messageHighlight: this.messageHighlight };
+        return {
+            ...super.childSubEnv,
+            messageHighlight: this.messageHighlight,
+            jumpToPresent: this.jumpToPresent,
+        };
     },
 
     get followerButtonLabel() {

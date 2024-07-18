@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.JumpToPresentBanner">
+        <span t-if="props.jumpToPresent.showBanner"
+            t-att-class="{'m-0 px-4 top-0': env.inChatter,}"
+            class="o-mail-Thread-banner o-mail-Thread-bannerHover d-flex d-print-none
+            justify-content-between alert alert-primary border-0 rounded-0 mb-0 py-1
+            cursor-pointer shadow-sm small fw-bold"
+            t-on-click="props.jumpToPresent.jump"
+        >
+            <span>You're viewing older messages</span>
+            <span>Jump to Present
+                <i class="ms-2 fa" t-att-class="{ 'fa-caret-up': props.order !== 'asc', 'fa-caret-down': props.order === 'asc' }"/>
+            </span>
+        </span>
+    </t>
+</templates>

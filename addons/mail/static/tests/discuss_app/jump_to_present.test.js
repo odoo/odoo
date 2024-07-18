@@ -75,11 +75,11 @@ test("Basic jump to present when scrolling to outdated messages (chatter, DESC)"
     await click(".o-mail-Thread-banner", {
         text: "You're viewing older messagesJump to Present",
     });
+    await contains(".o-mail-Chatter", { scroll: 0 });
     await contains(".o-mail-Thread-banner", {
         count: 0,
         text: "You're viewing older messagesJump to Present",
     });
-    await contains(".o-mail-Chatter", { scroll: 0 });
 });
 
 test("Jump to old reply should prompt jump to present", async () => {

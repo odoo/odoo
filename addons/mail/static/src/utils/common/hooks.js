@@ -471,3 +471,22 @@ export const useMovable = makeDraggableHook({
         return { top, left };
     },
 });
+
+export function useJumpToPresent() {
+    const state = useState({
+        current: null,
+        showBanner: null,
+        update(stateShow, current) {
+            state.current = current;
+            state.showBanner = stateShow;
+        },
+        async jump() {
+            state.current.messageHighlight?.clearHighlight();
+            await state.current.props.thread.loadAround();
+            state.current.props.thread.loadNewer = false;
+            state.current.props.thread.scrollTop = "bottom";
+            state.current.state.showJumpPresent = false;
+        },
+    });
+    return state;
+}

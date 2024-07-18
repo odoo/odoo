@@ -88,6 +88,7 @@
                 <SuggestedRecipientsList t-if="state.composerType !== 'note' and toRecipientsText" styleString="'margin-left:48px;'" thread="state.thread" onSuggestedRecipientAdded.bind="onSuggestedRecipientAdded"/>
                 <Composer composer="state.thread.composer" autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>
             </t>
+            <JumpToPresentBanner t-if="!state.isSearchOpen" jumpToPresent="jumpToPresent" order="'desc'"/>
         </div>
         <div class="o-mail-Chatter-content">
             <div t-if="state.isSearchOpen" class="o-mail-Chatter-search">

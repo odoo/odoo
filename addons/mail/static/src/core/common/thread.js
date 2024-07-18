@@ -1,7 +1,8 @@
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { Record } from "@mail/core/common/record";
-import { useVisible } from "@mail/utils/common/hooks";
+import { useJumpToPresent, useVisible } from "@mail/utils/common/hooks";
+import { JumpToPresentBanner } from "@mail/core/common/jump_to_present_banner";
 
 import {
     Component,
@@ -16,6 +17,7 @@ import {
     useEffect,
     useRef,
     useState,
+    useSubEnv,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -39,7 +41,7 @@ const PRESENT_MESSAGE_THRESHOLD = 10;
  * @extends {Component<Props, Env>}
  */
 export class Thread extends Component {
-    static components = { Message, Transition, DateSection };
+    static components = { Message, Transition, DateSection, JumpToPresentBanner };
     static props = [
         "showDates?",
         "isInChatWindow?",
@@ -69,10 +71,15 @@ export class Thread extends Component {
         this.escape = escape;
         this.registerMessageRef = this.registerMessageRef.bind(this);
         this.store = useState(useService("mail.store"));
+        this.jumpToPresent =
+            this.env.jumpToPresent ?? (this.props.showJumpPresent ? useJumpToPresent() : null);
         this.state = useState({
             isReplyingTo: false,
             mountedAndLoaded: false,
             showJumpPresent: false,
+        });
+        useSubEnv({
+            inChatter: this.env.inChatter,
         });
         this.lastJumpPresent = this.props.jumpPresent;
         this.orm = useService("orm");
@@ -126,7 +133,7 @@ export class Thread extends Component {
                 if (this.props.jumpPresent !== this.lastJumpPresent) {
                     this.messageHighlight?.clearHighlight();
                     if (this.props.thread.loadNewer) {
-                        this.jumpToPresent();
+                        this.jumpToPresent?.jump();
                     } else {
                         if (this.props.order === "desc") {
                             this.scrollableRef.el.scrollTop = 0;
@@ -153,6 +160,12 @@ export class Thread extends Component {
                 }
             },
             () => [this.props.thread.highlightMessage, this.state.mountedAndLoaded]
+        );
+        useEffect(
+            () => {
+                this.jumpToPresent?.update(this.state.showJumpPresent, this);
+            },
+            () => [this.state.showJumpPresent]
         );
         useEffect(
             () => {
@@ -468,14 +481,6 @@ export class Thread extends Component {
         return !message.isNotification && this.messageHighlight?.highlightedMessageId === message.id
             ? "o-highlighted bg-view shadow-lg pb-1"
             : "";
-    }
-
-    async jumpToPresent() {
-        this.messageHighlight?.clearHighlight();
-        await this.props.thread.loadAround();
-        this.props.thread.loadNewer = false;
-        this.props.thread.scrollTop = "bottom";
-        this.state.showJumpPresent = false;
     }
 
     async onClickUnreadMessagesBanner() {
