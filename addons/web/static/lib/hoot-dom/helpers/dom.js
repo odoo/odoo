@@ -920,7 +920,6 @@ export function cleanupDOM() {
     // Observers
     const remainingObservers = observers.size;
     if (remainingObservers) {
-        console.warn(`${remainingObservers} observers still running`);
         for (const { observer } of observers.values()) {
             observer.disconnect();
         }
