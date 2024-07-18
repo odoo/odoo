@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import common
 from . import test_forum_controller
 from . import test_forum_internals
