@@ -22,7 +22,6 @@ paymentExpressCheckoutForm.include({
     start: async function () {
         await this._super(...arguments);
         document.querySelector('[name="o_payment_submit_button"]')?.removeAttribute('disabled');
-        this.rpc = this.bindService('rpc');
         this._initiateExpressPayment = debounce(this._initiateExpressPayment, 500, true);
     },
 
@@ -58,13 +57,13 @@ paymentExpressCheckoutForm.include({
                 'country': shippingInfo.querySelector('#o_payment_demo_shipping_country').value,
             };
             // Call the shipping address update route to fetch the shipping options.
-            const availableCarriers = await this.rpc(
+            const availableCarriers = await jsonrpc(
                 this.paymentContext['shippingAddressUpdateRoute'],
                 {partial_shipping_address: expressShippingAddress},
             );
             if (availableCarriers.length > 0) {
                 const id = parseInt(availableCarriers[0].id);
-                await this.rpc('/shop/update_carrier', {carrier_id: id});
+                await jsonrpc('/shop/update_carrier', {carrier_id: id});
             } else {
                 this.call('dialog', 'add', ConfirmationDialog, {
                     title: _t("Validation Error"),
