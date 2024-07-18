@@ -470,7 +470,7 @@ class AccountChartTemplate(models.AbstractModel):
             if model in data:
                 data[model] = data.pop(model)
 
-        if company_data := data.get('res.company', {}).get(company.id):
+        if data.get('res.company', {}).get(company.id):
             # Filter out default values that we don't want to ignore if the field is not present, in any case.
             company_data_to_filter = {'account_production_wip_account_id', 'account_production_wip_overhead_account_id'}
             # Remove data of unknown fields present in the company template
