@@ -67,6 +67,11 @@ class TestUsers(TransactionCase):
             test_user.partner_id.company_id,
             "The partner_id linked to a user should be created without any company_id")
 
+        self.assertEqual(
+            test_user.partner_id.user_id, test_user,
+            "The partner should be linked to the user"
+        )
+
         # case 2 : the user has a partner
         test_user = User.create({
             'name': 'Bob Smith',

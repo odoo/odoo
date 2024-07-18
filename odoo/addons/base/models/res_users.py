@@ -696,6 +696,7 @@ class Users(models.Model):
         users = super(Users, self).create(vals_list)
         setting_vals = []
         for user in users:
+            user.partner_id.with_context(mail_auto_subscribe_no_notify=True).user_id = user
             if not user.res_users_settings_ids and user._is_internal():
                 setting_vals.append({'user_id': user.id})
             # if partner is global we keep it that way
