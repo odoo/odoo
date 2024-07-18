@@ -991,11 +991,12 @@ class AccountMoveLine(models.Model):
                 line.discount_allocation_key = frozendict({
                     'account_id': line.account_id.id,
                     'move_id': line.move_id.id,
+                    'currency_rate': line.currency_rate,
                 })
             else:
                 line.discount_allocation_key = False
 
-    @api.depends('account_id', 'company_id', 'discount', 'price_unit', 'quantity')
+    @api.depends('account_id', 'company_id', 'discount', 'price_unit', 'quantity', 'currency_rate')
     def _compute_discount_allocation_needed(self):
         for line in self:
             line.discount_allocation_dirty = True
@@ -1011,6 +1012,7 @@ class AccountMoveLine(models.Model):
                 frozendict({
                     'account_id': line.account_id.id,
                     'move_id': line.move_id.id,
+                    'currency_rate': line.currency_rate,
                 }),
                 {
                     'display_type': 'discount',
@@ -1023,6 +1025,7 @@ class AccountMoveLine(models.Model):
                 frozendict({
                     'move_id': line.move_id.id,
                     'account_id': discount_allocation_account.id,
+                    'currency_rate': line.currency_rate,
                 }),
                 {
                     'display_type': 'discount',
