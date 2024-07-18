@@ -302,8 +302,14 @@ export class SearchBar extends Component {
                 ? searchItem.propertyFieldDefinition.comodel
                 : field.relation;
 
+        let nameSearchOperator = "ilike";
+        if (query && query[0] === '"' && query[query.length - 1] === '"') {
+            query = query.slice(1, -1);
+            nameSearchOperator = "=";
+        }
         const options = await this.orm.call(relation, "name_search", [], {
             args: domain,
+            operator: nameSearchOperator,
             context,
             limit: 8,
             name: query.trim(),
@@ -379,7 +385,14 @@ export class SearchBar extends Component {
 
         if (!item.unselectable) {
             const { searchItemId, label, operator, value } = item;
-            this.env.searchModel.addAutoCompletionValues(searchItemId, { label, operator, value });
+            const autoCompleteValues = { label, operator, value };
+            if (value && value[0] === '"' && value[value.length - 1] === '"') {
+                autoCompleteValues.value = value.slice(1, -1);
+                autoCompleteValues.label = label.slice(1, -1);
+                autoCompleteValues.operator = "=";
+                autoCompleteValues.enforceEqual = true;
+            }
+            this.env.searchModel.addAutoCompletionValues(searchItemId, autoCompleteValues);
         }
         this.resetState();
     }
