@@ -1054,7 +1054,9 @@ export class PosOrder extends Base {
             lines: this.lines.map((l) => ({
                 ...l.getDisplayData(),
                 isSelected: l.isSelected(),
-                imageSrc: `/web/image/product.product/${l.product_id.id}/image_128`,
+                imageSrc: l.product_id.image_128
+                    ? `/web/image/product.product/${l.product_id.id}/image_128`
+                    : false,
             })),
             finalized: this.finalized,
             amount: formatCurrency(this.get_total_with_tax() || 0),
