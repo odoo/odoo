@@ -871,7 +871,7 @@ class SaleOrder(models.Model):
         products_per_rule = programs._get_valid_products(products)
 
         # Prepare amounts
-        so_products_per_rule = programs._get_valid_products(self.order_line.product_id)
+        so_products_per_rule = programs._get_valid_products(self.order_line)
         lines_per_rule = defaultdict(lambda: self.env['sale.order.line'])
         # Skip lines that have no effect on the minimum amount to reach.
         for line in self.order_line - self._get_no_effect_on_threshold_lines():

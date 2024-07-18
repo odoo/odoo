@@ -358,10 +358,11 @@ class LoyaltyProgram(models.Model):
                 continue
             program.portal_point_name = program.currency_id.symbol or ''
 
-    def _get_valid_products(self, products):
+    def _get_valid_products(self, order_lines):
         '''
         Returns a dict containing the products that match per rule of the program
         '''
+        products = order_lines.product_id
         rule_products = dict()
         for rule in self.rule_ids:
             domain = rule._get_valid_product_domain()
