@@ -16,7 +16,6 @@ class Partner extends models.Model {
     char_field = fields.Char({
         string: "Char",
         default: "My little Char Value",
-        searchable: true,
         trim: true,
     });
 
@@ -62,7 +61,7 @@ test("Show copy button even on empty field", async () => {
 });
 
 test("Show copy button even on readonly empty field", async () => {
-    Partner._fields.char_field = fields.Char({ readonly: true });
+    Partner._fields.char_field.readonly = true;
     await mountView({
         type: "form",
         resModel: "res.partner",

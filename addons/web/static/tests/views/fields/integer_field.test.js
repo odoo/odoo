@@ -12,7 +12,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 class Product extends models.Model {
-    price = fields.Integer({ string: "Price" });
+    price = fields.Integer();
 }
 
 defineModels([Product]);
