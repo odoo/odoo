@@ -1620,3 +1620,66 @@ class TestExpenses(TestExpenseCommon):
 
         expense_sheet.expense_line_ids.analytic_distribution = {self.analytic_account_1.id: 100.00}
         expense_sheet.with_context(validate_analytic=True).action_approve_expense_sheets()
+
+    def test_expense_sheet_with_line_ids(self):
+        """
+        Test to create an expense sheet with no account date and having multiple expenses
+        in which one of the expense doesn't have date to get the account date from the max date of expenses.
+        """
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'payment_method_line_id': self.outbound_payment_method_line.id,
+            'expense_line_ids': [
+                Command.create({
+                    'name': 'Car Travel Expenses',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 350.00,
+                    'date': False,
+                }),
+                Command.create({
+                    'name': 'Lunch expense',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 90.00,
+                    'date': '2024-04-30',
+                }),
+            ]
+        })
+        # Validate the values before submitting and approving
+        self.assertRecordValues(expense_sheet, [
+            {'total_amount': 440.00, 'accounting_date': False, 'state': 'draft', 'employee_id': self.expense_employee.id}
+        ])
+        self.assertRecordValues(expense_sheet.expense_line_ids, [
+            {'name': 'Car Travel Expenses', 'total_amount': 350.00, 'date': False},
+            {'name': 'Lunch expense', 'total_amount': 90.00, 'date': date(2024, 4, 30)},
+        ])
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_post()
+
+        # Validate the record values after submitting and approving
+        self.assertRecordValues(expense_sheet, [
+            {'total_amount': 440.00, 'accounting_date': date(2024, 4, 30), 'state': 'post', 'employee_id': self.expense_employee.id}
+        ])
+        self.assertRecordValues(expense_sheet.expense_line_ids, [
+            {'name': 'Car Travel Expenses', 'total_amount': 350.00, 'date': False},
+            {'name': 'Lunch expense', 'total_amount': 90.00, 'date': date(2024, 4, 30)},
+        ])
+
+        # Reset to draft to make the accounting_date to False and then recompute it
+        expense_sheet.action_reset_expense_sheets()
+
+        # Validate the accounting_date value to be false
+        self.assertFalse(expense_sheet.accounting_date)
+
+        # Update one of the expense sheet line date
+        expense_sheet.expense_line_ids[1].write({'date': '2024-05-30'})
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_post()
+
+        # Validate the acction_date value after subitting and approving
+        self.assertTrue(expense_sheet.accounting_date, date(2024, 5, 30))

@@ -713,8 +713,7 @@ class HrExpenseSheet(models.Model):
         self.activity_update()
 
     def _do_reset_approval(self):
-        self.sudo().write({'approval_state': False, 'approval_date': False})
-        self.accounting_date = False
+        self.sudo().write({'approval_state': False, 'approval_date': False, 'accounting_date': False})
         self.activity_update()
 
     def _do_refuse(self, reason):
@@ -785,7 +784,7 @@ class HrExpenseSheet(models.Model):
         today = fields.Date.context_today(self)
         start_month = fields.Date.start_of(today, "month")
         end_month = fields.Date.end_of(today, "month")
-        most_recent_expense = max(self.expense_line_ids.mapped('date')) or today
+        most_recent_expense = max(self.expense_line_ids.filtered(lambda exp: exp.date).mapped('date'), default=today)
 
         if most_recent_expense > end_month:
             return most_recent_expense
@@ -829,11 +828,11 @@ class HrExpenseSheet(models.Model):
             'expense_sheet_id': self.id,
         }
 
-        most_recent_expense = max(self.expense_line_ids.mapped('date'))
         today = fields.Date.context_today(self)
+        most_recent_expense = max(self.expense_line_ids.filtered(lambda exp: exp.date).mapped('date'), default=today)
 
         if self.payment_mode == 'company_account':
-            to_return['date'] = most_recent_expense or today
+            to_return['date'] = most_recent_expense
         else:
             to_return['invoice_date'] = self.accounting_date
 
