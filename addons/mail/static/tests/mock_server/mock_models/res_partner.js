@@ -74,7 +74,7 @@ export class ResPartner extends webModels.ResPartner {
 
         // add main suggestions based on users
         const partnersFromUsers = ResUsers._filter([])
-            .map((user) => this._filter([["id", "=", user.partner_id]])[0])
+            .map((user) => this.browse(user.partner_id)[0])
             .filter((partner) => partner);
         const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
 
@@ -162,7 +162,7 @@ export class ResPartner extends webModels.ResPartner {
 
         // add main suggestions based on users
         const partnersFromUsers = ResUsers._filter([])
-            .map((user) => this._filter([["id", "=", user.partner_id]])[0])
+            .map((user) => this.browse(user.partner_id)[0])
             .filter((partner) => partner);
         const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
         let extraMatchingPartners = [];
@@ -195,7 +195,7 @@ export class ResPartner extends webModels.ResPartner {
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartners = ResUsers._filter([])
             .filter((user) => {
-                const partner = this._filter([["id", "=", user.partner_id]])[0];
+                const [partner] = this.browse(user.partner_id);
                 // user must have a partner
                 if (!partner) {
                     return false;
@@ -214,7 +214,7 @@ export class ResPartner extends webModels.ResPartner {
                 return false;
             })
             .map((user) => {
-                const partner = this._filter([["id", "=", user.partner_id]])[0];
+                const [partner] = this.browse(user.partner_id);
                 return {
                     id: partner.id,
                     name: partner.name,
@@ -236,12 +236,10 @@ export class ResPartner extends webModels.ResPartner {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        const partners = this._filter([["id", "in", ids]], {
-            active_test: false,
-        });
+        const partners = this.browse(ids);
         return Object.fromEntries(
             partners.map((partner) => {
-                const users = ResUsers._filter([["id", "in", partner.user_ids]]);
+                const users = ResUsers.browse(partner.user_ids);
                 const internalUsers = users.filter((user) => !user.share);
                 let mainUser;
                 if (internalUsers.length > 0) {
@@ -295,7 +293,7 @@ export class ResPartner extends webModels.ResPartner {
             this.mail_partner_format(
                 ResUsers._filter([])
                     .filter((user) => {
-                        const partner = this._filter([["id", "=", user.partner_id]])[0];
+                        const [partner] = this.browse(user.partner_id);
                         // user must have a partner
                         if (!partner) {
                             return false;
@@ -332,7 +330,7 @@ export class ResPartner extends webModels.ResPartner {
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
 
-        const partner = this._filter([["id", "=", id]])[0];
+        const [partner] = this.browse(id);
         return MailNotification._filter([
             ["res_partner_id", "=", partner.id],
             ["is_read", "=", false],
@@ -349,9 +347,7 @@ export class ResPartner extends webModels.ResPartner {
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
 
-        const [partner] = this._filter([["id", "=", id]], {
-            active_test: false,
-        });
+        const [partner] = this.browse(id);
         const messages = MailMessage._filter([
             ["author_id", "=", partner.id],
             ["res_id", "!=", 0],
@@ -379,6 +375,6 @@ export class ResPartner extends webModels.ResPartner {
         if (ResUsers._is_public(this.env.uid)) {
             return [null, MailGuest._get_guest_from_context()];
         }
-        return [this._filter([["id", "=", this.env.user.partner_id]])[0], null];
+        return [this.browse(this.env.user.partner_id)[0], null];
     }
 }

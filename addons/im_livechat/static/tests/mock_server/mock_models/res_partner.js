@@ -48,9 +48,7 @@ export class ResPartner extends mailModels.ResPartner {
         const ResPartner = this.env["res.partner"];
 
         const partnerFormats = super.mail_partner_format(...arguments);
-        const partners = ResPartner._filter([["id", "in", ids]], {
-            active_test: false,
-        });
+        const partners = ResPartner.browse(ids);
         for (const partner of partners) {
             // Not a real field but ease the testing
             partnerFormats[partner.id].user_livechat_username = partner.user_livechat_username;

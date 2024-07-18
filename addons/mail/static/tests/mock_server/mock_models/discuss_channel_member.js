@@ -25,10 +25,10 @@ export class DiscussChannelMember extends models.ServerModel {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
 
-        const members = this._filter([["id", "in", ids]]);
+        const members = this.browse(ids);
         const notifications = [];
         for (const member of members) {
-            const [channel] = DiscussChannel._filter([["id", "=", member.channel_id]]);
+            const [channel] = DiscussChannel.browse(member.channel_id);
             const [data] = this._discuss_channel_member_format([member.id]);
             Object.assign(data, { isTyping: is_typing });
             notifications.push([channel, "discuss.channel.member/typing_status", data]);
@@ -39,7 +39,7 @@ export class DiscussChannelMember extends models.ServerModel {
 
     _compute_is_pinned() {
         for (const member of this) {
-            const [channel] = this.env["discuss.channel"]._filter([["id", "=", member.channel_id]]);
+            const [channel] = this.env["discuss.channel"].browse(member.channel_id);
             member.is_pinned =
                 !member.unpin_dt ||
                 member?.last_interest_dt >= member.unpin_dt ||
@@ -94,7 +94,7 @@ export class DiscussChannelMember extends models.ServerModel {
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
 
-        const members = this._filter([["id", "in", ids]]);
+        const members = this.browse(ids);
         /** @type {Record<string, { thread: any; id: number; persona: any }>[]} */
         const dataList = [];
         for (const member of members) {
@@ -103,7 +103,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 persona = this._get_partner_data([member.id]);
             }
             if (member.guest_id) {
-                const [guest] = MailGuest._filter([["id", "=", member.guest_id]]);
+                const [guest] = MailGuest.browse(member.guest_id);
                 persona = MailGuest._guest_format([guest.id])[guest.id];
             }
             const data = {
@@ -131,7 +131,7 @@ export class DiscussChannelMember extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const [member] = this._filter([["id", "in", ids]]);
+        const [member] = this.browse(ids);
         return ResPartner.mail_partner_format([member.partner_id])[member.partner_id];
     }
 }
