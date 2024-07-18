@@ -89,9 +89,15 @@ class HrExpense(models.Model):
         default=_default_account_id, domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]", help="An expense account is expected")
     description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
-        ("own_account", "Employee (to reimburse)"),
-        ("company_account", "Company")
-    ], default='own_account', tracking=True, states={'done': [('readonly', True)], 'approved': [('readonly', True)], 'reported': [('readonly', True)]}, string="Paid By")
+            ("own_account", "Employee (to reimburse)"),
+            ("company_account", "Company")
+        ],
+        default='own_account',
+        required=True,
+        tracking=True,
+        states={'done': [('readonly', True)], 'approved': [('readonly', True)], 'reported': [('readonly', True)]},
+        string="Paid By",
+    )
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')
     state = fields.Selection([
         ('draft', 'To Submit'),
@@ -1070,6 +1076,9 @@ class HrExpenseSheet(models.Model):
                 raise UserError(_("You can't mix sample expenses and regular ones"))
             self.write({'state': 'post'})
             return
+
+        if False in self.mapped('payment_mode'):
+            raise UserError(_("Please specify who paid the expenses"))
 
         if any(sheet.state != 'approve' for sheet in self):
             raise UserError(_("You can only generate accounting entry for approved expense(s)."))
