@@ -211,7 +211,6 @@ class FleetVehicle(models.Model):
             if prepared_data.get(vehicle_id.id):
                 if prepared_data[vehicle_id.id]['expiration_date'] < expiration_date:
                     prepared_data[vehicle_id.id]['expiration_date'] = expiration_date
-                if prepared_data[vehicle_id.id]['state'] == 'futur' and state == 'open':
                     prepared_data[vehicle_id.id]['state'] = state
             else:
                 prepared_data[vehicle_id.id] = {
@@ -263,12 +262,22 @@ class FleetVehicle(models.Model):
         else:
             search_operator = 'not in'
         today = fields.Date.context_today(self)
-        res_ids = self.env['fleet.vehicle.log.contract'].search([
-            ('expiration_date', '!=', False),
-            ('expiration_date', '<', today),
-            ('state', 'in', ['open', 'expired'])
-        ]).mapped('vehicle_id').ids
-        res.append(('id', search_operator, res_ids))
+        # get the id of vehicles that have overdue contracts
+        # but exclude those for which a new contract has already been created for them
+        vehicle_ids = self.env['fleet.vehicle']._search([
+            ("log_contracts", "any", [
+                ('expiration_date', '!=', False),
+                ('expiration_date', '<', today),
+                ('state', 'in', ['open', 'expired'])
+            ]),
+            "!",
+                ("log_contracts", "any", [
+                    ('expiration_date', '!=', False),
+                    ('expiration_date', '>=', today),
+                    ('state', 'in', ['open', 'futur'])
+                ]),
+        ])
+        res.append(('id', search_operator, vehicle_ids))
         return res
 
     def _clean_vals_internal_user(self, vals):
