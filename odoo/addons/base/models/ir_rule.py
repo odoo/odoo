@@ -5,7 +5,7 @@ import logging
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.osv import expression
-from odoo.tools import config
+from odoo.tools import config, SQL
 from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
@@ -119,16 +119,17 @@ class IrRule(models.Model):
         if self.env.su:
             return self.browse(())
 
-        query = """ SELECT r.id FROM ir_rule r JOIN ir_model m ON (r.model_id=m.id)
-                    WHERE m.model=%s AND r.active AND r.perm_{mode}
-                    AND (r.id IN (SELECT rule_group_id FROM rule_group_rel rg
-                                  JOIN res_groups_users_rel gu ON (rg.group_id=gu.gid)
-                                  WHERE gu.uid=%s)
-                         OR r.global)
-                    ORDER BY r.id
-                """.format(mode=mode)
-        self._cr.execute(query, (model_name, self._uid))
-        return self.browse(row[0] for row in self._cr.fetchall())
+        sql = SQL("""
+            SELECT r.id FROM ir_rule r
+            JOIN ir_model m ON (r.model_id=m.id)
+            WHERE m.model = %s AND r.active AND r.perm_%s
+                AND (r.global OR r.id IN (
+                    SELECT rule_group_id FROM rule_group_rel rg
+                    WHERE rg.group_id IN %s
+                ))
+            ORDER BY r.id
+        """, model_name, SQL(mode), tuple(self.env.user._get_group_ids()) or (None,))
+        return self.browse(v for v, in self.env.execute_query(sql))
 
     @api.model
     @tools.conditional(

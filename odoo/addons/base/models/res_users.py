@@ -610,25 +610,21 @@ class Users(models.Model):
         :param group_ids: list of group ids
         :return: boolean: is there at least a user in at least 2 of the provided groups
         """
-        if group_ids:
-            args = [tuple(group_ids)]
-            if len(self.ids) == 1:
-                where_clause = "AND r.uid = %s"
-                args.append(self.id)
-            else:
-                where_clause = ""  # default; we check ALL users (actually pretty efficient)
-            query = """
-                    SELECT 1 FROM res_groups_users_rel WHERE EXISTS(
-                        SELECT r.uid
-                        FROM res_groups_users_rel r
-                        WHERE r.gid IN %s""" + where_clause + """
-                        GROUP BY r.uid HAVING COUNT(r.gid) > 1
-                    )
-            """
-            self.env.cr.execute(query, args)
-            return bool(self.env.cr.fetchall())
-        else:
+        if not group_ids:
             return False
+        if len(self.ids) == 1:
+            user_condition = SQL(" AND r.uid = %s", self.id)
+        else:
+            # default; we check ALL users (actually pretty efficient)
+            user_condition = SQL()
+        return bool(self.env.execute_query(SQL("""
+        SELECT r.uid
+        FROM res_groups_users_rel r
+        WHERE r.gid IN %s %s
+        GROUP BY r.uid
+        HAVING COUNT(r.gid) > 1
+        LIMIT 1
+        """, tuple(group_ids), user_condition)))
 
     def toggle_active(self):
         for user in self:
