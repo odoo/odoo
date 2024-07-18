@@ -46,7 +46,7 @@ class HrLeave(models.Model):
                         'calendar_id': contract.resource_calendar_id.id,
                     }]
 
-        return resource_leaves | self.env['resource.calendar.leaves'].create(resource_leave_values)
+        return resource_leaves | self.env['resource.calendar.leaves'].sudo().create(resource_leave_values)
 
     def _get_overlapping_contracts(self, contract_states=None):
         self.ensure_one()
