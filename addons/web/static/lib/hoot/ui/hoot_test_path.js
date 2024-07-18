@@ -57,6 +57,11 @@ export class HootTestPath extends Component {
                             title="'Run ' + suite.fullName"
                             t-esc="suite.name"
                         />
+                        <t t-if="suite.config.multi">
+                            <strong class="text-abort whitespace-nowrap me-1">
+                                x<t t-esc="suite.config.multi" />
+                            </strong>
+                        </t>
                     </t>
                     <span class="select-none hidden md:inline" t-att-class="{ 'text-skip': suite.config.skip }">/</span>
                 </t>
@@ -69,12 +74,9 @@ export class HootTestPath extends Component {
                 <t t-if="props.canCopy">
                     <HootCopyButton text="props.test.name" altText="props.test.id" />
                 </t>
-                <t t-if="props.test.config.multi">
+                <t t-if="props.test.runCount > 1">
                     <strong class="text-abort whitespace-nowrap mx-1">
-                        x<t t-esc="props.test.visited" />
-                        <t t-if="props.test.visited lt props.test.config.multi">
-                            <t t-esc="'/' + props.test.config.multi" />
-                        </t>
+                        x<t t-esc="props.test.runCount" />
                     </strong>
                 </t>
             </span>
