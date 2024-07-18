@@ -499,18 +499,20 @@ export class OdooPivotModel extends PivotModel {
      * @return {string[]}
      */
     _getMeasureSpecs() {
-        return this.getDefinition().measures.map((measure) => {
-            if (measure.type === "many2one" && !measure.aggregator) {
-                return `${measure.fieldName}:count_distinct`;
-            }
-            if (measure.fieldName === "__count") {
-                // Remove aggregator that is not supported by python
-                return "__count";
-            }
-            return measure.aggregator
-                ? `${measure.fieldName}:${measure.aggregator}`
-                : measure.fieldName;
-        });
+        return this.getDefinition()
+            .measures.filter((measure) => !measure.computedBy)
+            .map((measure) => {
+                if (measure.type === "many2one" && !measure.aggregator) {
+                    return `${measure.fieldName}:count_distinct`;
+                }
+                if (measure.fieldName === "__count") {
+                    // Remove aggregator that is not supported by python
+                    return "__count";
+                }
+                return measure.aggregator
+                    ? `${measure.fieldName}:${measure.aggregator}`
+                    : measure.fieldName;
+            });
     }
 
     /**
