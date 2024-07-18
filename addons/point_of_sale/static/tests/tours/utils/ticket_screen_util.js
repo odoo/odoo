@@ -111,7 +111,7 @@ export function confirmRefund() {
     return [
         ProductScreen.clickReview(),
         {
-            trigger: ".ticket-screen .button.pay-order-button",
+            trigger: ".ticket-screen .btn-primary.pay-order-button",
             run: "click",
         },
     ];
