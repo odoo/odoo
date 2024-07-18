@@ -1689,7 +1689,13 @@ export class Model extends Array {
         const result = [];
         for (const record of this) {
             const isInDomain = actualDomain.contains(record);
-            if (isInDomain && (!name || record.display_name?.includes(name))) {
+            if (
+                isInDomain &&
+                (!name ||
+                    (operator === "="
+                        ? record.display_name === name
+                        : record.display_name?.includes(name)))
+            ) {
                 result.push([record.id, record.display_name]);
             }
         }
