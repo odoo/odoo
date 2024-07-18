@@ -276,6 +276,7 @@ const Wysiwyg = Widget.extend({
             collaborationClientAvatarUrl: this._getCollaborationClientAvatarUrl(),
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading', 'o_link_in_selection'],
             foldSnippets: !!options.foldSnippets,
+            autoActivateContentEditable: this.options.autoActivateContentEditable,
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {

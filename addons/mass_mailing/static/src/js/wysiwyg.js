@@ -136,6 +136,11 @@ const MassMailingWysiwyg = Wysiwyg.extend({
             this.toolbar.$el.find('#create-link').toggleClass('d-none', true);
         }
     },
+    _getEditorOptions: function () {
+        const options = this._super(...arguments);
+        const finalOptions = { autoActivateContentEditable: false, ...options };
+        return finalOptions;
+    },
 });
 
 return MassMailingWysiwyg;

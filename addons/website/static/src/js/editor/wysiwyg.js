@@ -134,6 +134,10 @@ const WebsiteWysiwyg = Wysiwyg.extend({
                 // Extra menu attributes to ignore.
                 const extraMenuClasses = ["nav-item", "nav-link", "dropdown-item", "active"];
                 const extraMenuToggleAttributes = ["data-bs-auto-close"];
+                // Carousel attributes to ignore.
+                const carouselSlidingClasses = ["carousel-item-start", "carousel-item-end",
+                    "carousel-item-next", "carousel-item-prev", "active"];
+                const carouselIndicatorAttributes = ["aria-current"];
 
                 return filteredRecords.filter(record => {
                     if (record.type === "attributes") {
@@ -177,6 +181,19 @@ const WebsiteWysiwyg = Wysiwyg.extend({
                                 return false;
                             }
                         }
+
+                        // Do not record some carousel attributes changes.
+                        if (record.target.closest(":not(section) > .carousel")) {
+                            if (record.target.matches(".carousel-item, .carousel-indicators > li")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, carouselSlidingClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".carousel-indicators > li")
+                                    && carouselIndicatorAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+                        }
                     } else if (record.type === "childList") {
                         const addedOrRemovedNode = record.addedNodes[0] || record.removedNodes[0];
                         // Do not record the addition/removal of the extra menu
@@ -198,6 +215,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
      * @returns {Promise}
      */
     _saveViewBlocks: async function () {
+        this._restoreCarousels();
         await this._super.apply(this, arguments);
         if (this.isDirty()) {
             return this._restoreMegaMenus();
@@ -400,6 +418,27 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         megaMenuEl.classList.add('o_no_parent_editor');
         this.odooEditor.observerActive("toggleMegaMenu");
         return this.snippetsMenu.activateSnippet($(megaMenuEl));
+    },
+    /**
+     * Restores all the carousels so their first slide is the active one.
+     *
+     * @private
+     */
+    _restoreCarousels() {
+        this.$editable[0].querySelectorAll(".carousel").forEach(carouselEl => {
+            // Set the first slide as the active one.
+            carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
+                itemEl.classList.remove("next", "prev", "left", "right");
+                itemEl.classList.toggle("active", i === 0);
+            });
+            carouselEl.querySelectorAll(".carousel-indicators li[data-bs-slide-to]").forEach((indicatorEl, i) => {
+                indicatorEl.classList.toggle("active", i === 0);
+                indicatorEl.removeAttribute("aria-current");
+                if (i === 0) {
+                    indicatorEl.setAttribute("aria-current", "true");
+                }
+            });
+        });
     },
     /**
      * Hides all opened dropdowns.
