@@ -6,19 +6,10 @@ class Partner extends models.Model {
     foo = fields.Char({
         string: "Foo",
         default: "My little Foo Value",
-        searchable: true,
         trim: true,
     });
-    int_field = fields.Integer({
-        string: "int_field",
-        sortable: true,
-        searchable: true,
-    });
-    float_field = fields.Float({
-        string: "float_field",
-        sortable: true,
-        searchable: true,
-    });
+    int_field = fields.Integer();
+    float_field = fields.Float();
     _records = [
         { id: 1, foo: "yop", int_field: 10 },
         { id: 2, foo: "gnap", int_field: 80 },

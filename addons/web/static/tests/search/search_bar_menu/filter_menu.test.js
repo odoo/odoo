@@ -798,7 +798,7 @@ test("consistent display of ! in debug mode", async () => {
 });
 
 test("display of is (not) (not) set in facets", async () => {
-    Foo._fields.boolean = fields.Boolean({ searchable: true });
+    Foo._fields.boolean = fields.Boolean();
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "foo",

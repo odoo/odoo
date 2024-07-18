@@ -22,7 +22,7 @@ import {
 class Partner extends models.Model {
     _name = "res.partner";
 
-    date = fields.Date({ string: "Date" });
+    date = fields.Date();
     char_field = fields.Char({ string: "Char" });
 
     _records = [
@@ -257,7 +257,7 @@ test("date field with warn_future option ", async () => {
 });
 
 test("date field with warn_future option: do not overwrite datepicker option", async () => {
-    Partner._fields.date = fields.Date({ string: "Date", default: undefined, onChange: () => {} });
+    Partner._onChanges.date = () => {};
 
     await mountView({
         type: "form",
@@ -411,10 +411,7 @@ test("hit enter should update value", async () => {
 test("allow to use compute dates (+5d for instance)", async () => {
     mockDate({ year: 2021, month: 2, day: 15 });
 
-    Partner._fields.date = fields.Date({
-        string: "Date",
-        default: "2019-09-15",
-    });
+    Partner._fields.date.default = "2019-09-15";
     await mountView({ type: "form", resModel: "res.partner" });
 
     expect(".o_field_date input").toHaveValue("09/15/2019");
