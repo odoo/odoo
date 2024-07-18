@@ -1324,6 +1324,28 @@ class StockQuant(TransactionCase):
         move._action_assign()
         self.assertFalse(move.quantity)
 
+    def test_lot_of_product_different_from_quant(self):
+        """
+        Test that a lot cannot be used in a quant if the product is different.
+        """
+        product_lot_2 = self.env['product.product'].create({
+            'name': 'Product',
+            'is_storable': True,
+            'tracking': 'lot',
+        })
+        lot_a = self.env['stock.lot'].create({
+            'name': 'A',
+            'product_id': product_lot_2.id,
+            'product_qty': 5,
+        })
+        with self.assertRaises(ValidationError):
+            self.env['stock.quant'].create({
+                'product_id': self.product_lot.id,
+                'location_id': self.stock_location.id,
+                'quantity': 20.0,
+                'lot_id': lot_a.id,
+            })
+
 
 class StockQuantRemovalStrategy(TransactionCase):
     def setUp(self):
