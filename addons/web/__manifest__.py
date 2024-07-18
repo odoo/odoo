@@ -133,6 +133,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.assets_backend_lazy': [
             ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
@@ -140,6 +141,9 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/views/graph/**',
             'web/static/src/views/pivot/**',
+        ],
+        'web.assets_backend_lazy_dark': [
+            ('include', 'web.assets_backend_lazy'),
         ],
         'web.assets_web': [
             ('include', 'web.assets_backend'),
