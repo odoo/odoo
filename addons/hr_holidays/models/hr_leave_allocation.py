@@ -689,7 +689,7 @@ class HolidaysAllocation(models.Model):
         # if allocation_validation_type == 'both': this method is the first approval
         # if allocation_validation_type != 'both': this method calls action_validate() below
 
-        if any(allocation.state != 'confirm' for allocation in self):
+        if any(allocation.validation_type != 'no_validation' and allocation.state != 'confirm' for allocation in self):
             raise UserError(_('Allocation must be confirmed ("To Approve") in order to approve it.'))
 
         current_employee = self.env.user.employee_id
