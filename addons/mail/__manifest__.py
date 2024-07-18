@@ -135,9 +135,7 @@ For more specific needs, you may also assign custom-defined actions
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
             'mail/static/src/scss/*.scss',
-            'mail/static/lib/**/*',
-            ('remove', 'mail/static/lib/odoo_sfu/odoo_sfu.js'),
-            ('remove', 'mail/static/lib/lame/lame.js'),
+            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             'mail/static/src/js/**/*',
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
