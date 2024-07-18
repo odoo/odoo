@@ -42,8 +42,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         run: "click",
     },
     {
-        trigger: ":iframe #website_cookies_bar:not(.d-none)",
-        allowInvisible: true,
+        trigger: ":iframe #website_cookies_bar:not(.d-none):not(:visible)",
     },
     {
         content: "Scroll to top",

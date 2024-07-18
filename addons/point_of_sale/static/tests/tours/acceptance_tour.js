@@ -51,9 +51,9 @@ registry.category("web_tour.tours").add("pos_basic_order_03_tax_position", {
         [
             waitForLoading(),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0"),
-            inLeftSide(Order.hasTotal("5.28")),
+            inLeftSide(...Order.hasTotal("5.28")),
             ProductScreen.clickFiscalPosition("FP-POS-2M", true),
-            inLeftSide(Order.hasTotal("5.52")),
+            inLeftSide(...Order.hasTotal("5.52")),
             ProductScreen.closePos(),
         ].flat(),
 });

@@ -102,7 +102,6 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         content: "The menu should still be visible. Edit a menu item.",
         trigger: ':iframe .o_mega_menu h4',
         // The content is removed in the previous step so it's now invisible.
-        allowInvisible: true,
         run: "editor New Menu Item",
     },
     {

@@ -37,8 +37,7 @@ registry.category("web_tour.tours").add("check_free_delivery", {
         tourUtils.pay(),
         {
             content: "Confirmation page should be shown",
-            trigger: "#oe_structure_website_sale_confirmation_1",
-            allowInvisible: true,
+            trigger: "#oe_structure_website_sale_confirmation_1:not(:visible)",
         },
     ],
 });
