@@ -83,7 +83,7 @@ export class HootDebugToolBar extends Component {
     formatTime = formatTime;
 
     get done() {
-        return Boolean(this.runnerState.done.length); // subscribe to test being added as done
+        return Boolean(this.runnerState.done.size); // subscribe to test being added as done
     }
 
     setup() {

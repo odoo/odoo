@@ -276,9 +276,9 @@ export class Runner {
         currentTest: null,
         /**
          * List of tests that have been run
-         * @type {Test[]}
+         * @type {Set<Test>}
          */
-        done: [],
+        done: new Set(),
         /**
          * @type {Record<string, GlobalErrorReport>}
          */
@@ -377,7 +377,7 @@ export class Runner {
             );
         });
 
-        [this._pushTest, this._pushPendingTest] = batch((test) => this.state.done.push(test), 10);
+        [this._pushTest, this._pushPendingTest] = batch((test) => this.state.done.add(test), 10);
         [this.expect, this.expectHooks] = makeExpect({
             get headless() {
                 return reactiveConfig.headless;
@@ -783,7 +783,7 @@ export class Runner {
         const nextJob = (job) => {
             this.state.currentTest = null;
             if (job) {
-                const sibling = job.currentJobs?.[job.visited++];
+                const sibling = job.currentJobs?.[job.currentJobIndex++];
                 if (sibling) {
                     return sibling;
                 }
@@ -809,14 +809,14 @@ export class Runner {
                 /** @type {Suite} */
                 const suite = job;
                 if (!suite.config.skip) {
-                    if (suite.visited <= 0) {
+                    if (suite.currentJobIndex <= 0) {
                         // before suite code
                         this.suiteStack.push(suite);
 
                         await this._callbacks.call("before-suite", suite, handleError);
                         await suite.callbacks.call("before-suite", suite, handleError);
                     }
-                    if (suite.visited >= suite.currentJobs.length) {
+                    if (suite.currentJobIndex >= suite.currentJobs.length) {
                         // after suite code
                         this.suiteStack.pop();
 
@@ -825,6 +825,10 @@ export class Runner {
                             await this._callbacks.call("after-suite", suite, handleError);
                         });
 
+                        suite.runCount++;
+                        if (suite.config.multi && suite.runCount < suite.config.multi) {
+                            suite.resetIndex();
+                        }
                         suite.parent?.reporting.add({ suites: +1 });
                         suite.callbacks.clear();
 
@@ -916,7 +920,7 @@ export class Runner {
 
             // Log test errors and increment counters
             this.expectHooks.after(test, this);
-            test.visited++;
+            test.runCount++;
             if (lastResults.pass) {
                 logger.logTest(test);
             } else {
@@ -951,12 +955,14 @@ export class Runner {
                     return this.stop();
                 }
             }
-            if (!test.config.multi || test.visited === test.config.multi) {
+            if (!test.config.multi || test.runCount >= test.config.multi) {
                 this._pushTest(test);
                 if (this.debug) {
                     return new Promise(() => {});
                 }
-                test.setRunFn(null);
+                if (!test.willRunAgain()) {
+                    test.setRunFn(null);
+                }
                 job = nextJob(job);
             }
         }
