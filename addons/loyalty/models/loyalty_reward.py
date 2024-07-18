@@ -168,7 +168,7 @@ class LoyaltyReward(models.Model):
                 elif len(products) == 1:
                     reward_string = _('Free Product - %s', reward.reward_product_id.with_context(display_default_code=False).display_name)
                 else:
-                    reward_string = _('Free Product - [%s]', ', '.join(products.with_context(display_default_code=False).mapped('display_name')))
+                    reward_string = _('Free Product - [%s]', ', '.join(products._origin.with_context(display_default_code=False).mapped('display_name')))
             elif reward.reward_type == 'discount':
                 format_string = '%(amount)g %(symbol)s'
                 if reward.currency_id.position == 'before':
