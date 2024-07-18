@@ -8,7 +8,12 @@
         <field name="arch" type="xml">
             <group name="main_fields" position="inside">
                 <group name="ecommerce_main_fields">
-                    <field name="visibility" string="eCommerce Filter Visibility" widget="radio"/>
+                    <field
+                        name="visibility"
+                        string="eCommerce Filter"
+                        widget="radio"
+                        options="{'horizontal': True}"
+                    />
                 </group>
             </group>
         </field>

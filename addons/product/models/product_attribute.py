@@ -28,14 +28,14 @@ class ProductAttribute(models.Model):
         selection=[
             ('always', 'Instantly'),
             ('dynamic', 'Dynamically'),
-            ('no_variant', 'Never (option)'),
+            ('no_variant', 'Never'),
         ],
         default='always',
-        string="Variants Creation Mode",
+        string="Variant Creation",
         help="""- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.
         - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.
         - Never: Variants are never created for the attribute.
-        Note: the variants creation mode cannot be changed once the attribute is used on at least one product.""",
+        Note: this cannot be changed once the attribute is used on a product.""",
         required=True)
     display_type = fields.Selection(
         selection=[
@@ -43,7 +43,7 @@ class ProductAttribute(models.Model):
             ('pills', 'Pills'),
             ('select', 'Select'),
             ('color', 'Color'),
-            ('multi', 'Multi-checkbox (option)'),
+            ('multi', 'Multi-checkbox'),
         ],
         default='radio',
         required=True,
