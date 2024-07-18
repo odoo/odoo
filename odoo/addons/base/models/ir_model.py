@@ -2032,26 +2032,22 @@ class IrModelAccess(models.Model):
     def _get_allowed_models(self, mode='read'):
         assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
 
+        group_ids = self.env.user._get_group_ids()
         self.flush_model()
-        self.env.cr.execute(f"""
+        rows = self.env.execute_query(sqltools.SQL("""
             SELECT m.model
               FROM ir_model_access a
               JOIN ir_model m ON (m.id = a.model_id)
-             WHERE a.perm_{mode}
+             WHERE a.perm_%s
                AND a.active
                AND (
                     a.group_id IS NULL OR
-                    -- use subselect fo force a better query plan. See #99695 --
-                    a.group_id IN (
-                        SELECT gu.gid
-                            FROM res_groups_users_rel gu
-                            WHERE gu.uid = %s
-                    )
+                    a.group_id IN %s
                 )
             GROUP BY m.model
-        """, (self.env.uid,))
+        """, sqltools.SQL(mode), tuple(group_ids) or (None,)))
 
-        return frozenset(v[0] for v in self.env.cr.fetchall())
+        return frozenset(v[0] for v in rows)
 
     @api.model
     def check(self, model, mode='read', raise_exception=True):

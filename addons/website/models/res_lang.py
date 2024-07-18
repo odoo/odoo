@@ -21,7 +21,8 @@ class Lang(models.Model):
         :return: LangDataDict({code: LangData})
         """
         if request and getattr(request, 'is_frontend', True):
-            lang_ids = self.env['website'].get_current_website().language_ids.sorted('name').ids
+            # get languages while ignoring current language as the one in the context may be invalid
+            lang_ids = self.env['website'].get_current_website().with_context(lang=False).language_ids.sorted('name').ids
             langs = [dict(self.env['res.lang']._get_data(id=id_)) for id_ in lang_ids]
             es_419_exists = any(lang['code'] == 'es_419' for lang in langs)
             already_shortened = []
