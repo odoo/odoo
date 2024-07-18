@@ -169,7 +169,7 @@ class EventEvent(models.Model):
         string='Maximum Attendees',
         compute='_compute_seats_max', readonly=False, store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
-    seats_limited = fields.Boolean('Limit Attendees', required=True, compute='_compute_seats_limited',
+    seats_limited = fields.Boolean('Limit Attendees', compute='_compute_seats_limited',
                                    precompute=True, readonly=False, store=True)
     seats_reserved = fields.Integer(
         string='Number of Registrations',

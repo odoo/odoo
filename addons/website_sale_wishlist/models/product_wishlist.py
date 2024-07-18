@@ -19,7 +19,7 @@ class ProductWishlist(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', help='Pricelist when added')
     price = fields.Monetary(currency_field='currency_id', string='Price', help='Price of the product when it has been added in the wishlist')
     website_id = fields.Many2one('website', ondelete='cascade', required=True)
-    active = fields.Boolean(default=True, required=True)
+    active = fields.Boolean(default=True)
 
     @api.model
     def current(self):

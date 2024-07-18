@@ -4,6 +4,8 @@ from __future__ import division
 from itertools import count, zip_longest
 
 from odoo import api, fields, models, Command
+from odoo.tools import mute_logger
+
 
 class A(models.Model):
     _name = 'test_testing_utilities.a'
@@ -301,10 +303,11 @@ class O2MReadonlySubfieldChild(models.Model):
     def _inverse_f(self):
         raise AssertionError("Inverse of f should not be called")
 
-class ReqBool(models.Model):
-    _name = _description = 'test_testing_utilities.req_bool'
+with mute_logger('odoo.fields'):
+    class ReqBool(models.Model):
+        _name = _description = 'test_testing_utilities.req_bool'
 
-    f_bool = fields.Boolean(required=True)
+        f_bool = fields.Boolean(required=True)
 
 class O2MChangesParent(models.Model):
     _name = _description = 'o2m_changes_parent'

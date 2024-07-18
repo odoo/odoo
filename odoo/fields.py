@@ -1463,6 +1463,11 @@ class Boolean(Field):
     type = 'boolean'
     column_type = ('bool', 'bool')
 
+    def _setup_attrs(self, model_class, name):
+        super()._setup_attrs(model_class, name)
+        if self.required:
+            _logger.warning("%s: Boolean fields can't be required", self)
+
     def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
 
