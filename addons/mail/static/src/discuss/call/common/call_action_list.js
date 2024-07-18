@@ -5,6 +5,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { useCallActions } from "./call_actions";
 
 export class CallActionList extends Component {
     static components = { Dropdown, DropdownItem };
@@ -15,44 +16,11 @@ export class CallActionList extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.rtc = useState(useService("discuss.rtc"));
+        this.callActions = useCallActions();
     }
 
     get MORE() {
         return _t("More");
-    }
-
-    get moreActions() {
-        const acts = [];
-        acts.push({
-            id: "raiseHand",
-            name: !this.rtc.selfSession.raisingHand ? _t("Raise Hand") : _t("Lower Hand"),
-            icon: "fa fa-fw fa-hand-paper-o",
-            onSelect: (ev) => this.onClickRaiseHand(ev),
-        });
-        if (isMobileOS) {
-            acts.push({
-                id: "shareScreen",
-                name: !this.rtc.state.sendScreen ? _t("Share Screen") : _t("Stop Sharing Screen"),
-                icon: "fa fa-fw fa-desktop",
-                onSelect: () => this.rtc.toggleVideo("screen"),
-            });
-        }
-        if (!this.props.fullscreen.isActive) {
-            acts.push({
-                id: "fullScreen",
-                name: _t("Enter Full Screen"),
-                icon: "fa fa-fw fa-arrows-alt",
-                onSelect: () => this.props.fullscreen.enter(),
-            });
-        } else {
-            acts.push({
-                id: "exitFullScreen",
-                name: _t("Exit Full Screen"),
-                icon: "fa fa-fw fa-compress",
-                onSelect: () => this.props.fullscreen.exit(),
-            });
-        }
-        return acts;
     }
 
     get isOfActiveCall() {
@@ -65,37 +33,6 @@ export class CallActionList extends Component {
 
     get isMobileOS() {
         return isMobileOS();
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     */
-    async onClickDeafen(ev) {
-        if (this.rtc.selfSession.isDeaf) {
-            this.rtc.undeafen();
-        } else {
-            this.rtc.deafen();
-        }
-    }
-
-    async onClickRaiseHand(ev) {
-        this.rtc.raiseHand(!this.rtc.selfSession.raisingHand);
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     */
-    onClickMicrophone(ev) {
-        if (this.rtc.selfSession.isMute) {
-            if (this.rtc.selfSession.isSelfMuted) {
-                this.rtc.unmute();
-            }
-            if (this.rtc.selfSession.isDeaf) {
-                this.rtc.undeafen();
-            }
-        } else {
-            this.rtc.mute();
-        }
     }
 
     /**
