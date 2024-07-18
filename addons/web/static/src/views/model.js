@@ -58,8 +58,8 @@ export class Model extends EventBus {
         return null;
     }
 
-    notify() {
-        this.trigger("update");
+    async notify() {
+        await this.trigger("update");
     }
 }
 Model.services = [];
