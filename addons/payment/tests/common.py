@@ -151,6 +151,14 @@ class PaymentCommon(PaymentTestUtils):
         return currency
 
     @classmethod
+    def _prepare_user(cls, user, group_xmlid):
+        user.groups_id = [Command.link(cls.env.ref(group_xmlid).id)]
+        # Flush and invalidate the cache to allow checking access rights.
+        user.flush()
+        user.invalidate_cache()
+        return user
+
+    @classmethod
     def _prepare_acquirer(cls, provider='none', company=None, update_values=None):
         """ Prepare and return the first acquirer matching the given provider and company.
 
@@ -244,3 +252,24 @@ class PaymentCommon(PaymentTestUtils):
             'invoice_id': self.invoice.id,
             'flow': flow,
         }
+
+    def _assert_does_not_raise(self, exception_class, func, *args, **kwargs):
+        """ Fail if an exception of the provided class is raised when calling the function.
+
+        If an exception of any other class is raised, it is caught and silently ignored.
+
+        This method cannot be used with functions that make requests. Any exception raised in the
+        scope of the new request will not be caught and will make the test fail.
+
+        :param class exception_class: The class of the exception to monitor.
+        :param function fun: The function to call when monitoring for exceptions.
+        :param list args: The positional arguments passed as-is to the called function.
+        :param dict kwargs: The keyword arguments passed as-is to the called function.
+        :return: None
+        """
+        try:
+            func(*args, **kwargs)
+        except exception_class:
+            self.fail(f"{func.__name__} should not raise error of class {exception_class.__name__}")
+        except Exception:
+            pass  # Any exception whose class is not monitored is caught and ignored.
