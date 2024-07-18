@@ -12,18 +12,18 @@ export class MailNotification extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const notifications = this._filter([["id", "in", ids]]);
+        const notifications = this.browse(ids);
         return notifications.filter((notification) => {
-            const partner = ResPartner._filter([["id", "=", notification.res_partner_id]])[0];
+            const [partner] = ResPartner.browse(notification.res_partner_id);
             if (
                 ["bounce", "exception", "canceled"].includes(notification.notification_status) ||
                 (partner && partner.partner_share)
             ) {
                 return true;
             }
-            const message = MailMessage._filter([["id", "=", notification.mail_message_id]])[0];
+            const [message] = MailMessage.browse(notification.mail_message_id);
             const subtypes = message.subtype_id
-                ? MailMessageSubtype._filter([["id", "=", message.subtype_id]])
+                ? MailMessageSubtype.browse(message.subtype_id)
                 : [];
             return subtypes.length === 0 || subtypes[0].track_recipients;
         });
@@ -34,9 +34,9 @@ export class MailNotification extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const notifications = this._filter([["id", "in", ids]]);
+        const notifications = this.browse(ids);
         for (const notification of notifications) {
-            const partner = ResPartner._filter([["id", "=", notification.res_partner_id]])[0];
+            const [partner] = ResPartner.browse(notification.res_partner_id);
             if (partner) {
                 store.add("Persona", {
                     displayName: partner.display_name,

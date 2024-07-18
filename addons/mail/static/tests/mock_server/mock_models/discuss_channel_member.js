@@ -29,13 +29,11 @@ export class DiscussChannelMember extends models.ServerModel {
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
-        const members = this._filter([["id", "in", ids]]);
+        const members = this.browse(ids);
         const notifications = [];
         for (const member of members) {
-            const [channel] = DiscussChannel._filter([["id", "=", member.channel_id]]);
-            const store = new mailDataHelpers.Store(
-                DiscussChannelMember.browse(member.id).map((record) => record.id)
-            );
+            const [channel] = DiscussChannel.browse(member.channel_id);
+            const store = new mailDataHelpers.Store(DiscussChannelMember.browse(member.id));
             store.add("ChannelMember", { id: member.id, isTyping: is_typing });
             notifications.push([channel, "mail.record/insert", store.get_result()]);
         }
@@ -44,7 +42,7 @@ export class DiscussChannelMember extends models.ServerModel {
 
     _compute_is_pinned() {
         for (const member of this) {
-            const [channel] = this.env["discuss.channel"]._filter([["id", "=", member.channel_id]]);
+            const [channel] = this.env["discuss.channel"].browse(member.channel_id);
             member.is_pinned =
                 !member.unpin_dt ||
                 member?.last_interest_dt >= member.unpin_dt ||
@@ -53,7 +51,7 @@ export class DiscussChannelMember extends models.ServerModel {
     }
 
     _compute_message_unread_counter([memberId]) {
-        const [member] = this._filter([["id", "=", memberId]]);
+        const [member] = this.browse(memberId);
         return this.env["mail.message"].search_count([
             ["res_id", "=", member.channel_id],
             ["model", "=", "discuss.channel"],
@@ -126,7 +124,7 @@ export class DiscussChannelMember extends models.ServerModel {
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
 
-        const members = this._filter([["id", "in", ids]]);
+        const members = this.browse(ids);
         for (const member of members) {
             const data = {};
             if ("id" in fields) {
@@ -184,7 +182,7 @@ export class DiscussChannelMember extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const [member] = this._filter([["id", "in", ids]]);
+        const [member] = this.browse(ids);
         store.add(ResPartner.browse(member.partner_id));
     }
 
@@ -199,7 +197,7 @@ export class DiscussChannelMember extends models.ServerModel {
         delete kwargs.ids;
         last_message_id = kwargs.last_message_id;
         sync = kwargs.sync ?? false;
-        const [member] = this._filter([["id", "in", ids]]);
+        const [member] = this.browse(ids);
         if (!member) {
             return;
         }
@@ -238,7 +236,7 @@ export class DiscussChannelMember extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const [member] = this._filter([["id", "in", ids]]);
+        const [member] = this.browse(ids);
         if (!member) {
             return;
         }
@@ -265,7 +263,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 target,
                 "mail.record/insert",
                 new mailDataHelpers.Store(
-                    DiscussChannelMember.browse(member.id).map((record) => record.id),
+                    DiscussChannelMember.browse(member.id),
                     makeKwArgs({
                         fields: {
                             id: true,
@@ -294,7 +292,7 @@ export class DiscussChannelMember extends models.ServerModel {
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
-        const [member] = this._filter([["id", "in", ids]]);
+        const [member] = this.browse(ids);
         if (!member) {
             return;
         }
@@ -308,7 +306,7 @@ export class DiscussChannelMember extends models.ServerModel {
             guest: { id: true, name: true },
         };
         const store = new mailDataHelpers.Store(
-            DiscussChannelMember.browse(member.id).map((record) => record.id),
+            DiscussChannelMember.browse(member.id),
             makeKwArgs({
                 fields: {
                     id: true,

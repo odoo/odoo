@@ -118,7 +118,7 @@ export class ResUsers extends webModels.ResUsers {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        const user = ResUsers._filter([["id", "in", ids]])[0];
+        const [user] = ResUsers.browse(ids);
         const channels = DiscussChannel._get_channels_as_member();
         const members = DiscussChannelMember._filter([
             ["channel_id", "in", channels.map((channel) => channel.id)],

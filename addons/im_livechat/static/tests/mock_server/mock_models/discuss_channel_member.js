@@ -13,11 +13,9 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const [member] = this._filter([["id", "in", ids]]);
-        const [channel] = DiscussChannel._filter([["id", "=", member.channel_id]]);
-        const [partner] = ResPartner._filter([["id", "=", member.partner_id]], {
-            active_test: false,
-        });
+        const [member] = this.browse(ids);
+        const [channel] = DiscussChannel.browse(member.channel_id);
+        const [partner] = ResPartner.browse(member.partner_id);
         if (channel.channel_type === "livechat") {
             const data = {
                 id: partner.id,
@@ -30,7 +28,7 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
                 data["name"] = partner.name;
             }
             if (!partner.is_public) {
-                const [country] = ResCountry._filter([["id", "=", partner.country_id]]);
+                const [country] = ResCountry.browse(partner.country_id);
                 data["country"] = country
                     ? {
                           code: country.code,

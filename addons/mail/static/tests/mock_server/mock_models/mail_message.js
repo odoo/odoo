@@ -49,7 +49,7 @@ export class MailMessage extends models.ServerModel {
                 messageIds.push(notification.mail_message_id);
             }
         }
-        const messages = this._filter([["id", "in", messageIds]]);
+        const messages = this.browse(messageIds);
         // simulate compute that should be done based on notifications
         for (const message of messages) {
             this.write([message.id], {
@@ -97,26 +97,23 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const messages = MailMessage._filter([["id", "in", ids]]).sort(
-            (a, b) => ids.indexOf(a) - ids.indexOf(b)
-        );
+        const messages = MailMessage.browse(ids);
         const notifications = MailNotification._filtered_for_web_client(
             MailNotification._filter([["mail_message_id", "in", ids]]).map((n) => n.id)
         );
         for (const message of messages) {
-            const thread =
-                message.model && this.env[message.model]._filter([["id", "=", message.res_id]])[0];
+            const thread = message.model && this.env[message.model].browse(message.res_id)[0];
             // sort attachments from oldest to most recent;
-            const attachments = IrAttachment._filter([["id", "in", message.attachment_ids]]).sort(
-                (a1, a2) => (a1.id < a2.id ? -1 : 1)
+            const attachments = IrAttachment.browse(message.attachment_ids).sort((a1, a2) =>
+                a1.id < a2.id ? -1 : 1
             );
             store.add(IrAttachment.browse(attachments.map((attachment) => attachment.id)));
-            const partners = ResPartner._filter([["id", "in", message.partner_ids]]);
-            const linkPreviews = MailLinkPreview._filter([["id", "in", message.link_preview_ids]]);
+            const partners = ResPartner.browse(message.partner_ids);
+            const linkPreviews = MailLinkPreview.browse(message.link_preview_ids);
             store.add(linkPreviews);
             const reactionsPerContent = {};
             for (const reactionId of message.reaction_ids ?? []) {
-                const [reaction] = MailMessageReaction._filter([["id", "=", reactionId]]);
+                const [reaction] = MailMessageReaction.browse(reactionId);
                 if (reactionsPerContent[reaction.content]) {
                     reactionsPerContent[reaction.content].push(reaction);
                 } else {
@@ -127,10 +124,10 @@ export class MailMessage extends models.ServerModel {
             for (const content in reactionsPerContent) {
                 const reactions = reactionsPerContent[content];
                 const guests = reactions
-                    .map((reaction) => MailGuest._filter([["id", "=", reaction.guest_id]])[0])
+                    .map((reaction) => MailGuest.browse(reaction.guest_id)[0])
                     .filter((guest) => !!guest);
                 const partners = reactions
-                    .map((reaction) => ResPartner._filter([["id", "=", reaction.partner_id]])[0])
+                    .map((reaction) => ResPartner.browse(reaction.partner_id)[0])
                     .filter((partner) => !!partner);
                 reactionGroups.push({
                     content: content,
@@ -182,7 +179,7 @@ export class MailMessage extends models.ServerModel {
             };
             delete response.author_id;
             if (message.subtype_id) {
-                const subtype = MailMessageSubtype._filter([["id", "=", message.subtype_id]])[0];
+                const [subtype] = MailMessageSubtype.browse(message.subtype_id);
                 response.subtype_description = subtype.description;
             }
             if (response.model && response.res_id) {
@@ -208,9 +205,7 @@ export class MailMessage extends models.ServerModel {
                 response["starred"] = message.starred_partner_ids?.includes(
                     this.env.user?.partner_id
                 );
-                const trackingValues = MailTrackingValue._filter([
-                    ["id", "in", message.tracking_value_ids],
-                ]);
+                const trackingValues = MailTrackingValue.browse(message.tracking_value_ids);
                 const formattedTrackingValues =
                     MailTrackingValue._tracking_value_format(trackingValues);
                 response["trackingValues"] = formattedTrackingValues;
@@ -247,9 +242,7 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        for (const message of MailMessage._filter([["id", "in", ids]]).sort(
-            (a, b) => ids.indexOf(a) - ids.indexOf(b)
-        )) {
+        for (const message of MailMessage.browse(ids)) {
             const data = {
                 author: false,
                 email_from: message.email_from,
@@ -261,9 +254,7 @@ export class MailMessage extends models.ServerModel {
                 store.add(MailGuest.browse(guestId));
                 data.author = { id: guestId, type: "guest" };
             } else if (message.author_id) {
-                const [partner] = ResPartner._filter([["id", "=", message.author_id]], {
-                    active_test: false,
-                });
+                const [partner] = ResPartner.browse(message.author_id);
                 store.add(
                     ResPartner.browse(partner.id),
                     makeKwArgs({
@@ -301,7 +292,7 @@ export class MailMessage extends models.ServerModel {
         if (!this.env.user) {
             return;
         }
-        const messages = this._filter([["id", "in", ids]]);
+        const messages = this.browse(ids);
         const notifications = MailNotification._filter([
             ["res_partner_id", "=", this.env.user.partner_id],
             ["is_read", "=", false],
@@ -336,7 +327,7 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const messages = this._filter([["id", "in", ids]]);
+        const messages = this.browse(ids);
         for (const message of messages) {
             const wasStarred = message.starred_partner_ids.includes(this.env.user.partner_id);
             this.write([message.id], {
@@ -521,7 +512,7 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
 
-        const messages = this._filter([["id", "in", ids]]);
+        const messages = this.browse(ids);
         const notifications = MailNotification._filtered_for_web_client(
             MailNotification._filter([["mail_message_id", "in", ids]]).map((n) => n.id)
         );
@@ -557,9 +548,9 @@ export class MailMessage extends models.ServerModel {
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
-        const [message] = this._filter([["id", "=", id]]);
+        const [message] = this.browse(id);
         const outdatedStarredPartners = message.starred_partner_ids
-            ? ResPartner._filter([["id", "in", message.starred_partner_ids]])
+            ? ResPartner.browse(message.starred_partner_ids)
             : [];
         this.write([id], { starred_partner_ids: [Command.clear()] });
         if (outdatedStarredPartners.length === 0) {

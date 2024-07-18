@@ -13,7 +13,7 @@ export class MailGuest extends models.ServerModel {
      * @returns {Record<string, ModelRecord>}
      */
     _to_store(ids, store) {
-        for (const guest of this._filter([["id", "in", ids]], { active_test: false })) {
+        for (const guest of this.browse(ids)) {
             store.add("Persona", {
                 id: guest.id,
                 im_status: guest.im_status,
