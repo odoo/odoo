@@ -305,32 +305,6 @@ export function getAdjacents(node, predicate = (n) => !!n) {
     const next = getAdjacentNextSiblings(node, predicate);
     return predicate(node) ? [...previous.reverse(), node, ...next] : [];
 }
-/**
- * Return the furthest uneditable parent of node contained within parentLimit.
- * @see deleteRange Used to guarantee that uneditables are fully contained in
- * the range (so that it is not possible to partially remove them)
- *
- * @param {Node} node
- * @param {Node} [parentLimit=undefined] non-inclusive furthest parent allowed
- * @returns {Node} uneditable parent if it exists
- */
-export function getFurthestUneditableParent(node, parentLimit) {
-    if (node === parentLimit || (parentLimit && !parentLimit.contains(node))) {
-        return undefined;
-    }
-    let parent = node && node.parentElement;
-    let nonEditableElement;
-    while (parent && (!parentLimit || parent !== parentLimit)) {
-        if (!parent.isContentEditable) {
-            nonEditableElement = parent;
-        }
-        if (parent.classList.contains("odoo-editor-editable")) {
-            break;
-        }
-        parent = parent.parentElement;
-    }
-    return nonEditableElement;
-}
 
 /**
  * Returns the deepest common ancestor element of the given nodes within the

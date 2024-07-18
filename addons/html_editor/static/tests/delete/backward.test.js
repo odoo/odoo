@@ -1948,7 +1948,6 @@ describe("Selection not collapsed", () => {
             });
         });
 
-        // @todo @phoenix: review this spec. It should not merge, like the test above.
         test("should extend the range to fully include contenteditable=false that are partially selected at the start of the range", async () => {
             await testEditor({
                 contentBefore: unformat(`
@@ -1961,7 +1960,27 @@ describe("Selection not collapsed", () => {
                     deleteBackward(editor);
                 },
                 contentAfter: unformat(`
-                        <p>before[]after</p>`),
+                        <p>before</p><p>[]after</p>`),
+            });
+        });
+
+        test("should extend the range to fully include contenteditable=false inline that is partially selected at the start of the range", async () => {
+            await testEditor({
+                contentBefore: '<p>abc<span contenteditable="false">de[f</span>g]hi</p>',
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: "<p>abc[]hi</p>",
+            });
+        });
+
+        test("should extend the range to fully include contenteditable=false inline that is partially selected at the end of the range", async () => {
+            await testEditor({
+                contentBefore: '<p>ab[c<span contenteditable="false">d]ef</span>ghi</p>',
+                stepFunction: async (editor) => {
+                    deleteBackward(editor);
+                },
+                contentAfter: "<p>ab[]ghi</p>",
             });
         });
 

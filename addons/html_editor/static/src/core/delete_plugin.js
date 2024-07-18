@@ -23,7 +23,6 @@ import {
     descendants,
     firstLeaf,
     getCommonAncestor,
-    getFurthestUneditableParent,
     lastLeaf,
     findFurthest,
 } from "../utils/dom_traversal";
@@ -143,7 +142,7 @@ export class DeletePlugin extends Plugin {
         }
 
         let range = this.adjustRange(selection, [
-            this.expandRangeToIncludeNonEditables,
+            this.fullyIncludeNonEditables,
             this.includeEndOrStartBlock,
             this.fullyIncludeLinks,
         ]);
@@ -891,26 +890,19 @@ export class DeletePlugin extends Plugin {
         return range;
     }
 
-    // Expand the range to fully include all contentEditable=False elements.
+    // Expand the range to fully include partially selected contentEditable=false elements.
     /**
      * @param {Range} range
      * @returns {Range}
      */
-    expandRangeToIncludeNonEditables(range) {
+    fullyIncludeNonEditables(range) {
         const { startContainer, endContainer, commonAncestorContainer: commonAncestor } = range;
-        const startUneditable = getFurthestUneditableParent(startContainer, commonAncestor);
+        const isNonEditable = (node) => !closestElement(node).isContentEditable;
+        const startUneditable = findFurthest(startContainer, commonAncestor, isNonEditable);
         if (startUneditable) {
-            // @todo @phoenix: Review this spec. I suggest this instead (no block merge after removing):
-            // startContainer = startUneditable.parentElement;
-            // startOffset = childNodeIndex(startUneditable);
-            const leaf = previousLeaf(startUneditable);
-            if (leaf) {
-                range.setStart(leaf, nodeSize(leaf));
-            } else {
-                range.setStart(commonAncestor, 0);
-            }
+            range.setStartBefore(startUneditable);
         }
-        const endUneditable = getFurthestUneditableParent(endContainer, commonAncestor);
+        const endUneditable = findFurthest(endContainer, commonAncestor, isNonEditable);
         if (endUneditable) {
             range.setEndAfter(endUneditable);
         }
