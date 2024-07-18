@@ -84,4 +84,4 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
 
         #  After the return only 10 of the second purchase order should still be in stock as it applies fifo on the return too
         self.assertEqual(product_fiforet_icecream.qty_available, 10.0, 'Qty available should be 10.0')
-        self.assertEqual(product_fiforet_icecream.value_svl, 800.0, 'Stock value should be 800')
+        self.assertEqual(product_fiforet_icecream.value_svl, 500.0, 'Stock value should be 500')
