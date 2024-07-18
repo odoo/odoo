@@ -3023,7 +3023,7 @@ test("leaving an empty many2one by pressing tab (after backspace or delete)", as
     expect(".o_field_many2one input").toHaveValue("");
 });
 
-test("many2one in editable list + onchange, with enter [REQUIRE FOCUS]", async () => {
+test("many2one in editable list + onchange, with enter", async () => {
     Partner._onChanges = {
         product_id: (obj) => {
             obj.int_field = obj.product_id || 0;
@@ -3068,7 +3068,7 @@ test("many2one in editable list + onchange, with enter [REQUIRE FOCUS]", async (
     ]);
 });
 
-test("many2one in editable list + onchange, with enter, part 2 [REQUIRE FOCUS]", async () => {
+test("many2one in editable list + onchange, with enter, part 2", async () => {
     // this is the same test as the previous one, but the onchange is just
     // resolved slightly later
     Partner._onChanges = {
