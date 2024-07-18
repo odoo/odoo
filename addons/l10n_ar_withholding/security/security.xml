@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+
+    <record id="l10n_ar_partner_tax_comp_rule" model="ir.rule">
+        <field name="name">Argentinean Partner Taxes Company Rule</field>
+        <field name="model_id" ref="model_l10n_ar_partner_tax"/>
+        <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
+    </record>
+
+</odoo>
