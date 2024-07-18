@@ -1,4 +1,4 @@
-import { test, expect, describe, beforeEach } from "@odoo/hoot";
+import { test, expect, beforeEach } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
@@ -7,13 +7,14 @@ import { mountView, contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineTodoModels } from "./todo_test_helpers";
 import { ProjectTask } from "./mock_server/mock_models/project_task";
 
-describe.current.tags("desktop");
 defineTodoModels();
 
 beforeEach(() => {
     ProjectTask._views = {
         form: `
             <form string="To-do" class="o_todo_form_view" js_class="todo_form">
+                <field name="priority" invisible="1"/>
+                <field name="state" invisible="1"/>
                 <field name="name"/>
             </form>`,
         "form,2": `
