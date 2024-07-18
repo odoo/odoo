@@ -787,6 +787,8 @@
                 <graph string="Tasks" sample="1" js_class="project_task_graph">
                     <field name="project_id" invisible="context.get('default_project_id', False)"/>
                     <field name="stage_id"/>
+                    <field name="working_hours_open" widget="float_time"/>
+                    <field name="working_hours_close" widget="float_time"/>
                     <field name="color" invisible="1"/>
                     <field name="sequence" invisible="1"/>
                     <field name="rating_last_value" string="Rating (/5)"/>

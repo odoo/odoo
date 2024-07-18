@@ -253,6 +253,10 @@ export class TicketScreen extends Component {
             }
         }
     }
+    async addAdditionalRefundInfo(order, destinationOrder) {
+        // used by L10N, e.g: add a refund reason using a specific L10N field
+        return Promise.resolve();
+    }
     async onDoRefund() {
         const order = this.getSelectedOrder();
 
@@ -352,6 +356,7 @@ export class TicketScreen extends Component {
         if (this.pos.get_order().cid !== destinationOrder.cid) {
             this.pos.set_order(destinationOrder);
         }
+        await this.addAdditionalRefundInfo(order, destinationOrder);
 
         this.closeTicketScreen();
     }
