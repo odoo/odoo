@@ -74,6 +74,14 @@
             position: absolute;
             bottom: 4px;
             right: 19px;
+            @include media-breakpoint-down(lg) {
+                bottom: 19px;
+                right: 0;
+            }
+            @include media-breakpoint-down(sm) {
+                bottom: 10px;
+                right: 10px;
+            }
         }
     }
 
