@@ -8,11 +8,15 @@
             <p class="text-muted">Be the first to find out all the latest news, products, and trends.</p>
         </div>
         <div class="s_newsletter_subscribe_form s_subscription_list js_subscribe col-lg-5 offset-lg-1" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
-            <div class="input-group">
-                <!-- input name must be an existing 'mailing.contact' field -->
-                <input type="tel" name="mobile" class="js_subscribe_value form-control" placeholder="+1 555-555-1234"/>
-                <a role="button" href="#" class="btn btn-primary js_subscribed_btn d-none o_submit pe-none opacity-50" disabled="disabled">Thanks, you are already subscribed</a>
-                <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+            <div class="js_subscribed_wrap d-none">
+                <p class="h4-fs text-center text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>
+            </div>
+            <div class="js_subscribe_wrap">
+                <div class="input-group">
+                    <!-- input name must be an existing 'mailing.contact' field -->
+                    <input type="tel" name="mobile" class="js_subscribe_value form-control" placeholder="+1 555-555-1234"/>
+                    <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+                </div>
             </div>
         </div>
     </div>
