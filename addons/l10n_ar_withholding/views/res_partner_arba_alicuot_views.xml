@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_res_partner_arba_alicuot_tree" model="ir.ui.view">
+        <field name="name">res.partner.arba_alicuot.tree</field>
+        <field name="model">res.partner.arba_alicuot</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!-- <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/> -->
+                <field name="tax_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="ref"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_res_partner_arba_alicuot_form" model="ir.ui.view">
+        <field name="name">res.partner.arba_alicuot.form</field>
+        <field name="model">res.partner.arba_alicuot</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="tag_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="numero_comprobante"/>
+                        <field name="grupo_percepcion" groups="base.group_no_one"/>
+                        <field name="grupo_retencion" groups="base.group_no_one"/>
+                    </group>
+                    <group>
+                        <label for="from_date"/>
+                            <div class="oe_inline">
+                            <field name="from_date" class="oe_inline"/>-<field name="to_date" class="oe_inline"/>
+                            </div>
+                        <field name="alicuota_percepcion"/>
+                        <field name="alicuota_retencion"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="SIRCAR">
+                        <p>
+                            Utilizado para la generación del TXT para SIRCAR.<br/>
+                            Tipo de Régimen de Retención/precición (código correspondiente según tabla definida por la jurisdicción).<br/>
+                            Puede consultar la tabla <a target="_blank" href="https://www.ca.gov.ar/sircar2">aquí</a>, sección "Instructivos y tablas" item "Tabla con la Tipificación de Regímenes..."
+                        </p>
+                        <group>
+                            <field name="regimen_percepcion"/>
+                            <field name="regimen_retencion"/>
+                        </group>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_partner_withholding_amount_type_form">
+        <field name="name">res.partner.arba_alicuot.form.inherit</field>
+        <field name="inherit_id" ref="view_res_partner_arba_alicuot_form"/>
+        <field name="model">res.partner.arba_alicuot</field>
+        <field name="arch" type="xml">
+            <field name="alicuota_retencion" position="after">
+                <field name="withholding_amount_type" required="True"/>
+            </field>
+            <!-- TODO mejorar esto, por ahora solo lo hacemos visible con este grupo ya que este grupo solo lo estamos usando en realidad para API, deberiamos ver de hacerlo de otra manera -->
+            <notebook>
+                <page string="API" groups="l10n_ar_account_withholding.partner_tax_withholding_amount_type">
+                    <group>
+                        <field name="api_codigo_articulo_retencion"/>
+                        <field name="api_articulo_inciso_calculo_retencion"/>
+                        <field name="api_codigo_articulo_percepcion"/>
+                        <field name="api_articulo_inciso_calculo_percepcion"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>
