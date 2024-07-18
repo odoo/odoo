@@ -22,10 +22,14 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 -->
 <template id="s_newsletter_subscribe_form" name="Newsletter">
     <div class="s_newsletter_subscribe_form s_newsletter_list js_subscribe" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
-        <div class="input-group">
-            <input type="email" name="email" class="js_subscribe_value form-control" placeholder="johnsmith@example.com"/>
-            <a role="button" href="#" class="btn btn-primary js_subscribed_btn d-none o_submit pe-none opacity-50" disabled="disabled">Thanks, you are already subscribed</a>
-            <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+        <div class="js_subscribed_wrap d-none">
+            <p class="h4-fs text-center text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>
+        </div>
+        <div class="js_subscribe_wrap">
+            <div class="input-group">
+                <input type="email" name="email" class="js_subscribe_value form-control" placeholder="johnsmith@example.com"/>
+                <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+            </div>
         </div>
     </div>
 </template>

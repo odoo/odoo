@@ -43,7 +43,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
      */
     cleanForSave() {
         const previewClasses = ['o_disable_preview', 'o_enable_preview'];
-        const toCleanElsSelector = ".js_subscribe_btn, .js_subscribed_btn";
+        const toCleanElsSelector = ".js_subscribe_wrap, .js_subscribed_wrap";
         const toCleanEls = this.$target[0].querySelectorAll(toCleanElsSelector);
         toCleanEls.forEach(element => {
             element.classList.remove(...previewClasses);
@@ -58,9 +58,9 @@ options.registry.mailing_list_subscribe = options.Class.extend({
      * @see this.selectClass for parameters
      */
     toggleThanksMessage(previewMode, widgetValue, params) {
-        const toSubscribeEl = this.$target[0].querySelector(".js_subscribe_btn");
+        const toSubscribeEl = this.$target[0].querySelector(".js_subscribe_wrap");
         const thanksMessageEl =
-            this.$target[0].querySelector(".js_subscribed_btn");
+            this.$target[0].querySelector(".js_subscribed_wrap");
 
         thanksMessageEl.classList.toggle("o_disable_preview", !widgetValue);
         thanksMessageEl.classList.toggle("o_enable_preview", widgetValue);
@@ -79,7 +79,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
         if (methodName !== 'toggleThanksMessage') {
             return this._super(...arguments);
         }
-        const toSubscribeElSelector = ".js_subscribe_btn.o_disable_preview";
+        const toSubscribeElSelector = ".js_subscribe_wrap.o_disable_preview";
         return this.$target[0].querySelector(toSubscribeElSelector) ? "true" : "";
     },
     /**
@@ -102,7 +102,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
             }
         }
         const checkboxEl = document.createElement('we-checkbox');
-        checkboxEl.setAttribute('string', _t("Display Thanks Button"));
+        checkboxEl.setAttribute('string', _t("Display Thanks Message"));
         checkboxEl.dataset.toggleThanksMessage = 'true';
         checkboxEl.dataset.noPreview = 'true';
         checkboxEl.dataset.dependencies = "!form_opt";
