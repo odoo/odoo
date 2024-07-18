@@ -129,14 +129,7 @@ test("BadgeSelectionField widget on a selection unchecking selected value", asyn
 });
 
 test("BadgeSelectionField widget on a selection unchecking selected value (required field)", async () => {
-    Partner._fields["color"] = fields.Selection({
-        required: true,
-        selection: [
-            ["red", "Red"],
-            ["black", "Black"],
-        ],
-        default: "red",
-    });
+    Partner._fields.color.required = true;
     onRpc("res.partner", "web_save", ({ args }) => {
         expect.step("web_save");
         expect(args[1]).toEqual({ color: "red" });

@@ -553,24 +553,20 @@ export class MockServer {
         }
 
         // Model fields
-        for (const [fieldName, fieldGetter] of Object.entries(ModelClass._fields)) {
-            if (!(FIELD_SYMBOL in fieldGetter)) {
+        for (const [fieldName, fieldDescriptor] of Object.entries(ModelClass._fields)) {
+            if (!(FIELD_SYMBOL in fieldDescriptor)) {
                 continue;
             }
 
-            const fieldGetterValue = fieldGetter();
-            if (fieldGetterValue.name) {
+            if (fieldDescriptor.name) {
                 throw new MockServerError(
-                    `cannot set the name of field "${fieldName}" from its definition: got "${fieldGetterValue.name}"`
+                    `cannot set the name of field "${fieldName}" from its definition: got "${fieldDescriptor.name}"`
                 );
             }
+            fieldDescriptor.string ||= toDisplayName(fieldName);
 
             /** @type {FieldDefinition} */
-            const fieldDef = {
-                string: toDisplayName(fieldName),
-                ...fieldGetterValue,
-                name: fieldName,
-            };
+            const fieldDef = { ...fieldDescriptor, name: fieldName };
 
             // On change function
             const onChange = fieldDef.onChange;
