@@ -4637,13 +4637,14 @@ class BaseModel(metaclass=MetaModel):
 
         # flush the order fields
         order_spec = order or self._order
-        for order_part in order_spec.split(','):
-            order_field = order_part.split()[0]
-            field = self._fields.get(order_field)
-            if field is not None:
-                to_flush[self._name].add(order_field)
-                if field.relational:
-                    self.env[field.comodel_name]._flush_search([], seen=seen)
+        if order_spec:
+            for order_part in order_spec.split(','):
+                order_field = order_part.split()[0]
+                field = self._fields.get(order_field)
+                if field is not None:
+                    to_flush[self._name].add(order_field)
+                    if field.relational:
+                        self.env[field.comodel_name]._flush_search([], seen=seen)
 
         if self._active_name:
             to_flush[self._name].add(self._active_name)
