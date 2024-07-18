@@ -126,10 +126,7 @@ const filterReady = (jobs) =>
 const formatAssertions = (assertions) => {
     const lines = [];
     for (let i = 0; i < assertions.length; i++) {
-        const { info, label, message, pass } = assertions[i];
-        if (pass) {
-            continue;
-        }
+        const { info, label, message } = assertions[i];
         lines.push(`\n${i + 1}. [${label}] ${message}`);
         if (info) {
             for (let [key, value] of info) {
@@ -146,7 +143,7 @@ const formatAssertions = (assertions) => {
             }
         }
     }
-    return lines.join("\n");
+    return lines;
 };
 
 /**
@@ -923,14 +920,25 @@ export class Runner {
             if (lastResults.pass) {
                 logger.logTest(test);
             } else {
-                let failReason;
-                if (lastResults.errors.length) {
-                    failReason = lastResults.errors.map((e) => e.message).join("\n");
-                } else {
-                    failReason = formatAssertions(lastResults.assertions);
+                const failReasons = [];
+                const failedAssertions = lastResults.assertions.filter(
+                    (assertion) => !assertion.pass
+                );
+                if (failedAssertions.length) {
+                    const s = failedAssertions.length === 1 ? "" : "s";
+                    failReasons.push(
+                        `\nFailed assertion${s}:`,
+                        ...formatAssertions(failedAssertions)
+                    );
                 }
-
-                logger.error(`Test "${test.fullName}" failed:\n${failReason}`);
+                if (lastResults.errors.length) {
+                    const s = lastResults.errors.length === 1 ? "" : "s";
+                    failReasons.push(
+                        `\nError${s} during test:`,
+                        ...lastResults.errors.map((e) => `\n${e.message}`)
+                    );
+                }
+                logger.error([`Test "${test.fullName}" failed:`, ...failReasons].join("\n"));
             }
 
             await this._callbacks.call("after-post-test", test, handleError);
