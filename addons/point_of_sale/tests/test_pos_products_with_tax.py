@@ -638,6 +638,13 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'taxes_id': [],
         })
         # configure a session on Branch XX
+        self.xx_bank_journal = self.env['account.journal'].with_company(branch_xx).create({
+            'name': 'Bank',
+            'type': 'bank',
+            'company_id': branch_xx.id,
+            'code': 'BNK',
+            'sequence': 15,
+        })
         xx_config = self.env['pos.config'].with_company(branch_xx).create({
             'name': 'Branch XX config',
             'company_id': branch_xx.id,

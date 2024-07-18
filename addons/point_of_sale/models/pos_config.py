@@ -25,11 +25,8 @@ class PosConfig(models.Model):
         return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
-        return self.env['account.journal'].search([
-            *self.env['account.journal']._check_company_domain(self.env.company),
-            ('type', 'in', ('sale', 'general')),
-            ('code', '=', 'POSS'),
-        ], limit=1)
+        journal = self.env['account.journal']._ensure_company_account_journal()
+        return journal
 
     def _default_invoice_journal(self):
         return self.env['account.journal'].search([
@@ -50,6 +47,9 @@ class PosConfig(models.Model):
         non_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', False)])
         available_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', True),
                                                                             ('config_ids', '=', False)], limit=1)
+        if not (non_cash_pm or available_cash_pm):
+            _dummy, payment_methods = self._create_journal_and_payment_methods()
+            return self.env['pos.payment.method'].browse(payment_methods)
         return non_cash_pm | available_cash_pm
 
     def _get_group_pos_manager(self):

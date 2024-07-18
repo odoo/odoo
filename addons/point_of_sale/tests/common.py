@@ -160,13 +160,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         })
 
         # Set basic defaults
-        cls.pos_sale_journal = cls.env['account.journal'].create({
-            'type': 'general',
-            'name': 'Point of Sale',
-            'code': 'POSS',
-            'company_id': cls.company.id,
-            'sequence': 20
-        })
         cls.sales_account = cls.company_data['default_account_revenue']
         cls.invoice_journal = cls.company_data['default_journal_sale']
         cls.receivable_account = cls.company_data['default_account_receivable']
@@ -250,17 +243,20 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         config = cls.env['pos.config'].create({
             'name': 'PoS Shop Test',
             'invoice_journal_id': cls.invoice_journal.id,
-            'journal_id': cls.pos_sale_journal.id,
             'available_pricelist_ids': cls.currency_pricelist.ids,
             'pricelist_id': cls.currency_pricelist.id,
         })
         cls.company_data['default_journal_cash'].pos_payment_method_ids.unlink()
-        cls.cash_pm1 = cls.env['pos.payment.method'].create({
-            'name': 'Cash',
-            'journal_id': cls.company_data['default_journal_cash'].id,
-            'receivable_account_id': cls.pos_receivable_cash.id,
-            'company_id': cls.env.company.id,
-        })
+        cls.cash_pm1 = config.payment_method_ids.filtered(lambda c: c.journal_id.type == 'cash')
+        if cls.cash_pm1:
+            cls.cash_pm1.write({'receivable_account_id': cls.pos_receivable_cash.id})
+        else:
+            cls.cash_pm1 = cls.env['pos.payment.method'].create({
+                'name': 'Cash',
+                'journal_id': cls.company_data['default_journal_cash'].id,
+                'receivable_account_id': cls.pos_receivable_cash.id,
+                'company_id': cls.env.company.id,
+            })
         cls.bank_pm1 = cls.env['pos.payment.method'].create({
             'name': 'Bank',
             'journal_id': cls.company_data['default_journal_bank'].id,
