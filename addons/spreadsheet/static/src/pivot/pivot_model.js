@@ -499,7 +499,7 @@ export class OdooPivotModel extends PivotModel {
      * @return {string[]}
      */
     _getMeasureSpecs() {
-        return this.getDefinition().measures.map((measure) => {
+        return this.getDefinition().measures.filter((measure) => !measure.computedBy).map((measure) => {
             if (measure.type === "many2one" && !measure.aggregator) {
                 return `${measure.fieldName}:count_distinct`;
             }
