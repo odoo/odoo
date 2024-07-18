@@ -14,11 +14,11 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
         const sessionIds = super.create(...arguments);
-        const rtcSessions = this._filter([["id", "in", sessionIds]]);
+        const rtcSessions = this.browse(sessionIds);
         /** @type {Record<string, DiscussChannelRtcSession>} */
         const sessionsByChannelId = {};
         for (const session of rtcSessions) {
-            const [member] = DiscussChannelMember._filter([["id", "=", session.channel_member_id]]);
+            const [member] = DiscussChannelMember.browse(session.channel_member_id);
             if (!sessionsByChannelId[member.channel_id]) {
                 sessionsByChannelId[member.channel_id] = [];
             }
@@ -89,8 +89,8 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const DiscussChannelRtcSession = this.env["discuss.channel.rtc.session"];
 
         this.write([id], values);
-        const [session] = DiscussChannelRtcSession._filter([["id", "=", id]]);
-        const [member] = DiscussChannelMember._filter([["id", "=", session.channel_member_id]]);
+        const [session] = DiscussChannelRtcSession.browse(id);
+        const [member] = DiscussChannelMember.browse(session.channel_member_id);
         const [channel] = DiscussChannel.search_read([["id", "=", member.channel_id]]);
         BusBus._sendone(channel, "discuss.channel.rtc.session/update_and_broadcast", {
             data: new mailDataHelpers.Store(DiscussChannelRtcSession.browse(id)).get_result(),

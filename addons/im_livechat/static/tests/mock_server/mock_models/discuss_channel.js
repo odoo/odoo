@@ -15,7 +15,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         const ResPartner = this.env["res.partner"];
 
         super._to_store(...arguments);
-        const channels = this._filter([["id", "in", ids]]);
+        const channels = this.browse(ids);
         for (const channel of channels) {
             const channelInfo = { id: channel.id };
             channelInfo["anonymous_name"] = channel.anonymous_name;
