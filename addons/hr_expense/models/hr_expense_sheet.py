@@ -657,6 +657,11 @@ class HrExpenseSheet(models.Model):
         if any(not sheet.journal_id for sheet in self):
             raise UserError(_("Specify expense journal to generate accounting entries."))
 
+        if False in self.mapped('payment_mode'):
+            raise UserError(_(
+                "Please specify if the expenses for this report were paid by the company, or the employee"
+            ))
+
         missing_email_employees = self.filtered(lambda sheet: not sheet.employee_id.work_email).employee_id
         if missing_email_employees:
             action = self.env['ir.actions.actions']._for_xml_id('hr.open_view_employee_list_my')
