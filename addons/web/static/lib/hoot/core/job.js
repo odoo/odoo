@@ -57,9 +57,9 @@ export class Job {
     config = {};
     /** @type {Job[]} */
     path = [this];
+    runCount = 0;
     /** @type {Tag[]} */
     tags = [];
-    visited = 0;
 
     /**
      * @param {import("./suite").Suite | null} parent
@@ -71,11 +71,13 @@ export class Job {
         this.name = name;
 
         if (this.parent) {
-            // Assigns parent path and config
-            this.configure({
+            // Assigns parent path and config (ignoring multi)
+            const parentConfig = {
                 ...this.parent.config,
                 tags: this.parent.tags,
-            });
+            };
+            delete parentConfig.multi;
+            this.configure(parentConfig);
             this.path.unshift(...this.parent.path);
         }
 
@@ -101,5 +103,15 @@ export class Job {
                 tag.weight++;
             }
         }
+    }
+
+    /**
+     * @param {Job} [child]
+     */
+    willRunAgain(child) {
+        if (this.config.multi && this.runCount < this.config.multi) {
+            return true;
+        }
+        return Boolean(this.parent?.willRunAgain(this));
     }
 }
