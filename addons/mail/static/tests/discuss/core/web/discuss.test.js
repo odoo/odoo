@@ -171,7 +171,7 @@ test("can join a chat conversation", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-Message", { count: 0 });
-    const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mitchell Admin, Mario"]]);
+    const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mario, Mitchell Admin"]]);
     await assertSteps([
         `/web/dataset/call_kw/discuss.channel/channel_get - ${JSON.stringify({
             args: [],

@@ -31,8 +31,8 @@ export class LivechatChannel extends models.ServerModel {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        const livechatChannel = this._filter([["id", "=", id]])[0];
-        const users = ResUsers._filter([["id", "in", livechatChannel.user_ids]]);
+        const [livechatChannel] = this.browse(id);
+        const users = ResUsers.browse(livechatChannel.user_ids);
         return users.filter((user) => user.im_status === "online");
     }
     /** @param {integer} id */

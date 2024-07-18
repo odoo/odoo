@@ -21,15 +21,15 @@ export class ResPartner extends mailModels.ResPartner {
         const ResUsers = this.env["res.users"];
 
         super._search_for_channel_invite_to_store(ids, store, channel_id);
-        const [channel] = DiscussChannel._filter([["id", "=", channel_id]]);
+        const [channel] = DiscussChannel.browse(channel_id);
         if (channel.channel_type !== "livechat") {
             return;
         }
         const activeLivechatPartners = LivechatChannel._filter([])
             .map(({ available_operator_ids }) => available_operator_ids)
             .flat()
-            .map((userId) => ResUsers._filter([["id", "=", userId]])[0].partner_id);
-        const partners = ResPartner._filter([["id", "in", ids]]);
+            .map((userId) => ResUsers.browse(userId)[0].partner_id);
+        const partners = ResPartner.browse(ids);
         for (const partner of partners) {
             const data = {
                 id: partner.id,

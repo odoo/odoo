@@ -248,7 +248,7 @@ export class MailThread extends models.ServerModel {
             ["notification_type", "=", notification_type],
             ["notification_status", "in", ["bounce", "exception"]],
         ]).filter((notification) => {
-            const message = MailMessage._filter([["id", "=", notification.mail_message_id]])[0];
+            const [message] = MailMessage.browse(notification.mail_message_id);
             return message.model === this._name && message.author_id === this.env.user.partner_id;
         });
         // Update notification status
@@ -344,23 +344,17 @@ export class MailThread extends models.ServerModel {
         if (!author_id) {
             // For simplicity partner is not guessed from email_from here, but
             // that would be the first step on the server.
-            const author = ResPartner._filter([["id", "=", this.env.user.partner_id]], {
-                active_test: false,
-            })[0];
+            const [author] = ResPartner.browse(this.env.user.partner_id);
             author_id = author.id;
             email_from = `${author.display_name} <${author.email}>`;
         }
         if (!email_from && author_id) {
-            const author = ResPartner._filter([["id", "=", author_id]], {
-                active_test: false,
-            })[0];
+            const [author] = ResPartner.browse(author_id);
             email_from = `${author.display_name} <${author.email}>`;
         }
         if (email_from === undefined) {
             if (author_id) {
-                const author = ResPartner._filter([["id", "=", author_id]], {
-                    active_test: false,
-                })[0];
+                const [author] = ResPartner.browse(author_id);
                 email_from = `${author.display_name} <${author.email}>`;
             }
         }
@@ -372,7 +366,7 @@ export class MailThread extends models.ServerModel {
 
     /** @param {number[]} ids */
     _message_compute_subject(ids) {
-        const records = this._filter([["id", "in", ids]]);
+        const records = this.browse(ids);
         return new Map(records.map((record) => [record.id, record.name || ""]));
     }
 
@@ -392,12 +386,12 @@ export class MailThread extends models.ServerModel {
         }
         const result = ids.reduce((result, id) => (result[id] = []), {});
         const model = this.env[this._name];
-        for (const record in model._filter([["id", "in", ids]])) {
+        for (const record in model.browse(ids)) {
             if (record.user_id) {
-                const user = ResUsers._filter([["id", "=", record.user_id]]);
+                const user = ResUsers.browse(record.user_id);
                 if (user.partner_id) {
                     const reason = model._fields["user_id"].string;
-                    const partner = ResPartner._filter([["id", "=", user.partner_id]]);
+                    const partner = ResPartner.browse(user.partner_id);
                     MailThread._message_add_suggested_recipient.call(
                         this,
                         result,
@@ -438,11 +432,11 @@ export class MailThread extends models.ServerModel {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        const message = MailMessage._filter([["id", "=", message_id]])[0];
+        const [message] = MailMessage.browse(message_id);
         const notifications = [];
         if (this._name === "discuss.channel") {
             // members
-            const channels = DiscussChannel._filter([["id", "=", message.res_id]]);
+            const channels = DiscussChannel.browse(message.res_id);
             for (const channel of channels) {
                 notifications.push([
                     [channel, "members"],

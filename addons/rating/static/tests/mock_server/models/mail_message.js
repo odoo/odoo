@@ -2,7 +2,6 @@ import { mailModels } from "@mail/../tests/mail_test_helpers";
 
 import { getKwArgs } from "@web/../tests/web_test_helpers";
 
-
 export class MailMessage extends mailModels.MailMessage {
     _to_store(ids, store, for_current_user, follower_by_message_partner) {
         const kwargs = getKwArgs(
@@ -19,7 +18,7 @@ export class MailMessage extends mailModels.MailMessage {
         const MailMessage = this.env["mail.message"];
 
         super._to_store(...arguments);
-        const messages = MailMessage._filter([["id", "in", ids]]);
+        const messages = MailMessage.browse(ids);
         for (const message of messages) {
             const [rating] = this.env["rating.rating"]._filter([["message_id", "=", message.id]]);
             if (rating) {
