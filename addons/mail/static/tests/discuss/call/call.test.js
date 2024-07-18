@@ -322,3 +322,53 @@ test("'Start a meeting' in mobile", async () => {
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Partner 2" });
 });
+
+test("Systray icon shows latest action", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-discuss-CallMenu-buttonContent .fa-microphone");
+    await click("[title='Mute']");
+    await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
+    await click("[title='Deafen']");
+    await contains(".o-discuss-CallMenu-buttonContent .fa-deaf");
+    await click("[title='Turn camera on']");
+    await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
+    await click("[title='More']");
+    await click("[title='Share Screen']");
+    await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
+    await click("[title='More']");
+    await click("[title='Raise Hand']");
+    await contains(".o-discuss-CallMenu-buttonContent .fa-hand-paper-o");
+});
+
+test("Systray icon keeps track of earlier actions", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-discuss-CallMenu-buttonContent .fa-microphone");
+    await click("[title='More']");
+    await click("[title='Share Screen']");
+    // stack: ["share-screen"]
+    await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
+    await click("[title='Turn camera on']");
+    // stack: ["video", "share-screen"]
+    await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
+    await click("[title='Mute']");
+    // stack: ["mute", "video", "share-screen"]
+    await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
+    await click("[title='Unmute']");
+    // stack: ["video", "share-screen"]
+    await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
+    await click("[title='Stop camera']");
+    // stack: ["share-screen"]
+    await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
+});

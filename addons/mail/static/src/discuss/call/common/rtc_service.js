@@ -12,6 +12,7 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { loadBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { callActionsRegistry } from "./call_actions";
 
 /**
  * @return {Promise<{ SfuClient: import("@mail/static/libs/odoo_sfu/odoo_sfu").SfuClient, SFU_CLIENT_STATE: import("@mail/static/libs/odoo_sfu/odoo_sfu").SFU_CLIENT_STATE }>}
@@ -126,6 +127,40 @@ export class Rtc extends Record {
     serverInfo;
     /** @type {import("@mail/static/libs/odoo_sfu/odoo_sfu").SfuClient} */
     sfuClient = undefined;
+
+    /** @type {Object<string, boolean>} The keys are action names and the values are booleans indicating whether each action is active */
+    lastActions = {};
+    /** @type {Array<string>} Array of action names representing the stack of currently active actions */
+    actionsStack = [];
+    /** @type {string|undefined} String representing the last call action activated, or undefined if none are */
+    lastSelfCallAction = undefined;
+
+    callActions = Record.attr([], {
+        compute() {
+            return callActionsRegistry
+                .getEntries()
+                .filter(([key, action]) => action.condition({ rtc: this }))
+                .map(([key, action]) => [key, action.isActive({ rtc: this })]);
+        },
+        onUpdate() {
+            for (const [key, isActive] of this.callActions) {
+                if (isActive === this.lastActions[key]) {
+                    continue;
+                }
+                if (isActive) {
+                    if (!this.actionsStack.includes(key)) {
+                        this.actionsStack.unshift(key);
+                    }
+                } else {
+                    this.actionsStack.splice(this.actionsStack.indexOf(key), 1);
+                }
+            }
+
+            this.lastSelfCallAction = this.actionsStack[0];
+
+            this.lastActions = Object.fromEntries(this.callActions);
+        },
+    });
 
     setup() {
         this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);

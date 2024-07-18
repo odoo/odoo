@@ -5,52 +5,9 @@
         <div class="o-discuss-CallActionList d-flex flex-column justify-content-center" t-attf-class="{{ className }}" t-ref="root">
             <div class="d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
                 <t t-if="isOfActiveCall and rtc.selfSession">
-                    <t t-if="rtc.selfSession.isMute" t-set="micText">Unmute</t>
-                    <t t-else="" t-set="micText">Mute</t>
-                    <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
-                        t-att-aria-label="micText"
-                        t-att-title="micText"
-                        t-on-click="onClickMicrophone">
-                        <div class="fa-stack">
-                            <i class="fa fa-stack-1x" t-att-class="{
-                                'fa-lg': !isSmall,
-                                'fa-microphone': !rtc.selfSession.isMute,
-                                'fa-microphone-slash': rtc.selfSession.isMute,
-                                'text-danger': rtc.selfSession.isMute,
-                            }"/>
-                        </div>
-                    </button>
-                    <t t-if="rtc.selfSession.isDeaf" t-set="headphoneText">Undeafen</t>
-                    <t t-else="" t-set="headphoneText">Deafen</t>
-                    <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
-                        t-att-aria-label="headphoneText"
-                        t-att-title="headphoneText"
-                        t-on-click="onClickDeafen">
-                        <div class="fa-stack">
-                            <i class="fa fa-stack-1x" t-att-class="{
-                                'fa-lg': !isSmall,
-                                'fa-headphones': !rtc.selfSession.isDeaf,
-                                'fa-deaf': rtc.selfSession.isDeaf,
-                                'text-danger': rtc.selfSession.isDeaf,
-                            }"/>
-                        </div>
-                    </button>
-                    <t t-if="rtc.state.sendCamera" t-set="cameraText">Stop camera</t>
-                    <t t-else="" t-set="cameraText">Turn camera on</t>
-                    <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-                        t-att-class="{
-                            'p-2': isSmall,
-                            'p-3': !isSmall,
-                        }"
-                        t-att-aria-label="cameraText"
-                        t-att-title="cameraText"
-                        t-on-click="() => this.rtc.toggleVideo('camera')">
-                        <div class="fa-stack">
-                            <i class="fa fa-video-camera fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall, 'text-success': rtc.state.sendCamera }"/>
-                        </div>
-                    </button>
+                    <t t-foreach="callActions.actions.slice(0, 3)" t-as="action" t-key="action_index">
+                        <t t-call="discuss.CallActionList.actionButton" />
+                    </t>
                     <Dropdown position="'top-end'" menuClass="'d-flex flex-column py-0'">
                         <button t-att-class="`btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover ${ isSmall ? 'p-2' : 'p-3' }`" t-att-title="MORE">
                             <div class="fa-stack">
@@ -58,8 +15,11 @@
                             </div>
                         </button>
                         <t t-set-slot="content">
-                            <DropdownItem t-foreach="moreActions" t-as="action" t-key="action.id" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" attrs="{ title: action.name }" onSelected="action.onSelect">
-                                <i t-att-class="action.icon"/>
+                            <DropdownItem t-foreach="callActions.actions.slice(3)" t-as="action" t-key="action_index" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" attrs="{ title: action.name }" onSelected="action.select">
+                                <i class="fa fa-fw" t-att-class="{
+                                    [action.inactiveIcon]: !action.isActive,
+                                    [action.icon]: action.isActive or !action.inactiveIcon,
+                                }"/>
                                 <span class="mx-2" t-out="action.name"/>
                             </DropdownItem>
                         </t>
@@ -97,6 +57,23 @@
                 </button>
             </div>
         </div>
+    </t>
+
+    <t t-name="discuss.CallActionList.actionButton">
+        <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+            t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+            t-att-aria-label="action.name"
+            t-att-title="action.name"
+            t-on-click="action.select">
+            <div class="fa-stack">
+                <i class="fa fa-stack-1x" t-att-class="{
+                    'fa-lg': !isSmall,
+                    [action.inactiveIcon]: !action.isActive,
+                    [action.icon]: action.isActive or !action.inactiveIcon,
+                    [action.activeClass]: action.isActive,
+                }"/>
+            </div>
+        </button>
     </t>
 
 </templates>
