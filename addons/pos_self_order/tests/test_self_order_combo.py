@@ -24,7 +24,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'counter',
         })
-        self.pos_user.groups_id += self.env.ref('account.group_account_invoice')
+        self.pos_admin.groups_id += self.env.ref('account.group_account_invoice')
         self.pos_config.with_user(self.pos_user).open_ui()
         self_route = self.pos_config._get_self_order_route()
 
