@@ -42,9 +42,10 @@
                     <group name="sale_main_fields">
                         <label for="name" string="Attribute Name"/>
                         <field name="name" nolabel="1"/>
-                        <field name="display_type" widget="radio"/>
+                        <field name="display_type" widget="radio" options="{'horizontal': True}"/>
                         <field name="create_variant"
                                widget="radio"
+                               options="{'horizontal': True}"
                                readonly="number_related_products != 0 or display_type == 'multi'"
                                force_save="1"/>
                     </group>
@@ -68,12 +69,22 @@
                                        class="oe_avatar text-start float-none"
                                        column_invisible="parent.display_type != 'color'"/>
                                 <field name="default_extra_price" width="160px"/>
-                                <button name="action_open_product_template_attribute_value"
-                                        type="object"
-                                        string="View products"
-                                        class="w-100 text-end"
-                                        column_invisible="parent.number_related_products &lt; 1"
-                                        invisible="not id"/>
+                                <button
+                                    name="action_add_to_products"
+                                    string="Add to products"
+                                    type="object"
+                                    icon="fa-plus"
+                                    column_invisible="parent.number_related_products &lt; 1"
+                                    invisible="pav_attribute_line_ids"
+                                />
+                                <button
+                                    name="action_update_prices"
+                                    string="Update extra prices"
+                                    type="object"
+                                    icon="fa-refresh"
+                                    column_invisible="parent.number_related_products &lt; 1"
+                                    invisible="not pav_attribute_line_ids or not default_extra_price_changed"
+                                />
                             </list>
                         </field>
                     </page>

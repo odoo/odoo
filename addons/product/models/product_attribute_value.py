@@ -2,7 +2,7 @@
 
 from random import randint
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -31,8 +31,6 @@ class ProductAttributeValue(models.Model):
         relation='product_attribute_value_product_template_attribute_line_rel',
         string="Lines",
         copy=False)
-    is_used_on_products = fields.Boolean(
-        string="Used on Products", compute='_compute_is_used_on_products')
 
     default_extra_price = fields.Float()
     is_custom = fields.Boolean(
@@ -52,10 +50,11 @@ class ProductAttributeValue(models.Model):
     )
     active = fields.Boolean(default=True)
 
-    @api.depends('pav_attribute_line_ids')
-    def _compute_is_used_on_products(self):
-        for pav in self:
-            pav.is_used_on_products = bool(pav.pav_attribute_line_ids.filtered('product_tmpl_id.active'))
+    is_used_on_products = fields.Boolean(
+        string="Used on Products", compute='_compute_is_used_on_products')
+    default_extra_price_changed = fields.Boolean(compute='_compute_default_extra_price_changed')
+
+    # === COMPUTE METHODS === #
 
     @api.depends('attribute_id')
     @api.depends_context('show_attribute')
@@ -73,10 +72,24 @@ class ProductAttributeValue(models.Model):
         for value in self:
             value.display_name = f"{value.attribute_id.name}: {value.name}"
 
-    def write(self, values):
-        if 'attribute_id' in values:
+    @api.depends('pav_attribute_line_ids')
+    def _compute_is_used_on_products(self):
+        for pav in self:
+            pav.is_used_on_products = bool(pav.pav_attribute_line_ids.filtered('product_tmpl_id.active'))
+
+    @api.depends('default_extra_price')
+    def _compute_default_extra_price_changed(self):
+        for pav in self:
+            pav.default_extra_price_changed = (
+                pav.default_extra_price != pav._origin.default_extra_price
+            )
+
+    # === CRUD METHODS === #
+
+    def write(self, vals):
+        if 'attribute_id' in vals:
             for pav in self:
-                if pav.attribute_id.id != values['attribute_id'] and pav.is_used_on_products:
+                if pav.attribute_id.id != vals['attribute_id'] and pav.is_used_on_products:
                     raise UserError(_(
                         "You cannot change the attribute of the value %(value)s because it is used"
                         " on the following products: %(products)s",
@@ -84,8 +97,8 @@ class ProductAttributeValue(models.Model):
                         products=", ".join(pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')),
                     ))
 
-        invalidate = 'sequence' in values and any(record.sequence != values['sequence'] for record in self)
-        res = super().write(values)
+        invalidate = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
+        res = super().write(vals)
         if invalidate:
             # prefetched o2m have to be resequenced
             # (eg. product.template.attribute.line: value_ids)
@@ -126,11 +139,32 @@ class ProductAttributeValue(models.Model):
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pav: pav.attribute_id.create_variant != 'no_variant')
 
-    def action_open_product_template_attribute_value(self):
+    # === ACTION METHODS === #
+
+    def action_add_to_products(self):
         return {
+            'name': _("Add to all products"),
             'type': 'ir.actions.act_window',
-            "name": _("Product Variant Values"),
-            'res_model': 'product.template.attribute.value',
-            'view_mode': 'list',
-            'domain': [('product_attribute_value_id.id', '=', self.id)],
+            'res_model': 'update.product.attribute.value',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_attribute_value_id': self.id,
+                'default_mode': 'add',
+                'dialog_size': 'medium',
+            },
+        }
+
+    def action_update_prices(self):
+        return {
+            'name': _("Update product extra prices"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'update.product.attribute.value',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_attribute_value_id': self.id,
+                'default_mode': 'update_extra_price',
+                'dialog_size': 'medium',
+            },
         }
