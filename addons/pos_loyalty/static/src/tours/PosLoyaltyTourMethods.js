@@ -41,6 +41,11 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                     content: 'confirm inputted code',
                     trigger: '.popup-textinput .button.confirm',
                 },
+                {
+                    content: 'verify popup is closed',
+                    trigger: 'body:not(:has(.popup-textinput))',
+                    run: function () {}, // it's a check
+                },
             ];
             return steps;
         }
