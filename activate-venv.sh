@@ -1,0 +1,1 @@
+source ~/dev/venv_odoo/bin/activate
