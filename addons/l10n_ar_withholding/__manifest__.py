@@ -16,6 +16,7 @@
         'views/account_payment_view.xml',
         'views/report_payment_receipt_templates.xml',
         'views/res_config_settings.xml',
+        'views/res_partner_view.xml',
         'wizards/account_payment_register_views.xml',
         'security/ir.model.access.csv',
     ],
