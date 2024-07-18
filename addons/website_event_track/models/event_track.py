@@ -156,7 +156,7 @@ class Track(models.Model):
         super(Track, self)._compute_website_url()
         for track in self:
             if track.id:
-                track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
+                track.website_url = f'{track.get_base_url()}/event/{slug(track.event_id)}/track/{slug(track)}'
 
     # STAGES
 
