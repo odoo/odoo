@@ -20,30 +20,9 @@ export class Settings extends Record {
             typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
         this._loadLocalSettings();
     }
-    volumes = Record.many("Volume");
-    showOnlyVideo = false;
+
+    // Notification settings
     /**
-     * DeviceId of the audio input selected by the user
-     */
-    audioInputDeviceId = "";
-    backgroundBlurAmount = 10;
-    edgeBlurAmount = 10;
-    /**
-     * true if listening to keyboard input to register the push to talk key.
-     */
-    isRegisteringKey = false;
-    logRtc = false;
-    push_to_talk_key;
-    use_push_to_talk = false;
-    voice_active_duration = 200;
-    useBlur = false;
-    volumeSettingsTimeouts = new Map();
-    /**
-     * Normalized [0, 1] volume at which the voice activation system must consider the user as "talking".
-     */
-    voiceActivationThreshold = 0.05;
-    /**
-     * General notification settings for channels
      * @type {"mentions"|"all"|"no_notif"}
      */
     channel_notifications = Record.attr("mentions", {
@@ -52,6 +31,27 @@ export class Settings extends Record {
         },
     });
     mute_until_dt = Record.attr(false, { type: "datetime" });
+
+    // Voice settings
+    // DeviceId of the audio input selected by the user
+    audioInputDeviceId = "";
+    use_push_to_talk = false;
+    voice_active_duration = 200;
+    volumes = Record.many("Volume");
+    volumeSettingsTimeouts = new Map();
+    // Normalized [0, 1] volume at which the voice activation system must consider the user as "talking".
+    voiceActivationThreshold = 0.05;
+    // true if listening to keyboard input to register the push to talk key.
+    isRegisteringKey = false;
+    push_to_talk_key;
+
+    // Video settings
+    backgroundBlurAmount = 10;
+    edgeBlurAmount = 10;
+    showOnlyVideo = false;
+    useBlur = false;
+
+    logRtc = false;
     /**
      * @returns {Object} MediaTrackConstraints
      */
@@ -277,17 +277,15 @@ export class Settings extends Record {
         this.audioInputDeviceId = browser.localStorage.getItem(
             "mail_user_setting_audio_input_device_id"
         );
-    }
-    /**
-     * @private
-     * @param {Event} ev
-     *
-     * Syncs the setting across tabs.
-     */
-    _onStorage(ev) {
-        if (ev.key === "mail_user_setting_voice_threshold") {
-            this.voiceActivationThreshold = ev.newValue;
-        }
+        this.showOnlyVideo =
+            browser.localStorage.getItem("mail_user_setting_show_only_video") === "true";
+        this.useBlur = browser.localStorage.getItem("mail_user_setting_use_blur") === "true";
+        const backgroundBlurAmount = browser.localStorage.getItem(
+            "mail_user_setting_background_blur_amount"
+        );
+        this.backgroundBlurAmount = backgroundBlurAmount ? parseInt(backgroundBlurAmount) : 10;
+        const edgeBlurAmount = browser.localStorage.getItem("mail_user_setting_edge_blur_amount");
+        this.edgeBlurAmount = edgeBlurAmount ? parseInt(edgeBlurAmount) : 10;
     }
     /**
      * @private

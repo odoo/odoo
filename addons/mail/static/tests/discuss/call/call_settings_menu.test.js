@@ -1,4 +1,5 @@
 import {
+    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -6,6 +7,7 @@ import {
     SIZES,
     start,
     startServer,
+    step,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -79,4 +81,49 @@ test("activate blur", async () => {
     await click("input[title='Blur video background']");
     await contains("label", { text: "Blur video background" });
     await contains("label", { text: "Edge blur intensity" });
+});
+
+test("local storage for call settings", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "test" });
+    patchWithCleanup(browser.localStorage, {
+        getItem(key) {
+            if (key === "mail_user_setting_background_blur_amount") {
+                return "3";
+            }
+            if (key === "mail_user_setting_edge_blur_amount") {
+                return "5";
+            }
+            if (key === "mail_user_setting_show_only_video") {
+                return "true";
+            }
+            if (key === "mail_user_setting_use_blur") {
+                return "true";
+            }
+            return super.getItem(key);
+        },
+        setItem(key, value) {
+            if (key.startsWith("mail_user_setting")) {
+                step(`${key}: ${value}`);
+            }
+            return super.setItem(key, value);
+        },
+    });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    // testing load from local storage
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "test" });
+    await click("[title='Open Actions Menu']");
+    await click(".o-mail-ChatWindow-command", { text: "Show Call Settings" });
+    await contains("input[title='Show video participants only']:checked");
+    await contains("input[title='Blur video background']:checked");
+    await contains("label[title='Background blur intensity']", { text: "15%" });
+    await contains("label[title='Edge blur intensity']", { text: "25%" });
+
+    // testing save to local storage
+    await click("input[title='Show video participants only']");
+    await assertSteps(["mail_user_setting_show_only_video: false"]);
+    await click("input[title='Blur video background']");
+    await assertSteps(["mail_user_setting_use_blur: false"]);
 });
