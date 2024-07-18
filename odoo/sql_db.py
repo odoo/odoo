@@ -517,6 +517,7 @@ class TestCursor(BaseCursor):
     """
     _cursors_stack = []
     def __init__(self, cursor, lock):
+        assert isinstance(cursor, BaseCursor)
         super().__init__()
         self._now = None
         self._closed = False
