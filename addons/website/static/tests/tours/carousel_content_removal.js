@@ -19,7 +19,6 @@ wTourUtils.registerWebsitePreviewTour("carousel_content_removal", {
     content: "Remove the active carousel item.",
     run: "click",
 }, {
-    trigger: ":iframe .carousel .carousel-item.active .container:not(:has(*))",
+    trigger: ":iframe .carousel .carousel-item.active .container:not(:has(*)):not(:visible)",
     content: "Check for a carousel slide with an empty container tag",
-    allowInvisible: true,
 }]);

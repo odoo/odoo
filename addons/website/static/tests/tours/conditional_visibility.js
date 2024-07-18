@@ -73,8 +73,7 @@ wTourUtils.changeOption('ConditionalVisibility', 'we-toggler'),
 },
 {
     content: 'Check if the rule was applied',
-    trigger: ':iframe #wrap',
-    allowInvisible: true,
+    trigger: ':iframe #wrap:not(:visible)',
     run: function (actions) {
         const style = window.getComputedStyle(this.anchor.getElementsByClassName('s_text_image')[0]);
         if (style.display !== 'none') {

@@ -227,8 +227,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     },
     {
         content: "Check that Question 3 no longer has a trigger icon",
-        trigger: "div[name=question_and_page_ids] tr:contains('Question 3') div.o_widget_survey_question_trigger:not(:has(button))",
-        allowInvisible: true,
+        trigger: "div[name=question_and_page_ids] tr:contains('Question 3') div.o_widget_survey_question_trigger:not(:has(button)):not(:visible)",
     }, {
         content: "Check that Question 2 however still has a trigger icon",
         trigger: "tr:contains('Question 2') button i.fa-code-fork",
@@ -238,8 +237,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "click",
     }, {
         content: "Check that now Question 2 too does no longer have a trigger icon",
-        trigger: "tr:contains('Question 2') div.o_widget_survey_question_trigger:not(:has(button))",
-        allowInvisible: true,
+        trigger: "tr:contains('Question 2') div.o_widget_survey_question_trigger:not(:has(button)):not(:visible)",
     }, {
         content: 'Go back to Kanban View',
         trigger: '[data-menu-xmlid="survey.menu_survey_form"]',
