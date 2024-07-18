@@ -289,6 +289,7 @@ export class ListRenderer extends Component {
                 (field) =>
                     field.relatedPropertyField &&
                     field.relatedPropertyField.fieldName === column.name
+                    && field.type !== 'separator'
             )
             .map((propertyField) => {
                 return {
