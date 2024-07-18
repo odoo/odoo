@@ -525,6 +525,7 @@ class TestCursor(BaseCursor):
     _savepoint_seq = itertools.count()
 
     def __init__(self, cursor, lock):
+        assert isinstance(cursor, BaseCursor)
         super().__init__()
         self._closed = False
         self._cursor = cursor
