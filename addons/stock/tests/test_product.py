@@ -378,3 +378,49 @@ class TestVirtualAvailable(TestStockCommon):
         self.picking_out.button_validate()
         with self.assertRaises(UserError):
             self.product_3.write({'type': 'consu'})
+
+    def test_product_qty_available_outgoing_child_locations(self):
+        parent_loc = self.env.ref('stock.stock_location_stock')
+        sub_loc = self.env['stock.location'].create([{
+            'name': 'Sublocation',
+            'location_id': parent_loc.id,
+        }])
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+        })
+        move_in = self.env['stock.move'].create({
+            'name': 'a move',
+            'product_id': product.id,
+            'product_uom_qty': 30.0,
+            'product_uom': product.uom_id.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': sub_loc.id,
+            'date': '2024-01-02'
+        })
+        move_in._action_confirm()
+        move_in._action_assign()
+        move_line_in = move_in.move_line_ids
+        move_line_in.qty_done = 30.0
+        move_in._action_done()
+        move_out = self.env['stock.move'].create({
+            'name': 'a move',
+            'product_id': product.id,
+            'product_uom_qty': 3.0,
+            'product_uom': product.uom_id.id,
+            'location_id': parent_loc.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'date': '2024-01-03'
+        })
+        move_out._action_confirm()
+        move_out._action_assign()
+        move_line_out = move_out.move_line_ids
+        move_line_out.qty_done = 3.0
+        move_out._action_done()
+        self.assertEqual(move_out.location_id, parent_loc)
+        self.assertEqual(move_line_out.location_id, sub_loc)
+        qty_available = product.with_context(
+            location=sub_loc.id, to_date="2024-01-01"
+        ).qty_available
+        self.assertEqual(qty_available, 0.0)
