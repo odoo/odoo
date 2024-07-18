@@ -14,6 +14,7 @@ This is the basic Zambian localization necessary to run Odoo in ZM:
     - Fiscal Positions
     - Default Settings
     """,
+    'auto_install': ['account'],
     "depends": [
         "account",
     ],
