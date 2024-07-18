@@ -7753,7 +7753,7 @@ test(`edit list line after line deletion`, async () => {
     expect(`.o_selected_row`).toHaveCount(1, { message: "no other row should be selected" });
 });
 
-test(`pressing TAB in editable list with several fields [REQUIRE FOCUS]`, async () => {
+test(`pressing TAB in editable list with several fields`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -7781,7 +7781,7 @@ test(`pressing TAB in editable list with several fields [REQUIRE FOCUS]`, async 
     expect(`.o_data_row:eq(1) .o_data_cell:eq(0) input`).toBeFocused();
 });
 
-test(`pressing SHIFT-TAB in editable list with several fields [REQUIRE FOCUS]`, async () => {
+test(`pressing SHIFT-TAB in editable list with several fields`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -8034,7 +8034,7 @@ test(`edition, then navigation with tab (with a readonly field and onchange)`, a
     expect.verifySteps(["onchange:bar"]);
 });
 
-test(`pressing SHIFT-TAB in editable list with a readonly field [REQUIRE FOCUS]`, async () => {
+test(`pressing SHIFT-TAB in editable list with a readonly field`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -8056,7 +8056,7 @@ test(`pressing SHIFT-TAB in editable list with a readonly field [REQUIRE FOCUS]`
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 });
 
-test(`pressing SHIFT-TAB in editable list with a readonly field in first column [REQUIRE FOCUS]`, async () => {
+test(`pressing SHIFT-TAB in editable list with a readonly field in first column`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -8078,7 +8078,7 @@ test(`pressing SHIFT-TAB in editable list with a readonly field in first column 
     expect(`.o_data_row [name=qux] input`).toBeFocused();
 });
 
-test(`pressing SHIFT-TAB in editable list with a readonly field in last column [REQUIRE FOCUS]`, async () => {
+test(`pressing SHIFT-TAB in editable list with a readonly field in last column`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
