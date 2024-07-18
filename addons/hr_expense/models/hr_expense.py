@@ -174,6 +174,7 @@ class HrExpense(models.Model):
         ],
         string="Paid By",
         default='own_account',
+        required=True,
         tracking=True,
     )
     vendor_id = fields.Many2one(comodel_name='res.partner', string="Vendor")
