@@ -194,7 +194,7 @@ class CompanyLDAP(models.Model):
         """
 
         return {
-            'name': tools.ustr(ldap_entry[1]['cn'][0]),
+            'name': ldap_entry[1]['cn'][0],
             'login': login,
             'company_id': conf['company'][0]
         }
@@ -210,7 +210,7 @@ class CompanyLDAP(models.Model):
         :return: res_users id
         :rtype: int
         """
-        login = tools.ustr(login.lower().strip())
+        login = login.lower().strip()
         self.env.cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s", (login,))
         res = self.env.cr.fetchone()
         if res:
