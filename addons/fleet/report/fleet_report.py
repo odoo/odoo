@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from psycopg2 import sql
 
-from odoo import tools
-from odoo import api, fields, models
+from odoo import fields, models
+from odoo.tools.sql import drop_view_if_exists, SQL
 
 
 class FleetReport(models.Model):
@@ -148,9 +147,5 @@ FROM (
             contract_costs cc)
 ) c
 """
-        tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute(
-            sql.SQL("""CREATE or REPLACE VIEW {} as ({})""").format(
-                sql.Identifier(self._table),
-                sql.SQL(query)
-            ))
+        drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute(SQL("""CREATE or REPLACE VIEW %s as (%s)""", SQL.identifier(self._table), SQL(query)))

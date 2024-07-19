@@ -4,11 +4,11 @@ from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
-from odoo.tools import frozendict, mute_logger, date_utils
+from odoo.tools import frozendict, mute_logger, date_utils, SQL
 
 import re
 from collections import defaultdict
-from psycopg2 import sql, errors as pgerrors
+from psycopg2 import errors as pgerrors
 
 
 class SequenceMixin(models.AbstractModel):
@@ -48,17 +48,17 @@ class SequenceMixin(models.AbstractModel):
         # Add an index to optimise the query searching for the highest sequence number
         if not self._abstract and self._sequence_index:
             index_name = self._table + '_sequence_index'
-            self.env.cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', (index_name,))
+            self.env.cr.execute(SQL('SELECT indexname FROM pg_indexes WHERE indexname = %s', index_name))
             if not self.env.cr.fetchone():
-                self.env.cr.execute(sql.SQL("""
-                    CREATE INDEX {index_name} ON {table} ({sequence_index}, sequence_prefix desc, sequence_number desc, {field});
-                    CREATE INDEX {index2_name} ON {table} ({sequence_index}, id desc, sequence_prefix);
-                """).format(
-                    sequence_index=sql.Identifier(self._sequence_index),
-                    index_name=sql.Identifier(index_name),
-                    index2_name=sql.Identifier(index_name + "2"),
-                    table=sql.Identifier(self._table),
-                    field=sql.Identifier(self._sequence_field),
+                self.env.cr.execute(SQL("""
+                    CREATE INDEX %(index_name)s ON %(table)s (%(sequence_index)s, sequence_prefix desc, sequence_number desc, %(field)s);
+                    CREATE INDEX %(index2_name)s ON %(table)s (%(sequence_index)s, id desc, sequence_prefix);
+                    """,
+                    sequence_index=SQL.identifier(self._sequence_index),
+                    index_name=SQL.identifier(index_name),
+                    index2_name=SQL.identifier(index_name + "2"),
+                    table=SQL.identifier(self._table),
+                    field=SQL.identifier(self._sequence_field),
                 ))
 
     def _get_sequence_date_range(self, reset):

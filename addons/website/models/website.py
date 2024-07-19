@@ -11,7 +11,6 @@ import requests
 import threading
 
 from lxml import etree, html
-from psycopg2 import sql
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
@@ -1581,16 +1580,17 @@ class Website(models.Model):
             return True
 
         # As well as every snippet dropped in html fields
-        self.env.cr.execute(sql.SQL(" UNION ").join(
-            sql.SQL("SELECT regexp_matches({}{}, {}, 'g') FROM {}").format(
-                sql.Identifier(column),
-                sql.SQL("->>'en_US'" if translate else ''),
-                sql.Placeholder('snippet_regex'),
-                sql.Identifier(table)
-            ) for _model, table, column, translate in html_fields_attributes
-        ), {'snippet_regex': f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'})
-
-        snippet_occurences = [r[0][0] for r in self.env.cr.fetchall()]
+        result = self.env.execute_query(SQL(" UNION ").join(
+            SQL(
+                "SELECT regexp_matches(%s%s, %s, 'g') FROM %s",
+                SQL.identifier(column),
+                SQL("->>'en_US'") if translate else SQL(),
+                f'<([^>]*data-snippet="{snippet_id}"[^>]*)>',
+                SQL.identifier(table),
+            )
+            for _model, table, column, translate in html_fields_attributes
+        ))
+        snippet_occurences = [r[0][0] for r in result]
         return self._check_snippet_used(snippet_occurences, asset_type, asset_version)
 
     def _check_snippet_used(self, snippet_occurences, asset_type, asset_version):
