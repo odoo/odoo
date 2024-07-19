@@ -67,7 +67,7 @@ export class ColorSelector extends Component {
 
     applyColor(color) {
         const mode = this.props.type === "foreground" ? "color" : "background";
-        this.props.dispatch("APPLY_COLOR", { color, mode });
+        this.props.dispatch("APPLY_COLOR", { color: color || "", mode });
     }
 
     onColorApply(ev) {
@@ -82,7 +82,7 @@ export class ColorSelector extends Component {
     onColorPreview(ev) {
         const color = ev.hex ? ev.hex : this.processColorFromEvent(ev);
         const mode = this.props.type === "foreground" ? "color" : "background";
-        this.props.dispatch("COLOR_PREVIEW", { color, mode });
+        this.props.dispatch("COLOR_PREVIEW", { color: color || "", mode });
     }
 
     onColorHover(ev) {
