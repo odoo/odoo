@@ -123,6 +123,10 @@ describe(parseUrl(import.meta.url), () => {
     test("toExplicitString", () => {
         expect(toExplicitString("\n")).toBe(`\\n`);
         expect(toExplicitString("\t")).toBe(`\\t`);
-        expect(toExplicitString("\u200B")).toBe(`\\u200b`);
+
+        expect(toExplicitString(" \n")).toBe(` \n`);
+        expect(toExplicitString("\t ")).toBe(`\t `);
+
+        expect(toExplicitString("Abc\u200BDef")).toBe(`Abc\\u200bDef`);
     });
 });

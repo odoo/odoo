@@ -245,7 +245,9 @@ test("Many2ManyTagsField in tree view", async () => {
     });
 
     expect(".o_field_many2many_tags .badge").toHaveCount(2);
-    expect(".badge.dropdown-toggle", "the tags should not be dropdowns").toHaveCount(0);
+    expect(".badge.dropdown-toggle").toHaveCount(0, {
+        message: "the tags should not be dropdowns",
+    });
 
     // click on the tag: should do nothing and open the form view
     await contains(".o_field_many2many_tags .badge :nth-child(1)").click();
@@ -279,7 +281,9 @@ test("Many2ManyTagsField in tree view -- multi edit", async () => {
     });
 
     expect(".o_field_many2many_tags .badge").toHaveCount(2);
-    expect(".badge.dropdown-toggle", "the tags should not be dropdowns").toHaveCount(0);
+    expect(".badge.dropdown-toggle").toHaveCount(0, {
+        message: "the tags should not be dropdowns",
+    });
 
     // click on the tag: should do nothing and open the form view
     await contains(".o_field_many2many_tags .badge :nth-child(1)").click();
