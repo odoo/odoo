@@ -10,14 +10,12 @@ from collections import defaultdict
 from collections.abc import Mapping
 from operator import itemgetter
 
-from psycopg2 import sql
 from psycopg2.extras import Json
-from psycopg2.sql import Identifier, SQL, Placeholder
 
 from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_list, unique, OrderedSet, sql as sqltools
+from odoo.tools import format_list, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
@@ -65,13 +63,6 @@ def selection_xmlid(module, model_name, field_name, value):
     return '%s.selection__%s__%s__%s' % (module, xmodel, field_name, xvalue)
 
 
-# generic INSERT and UPDATE queries
-INSERT_QUERY = SQL("INSERT INTO {table} ({cols}) VALUES %s RETURNING id")
-UPDATE_QUERY = SQL("UPDATE {table} SET {assignment} WHERE {condition} RETURNING id")
-
-quote = '"{}"'.format
-
-
 def query_insert(cr, table, rows):
     """ Insert rows in a table. ``rows`` is a list of dicts, all with the same
         set of keys. Return the ids of the new rows.
@@ -79,12 +70,15 @@ def query_insert(cr, table, rows):
     if isinstance(rows, Mapping):
         rows = [rows]
     cols = list(rows[0])
-    query = INSERT_QUERY.format(
-        table=Identifier(table),
-        cols=SQL(",").join(map(Identifier, cols)),
+    query = SQL(
+        "INSERT INTO %s (%s)",
+        SQL.identifier(table),
+        SQL(",").join(map(SQL.identifier, cols)),
     )
+    assert not query.params
+    str_query = query.code + " VALUES %s RETURNING id"
     params = [tuple(row[col] for col in cols) for row in rows]
-    cr.execute_values(query, params)
+    cr.execute_values(str_query, params)
     return [row[0] for row in cr.fetchall()]
 
 
@@ -92,34 +86,40 @@ def query_update(cr, table, values, selectors):
     """ Update the table with the given values (dict), and use the columns in
         ``selectors`` to select the rows to update.
     """
-    setters = set(values) - set(selectors)
-    query = UPDATE_QUERY.format(
-        table=Identifier(table),
-        assignment=SQL(",").join(
-            SQL("{} = {}").format(Identifier(s), Placeholder(s))
-            for s in setters
+    query = SQL(
+        "UPDATE %s SET %s WHERE %s RETURNING id",
+        SQL.identifier(table),
+        SQL(",").join(
+            SQL("%s = %s", SQL.identifier(key), val)
+            for key, val in values.items()
+            if key not in selectors
         ),
-        condition=SQL(" AND ").join(
-            SQL("{} = {}").format(Identifier(s), Placeholder(s))
-            for s in selectors
+        SQL(" AND ").join(
+            SQL("%s = %s", SQL.identifier(key), values[key])
+            for key in selectors
         ),
     )
-    cr.execute(query, values)
+    cr.execute(query)
     return [row[0] for row in cr.fetchall()]
 
 
-def select_en(model, fnames, where, params):
+def select_en(model, fnames, model_names):
     """ Select the given columns from the given model's table, with the given WHERE clause.
     Translated fields are returned in 'en_US'.
     """
-    table = quote(model._table)
-    cols = ", ".join(
-        f"{quote(fname)}->>'en_US'" if model._fields[fname].translate else quote(fname)
+    if not model_names:
+        return []
+    cols = SQL(", ").join(
+        SQL("%s->>'en_US'", SQL.identifier(fname)) if model._fields[fname].translate else SQL.identifier(fname)
         for fname in fnames
     )
-    query = f"SELECT {cols} FROM {table} WHERE {where}"
-    model.env.cr.execute(query, params)
-    return model.env.cr.fetchall()
+    query = SQL(
+        "SELECT %s FROM %s WHERE model IN %s",
+        cols,
+        SQL.identifier(model._table),
+        tuple(model_names),
+    )
+    return model.env.execute_query(query)
 
 
 def upsert_en(model, fnames, rows, conflict):
@@ -131,17 +131,6 @@ def upsert_en(model, fnames, rows, conflict):
     :param conflict: list of column names to put into the ON CONFLICT clause
     :return: the ids of the inserted or updated rows
     """
-    table = quote(model._table)
-    cols = ", ".join(quote(fname) for fname in fnames)
-    values = ", ".join("%s" for row in rows)
-    conf = ", ".join(conflict)
-    excluded = ", ".join(f"EXCLUDED.{quote(fname)}" for fname in fnames)
-    query = f"""
-        INSERT INTO {table} ({cols}) VALUES {values}
-        ON CONFLICT ({conf}) DO UPDATE SET ({cols}) = ({excluded})
-        RETURNING id
-    """
-
     # for translated fields, we can actually erase the json value, as
     # translations will be reloaded after this
     def identity(val):
@@ -151,12 +140,23 @@ def upsert_en(model, fnames, rows, conflict):
         return Json({'en_US': val}) if val is not None else val
 
     wrappers = [(jsonify if model._fields[fname].translate else identity) for fname in fnames]
-    params = [
+    values = [
         tuple(func(val) for func, val in zip(wrappers, row))
         for row in rows
     ]
-    model.env.cr.execute(query, params)
-    return [row[0] for row in model.env.cr.fetchall()]
+    comma = SQL(", ").join
+    query = SQL("""
+        INSERT INTO %(table)s (%(cols)s) VALUES %(values)s
+        ON CONFLICT (%(conflict)s) DO UPDATE SET (%(cols)s) = (%(excluded)s)
+        RETURNING id
+        """,
+        table=SQL.identifier(model._table),
+        cols=comma(SQL.identifier(fname) for fname in fnames),
+        values=comma(values),
+        conflict=comma(SQL.identifier(fname) for fname in conflict),
+        excluded=comma(SQL("EXCLUDED.%s", SQL.identifier(fname)) for fname in fnames),
+    )
+    return [id_ for id_, in model.env.execute_query(query)]
 
 
 #
@@ -233,13 +233,12 @@ class IrModel(models.Model):
 
     @api.depends()
     def _compute_count(self):
-        cr = self.env.cr
         self.count = 0
         for model in self:
             records = self.env[model.model]
             if not records._abstract and records._auto:
-                cr.execute(sql.SQL('SELECT COUNT(*) FROM {}').format(sql.Identifier(records._table)))
-                model.count = cr.fetchone()[0]
+                [[count]] = self.env.execute_query(SQL("SELECT COUNT(*) FROM %s", SQL.identifier(records._table)))
+                model.count = count
 
     @api.constrains('model')
     def _check_model_name(self):
@@ -291,11 +290,11 @@ class IrModel(models.Model):
                     continue
 
                 table = current_model._table
-                kind = sqltools.table_kind(self._cr, table)
-                if kind == sqltools.TableKind.View:
-                    self._cr.execute(sql.SQL('DROP VIEW {}').format(sql.Identifier(table)))
-                elif kind == sqltools.TableKind.Regular:
-                    self._cr.execute(sql.SQL('DROP TABLE {} CASCADE').format(sql.Identifier(table)))
+                kind = sql.table_kind(self._cr, table)
+                if kind == sql.TableKind.View:
+                    self._cr.execute(SQL('DROP VIEW %s', SQL.identifier(table)))
+                elif kind == sql.TableKind.Regular:
+                    self._cr.execute(SQL('DROP TABLE %s CASCADE', SQL.identifier(table)))
                 elif kind is not None:
                     _logger.warning(
                         "Unable to drop table %r of model %r: unmanaged or unknown tabe type %r",
@@ -402,7 +401,7 @@ class IrModel(models.Model):
 
         model_ids = {}
         existing = {}
-        for row in select_en(self, ['id'] + cols, "model IN %s", [tuple(model_names)]):
+        for row in select_en(self, ['id'] + cols, model_names):
             model_ids[row[1]] = row[0]
             existing[row[1]] = row[1:]
 
@@ -469,8 +468,8 @@ class IrModel(models.Model):
         for model_data in cr.dictfetchall():
             model_class = self._instanciate(model_data)
             Model = model_class._build_model(self.pool, cr)
-            kind = sqltools.table_kind(cr, Model._table)
-            if kind not in (sqltools.TableKind.Regular, None):
+            kind = sql.table_kind(cr, Model._table)
+            if kind not in (sql.TableKind.Regular, None):
                 _logger.info(
                     "Model %r is backed by table %r which is not a regular table (%r), disabling automatic schema management",
                     Model._name, Model._table, kind,
@@ -834,10 +833,10 @@ class IrModelFields(models.Model):
             is_model = model is not None
             if field.store:
                 # TODO: Refactor this brol in master
-                if is_model and sqltools.column_exists(self._cr, model._table, field.name) and \
-                        sqltools.table_kind(self._cr, model._table) == sqltools.TableKind.Regular:
-                    self._cr.execute(sql.SQL('ALTER TABLE {} DROP COLUMN {} CASCADE').format(
-                        sql.Identifier(model._table), sql.Identifier(field.name),
+                if is_model and sql.column_exists(self._cr, model._table, field.name) and \
+                        sql.table_kind(self._cr, model._table) == sql.TableKind.Regular:
+                    self._cr.execute(SQL('ALTER TABLE %s DROP COLUMN %s CASCADE',
+                        SQL.identifier(model._table), SQL.identifier(field.name),
                     ))
                 if field.state == 'manual' and field.ttype == 'many2many':
                     rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
@@ -852,7 +851,7 @@ class IrModelFields(models.Model):
                              (tuple(tables_to_drop), tuple(self.ids)))
             tables_to_keep = set(row[0] for row in self._cr.fetchall())
             for rel_name in tables_to_drop - tables_to_keep:
-                self._cr.execute(sql.SQL('DROP TABLE {}').format(sql.Identifier(rel_name)))
+                self._cr.execute(SQL('DROP TABLE %s', SQL.identifier(rel_name)))
 
         return True
 
@@ -1076,18 +1075,18 @@ class IrModelFields(models.Model):
             # rename column in database, and its corresponding index if present
             table, oldname, newname, index, stored = column_rename
             if stored:
-                self._cr.execute(
-                    sql.SQL('ALTER TABLE {} RENAME COLUMN {} TO {}').format(
-                        sql.Identifier(table),
-                        sql.Identifier(oldname),
-                        sql.Identifier(newname)
-                    ))
+                self._cr.execute(SQL(
+                    'ALTER TABLE %s RENAME COLUMN %s TO %s',
+                    SQL.identifier(table),
+                    SQL.identifier(oldname),
+                    SQL.identifier(newname)
+                ))
                 if index:
-                    self._cr.execute(
-                        sql.SQL('ALTER INDEX {} RENAME TO {}').format(
-                            sql.Identifier(f'{table}_{oldname}_index'),
-                            sql.Identifier(f'{table}_{newname}_index'),
-                        ))
+                    self._cr.execute(SQL(
+                        'ALTER INDEX %s RENAME TO %s',
+                        SQL.identifier(f'{table}_{oldname}_index'),
+                        SQL.identifier(f'{table}_{newname}_index'),
+                    ))
 
         if column_rename or patched_models or translate_only:
             # setup models, this will reload all manual fields in registry
@@ -1176,7 +1175,7 @@ class IrModelFields(models.Model):
 
         field_ids = {}
         existing = {}
-        for row in select_en(self, ['id'] + cols, "model IN %s", [tuple(model_names)]):
+        for row in select_en(self, ['id'] + cols, model_names):
             field_ids[row[1:3]] = row[0]
             existing[row[1:3]] = row[1:]
 
@@ -1690,14 +1689,15 @@ class IrModelSelection(models.Model):
                     "Could not fulfill ondelete action for field %s.%s, "
                     "attempting ORM bypass...", records._name, fname,
                 )
-                query = sql.SQL("UPDATE {} SET {}=%s WHERE id IN %s").format(
-                    sql.Identifier(records._table),
-                    sql.Identifier(fname),
-                )
                 # if this fails then we're shit out of luck and there's nothing
                 # we can do except fix on a case-by-case basis
-                value = field.convert_to_column(value, records)
-                self.env.cr.execute(query, [value, records._ids])
+                self.env.execute_query(SQL(
+                    "UPDATE %s SET %s=%s WHERE id IN %s",
+                    SQL.identifier(records._table),
+                    SQL.identifier(fname),
+                    field.convert_to_column(value, records),
+                    records._ids,
+                ))
                 records.invalidate_recordset([fname])
 
         for selection in self:
@@ -1800,15 +1800,15 @@ class IrModelConstraint(models.Model):
                                     WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
                                  ('f', name, table))
                 if self._cr.fetchone():
-                    self._cr.execute(
-                        sql.SQL('ALTER TABLE {} DROP CONSTRAINT {}').format(
-                            sql.Identifier(table),
-                            sql.Identifier(name[:63])
-                        ))
+                    self._cr.execute(SQL(
+                        'ALTER TABLE %s DROP CONSTRAINT %s',
+                        SQL.identifier(table),
+                        SQL.identifier(name[:63]),
+                    ))
                     _logger.info('Dropped FK CONSTRAINT %s@%s', name, data.model.model)
 
             if typ == 'u':
-                hname = sqltools.make_identifier(name)
+                hname = sql.make_identifier(name)
                 # test if constraint exists
                 # Since type='u' means any "other" constraint, to avoid issues we limit to
                 # 'c' -> check, 'u' -> unique, 'x' -> exclude constraints, effective leaving
@@ -1818,8 +1818,11 @@ class IrModelConstraint(models.Model):
                                     WHERE cs.contype in ('c', 'u', 'x') and cs.conname=%s and cl.relname=%s""",
                                  (hname, table))
                 if self._cr.fetchone():
-                    self._cr.execute(sql.SQL('ALTER TABLE {} DROP CONSTRAINT {}').format(
-                        sql.Identifier(table), sql.Identifier(hname)))
+                    self._cr.execute(SQL(
+                        'ALTER TABLE %s DROP CONSTRAINT %s',
+                        SQL.identifier(table),
+                        SQL.identifier(hname),
+                    ))
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
         return super().unlink()
@@ -1936,14 +1939,14 @@ class IrModelRelation(models.Model):
                 # as installed modules have defined this element we must not delete it!
                 continue
 
-            if sqltools.table_exists(self._cr, name):
+            if sql.table_exists(self._cr, name):
                 to_drop.add(name)
 
         self.unlink()
 
         # drop m2m relation tables
         for table in to_drop:
-            self._cr.execute(sql.SQL('DROP TABLE {} CASCADE').format(sql.Identifier(table)))
+            self._cr.execute(SQL('DROP TABLE %s CASCADE', SQL.identifier(table)))
             _logger.info('Dropped table %s', table)
 
     def _reflect_relation(self, model, table, module):
@@ -2034,7 +2037,7 @@ class IrModelAccess(models.Model):
 
         group_ids = self.env.user._get_group_ids()
         self.flush_model()
-        rows = self.env.execute_query(sqltools.SQL("""
+        rows = self.env.execute_query(SQL("""
             SELECT m.model
               FROM ir_model_access a
               JOIN ir_model m ON (m.id = a.model_id)
@@ -2045,7 +2048,7 @@ class IrModelAccess(models.Model):
                     a.group_id IN %s
                 )
             GROUP BY m.model
-        """, sqltools.SQL(mode), tuple(group_ids) or (None,)))
+        """, SQL(mode), tuple(group_ids) or (None,)))
 
         return frozenset(v[0] for v in rows)
 
@@ -2184,10 +2187,12 @@ class IrModelData(models.Model):
 
     def _auto_init(self):
         res = super(IrModelData, self)._auto_init()
-        sqltools.create_unique_index(self._cr, 'ir_model_data_module_name_uniq_index',
-                                  self._table, ['module', 'name'])
-        sqltools.create_index(self._cr, 'ir_model_data_model_res_id_index',
-                           self._table, ['model', 'res_id'])
+        sql.create_unique_index(
+            self._cr, 'ir_model_data_module_name_uniq_index',
+            self._table, ['module', 'name'])
+        sql.create_index(
+            self._cr, 'ir_model_data_model_res_id_index',
+            self._table, ['model', 'res_id'])
         return res
 
     @api.depends('res_id', 'model', 'complete_name')

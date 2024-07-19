@@ -18,12 +18,10 @@ from hashlib import sha256
 from itertools import chain, repeat
 from markupsafe import Markup
 
-import babel.core
 import pytz
 from lxml import etree
 from lxml.builder import E
 from passlib.context import CryptContext as _CryptContext
-from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -2285,30 +2283,27 @@ class APIKeys(models.Model):
     create_date = fields.Datetime("Creation Date", readonly=True)
 
     def init(self):
-        table = sql.Identifier(self._table)
-        self.env.cr.execute(sql.SQL("""
-        CREATE TABLE IF NOT EXISTS {table} (
+        table = SQL.identifier(self._table)
+        self.env.cr.execute(SQL("""
+        CREATE TABLE IF NOT EXISTS %(table)s (
             id serial primary key,
             name varchar not null,
             user_id integer not null REFERENCES res_users(id) ON DELETE CASCADE,
             scope varchar,
-            index varchar({index_size}) not null CHECK (char_length(index) = {index_size}),
+            index varchar(%(index_size)s) not null CHECK (char_length(index) = %(index_size)s),
             key varchar not null,
             create_date timestamp without time zone DEFAULT (now() at time zone 'utc')
         )
-        """).format(table=table, index_size=sql.Placeholder('index_size')), {
-            'index_size': INDEX_SIZE
-        })
+        """, table=table, index_size=INDEX_SIZE))
 
         index_name = self._table + "_user_id_index_idx"
         if len(index_name) > 63:
             # unique determinist index name
             index_name = self._table[:50] + "_idx_" + sha256(self._table.encode()).hexdigest()[:8]
-        self.env.cr.execute(sql.SQL("""
-        CREATE INDEX IF NOT EXISTS {index_name} ON {table} (user_id, index);
-        """).format(
-            table=table,
-            index_name=sql.Identifier(index_name)
+        self.env.cr.execute(SQL(
+            "CREATE INDEX IF NOT EXISTS %s ON %s (user_id, index)",
+            SQL.identifier(index_name),
+            table,
         ))
 
     @check_identity

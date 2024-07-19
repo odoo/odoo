@@ -4,13 +4,12 @@ from unittest.mock import patch
 from urllib.parse import urljoin, urlsplit
 
 import requests
-from psycopg2 import sql
 
 import odoo
 from odoo.modules.registry import Registry
 from odoo.sql_db import close_db, db_connect
 from odoo.tests import HOST, BaseCase, Like, get_db_name, tagged
-from odoo.tools import lazy_property, mute_logger
+from odoo.tools import lazy_property, mute_logger, SQL
 
 
 """
@@ -30,20 +29,17 @@ The other "what could go wrong" I can think about:
 
 
 def duplicate_db(db_source, db_dest):
-    query = "CREATE DATABASE {db_dest} ENCODING 'unicode' TEMPLATE {db_source}"
+    query = SQL("CREATE DATABASE %s ENCODING 'unicode' TEMPLATE %s", SQL.identifier(db_dest), SQL.identifier(db_source))
     with closing(db_connect('postgres').cursor()) as cr:
         cr._cnx.autocommit = True
-        cr.execute(sql.SQL(query).format(
-            db_source=sql.Identifier(db_source),
-            db_dest=sql.Identifier(db_dest),
-        ))
+        cr.execute(query)
 
 
 def drop_db(db):
-    query = "DROP DATABASE IF EXISTS {db}"
+    query = SQL("DROP DATABASE IF EXISTS %s", SQL.identifier(db))
     with closing(db_connect('postgres').cursor()) as cr:
         cr._cnx.autocommit = True
-        cr.execute(sql.SQL(query).format(db=sql.Identifier(db)))
+        cr.execute(query)
 
 
 @tagged('-standard', '-at_install', 'post_install', 'database_breaking')
