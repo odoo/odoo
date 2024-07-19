@@ -604,10 +604,9 @@ export async function mail_message_post(request) {
         "message_type",
         "partner_ids",
         "subtype_xmlid",
-        "parent_id",
     ];
     if (thread_model === "discuss.channel") {
-        allowedParams.push("special_mentions");
+        allowedParams.push("parent_id", "special_mentions");
     }
     for (const allowedParam of allowedParams) {
         if (post_data[allowedParam] !== undefined) {
