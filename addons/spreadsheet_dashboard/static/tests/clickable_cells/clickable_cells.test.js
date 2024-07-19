@@ -48,6 +48,7 @@ test("Invalid pivot/list formulas should not be clickable", async () => {
 
 test("pivot/list formulas should be clickable", async () => {
     const data = {
+        version: 16,
         sheets: [
             {
                 cells: {

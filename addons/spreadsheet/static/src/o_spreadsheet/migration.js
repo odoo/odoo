@@ -2,9 +2,8 @@
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
-const { load, tokenize, parse, convertAstNodes, astToFormula, helpers } = spreadsheet;
-const { corePluginRegistry } = spreadsheet.registries;
-const { parseDimension } = helpers;
+const { tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
+const { corePluginRegistry, migrationStepRegistry } = spreadsheet.registries;
 
 export const ODOO_VERSION = 12;
 
@@ -25,50 +24,64 @@ const MAP_FN_NAMES_V10 = {
 
 const dmyRegex = /^([0|1|2|3][1-9])\/(0[1-9]|1[0-2])\/(\d{4})$/i;
 
-export function migrate(data) {
-    let _data = load(data, !!odoo.debug);
-    const version = _data.odooVersion || 0;
+migrationStepRegistry.add("odoo_migration", {
+    versionFrom: "16.1",
+    migrate(data) {
+        return migrateOdooData(data);
+    },
+});
+
+function migrateOdooData(data) {
+    const version = data.odooVersion || 0;
     if (version < 1) {
-        _data = migrate0to1(_data);
+        data = migrate0to1(data);
     }
     if (version < 2) {
-        _data = migrate1to2(_data);
+        data = migrate1to2(data);
     }
     if (version < 3) {
-        _data = migrate2to3(_data);
+        data = migrate2to3(data);
     }
     if (version < 4) {
-        _data = migrate3to4(_data);
+        data = migrate3to4(data);
     }
     if (version < 5) {
-        _data = migrate4to5(_data);
+        data = migrate4to5(data);
     }
     if (version < 6) {
-        _data = migrate5to6(_data);
+        data = migrate5to6(data);
     }
     if (version < 7) {
-        _data = migrate6to7(_data);
+        data = migrate6to7(data);
     }
     if (version < 8) {
-        _data = migrate7to8(_data);
+        data = migrate7to8(data);
     }
     if (version < 9) {
-        _data = migrate8to9(_data);
+        data = migrate8to9(data);
     }
     if (version < 10) {
-        _data = migrate9to10(_data);
+        data = migrate9to10(data);
     }
     if (version < 11) {
-        _data = migrate10to11(_data);
+        data = migrate10to11(data);
     }
     if (version < 12) {
-        _data = migrate11to12(_data);
+        data = migrate11to12(data);
     }
-    return _data;
+    return data;
+}
+
+function parseDimension(dimension) {
+    const [name, granularity] = dimension.split(":");
+    if (granularity) {
+        return { name, granularity };
+    }
+    return { name };
 }
 
 function renameFunctions(data, map) {
-    for (const sheet of data.sheets) {
+    for (const sheet of data.sheets || []) {
         for (const xc in sheet.cells || []) {
             const cell = sheet.cells[xc];
             if (cell.content && cell.content.startsWith("=")) {
@@ -94,7 +107,7 @@ function migrate0to1(data) {
 }
 
 function migrate1to2(data) {
-    for (const sheet of data.sheets) {
+    for (const sheet of data.sheets || []) {
         for (const xc in sheet.cells || []) {
             const cell = sheet.cells[xc];
             if (cell.content && cell.content.startsWith("=")) {
@@ -331,10 +344,14 @@ function migrate10to11(data) {
 function migrate11to12(data) {
     // remove the calls to ODOO.PIVOT.POSITION and replace
     // the previous argument to a relative position
-    for (const sheet of data.sheets) {
+    for (const sheet of data.sheets || []) {
         for (const xc in sheet.cells || []) {
             const cell = sheet.cells[xc];
-            if (cell.content && cell.content.startsWith("=") && cell.content.includes("ODOO.PIVOT.POSITION")) {
+            if (
+                cell.content &&
+                cell.content.startsWith("=") &&
+                cell.content.includes("ODOO.PIVOT.POSITION")
+            ) {
                 const tokens = tokenize(cell.content);
                 /* given that odoo.pivot.position is automatically set, we know that:
                 1) it is always on the form of ODOO.PIVOT.POSITION(1, ...)
@@ -343,10 +360,12 @@ function migrate11to12(data) {
                 4) odoo.pivot.position can only exist after the 3rd token and needs at least 7 tokens to be valid*/
                 for (let i = 2; i < tokens.length - 7; i++) {
                     const token = tokens[i];
-                    if (token.type === "SYMBOL" &&
-                        token.value.toUpperCase() === "ODOO.PIVOT.POSITION" ) {
-                        const order = tokens[i + 6]
-                        tokens[i - 2].value = '"#' + tokens[i - 2].value.slice(1) // "dimension" becomes "#dimension"
+                    if (
+                        token.type === "SYMBOL" &&
+                        token.value.toUpperCase() === "ODOO.PIVOT.POSITION"
+                    ) {
+                        const order = tokens[i + 6];
+                        tokens[i - 2].value = '"#' + tokens[i - 2].value.slice(1); // "dimension" becomes "#dimension"
                         tokens.splice(i, 7); // remove "ODOO.PIVOT.POSITION", "(", "1", ",", "dimension", ", ", order
                         // tokens[i-1] is the comma before odoo.pivot.position
                         tokens[i] = order;

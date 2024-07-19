@@ -215,14 +215,14 @@ export class OdooPivotModel extends PivotModel {
         const cols = this._getSpreadsheetCols();
         const rows = this._getSpreadsheetRows(this.data.rowGroupTree);
         rows.push(rows.shift()); //Put the Total row at the end.
-        const measures = this.getDefinition().measures.map((measure) => measure.name);
+        const measures = this.getDefinition().measures.map((measure) => measure.id);
         /** @type {Record<string, string | undefined>} */
         const fieldsType = {};
         for (const columns of this.getDefinition().columns) {
-            fieldsType[columns.name] = columns.type;
+            fieldsType[columns.fieldName] = columns.type;
         }
         for (const row of this.getDefinition().rows) {
-            fieldsType[row.name] = row.type;
+            fieldsType[row.fieldName] = row.type;
         }
         return new SpreadsheetPivotTable(cols, rows, measures, fieldsType);
     }
@@ -464,7 +464,7 @@ export class OdooPivotModel extends PivotModel {
                 this.getDefinition().measures.forEach((measure) => {
                     const measureCell = {
                         fields: [...cell.fields, "measure"],
-                        values: [...cell.values, measure.name],
+                        values: [...cell.values, measure.id],
                         width: 1,
                     };
                     measureRow.push(measureCell);
@@ -474,7 +474,7 @@ export class OdooPivotModel extends PivotModel {
         this.getDefinition().measures.forEach((measure) => {
             const measureCell = {
                 fields: ["measure"],
-                values: [measure.name],
+                values: [measure.id],
                 width: 1,
             };
             measureRow.push(measureCell);
@@ -501,13 +501,15 @@ export class OdooPivotModel extends PivotModel {
     _getMeasureSpecs() {
         return this.getDefinition().measures.map((measure) => {
             if (measure.type === "many2one" && !measure.aggregator) {
-                return `${measure.name}:count_distinct`;
+                return `${measure.fieldName}:count_distinct`;
             }
-            if (measure.name === "__count") {
+            if (measure.fieldName === "__count") {
                 // Remove aggregator that is not supported by python
                 return "__count";
             }
-            return measure.nameWithAggregator;
+            return measure.aggregator
+                ? `${measure.fieldName}:${measure.aggregator}`
+                : measure.fieldName;
         });
     }
 

@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { Model } from "@odoo/o-spreadsheet";
 import { createDefaultCurrencyFormat } from "@spreadsheet/currency/helpers";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
@@ -205,7 +204,7 @@ export class DashboardLoader {
             ? createDefaultCurrencyFormat(defaultCurrency)
             : undefined;
         const model = new Model(
-            migrate(snapshot),
+            snapshot,
             {
                 custom: { env: this.env, orm: this.orm, odooDataProvider },
                 mode: "dashboard",

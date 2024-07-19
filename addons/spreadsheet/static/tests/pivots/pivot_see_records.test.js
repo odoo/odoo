@@ -111,7 +111,7 @@ test("Domain with granularity quarter_number are correctly computer", async func
     const { env, model, pivotId } = await createSpreadsheetWithPivot();
 
     updatePivot(model, pivotId, {
-        rows: [{ name: "date", granularity: "quarter_number", order: "asc" }],
+        rows: [{ fieldName: "date", granularity: "quarter_number", order: "asc" }],
     });
     await animationFrame();
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"date:quarter_number",2)`);
@@ -131,7 +131,7 @@ test("Domain with granularity iso_week_number are correctly computer", async fun
     const { env, model, pivotId } = await createSpreadsheetWithPivot();
 
     updatePivot(model, pivotId, {
-        rows: [{ name: "date", granularity: "iso_week_number", order: "asc" }],
+        rows: [{ fieldName: "date", granularity: "iso_week_number", order: "asc" }],
     });
     await animationFrame();
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"date:iso_week_number",15)`);
@@ -151,7 +151,7 @@ test("Domain with granularity month_number are correctly computer", async functi
     const { env, model, pivotId } = await createSpreadsheetWithPivot();
 
     updatePivot(model, pivotId, {
-        rows: [{ name: "date", granularity: "month_number", order: "asc" }],
+        rows: [{ fieldName: "date", granularity: "month_number", order: "asc" }],
     });
     await animationFrame();
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"date:month_number",4)`);
@@ -171,7 +171,7 @@ test("Domain with granularity day_of_month are correctly computer", async functi
     const { env, model, pivotId } = await createSpreadsheetWithPivot();
 
     updatePivot(model, pivotId, {
-        rows: [{ name: "date", granularity: "day_of_month", order: "asc" }],
+        rows: [{ fieldName: "date", granularity: "day_of_month", order: "asc" }],
     });
     await animationFrame();
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"date:day_of_month",11)`);
@@ -241,7 +241,7 @@ test("Can see records on PIVOT cells", async function () {
         // B1 is a column header
         B1: '=PIVOT.HEADER(1,"foo",1)',
         // B2 is a measure header
-        B2: '=PIVOT.HEADER(1,"foo",1,"measure","probability")',
+        B2: '=PIVOT.HEADER(1,"foo",1,"measure","probability:avg")',
         // A3 is a row header
         A3: '=PIVOT.HEADER(1,"bar",FALSE)',
         // A5 is a total header
@@ -249,15 +249,15 @@ test("Can see records on PIVOT cells", async function () {
     };
     const data_cells = {
         // B3 is an empty value
-        B3: '=PIVOT.VALUE(1,"probability","bar",FALSE,"foo",1)',
+        B3: '=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",1)',
         // B4 is an non-empty value
-        B4: '=PIVOT.VALUE(1,"probability","bar",TRUE,"foo",1)',
+        B4: '=PIVOT.VALUE(1,"probability:avg","bar",TRUE,"foo",1)',
         // B5 is a column group total value
-        B5: '=PIVOT.VALUE(1,"probability","foo",1)',
+        B5: '=PIVOT.VALUE(1,"probability:avg","foo",1)',
         // F3 is a row group total value
-        F3: '=PIVOT.VALUE(1,"probability","bar",FALSE)',
+        F3: '=PIVOT.VALUE(1,"probability:avg","bar",FALSE)',
         // F5 is the total
-        F5: '=PIVOT.VALUE(1,"probability")',
+        F5: '=PIVOT.VALUE(1,"probability:avg")',
     };
     await checkCells({ ...header_cells, ...data_cells });
 
@@ -269,7 +269,9 @@ test("Can see records on PIVOT cells", async function () {
 
 test("Cannot see records of pivot formula without value", async function () {
     const { env, model } = await createSpreadsheetWithPivot();
-    expect(getCellFormula(model, "B3")).toBe(`=PIVOT.VALUE(1,"probability","bar",FALSE,"foo",1)`);
+    expect(getCellFormula(model, "B3")).toBe(
+        `=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",1)`
+    );
     expect(getCellValue(model, "B3")).toBe("", { message: "B3 is empty" });
     selectCell(model, "B3");
     const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
@@ -287,9 +289,9 @@ test("Cannot see records of spreadsheet pivot", async function () {
         pivotId: "2",
         pivot: {
             type: "SPREADSHEET",
-            columns: [{ name: "A", order: "asc" }],
+            columns: [{ fieldName: "A", order: "asc" }],
             rows: [],
-            measures: [{ name: "B", aggregator: "sum" }],
+            measures: [{ id: "B:sum", fieldName: "B", aggregator: "sum" }],
             name: "Pivot2",
             dataSet: {
                 sheetId: model.getters.getActiveSheetId(),
