@@ -1,4 +1,4 @@
-import { App, whenReady, Component, useState } from "@odoo/owl";
+import { App, whenReady, Component, useState, onWillStart } from "@odoo/owl";
 import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
 import { makeEnv, startServices } from "@web/env";
@@ -32,6 +32,8 @@ class kioskAttendanceApp extends Component{
             company: this.props.companyId,
         });
         this.state = useState({
+            barcode: false,
+            barcodeIsSet: false,
             active_display: "settings",
             displayDemoMessage: browser.localStorage.getItem("hr_attendance.ShowDemoMessage") !== "false",
         });
@@ -47,6 +49,22 @@ class kioskAttendanceApp extends Component{
         } else {
             this.manualKioskMode = true;
             this.state.active_display = "manual";
+        }
+        onWillStart( async () => {
+            this.isFreshDb = await rpc("/hr_attendance/is_fresh_db", { token: this.props.token });
+        });
+    }
+
+    async setBadgeID() {
+        let barcode = this.state.barcode;
+        if (barcode) {
+            const result = await rpc("/hr_attendance/set_user_barcode", { token: this.props.token, barcode, });
+            if (result) {
+                this.notification.add(_t("Your badge Id is now set, you can scan your badge."), { type: 'success', });
+            } else {
+                this.notification.add(_t("Your badge has already been set."), { type: 'danger', });
+            }
+            this.state.barcodeIsSet = true;
         }
     }
 

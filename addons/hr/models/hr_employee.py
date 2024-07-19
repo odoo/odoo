@@ -660,7 +660,7 @@ class HrEmployeePrivate(models.Model):
         ]
 
     def _load_scenario(self):
-        demo_tag = self.env.ref('hr_appraisal.employee_category_demo', raise_if_not_found=False)
+        demo_tag = self.env.ref('hr.employee_category_demo', raise_if_not_found=False)
         if demo_tag:
             return
         convert.convert_file(self.env, 'hr', 'data/scenarios/hr_scenario.xml', None, mode='init', kind='data')
