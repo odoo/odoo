@@ -109,6 +109,7 @@ const memoize = (instanceGetter) => {
     };
 };
 
+const R_INVISIBLE_CHARACTERS = /[\u00a0\u200b-\u200d\ufeff]/g;
 const R_OBJECT = /^\[object \w+\]$/;
 
 const dmp = new DiffMatchPatch();
@@ -409,11 +410,18 @@ export function deepEqual(a, b, cache = new Set()) {
 }
 
 /**
- * @param {[unknown, ArgumentType | ArgumentType[]][]} argumentsDefs
+ * @param {any[]} args
+ * @param {...(ArgumentType | ArgumentType[])} argumentsDefs
  */
-export function ensureArguments(argumentsDefs) {
+export function ensureArguments(args, ...argumentsDefs) {
+    if (args.length > argumentsDefs.length) {
+        throw new HootError(
+            `expected a maximum of ${argumentsDefs.length} arguments and got ${args.length}`
+        );
+    }
     for (let i = 0; i < argumentsDefs.length; i++) {
-        const [value, acceptedType] = argumentsDefs[i];
+        const value = args[i];
+        const acceptedType = argumentsDefs[i];
         const types = isIterable(acceptedType) ? [...acceptedType] : [acceptedType];
         if (!types.some((type) => isOfType(value, type))) {
             const strTypes = types.map(formatHumanReadable);
@@ -554,20 +562,21 @@ export function formatTechnical(
             } else if (isIterable(value)) {
                 const proto =
                     value.constructor.name === "Array" ? "" : `${value.constructor.name} `;
-                return `${baseIndent}${proto}[\n${[...value]
-                    .map(
-                        (val) =>
-                            `${startIndent}${formatTechnical(val, {
-                                cache,
-                                depth: depth + 1,
-                                isObjectValue: true,
-                            })},\n`
-                    )
-                    .join("")}${endIndent}]`;
+                const content = [...value].map(
+                    (val) =>
+                        `${startIndent}${formatTechnical(val, {
+                            cache,
+                            depth: depth + 1,
+                            isObjectValue: true,
+                        })},\n`
+                );
+                return `${baseIndent}${proto}[${
+                    content.length ? `\n${content.join("")}${endIndent}` : ""
+                }]`;
             } else {
                 const proto =
                     value.constructor.name === "Object" ? "" : `${value.constructor.name} `;
-                return `${baseIndent}${proto}{\n${$entries(value)
+                const content = $entries(value)
                     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
                     .map(
                         ([k, v]) =>
@@ -576,8 +585,10 @@ export function formatTechnical(
                                 depth: depth + 1,
                                 isObjectValue: true,
                             })},\n`
-                    )
-                    .join("")}${endIndent}}`;
+                    );
+                return `${baseIndent}${proto}{${
+                    content.length ? `\n${content.join("")}${endIndent}` : ""
+                }}`;
             }
         }
     }
@@ -893,19 +904,22 @@ export function title(string) {
 }
 
 /**
+ * Replaces invisible characters in a given value with their unicode value.
+ *
  * @param {unknown} value
  */
 export function toExplicitString(value) {
     const strValue = String(value);
     switch (strValue) {
-        case "\n":
+        case "\n": {
             return "\\n";
-        case "\t":
+        }
+        case "\t": {
             return "\\t";
+        }
     }
-    // replace zero-width spaces with their explicit representation
     return strValue.replace(
-        /[\u200B-\u200D\uFEFF]/g,
+        R_INVISIBLE_CHARACTERS,
         (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`
     );
 }
@@ -1051,34 +1065,47 @@ export class Markup {
     }
 
     /**
-     * @param {unknown} a
-     * @param {unknown} b
+     * @param {unknown} expected
+     * @param {unknown} actual
      */
-    static diff(a, b) {
-        return new this({
-            technical: true,
-            content: dmp.diff_main(formatTechnical(a), formatTechnical(b)).map((diff) => {
-                const classList = ["no-underline"];
-                let tagName = "t";
-                if (diff[0] === DIFF_INSERT) {
-                    classList.push("text-pass", "bg-pass-900");
-                    tagName = "ins";
-                } else if (diff[0] === DIFF_DELETE) {
-                    classList.push("text-fail", "bg-fail-900");
-                    tagName = "del";
-                }
-                return new this({
-                    className: classList.join(" "),
-                    content: toExplicitString(diff[1]),
-                    tagName,
-                });
+    static diff(expected, actual) {
+        const eType = typeof expected;
+        if (eType !== typeof actual || !(eType === "object" || eType === "string")) {
+            // Cannot diff
+            return null;
+        }
+        return [
+            new this({ content: "Diff:" }),
+            new this({
+                technical: true,
+                content: dmp
+                    .diff_main(formatTechnical(expected), formatTechnical(actual))
+                    .map((diff) => {
+                        const classList = ["no-underline"];
+                        let tagName = "t";
+                        if (diff[0] === DIFF_INSERT) {
+                            classList.push("text-pass", "bg-pass-900");
+                            tagName = "ins";
+                        } else if (diff[0] === DIFF_DELETE) {
+                            classList.push("text-fail", "bg-fail-900");
+                            tagName = "del";
+                        }
+                        return new this({
+                            className: classList.join(" "),
+                            content: toExplicitString(diff[1]),
+                            tagName,
+                        });
+                    }),
             }),
-        });
+        ];
     }
 
-    /** @param {string} content */
-    static green(content) {
-        return new this({ className: "text-pass", content });
+    /**
+     * @param {string} content
+     * @param {unknown} value
+     */
+    static green(content, value) {
+        return [new this({ className: "text-pass", content }), value];
     }
 
     /**
@@ -1088,13 +1115,17 @@ export class Markup {
         return object instanceof Markup;
     }
 
-    /** @param {string} content */
-    static red(content) {
-        return new this({ className: "text-fail", content });
+    /**
+     * @param {string} content
+     * @param {unknown} value
+     */
+    static red(content, value) {
+        return [new this({ className: "text-fail", content }), value];
     }
 
     /**
      * @param {string} content
+     * @param {unknown} value
      * @param {{ technical?: boolean }} [options]
      */
     static text(content, options) {
