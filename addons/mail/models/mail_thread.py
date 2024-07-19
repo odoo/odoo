@@ -4523,7 +4523,7 @@ class MailThread(models.AbstractModel):
         attachments = message.attachment_ids.sorted("id")
         broadcast_store = Store(attachments)
         res = {
-            "attachments": {"id": attachment.id for attachment in attachments},
+            "attachments": [{"id": attachment.id} for attachment in attachments],
             "body": message.body,
             "id": message.id,
             "pinned_at": message.pinned_at,
