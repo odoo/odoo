@@ -11,22 +11,27 @@
             </button>
             <t t-set-slot="content">
                 <div class="o_font_color_selector user-select-none">
-                    <div class="mb-1">
-                        <div class="btn btn-sm btn-light ms-1"
+                    <div class="mb-1 d-flex">
+                        <button class="btn btn-sm btn-light ms-1"
                             t-att-class="{active: state.activeTab === 'solid'}"
                             t-on-click="() => this.setTab('solid')">
                             Solid
-                        </div> 
-                        <div class="btn btn-sm btn-light"
+                        </button> 
+                        <button class="btn btn-sm btn-light"
                             t-att-class="{active: state.activeTab === 'custom'}"
                             t-on-click="() => this.setTab('custom')">
                             Custom
-                        </div> 
-                        <div class="btn btn-sm btn-light"
+                        </button> 
+                        <button class="btn btn-sm btn-light"
                             t-att-class="{active: state.activeTab === 'gradient'}"
                             t-on-click="() => this.setTab('gradient')">
                             Gradient
-                        </div> 
+                        </button> 
+                        <button class="btn btn-sm btn-light fa fa-trash me-1" 
+                                title="Reset"
+                                t-on-click="onColorApply"
+                                t-on-mouseover="onColorHover"
+                                t-on-mouseout="onColorHoverOut"/>
                     </div>
                     <div t-ref="colorsWrapper">
                         <t t-if="state.activeTab==='solid'">
