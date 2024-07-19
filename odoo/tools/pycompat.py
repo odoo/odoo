@@ -32,6 +32,7 @@ def to_text(source):
     * bytes are decoded as UTF-8
     * rest is textified via the current version's relevant data model method
     """
+    warnings.warn("Deprecated since Odoo 18.0.", DeprecationWarning, 2)
     if source is None or source is False:
         return u''
 
