@@ -1,4 +1,5 @@
 import { FormController } from "@web/views/form/form_controller";
+import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
 
@@ -7,6 +8,7 @@ export class CalendarFormController extends FormController {
         super.setup();
         const ormService = useService("orm");
         this.actionService = useService("action");
+        this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
 
         onWillStart(async () => {
             this.discussVideocallLocation = await ormService.call(
@@ -46,10 +48,14 @@ export class CalendarFormController extends FormController {
      * Otherwise, it calls the unlink action on the server.
      */
     async deleteRecord() {
-        const rootValues = this.model.root._values;
+        const record = this.model.root;
+        const rootValues = record._values;
+        let recurrenceUpdate = false;
+        if (record.data.recurrency) {
+            recurrenceUpdate = await this.askRecurrenceUpdatePolicy();
+        }
         if (rootValues.attendees_count == 1 && rootValues.user_id[0] !== rootValues.partner_ids._currentIds[0]) {
-            // Call the default delete if the event has only one attendee and the user is not listed in partner_ids.
-            super.deleteRecord(...arguments);
+            await this._archiveRecord(record.resId, recurrenceUpdate);
         } else {
             await this.orm.call("calendar.event", "action_unlink_event", [
                 this.model.root.resId,
@@ -71,5 +77,18 @@ export class CalendarFormController extends FormController {
                 }
             });
         }
+    }
+
+    /**
+     * Archives a calendar event record.
+     *
+     * @param {number} id - The ID of the record to archive.
+     * @param {boolean} recurrenceUpdate - Indicates how the archive of a recurring event will be updated.
+     */
+    async _archiveRecord(id, recurrenceUpdate) {
+        await this.orm.call(this.model.root.resModel, "action_mass_archive", [
+            [id], recurrenceUpdate
+        ]);
+        this.env.config.historyBack();
     }
 }
