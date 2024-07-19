@@ -862,7 +862,7 @@ class ProductCategory(models.Model):
     property_valuation = fields.Selection([
         ('manual_periodic', 'Manual'),
         ('real_time', 'Automated')], string='Inventory Valuation',
-        company_dependent=True, copy=True, required=True,
+        company_dependent=True, copy=True,
         help="""Manual: The accounting entries to value the inventory are not posted automatically.
         Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.
         """)
@@ -870,7 +870,7 @@ class ProductCategory(models.Model):
         ('standard', 'Standard Price'),
         ('fifo', 'First In First Out (FIFO)'),
         ('average', 'Average Cost (AVCO)')], string="Costing Method",
-        company_dependent=True, copy=True, required=True,
+        company_dependent=True, copy=True,
         help="""Standard Price: The products are valued at their standard cost defined on the product.
         Average Cost (AVCO): The products are valued at weighted average cost.
         First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.
@@ -879,18 +879,18 @@ class ProductCategory(models.Model):
         'account.journal', 'Stock Journal', company_dependent=True,
         help="When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
     property_stock_account_input_categ_id = fields.Many2one(
-        'account.account', 'Stock Input Account', company_dependent=True,
+        'account.account', 'Stock Input Account', company_dependent=True, ondelete='restrict',
         domain="[('deprecated', '=', False)]", check_company=True,
         help="""Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account
                 set on the source location. This is the default value for all products in this category. It can also directly be set on each product.""")
     property_stock_account_output_categ_id = fields.Many2one(
-        'account.account', 'Stock Output Account', company_dependent=True,
+        'account.account', 'Stock Output Account', company_dependent=True, ondelete='restrict',
         domain="[('deprecated', '=', False)]", check_company=True,
         help="""When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,
                 unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.
                 It can also directly be set on each product.""")
     property_stock_valuation_account_id = fields.Many2one(
-        'account.account', 'Stock Valuation Account', company_dependent=True,
+        'account.account', 'Stock Valuation Account', company_dependent=True, ondelete='restrict',
         domain="[('deprecated', '=', False)]", check_company=True,
         help="""When automated inventory valuation is enabled on a product, this account will hold the current value of the products.""",)
 
@@ -922,25 +922,23 @@ class ProductCategory(models.Model):
 
     @api.model
     def _create_default_stock_accounts_properties(self):
-        IrProperty = self.env['ir.property']
+        IrDefault = self.env['ir.default']
         company = self.env.ref('base.main_company')
         output_field = self.env['ir.model.fields'].search([
             ('model', '=', 'product.category'),
             ('name', '=', 'property_stock_account_output_categ_id'),
         ])
-        output_property = IrProperty.search([
-            ('fields_id', '=', output_field.id),
-            ('res_id', '=', False),
+        output_property = IrDefault.search([
+            ('field_id', '=', output_field.id),
             ('company_id', '=', company.id),
         ])
         if not output_property:
-            IrProperty._load_records([{
+            IrDefault._load_records([{
                 'xml_id': 'stock_account.property_stock_account_output_categ_id',
                 'noupdate': True,
                 'values': {
-                    'name': 'property_stock_account_output_categ_id',
-                    'fields_id': output_field.id,
-                    'value': False,
+                    'field_id': output_field.id,
+                    'json_value': 'false',
                     'company_id': company.id,
                 },
             }])
@@ -949,19 +947,17 @@ class ProductCategory(models.Model):
             ('model', '=', 'product.category'),
             ('name', '=', 'property_stock_account_input_categ_id'),
         ])
-        input_property = IrProperty.search([
-            ('fields_id', '=', input_field.id),
-            ('res_id', '=', False),
+        input_property = IrDefault.search([
+            ('field_id', '=', input_field.id),
             ('company_id', '=', company.id),
         ])
         if not input_property:
-            IrProperty._load_records([{
+            IrDefault._load_records([{
                 'xml_id': 'stock_account.property_stock_account_input_categ_id',
                 'noupdate': True,
                 'values': {
-                    'name': 'property_stock_account_input_categ_id',
-                    'fields_id': input_field.id,
-                    'value': False,
+                    'field_id': input_field.id,
+                    'json_value': 'false',
                     'company_id': company.id,
                 },
             }])

@@ -193,12 +193,7 @@ class MergePartnerAutomatic(models.TransientModel):
         for update_record in additional_update_records:
             update_records(update_record['model'], src=record, field_model=update_record['field_model'])
 
-        # Include the 'value_reference' field on ir.property that is nominally a char but works like a Reference field
-        records = self.env['ir.model.fields'].sudo().search([
-            '|',
-            '&', ('ttype', '=', 'reference'), ('store', '=', True),
-            '&', ('model', '=', 'ir.property'), ('name', '=', 'value_reference')
-        ])
+        records = self.env['ir.model.fields'].sudo().search([('ttype', '=', 'reference'), ('store', '=', True)])
         for record in records:
             try:
                 Model = self.env[record.model]
@@ -216,45 +211,60 @@ class MergePartnerAutomatic(models.TransientModel):
                     record.name: '%s,%d' % (referenced_model, dst_record.id),
                 }
                 records_ref.sudo().write(values)
+        # company_dependent fields referring the merged records
+        for field in self.env.registry.many2one_company_dependents[dst_record._name]:
+            self.env.cr.execute(SQL(
+                """
+                UPDATE %(table)s
+                SET %(field)s = (
+                    SELECT jsonb_object_agg(key,
+                        CASE
+                            WHEN value::int IN %(src_record_ids)s
+                            THEN %(dest_record_id)s
+                            ELSE value::int
+                        END
+                    )
+                    FROM jsonb_each_text(%(field)s)
+                )
+                WHERE %(field)s IS NOT NULL
+                """,
+                table=SQL.identifier(self.env[field.model_name]._table),
+                field=SQL.identifier(field.name),
+                src_record_ids=tuple(src_records.ids),
+                dest_record_id=dst_record.id,
+            ))
 
         self.env.flush_all()
 
-        # Company-dependent fields
-        self.env['ir.property'].invalidate_model()
+        # company_dependent fields of merged records
         with self._cr.savepoint():
-            source_ids = tuple(f'{referenced_model},{src}' for src in src_records.ids)
-            destination_id = f'{referenced_model},{dst_record.id}'
-
-            self.env.cr.execute(SQL(
-                """
-                 UPDATE ir_property AS _ip1
-                    SET res_id = %(destination_id)s
-                  WHERE id IN (
-                         SELECT DISTINCT ON (fields_id, company_id)
-                                id
-                           FROM ir_property
-                          WHERE res_id IN %(source_ids)s
-                          ORDER BY fields_id, company_id, res_id
+            for fname, field in dst_record._fields.items():
+                if field.company_dependent:
+                    self.env.execute_query(SQL(
+                        # use the specific company dependent value of sources
+                        # to fill the non-specific value of destination. Source
+                        # values for rows with larger id have higher priority
+                        # when aggregated
+                        """
+                        WITH source AS (
+                            SELECT %(field)s
+                            FROM  %(table)s
+                            WHERE id IN %(source_ids)s
+                            ORDER BY id
+                        ), source_agg AS (
+                            SELECT jsonb_object_agg(key, value) AS value
+                            FROM  source, jsonb_each(%(field)s)
                         )
-                    AND NOT EXISTS (
-                         SELECT
-                           FROM ir_property AS _ip2
-                          WHERE _ip2.res_id = %(destination_id)s
-                            AND _ip2.fields_id = _ip1.fields_id
-                            AND _ip2.company_id = _ip1.company_id
-                        )
-                """,
-                source_ids=source_ids,
-                destination_id=destination_id,
-            ))
-            # Remove any properties still referring to the source records.
-            self.env.cr.execute(SQL(
-                """
-                DELETE FROM ir_property
-                WHERE res_id IN %(source_ids)s
-                """,
-                source_ids=source_ids,
-            ))
+                        UPDATE %(table)s
+                        SET %(field)s = source_agg.value || COALESCE(%(table)s.%(field)s, '{}'::jsonb)
+                        FROM source_agg
+                        WHERE id = %(destination_id)s AND source_agg.value IS NOT NULL
+                        """,
+                        table=SQL.identifier(dst_record._table),
+                        field=SQL.identifier(fname),
+                        destination_id=dst_record.id,
+                        source_ids=tuple(src_records.ids),
+                    ))
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):

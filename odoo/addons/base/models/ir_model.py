@@ -542,6 +542,7 @@ class IrModelFields(models.Model):
     readonly = fields.Boolean()
     index = fields.Boolean(string='Indexed')
     translate = fields.Boolean(string='Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)")
+    company_dependent = fields.Boolean(string='Company Dependent', help="Whether values for this field is company dependent", readonly=True)
     size = fields.Integer()
     state = fields.Selection([('manual', 'Custom Field'), ('base', 'Base Field')], string='Type', default='manual', required=True, readonly=True, index=True)
     on_delete = fields.Selection([('cascade', 'Cascade'), ('set null', 'Set NULL'), ('restrict', 'Restrict')],
@@ -1144,6 +1145,7 @@ class IrModelFields(models.Model):
             'selectable': bool(field.search or field.store),
             'size': getattr(field, 'size', None),
             'translate': bool(field.translate),
+            'company_dependent': bool(field.company_dependent),
             'relation_field': field.inverse_name if field.type == 'one2many' else None,
             'relation_table': field.relation if field.type == 'many2many' else None,
             'column1': field.column1 if field.type == 'many2many' else None,
@@ -1715,7 +1717,7 @@ class IrModelSelection(models.Model):
                     "UPDATE %s SET %s=%s WHERE id IN %s",
                     SQL.identifier(records._table),
                     SQL.identifier(fname),
-                    field.convert_to_column(value, records),
+                    field.convert_to_column_insert(value, records),
                     records._ids,
                 ))
                 records.invalidate_recordset([fname])

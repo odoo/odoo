@@ -585,6 +585,7 @@ class AccountJournal(models.Model):
             accounts = self.search([('bank_account_id', '=', bank_account.id)])
             if accounts <= self:
                 bank_accounts += bank_account
+        self.env['account.payment.method.line'].search([('journal_id', 'in', self.ids)]).unlink()
         ret = super(AccountJournal, self).unlink()
         bank_accounts.unlink()
         return ret

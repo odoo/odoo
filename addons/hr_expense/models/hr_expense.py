@@ -427,10 +427,11 @@ class HrExpense(models.Model):
 
     @api.depends('product_id', 'company_id')
     def _compute_account_id(self):
+        property_field = self.env['product.category']._fields['property_account_expense_categ_id']
         for _expense in self:
             expense = _expense.with_company(_expense.company_id)
             if not expense.product_id:
-                expense.account_id = self.env['ir.property']._get('property_account_expense_categ_id', 'product.category')
+                expense.account_id = property_field.get_company_dependent_fallback(self.env['product.category'])
                 continue
             account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
             if account:
@@ -966,7 +967,8 @@ class HrExpense(models.Model):
         if self.product_id:
             account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
         else:
-            account = self.env['ir.property']._get('property_account_expense_categ_id', 'product.category')
+            field = self.env['property.category']._fields['property_account_expense_categ_id']
+            account = field.get_company_dependent_fallback(self.env['property.category'])
 
         if account:
             return account

@@ -487,14 +487,8 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         else:
             return self._assertRaises(exception, **kwargs)
 
-    @contextmanager
-    def assertQueries(self, expected, flush=True):
-        """ Check the queries made by the current cursor. ``expected`` is a list
-        of strings representing the expected queries being made. Query strings
-        are matched against each other, ignoring case and whitespaces.
-        """
+    def _patchExecute(self, actual_queries, flush=True):
         Cursor_execute = Cursor.execute
-        actual_queries = []
 
         def execute(self, query, params=None, log_exceptions=None):
             actual_queries.append(query.code if isinstance(query, SQL) else query)
@@ -513,6 +507,16 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                 self.env.flush_all()
                 self.env.cr.flush()
 
+    @contextmanager
+    def assertQueries(self, expected, flush=True):
+        """ Check the queries made by the current cursor. ``expected`` is a list
+        of strings representing the expected queries being made. Query strings
+        are matched against each other, ignoring case and whitespaces.
+        """
+        actual_queries = []
+
+        yield from self._patchExecute(actual_queries, flush)
+
         if not self.warm:
             return
 
@@ -527,6 +531,32 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                 "".join(actual_query.lower().split()),
                 "".join(expect_query.lower().split()),
                 "\n---- actual query:\n%s\n---- not like:\n%s" % (actual_query, expect_query),
+            )
+
+    @contextmanager
+    def assertQueriesContain(self, expected, flush=True):
+        """ Check the queries made by the current cursor. ``expected`` is a list
+        of strings representing the expected queries being made. Query strings
+        are matched against each other, ignoring case and whitespaces.
+        """
+        actual_queries = []
+
+        yield from self._patchExecute(actual_queries, flush)
+
+        if not self.warm:
+            return
+
+        self.assertEqual(
+            len(actual_queries), len(expected),
+            "\n---- actual queries:\n%s\n---- expected queries:\n%s" % (
+                "\n".join(actual_queries), "\n".join(expected),
+            )
+        )
+        for actual_query, expect_query in zip(actual_queries, expected):
+            self.assertIn(
+                "".join(expect_query.lower().split()),
+                "".join(actual_query.lower().split()),
+                "\n---- actual query:\n%s\n---- doesn't contain:\n%s" % (actual_query, expect_query),
             )
 
     @contextmanager

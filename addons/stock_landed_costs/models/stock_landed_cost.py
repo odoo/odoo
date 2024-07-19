@@ -25,12 +25,8 @@ class StockLandedCost(models.Model):
 
     def _default_account_journal_id(self):
         """Take the journal configured in the company, else fallback on the stock journal."""
-        lc_journal = self.env['account.journal']
-        if self.env.company.lc_journal_id:
-            lc_journal = self.env.company.lc_journal_id
-        else:
-            lc_journal = self.env['ir.property']._get("property_stock_journal", "product.category")
-        return lc_journal
+        ProductCategory = self.env['product.category']
+        return self.env.company.lc_journal_id or ProductCategory._fields['property_stock_journal'].get_company_dependent_fallback(ProductCategory)
 
     name = fields.Char(
         'Name', default=lambda self: _('New'),

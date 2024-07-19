@@ -417,7 +417,7 @@ class HTML(models.AbstractModel):
                         return attrs
                     else:
                         try:
-                            field.convert_to_column(record[field_name], record)
+                            field.convert_to_column_insert(record[field_name], record)
                         except UserError:
                             # The field contains element(s) that would be
                             # removed if sanitized. It means that someone who

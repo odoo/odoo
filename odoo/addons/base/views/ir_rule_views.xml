@@ -104,14 +104,4 @@
         </record>
 
         <menuitem action="action_rule" id="menu_action_rule" parent="base.menu_security" sequence="3"/>
-
-
-        <record id="property_rule" model="ir.rule">
-            <field name="name">Property multi-company</field>
-            <field name="model_id" ref="model_ir_property"/>
-            <field eval="True" name="global"/>
-            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
-        </record>
-
-
 </odoo>

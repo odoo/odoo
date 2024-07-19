@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from datetime import date
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError
+from odoo.tools import SQL
 
 
 class IrDefault(models.Model):
@@ -33,11 +35,15 @@ class IrDefault(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # invalidate all company dependent fields since their fallback value in cache may be changed
+        self.env.invalidate_all()
         self.env.registry.clear_cache()
         return super(IrDefault, self).create(vals_list)
 
     def write(self, vals):
         if self:
+            # invalidate all company dependent fields since their fallback value in cache may be changed
+            self.env.invalidate_all()
             self.env.registry.clear_cache()
         new_default = super().write(vals)
         self.check_access('write')
@@ -45,6 +51,8 @@ class IrDefault(models.Model):
 
     def unlink(self):
         if self:
+            # invalidate all company dependent fields since their fallback value in cache may be changed
+            self.env.invalidate_all()
             self.env.registry.clear_cache()
         return super(IrDefault, self).unlink()
 
@@ -76,6 +84,8 @@ class IrDefault(models.Model):
             model = self.env[model_name]
             field = model._fields[field_name]
             parsed = field.convert_to_cache(value, model)
+            if field.type in ('date', 'datetime') and isinstance(value, date):
+                value = field.to_string(value)
             json_value = json.dumps(value, ensure_ascii=False)
         except KeyError:
             raise ValidationError(_("Invalid field %(model)s.%(field)s", model=model_name, field=field_name))
@@ -146,6 +156,7 @@ class IrDefault(models.Model):
             current user), as a dict mapping field names to values.
         """
         cr = self.env.cr
+        self.flush_model()
         query = """ SELECT f.name, d.json_value
                     FROM ir_default d
                     JOIN ir_model_fields f ON d.field_id=f.id
@@ -188,3 +199,30 @@ class IrDefault(models.Model):
         json_vals = [json.dumps(value, ensure_ascii=False) for value in values]
         domain = [('field_id', '=', field.id), ('json_value', 'in', json_vals)]
         return self.search(domain).unlink()
+
+    @tools.ormcache('model_name', 'field_name')
+    def _get_field_column_fallbacks(self, model_name, field_name):
+        company_ids = self.env.execute_query(SQL('SELECT ARRAY_AGG(id) FROM res_company'))[0][0]
+        field = self.env[model_name]._fields[field_name]
+        self_super = self.with_user(SUPERUSER_ID)
+        return json.dumps({
+            id_: field.convert_to_column(
+                self_super.with_company(id_)._get_model_defaults(model_name).get(field_name),
+                self_super.with_company(id_)
+            )
+            for id_ in company_ids
+        })
+
+    def _evaluate_condition_with_fallback(self, model_name, condition):
+        """
+        when the field value of the condition is company_dependent without
+        customization, evaluate if its fallback value will be kept by
+        the condition
+        return True/False/None(for unknown)
+        """
+        field_name = condition[0].split('.', 1)[0]
+        model = self.env[model_name]
+        field = model._fields[field_name]
+        fallback = field.get_company_dependent_fallback(model)
+        record = model.new({field_name: field.convert_to_write(fallback, model)})
+        return bool(record.filtered_domain([condition]))

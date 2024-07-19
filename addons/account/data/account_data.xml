@@ -139,12 +139,7 @@
         </record>
 
         <!-- Partner Trust Property -->
-        <record forcecreate="True" id="default_followup_trust" model="ir.property">
-            <field name="name">Followup Trust Property</field>
-            <field name="fields_id" search="[('model', '=', 'res.partner'), ('name', '=', 'trust')]"/>
-            <field name="value">normal</field>
-            <field name="type">selection</field>
-        </record>
+        <function model="ir.default" name="set" eval="('res.partner', 'trust', 'normal')"/>
 
         <!-- Share Button in action menu -->
         <record id="model_account_move_action_share" model="ir.actions.server">

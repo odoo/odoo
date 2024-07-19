@@ -52,9 +52,9 @@ class TestUi(AccountTestInvoicingCommon, TestUICommon):
             'reconcile': True,
         })
 
-        Property = self.env['ir.property']
-        Property._set_default('property_account_receivable_id', 'res.partner', a_recv, self.env.company)
-        Property._set_default('property_account_payable_id', 'res.partner', a_pay, self.env.company)
+        IrDefault = self.env['ir.default']
+        IrDefault.set('res.partner', 'property_account_receivable_id', a_recv.id, company_id=self.env.company.id)
+        IrDefault.set('res.partner', 'property_account_payable_id', a_pay.id, company_id=self.env.company.id)
 
         product_course_channel_6 = self.env['product.product'].create({
             'name': 'DIY Furniture Course',

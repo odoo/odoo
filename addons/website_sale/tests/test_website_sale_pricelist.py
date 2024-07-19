@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from odoo.fields import Command
 from odoo.tests import tagged
+from odoo.tools import SQL
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, TransactionCaseWithUserDemo
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
@@ -469,7 +470,34 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
     def setUp(self):
         super().setUp()
         # clean `property_product_pricelist` for partner for this test (clean setup)
-        self.env['ir.property'].search([('res_id', '=', 'res.partner,%s' % self.env.user.partner_id.id)]).unlink()
+        self.env.invalidate_all()
+        for field in self.env.registry.many2one_company_dependents['res.partner']:
+            self.env.cr.execute(SQL(
+                """
+                UPDATE %(table)s
+                SET %(field)s = (
+                    SELECT jsonb_object_agg(key, value)
+                    FROM jsonb_each(%(field)s)
+                    WHERE value != %(id_)s
+                )
+                WHERE %(field)s IS NOT NULL
+                """,
+                table=SQL.identifier(self.env[field.model_name]._table),
+                field=SQL.identifier(field.name),
+                id_=SQL('to_jsonb(%s::int)', self.env.user.partner_id.id),
+            ))
+        if fields_ := self.env.registry.many2one_company_dependents['res.partner']:
+            field_ids = [self.env['ir.model.fields']._get_ids(field.model_name).get(field.name) for field in fields_]
+            self.env.cr.execute(SQL(
+                """
+                DELETE FROM ir_default
+                WHERE field_id IN %(field_ids)s
+                AND json_value = %(id_text)s
+                """,
+                field_ids=tuple(field_ids),
+                id_text=str(self.env.user.partner_id.id),
+            ))
+        self.env.registry.clear_cache()
 
         # set different country groups on pricelists
         c_EUR = self.env.ref('base.europe')
@@ -507,7 +535,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         self.website1_be_pl = self.generic_pl_select + self.generic_pl_code + self.w1_pl_select + self.generic_pl_code_select + self.w1_pl + self.w1_pl_code
 
     def test_get_pricelist_available_geoip(self):
-        # Test get all available pricelists with geoip and no partner pricelist (ir.property)
+        # Test get all available pricelists with geoip and no partner pricelist
 
         # property_product_pricelist will also be returned in the available pricelists
         self.website1_be_pl += self.env.user.partner_id.property_product_pricelist
@@ -517,14 +545,14 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, and the partner pl")
 
     def test_get_pricelist_available_geoip2(self):
-        # Test get all available pricelists with geoip and a partner pricelist (ir.property) not website compliant
+        # Test get all available pricelists with geoip and a partner pricelist not website compliant
         self.env.user.partner_id.property_product_pricelist = self.backend_pl
         with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code):
             pls = self.website.get_pricelist_available()
         self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned as partner pl is not website compliant")
 
     def test_get_pricelist_available_geoip3(self):
-        # Test get all available pricelists with geoip and a partner pricelist (ir.property) website compliant (but not geoip compliant)
+        # Test get all available pricelists with geoip and a partner pricelist website compliant (but not geoip compliant)
         self.env.user.partner_id.property_product_pricelist = self.w1_pl_code_select
         with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code):
             pls = self.website.get_pricelist_available()
@@ -620,16 +648,11 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         # Ensure everything was done correctly
         self.assertEqual(self.demo_user.partner_id.with_company(self.company1.id).property_product_pricelist, self.c1_pl)
         self.assertEqual(self.demo_user.partner_id.with_company(self.company2.id).property_product_pricelist, self.c2_pl)
-        irp1 = self.env['ir.property'].with_company(self.company1)._get("property_product_pricelist", "res.partner", self.demo_user.partner_id.id)
-        irp2 = self.env['ir.property'].with_company(self.company2)._get("property_product_pricelist", "res.partner", self.demo_user.partner_id.id)
-        self.assertEqual((irp1, irp2), (self.c1_pl, self.c2_pl), "Ensure there is an `ir.property` for demo partner for every company, and that the pricelist is the company specific one.")
-        # ---------------------------------- IR.PROPERTY -------------------------------------
-        # id |            name              |     res_id    | company_id |   value_reference
-        # ------------------------------------------------------------------------------------
-        # 1  | 'property_product_pricelist' |               |      1     | product.pricelist,1
-        # 2  | 'property_product_pricelist' |               |      2     | product.pricelist,2
-        # 3  | 'property_product_pricelist' | res.partner,8 |      1     | product.pricelist,10
-        # 4  | 'property_product_pricelist' | res.partner,8 |      2     | product.pricelist,11
+        # property_product_pricelist has been cached
+        field = self.env['res.partner']._fields['property_product_pricelist']
+        cache_rp1 = self.env.cache.get(self.demo_user.partner_id.with_company(self.company1.id), field)
+        cache_rp2 = self.env.cache.get(self.demo_user.partner_id.with_company(self.company2.id), field)
+        self.assertEqual((cache_rp1, cache_rp2), (self.c1_pl.id, self.c2_pl.id), "Ensure the pricelist is the company specific one.")
 
     def test_property_product_pricelist_multi_company(self):
         ''' Test that the `property_product_pricelist` of `res.partner` is read
@@ -638,13 +661,13 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
             is not the same as its user's company.
 
             Here, as demo user (company1), we will visit website1 (company2).
-            It should return the ir.property for demo user for company2 and not
+            It should return the data for demo user for company2 and not
             for the company1 as we should get the website's company pricelist
             and not the demo user's current company pricelist.
         '''
         simulate_frontend_context(self, self.website.id)
 
-        # First check: It should return ir.property,4 as company_id is
+        # First check: It should return c2_pl as company_id is
         # website.company_id and not env.user.company_id
         company_id = self.website.company_id.id
         partner = self.demo_user.partner_id.with_company(company_id)

@@ -76,8 +76,6 @@ class AccountAnalyticPlan(models.Model):
             ('unavailable', 'Unavailable'),
         ],
         string="Default Applicability",
-        required=True,
-        default='optional',  # actually set in _auto_init because company dependent
         readonly=False,
         company_dependent=True,
     )
@@ -91,10 +89,10 @@ class AccountAnalyticPlan(models.Model):
     def _auto_init(self):
         super()._auto_init()
         def precommit():
-            self.env['ir.property']._set_default(
-                name='default_applicability',
-                model=self._name,
-                value='optional',
+            self.env['ir.default'].set(
+                self._name,
+                'default_applicability',
+                'optional',
             )
         self.env.cr.precommit.add(precommit)
 
