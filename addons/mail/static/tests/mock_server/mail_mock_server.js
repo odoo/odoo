@@ -598,16 +598,20 @@ export async function mail_message_post(request) {
         }
     }
     const finalData = {};
-    for (const allowedField of [
+    const allowedParams = [
         "attachment_ids",
         "body",
         "message_type",
         "partner_ids",
         "subtype_xmlid",
         "parent_id",
-    ]) {
-        if (post_data[allowedField] !== undefined) {
-            finalData[allowedField] = post_data[allowedField];
+    ];
+    if (thread_model === "discuss.channel") {
+        allowedParams.push("special_mentions");
+    }
+    for (const allowedParam of allowedParams) {
+        if (post_data[allowedParam] !== undefined) {
+            finalData[allowedParam] = post_data[allowedParam];
         }
     }
     const kwargs = makeKwArgs({ ...finalData, context });

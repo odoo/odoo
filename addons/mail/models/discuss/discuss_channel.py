@@ -710,6 +710,9 @@ class Channel(models.Model):
              ('res_id', '=', self.id)
             ]).id
 
+    def _get_allowed_message_post_params(self):
+        return super()._get_allowed_message_post_params() | {"special_mentions"}
+
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
         if (not self.env.user or self.env.user._is_public()) and self.is_member:
@@ -717,6 +720,10 @@ class Channel(models.Model):
             self = self.sudo()
         # sudo: discuss.channel - write to discuss.channel is not accessible for most users
         self.sudo().last_interest_dt = fields.Datetime.now()
+        if "everyone" in kwargs.pop("special_mentions", []):
+            kwargs["partner_ids"] = list(
+                set(kwargs["partner_ids"] + self.channel_member_ids.partner_id.ids)
+            )
         # mail_post_autofollow=False is necessary to prevent adding followers
         # when using mentions in channels. Followers should not be added to
         # channels, and especially not automatically (because channel membership

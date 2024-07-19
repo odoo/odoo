@@ -75,12 +75,9 @@ class ThreadController(http.Controller):
             key=lambda it: (it["parent_model"] or "", it["res_model"] or "", it["internal"], it["sequence"]),
         )
 
-    def _get_allowed_message_post_params(self):
-        return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid", "parent_id"}
-
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def mail_message_post(self, thread_model, thread_id, post_data, context=None, special_mentions=[], **kwargs):
+    def mail_message_post(self, thread_model, thread_id, post_data, context=None, **kwargs):
         guest = request.env["mail.guest"]._get_guest_from_context()
         guest.env["ir.attachment"].browse(post_data.get("attachment_ids", []))._check_attachments_access(
             kwargs.get("attachment_tokens")
@@ -113,13 +110,11 @@ class ThreadController(http.Controller):
                 kwargs["partner_emails"], kwargs.get("partner_additional_values", {})
             )]
         post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
-        if "everyone" in special_mentions:
-            post_data["partner_ids"] = [channel_member.partner_id.id for channel_member in thread.channel_member_ids if channel_member.partner_id]
         message = thread.message_post(
             **{
                 key: value
                 for key, value in post_data.items()
-                if key in self._get_allowed_message_post_params()
+                if key in thread._get_allowed_message_post_params()
             }
         )
         return Store(message, for_current_user=True).get_result()
