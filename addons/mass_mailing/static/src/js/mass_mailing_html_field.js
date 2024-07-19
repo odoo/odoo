@@ -384,6 +384,8 @@ export class MassMailingHtmlField extends HtmlField {
             // the Odoo editor before resetting the history.
             setTimeout(() => {
                 this.wysiwyg.historyReset();
+                // Update undo/redo buttons
+                this.wysiwyg.odooEditor.dispatchEvent(new Event('historyStep'));
 
                 // The selection has been lost when switching theme.
                 const document = this.wysiwyg.odooEditor.document;
