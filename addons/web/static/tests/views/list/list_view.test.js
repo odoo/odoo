@@ -15013,17 +15013,22 @@ test(`toggle properties`, async () => {
         string: "Property char",
     };
     const definition1 = {
+        type: "separator",
+        name: "property_separator",
+        string: "Group 1",
+    };
+    const definition2 = {
         type: "boolean",
         name: "property_boolean",
         string: "Property boolean",
     };
     Bar._records[0].definitions = [definition0];
-    Bar._records[1].definitions = [definition1];
+    Bar._records[1].definitions = [definition1, definition2];
     for (const record of Foo._records) {
         if (record.m2o === 1) {
             record.properties = [{ ...definition0, value: "0" }];
         } else if (record.m2o === 2) {
-            record.properties = [{ ...definition1, value: true }];
+            record.properties = [definition1, { ...definition2, value: true }];
         }
     }
 
@@ -15038,6 +15043,8 @@ test(`toggle properties`, async () => {
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
+    expect(`.o-dropdown--menu input[type='checkbox']`).toHaveCount(2);
+
     await contains(`.o-dropdown--menu input[type='checkbox']:eq(0)`).click();
     expect(`.o_list_renderer th[data-name='properties.property_char']`).toHaveCount(1);
     expect(`.o_list_renderer th[data-name='properties.property_boolean']`).toHaveCount(0);
