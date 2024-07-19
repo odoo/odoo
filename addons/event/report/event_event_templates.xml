@@ -151,7 +151,7 @@
                             <div class="o_event_full_page_left_details_top mb-3">
                                 <h2 class="o_event_full_page_ticket_event_name fw-bold pt-3" t-field="event.name"/>
                                 <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
-                                <h4 t-if="attendee" class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_type" t-field="attendee.event_ticket_id"/>
+                                <h4 t-if="attendee" class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_type" t-field="attendee.event_ticket_id.name"/>
                                 <h4 t-elif="first_ticket" t-out="first_ticket.name" class="o_event_full_page_ticket_font_faded pe-4"/>
                                 <h4 class="fw-bold mb-3 pb-2" t-if="attendee" t-field="attendee.name"/>
                                 <h4 class="fw-bold mb-3 pb-2" t-elif="not attendee"><span>John Doe</span></h4>
