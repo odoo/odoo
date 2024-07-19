@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from dateutil.relativedelta import relativedelta
 from pytz import UTC
 
 from odoo import api, fields, models
@@ -14,7 +15,7 @@ class CalendarEvent(models.Model):
     @api.depends('partner_ids', 'start', 'stop', 'allday')
     def _compute_unavailable_partner_ids(self):
         complete_events = self.filtered(
-            lambda event: event.start and event.stop and event.stop >= event.start and event.partner_ids)
+            lambda event: event.start and event.stop and (event.stop > event.start or (event.stop >= event.start and event.allday)) and event.partner_ids)
         incomplete_event = self - complete_events
         incomplete_event.unavailable_partner_ids = []
         if not complete_events:
@@ -44,15 +45,20 @@ class CalendarEvent(models.Model):
         global_interval = company_calendar._work_intervals_batch(start, stop)[False]
         interval_by_event = {}
         for event in self:
-            event_interval = Intervals([(
-                timezone_datetime(event.start),
-                timezone_datetime(event.stop),
-                self.env['resource.calendar']
-            )])
             if event.allday:
-                interval_by_event[event] = event_interval & global_interval
+                # Avoid allday event with a duration of 0
+                allday_event_interval = Intervals([(
+                    event.start.replace(hour=0, minute=0, second=0, tzinfo=UTC),
+                    event.stop.replace(hour=23, minute=59, second=59, tzinfo=UTC),
+                    self.env['resource.calendar']
+                )])
+                interval_by_event[event] = allday_event_interval & global_interval
             else:
-                interval_by_event[event] = event_interval
+                interval_by_event[event] = Intervals([(
+                    timezone_datetime(event.start),
+                    timezone_datetime(event.stop),
+                    self.env['resource.calendar']
+                )])
         return interval_by_event
 
     def _check_employees_availability_for_event(self, schedule_by_partner, event_interval):
