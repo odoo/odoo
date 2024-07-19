@@ -10,6 +10,7 @@ import traceback
 import codecs
 from hashlib import md5
 
+import qrcode
 from PIL import Image
 from xml.etree import ElementTree as ET
 
@@ -18,11 +19,6 @@ try:
     import jcconv
 except ImportError:
     jcconv = None
-
-try: 
-    import qrcode
-except ImportError:
-    qrcode = None
 
 from .constants import *
 from .exceptions import *

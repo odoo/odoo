@@ -40,8 +40,5 @@ You need to configure your certificate and the tax agency.
         'views/account_move_views.xml',
     ],
     'demo': ['demo/demo_certificate.xml'],
-    'external_dependencies': {
-        'python': ['pyOpenSSL'],
-    },
     'license': 'LGPL-3',
 }

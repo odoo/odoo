@@ -41,14 +41,11 @@ BOM_MAP = {
     'utf-32be': codecs.BOM_UTF32_BE,
 }
 
+import xlrd
 try:
-    import xlrd
-    try:
-        from xlrd import xlsx
-    except ImportError:
-        xlsx = None
+    from xlrd import xlsx
 except ImportError:
-    xlrd = xlsx = None
+    xlsx = None
 
 try:
     from . import odf_ods_reader

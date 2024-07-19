@@ -1,6 +1,11 @@
 import ast
 import os
 import logging
+import re
+
+import xlsxwriter
+import xlwt
+
 from odoo import MIN_PY_VERSION
 from shutil import copyfileobj
 from types import CodeType
@@ -19,6 +24,32 @@ from werkzeug.routing import Rule
 from werkzeug.wrappers import Request, Response
 
 from .json import scriptsafe
+
+
+# add some sanitization to respect the excel sheet name restrictions
+# as the sheet name is often translatable, can not control the input
+class PatchedWorkbook(xlwt.Workbook):
+    def add_sheet(self, name, cell_overwrite_ok=False):
+        # invalid Excel character: []:*?/\
+        name = re.sub(r'[\[\]:*?/\\]', '', name)
+
+        # maximum size is 31 characters
+        name = name[:31]
+        return super().add_sheet(name, cell_overwrite_ok=cell_overwrite_ok)
+xlwt.Workbook = PatchedWorkbook
+
+
+class PatchedXlsxWorkbook(xlsxwriter.Workbook):
+    def add_worksheet(self, name=None, worksheet_class=None):
+        if name:
+            # invalid Excel character: []:*?/\
+            name = re.sub(r'[\[\]:*?/\\]', '', name)
+
+            # maximum size is 31 characters
+            name = name[:31]
+        return super().add_worksheet(name, worksheet_class=worksheet_class)
+xlsxwriter.Workbook = PatchedXlsxWorkbook
+
 
 try:
     from xlrd import xlsx

@@ -12,9 +12,6 @@ Odoo database.
     'version': '1.0',
     'category': 'Accounting/Accounting',
     'depends': ['account'],
-    'external_dependencies': {
-        'python': ['cryptography']
-    },
     'data': [
         'security/ir.model.access.csv',
         'security/account_edi_proxy_client_security.xml',

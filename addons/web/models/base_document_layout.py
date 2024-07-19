@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
 from markupsafe import Markup
+import sass as libsass
 
 from odoo import api, fields, models
-
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.tools import html2plaintext, is_html_empty, image as tools
 from odoo.tools.misc import file_path
 
-try:
-    import sass as libsass
-except ImportError:
-    # If the `sass` python library isn't found, we fallback on the
-    # `sassc` executable in the path.
-    libsass = None
 try:
     from PIL.Image import Resampling
 except ImportError:

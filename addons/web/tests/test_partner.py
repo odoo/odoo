@@ -4,20 +4,16 @@ import io
 import logging
 import unittest
 import zipfile
-from odoo.fields import Command
-
-from odoo.tests.common import HttpCase, tagged
 from base64 import b64decode
 
+import vobject
+
+from odoo.fields import Command
+from odoo.tests.common import HttpCase, tagged
 from odoo.tools import mute_logger
+
+
 _logger = logging.getLogger(__name__)
-
-try:
-    import vobject
-except ImportError:
-    _logger.warning("`vobject` Python module not found, vcard file generation disabled. Consider installing this module if you want to generate vcard files")
-    vobject = None
-
 
 @tagged('-at_install', 'post_install')
 class TestPartnerVCard(HttpCase):

@@ -3,12 +3,13 @@
 
 import logging
 import math
+import uuid
 from datetime import datetime, timedelta
 from itertools import repeat
-from werkzeug.urls import url_parse
 
 import pytz
-import uuid
+import vobject
+from werkzeug.urls import url_parse
 
 from odoo import api, fields, models, Command
 from odoo.osv.expression import AND
@@ -29,11 +30,6 @@ from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
-try:
-    import vobject
-except ImportError:
-    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
-    vobject = None
 
 SORT_ALIASES = {
     'start': 'sort_start',

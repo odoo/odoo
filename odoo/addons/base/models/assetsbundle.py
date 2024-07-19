@@ -12,15 +12,8 @@ import re
 import textwrap
 import uuid
 
-try:
-    import sass as libsass
-except ImportError:
-    # If the `sass` python library isn't found, we fallback on the
-    # `sassc` executable in the path.
-    libsass = None
-
+import sass as libsass
 from rjsmin import jsmin as rjsmin
-from markupsafe import Markup
 
 from odoo import release, SUPERUSER_ID, _
 from odoo.http import request
@@ -1037,9 +1030,6 @@ class ScssStylesheetAsset(PreprocessedCSS):
     output_style = 'expanded'
 
     def compile(self, source):
-        if libsass is None:
-            return super().compile(source)
-
         try:
             profiler.force_hook()
             return libsass.compile(
@@ -1052,13 +1042,6 @@ class ScssStylesheetAsset(PreprocessedCSS):
             )
         except libsass.CompileError as e:
             raise CompileError(e.args[0])
-
-    def get_command(self):
-        try:
-            sassc = misc.find_in_path('sassc')
-        except IOError:
-            sassc = 'sassc'
-        return [sassc, '--stdin', '--precision', str(self.precision), '--load-path', self.bootstrap_path, '-t', self.output_style]
 
 
 class LessStylesheetAsset(PreprocessedCSS):

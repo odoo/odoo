@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import logging
 from base64 import b64decode
+
+import vobject.vcard
 
 from odoo import models
 
 _logger = logging.getLogger(__name__)
-
-try:
-    import vobject
-except ImportError:
-    _logger.warning("`vobject` Python module not found, vcard file generation disabled. Consider installing this module if you want to generate vcard files")
-    vobject = None
 
 
 class ResPartner(models.Model):

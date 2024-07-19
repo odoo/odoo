@@ -5,10 +5,11 @@ from collections import deque
 import io
 import json
 
+import xlsxwriter
+
 from odoo import http, _
 from odoo.http import content_disposition, request
 from odoo.tools import ustr, osutil
-from odoo.tools.misc import xlsxwriter
 
 
 class TableExporter(http.Controller):

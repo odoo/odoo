@@ -1,13 +1,14 @@
+import logging
 import datetime
 import string
 import re
+
 import stdnum
+from stdnum import luhn
 from stdnum.eu.vat import check_vies
 from stdnum.exceptions import InvalidComponent, InvalidChecksum, InvalidFormat
+from stdnum.nl.bsn import checksum
 from stdnum.util import clean
-from stdnum import luhn
-
-import logging
 
 from odoo import api, models, fields, tools, _
 from odoo.tools import zeep
@@ -444,12 +445,6 @@ class ResPartner(models.Model):
 
         TODO: remove when fixed upstream
         """
-
-        try:
-            from stdnum.util import clean
-            from stdnum.nl.bsn import checksum
-        except ImportError:
-            return True
 
         vat = clean(vat, ' -.').upper().strip()
 

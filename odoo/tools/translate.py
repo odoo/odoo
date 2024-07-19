@@ -461,11 +461,8 @@ class GettextAlias(object):
             return s.env.cr, False
         if hasattr(s, 'cr'):
             return s.cr, False
-        try:
-            from odoo.http import request
-            return request.env.cr, False
-        except RuntimeError:
-            pass
+        if odoo.http.request:
+            return odoo.http.request.env.cr, False
         if allow_create:
             # create a new cursor
             db = self._get_db()
@@ -496,12 +493,8 @@ class GettextAlias(object):
             s = frame.f_locals.get('self')
             if hasattr(s, 'env'):
                 lang = s.env.lang
-            if not lang:
-                try:
-                    from odoo.http import request
-                    lang = request.env.lang
-                except RuntimeError:
-                    pass
+            if not lang and odoo.http.request:
+                lang = odoo.http.request.env.lang
             if not lang:
                 # Last resort: attempt to guess the language of the user
                 # Pitfall: some operations are performed in sudo mode, and we
