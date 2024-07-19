@@ -108,6 +108,26 @@ test("custom colors used in the editor are shown in the colorpicker", async () =
     );
 });
 
+test("Can reset a color", async () => {
+    const { editor } = await setupEditor(
+        `<p class="tested">
+            <font style="color: rgb(255, 0, 0);">[test]</font>
+        </p>`
+    );
+    await waitFor(".o-we-toolbar");
+    expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(1);
+    expect(".tested").not.toHaveInnerHTML("test");
+    click(".o-select-color-foreground");
+    await animationFrame();
+    click("button.fa-trash");
+    await animationFrame();
+    expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(0);
+    expect(".tested").toHaveInnerHTML("test");
+    editor.dispatch("HISTORY_UNDO");
+    expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(1);
+    expect(".tested").not.toHaveInnerHTML("test");
+});
+
 test.tags("desktop")(
     "selected text color is shown in the toolbar and update when hovering",
     async () => {
