@@ -2022,7 +2022,7 @@ class SnippetsMenu extends Component {
      * At this stage, references at accessible.
      * It fetches and parses the snippets templates and options, as well as
      * going through a first pass of the invisible elements.
-     * It also initializes click events on the documents, and sets up tooltips. 
+     * It also initializes click events on the documents, and sets up tooltips.
      */
     async start() {
         // TODO: at a later date, we should remove this.$el (maybe when jQuery
@@ -3269,7 +3269,7 @@ class SnippetsMenu extends Component {
                 const snippet = {
                     id: parseInt(snippetEl.dataset.oeSnippetId) || uniqueId(snippetEl.dataset.moduleId),
                     name: snippetEl.children[0].dataset.snippet,
-                    displayName: markup(escape(snippetEl.getAttribute("name"))),
+                    displayName: snippetEl.getAttribute("name"),
                     category: category,
                     content: snippetEl.children,
                     thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
@@ -4634,7 +4634,7 @@ class SnippetsMenu extends Component {
         await this._updateInvisibleDOM();
     }
     _addToolbar(toolbarMode = "text") {
-        // TODO: Now that the toolbar is not removed every time 
+        // TODO: Now that the toolbar is not removed every time
         // `_updateRightPanelContent` is called, we should probably rename this
         // method ot "_updateToolbar" and remove some of the now useless code,
         // since the only important thing is to check the visibility
@@ -4933,7 +4933,7 @@ class SnippetsMenu extends Component {
     /**
      * Compatibility layer for legacy widgets. Should be removed when everything
      * is converted to OWL.
-     * 
+     *
      * @param ev {CustomEvent}
      */
     _trigger_up(ev) {
@@ -4966,7 +4966,7 @@ class SnippetsMenu extends Component {
             const snippetThumbnails = this.el.querySelectorAll(".oe_snippet_thumbnail");
             const isSnippetGroupClicked = initialSnippetEl.matches(".oe_snippet[data-snippet-group]");
             const groupSelected = snippetGroup ||
-                [...this.snippets.values()].find(snippet => 
+                [...this.snippets.values()].find(snippet =>
                     snippet.name === initialSnippetEl.dataset.snippet
                 ).group;
 
