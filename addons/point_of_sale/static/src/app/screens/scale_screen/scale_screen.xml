@@ -38,7 +38,7 @@
                 </div>
                 <div class="d-flex px-5 flex-row gap-2 m-2 align-items-center">
                     <div class="product-price w-50 fs-2 text-center"
-                        t-esc="env.utils.formatCurrency(productPrice) + '/' + productUom" />
+                        t-esc="productUnitPrice + '/' + productUom" />
                     <div class="computed-price fd-flex flex-grow-1 p-3 rounded text-center text-bg-info bg-opacity-25 text-info fs-2 fw-bold" t-esc="computedPriceString" />
                 </div>
             </div>
