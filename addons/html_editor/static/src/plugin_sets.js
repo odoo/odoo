@@ -112,11 +112,13 @@ export const COLLABORATION_PLUGINS = [
     CollaborationSelectionAvatarPlugin,
 ];
 
+export const EMBEDDED_COMPONENT_PLUGINS = [EmbeddedComponentPlugin];
+
 export const DYNAMIC_PLACEHOLDER_PLUGINS = [DynamicPlaceholderPlugin, QWebPlugin];
 
 export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,
     ...MAIN_PLUGINS,
+    ...EMBEDDED_COMPONENT_PLUGINS,
     QWebPlugin,
-    EmbeddedComponentPlugin,
 ];
