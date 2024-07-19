@@ -446,7 +446,7 @@ class HrAttendance(models.Model):
             return True
         # This record only exists if the scenario has been already launched
         demo_tag = self.env.ref('hr_attendance.employee_category_demo', raise_if_not_found=False)
-        return bool(demo_tag)
+        return bool(demo_tag) or bool(self.env['ir.module.module'].search_count([('demo', '=', True)]))
 
     def _load_demo_data(self):
         # Load employees, schedules, departments and partners
