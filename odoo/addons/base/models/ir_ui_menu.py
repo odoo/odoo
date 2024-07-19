@@ -300,7 +300,7 @@ class IrUiMenu(models.Model):
                     'children', []).append(menu_item['id'])
             attachment = mi_attachment_by_res_id.get(menu_item['id'])
             if attachment:
-                menu_item['web_icon_data'] = attachment['datas']
+                menu_item['web_icon_data'] = attachment['datas'].decode()
                 menu_item['web_icon_data_mimetype'] = attachment['mimetype']
             else:
                 menu_item['web_icon_data'] = False
