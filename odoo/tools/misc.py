@@ -100,6 +100,7 @@ __all__ = [
     'ustr',
 ]
 
+
 if TYPE_CHECKING:
     from odoo.addons.base.models.res_lang import LangData
 
