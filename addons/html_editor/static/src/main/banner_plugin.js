@@ -8,7 +8,7 @@ function isAvailable(node) {
 }
 export class BannerPlugin extends Plugin {
     static name = "banner";
-    static dependencies = ["dom", "selection"];
+    static dependencies = ["dom", "emoji", "selection"];
     /** @type { (p: BannerPlugin) => Record<string, any> } */
     static resources = (p) => ({
         powerboxCategory: { id: "banner", name: _t("Banner"), sequence: 20 },
@@ -56,10 +56,18 @@ export class BannerPlugin extends Plugin {
         ],
     });
 
+    setup() {
+        this.addDomListener(this.editable, "click", (e) => {
+            if (e.target.classList.contains("o_editor_banner_icon")) {
+                this.onBannerEmojiChange(e.target);
+            }
+        });
+    }
+
     insertBanner(title, emoji, alertClass) {
         const bannerElement = parseHTML(
             this.document,
-            `<div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status" contenteditable="false">
+            `<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="${title}">${emoji}</i>
                 <div class="w-100 ms-3" contenteditable="true">
                     <p><br></p>
@@ -69,5 +77,15 @@ export class BannerPlugin extends Plugin {
         this.shared.domInsert(bannerElement);
         this.shared.setCursorStart(bannerElement.querySelector(".o_editor_banner > div > p"));
         this.dispatch("ADD_STEP");
+    }
+
+    onBannerEmojiChange(iconElement) {
+        this.shared.showEmojiPicker({
+            target: iconElement,
+            onSelect: (emoji) => {
+                iconElement.textContent = emoji;
+                this.dispatch("ADD_STEP");
+            },
+        });
     }
 }
