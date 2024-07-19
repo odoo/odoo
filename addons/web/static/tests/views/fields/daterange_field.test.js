@@ -4,7 +4,6 @@ import {
     queryAllProperties,
     queryAllValues,
     queryFirst,
-    queryText,
     queryValue,
     resize,
 } from "@odoo/hoot-dom";
@@ -82,33 +81,31 @@ test.tags("desktop")("Datetime field - interaction with the datepicker", async (
     const daterange = queryFirst(".o_field_daterange");
     await contains("input[data-field=datetime]", { root: daterange }).click();
 
-    let datepicker = queryFirst(".o_datetime_picker");
-    expect(datepicker).toBeDisplayed();
+    expect(".o_datetime_picker").toBeDisplayed();
 
-    expect(queryText(".o_date_item_cell.o_select_start", { root: datepicker })).toBe("8");
+    expect(".o_date_item_cell.o_select_start").toHaveText("8");
     let [hourSelectStart, minuteSelectStart] = getTimePickers().at(0);
     expect(hourSelectStart.value).toBe("15");
     expect(minuteSelectStart.value).toBe("30");
-    expect(queryText(".o_date_item_cell.o_select_end", { root: datepicker })).toBe("13");
+    expect(".o_date_item_cell.o_select_end").toHaveText("13");
     let [hourSelectEnd, minuteSelectEnd] = getTimePickers().at(1);
     expect(hourSelectEnd.value).toBe("5");
     expect(minuteSelectEnd.value).toBe("30");
     expect(queryAll("option", { root: minuteSelectStart })).toHaveCount(12);
     // Close picker
     await contains(".o_form_view_container").click();
-    expect(".o_datetime_picker", "datepicker should be closed").toHaveCount(0);
+    expect(".o_datetime_picker").toHaveCount(0);
 
     // Try to check with end date
     await contains("input[data-field=datetime_end]", { root: daterange }).click();
 
-    datepicker = queryFirst(".o_datetime_picker");
-    expect(datepicker).toBeDisplayed();
+    expect(".o_datetime_picker").toBeDisplayed();
 
-    expect(queryText(".o_date_item_cell.o_select_start", { root: datepicker })).toBe("8");
+    expect(".o_date_item_cell.o_select_start").toHaveText("8");
     [hourSelectStart, minuteSelectStart] = getTimePickers().at(0);
     expect(hourSelectStart.value).toBe("15");
     expect(minuteSelectStart.value).toBe("30");
-    expect(queryText(".o_date_item_cell.o_select_end", { root: datepicker })).toBe("13");
+    expect(".o_date_item_cell.o_select_end").toHaveText("13");
     [hourSelectEnd, minuteSelectEnd] = getTimePickers().at(1);
     expect(hourSelectEnd.value).toBe("5");
     expect(minuteSelectEnd.value).toBe("30");

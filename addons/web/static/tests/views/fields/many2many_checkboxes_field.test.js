@@ -89,16 +89,12 @@ test("Many2ManyCheckBoxesField (readonly)", async () => {
             </form>`,
     });
 
-    expect(
-        "div.o_field_widget div.form-check",
-        2,
-        "should have fetched and displayed the 2 values of the many2many"
-    ).toHaveCount(2);
-    expect(
-        "div.o_field_widget div.form-check input:disabled",
-        2,
-        "the checkboxes should be disabled"
-    ).toHaveCount(2);
+    expect("div.o_field_widget div.form-check").toHaveCount(2, {
+        message: "should have fetched and displayed the 2 values of the many2many",
+    });
+    expect("div.o_field_widget div.form-check input:disabled").toHaveCount(2, {
+        message: "the checkboxes should be disabled",
+    });
 
     await contains("div.o_field_widget div.form-check > label:eq(1)").click();
 

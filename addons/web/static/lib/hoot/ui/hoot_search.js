@@ -175,7 +175,7 @@ const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
     <t t-foreach="categories" t-as="category" t-key="category">
         <t t-set="jobs" t-value="state.categories[category][0]" />
         <t t-set="checkedCount" t-value="state.categories[category][1]" />
-        <t t-if="jobs.length">
+        <t t-if="jobs?.length">
             <div class="flex flex-col mb-2 max-h-48 overflow-hidden">
                 <h4 class="text-primary font-bold flex items-center mb-2">
                     <span class="w-full">
@@ -240,7 +240,7 @@ const TEMPLATE_SEARCH_DASHBOARD = /* xml */ `
                 </span>
             </h4>
             <ul class="flex flex-col overflow-y-auto gap-1">
-                <t t-foreach="getTop(env.runner.tags)" t-as="job" t-key="job.id">
+                <t t-foreach="getTop(env.runner.tags.values())" t-as="job" t-key="job.id">
                     <t t-set="category" t-value="'tags'" />
                     ${templateIncludeWidget("li")}
                 </t>
@@ -392,7 +392,7 @@ export class HootSearch extends Component {
 
     /**
      * @param {string} query
-     * @param {Iterable<Suite | Tag | Test>} items
+     * @param {Map<string, Suite | Tag | Test>} items
      * @param {SearchCategory} category
      */
     filterItems(query, items, category) {
@@ -401,7 +401,7 @@ export class HootSearch extends Component {
         const result = [];
         const remaining = [];
         let checkedCount = 0;
-        for (const item of items) {
+        for (const item of items.values()) {
             const value = Math.abs(checked[item.id]);
             if (value === INCLUDE_LEVEL.url) {
                 result.push(item);
@@ -421,9 +421,9 @@ export class HootSearch extends Component {
         const { suites, tags, tests } = this.env.runner;
         const pattern = getPattern(this.state.query);
         return {
-            suites: this.filterItems(pattern, suites.values(), "suites"),
+            suites: this.filterItems(pattern, suites, "suites"),
             tags: this.filterItems(pattern, tags, "tags"),
-            tests: this.filterItems(pattern, tests.values(), "tests"),
+            tests: this.filterItems(pattern, tests, "tests"),
         };
     }
 
@@ -485,7 +485,7 @@ export class HootSearch extends Component {
     }
 
     /**
-     * @param {Suite[] | Tag[]} items
+     * @param {Iterable<Suite | Tag>} items
      */
     getTop(items) {
         return [...items].sort((a, b) => b.weight - a.weight).slice(0, 5);
