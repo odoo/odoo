@@ -32,7 +32,9 @@ export class TablePlugin extends Plugin {
         handle_tab: { callback: p.handleTab.bind(p), sequence: 20 },
         handle_shift_tab: { callback: p.handleShiftTab.bind(p), sequence: 20 },
         handle_delete_range: { callback: p.handleDeleteRange.bind(p) },
-        unremovables: isUnremovableTableComponent,
+        isUnremovable: isUnremovableTableComponent,
+        isUnsplittable: (element) =>
+            element.tagName === "TABLE" || tableInnerComponents.has(element.tagName),
         onSelectionChange: p.updateSelectionTable.bind(p),
     });
 

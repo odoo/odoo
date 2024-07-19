@@ -55,8 +55,7 @@ export class ZwsPlugin extends Plugin {
             this.cleanZWS(element);
             return;
         }
-        // @todo phoenix: consider making the delete plugin export isUnremovable instead?
-        if (this.resources.unremovables.some((predicate) => predicate(element))) {
+        if (this.resources.isUnremovable.some((predicate) => predicate(element))) {
             return;
         }
         if (element.classList.length) {

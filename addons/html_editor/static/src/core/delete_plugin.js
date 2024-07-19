@@ -8,7 +8,6 @@ import {
     isSelfClosingElement,
     isShrunkBlock,
     isTangible,
-    isUnbreakable,
     isWhitespace,
     isZWS,
     nextLeaf,
@@ -50,7 +49,7 @@ const beforeInputHandlers = {
 export class DeletePlugin extends Plugin {
     static dependencies = ["selection"];
     static name = "delete";
-    static shared = ["deleteRange"];
+    static shared = ["deleteRange", "isUnmergeable"];
     /** @type { (p: DeletePlugin) => Record<string, any> } */
     static resources = (p) => ({
         onBeforeInput: p.onBeforeInput.bind(p),
@@ -70,14 +69,10 @@ export class DeletePlugin extends Plugin {
         handle_delete_forward_line: { callback: p.deleteForwardUnmergeable.bind(p) },
 
         // @todo @phoenix: move these predicates to different plugins
-        unremovables: [
-            // The root editable (@todo @phoenix: I don't think this is necessary)
-            (element) => element.classList.contains("odoo-editor-editable"),
+        isUnremovable: [
+            (element) => element.classList.contains("oe_unremovable"),
             // Website stuff?
             (element) => element.classList.contains("o_editable"),
-            (element) => element.classList.contains("oe_unremovable"),
-            // QWeb directives
-            (element) => element.getAttribute("t-set") || element.getAttribute("t-call"),
             // Monetary field
             (element) => element.matches("[data-oe-type='monetary'] > span"),
         ],
@@ -555,7 +550,7 @@ export class DeletePlugin extends Plugin {
         if (node.nodeType !== Node.ELEMENT_NODE) {
             return true;
         }
-        return this.resources.unremovables.some((predicate) => predicate(node, root));
+        return this.resources.isUnremovable.some((predicate) => predicate(node, root));
     }
 
     // Returns true if the entire subtree rooted at node was removed.
@@ -661,12 +656,15 @@ export class DeletePlugin extends Plugin {
         // Same any combination involving type "null" (no joinable element).
     }
 
+    /**
+     * An unsplittable element is also unmergeable and vice-versa (as split and
+     * merge are reverse operations from one another).
+     */
     isUnmergeable(node) {
-        if (this.isUnremovable(node)) {
-            return true;
-        }
-        // @todo @phoenix: get rules as resources
-        return isUnbreakable(node);
+        return (
+            node.nodeType === Node.ELEMENT_NODE &&
+            this.resources.isUnsplittable.some((predicate) => predicate(node))
+        );
     }
 
     joinBlocks(left, right, commonAncestor) {
