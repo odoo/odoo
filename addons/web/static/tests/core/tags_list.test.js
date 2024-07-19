@@ -138,19 +138,20 @@ test("Limiting the visible tags displays a counter", async () => {
 
     await mountWithCleanup(Parent);
     expect(".o_tag").toHaveCount(2);
-    expect(".rounded", {
+    expect(".rounded").toHaveText("+4", {
         message: "the counter displays 4 more items",
-    }).toHaveText("+4");
-    expect(JSON.parse(queryAttribute(".rounded", "data-tooltip-info")), {
-        message: "the counter has a tooltip displaying other items",
-    }).toEqual({
-        tags: [
-            { text: "Fire", id: "tag3" },
-            { text: "Earth", id: "tag4" },
-            { text: "Wind", id: "tag5" },
-            { text: "Dust", id: "tag6" },
-        ],
     });
+    expect(JSON.parse(queryAttribute(".rounded", "data-tooltip-info"))).toEqual(
+        {
+            tags: [
+                { text: "Fire", id: "tag3" },
+                { text: "Earth", id: "tag4" },
+                { text: "Wind", id: "tag5" },
+                { text: "Dust", id: "tag6" },
+            ],
+        },
+        { message: "the counter has a tooltip displaying other items" }
+    );
 });
 
 test("Tags with img have a backdrop only if they can be deleted", async () => {

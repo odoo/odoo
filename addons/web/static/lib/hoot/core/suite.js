@@ -29,13 +29,32 @@ export class Suite extends Job {
     /** @type {(Suite | Test)[]} */
     jobs = [];
     reporting = createReporting();
-    weight = 0;
 
-    increaseWeight() {
-        this.weight++;
-        if (this.parent) {
-            this.parent.increaseWeight();
+    totalSuiteCount = 0;
+    totalTestCount = 0;
+
+    get weight() {
+        return this.totalTestCount;
+    }
+
+    addJob(job) {
+        this.jobs.push(job);
+
+        if (job instanceof Suite) {
+            this.increaseSuiteCount();
+        } else {
+            this.increaseTestCount();
         }
+    }
+
+    increaseSuiteCount() {
+        this.totalSuiteCount++;
+        this.parent?.increaseSuiteCount();
+    }
+
+    increaseTestCount() {
+        this.totalTestCount++;
+        this.parent?.increaseTestCount();
     }
 
     resetIndex() {
@@ -48,6 +67,14 @@ export class Suite extends Job {
                 job.resetIndex();
             }
         }
+    }
+
+    /**
+     * @param {Job[]} jobs
+     */
+    setCurrentJobs(jobs) {
+        this.currentJobs = jobs;
+        this.currentJobIndex = 0;
     }
 
     /**

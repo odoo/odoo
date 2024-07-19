@@ -910,7 +910,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
         test("queryRect with trimPadding", async () => {
             await mountOnFixture(/* xml */ `
-                <div style="width: 40px; height: 60px; padding: 5px; margin: 6px" />
+                <div style="width: 50px; height: 70px; padding: 5px; margin: 6px" />
             `);
 
             expect("div").toHaveRect({ width: 50, height: 70 }); // with padding

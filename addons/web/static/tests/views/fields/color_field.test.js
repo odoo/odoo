@@ -134,6 +134,6 @@ test("color field change via anoter field's onchange", async () => {
     expect.verifySteps([
         'onchange [[1],{"text":"someValue"},["text"],{"text":{},"hex_color":{},"display_name":{}}]',
     ]);
-    expect(".o_field_color input", { visible: false }).toHaveValue("#fefefe");
+    expect(".o_field_color input").toHaveValue("#fefefe");
     expect(".o_field_color div").toHaveStyle({ backgroundColor: "rgb(254, 254, 254)" });
 });

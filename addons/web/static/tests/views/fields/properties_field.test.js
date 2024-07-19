@@ -408,17 +408,20 @@ test("properties: access to parent", async () => {
     );
     await animationFrame();
 
-    const popover = queryFirst(".o_property_field_popover");
-    expect(popover).toHaveCount(1, { message: "Should have opened the definition popover" });
-    expect(".o_field_property_definition_header", { root: popover }).toHaveValue("My Char");
+    expect(".o_property_field_popover").toHaveCount(1, {
+        message: "Should have opened the definition popover",
+    });
+    expect(".o_field_property_definition_header").toHaveValue("My Char");
 
-    const type = popover.querySelector(".o_field_property_definition_type input");
-    expect(".o_field_property_definition_type input", { root: popover }).toHaveValue("Text");
+    expect(".o_field_property_definition_type input").toHaveValue("Text");
 
     // Change the property type to "Date & Time"
     await contains(".o_field_property_definition_header").edit("My Datetime");
     await changeType("datetime");
-    expect(type).toHaveValue("Date & Time", { message: "Should have changed the property type" });
+    expect(".o_property_field_popover .o_field_property_definition_type input").toHaveValue(
+        "Date & Time",
+        { message: "Should have changed the property type" }
+    );
 
     // Choosing a date in the date picker should not close the definition popover
     click(".o_field_property_definition_value .o_datetime_input");
