@@ -98,3 +98,41 @@ registry.category("web_tour.tours").add("PosComboPriceCheckTour", {
             ProductScreen.clickPayButton(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosComboChangeFP", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+
+            ProductScreen.selectedOrderlineHas("Office Combo"),
+            ProductScreen.clickOrderline("Combo Product 2"),
+            ProductScreen.selectedOrderlineHas("Combo Product 2", "1.0", "8.33"),
+            ProductScreen.clickOrderline("Combo Product 4"),
+            ProductScreen.selectedOrderlineHas("Combo Product 4", "1.0", "16.67"),
+            ProductScreen.clickOrderline("Combo Product 6"),
+            ProductScreen.selectedOrderlineHas("Combo Product 6", "1.0", "25.00"),
+            ProductScreen.totalAmountIs("50.00"),
+            inLeftSide(Order.hasTax("4.55")),
+
+            // Test than changing the fp, doesn't change the price of the combo
+            ProductScreen.clickFiscalPosition("test fp"),
+            ProductScreen.clickOrderline("Office Combo"),
+            ProductScreen.selectedOrderlineHas("Office Combo"),
+            ProductScreen.clickOrderline("Combo Product 2"),
+            ProductScreen.selectedOrderlineHas("Combo Product 2", "1.0", "8.33"),
+            ProductScreen.clickOrderline("Combo Product 4"),
+            ProductScreen.selectedOrderlineHas("Combo Product 4", "1.0", "16.67"),
+            ProductScreen.clickOrderline("Combo Product 6"),
+            ProductScreen.selectedOrderlineHas("Combo Product 6", "1.0", "25.00"),
+            ProductScreen.totalAmountIs("50.00"),
+            inLeftSide(Order.hasTax("2.38")),
+            ProductScreen.isShown(),
+        ].flat(),
+});
