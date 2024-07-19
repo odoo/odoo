@@ -377,17 +377,24 @@ export class ProductScreen extends Component {
         }
 
         this.pos.setSelectedCategory(0);
+        const domain = [
+            "|",
+            "|",
+            ["name", "ilike", searchProductWord],
+            ["default_code", "ilike", searchProductWord],
+            ["barcode", "ilike", searchProductWord],
+            ["available_in_pos", "=", true],
+            ["sale_ok", "=", true],
+        ];
+
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            const categIds = iface_available_categ_ids.map((categ) => categ.id);
+            domain.push(["pos_categ_ids", "in", categIds]);
+        }
         const product = await this.pos.data.searchRead(
             "product.product",
-            [
-                "&",
-                ["available_in_pos", "=", true],
-                "|",
-                "|",
-                ["name", "ilike", searchProductWord],
-                ["default_code", "ilike", searchProductWord],
-                ["barcode", "ilike", searchProductWord],
-            ],
+            domain,
             this.pos.data.fields["product.product"],
             {
                 context: { display_default_code: false },
