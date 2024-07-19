@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from email.message import EmailMessage
-from email.utils import make_msgid
 import base64
 import datetime
 import email
@@ -12,9 +9,10 @@ import logging
 import re
 import smtplib
 import ssl
-import threading
-
+from email.message import EmailMessage
+from email.utils import make_msgid
 from socket import gaierror, timeout
+
 from OpenSSL import crypto as SSLCrypto
 from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
 from OpenSSL.SSL import Error as SSLError
@@ -22,8 +20,7 @@ from urllib3.contrib.pyopenssl import PyOpenSSLContext
 
 from odoo import api, fields, models, tools, _, modules
 from odoo.exceptions import UserError
-from odoo.tools import ustr, pycompat, formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize, human_size
-
+from odoo.tools import formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize, human_size
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -98,7 +95,7 @@ def extract_rfc2822_addresses(text):
     """
     if not text:
         return []
-    candidates = address_pattern.findall(ustr(text))
+    candidates = address_pattern.findall(text)
     valid_addresses = []
     for c in candidates:
         try:
@@ -537,7 +534,6 @@ class IrMailServer(models.Model):
         headers = headers or {}         # need valid dict later
         email_cc = email_cc or []
         email_bcc = email_bcc or []
-        body = body or u''
 
         msg = EmailMessage(policy=email.policy.SMTP)
         if not message_id:
@@ -559,16 +555,16 @@ class IrMailServer(models.Model):
             msg['Bcc'] = email_bcc
         msg['Date'] = datetime.datetime.utcnow()
         for key, value in headers.items():
-            msg[pycompat.to_text(ustr(key))] = value
+            msg[key] = value
 
-        email_body = ustr(body)
+        email_body = body or ''
         if subtype == 'html' and not body_alternative:
             msg['MIME-Version'] = '1.0'
             msg.add_alternative(tools.html2plaintext(email_body), subtype='plain', charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         elif body_alternative:
             msg['MIME-Version'] = '1.0'
-            msg.add_alternative(ustr(body_alternative), subtype=subtype_alternative, charset='utf-8')
+            msg.add_alternative(body_alternative, subtype=subtype_alternative, charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         else:
             msg.set_content(email_body, subtype=subtype, charset='utf-8')
