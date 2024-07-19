@@ -588,6 +588,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         company = self.env.user.company_id
         usd_currency = self.env.ref('base.USD')
         eur_currency = self.env.ref('base.EUR')
+        eur_currency.active = True  # EUR might not be active
 
         company.currency_id = usd_currency
 
