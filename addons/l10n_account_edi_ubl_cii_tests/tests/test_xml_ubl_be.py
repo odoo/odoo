@@ -818,8 +818,8 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             move_type='out_invoice',
             invoice_vals={
                 'currency_id': self.other_currency.id,
-                'amount_total': 218.042,
-                'amount_tax': 39.842,
+                'amount_total': 218.04,
+                'amount_tax': 39.84,
                 'invoice_lines': [{
                     'price_unit': 99,
                     'quantity': 2,
