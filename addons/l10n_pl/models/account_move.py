@@ -25,3 +25,15 @@ class AccountMove(models.Model):
                 record.reversed_entry_id.amount_total < record.amount_total and record.move_type != 'entry':
                 raise ValidationError(_("Credit notes can't have a total amount greater than the invoice's"))
         return super().action_post()
+
+    def _compute_invoice_currency_rate(self):
+        l10n_pl_credit_note = self.filtered(
+            lambda move: (
+                move.country_code == 'PL'
+                and move.reversed_entry_id
+            )
+        )
+        for move in l10n_pl_credit_note:
+            move.invoice_currency_rate = move.reversed_entry_id.invoice_currency_rate
+
+        super(AccountMove, (self - l10n_pl_credit_note))._compute_invoice_currency_rate()
