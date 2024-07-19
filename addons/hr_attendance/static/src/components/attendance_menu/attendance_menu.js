@@ -49,6 +49,8 @@ export class ActivityMenu extends Component {
             this.state.checkedIn = this.employee.attendance_state === "checked_in";
             this.isFirstAttendance = this.employee.hours_previously_today === 0;
             this.state.isDisplayed = this.employee.display_systray
+        } else {
+            this.state.isDisplayed = false
         }
     }
 
