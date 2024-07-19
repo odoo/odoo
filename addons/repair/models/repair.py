@@ -111,11 +111,23 @@ class Repair(models.Model):
         'procurement.group', 'Procurement Group',
         copy=False)
     location_id = fields.Many2one(
-        'stock.location', 'Location',
+        'stock.location', 'Component Source Location',
         compute="_compute_location_id",
         store=True, readonly=False, required=True, precompute=True,
         index=True, check_company=True,
+        help="This is the location where the components of product to repair is located.")
+    product_location_src_id = fields.Many2one(
+        'stock.location', 'Product Source Location',
+        compute="_compute_product_location_src_id",
+        store=True, readonly=False, required=True, precompute=True,
+        index=True, check_company=True,
         help="This is the location where the product to repair is located.")
+    product_location_dest_id = fields.Many2one(
+        'stock.location', 'Product Destination Location',
+        compute="_compute_product_location_dest_id",
+        store=True, readonly=False, required=True, precompute=True,
+        index=True, check_company=True,
+        help="This is the location where the repaired product is located.")
     location_dest_id = fields.Many2one(
         'stock.location', 'Added Parts Destination Location',
         related="picking_type_id.default_location_dest_id", depends=["picking_type_id"],
@@ -243,6 +255,16 @@ class Repair(models.Model):
     def _compute_location_id(self):
         for repair in self:
             repair.location_id = repair.picking_type_id.default_location_src_id
+
+    @api.depends('picking_type_id')
+    def _compute_product_location_src_id(self):
+        for record in self:
+            record.product_location_src_id = record.picking_type_id.default_product_location_src_id
+
+    @api.depends('picking_type_id')
+    def _compute_product_location_dest_id(self):
+        for record in self:
+            record.product_location_dest_id = record.picking_type_id.default_product_location_dest_id
 
     @api.depends('picking_type_id')
     def _compute_recycle_location_id(self):
@@ -479,8 +501,8 @@ class Repair(models.Model):
                 'product_uom': repair.product_uom.id or repair.product_id.uom_id.id,
                 'product_uom_qty': repair.product_qty,
                 'partner_id': repair.partner_id.id,
-                'location_id': repair.location_id.id,
-                'location_dest_id': repair.location_id.id,
+                'location_id': repair.product_location_src_id.id,
+                'location_dest_id': repair.product_location_dest_id.id,
                 'picked': True,
                 'move_line_ids': [(0, 0, {
                     'product_id': repair.product_id.id,
@@ -490,9 +512,9 @@ class Repair(models.Model):
                     'package_id': False,
                     'result_package_id': False,
                     'owner_id': owner_id,
-                    'location_id': repair.location_id.id,
+                    'location_id': repair.product_location_src_id.id,
                     'company_id': repair.company_id.id,
-                    'location_dest_id': repair.location_id.id,
+                    'location_dest_id': repair.product_location_dest_id.id,
                     'consume_line_ids': [(6, 0, repair.move_ids.move_line_ids.ids)]
                 })],
                 'repair_id': repair.id,
@@ -550,13 +572,13 @@ class Repair(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         available_qty_owner = sum(self.env['stock.quant'].search([
             ('product_id', '=', self.product_id.id),
-            ('location_id', '=', self.location_id.id),
+            ('location_id', '=', self.product_location_src_id.id),
             ('lot_id', '=', self.lot_id.id),
             ('owner_id', '=', self.partner_id.id),
         ]).mapped('quantity'))
         available_qty_noown = sum(self.env['stock.quant'].search([
             ('product_id', '=', self.product_id.id),
-            ('location_id', '=', self.location_id.id),
+            ('location_id', '=', self.product_location_src_id.id),
             ('lot_id', '=', self.lot_id.id),
             ('owner_id', '=', False),
         ]).mapped('quantity'))
@@ -573,7 +595,7 @@ class Repair(models.Model):
             'type': 'ir.actions.act_window',
             'context': {
                 'default_product_id': self.product_id.id,
-                'default_location_id': self.location_id.id,
+                'default_location_id': self.product_location_src_id.id,
                 'default_repair_id': self.id,
                 'default_quantity': repair_qty,
                 'default_product_uom_name': self.product_id.uom_name

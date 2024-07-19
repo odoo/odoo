@@ -186,8 +186,8 @@
                             <field name="picking_type_id" options="{'no_create': True}" readonly="state in ('done', 'cancel')"/>
                         </group>
                         <group string="Locations" groups="stock.group_stock_multi_locations" name="locations">
+                            <field name="product_location_src_id" readonly="state != 'draft'" options="{'no_create': True}"/>
                             <field name="location_id" readonly="state != 'draft'" options="{'no_create': True}"/>
-                            <field name="recycle_location_id" readonly="state != 'draft'" options="{'no_create': True}"/>
                         </group>
                     </page>
                 </notebook>
