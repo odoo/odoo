@@ -209,6 +209,24 @@ export function getTitle() {
     }
 }
 
+export function getViewPortHeight() {
+    const heightDescriptor = findOriginalDescriptor(window, "innerHeight");
+    if (heightDescriptor) {
+        return heightDescriptor.get.call(window);
+    } else {
+        return window.innerHeight;
+    }
+}
+
+export function getViewPortWidth() {
+    const titleDescriptor = findOriginalDescriptor(window, "innerWidth");
+    if (titleDescriptor) {
+        return titleDescriptor.get.call(window);
+    } else {
+        return window.innerWidth;
+    }
+}
+
 /**
  * @param {boolean} setTouch
  */

@@ -23,7 +23,7 @@ import { internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
 import { cleanupNetwork } from "../mock/network";
 import { Deferred, cleanupTime, setFrameRate } from "../mock/time";
-import { cleanupWindow, mockTouch } from "../mock/window";
+import { cleanupWindow, getViewPortHeight, getViewPortWidth, mockTouch } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
 import { makeFixtureManager } from "./fixture";
@@ -58,6 +58,7 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
  *  icon?: string;
  *  label: string;
  *  platform?: import("../mock/navigator").Platform;
+ *  size?: [number, number];
  *  tags?: string[];
  *  touch?: boolean;
  * }} Preset
@@ -147,7 +148,7 @@ const formatAssertions = (assertions) => {
 };
 
 /**
- * @returns {Map<Job, Preset>}
+ * @returns {Map<string, Preset>}
  */
 const getDefaultPresets = () =>
     new Map([
@@ -163,6 +164,7 @@ const getDefaultPresets = () =>
                 icon: "fa-desktop",
                 label: "Desktop",
                 platform: "linux",
+                size: [1366, 768],
                 tags: ["-mobile"],
                 touch: false,
             },
@@ -173,6 +175,7 @@ const getDefaultPresets = () =>
                 icon: "fa-mobile",
                 label: "Mobile",
                 platform: "android",
+                size: [375, 667],
                 tags: ["-desktop"],
                 touch: true,
             },
@@ -248,6 +251,8 @@ const warnUserEvent = (ev) => {
 
 const RESIZE_OBSERVER_MESSAGE = "ResizeObserver loop completed with undelivered notifications";
 const handledErrors = new WeakSet();
+/** @type {string | null} */
+let lastPresetWarn = null;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -660,6 +665,35 @@ export class Runner {
         for (const callback of callbacks) {
             callbackRegistry.add("before-test", callback);
         }
+    }
+
+    checkPresetForViewPort() {
+        const presetId = this.config.preset;
+        const preset = this.presets.get(presetId);
+        if (!preset.size) {
+            return true;
+        }
+        const innerWidth = getViewPortWidth();
+        const innerHeight = getViewPortHeight();
+        const [width, height] = preset.size;
+        if (width !== innerWidth || height !== innerHeight) {
+            if (lastPresetWarn !== presetId) {
+                logger.warn(
+                    `viewport size does not match the expected size for the "${preset.label}" preset`,
+                    `\n> expected:`,
+                    width,
+                    "x",
+                    height,
+                    `\n> current:`,
+                    innerWidth,
+                    "x",
+                    innerHeight
+                );
+            }
+            lastPresetWarn = presetId;
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -1406,10 +1440,10 @@ export class Runner {
             if (preset.platform) {
                 mockUserAgent(preset.platform);
             }
-
             if (typeof preset.touch === "boolean") {
                 mockTouch(preset.touch);
             }
+            this.checkPresetForViewPort();
         }
 
         this._populateState = true;
