@@ -529,6 +529,7 @@ class IrModelFields(models.Model):
     required = fields.Boolean()
     readonly = fields.Boolean()
     index = fields.Boolean(string='Indexed')
+    index_keys = fields.Char(string='Indexed Keys')
     translate = fields.Boolean(string='Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)")
     size = fields.Integer()
     state = fields.Selection([('manual', 'Custom Field'), ('base', 'Base Field')], string='Type', default='manual', required=True, readonly=True, index=True)
@@ -1099,6 +1100,7 @@ class IrModelFields(models.Model):
             'state': 'manual' if field.manual else 'base',
             'relation': field.comodel_name or None,
             'index': bool(field.index),
+            'index_keys': field.index_keys,
             'store': bool(field.store),
             'copied': bool(field.copy),
             'on_delete': field.ondelete if field.type == 'many2one' else None,

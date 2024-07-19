@@ -158,7 +158,7 @@ class Field(MetaField('DummyField', (object,), {})):
                                 values are NULL, or when NULL is never searched for)
         * ``"trigram"``: Generalized Inverted Index (GIN) with trigrams (good for full-text search)
         * ``None`` or ``False``: no index (default)
-
+    :index_keys str index keys: key expression for index, semicolon separated
     :param default: the default value for the field; this is either a static
         value, or a function taking a recordset and returning a value; use
         ``default=None`` to discard default values for the field
@@ -295,7 +295,8 @@ class Field(MetaField('DummyField', (object,), {})):
     comodel_name = None                 # name of the model of values (if relational)
 
     store = True                        # whether the field is stored in database
-    index = None                        # how the field is indexed in database
+    index = None                        # how the field is indexed in database ('btree', 'btree_not_null', 'brin', 'brin_not_null', 'trigram', True, False, None)
+    index_keys = None                   # index key for indexing used semicolon separator (example: where name like self and default_code ilike self: (name, default_code))
     manual = False                      # whether the field is a custom field
     copy = True                         # whether the field is copied over by BaseModel.copy()
     _depends = None                     # collection of field dependencies
