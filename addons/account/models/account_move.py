@@ -3520,12 +3520,11 @@ class AccountMove(models.Model):
             if decoder:
                 try:
                     with self.env.cr.savepoint():
-                        with current_invoice._get_edi_creation() as invoice:
-                            # pylint: disable=not-callable
-                            success = decoder(invoice, file_data, new)
+                        invoice = current_invoice or self.create({})
+                        success = decoder(invoice, file_data, new)
+
                         if success or file_data['type'] == 'pdf':
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
-
                             invoices |= invoice
                             current_invoice = self.env['account.move']
                             add_file_data_results(file_data, invoice)
@@ -3536,7 +3535,7 @@ class AccountMove(models.Model):
                     raise
                 except Exception:
                     message = _("Error importing attachment '%s' as invoice (decoder=%s)", file_data['filename'], decoder.__name__)
-                    invoice.sudo().message_post(body=message)
+                    current_invoice.sudo().message_post(body=message)
                     _logger.exception(message)
 
             passed_file_data_list.append(file_data)
