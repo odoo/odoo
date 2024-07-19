@@ -176,6 +176,8 @@
                                     t-att-data-oe-snippet-id="snippet.id"
                                     t-att-data-module-id="snippet.moduleId"
                                     t-on-click="_onSnippetClick"
+                                    t-att-data-oe-height-in-grid="snippet.heightInGrid"
+                                    t-att-data-oe-width-in-grid="snippet.widthInGrid"
                                     t-att-data-tooltip="snippet.disabled ? disabledTooltip : false">
                                     <t t-if="snippet.disabled">
                                         <img src="/web_editor/static/src/img/snippet_disabled.svg" class="o_snippet_undroppable"/>

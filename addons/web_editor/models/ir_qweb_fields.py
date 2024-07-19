@@ -79,16 +79,20 @@ class IrQWeb(models.AbstractModel):
         view = self.env['ir.ui.view']._get(key).sudo()
         name = el.attrib.pop('string', view.name)
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
+        height_in_grid = el.attrib.pop('t-height-in-grid', None)
+        width_in_grid = el.attrib.pop('t-width-in-grid', None)
         # Forbid sanitize contains the specific reason:
         # - "true": always forbid
         # - "form": forbid if forms are sanitized
         forbid_sanitize = el.attrib.pop('t-forbid-sanitize', None)
-        div = '<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s" %s>' % (
+        div = '<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s" %s %s %s>' % (
             escape(pycompat.to_text(name)),
             escape(pycompat.to_text(thumbnail)),
             escape(pycompat.to_text(view.id)),
             escape(pycompat.to_text(el.findtext('keywords'))),
             f'data-oe-forbid-sanitize="{forbid_sanitize}"' if forbid_sanitize else '',
+            f'data-oe-height-in-grid="{height_in_grid}"' if height_in_grid else '',
+            f'data-oe-width-in-grid="{width_in_grid}"' if width_in_grid else '',
         )
         self._append_text(div, compile_context)
         code = self._compile_node(el, compile_context, indent)

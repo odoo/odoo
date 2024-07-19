@@ -344,7 +344,7 @@ export function _checkIfImageColumn(columnEl) {
  * @private
  * @param {Element} columnEl a column containing only an image.
  */
-function _convertImageColumn(columnEl) {
+export function _convertImageColumn(columnEl) {
     columnEl.querySelectorAll('br').forEach(el => el.remove());
     const textNodeEls = [...columnEl.childNodes].filter(el => el.nodeType === Node.TEXT_NODE);
     textNodeEls.forEach(el => el.remove());

@@ -2,6 +2,7 @@
 
 import options from "@web_editor/js/editor/snippets.options";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 
 options.registry.ImageSnippet = options.Class.extend({
     /**
@@ -16,9 +17,16 @@ options.registry.ImageSnippet = options.Class.extend({
                 onlyImages: true,
                 save: imageEl => {
                     isImageSaved = true;
+                    const parentEl = this.$target[0].parentNode;
                     // Replace the placeholder with the new image.
-                    this.$target[0].parentNode.insertBefore(imageEl, this.$target[0]);
-                    this.$target[0].parentNode.removeChild(this.$target[0]);
+                    parentEl.insertBefore(imageEl, this.$target[0]);
+                    parentEl.removeChild(this.$target[0]);
+                    // Adapt the image to a grid item image if it is dropped as
+                    // a grid item.
+                    if (parentEl.classList.contains("o_grid_item")
+                            && gridUtils._checkIfImageColumn(parentEl)) {
+                        gridUtils._convertImageColumn(parentEl);
+                    }
                 },
             }, {
                 onClose: () => {
