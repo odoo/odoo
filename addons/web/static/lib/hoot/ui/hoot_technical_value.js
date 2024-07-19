@@ -1,6 +1,13 @@
 /** @odoo-module */
 
-import { Component, xml as owlXml, toRaw, useState } from "@odoo/owl";
+import {
+    Component,
+    onWillRender,
+    onWillUpdateProps,
+    xml as owlXml,
+    toRaw,
+    useState,
+} from "@odoo/owl";
 import { isNode, toSelector } from "@web/../lib/hoot-dom/helpers/dom";
 import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { Markup, toExplicitString } from "../hoot_utils";
@@ -35,6 +42,8 @@ const xml = (template, ...substitutions) =>
             .replace(/>\s+/g, ">")
             .replace(/\s+</g, "<"),
     });
+
+const INVARIABLE_OBJECTS = [Promise, RegExp];
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -76,19 +85,29 @@ export class HootTechnicalValue extends Component {
             </button>
         </t>
         <t t-elif="value and typeof value === 'object'">
-            <t t-set="objectSize" t-value="getSize()" />
+            <t t-set="labelSize" t-value="getLabelAndSize()" />
             <pre class="hoot-technical">
-                <button class="hoot-object-type inline-flex items-center gap-1 me-1" t-on-click="onClick">
-                    <t t-if="objectSize">
+                <button class="hoot-object inline-flex items-center gap-1 me-1" t-on-click="onClick">
+                    <t t-if="labelSize[1] > 0">
                         <i
                             class="fa fa-caret-right flex justify-center w-2 transition"
                             t-att-class="{ 'rotate-90': state.open }"
                         />
                     </t>
-                    <t t-esc="value.constructor.name" />
-                    (<t t-esc="objectSize" />)
+                    <t t-esc="labelSize[0]" />
+                    <t t-if="state.promiseState">
+                        &lt;
+                        <span class="text-muted" t-esc="state.promiseState[0]" />
+                        <t t-if="state.promiseState[0] !== 'pending'">
+                            : <HootTechnicalValue value="state.promiseState[1]" />
+                        </t>
+                        &gt;
+                    </t>
+                    <t t-elif="labelSize[1] !== null">
+                        (<t t-esc="labelSize[1]" />)
+                    </t>
                 </button>
-                <t t-if="state.open and objectSize">
+                <t t-if="state.open and labelSize[1] > 0">
                     <t t-if="isIterable(value)">
                         <t>[</t>
                         <ul class="ps-4">
@@ -121,9 +140,9 @@ export class HootTechnicalValue extends Component {
         <t t-else="">
             <span t-attf-class="hoot-{{ typeof value }}">
                 <t t-if="typeof value === 'string'">
-                    <t>"</t><t t-esc="value" /><t>"</t>
+                    <t>"</t><t t-esc="explicitValue" /><t>"</t>
                 </t>
-                <t t-else="" t-esc="toExplicitString(value)" />
+                <t t-else="" t-esc="explicitValue" />
             </span>
         </t>
     `;
@@ -131,13 +150,27 @@ export class HootTechnicalValue extends Component {
     toSelector = toSelector;
     isIterable = isIterable;
     isNode = isNode;
-    toExplicitString = toExplicitString;
+
+    get explicitValue() {
+        return toExplicitString(this.value);
+    }
 
     setup() {
         this.logged = false;
-        this.isMarkup = Markup.isMarkup(this.props.value);
-        this.value = toRaw(this.props.value);
-        this.state = useState({ open: false });
+        this.state = useState({
+            open: false,
+            promiseState: null,
+        });
+        this.wrapPromiseValue(this.props.value);
+
+        onWillRender(() => {
+            this.isMarkup = Markup.isMarkup(this.props.value);
+            this.value = toRaw(this.props.value);
+        });
+        onWillUpdateProps((nextProps) => {
+            this.state.open = false;
+            this.wrapPromiseValue(nextProps.value);
+        });
     }
 
     onClick() {
@@ -145,7 +178,22 @@ export class HootTechnicalValue extends Component {
         this.state.open = !this.state.open;
     }
 
+    getLabelAndSize() {
+        if (this.value instanceof Date) {
+            return [this.value.toISOString(), null];
+        }
+        if (this.value instanceof RegExp) {
+            return [String(this.value), null];
+        }
+        return [this.value.constructor.name, this.getSize()];
+    }
+
     getSize() {
+        for (const Class of INVARIABLE_OBJECTS) {
+            if (this.value instanceof Class) {
+                return null;
+            }
+        }
         const values = isIterable(this.value) ? [...this.value] : $keys(this.value);
         return values.length;
     }
@@ -160,5 +208,22 @@ export class HootTechnicalValue extends Component {
         }
         this.logged = true;
         $log(this.value);
+    }
+
+    wrapPromiseValue(promise) {
+        if (!(promise instanceof Promise)) {
+            return;
+        }
+        this.state.promiseState = ["pending", null];
+        Promise.resolve(promise).then(
+            (value) => {
+                this.state.promiseState = ["fulfilled", value];
+                return value;
+            },
+            (reason) => {
+                this.state.promiseState = ["rejected", reason];
+                throw reason;
+            }
+        );
     }
 }

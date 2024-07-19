@@ -284,7 +284,7 @@ describe(`new urls`, () => {
         });
 
         await animationFrame();
-        expect.verifySteps(["/web/action/load"], "pushState was not called");
+        expect.verifySteps(["/web/action/load"]);
     });
 
     test(`initial loading take complete context`, async () => {
@@ -325,7 +325,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/__test__client__action__", {
             message: "url did not change",
         });
-        expect.verifySteps([], "pushState was not called");
+        expect.verifySteps([]);
     });
 
     test(`fallback on home action if no action found`, async () => {
@@ -407,7 +407,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/action-wowl.client_action", {
             message: "action in target new doesn't affect the URL",
         });
-        expect.verifySteps([], "pushState was not called");
+        expect.verifySteps([]);
     });
 
     test(`should not crash on invalid state`, async () => {
@@ -1055,7 +1055,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/action-2/2", {
             message: "url did not change",
         });
-        expect.verifySteps(["action: 2"], "pushState was not called");
+        expect.verifySteps(["action: 2"]);
     });
 
     test(`state with integer active_ids should not crash`, async () => {

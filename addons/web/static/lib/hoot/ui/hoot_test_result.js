@@ -73,11 +73,11 @@ export class HootTestResult extends Component {
                             <small class="text-muted flex items-center" t-att-title="timestamp">
                                 <t t-esc="'@' + timestamp" />
                             </small>
-                            <t t-if="!assertion.pass and assertion.info">
+                            <t t-if="!assertion.pass and assertion.failedDetails">
                                 <div class="hoot-info grid gap-x-2 col-span-2">
-                                    <t t-foreach="assertion.info" t-as="info" t-key="info_index">
-                                        <HootTechnicalValue value="info[0]" />
-                                        <HootTechnicalValue value="info[1]" />
+                                    <t t-foreach="assertion.failedDetails" t-as="details" t-key="details_index">
+                                        <HootTechnicalValue value="details[0]" />
+                                        <HootTechnicalValue value="details[1]" />
                                     </t>
                                 </div>
                             </t>
