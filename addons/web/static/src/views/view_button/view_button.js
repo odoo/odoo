@@ -107,14 +107,7 @@ export class ViewButton extends Component {
         return (!name && !type && !special) || this.props.disabled;
     }
 
-    /**
-     * @param {MouseEvent} ev
-     */
-    onClick(ev) {
-        if (this.props.tag === "a") {
-            ev.preventDefault();
-        }
-
+    onClick() {
         if (this.props.onClick) {
             return this.props.onClick();
         }

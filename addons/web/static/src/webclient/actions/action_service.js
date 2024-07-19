@@ -1012,7 +1012,7 @@ export function makeActionManager(env, router = _router) {
                 currentController.state.active_id === router.current.active_id &&
                 currentController.state.resId === router.current.resId
             ) {
-                router.pushState({ globalState }, { sync: true });
+                router.pushState({ globalState }, { sync: true, ctrlKey: options.ctrlKey });
             }
         }
         if (controller.action.globalState) {
@@ -1063,7 +1063,10 @@ export function makeActionManager(env, router = _router) {
         if (url && !(url.startsWith("http") || url.startsWith("/"))) {
             url = "/" + url;
         }
-        if (action.target === "download" || action.target === "self") {
+        if (
+            action.target === "download" ||
+            (action.target === "self" && !router.current.openNewWindow)
+        ) {
             browser.location.assign(url);
         } else {
             const w = browser.open(url, "_blank");
@@ -1502,8 +1505,8 @@ export function makeActionManager(env, router = _router) {
         // in case an effect is returned from python and there is already an effect
         // attribute on the button, the priority is given to the button attribute
         const effect = params.effect ? evaluateExpr(params.effect) : action.effect;
-        const { onClose, stackPosition, viewType } = params;
-        const options = { onClose, stackPosition, viewType };
+        const { onClose, stackPosition, viewType, ctrlKey } = params;
+        const options = { onClose, stackPosition, viewType, ctrlKey };
         await doAction(action, options);
         if (params.close) {
             await _executeCloseAction();

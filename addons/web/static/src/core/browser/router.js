@@ -233,6 +233,7 @@ export function urlToState(urlObj) {
 let state;
 let pushTimeout;
 let pushArgs;
+let openNewWindow = false;
 let _lockedKeys;
 let _hiddenKeysFromUrl = new Set();
 
@@ -312,6 +313,12 @@ browser.addEventListener("click", (ev) => {
     }
 });
 
+function doOpenWindow() {
+    openNewWindow = false;
+    // TODO compute the url to access the correct page, with shared state
+    window.open("#");
+}
+
 /**
  * @param {string} mode
  */
@@ -362,7 +369,9 @@ function makeDebouncedPush(mode) {
                 state: {},
             };
         };
-        if (options.sync) {
+        if (openNewWindow) {
+            doOpenWindow();
+        } else if (options.sync) {
             push();
         } else {
             pushTimeout = browser.setTimeout(() => {
@@ -385,6 +394,12 @@ export const router = {
     cancelPushes: () => browser.clearTimeout(pushTimeout),
     addLockedKey: (key) => _lockedKeys.add(key),
     hideKeyFromUrl: (key) => _hiddenKeysFromUrl.add(key),
+    enableOpenNewWindow: () => {
+        state.openNewWindow = true;
+    },
+    disableOpenNewWindow: () => {
+        state.openNewWindow = false;
+    },
     skipLoad: false,
 };
 

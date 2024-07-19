@@ -298,7 +298,7 @@ export class KanbanRecord extends Component {
      * @param {MouseEvent} ev
      */
     onGlobalClick(ev) {
-        if (ev.target.closest(CANCEL_GLOBAL_CLICK)) {
+        if (ev?.target.closest(CANCEL_GLOBAL_CLICK)) {
             return;
         }
         const { archInfo, forceGlobalClick, openRecord, record } = this.props;
