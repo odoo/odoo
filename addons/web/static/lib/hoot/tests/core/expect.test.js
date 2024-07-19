@@ -1,10 +1,126 @@
 /** @odoo-module */
 
-import { describe, expect, mountOnFixture, test } from "@odoo/hoot";
+import { describe, expect, makeExpect, mountOnFixture, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import { parseUrl } from "../local_helpers";
+import { Test } from "../../core/test";
 
 describe(parseUrl(import.meta.url), () => {
+    test("makeExpect passing, without a test", () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+
+        expect(() => customExpect(true).toBe(true)).toThrow(
+            "cannot call `expect()` outside of a test"
+        );
+
+        hooks.before();
+
+        customExpect({ key: true }).toEqual({ key: true });
+        customExpect("oui").toBe("oui");
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(true);
+        expect(results.assertions).toHaveLength(2);
+    });
+
+    test("makeExpect failing, without a test", () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        customExpect({ key: true }).toEqual({ key: true });
+        customExpect("oui").toBe("non");
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(false);
+        expect(results.assertions).toHaveLength(2);
+    });
+
+    test("makeExpect with a test", async () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+        const customTest = new Test(null, "test", {}, () => {
+            customExpect({ key: true }).toEqual({ key: true });
+            customExpect("oui").toBe("non");
+        });
+
+        hooks.before(customTest);
+
+        await customTest.run();
+
+        const results = hooks.after();
+
+        expect(customTest.lastResults).toBe(results);
+        // Result is expected to have the same shape, no need for other assertions
+    });
+
+    test("makeExpect with a test flagged with TODO", async () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+        const customTest = new Test(null, "test", { todo: true }, () => {
+            customExpect(1).toBe(1);
+        });
+
+        hooks.before(customTest);
+
+        await customTest.run();
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(false);
+        expect(results.assertions[0].pass).toBe(true);
+    });
+
+    test("makeExpect with no assertions", () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        expect(() => customExpect.assertions(0)).toThrow(
+            "expected assertions count should be more than 1"
+        );
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(false);
+        expect(results.assertions).toHaveLength(1);
+        expect(results.assertions[0].message).toBe(
+            "expected at least one assertion, but none were run"
+        );
+    });
+
+    test("makeExpect with unconsumed matchers", () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        expect(() => customExpect(true, true)).toThrow("`expect()` only accepts a single argument");
+        customExpect(true);
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(false);
+        expect(results.assertions).toHaveLength(1);
+        expect(results.assertions[0].message).toBe("called once without calling any matchers");
+    });
+
+    test("makeExpect with unverified steps", () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        customExpect.step("oui");
+        customExpect.verifySteps(["oui"]);
+        customExpect.step("non");
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(false);
+        expect(results.assertions).toHaveLength(2);
+        expect(results.assertions[1].message).toBe("unverified steps");
+    });
+
     describe("standard matchers", () => {
         test("toBe", () => {
             // Boolean
@@ -199,6 +315,28 @@ describe(parseUrl(import.meta.url), () => {
             expect("li").toHaveCount(3);
             expect("li").toHaveCount();
             expect("li:contains(milk)").toHaveCount(2);
+        });
+
+        test("toHaveText", async () => {
+            class TextComponent extends Component {
+                static props = {};
+                static template = xml`
+                    <div class="with">With<t t-esc="nbsp" />nbsp</div>
+                    <div class="without">Without nbsp</div>
+                `;
+
+                nbsp = "\u00a0";
+            }
+
+            await mountOnFixture(TextComponent);
+
+            expect(".with").toHaveText("With nbsp");
+            expect(".with").toHaveText("With\u00a0nbsp", { raw: true });
+            expect(".with").not.toHaveText("With\u00a0nbsp");
+
+            expect(".without").toHaveText("Without nbsp");
+            expect(".without").not.toHaveText("Without\u00a0nbsp");
+            expect(".without").not.toHaveText("Without\u00a0nbsp", { raw: true });
         });
     });
 });

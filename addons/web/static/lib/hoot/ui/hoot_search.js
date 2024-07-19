@@ -175,7 +175,7 @@ const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
     <t t-foreach="categories" t-as="category" t-key="category">
         <t t-set="jobs" t-value="state.categories[category][0]" />
         <t t-set="checkedCount" t-value="state.categories[category][1]" />
-        <t t-if="jobs.length">
+        <t t-if="jobs?.length">
             <div class="flex flex-col mb-2 max-h-48 overflow-hidden">
                 <h4 class="text-primary font-bold flex items-center mb-2">
                     <span class="w-full">
