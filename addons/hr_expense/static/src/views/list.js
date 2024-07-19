@@ -12,7 +12,6 @@ import { listView } from "@web/views/list/list_view";
 import { ListController } from "@web/views/list/list_controller";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { onWillStart } from "@odoo/owl";
-import { MEDIAS_BREAKPOINTS, SIZES } from '@web/core/ui/ui_service';
 
 export class ExpenseListController extends ExpenseDocumentUpload(ListController) {
     static template = `hr_expense.ListView`;
@@ -23,9 +22,6 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         this.actionService = useService('action');
         this.isExpenseSheet = this.model.config.resModel === "hr.expense.sheet";
 
-        const mobileMaxWidth = MEDIAS_BREAKPOINTS[SIZES.MD].minWidth;
-        this.onMobile = window.innerWidth <= mobileMaxWidth;
-
         onWillStart(async () => {
             this.userIsExpenseTeamApprover = await user.hasGroup("hr_expense.group_hr_expense_team_approver");
             this.userIsAccountInvoicing = await user.hasGroup("account.group_account_invoice");
@@ -35,12 +31,6 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
     displaySubmit() {
         const records = this.model.root.selection;
         return records.length && records.every(record => record.data.state === 'draft') && this.isExpenseSheet;
-    }
-
-    displayCreateReport() {
-        const usesSampleData = this.model.useSampleModel;
-        const records = this.model.root.records;
-        return !usesSampleData && !this.isExpenseSheet && records.length && records.some(record => record.data.state === "draft") && !this.onMobile;
     }
 
     displayApprove() {
@@ -79,14 +69,6 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
             });
         }
         await this.model.root.load();
-    }
-
-    async action_show_expenses_to_submit () {
-        const records = this.model.root.selection;
-        const res = await this.orm.call(this.model.config.resModel, 'get_expenses_to_submit', [records.map((record) => record.resId)]);
-        if (res) {
-            await this.actionService.doAction(res, {});
-        }
     }
 }
 
