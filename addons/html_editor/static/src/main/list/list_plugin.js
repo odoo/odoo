@@ -1,6 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
-import { wrapInlinesInBlocks, removeClass, setTagName, toggleClass } from "@html_editor/utils/dom";
+import {
+    wrapInlinesInBlocks,
+    removeClass,
+    setTagName,
+    toggleClass,
+    fillEmpty,
+} from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isEmptyBlock,
@@ -108,6 +114,7 @@ export class ListPlugin extends Plugin {
             // but never worked because of the ::before pseudo-element is used
             // to display the checkbox.
         ],
+        onInput: p.onInput.bind(p),
     });
 
     setup() {
@@ -119,11 +126,52 @@ export class ListPlugin extends Plugin {
         switch (command) {
             case "TOGGLE_LIST":
                 this.toggleList(payload.mode);
+                this.dispatch("ADD_STEP");
                 break;
             case "NORMALIZE": {
                 this.normalize(payload.node);
                 break;
             }
+        }
+    }
+
+    onInput() {
+        const selection = this.shared.getEditableSelection();
+        const blockEl = closestBlock(selection.anchorNode);
+        const stringToConvert = blockEl.textContent.substring(0, selection.anchorOffset);
+        const shouldCreateNumberList = /^(?:[1aA])[.)]\s$/.test(stringToConvert);
+        const shouldCreateBulletList = /^[-*]\s$/.test(stringToConvert);
+        if (
+            (shouldCreateNumberList || shouldCreateBulletList) &&
+            !closestElement(selection.anchorNode, "li")
+        ) {
+            this.shared.setSelection({
+                anchorNode: blockEl.firstChild,
+                anchorOffset: 0,
+                focusNode: selection.focusNode,
+                focusOffset: selection.focusOffset,
+            });
+            this.shared.extractContent(this.shared.getEditableSelection());
+            fillEmpty(blockEl);
+            if (shouldCreateNumberList) {
+                this.toggleList("OL");
+                // When the anchorNode is a context block and a list is
+                // being created inside it, ensure to navigate to the
+                // deepest node.
+                const [deepsetNode] = getDeepestPosition(
+                    selection.anchorNode,
+                    selection.anchorOffset
+                );
+                const closestOl = closestElement(deepsetNode, "OL");
+                if (stringToConvert.startsWith("A")) {
+                    closestOl.style.listStyle = "upper-alpha";
+                } else if (stringToConvert.startsWith("a")) {
+                    closestOl.style.listStyle = "lower-alpha";
+                }
+            } else if (shouldCreateBulletList) {
+                this.toggleList("UL");
+            }
+            this.dispatch("ADD_STEP");
         }
     }
 
@@ -195,8 +243,6 @@ export class ListPlugin extends Plugin {
                 this.liToBlocks(li);
             }
         }
-
-        this.dispatch("ADD_STEP");
     }
 
     normalize(root = this.editable) {
@@ -234,6 +280,7 @@ export class ListPlugin extends Plugin {
         const cursors = this.shared.preserveSelection();
         const newList = setTagName(list, newTag);
         // Clear list style (@todo @phoenix - why??)
+        newList.style.removeProperty("list-style");
         for (const li of newList.children) {
             if (li.style.listStyle !== "none") {
                 li.style.listStyle = null;
