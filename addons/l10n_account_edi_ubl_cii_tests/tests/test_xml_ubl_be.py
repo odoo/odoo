@@ -755,7 +755,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             list_line_discount=[0], list_line_taxes=[tax_21+self.recupel], move_type='out_invoice',
         )
         self._assert_imported_invoice_from_file(
-            subfolder=subfolder, filename='bis3_ecotaxes_case4.xml', amount_total=218.042, amount_tax=39.842,
+            subfolder=subfolder, filename='bis3_ecotaxes_case4.xml', amount_total=218.04, amount_tax=39.84,
             list_line_subtotals=[178.20000000000002], currency_id=self.currency_data['currency'].id,
             list_line_price_unit=[99], list_line_discount=[10], list_line_taxes=[tax_21+self.recupel],
             move_type='out_invoice',
