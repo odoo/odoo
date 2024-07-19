@@ -442,6 +442,28 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         return super.destroy(...arguments);
     }
 
+    /**
+     * Get an option linked to the page.
+     *
+     * @param {string} name The name of the page option
+     * @return {*}
+     */
+    getPageOption(name) {
+        return this.pageOptions[name].value;
+    }
+    /**
+     * Toggles or force an option linked to the page.
+     *
+     * @see {PageOption}
+     *
+     * @param {string} name The name of the page option
+     * @param {*} [value] The value if needed to be forced
+     */
+    togglePageOption(name, value) {
+        const pageOption = this.pageOptions[name];
+        pageOption.value = value === undefined ? !pageOption.value : value;
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -664,9 +686,9 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         const params = event.data.params;
         switch (actionName) {
             case 'get_page_option':
-                 return event.data.onSuccess(this.pageOptions[params[0]].value);
+                 return event.data.onSuccess(this.getPageOption(params[0]));
             case 'toggle_page_option':
-                this._togglePageOption(...params);
+                this.togglePageOption(params[0].name, params[0].value);
                 return event.data.onSuccess();
             case 'edit_menu':
                 return this.dialogs.add(EditMenuDialog, {
@@ -677,19 +699,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                     },
                 });
         }
-    }
-    /**
-     * Toggles or force an option linked to the page.
-     *
-     * @see {PageOption}
-     * @param {Object} params
-     * @param {string} params.name the name of the page option,
-     * @param {*} params.value the value if needed to be forced
-     * @private
-     */
-    _togglePageOption(params) {
-        const pageOption = this.pageOptions[params.name];
-        pageOption.value = params.value === undefined ? !pageOption.value : params.value;
     }
     /**
      * Triggers an event on the iframe's public root.
