@@ -11,9 +11,11 @@ import threading
 import re
 import functools
 
-from psycopg2 import sql, OperationalError
+from psycopg2 import OperationalError
 
 from odoo import tools
+from odoo.tools import SQL
+
 
 _logger = logging.getLogger(__name__)
 
@@ -616,11 +618,12 @@ class Profiler:
                     for collector in self.collectors:
                         if collector.entries:
                             values[collector.name] = json.dumps(collector.entries)
-                    query = sql.SQL("INSERT INTO {}({}) VALUES %s RETURNING id").format(
-                        sql.Identifier("ir_profile"),
-                        sql.SQL(",").join(map(sql.Identifier, values)),
+                    query = SQL(
+                        "INSERT INTO ir_profile(%s) VALUES %s RETURNING id",
+                        SQL(",").join(map(SQL.identifier, values)),
+                        tuple(values.values()),
                     )
-                    cr.execute(query, [tuple(values.values())])
+                    cr.execute(query)
                     self.profile_id = cr.fetchone()[0]
                     _logger.info('ir_profile %s (%s) created', self.profile_id, self.profile_session)
         except OperationalError:

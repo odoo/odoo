@@ -8,11 +8,11 @@ import psycopg2.errors
 import pytz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from psycopg2 import sql
 
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -699,8 +699,7 @@ class ir_cron(models.Model):
         ir_cron modification and on trigger creation (regardless of call_at)
         """
         with odoo.sql_db.db_connect('postgres').cursor() as cr:
-            query = sql.SQL("SELECT {}('cron_trigger', %s)").format(sql.Identifier(ODOO_NOTIFY_FUNCTION))
-            cr.execute(query, [self.env.cr.dbname])
+            cr.execute(SQL("SELECT %s('cron_trigger', %s)", SQL.identifier(ODOO_NOTIFY_FUNCTION), self.env.cr.dbname))
         _logger.debug("cron workers notified")
 
     def _add_progress(self, *, timed_out_counter=None):
