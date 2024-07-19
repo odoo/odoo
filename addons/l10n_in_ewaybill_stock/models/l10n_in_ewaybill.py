@@ -308,9 +308,9 @@ class Ewaybill(models.Model):
 
     def _check_lines(self):
         error_message = []
-        AccountEDI = self.env['account.edi.format']
+        AccountMove = self.env['account.move']
         for line in self.move_ids:
-            if not (hsn_code := AccountEDI._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)):
+            if not (hsn_code := AccountMove._l10n_in_extract_digits(line.product_id.l10n_in_hsn_code)):
                 error_message.append(_("HSN code is not set in product %s", line.product_id.name))
             elif not re.match("^[0-9]+$", hsn_code):
                 error_message.append(_(
@@ -482,28 +482,28 @@ class Ewaybill(models.Model):
         return taxes
 
     def _get_l10n_in_ewaybill_line_details(self, line, tax_details):
-        AccountEDI = self.env['account.edi.format']
+        AccountMove = self.env['account.move']
         product = line.product_id
         line_details = {
             "productName": product.name,
-            "hsnCode": AccountEDI._l10n_in_edi_extract_digits(product.l10n_in_hsn_code),
+            "hsnCode": AccountMove._l10n_in_extract_digits(product.l10n_in_hsn_code),
             "productDesc": product.name,
             "quantity": line.quantity,
             "qtyUnit": product.uom_id.l10n_in_code and product.uom_id.l10n_in_code.split("-")[
                 0] or "OTH",
-            "taxableAmount": AccountEDI._l10n_in_round_value(tax_details['total_excluded']),
+            "taxableAmount": AccountMove._l10n_in_round_value(tax_details['total_excluded']),
         }
         for tax in tax_details.get('taxes'):
             for gst_type in ['igst', 'sgst', 'cgst']:
                 if tax_rate := tax.get(f'{gst_type}_rate'):
                     line_details.update({
-                        f"{gst_type}Rate": AccountEDI._l10n_in_round_value(tax_rate)
+                        f"{gst_type}Rate": AccountMove._l10n_in_round_value(tax_rate)
                     })
             if cess_rate := tax.get("cess_rate"):
-                line_details.update({"cessRate": AccountEDI._l10n_in_round_value(cess_rate)})
+                line_details.update({"cessRate": AccountMove._l10n_in_round_value(cess_rate)})
             if cess_non_advol := tax.get("cess_non_advol_amount"):
                 line_details.update({
-                    "cessNonadvol": AccountEDI._l10n_in_round_value(cess_non_advol)
+                    "cessNonadvol": AccountMove._l10n_in_round_value(cess_non_advol)
                 })
         return line_details
 
@@ -587,7 +587,7 @@ class Ewaybill(models.Model):
 
     def _prepare_ewaybill_tax_details_json_payload(self):
         tax_details = self._l10n_in_tax_details()
-        round_value = self.env['account.edi.format']._l10n_in_round_value
+        round_value = self.env['account.move']._l10n_in_round_value
         return {
             "itemList": [
                 self._get_l10n_in_ewaybill_line_details(line, tax_details['line_tax_details'][line.id])

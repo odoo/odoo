@@ -73,13 +73,6 @@ class AccountEdiFormat(models.Model):
     def _l10n_in_edi_xml_invoice_content(self, invoice):
         return json.dumps(self._l10n_in_edi_generate_invoice_json(invoice)).encode()
 
-    def _l10n_in_edi_extract_digits(self, string):
-        if not string:
-            return string
-        matches = re.findall(r"\d+", string)
-        result = "".join(matches)
-        return result
-
     def _l10n_in_is_global_discount(self, line):
         return not line.tax_ids and line.price_subtotal < 0 or False
 
@@ -96,7 +89,7 @@ class AccountEdiFormat(models.Model):
             if line.display_type == 'product':
                 if line.discount < 0:
                     error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
-                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
+                hsn_code = self.env['account.move']._l10n_in_extract_digits(line.l10n_in_hsn_code)
                 if not hsn_code:
                     error_message.append(_("HSN code is not set in product line %s", line.name))
                 elif not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code):
@@ -249,7 +242,7 @@ class AccountEdiFormat(models.Model):
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
             message.append(_("- Zip code required 6 digits"))
         if partner.phone and not re.match("^[0-9]{10,12}$",
-            self._l10n_in_edi_extract_digits(partner.phone)
+            self.env['account.move']._l10n_in_extract_digits(partner.phone)
         ):
             message.append(_("- Mobile number should be minimum 10 or maximum 12 digits"))
         if partner.email and (
@@ -280,7 +273,8 @@ class AccountEdiFormat(models.Model):
             if is_overseas is true then pin is 999999 and GSTIN(vat) is URP and Stcd is .
             if pos_state_id is passed then we use set POS
         """
-        zip_digits = self._l10n_in_edi_extract_digits(partner.zip)
+        AccountMove = self.env['account.move']
+        zip_digits = AccountMove._l10n_in_extract_digits(partner.zip)
         partner_details = {
             "Addr1": partner.street or "",
             "Loc": partner.city or "",
@@ -293,7 +287,7 @@ class AccountEdiFormat(models.Model):
             if partner.email:
                 partner_details.update({"Em": partner.email})
             if partner.phone:
-                partner_details.update({"Ph": self._l10n_in_edi_extract_digits(partner.phone)})
+                partner_details.update({"Ph": AccountMove._l10n_in_extract_digits(partner.phone)})
         if pos_state_id:
             partner_details.update({"POS": pos_state_id.l10n_in_tin or ""})
         if set_vat:
@@ -313,16 +307,6 @@ class AccountEdiFormat(models.Model):
             })
         return partner_details
 
-    @api.model
-    def _l10n_in_round_value(self, amount, precision_digits=2):
-        """
-            This method is call for rounding.
-            If anything is wrong with rounding then we quick fix in method
-        """
-        value = round(amount, precision_digits)
-        # avoid -0.0
-        return value if value else 0.0
-
     def _get_l10n_in_edi_line_details(self, index, line, line_tax_details):
         """
         Create the dictionary with line details
@@ -336,6 +320,7 @@ class AccountEdiFormat(models.Model):
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
         quantity = line.quantity
         full_discount_or_zero_quantity = line.discount == 100.00 or float_is_zero(quantity, 3)
+        AccountMove = self.env["account.move"]
         if full_discount_or_zero_quantity:
             unit_price_in_inr = line.currency_id._convert(
                 line.price_unit,
@@ -357,30 +342,30 @@ class AccountEdiFormat(models.Model):
             "SlNo": str(index),
             "PrdDesc": PrdDesc.replace("\n", ""),
             "IsServc": line.product_id.type == "service" and "Y" or "N",
-            "HsnCd": self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code),
-            "Qty": self._l10n_in_round_value(quantity or 0.0, 3),
+            "HsnCd": AccountMove._l10n_in_extract_digits(line.l10n_in_hsn_code),
+            "Qty": AccountMove._l10n_in_round_value(quantity or 0.0, 3),
             "Unit": line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split("-")[0] or "OTH",
             # Unit price in company currency and tax excluded so its different then price_unit
-            "UnitPrice": self._l10n_in_round_value(unit_price_in_inr, 3),
+            "UnitPrice": AccountMove._l10n_in_round_value(unit_price_in_inr, 3),
             # total amount is before discount
-            "TotAmt": self._l10n_in_round_value(unit_price_in_inr * quantity),
-            "Discount": self._l10n_in_round_value((unit_price_in_inr * quantity) * (line.discount / 100)),
-            "AssAmt": self._l10n_in_round_value((sign * line.balance)),
-            "GstRt": self._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00) or (
+            "TotAmt": AccountMove._l10n_in_round_value(unit_price_in_inr * quantity),
+            "Discount": AccountMove._l10n_in_round_value((unit_price_in_inr * quantity) * (line.discount / 100)),
+            "AssAmt": AccountMove._l10n_in_round_value(sign * line.balance),
+            "GstRt": AccountMove._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00) or (
                 tax_details_by_code.get("cgst_rate", 0.00) + tax_details_by_code.get("sgst_rate", 0.00)), 3),
-            "IgstAmt": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
-            "CgstAmt": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
-            "SgstAmt": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
-            "CesRt": self._l10n_in_round_value(tax_details_by_code.get("cess_rate", 0.00), 3),
-            "CesAmt": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
-            "CesNonAdvlAmt": self._l10n_in_round_value(
+            "IgstAmt": AccountMove._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
+            "CgstAmt": AccountMove._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
+            "SgstAmt": AccountMove._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
+            "CesRt": AccountMove._l10n_in_round_value(tax_details_by_code.get("cess_rate", 0.00), 3),
+            "CesAmt": AccountMove._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
+            "CesNonAdvlAmt": AccountMove._l10n_in_round_value(
                 tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "StateCesRt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_rate_amount", 0.00), 3),
-            "StateCesAmt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_amount", 0.00)),
-            "StateCesNonAdvlAmt": self._l10n_in_round_value(
+            "StateCesRt": AccountMove._l10n_in_round_value(tax_details_by_code.get("state_cess_rate_amount", 0.00), 3),
+            "StateCesAmt": AccountMove._l10n_in_round_value(tax_details_by_code.get("state_cess_amount", 0.00)),
+            "StateCesNonAdvlAmt": AccountMove._l10n_in_round_value(
                 tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
-            "OthChrg": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
-            "TotItemVal": self._l10n_in_round_value(((sign * line.balance) + line_tax_details.get("tax_amount", 0.00))),
+            "OthChrg": AccountMove._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
+            "TotItemVal": AccountMove._l10n_in_round_value((sign * line.balance) + line_tax_details.get("tax_amount", 0.00)),
         }
 
     def _l10n_in_edi_generate_invoice_json_managing_negative_lines(self, invoice, json_payload):
@@ -409,22 +394,23 @@ class AccountEdiFormat(models.Model):
         def put_discount_on(discount_line_vals, other_line_vals):
             discount = discount_line_vals['AssAmt'] * -1
             discount_to_allow = other_line_vals['AssAmt']
+            AccountMove = self.env["account.move"]
             if float_compare(discount_to_allow, discount, precision_rounding=invoice.currency_id.rounding) < 0:
                 # Update discount line, needed when discount is more then max line, in short remaining_discount is not zero
                 discount_line_vals.update({
-                    'AssAmt': self._l10n_in_round_value(discount_line_vals['AssAmt'] + other_line_vals['AssAmt']),
-                    'IgstAmt': self._l10n_in_round_value(discount_line_vals['IgstAmt'] + other_line_vals['IgstAmt']),
-                    'CgstAmt': self._l10n_in_round_value(discount_line_vals['CgstAmt'] + other_line_vals['CgstAmt']),
-                    'SgstAmt': self._l10n_in_round_value(discount_line_vals['SgstAmt'] + other_line_vals['SgstAmt']),
-                    'CesAmt': self._l10n_in_round_value(discount_line_vals['CesAmt'] + other_line_vals['CesAmt']),
-                    'CesNonAdvlAmt': self._l10n_in_round_value(discount_line_vals['CesNonAdvlAmt'] + other_line_vals['CesNonAdvlAmt']),
-                    'StateCesAmt': self._l10n_in_round_value(discount_line_vals['StateCesAmt'] + other_line_vals['StateCesAmt']),
-                    'StateCesNonAdvlAmt': self._l10n_in_round_value(discount_line_vals['StateCesNonAdvlAmt'] + other_line_vals['StateCesNonAdvlAmt']),
-                    'OthChrg': self._l10n_in_round_value(discount_line_vals['OthChrg'] + other_line_vals['OthChrg']),
-                    'TotItemVal': self._l10n_in_round_value(discount_line_vals['TotItemVal'] + other_line_vals['TotItemVal']),
+                    'AssAmt': AccountMove._l10n_in_round_value(discount_line_vals['AssAmt'] + other_line_vals['AssAmt']),
+                    'IgstAmt': AccountMove._l10n_in_round_value(discount_line_vals['IgstAmt'] + other_line_vals['IgstAmt']),
+                    'CgstAmt': AccountMove._l10n_in_round_value(discount_line_vals['CgstAmt'] + other_line_vals['CgstAmt']),
+                    'SgstAmt': AccountMove._l10n_in_round_value(discount_line_vals['SgstAmt'] + other_line_vals['SgstAmt']),
+                    'CesAmt': AccountMove._l10n_in_round_value(discount_line_vals['CesAmt'] + other_line_vals['CesAmt']),
+                    'CesNonAdvlAmt': AccountMove._l10n_in_round_value(discount_line_vals['CesNonAdvlAmt'] + other_line_vals['CesNonAdvlAmt']),
+                    'StateCesAmt': AccountMove._l10n_in_round_value(discount_line_vals['StateCesAmt'] + other_line_vals['StateCesAmt']),
+                    'StateCesNonAdvlAmt': AccountMove._l10n_in_round_value(discount_line_vals['StateCesNonAdvlAmt'] + other_line_vals['StateCesNonAdvlAmt']),
+                    'OthChrg': AccountMove._l10n_in_round_value(discount_line_vals['OthChrg'] + other_line_vals['OthChrg']),
+                    'TotItemVal': AccountMove._l10n_in_round_value(discount_line_vals['TotItemVal'] + other_line_vals['TotItemVal']),
                 })
                 other_line_vals.update({
-                    'Discount': self._l10n_in_round_value(other_line_vals['Discount'] + discount_to_allow),
+                    'Discount': AccountMove._l10n_in_round_value(other_line_vals['Discount'] + discount_to_allow),
                     'AssAmt': 0.00,
                     'IgstAmt': 0.00,
                     'CgstAmt': 0.00,
@@ -438,17 +424,17 @@ class AccountEdiFormat(models.Model):
                 })
                 return False
             other_line_vals.update({
-                'Discount': self._l10n_in_round_value(other_line_vals['Discount'] + discount),
-                'AssAmt': self._l10n_in_round_value(other_line_vals['AssAmt'] + discount_line_vals['AssAmt']),
-                'IgstAmt': self._l10n_in_round_value(other_line_vals['IgstAmt'] + discount_line_vals['IgstAmt']),
-                'CgstAmt': self._l10n_in_round_value(other_line_vals['CgstAmt'] + discount_line_vals['CgstAmt']),
-                'SgstAmt': self._l10n_in_round_value(other_line_vals['SgstAmt'] + discount_line_vals['SgstAmt']),
-                'CesAmt': self._l10n_in_round_value(other_line_vals['CesAmt'] + discount_line_vals['CesAmt']),
-                'CesNonAdvlAmt': self._l10n_in_round_value(other_line_vals['CesNonAdvlAmt'] + discount_line_vals['CesNonAdvlAmt']),
-                'StateCesAmt': self._l10n_in_round_value(other_line_vals['StateCesAmt'] + discount_line_vals['StateCesAmt']),
-                'StateCesNonAdvlAmt': self._l10n_in_round_value(other_line_vals['StateCesNonAdvlAmt'] + discount_line_vals['StateCesNonAdvlAmt']),
-                'OthChrg': self._l10n_in_round_value(other_line_vals['OthChrg'] + discount_line_vals['OthChrg']),
-                'TotItemVal': self._l10n_in_round_value(other_line_vals['TotItemVal'] + discount_line_vals['TotItemVal']),
+                'Discount': AccountMove._l10n_in_round_value(other_line_vals['Discount'] + discount),
+                'AssAmt': AccountMove._l10n_in_round_value(other_line_vals['AssAmt'] + discount_line_vals['AssAmt']),
+                'IgstAmt': AccountMove._l10n_in_round_value(other_line_vals['IgstAmt'] + discount_line_vals['IgstAmt']),
+                'CgstAmt': AccountMove._l10n_in_round_value(other_line_vals['CgstAmt'] + discount_line_vals['CgstAmt']),
+                'SgstAmt': AccountMove._l10n_in_round_value(other_line_vals['SgstAmt'] + discount_line_vals['SgstAmt']),
+                'CesAmt': AccountMove._l10n_in_round_value(other_line_vals['CesAmt'] + discount_line_vals['CesAmt']),
+                'CesNonAdvlAmt': AccountMove._l10n_in_round_value(other_line_vals['CesNonAdvlAmt'] + discount_line_vals['CesNonAdvlAmt']),
+                'StateCesAmt': AccountMove._l10n_in_round_value(other_line_vals['StateCesAmt'] + discount_line_vals['StateCesAmt']),
+                'StateCesNonAdvlAmt': AccountMove._l10n_in_round_value(other_line_vals['StateCesNonAdvlAmt'] + discount_line_vals['StateCesNonAdvlAmt']),
+                'OthChrg': AccountMove._l10n_in_round_value(other_line_vals['OthChrg'] + discount_line_vals['OthChrg']),
+                'TotItemVal': AccountMove._l10n_in_round_value(other_line_vals['TotItemVal'] + discount_line_vals['TotItemVal']),
             })
             return True
 
@@ -473,6 +459,7 @@ class AccountEdiFormat(models.Model):
         return json_payload
 
     def _l10n_in_edi_generate_invoice_json(self, invoice):
+        AccountMove = self.env["account.move"]
         tax_details = self._l10n_in_prepare_edi_tax_details(invoice)
         saler_buyer = self._get_l10n_in_edi_saler_buyer_party(invoice)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
@@ -504,28 +491,28 @@ class AccountEdiFormat(models.Model):
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount") + global_discount_amount),
-                "CgstVal": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
-                "SgstVal": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
-                "IgstVal": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
-                "CesVal": self._l10n_in_round_value((
+                "AssVal": AccountMove._l10n_in_round_value(tax_details.get("base_amount") + global_discount_amount),
+                "CgstVal": AccountMove._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
+                "SgstVal": AccountMove._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
+                "IgstVal": AccountMove._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
+                "CesVal": AccountMove._l10n_in_round_value((
                     tax_details_by_code.get("cess_amount", 0.00)
                     + tax_details_by_code.get("cess_non_advol_amount", 0.00)),
                 ),
-                "StCesVal": self._l10n_in_round_value((
+                "StCesVal": AccountMove._l10n_in_round_value((
                     tax_details_by_code.get("state_cess_amount", 0.00)
                     + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
                 ),
-                "Discount": self._l10n_in_round_value(global_discount_amount),
-                "RndOffAmt": self._l10n_in_round_value(
+                "Discount": AccountMove._l10n_in_round_value(global_discount_amount),
+                "RndOffAmt": AccountMove._l10n_in_round_value(
                     rounding_amount),
-                "TotInvVal": self._l10n_in_round_value(
+                "TotInvVal": AccountMove._l10n_in_round_value(
                     (tax_details.get("base_amount") + tax_details.get("tax_amount") + rounding_amount)),
             },
         }
         if invoice.company_currency_id != invoice.currency_id:
             json_payload["ValDtls"].update({
-                "TotInvValFc": self._l10n_in_round_value(
+                "TotInvValFc": AccountMove._l10n_in_round_value(
                     (tax_details.get("base_amount_currency") + tax_details.get("tax_amount_currency")))
             })
         if saler_buyer.get("seller_details") != saler_buyer.get("dispatch_details"):

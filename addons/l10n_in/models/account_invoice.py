@@ -221,6 +221,24 @@ class AccountMove(models.Model):
             for tag_name in tags_name
         }
 
+    @api.model
+    def _l10n_in_round_value(self, amount, precision_digits=2):
+        """
+            This method is call for rounding.
+            If anything is wrong with rounding then we quick fix in method
+        """
+        value = round(amount, precision_digits)
+        # avoid -0.0
+        return value or 0.0
+
+    @api.model
+    def _l10n_in_extract_digits(self, string):
+        if not string:
+            return string
+        matches = re.findall(r"\d+", string)
+        result = "".join(matches)
+        return result
+
     def _get_name_invoice_report(self):
         self.ensure_one()
         if self.country_code == 'IN':
@@ -272,7 +290,7 @@ class AccountMove(models.Model):
                 if line.product_id.type != 'service':
                     uqc = line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split("-")[0] or "OTH"
                 lines_json = {
-                    'hsn_sc': line.l10n_in_hsn_code,
+                    'hsn_sc': self._l10n_in_extract_digits(line.l10n_in_hsn_code),
                     'uqc': uqc,
                     'product_type': line.product_id.type,
                     'qty': line.quantity,
