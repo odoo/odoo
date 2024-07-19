@@ -1950,6 +1950,7 @@ export class Order extends PosModel {
                 combo_parent_id: comboParent,
                 combo_line_id: comboLine.comboLine,
                 attribute_value_ids: comboLine.attribute_value_ids,
+                extras: { price_type: "manual" },
             });
 
             comboLines.push(line);
