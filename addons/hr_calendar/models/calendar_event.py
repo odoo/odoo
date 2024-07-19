@@ -21,11 +21,13 @@ class CalendarEvent(models.Model):
         if not complete_events:
             return
         event_intervals = complete_events._get_events_interval()
-        # Event without start and stop are skipped, except all day event: their interval is computed
-        # based on company calendar's interval.
         for event, event_interval in event_intervals.items():
+            # Event_interval is empty when an allday event contains at least one day where the company is closed
+            if not event_interval:
+                event.unavailable_partner_ids = event.partner_ids
+                continue
             start = event_interval._items[0][0]
-            stop = event_interval._items[0][1]
+            stop = event_interval._items[-1][1]
             schedule_by_partner = event.partner_ids._get_schedule(start, stop, merge=False)
             event.unavailable_partner_ids = event._check_employees_availability_for_event(
                 schedule_by_partner, event_interval)
@@ -36,8 +38,11 @@ class CalendarEvent(models.Model):
 
     def _get_events_interval(self):
         """
-        Calculate the interval of an event based on its start, stop, and allday values. If an event is scheduled for the
-        entire day, its interval will correspond to the work interval defined by the company's calendar.
+        This method will returned an Intervals object that represent the event's interval based of its parameters.
+
+        If an event is scheduled for the entire day, its interval will correspond to the work interval defined by the
+        company's calendar.
+        If an allday event is scheduled on a day when the company is closed, the interval of this event will be empty.
         """
         start = min(self.mapped('start')).replace(hour=0, minute=0, second=0, tzinfo=UTC)
         stop = max(self.mapped('stop')).replace(hour=23, minute=59, second=59, tzinfo=UTC)
@@ -52,7 +57,15 @@ class CalendarEvent(models.Model):
                     event.stop.replace(hour=23, minute=59, second=59, tzinfo=UTC),
                     self.env['resource.calendar']
                 )])
-                interval_by_event[event] = allday_event_interval & global_interval
+
+                if any(not (Intervals([(
+                    event.start.replace(hour=0, minute=0, second=0, tzinfo=UTC) + relativedelta(days=i),
+                    event.start.replace(hour=23, minute=59, second=59, tzinfo=UTC) + relativedelta(days=i),
+                    self.env['resource.calendar']
+                )]) & global_interval) for i in range(0, (event.stop_date - event.start_date).days + 1)):
+                    interval_by_event[event] = Intervals([])
+                else:
+                    interval_by_event[event] = allday_event_interval & global_interval
             else:
                 interval_by_event[event] = Intervals([(
                     timezone_datetime(event.start),
