@@ -42,7 +42,7 @@
                             </setting>
                         </block>
                         <block title="Taxes" name="default_taxes_setting_container">
-                            <setting id="default_taxes" string="Default Taxes" company_dependent="1" help="Default taxes applied to local transactions" title="These taxes are set in any new product created."
+                            <setting id="default_taxes" string="Default Taxes" company_dependent="1" help="Default taxes applied when creating new products." title="These taxes are set in any new product created."
                                 documentation="/applications/finance/accounting/taxation/taxes/default_taxes.html">
                                 <div class="content-group">
                                     <div class="row mt16">
@@ -52,6 +52,10 @@
                                     <div class="row">
                                         <label string="Purchase Tax" for="purchase_tax_id" class="col-lg-3 o_light_label"/>
                                         <field name="purchase_tax_id" domain="[('type_tax_use', 'in', ('purchase', 'all'))]"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Prices" for="account_price_include" class="col-lg-3 o_light_label"/>
+                                        <field name="account_price_include" readonly="has_accounting_entries"/>
                                     </div>
                                 </div>
                             </setting>

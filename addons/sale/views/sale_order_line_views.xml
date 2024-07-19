@@ -68,7 +68,16 @@
                             <field name="tax_country_id" invisible="1"/>
                             <field name="price_unit"/>
                             <field name="discount" groups="sale.group_discount_per_so_line"/>
-                            <field name="price_subtotal" widget="monetary"/>
+                            <field name="price_subtotal"
+                                   string="Amount"
+                                   widget="monetary"
+                                   invisible="company_price_include == 'tax_included'"
+                                />
+                            <field name="price_total"
+                                   string="Amount"
+                                   widget="monetary"
+                                   invisible="company_price_include == 'tax_excluded'"
+                                />
                             <field name="tax_id"
                                 widget="many2many_tags"
                                 options="{'no_create': True}"
@@ -76,7 +85,6 @@
                                 domain="[('type_tax_use', '=', 'sale'), ('company_id', '=', company_id), ('country_id', '=', tax_country_id)]"
                                 readonly="qty_invoiced &gt; 0"/>
                             <field name="price_tax" widget="monetary"/>
-                            <field name="price_total" widget="monetary"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                     </group>

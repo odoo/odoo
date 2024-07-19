@@ -181,7 +181,11 @@
                                     <field name="invoice_legal_notes"/>
                                 </group>
                                 <group name="advanced_booleans">
-                                    <field name="price_include" invisible="amount_type == 'group'"/>
+                                    <field name="price_include" invisible="1"/>
+                                    <field name="price_include_override"
+                                           invisible="amount_type == 'group' or type_tax_use == 'purchase'"
+                                           placeholder="Default"
+                                    />
                                     <field name="include_base_amount" invisible="amount_type == 'group'"/>
                                     <field name="is_base_affected"
                                            invisible="amount_type == 'group' or price_include"

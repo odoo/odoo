@@ -231,6 +231,15 @@ class ResCompany(models.Model):
     # Autopost Wizard
     autopost_bills = fields.Boolean(string='Auto-validate bills', default=True)
 
+    # Tax ex/included in prices
+    account_price_include = fields.Selection(
+        selection=[('tax_included', 'Tax Included'), ('tax_excluded', 'Tax Excluded')],
+        string='Default Sales Price Include',
+        default='tax_excluded',
+        required=True,
+        help="Default on whether the sales price used on the product and invoices with this Company includes its taxes."
+    )
+
     def _get_company_root_delegated_field_names(self):
         return super()._get_company_root_delegated_field_names() + [
             'fiscalyear_last_day',
@@ -244,6 +253,11 @@ class ResCompany(models.Model):
         invalidation_fields = super().cache_invalidation_fields()
         invalidation_fields.add('check_account_audit_trail')
         return invalidation_fields
+
+    @api.constrains("account_price_include")
+    def _check_set_account_price_include(self):
+        if any(company.sudo()._existing_accounting() for company in self):
+            raise ValidationError("Cannot change Price Tax computation method on a company that has already started invoicing.")
 
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):

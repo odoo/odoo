@@ -273,6 +273,7 @@ class SaleOrder(models.Model):
         string="Amount Before Discount",
         compute='_compute_amount_undiscounted', digits=0)
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
+    company_price_include = fields.Selection(related='company_id.account_price_include')
     expected_date = fields.Datetime(
         string="Expected Date",
         compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
