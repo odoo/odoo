@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { useMiddleClick } from "@web/core/utils/middle_click";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
@@ -104,6 +105,11 @@ export class Many2OneField extends Component {
         this.notification = useService("notification");
         this.autocompleteContainerRef = useChildRef();
         this.addDialog = useOwnedDialogs();
+        useMiddleClick({
+            clickParams: {
+                record: this.props.record,
+            },
+        });
 
         this.focusInput = () => {
             this.autocompleteContainerRef.el.querySelector("input").focus();
