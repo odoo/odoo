@@ -301,7 +301,8 @@ export class SelectionPlugin extends Plugin {
      */
     getEditableSelection({ deep = false } = {}) {
         const selection = this.document.getSelection();
-        if (selection && selection.rangeCount && this.isSelectionInEditable(selection)) {
+        const inEditable = selection && this.isSelectionInEditable(selection);
+        if (inEditable) {
             this.activeSelection = this.makeSelection(selection, true);
         } else if (!this.activeSelection.anchorNode.isConnected) {
             this.activeSelection = this.makeSelection();
@@ -338,6 +339,7 @@ export class SelectionPlugin extends Plugin {
             startOffset,
             endContainer,
             endOffset,
+            inEditable,
             commonAncestorContainer: range.commonAncestorContainer,
             cloneContents: () => range.cloneContents(),
         });

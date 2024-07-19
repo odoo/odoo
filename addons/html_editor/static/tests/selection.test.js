@@ -88,10 +88,9 @@ describe("inEditable", () => {
         const { editor } = await setupEditor("<p>ab[]</p>");
         const selection = document.getSelection();
         let editableSelection = editor.shared.getEditableSelection();
-        selection.setPosition(document.body);
         expect(editableSelection.inEditable).toBe(true);
-        // internal value is updated only after selectionchange event
-        await animationFrame();
+        selection.setPosition(document.body);
+        // value is updated directly !
         editableSelection = editor.shared.getEditableSelection();
         expect(editableSelection.inEditable).toBe(false);
     });
