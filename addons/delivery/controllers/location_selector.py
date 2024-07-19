@@ -29,7 +29,7 @@ class LocationSelectorController(Controller):
         """
         order = request.env['sale.order'].browse(order_id)
         if request.geoip.country_code:
-            country = self.env['res.country'].search(
+            country = request.env['res.country'].search(
                 [('code', '=', request.geoip.country_code)], limit=1,
             )
         else:
