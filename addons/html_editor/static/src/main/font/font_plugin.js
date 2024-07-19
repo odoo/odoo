@@ -290,7 +290,7 @@ export class FontPlugin extends Plugin {
         // Detect if cursor is at the start of the editable (collapsed range).
         const rangeIsCollapsed = startContainer === endContainer && startOffset === endOffset;
         if (rangeIsCollapsed) {
-            const isUnremovable = this.resources.unremovables.some((predicate) =>
+            const isUnremovable = this.resources.isUnremovable.some((predicate) =>
                 predicate(closestHandledElement)
             );
             if (

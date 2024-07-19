@@ -2,7 +2,7 @@ import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { hasAnyNodesColor } from "@html_editor/utils/color";
 import { unwrapContents } from "../utils/dom";
-import { isUnbreakable, isVisibleTextNode, isZWS } from "../utils/dom_info";
+import { isVisibleTextNode, isZWS } from "../utils/dom_info";
 import { closestElement } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
 import { DIRECTIONS } from "../utils/position";
@@ -155,7 +155,7 @@ export class FormatPlugin extends Plugin {
             .getTraversedNodes()
             .filter((n) => n.nodeType === Node.TEXT_NODE);
         const isFormatted = formatsSpecs[format].isFormatted;
-        return selectedNodes.length && selectedNodes.some((n) => isFormatted(n, this.editable));
+        return selectedNodes.some((n) => isFormatted(n, this.editable));
     }
     /**
      * Return true if the current selection on the editable appears as the
@@ -241,8 +241,7 @@ export class FormatPlugin extends Plugin {
             while (
                 parentNode &&
                 !isBlock(parentNode) &&
-                !isUnbreakable(parentNode) &&
-                !isUnbreakable(currentNode) &&
+                !this.shared.isUnsplittable(parentNode) &&
                 (parentNode.classList.length === 0 ||
                     [...parentNode.classList].every((cls) => FONT_SIZE_CLASSES.includes(cls)))
             ) {

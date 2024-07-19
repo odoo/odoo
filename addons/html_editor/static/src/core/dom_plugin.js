@@ -15,7 +15,6 @@ import {
     isProtecting,
     isSelfClosingElement,
     isShrunkBlock,
-    isUnbreakable,
     paragraphRelatedElements,
 } from "../utils/dom_info";
 import { closestElement, descendants } from "../utils/dom_traversal";
@@ -24,7 +23,7 @@ import { DIRECTIONS, childNodeIndex, rightPos } from "../utils/position";
 
 export class DomPlugin extends Plugin {
     static name = "dom";
-    static dependencies = ["selection", "split"];
+    static dependencies = ["selection", "split", "delete"];
     static shared = ["domInsert", "copyAttributes"];
     static resources = () => ({
         powerboxCommands: {
@@ -223,7 +222,7 @@ export class DomPlugin extends Plugin {
         // If all the Html have been isolated, We force a split of the parent element
         // to have the need new line in the final result
         if (!container.hasChildNodes()) {
-            if (isUnbreakable(closestBlock(currentNode.nextSibling))) {
+            if (this.shared.isUnsplittable(closestBlock(currentNode.nextSibling))) {
                 this.dispatch("INSERT_LINEBREAK_NODE", {
                     targetNode: currentNode.nextSibling,
                     targetOffset: 0,
@@ -251,7 +250,7 @@ export class DomPlugin extends Plugin {
                     (!allowsParagraphRelatedElements(currentNode.parentElement) ||
                         currentNode.parentElement.nodeName === "LI")
                 ) {
-                    if (isUnbreakable(currentNode.parentElement)) {
+                    if (this.shared.isUnsplittable(currentNode.parentElement)) {
                         // If we have to insert a table, we cannot afford to unwrap it
                         // we need to search for a more suitable spot to put the table in
                         if (nodeToInsert.nodeName === "TABLE") {
@@ -485,7 +484,7 @@ export class DomPlugin extends Plugin {
     shouldBeMerged(node) {
         return (
             areSimilarElements(node, node.previousSibling) &&
-            !isUnbreakable(node) &&
+            !this.shared.isUnmergeable(node) &&
             !isEditorTab(node) &&
             !(
                 node.attributes?.length === 1 &&

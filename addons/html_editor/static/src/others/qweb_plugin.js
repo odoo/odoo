@@ -2,6 +2,12 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { QWebPicker } from "./qweb_picker";
 
+const isUnsplittableQWebElement = (element) =>
+    element.tagName === "T" ||
+    ["t-field", "t-if", "t-elif", "t-else", "t-foreach", "t-value", "t-esc", "t-out", "t-raw"].some(
+        (attr) => element.getAttribute(attr)
+    );
+
 export class QWebPlugin extends Plugin {
     static name = "qweb";
     static dependencies = ["overlay", "selection"];
@@ -9,6 +15,8 @@ export class QWebPlugin extends Plugin {
     static resources = (p) => ({
         onSelectionChange: p.onSelectionChange.bind(p),
         is_mutation_record_savable: p.isMutationRecordSavable.bind(p),
+        isUnremovable: (element) => element.getAttribute("t-set") || element.getAttribute("t-call"),
+        isUnsplittable: isUnsplittableQWebElement,
     });
 
     setup() {
