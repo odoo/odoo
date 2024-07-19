@@ -32,7 +32,7 @@ export class ColumnPlugin extends Plugin {
     static name = "column";
     static dependencies = ["selection"];
     static resources = () => ({
-        unremovables: isUnremovableColumn,
+        isUnremovable: isUnremovableColumn,
         powerboxCommands: [
             {
                 name: _t("2 columns"),
