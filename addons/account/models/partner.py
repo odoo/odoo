@@ -6,7 +6,7 @@ import time
 import re
 import logging
 
-from psycopg2 import sql, errors as pgerrors
+from psycopg2 import errors as pgerrors
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
@@ -778,12 +778,15 @@ class ResPartner(models.Model):
         if self.ids and field in ['customer_rank', 'supplier_rank']:
             try:
                 with self.env.cr.savepoint(flush=False), mute_logger('odoo.sql_db'):
-                    query = sql.SQL("""
-                        SELECT {field} FROM res_partner WHERE ID IN %(partner_ids)s FOR NO KEY UPDATE NOWAIT;
-                        UPDATE res_partner SET {field} = {field} + %(n)s
+                    self.env.execute_query(SQL("""
+                        SELECT %(field)s FROM res_partner WHERE ID IN %(partner_ids)s FOR NO KEY UPDATE NOWAIT;
+                        UPDATE res_partner SET %(field)s = %(field)s + %(n)s
                         WHERE id IN %(partner_ids)s
-                    """).format(field=sql.Identifier(field))
-                    self.env.cr.execute(query, {'partner_ids': tuple(self.ids), 'n': n})
+                        """,
+                        field=SQL.identifier(field),
+                        partner_ids=tuple(self.ids),
+                        n=n,
+                    ))
                     self.invalidate_recordset([field])
             except (pgerrors.LockNotAvailable, pgerrors.SerializationFailure):
                 _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
