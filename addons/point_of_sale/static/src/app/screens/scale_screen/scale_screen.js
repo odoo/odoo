@@ -3,6 +3,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
+import { getTaxesValues } from "@point_of_sale/app/models/utils/tax_utils";
 
 export class ScaleScreen extends Component {
     static template = "point_of_sale.ScaleScreen";
@@ -11,6 +12,7 @@ export class ScaleScreen extends Component {
         getPayload: Function,
         product: Object,
         close: Function,
+        taxIncluded: Boolean,
     };
     setup() {
         this.pos = usePos();
@@ -77,11 +79,7 @@ export class ScaleScreen extends Component {
         return unit;
     }
     get computedPriceString() {
-        return this.env.utils.formatCurrency(this.netWeight * this.pricePerUom);
-    }
-    get productPrice() {
-        const product = this.props.product;
-        return (product ? product.get_price(this._activePricelist, this.state.weight) : 0) || 0;
+        return this.env.utils.formatCurrency(this.netWeight * this.productPrice);
     }
     get productUom() {
         return this.props.product?.uom_id?.name;
@@ -93,5 +91,26 @@ export class ScaleScreen extends Component {
         setTimeout(() => {
             this.state.tareLoading = false;
         }, 3000);
+    }
+    get productPrice() {
+        const product = this.props.product;
+        const priceUnit = product.get_price(this._activePricelist, 1);
+
+        let taxes = product.taxes_id;
+
+        const taxesData = getTaxesValues(
+            taxes,
+            priceUnit,
+            1,
+            product,
+            this.pos.config._product_default_values,
+            this.pos.company,
+            this.pos.currency
+        );
+        if (this.props.taxIncluded) {
+            return taxesData.total_included;
+        } else {
+            return taxesData.total_excluded;
+        }
     }
 }

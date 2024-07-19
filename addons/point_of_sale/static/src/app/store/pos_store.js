@@ -690,6 +690,7 @@ export class PosStore extends Reactive {
             if (values.product_id.isScaleAvailable) {
                 const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen, {
                     product: values.product_id,
+                    taxIncluded: this.config.iface_tax_included === "total",
                 });
                 if (!weight) {
                     return;
