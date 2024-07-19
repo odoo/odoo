@@ -37,7 +37,7 @@ class Manager(Thread):
         """
         server = helpers.get_odoo_server_url()
         if server:
-            subject = helpers.read_file_first_line('odoo-subject.conf')
+            subject = helpers.get_conf('subject')
             if subject:
                 domain = helpers.get_ip().replace('.', '-') + subject.strip('*')
             else:
@@ -94,6 +94,7 @@ class Manager(Thread):
         """
         Thread that will load interfaces and drivers and contact the odoo server with the updates
         """
+        helpers.migrate_old_config_files_to_new_config_file()
         server_url = helpers.get_odoo_server_url()
 
         helpers.start_nginx_server()
