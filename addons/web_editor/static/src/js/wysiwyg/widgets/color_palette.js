@@ -12,7 +12,7 @@ let colorpickerArch;
 const ColorPaletteWidget = Widget.extend({
     template: 'web_editor.snippet.option.colorpicker',
     events: {
-        'click .o_we_color_btn': '_onColorButtonClick',
+        'click .o_we_color_btn:not(.o_custom_gradient_btn)': '_onColorButtonClick',
         'mouseenter .o_we_color_btn': '_onColorButtonEnter',
         'mouseleave .o_we_color_btn': '_onColorButtonLeave',
         'click .o_we_colorpicker_switch_pane_btn': '_onSwitchPaneButtonClick',
