@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models, api, _
+from odoo.exceptions import UserError
 
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
     repair_type_id = fields.Many2one('stock.picking.type', 'Repair Operation Type', check_company=True)
+    repair_mto_pull_id = fields.Many2one(
+        'stock.rule', 'Repair MTO Rule', copy=False)
 
     def _get_sequence_values(self, name=False, code=False):
         values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
@@ -49,3 +52,34 @@ class StockWarehouse(models.Model):
             },
         })
         return data
+
+    @api.model
+    def _get_production_location(self):
+        location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.company_id.id)], limit=1)
+        if not location:
+            raise UserError(_("Can't find any production location."))
+        return location
+
+    def _generate_global_route_rules_values(self):
+        rules = super()._generate_global_route_rules_values()
+        production_location = self._get_production_location()
+        rules.update({
+            'repair_mto_pull_id': {
+                'depends': ['repair_type_id'],
+                'create_values': {
+                    'procure_method': 'mts_else_mto',
+                    'company_id': self.company_id.id,
+                    'action': 'pull',
+                    'auto': 'manual',
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
+                    'location_dest_id': self.repair_type_id.default_location_dest_id.id,
+                    'location_src_id': self.repair_type_id.default_location_src_id.id,
+                    'picking_type_id': self.repair_type_id.id
+                },
+                'update_values': {
+                    'name': self._format_rulename(self.lot_stock_id, production_location, 'MTO'),
+                    'active': True,
+                },
+            },
+        })
+        return rules
