@@ -15,12 +15,14 @@ class ProductCategory(models.Model):
         domain=ACCOUNT_DOMAIN,
         help="This account will be used when validating a customer invoice.",
         tracking=True,
+        ondelete='restrict',
     )
     property_account_expense_categ_id = fields.Many2one('account.account', company_dependent=True,
         string="Expense Account",
         domain=ACCOUNT_DOMAIN,
         help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon accounting with perpetual inventory valuation in which case the expense (Cost of Goods Sold account) is recognized at the customer invoice validation.",
         tracking=True,
+        ondelete='restrict',
     )
 
 #----------------------------------------------------------
@@ -42,11 +44,11 @@ class ProductTemplate(models.Model):
         domain=[('type_tax_use', '=', 'purchase')],
         default=lambda self: self.env.companies.account_purchase_tax_id or self.env.companies.root_id.sudo().account_purchase_tax_id,
     )
-    property_account_income_id = fields.Many2one('account.account', company_dependent=True,
+    property_account_income_id = fields.Many2one('account.account', company_dependent=True, ondelete='restrict',
         string="Income Account",
         domain=ACCOUNT_DOMAIN,
         help="Keep this field empty to use the default value from the product category.")
-    property_account_expense_id = fields.Many2one('account.account', company_dependent=True,
+    property_account_expense_id = fields.Many2one('account.account', company_dependent=True, ondelete='restrict',
         string="Expense Account",
         domain=ACCOUNT_DOMAIN,
         help="Keep this field empty to use the default value from the product category. If anglo-saxon accounting with automated valuation method is configured, the expense account on the product category will be used.")

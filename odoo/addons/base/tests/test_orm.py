@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
-import psycopg2
-
-from odoo.exceptions import AccessError, MissingError
-from odoo.tests.common import TransactionCase
+from odoo.exceptions import AccessError
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo import Command
 
@@ -176,28 +172,6 @@ class TestORM(TransactionCase):
         group_user.write({'users': [Command.unlink(user.id)]})
         self.assertTrue(user.share)
 
-    @mute_logger('odoo.models')
-    def test_unlink_with_property(self):
-        """ Verify that unlink removes the related ir.property as unprivileged user """
-        user = self.env['res.users'].create({
-            'name': 'Justine Bridou',
-            'login': 'saucisson',
-            'groups_id': [Command.set([self.ref('base.group_partner_manager')])],
-        })
-        p1 = self.env['res.partner'].with_user(user).create({'name': 'Zorro'})
-        self.env['ir.property'].with_user(user)._set_multi("ref", "res.partner", {p1.id: "Nain poilu"})
-        p1_prop = self.env['ir.property'].with_user(user)._get("ref", "res.partner", res_id=p1.id)
-        self.assertEqual(
-            p1_prop, "Nain poilu", 'p1_prop should have been created')
-
-        # Unlink with unprivileged user
-        p1.unlink()
-
-        # ir.property is deleted
-        p1_prop = self.env['ir.property'].with_user(user)._get("ref", "res.partner", res_id=p1.id)
-        self.assertEqual(
-            p1_prop, False, 'p1_prop should have been deleted')
-
     def test_create_multi(self):
         """ create for multiple records """
         # assumption: 'res.bank' does not override 'create'
@@ -343,3 +317,40 @@ class TestInherits(TransactionCase):
         user.write({'image_1920': 'R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='})
         write_date_after = user.write_date
         self.assertNotEqual(write_date_before, write_date_after)
+
+
+@tagged('post_install', '-at_install')
+class TestCompanyDependent(TransactionCase):
+    def test_orm_ondelete_cascade(self):
+        # model_A
+        #  | field_a                           company dependent many2one is
+        #  | company dependent many2one        stored as jsonb and doesn't
+        #  v                                   have db ON DELETE action
+        # model_B
+        #  | field_b                           if a row for model_B is deleted
+        #  | many2one (ondelete='cascade')     because of ON DELETE CASCADE,
+        #  v                                   model_A will reference a deleted
+        # model_C                              row and have MissingError
+        #  | field_c
+        #  | many2one (ondelete='cascade')     this test asks you to move the
+        #  v                                   ON DELETE CASCADE logic to ORM
+        # model_D                              and remove ondelete='cascade'
+        #
+        # Note:
+        # the test doesn't force developers to remove ondelete='cascade' for
+        # model_C if model_C is not referenced by another company dependent
+        # many2one field. But usually it is needed, unless you can accept
+        # the value of field_b to be an empty recordset of model_C
+        #
+        for model in self.env.registry.values():
+            for field in model._fields.values():
+                if field.company_dependent and field.type == 'many2one':
+                    for comodel_field in self.env[field.comodel_name]._fields.values():
+                        self.assertFalse(
+                            comodel_field.type == 'many2one' and comodel_field.ondelete == 'cascade',
+                            (f'when a row for {comodel_field.comodel_name} is deleted, a row for {comodel_field.model_name} '
+                             f'may also be deleted for sake of on delete cascade field {comodel_field}, which may '
+                             f'cause MissingError for a company dependent many2one field {field} in the future. '
+                             f'Please override the unlink method of {comodel_field.comodel_name} and do the ORM on '
+                             f'delete cascade logic and remove/override the ondelete="cascade" of {comodel_field}')
+                        )

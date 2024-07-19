@@ -25,15 +25,15 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_l10n_vn_edi_default_symbol(self):
-        for setting in self:
-            if setting.company_id.country_id.code == 'VN':
-                setting.l10n_vn_edi_default_symbol = self.env['ir.property']._get('l10n_vn_edi_symbol', 'res.partner')
+        ResPartner = self.env['res.partner']
+        l10n_vn_edi_symbol_field = ResPartner._fields['l10n_vn_edi_symbol']
+        self.l10n_vn_edi_default_symbol = l10n_vn_edi_symbol_field.get_company_dependent_fallback(ResPartner)
 
     def _inverse_l10n_vn_edi_default_symbol(self):
         for setting in self:
-            self.env['ir.property']._set_default(
-                'l10n_vn_edi_symbol',
+            self.env['ir.default'].set(
                 'res.partner',
-                setting.l10n_vn_edi_default_symbol,
-                setting.company_id.id
+                'l10n_vn_edi_symbol',
+                setting.l10n_vn_edi_default_symbol.id,
+                company_id=setting.company_id.id
             )

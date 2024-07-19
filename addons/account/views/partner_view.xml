@@ -210,8 +210,8 @@
                             </group>
                             <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_readonly">
                                 <field name="currency_id" invisible="1"/>
-                                <field name="property_account_receivable_id"/>
-                                <field name="property_account_payable_id"/>
+                                <field name="property_account_receivable_id" required="True"/>
+                                <field name="property_account_payable_id" required="True"/>
                             </group>
                             <group string="Credit Limits"
                                    name="credit_limits"

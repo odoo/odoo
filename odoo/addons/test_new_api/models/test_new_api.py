@@ -661,6 +661,8 @@ class CompanyDependent(models.Model):
     phi = fields.Float(company_dependent=True, digits=(2, 5))
     html1 = fields.Html(company_dependent=True, sanitize=False)
     html2 = fields.Html(company_dependent=True, sanitize_attributes=True, strip_classes=True, strip_style=True)
+    company_id = fields.Many2one('res.company', company_dependent=True)  # child_of and parent_of is optimized
+    partner_id = fields.Many2one('res.partner', company_dependent=True)
 
 
 class CompanyDependentAttribute(models.Model):

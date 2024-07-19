@@ -75,12 +75,7 @@ class Company(models.Model):
                 'location_id': parent_location.id,
                 'company_id': company.id,
             })
-            self.env['ir.property']._set_default(
-                "property_stock_inventory",
-                "product.template",
-                inventory_loss_location,
-                company.id,
-            )
+            self.env['ir.default'].set('product.template', 'property_stock_inventory', inventory_loss_location.id, company_id=company.id)
 
     def _create_production_location(self):
         parent_location = self.env.ref('stock.stock_location_locations_virtual', raise_if_not_found=False)
@@ -91,12 +86,7 @@ class Company(models.Model):
                 'location_id': parent_location.id,
                 'company_id': company.id,
             })
-            self.env['ir.property']._set_default(
-                "property_stock_production",
-                "product.template",
-                production_location,
-                company.id,
-            )
+            self.env['ir.default'].set('product.template', 'property_stock_production', production_location.id, company_id=company.id)
 
     def _create_scrap_location(self):
         parent_location = self.env.ref('stock.stock_location_locations_virtual', raise_if_not_found=False)
@@ -147,7 +137,7 @@ class Company(models.Model):
     def create_missing_inventory_loss_location(self):
         company_ids  = self.env['res.company'].search([])
         inventory_loss_product_template_field = self.env['ir.model.fields']._get('product.template', 'property_stock_inventory')
-        companies_having_property = self.env['ir.property'].sudo().search([('fields_id', '=', inventory_loss_product_template_field.id), ('res_id', '=', False)]).mapped('company_id')
+        companies_having_property = self.env['ir.default'].sudo().search([('field_id', '=', inventory_loss_product_template_field.id)]).mapped('company_id')
         company_without_property = company_ids - companies_having_property
         company_without_property._create_inventory_loss_location()
 
@@ -155,7 +145,7 @@ class Company(models.Model):
     def create_missing_production_location(self):
         company_ids  = self.env['res.company'].search([])
         production_product_template_field = self.env['ir.model.fields']._get('product.template', 'property_stock_production')
-        companies_having_property = self.env['ir.property'].sudo().search([('fields_id', '=', production_product_template_field.id), ('res_id', '=', False)]).mapped('company_id')
+        companies_having_property = self.env['ir.default'].sudo().search([('field_id', '=', production_product_template_field.id)]).mapped('company_id')
         company_without_property = company_ids - companies_having_property
         company_without_property._create_production_location()
 

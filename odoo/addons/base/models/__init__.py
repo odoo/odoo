@@ -25,7 +25,6 @@ from . import ir_qweb
 from . import ir_qweb_fields
 from . import ir_http
 from . import ir_logging
-from . import ir_property
 from . import ir_module
 from . import ir_demo
 from . import ir_demo_failure

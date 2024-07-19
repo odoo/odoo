@@ -31,7 +31,7 @@ from .models import check_property_field_value_name
 from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
-    OrderedSet, sql, SQL, date_utils, unique,
+    OrderedSet, sql, SQL, date_utils, unique, lazy_property,
     image_process, merge_sequences, is_list_of,
     html_normalize, html_sanitize,
     DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT,
@@ -58,6 +58,10 @@ NO_ACCESS='.'
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
     'ir.model.relation', 'ir.model.constraint', 'ir.module.module',
+)
+
+COMPANY_DEPENDENT_FIELDS = (
+    'char', 'float', 'boolean', 'integer', 'text', 'many2one', 'date', 'datetime', 'selection', 'html'
 )
 
 _logger = logging.getLogger(__name__)
@@ -172,17 +176,10 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
     :param bool company_dependent: whether the field value is dependent of the current company;
 
-        The value isn't stored on the model table.  It is registered as `ir.property`.
-        When the value of the company_dependent field is needed, an `ir.property`
-        is searched, linked to the current company (and current record if one property
-        exists).
+        The value is stored on the model table as jsonb dict with the company id as the key.
 
-        If the value is changed on the record, it either modifies the existing property
-        for the current record (if one exists), or creates a new one for the current company
-        and res_id.
-
-        If the value is changed on the company side, it will impact all records on which
-        the value hasn't been changed.
+        The field's default values stored in model ir.default are used as fallbacks for
+        unspecified values in the jsonb dict.
 
     :param bool copy: whether the field value should be copied when the record
         is duplicated (default: ``True`` for normal fields, ``False`` for
@@ -277,8 +274,10 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     relational = False                  # whether the field is a relational one
     translate = False                   # whether the field is translated
 
-    column_type: typing.Tuple[str, str] | None = None  # database column type (ident, spec)
-    write_sequence = 0                  # field ordering for write()
+    write_sequence = 0  # field ordering for write()
+    # Database column type (ident, spec) for non-company-dependent fields.
+    # Company-dependent fields are stored as jsonb (see column_type).
+    _column_type: typing.Tuple[str, str] | None = None
 
     args = None                         # the parameters given to __init__()
     _module = None                      # the field's module name
@@ -461,18 +460,17 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
                 warnings.warn(f"precompute attribute has no impact on non stored field {self}")
                 attrs['precompute'] = False
         if attrs.get('company_dependent'):
-            # by default, company-dependent fields are not stored, not computed
-            # in superuser mode and not copied
-            attrs['store'] = False
-            attrs['compute_sudo'] = attrs.get('compute_sudo', False)
+            if attrs.get('required'):
+                warnings.warn(f"company_dependent field {self} cannot be required")
+            if attrs.get('translate'):
+                warnings.warn(f"company_dependent field {self} cannot be translated")
+            if self.type not in COMPANY_DEPENDENT_FIELDS:
+                warnings.warn(f"company_dependent field {self} is not one of the allowed types {COMPANY_DEPENDENT_FIELDS}")
             attrs['copy'] = attrs.get('copy', False)
-            attrs['default'] = attrs.get('default', self._default_company_dependent)
-            attrs['compute'] = self._compute_company_dependent
-            if not attrs.get('readonly'):
-                attrs['inverse'] = self._inverse_company_dependent
-            attrs['search'] = self._search_company_dependent
-            attrs['depends_context'] = attrs.get('depends_context', ()) + ('company',)
-
+            # speed up search and on delete
+            attrs['index'] = attrs.get('index', 'btree_not_null')
+            attrs['prefetch'] = attrs.get('prefetch', 'company_dependent')
+            attrs['_depends_context'] = ('company',)
         # parameters 'depends' and 'depends_context' are stored in attributes
         # '_depends' and '_depends_context', respectively
         if 'depends' in attrs:
@@ -769,6 +767,11 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     _related_groups = property(attrgetter('groups'))
     _related_aggregator = property(attrgetter('aggregator'))
 
+    @lazy_property
+    def column_type(self) -> tuple[str, str] | None:
+        """ Return the actual column type for this field, if stored as a column. """
+        return ('jsonb', 'jsonb') if self.company_dependent or self.translate else self._column_type
+
     @property
     def base_field(self):
         """ Return the base field of an inherited field, or ``self``. """
@@ -778,28 +781,11 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     # Company-dependent fields
     #
 
-    def _default_company_dependent(self, model):
-        return model.env['ir.property']._get(self.name, self.model_name)
-
-    def _compute_company_dependent(self, records):
-        # read property as superuser, as the current user may not have access
-        Property = records.env['ir.property'].sudo()
-        values = Property._get_multi(self.name, self.model_name, records.ids)
-        for record in records:
-            record[self.name] = values.get(record.id)
-
-    def _inverse_company_dependent(self, records):
-        # update property as superuser, as the current user may not have access
-        Property = records.env['ir.property'].sudo()
-        values = {
-            record.id: self.convert_to_write(record[self.name], record)
-            for record in records
-        }
-        Property._set_multi(self.name, self.model_name, values)
-
-    def _search_company_dependent(self, records, operator, value):
-        Property = records.env['ir.property'].sudo()
-        return Property.search_multi(self.name, self.model_name, operator, value)
+    def get_company_dependent_fallback(self, records):
+        assert self.company_dependent
+        fallback = records.env['ir.default']._get_model_defaults(records._name).get(self.name)
+        fallback = self.convert_to_cache(fallback, records, validate=False)
+        return self.convert_to_record(fallback, records)
 
     #
     # Setup of field triggers
@@ -975,7 +961,10 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     #
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        """ Convert ``value`` from the ``write`` format to the SQL format. """
+        """ Convert ``value`` from the ``write`` format to the SQL parameter
+        format for SQL conditions. This is used to compare a field's value when
+        the field actually stores multiple values (translated or company-dependent).
+        """
         if value is None or value is False:
             return None
         if isinstance(value, str):
@@ -984,6 +973,32 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             return value.decode()
         else:
             return str(value)
+
+    def convert_to_column_insert(self, value, record, values=None, validate=True):
+        """ Convert ``value`` from the ``write`` format to the SQL parameter
+        format for INSERT queries. This method handles the case of fields that
+        store multiple values (translated or company-dependent).
+        """
+        value = self.convert_to_column(value, record, values, validate)
+        if not self.company_dependent:
+            return value
+        fallback = record.env['ir.default']._get_model_defaults(record._name).get(self.name)
+        if value == self.convert_to_column(fallback, record):
+            return None
+        return PsycopgJson({record.env.company.id: value})
+
+    def convert_to_column_update(self, value, record):
+        """ Convert ``value`` from the ``to_flush`` format to the SQL parameter
+        format for UPDATE queries. The ``to_flush`` format is the same as the
+        cache format, except for translated fields (``{'lang_code': 'value', ...}``
+        or ``None``) and company-dependent fields (``{company_id: value, ...}``).
+        """
+        if self.company_dependent:
+            return PsycopgJson(value)
+        return self.convert_to_column_insert(
+            self.convert_to_write(value, record),
+            record,
+        )
 
     def convert_to_cache(self, value, record, validate=True):
         """ Convert ``value`` to the cache format; ``value`` may come from an
@@ -1470,7 +1485,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 class Boolean(Field[bool]):
     """ Encapsulates a :class:`bool`. """
     type = 'boolean'
-    column_type = ('bool', 'bool')
+    _column_type = ('bool', 'bool')
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
@@ -1485,7 +1500,7 @@ class Boolean(Field[bool]):
 class Integer(Field[int]):
     """ Encapsulates an :class:`int`. """
     type = 'integer'
-    column_type = ('int4', 'int4')
+    _column_type = ('int4', 'int4')
 
     aggregator = 'sum'
 
@@ -1574,7 +1589,7 @@ class Float(Field[float]):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
     @property
-    def column_type(self):
+    def _column_type(self):
         # Explicit support for "falsy" digits (0, False) to indicate a NUMERIC
         # field with no fixed precision. The values are saved in the database
         # with all significant digits.
@@ -1596,12 +1611,14 @@ class Float(Field[float]):
         return self.get_digits(env)
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        result = float(value or 0.0)
-        digits = self.get_digits(record.env)
-        if digits:
+        value_float = value = float(value or 0.0)
+        if digits := self.get_digits(record.env):
             precision, scale = digits
-            result = float_repr(float_round(result, precision_digits=scale), precision_digits=scale)
-        return result
+            value_float = float_round(value, precision_digits=scale)
+            value = float_repr(value_float, precision_digits=scale)
+        if self.company_dependent:
+            return value_float
+        return value
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -1634,7 +1651,7 @@ class Monetary(Field[float]):
     """
     type = 'monetary'
     write_sequence = 10
-    column_type = ('numeric', 'numeric')
+    _column_type = ('numeric', 'numeric')
 
     currency_field = None
     aggregator = 'sum'
@@ -1665,7 +1682,7 @@ class Monetary(Field[float]):
         assert self.get_currency_field(model) in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.get_currency_field(model))
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column_insert(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
         currency_field_name = self.get_currency_field(record)
         currency_field = record._fields[currency_field_name]
@@ -1757,21 +1774,20 @@ class _String(Field[str | typing.Literal[False]]):
         return func(term)
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        cache_value = self.convert_to_cache(value, record, validate)
-        if cache_value is None:
-            return None
-        if callable(self.translate):
-            # pylint: disable=not-callable
-            cache_value = self.translate(lambda t: None, cache_value)
-        if self.translate:
-            cache_value = {'en_US': cache_value, record.env.lang or 'en_US': cache_value}
-        return self._convert_from_cache_to_column(cache_value)
+        return self.convert_to_cache(value, record, validate)
 
-    def _convert_from_cache_to_column(self, value):
-        """ Convert from cache_raw value to column value """
-        if value is None:
-            return None
-        return PsycopgJson(value) if self.translate else value
+    def convert_to_column_insert(self, value, record, values=None, validate=True):
+        if self.translate:
+            value = self.convert_to_column(value, record, values, validate)
+            if value is None:
+                return None
+            return PsycopgJson({'en_US': value, record.env.lang or 'en_US': value})
+        return super().convert_to_column_insert(value, record, values, validate)
+
+    def convert_to_column_update(self, value, record):
+        if self.translate:
+            return PsycopgJson(value) if value else value
+        return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1781,7 +1797,11 @@ class _String(Field[str | typing.Literal[False]]):
             s = value.decode()
         else:
             s = str(value)
-        return s[:self.size]
+        value = s[:self.size]
+        if callable(self.translate):
+            # pylint: disable=not-callable
+            value = self.translate(lambda t: None, value)
+        return value
 
     def convert_to_record(self, value, record):
         if value is None:
@@ -1914,8 +1934,6 @@ class _String(Field[str | typing.Literal[False]]):
 
         # model term translation
         new_translations_list = []
-        # pylint: disable=not-callable
-        cache_value = self.translate(lambda t: None, cache_value)
         new_terms = set(self.get_trans_terms(cache_value))
         delay_translations = records.env.context.get('delay_translations')
         for record in records:
@@ -2004,8 +2022,8 @@ class Char(_String):
             "Char field %s with non-integer size %r" % (self, self.size)
 
     @property
-    def column_type(self):
-        return ('jsonb', 'jsonb') if self.translate else ('varchar', pg_varchar(self.size))
+    def _column_type(self):
+        return ('varchar', pg_varchar(self.size))
 
     def update_db_column(self, model, column):
         if (
@@ -2022,14 +2040,6 @@ class Char(_String):
     _description_size = property(attrgetter('size'))
     _description_trim = property(attrgetter('trim'))
 
-    def convert_to_column(self, value, record, values=None, validate=True):
-        if value is None or value is False:
-            return None
-        # we need to convert the string to a unicode object to be able
-        # to evaluate its length (and possibly truncate it) reliably
-        value = value.decode() if isinstance(value, bytes) else str(value)
-        return super().convert_to_column(value[:self.size], record, values, validate)
-
 
 class Text(_String):
     """ Very similar to :class:`Char` but used for longer contents, does not
@@ -2043,10 +2053,7 @@ class Text(_String):
     :type translate: bool or callable
     """
     type = 'text'
-
-    @property
-    def column_type(self):
-        return ('jsonb', 'jsonb') if self.translate else ('text', 'text')
+    _column_type = ('text', 'text')
 
 
 class Html(_String):
@@ -2065,6 +2072,7 @@ class Html(_String):
     :param bool strip_classes: whether to strip classes attributes (default: ``False``)
     """
     type = 'html'
+    _column_type = ('text', 'text')
 
     sanitize = True                     # whether value must be sanitized
     sanitize_overridable = False        # whether the sanitation can be bypassed by the users part of the `base.group_sanitize_override` group
@@ -2083,10 +2091,6 @@ class Html(_String):
             attrs['translate'] = html_translate
         return attrs
 
-    @property
-    def column_type(self):
-        return ('jsonb', 'jsonb') if self.translate else ('text', 'text')
-
     _related_sanitize = property(attrgetter('sanitize'))
     _related_sanitize_tags = property(attrgetter('sanitize_tags'))
     _related_sanitize_attributes = property(attrgetter('sanitize_attributes'))
@@ -2102,7 +2106,8 @@ class Html(_String):
     _description_strip_classes = property(attrgetter('strip_classes'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        return super().convert_to_column(self._convert(value, record, validate=True), record, values, validate=False)
+        value = self._convert(value, record, validate=True)
+        return super().convert_to_column(value, record, values, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
         return self._convert(value, record, validate)
@@ -2188,7 +2193,7 @@ class Html(_String):
 class Date(Field[date | typing.Literal[False]]):
     """ Encapsulates a python :class:`date <datetime.date>` object. """
     type = 'date'
-    column_type = ('date', 'date')
+    _column_type = ('date', 'date')
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
@@ -2268,6 +2273,11 @@ class Date(Field[date | typing.Literal[False]]):
         """
         return value.strftime(DATE_FORMAT) if value else False
 
+    def convert_to_column_update(self, value, record):
+        if self.company_dependent:
+            return PsycopgJson({k: self.to_string(v) or None for k, v in value.items()})
+        return super().convert_to_column_update(value, record)
+
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return None
@@ -2289,7 +2299,7 @@ class Date(Field[date | typing.Literal[False]]):
 class Datetime(Field[datetime | typing.Literal[False]]):
     """ Encapsulates a python :class:`datetime <datetime.datetime>` object. """
     type = 'datetime'
-    column_type = ('timestamp', 'timestamp')
+    _column_type = ('timestamp', 'timestamp')
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
@@ -2376,6 +2386,11 @@ class Datetime(Field[datetime | typing.Literal[False]]):
         """
         return value.strftime(DATETIME_FORMAT) if value else False
 
+    def convert_to_column_update(self, value, record):
+        if self.company_dependent:
+            return PsycopgJson({k: self.to_string(v) or None for k, v in value.items()})
+        return super().convert_to_column_update(value, record)
+
     def convert_to_cache(self, value, record, validate=True):
         return self.to_datetime(value)
 
@@ -2407,7 +2422,7 @@ class Binary(Field):
     _depends_context = ('bin_size',)    # depends on context (content or size)
     attachment = True                   # whether value is stored in attachment
 
-    @property
+    @lazy_property
     def column_type(self):
         return None if self.attachment else ('bytea', 'bytea')
 
@@ -2746,7 +2761,7 @@ class Selection(Field[str | typing.Literal[False]]):
     ``related`` or extended fields.
     """
     type = 'selection'
-    column_type = ('varchar', pg_varchar())
+    _column_type = ('varchar', pg_varchar())
 
     selection = None            # [(value, string), ...], function or method name
     validate = True             # whether validating upon write
@@ -2908,7 +2923,7 @@ class Selection(Field[str | typing.Literal[False]]):
     def convert_to_column(self, value, record, values=None, validate=True):
         if validate and self.validate:
             value = self.convert_to_cache(value, record)
-        return super(Selection, self).convert_to_column(value, record, values, validate)
+        return super().convert_to_column(value, record, values, validate)
 
     def convert_to_cache(self, value, record, validate=True):
         if not validate or self._selection is None:
@@ -2937,9 +2952,7 @@ class Reference(Selection):
     """
     type = 'reference'
 
-    @property
-    def column_type(self):
-        return ('varchar', pg_varchar())
+    _column_type = ('varchar', pg_varchar())
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return Field.convert_to_column(self, value, record, values, validate)
@@ -3086,7 +3099,7 @@ class Many2one(_Relational[M]):
         company_id(s) are compatible with the currently active company.
     """
     type = 'many2one'
-    column_type = ('int4', 'int4')
+    _column_type = ('int4', 'int4')
 
     ondelete = None                     # what to do when value is deleted
     auto_join = False                   # whether joins are generated upon search
@@ -3144,6 +3157,8 @@ class Many2one(_Relational[M]):
         model.pool.post_init(self.update_db_foreign_key, model, column)
 
     def update_db_foreign_key(self, model, column):
+        if self.company_dependent:
+            return
         comodel = model.env[self.comodel_name]
         # foreign keys do not work on views, and users can define custom models on sql views.
         if not model._is_an_ordinary_table() or not comodel._is_an_ordinary_table():
@@ -3368,7 +3383,7 @@ class Json(Field):
     """
 
     type = 'json'
-    column_type = ('jsonb', 'jsonb')
+    _column_type = ('jsonb', 'jsonb')
 
     def convert_to_record(self, value, record):
         """ Return a copy of the value """
@@ -3411,7 +3426,7 @@ class Properties(Field):
     field definition (property type, ...).
     """
     type = 'properties'
-    column_type = ('jsonb', 'jsonb')
+    _column_type = ('jsonb', 'jsonb')
     copy = False
     prefetch = False
     write_sequence = 10              # because it must be written after the definition field
@@ -3949,7 +3964,7 @@ class PropertiesDefinition(Field):
     of expected properties on subrecords. It is used to check the properties
     definition. """
     type = 'properties_definition'
-    column_type = ('jsonb', 'jsonb')
+    _column_type = ('jsonb', 'jsonb')
     copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
     prefetch = True

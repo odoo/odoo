@@ -19,7 +19,7 @@
             <field name="arch" type="xml">
                 <group name="logistics" position="after">
                     <group string="Inventory Valuation">
-                        <field name="property_cost_method"/>
+                        <field name="property_cost_method" required="True"/>
                         <label for="property_valuation" groups="stock_account.group_stock_accounting_automatic"/>
                         <div groups="stock_account.group_stock_accounting_automatic">
                             <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
@@ -36,7 +36,7 @@
             <field name="arch" type="xml">
                 <group name="account_property" position="inside">
                     <group name="account_stock_property" string="Account Stock Properties" groups="account.group_account_readonly" invisible="property_valuation == 'manual_periodic'">
-                        <field name="property_valuation" invisible="1"/>
+                        <field name="property_valuation" invisible="True" required="True"/>
                         <field name="property_stock_valuation_account_id" options="{'no_create': True}" required="property_valuation == 'real_time'"/>
                         <field name="property_stock_journal" required="property_valuation == 'real_time'" />
                         <field name="property_stock_account_input_categ_id" options="{'no_create': True}" required="property_valuation == 'real_time'" />

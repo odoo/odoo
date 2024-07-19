@@ -663,7 +663,7 @@ class TestIrPropertyOptimizations(TransactionCase):
         self.Eggs = self.env['test_performance.eggs']
 
     def test_with_falsy_default(self):
-        self.assertFalse(self.env['ir.property']._get('property_eggs', 'test_performance.bacon'))
+        self.assertFalse(self.env['ir.default']._get('test_performance.bacon', 'property_eggs', company_id=True))
 
         # warmup
         eggs = self.Eggs.create({})
@@ -689,9 +689,9 @@ class TestIrPropertyOptimizations(TransactionCase):
 
     def test_with_truthy_default(self):
         eggs = self.Eggs.create({})
-        self.env['ir.property']._set_default("property_eggs", "test_performance.bacon", eggs)
+        self.env['ir.default'].set("test_performance.bacon", "property_eggs", eggs.id)
 
-        self.assertEqual(eggs, self.env['ir.property']._get('property_eggs', 'test_performance.bacon'))
+        self.assertEqual(eggs.id, self.env['ir.default']._get('test_performance.bacon', 'property_eggs'))
 
         # warmup
         self.Bacon.create({})

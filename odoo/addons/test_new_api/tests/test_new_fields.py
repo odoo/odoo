@@ -11,6 +11,7 @@ import io
 from PIL import Image
 from unittest.mock import patch
 import psycopg2
+import threading
 
 from odoo import models, fields, Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -1503,12 +1504,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         tag2 = self.env['test_new_api.multi.tag'].create({'name': 'Quuz'})
 
         # create default values for the company-dependent fields
-        self.env['ir.property']._set_default('foo', 'test_new_api.company', 'default')
-        self.env['ir.property']._set_default('foo', 'test_new_api.company', 'default1', company1)
-        self.env['ir.property']._set_default('tag_id', 'test_new_api.company', tag0)
+        self.env['ir.default'].set('test_new_api.company', 'foo', 'default')
+        self.env['ir.default'].set('test_new_api.company', 'foo', 'default1', company_id=company1.id)
+        self.env['ir.default'].set('test_new_api.company', 'tag_id', tag0.id)
 
-        # assumption: users don't have access to 'ir.property'
-        accesses = self.env['ir.model.access'].search([('model_id.model', '=', 'ir.property')])
+        # assumption: users don't have access to 'ir.default'
+        accesses = self.env['ir.model.access'].search([('model_id.model', '=', 'ir.default')])
         accesses.write(dict.fromkeys(['perm_read', 'perm_write', 'perm_create', 'perm_unlink'], False))
 
         # create/modify a record, and check the value for each user
@@ -1620,12 +1621,13 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             This assumes that filtered_domain() correctly filters records when
             its domain refers to company-dependent fields.
         """
-        Property = self.env['ir.property']
+        IrDefault = self.env['ir.default']
         Model = self.env['test_new_api.company']
 
         # create 4 records for all cases: two with explicit truthy values, one
         # with an explicit falsy value, and one without an explicit value
         records = Model.create([{}] * 4)
+        record_fallback = Model.create({})
 
         # For each field, we assign values to the records, and test a number of
         # searches.  The search cases are given by comparison operators, and for
@@ -1634,39 +1636,54 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         # search performed by filtered_domain().
 
         def test_field(field_name, truthy_values, operations):
-            # set ir.properties to all records except the last one
-            Property._set_multi(
-                field_name, Model._name,
-                {rec.id: val for rec, val in zip(records, truthy_values + [False])},
-                # Using this sentinel for 'default_value' forces the method to
-                # create 'ir.property' records for the value False. Without it,
-                # no property would be created because False is the default
-                # value.
-                default_value=object(),
-            )
+            # set ir.defaults to all records except the last one
+            for rec, val in zip(records, truthy_values + [False]):
+                rec[field_name] = val
 
             # test without default value
             test_cases(field_name, operations)
 
             # set default value to False
-            Property._set_default(field_name, Model._name, False)
+            IrDefault.set(Model._name, field_name, False)
             self.env.flush_all()
             self.env.invalidate_all()
+            for rec, val in zip(records, truthy_values + [False]):
+                rec[field_name] = val
             test_cases(field_name, operations, False)
 
             # set default value to truthy_values[0]
-            Property._set_default(field_name, Model._name, truthy_values[0])
+            IrDefault.set(Model._name, field_name, truthy_values[0])
             self.env.flush_all()
             self.env.invalidate_all()
+            for rec, val in zip(records, truthy_values + [False]):
+                rec[field_name] = val
             test_cases(field_name, operations, truthy_values[0])
 
         def test_cases(field_name, operations, default=None):
-            field_type = Model._fields[field_name].type
+            model = self.env['test_new_api.company']
+            field = model._fields[field_name]
+            field_fallback = field.get_company_dependent_fallback(model)
+            record_fallback[field_name] = field_fallback
+            current_thread = threading.current_thread()
+
             for operator, values in operations.items():
-                # TODO complement of dates is not working correctly, skip for now
-                test_complement = "date" not in field_type
                 for value in values:
                     domain = [(field_name, operator, value)]
+                    company_dependent_column_not_null = not record_fallback.filtered_domain(domain)
+                    if company_dependent_column_not_null:
+                        with self.subTest(domain=domain, default=default):
+                            Model.search([('id', 'in', records.ids)] + domain)
+                            current_thread.query_count = 0
+                            current_thread.query_time = 0
+                            Model.search([('id', 'in', records.ids)] + domain)  # warmup
+                            if current_thread.query_count:
+                                # parent_of and child_of may need extra queries
+                                expected_contained_sqls = [''] * (current_thread.query_count - 1) + [f'"test_new_api_company"."{field_name}" IS NOT NULL']
+                                with self.assertQueriesContain(expected_contained_sqls):
+                                    Model.search([('id', 'in', records.ids)] + domain)
+
+                    # TODO complement of dates, child_of and parent_of are not working correctly, skip for now
+                    test_complement = "date" not in field.type and operator not in ['child_of', 'parent_of']
                     with self.subTest(domain=domain, default=default):
                         self._search(
                             Model,
@@ -1742,6 +1759,22 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             'not in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
             'any': ([('name', '=', tag1.name)], [('name', '=', False)], []),
             'not any': ([('name', '=', tag1.name)], [('name', '=', False)], []),
+        })
+
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A1', 'parent_id': company0.id})
+        company2 = self.env['res.company'].create({'name': 'B1', 'parent_id': company1.id})
+
+        company1.partner_id.parent_id = company0.partner_id
+        company2.partner_id.parent_id = company1.partner_id
+        self.env.invalidate_all()
+        test_field('company_id', [company1.id, company2.id], {
+            'child_of': (company0.id, company1.id, company2.id),
+            'parent_of': (company0.id, company1.id, company2.id),
+        })
+        test_field('partner_id', [company1.id, company2.id], {
+            'child_of': (company0.partner_id.id, company1.partner_id.id, company2.partner_id.id),
+            'parent_of': (company0.partner_id.id, company1.partner_id.id, company2.partner_id.id),
         })
 
     def test_29_company_dependent_html(self):

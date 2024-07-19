@@ -49,7 +49,7 @@ class Location(models.Model):
              "\n* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products"
              "\n* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations")
     location_id = fields.Many2one(
-        'stock.location', 'Parent Location', index=True, ondelete='cascade', check_company=True,
+        'stock.location', 'Parent Location', index=True, check_company=True,
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
     child_ids = fields.One2many('stock.location', 'location_id', 'Contains')
     child_internal_location_ids = fields.Many2many(
@@ -260,6 +260,9 @@ class Location(models.Model):
         res = super().write(values)
         self.invalidate_model(['warehouse_id'])
         return res
+
+    def unlink(self):
+        return super(Location, self.search([('id', 'child_of', self.ids)])).unlink()
 
     @api.model
     def name_create(self, name):

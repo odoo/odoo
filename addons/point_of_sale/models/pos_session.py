@@ -783,8 +783,11 @@ class PosSession(models.Model):
         return self._credit_amounts(partial_vals, imbalance_amount_session, imbalance_amount)
 
     def _get_balancing_account(self):
-        propoerty_account = self.env['ir.property']._get('property_account_receivable_id', 'res.partner')
-        return self.company_id.account_default_pos_receivable_account_id or propoerty_account or self.env['account.account']
+        return (
+            self.company_id.account_default_pos_receivable_account_id
+            or self.env['res.partner']._fields['property_account_receivable_id'].get_company_dependent_fallback(self.env['res.partner'])
+            or self.env['account.account']
+        )
 
     def _create_account_move(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         """ Create account.move and account.move.line records for this session.

@@ -44,9 +44,11 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                                                  'account_type': 'asset_receivable',
                                                  'reconcile': True})
         env.company.account_default_pos_receivable_account_id = cls.account_receivable
-        env['ir.property']._set_default('property_account_receivable_id', 'res.partner', cls.account_receivable, main_company)
+        env['ir.default'].set('res.partner', 'property_account_receivable_id', cls.account_receivable.id, company_id=main_company.id)
         # Pricelists are set below, do not take demo data into account
-        env['ir.property'].sudo().search([('name', '=', 'property_product_pricelist')]).unlink()
+        env['res.partner'].sudo().invalidate_model(['property_product_pricelist', 'specific_property_product_pricelist'])
+        # remove the all specific values for all companies only for test
+        env.cr.execute('UPDATE res_partner SET specific_property_product_pricelist = NULL')
 
         # Create user.
         cls.pos_user = cls.env['res.users'].create({
@@ -522,7 +524,8 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         # Change the default sale pricelist of customers,
         # so the js tests can expect deterministically this pricelist when selecting a customer.
-        env['ir.property']._set_default("property_product_pricelist", "res.partner", public_pricelist, main_company)
+        # bad hack only for test
+        env['ir.default'].set("res.partner", "specific_property_product_pricelist", public_pricelist.id, company_id=main_company.id)
 
 
 @tagged('post_install', '-at_install')
