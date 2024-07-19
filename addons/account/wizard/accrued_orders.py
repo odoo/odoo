@@ -177,7 +177,17 @@ class AccruedExpenseRevenue(models.TransientModel):
                 for order_line in lines:
                     if is_purchase:
                         account = self._get_computed_account(order, order_line.product_id, is_purchase)
-                        amount_currency = order_line.currency_id.round(order_line.qty_to_invoice * order_line.price_unit)
+                        if any(tax.price_include for tax in order_line.taxes_id):
+                            # As included taxes are not taken into account in the price_unit, we need to compute the price_subtotal
+                            price_subtotal = order_line.taxes_id.compute_all(
+                                order_line.price_unit,
+                                currency=order_line.order_id.currency_id,
+                                quantity=order_line.qty_to_invoice,
+                                product=order_line.product_id,
+                                partner=order_line.order_id.partner_id)['total_excluded']
+                        else:
+                            price_subtotal = order_line.qty_to_invoice * order_line.price_unit
+                        amount_currency = order_line.currency_id.round(price_subtotal)
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
                         label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
