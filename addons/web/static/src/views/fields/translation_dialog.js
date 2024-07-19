@@ -18,6 +18,7 @@ export class TranslationDialog extends Component {
         close: Function,
         isText: { type: Boolean, optional: true },
         showSource: { type: Boolean, optional: true },
+        updateTranslations: { type: Function, optional: true },
     };
     setup() {
         super.setup();
@@ -104,6 +105,16 @@ export class TranslationDialog extends Component {
             this.props.fieldName,
             translations,
         ]);
+
+        if (this.props.updateTranslations) {
+            // Get the translations (possibly modified due to backend rules)
+            const [fieldTranslations] = await this.orm.call(this.props.resModel, "get_field_translations", [
+                this.props.resId,
+                this.props.fieldName,
+            ]);
+            // Provide the new translations to parent components if needed
+            this.props.updateTranslations(fieldTranslations);
+        }
 
         await this.props.onSave();
         this.props.close();

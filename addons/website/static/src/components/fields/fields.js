@@ -8,7 +8,8 @@ import {Switch} from '@website/components/switch/switch';
 import {registry} from '@web/core/registry';
 import {TranslationButton} from "@web/views/fields/translation_button";
 import { _t } from '@web/core/l10n/translation';
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onWillStart } from "@odoo/owl";
+import { user } from "@web/core/user";
 
 /**
  * Displays website page dependencies and URL redirect options when the page URL
@@ -23,21 +24,54 @@ class PageUrlField extends Component {
     };
 
     setup() {
+        this.websiteService = useService("website");
         this.orm = useService('orm');
         this.serverUrl = `${window.location.origin}/`;
-        this.pageUrl = this.fieldURL;
 
         this.state = useState({
             redirect_old_url: false,
-            url: this.pageUrl,
+            url: this.fieldURL,
             redirect_type: '301',
+            original_url: '',
+            url_translate: '',
+        });
+        onWillStart(async () => {
+            const { resModel, resId } = this.props.record;
+            const resField = this.props.name;
+            // The default website lang is the one of the metadata or the
+            // current one otherwise.
+            this.defaultWebsiteLangCode = this.websiteService.currentWebsite.metadata.lang;
+            const defaultWebsiteLang = this.websiteService.currentWebsite.metadata.defaultLangName;
+            if (defaultWebsiteLang) {
+                const installedLangInfos = await this.orm.call("res.lang", "get_installed" , []);
+                this.defaultWebsiteLangCode = installedLangInfos.find(installedLangInfo => installedLangInfo[1].includes(defaultWebsiteLang.trim()))[0];
+            }
+            // Retrieve the url translations
+            const [fieldTranslations] = await this.orm.call(resModel, "get_field_translations", [
+                resId,
+                resField,
+            ]);
+            this.urlTranslations = {};
+            fieldTranslations.forEach(element => {
+                this.urlTranslations[element.lang] = element.value;
+            });
+            this.state.original_url = this.urlTranslationInWebsiteDefaultLang;
+            this.state.url_translate = this.urlTranslationInWebsiteDefaultLang;
+            this.isUserLangSameThanWebsite = user.lang == this.defaultWebsiteLangCode;
         });
 
         useInputField({getValue: () => this.fieldURL});
     }
 
     get enableRedirect() {
-        return this.state.url !== this.pageUrl;
+        return this.urlInWebsiteDefaultLangue !== this.state.original_url;
+    }
+
+    get urlInWebsiteDefaultLangue() {
+        if (this.isUserLangSameThanWebsite) {
+            return `/${this.state.url}`;
+        }
+        return this.urlTranslationInWebsiteDefaultLang;
     }
 
     onChangeRedirectOldUrl(value) {
@@ -50,6 +84,10 @@ class PageUrlField extends Component {
         return (value.url !== undefined ? value.url : value).replace(/^\//g, '');
     }
 
+    get urlTranslationInWebsiteDefaultLang() {
+        return this.urlTranslations[this.defaultWebsiteLangCode];
+    }
+
     get isTranslatable() {
         return this.props.record.fields[this.props.name].translate;
     }
@@ -58,6 +96,19 @@ class PageUrlField extends Component {
         // HACK: update redirect data from the URL field.
         // TODO: remove this and use a transient model with redirect fields.
         this.props.record.update({ [this.props.name]: this.state });
+    }
+
+    updateTranslations(fieldTranslations) {
+        // Update the translations with the new values
+        fieldTranslations.forEach(element => {
+            this.urlTranslations[element.lang] = element.value;
+        });
+        // Update the url state if the website default language is the same than
+        // the user default language.
+        if (this.isUserLangSameThanWebsite) {
+            this.state.url = this.urlTranslationInWebsiteDefaultLang.substring(1);
+        }
+        this.state.url_translate = this.urlTranslationInWebsiteDefaultLang;
     }
 }
 

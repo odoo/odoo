@@ -16,7 +16,7 @@ import { Component } from "@odoo/owl";
 export function useTranslationDialog() {
     const addDialog = useOwnedDialogs();
 
-    async function openTranslationDialog({ record, fieldName }) {
+    async function openTranslationDialog({ record, fieldName, updateTranslations }) {
         const saved = await record.save();
         if (!saved) {
             return;
@@ -32,6 +32,7 @@ export function useTranslationDialog() {
             onSave: async () => {
                 await record.load();
             },
+            updateTranslations: updateTranslations,
         });
     }
 
@@ -43,6 +44,7 @@ export class TranslationButton extends Component {
     static props = {
         fieldName: { type: String },
         record: { type: Object },
+        updateTranslations: { type: Function, optional: true },
     };
 
     setup() {
@@ -57,7 +59,7 @@ export class TranslationButton extends Component {
     }
 
     onClick() {
-        const { fieldName, record } = this.props;
-        this.translationDialog({ fieldName, record });
+        const { fieldName, record, updateTranslations } = this.props;
+        this.translationDialog({ fieldName, record, updateTranslations });
     }
 }

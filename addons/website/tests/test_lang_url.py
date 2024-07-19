@@ -246,3 +246,11 @@ class TestTranslateUrl(TestLangUrl):
         self.assertEqual(self.website.homepage_url, self.name_page_fr)
         self.page.is_homepage = False
         self.assertEqual(self.website.homepage_url, '')
+
+    def test_redirect_on_new_url(self):
+        # If the user modifies a url in the website default language, it should
+        # have the possibility to create a url redirection.
+        self.website.default_lang_id = self.lang_fr
+        self.start_tour('/contactus', 'update_default_lang_website_url', login='admin')
+        website_rewrite = self.env['website.rewrite'].search([('url_from', '=', '/contactus'), ('url_to', '=', '/contactus-fr')])
+        self.assertEqual(len(website_rewrite), 1, "A rewrite route should have been created")

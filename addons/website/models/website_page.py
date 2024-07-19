@@ -163,7 +163,7 @@ class Page(models.Model):
         self.env.registry.clear_cache()
         return super().unlink()
 
-    def _handle_url_update(self, page, website_id, url, lang, redirect_old_url=None, name=None, redirect_type=None):
+    def _handle_url_update(self, page, website_id, url, lang, redirect_old_url=None, name=None, redirect_type=None, original_url=None, url_translate=None):
         """ Handles a url update. More specifically, it slugifies it and makes
         sure that the url is unique, handles redirection update, updates page
         menus and website homepage url if needed.
@@ -174,6 +174,9 @@ class Page(models.Model):
         :param redirect_old_url: True if a url redirection is needed.
         :param name: The page name.
         :param redirect_type: The type of redirection.
+        :param original_url: The url before modifications were applied.
+        :param url_translate: The translation of the url in the website default
+        language.
         """
         # Slugify the translated url
         url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
@@ -182,14 +185,6 @@ class Page(models.Model):
             # Make sure that the slugified url is unique
             url = self.env['website'].with_context(website_id=website_id, lang=lang).get_unique_path(url)
             page.menu_ids.with_context(lang=lang).write({'url': url})
-            if redirect_old_url:
-                self.env['website.rewrite'].create({
-                    'name': name,
-                    'redirect_type': redirect_type,
-                    'url_from': page.url,
-                    'url_to': url,
-                    'website_id': website_id,
-                })
             # Handle the synchronization of website's homepage URL if the lang
             # is the default website language.
             website = self.env['website'].get_current_website().with_context(lang=lang)
@@ -199,6 +194,22 @@ class Page(models.Model):
                 website._handle_homepage_url(page_url_normalized)
                 if website.homepage_url == page_url_normalized['homepage_url']:
                     website.homepage_url = url
+        if redirect_old_url:
+            # The redirection is done for url in the default website language.
+            # If the website default language is the same than the user default
+            # language, take `url` as the new url for the redirection as it
+            # could have been modified by the slugify process. If the website
+            # default language is not the same than the user default language,
+            # take the translation in the website default language.
+            is_user_lang_same_than_website = self.env.user.lang == self.env['website'].browse(website_id).default_lang_id.code
+            url_to = url if is_user_lang_same_than_website else url_translate
+            self.env['website.rewrite'].create({
+                'name': name,
+                'redirect_type': redirect_type,
+                'url_from': original_url,
+                'url_to': url_to,
+                'website_id': website_id,
+            })
         return url
 
     def _update_field_translations(self, fname, translations, digest=None, source_lang=None):
@@ -218,16 +229,19 @@ class Page(models.Model):
             # If URL has been edited, slug it
             if 'url' in vals:
                 url = vals['url'] or ''
-                redirect_old_url = redirect_type = None
+                redirect_old_url = redirect_type = original_url = url_translate = None
                 # TODO This should be done another way after the backend/frontend merge
                 if isinstance(url, dict):
                     redirect_old_url = url.get('redirect_old_url')
                     redirect_type = url.get('redirect_type')
+                    original_url = url.get('original_url')
+                    url_translate = url.get('url_translate')
                     url = url.get('url')
                 name = vals.get('name') or page.name
                 vals['url'] = self._handle_url_update(
                     page, website_id, url, self.env.user.lang, redirect_old_url=redirect_old_url,
-                    name=name, redirect_type=redirect_type
+                    name=name, redirect_type=redirect_type, original_url=original_url,
+                    url_translate=url_translate,
                 )
 
             # If name has changed, check for key uniqueness

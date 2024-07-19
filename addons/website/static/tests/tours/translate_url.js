@@ -2,7 +2,19 @@
 
 import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
-const translateUrl = function (newUrl) {
+const translateUrl = function (newUrl, checkRedirect = false) {
+    let activateRedirectIfNeeded = [];
+    if (checkRedirect) {
+        activateRedirectIfNeeded = [{
+            content: "Click on the redirect toggle on the 'Page Properties'",
+            trigger: ".modal-content:contains('Page Properties') label:contains('Redirect Old URL') span:first-of-type",
+            run: "click",
+        }, {
+            content: "Ensure that the option is toggled",
+            trigger: ".modal-content:contains('Page Properties') #redirect_type",
+        },
+    ];
+    }
     return [{
         content: "Click on the 'Site' button",
         trigger: "button:contains('Site')",
@@ -28,7 +40,8 @@ const translateUrl = function (newUrl) {
         content: "Click on 'Save'",
         trigger: ".modal-content:contains('Translate: url') footer button:contains('Save')",
         run: "click",
-    }, {
+    },
+    ... activateRedirectIfNeeded, {
         content: "Click on 'Save and Close'",
         trigger: ".modal-content:contains('Page Properties') footer button:contains('Save & Close')",
         run: "click",
@@ -62,3 +75,9 @@ registerWebsitePreviewTour("update_homepage_url", {
     ...translateUrl("/contactus-fr"),
 ]);
 
+registerWebsitePreviewTour("update_default_lang_website_url", {
+    test: true,
+    url: "/contactus",
+}, () => [
+    ...translateUrl("/contactus-fr", true),
+]);
