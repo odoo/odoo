@@ -3,6 +3,7 @@
     <record id="tax_report" model="account.report">
         <field name="name">Tax Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.bo"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -391,6 +392,13 @@
                     <record id="l10n_bo_tax_report_iva_difference" model="account.report.line">
                         <field name="name">Determination of the difference</field>
                         <field name="code">l10n_bo_tax_report_iva_difference</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bo_tax_report_closing_expr" model="account.report.expression">
+                                <field name="label">_tax_closing</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_bo_tax_report_iva_19.tax_amount + l10n_bo_tax_report_iva_debit_donations.balance - l10n_bo_tax_report_iva_30.tax_amount</field>
+                            </record>
+                        </field>
                         <field name="children_ids">
                             <record id="l10n_bo_tax_report_iva_693" model="account.report.line">
                                 <field name="name">Difference in favor of the Taxpayer (C1004-C1002; If >0)</field>

@@ -3,6 +3,7 @@
     <record id="account_tax_report_bj" model="account.report">
         <field name="name">VAT Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.bj"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -198,6 +199,11 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">BJ_GROSS.balance - BJ_VAT_DEDUCTIBLE.balance</field>
                                 <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="l10n_bj_tax_report_closing_expr" model="account.report.expression">
+                                <field name="label">_tax_closing</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BJ_GROSS.balance - (BJ_GOODS_SERVICES.balance + BJ_ASSETS.balance)</field>
                             </record>
                         </field>
                     </record>

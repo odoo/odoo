@@ -3,6 +3,7 @@
     <record id="tr_form" model="account.report">
         <field name="name">Bangladesh Tax Report (BD)</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.bd"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -268,6 +269,13 @@
             <record id="tr_title_net_vat_due" model="account.report.line">
                 <field name="name">Net VAT Due</field>
                 <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_bd_tax_report_closing_expr" model="account.report.expression">
+                        <field name="label">_tax_closing</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SAL2.taxbalance + SAL45.taxbalance + SAL5.taxbalance + SAL75.taxbalance + SAL10.taxbalance + SAL15.taxbalance - (PUR2.taxbalance + PUR45.taxbalance + PUR5.taxbalance + PUR75.taxbalance + PUR10.taxbalance + PUR15.taxbalance)</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="tr_line_S_net_vat" model="account.report.line">
                         <field name="name">Sales VAT Received (Payable)</field>

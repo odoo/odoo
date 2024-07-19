@@ -3,6 +3,7 @@
     <record id="tax_report" model="account.report">
         <field name="name">Tax Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.ae"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -463,6 +464,13 @@
                 <field name="name">Net VAT Due</field>
                 <field name="aggregation_formula">((STD_RATE_SUPP_TAX_AB.balance + STD_RATE_SUPP_TAX_DB.balance + STD_RATE_SUPP_TAX_SJ.balance + STD_RATE_SUPP_TAX_AJ.balance + STD_RATE_SUPP_TAX_UM.balance + STD_RATE_SUPP_TAX_RA.balance + STD_RATE_SUPP_TAX_FU.balance) + OUT_OF_SCOPE_TAX_0.balance + ADJUST_GOODS_IMPORT_IN_UAE_TAX.balance + GOODS_IMPORT_IN_UAE_TAX.balance + EXAMPT_SUPP_TAX.balance + ZERO_RATE_SUPP_TAX.balance + REVERSE_CHARGE_PRO_TAX.balance + TAX_REF_TOUR_SCHEME_TAX.balance) - (OUT_OF_SCOPE_1_TAX.balance + SUPP_REV_CHARGE_PRO_TAX.balance + STD_RATE_EXPENSES_TAX.balance)</field>
                 <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_ae_tax_report_closing_expr" model="account.report.expression">
+                        <field name="label">_tax_closing</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">((STD_RATE_SUPP_TAX_AB.balance + STD_RATE_SUPP_TAX_DB.balance + STD_RATE_SUPP_TAX_SJ.balance + STD_RATE_SUPP_TAX_AJ.balance + STD_RATE_SUPP_TAX_UM.balance + STD_RATE_SUPP_TAX_RA.balance + STD_RATE_SUPP_TAX_FU.balance) + EXAMPT_SUPP_TAX.balance + ZERO_RATE_SUPP_TAX.balance + REVERSE_CHARGE_PRO_TAX.balance + TAX_REF_TOUR_SCHEME_TAX.balance) - (SUPP_REV_CHARGE_PRO_TAX.balance + STD_RATE_EXPENSES_TAX.balance)</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="tax_report_line_total_value_due_tax_period" model="account.report.line">
                         <field name="name">14. Total value of due tax for the period</field>

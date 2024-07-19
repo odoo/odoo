@@ -3,6 +3,7 @@
     <record id="tax_report" model="account.report">
         <field name="name">Tax Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.fr"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -311,6 +312,18 @@
                 <field name="children_ids">
                     <record id="tax_report_tva_brute" model="account.report.line">
                         <field name="name">Gross VAT</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_closing_expr" model="account.report.expression">
+                                <field name="label">_tax_closing_domain</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">(box_08_taxe.balance_from_tags + box_09_taxe.balance_from_tags + box_9B_taxe.balance_from_tags + box_10_taxe.balance_from_tags + box_11_taxe.balance_from_tags + box_13_taxe.balance + box_14_taxe.balance + box_T1_taxe.balance_from_tags + box_T2_taxe.balance_from_tags + box_T3_taxe.balance_from_tags + box_T4_taxe.balance_from_tags + box_T5_taxe.balance_from_tags + box_T6_taxe.balance_from_tags + box_T7_taxe.balance + box_P1_taxe.balance_from_tags + box_P2_taxe.balance_from_tags + box_I1_taxe.balance_from_tags + box_I2_taxe.balance_from_tags + box_I3_taxe.balance_from_tags + box_I4_taxe.balance_from_tags + box_I5_taxe.balance_from_tags + box_I6_taxe.balance_from_tags + box_15.balance + box_5B.balance) - (box_19.balance + box_20.balance + box_21.balance + box_2C.balance)</field>
+                            </record>
+                            <record id="tax_report_closing_rounded_expr" model="account.report.expression">
+                                <field name="label">_tax_closing</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_16.balance - (box_19.balance + box_20.balance + box_21.balance + box_2C.balance)</field>
+                            </record>
+                        </field>
                     </record>
                     <record id="tax_report_tva_brute_metropo" model="account.report.line">
                         <field name="name">Operations carried out in mainland France</field>

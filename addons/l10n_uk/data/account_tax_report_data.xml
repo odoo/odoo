@@ -3,6 +3,7 @@
     <record id="tax_report" model="account.report">
         <field name="name">Tax Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.uk"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -17,6 +18,13 @@
                 <field name="name">VAT Calculations</field>
                 <field name="aggregation_formula">UKTAX_1.balance + UKTAX_2.balance + UKTAX_4.balance</field>
                 <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_uk_tax_report_closing_expr" model="account.report.expression">
+                        <field name="label">_tax_closing</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">UKTAX_1.balance + UKTAX_2.balance - UKTAX_4.balance</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_vat_box1" model="account.report.line">
                         <field name="name">[BOX 1] VAT due on sales and other outputs</field>

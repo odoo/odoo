@@ -42,6 +42,7 @@ class AccountReport(models.Model):
         compute="_compute_use_sections", store=True, readonly=False,
         help="Create a structured report with multiple sections for convenient navigation and simultaneous printing.",
     )
+    use_tax_closing = fields.Boolean(string='Use tax closing entry', default=False)
     chart_template = fields.Selection(string="Chart of Accounts", selection=lambda self: self.env['account.chart.template']._select_chart_template())
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
     only_tax_exigible = fields.Boolean(

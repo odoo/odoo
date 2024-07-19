@@ -3,6 +3,7 @@
     <record id="tax_report_vat" model="account.report">
         <field name="name">VAT Return</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.be"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -419,6 +420,13 @@
             <record id="tax_report_title_taxes" model="account.report.line">
                 <field name="name">Taxes</field>
                 <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_closing_expr" model="account.report.expression">
+                        <field name="label">_tax_closing</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">(c54.balance + c55.balance + c56.balance + c57.balance + c61.balance + c63.balance) - (c59.balance + c62.balance + c64.balance)</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="tax_report_title_taxes_dues" model="account.report.line">
                         <field name="name">IV Due</field>

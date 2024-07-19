@@ -3,6 +3,7 @@
     <record id="tax_report_104" model="account.report">
         <field name="name">104</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.ec"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -1451,6 +1452,7 @@
     <record id="tax_report_103" model="account.report">
         <field name="name">103</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.ec"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>

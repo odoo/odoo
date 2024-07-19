@@ -3,6 +3,7 @@
     <record id="vat" model="account.report">
         <field name="name">2550Q</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.ph"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>

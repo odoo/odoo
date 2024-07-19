@@ -3,6 +3,7 @@
     <record id="l10n_ca_tr_gsthst" model="account.report">
         <field name="name">GST/HST report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.ca"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -186,6 +187,7 @@
     <record id="l10n_ca_tr_pst_bc" model="account.report">
         <field name="name">British-Columbia PST report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.ca"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -332,6 +334,7 @@
     <record id="l10n_ca_tr_pst_mb" model="account.report">
         <field name="name">Manitoba PST report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.ca"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -428,6 +431,7 @@
     <record id="l10n_ca_tr_qst" model="account.report">
         <field name="name">Quebec Tax report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.ca"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -658,6 +662,7 @@
     <record id="l10n_ca_tr_pst_sk" model="account.report">
         <field name="name">Saskatchewan PST report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.ca"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>

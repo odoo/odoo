@@ -3,6 +3,7 @@
     <record id="l10n_kz_tr_form_300_00" model="account.report">
         <field name="name">VAT Report - Form 300.00</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.kz"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>

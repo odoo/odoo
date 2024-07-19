@@ -4,6 +4,7 @@
         <field name="name">Sections C and D</field>
         <field name="country_id" ref="base.ug"/>
         <field name="filter_fiscal_position" eval="True"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="section_CD_base" model="account.report.column">
@@ -19,6 +20,13 @@
             <record id="C" model="account.report.line">
                 <field name="name">Section C - Sales (Goods and Services)</field>
                 <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_ug_tax_report_closing_expr_section_CD" model="account.report.expression">
+                        <field name="label">_tax_closing</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">UG_TAX_C8.tax + UG_TAX_C9_i.tax + UG_TAX_C9_ii.tax + UG_TAX_C9_iii.tax + UG_TAX_C9_iv.tax + UG_TAX_C9_v.tax - (UG_TAX_D20.tax + UG_TAX_D21_i.tax - UG_TAX_D21_ii.tax + UG_TAX_D21_iii.tax + UG_TAX_D21_iv.tax)</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="C1" model="account.report.line">
                         <field name="name">1. Zero Rated Sales Local</field>
@@ -592,6 +600,7 @@
                     </record>
                     <record id="F34" model="account.report.line">
                         <field name="name">Total Input tax credit Allowed for the period</field>
+                        <field name="code">UG_TAX_F34</field>
                         <field name="expression_ids">
                             <record id="F34_tax" model="account.report.expression">
                                 <field name="label">allowed</field>
@@ -609,6 +618,7 @@
     <record id="tax_report_ug" model="account.report">
         <field name="name">Tax Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.ug"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>

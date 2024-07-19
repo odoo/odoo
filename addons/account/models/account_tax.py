@@ -32,6 +32,9 @@ class AccountTaxGroup(models.Model):
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
     company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
+
+    ##########################################################################################
+    # TODO: lost: remove this
     tax_payable_account_id = fields.Many2one(
         comodel_name='account.account',
         check_company=True,
@@ -47,6 +50,7 @@ class AccountTaxGroup(models.Model):
         check_company=True,
         string='Tax Advance Account',
         help="Downpayments posted on this account will be considered by the Tax Closing Entry.")
+    #######################################################################################################
     country_id = fields.Many2one(
         string="Country",
         comodel_name='res.country',

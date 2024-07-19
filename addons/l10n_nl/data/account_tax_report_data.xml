@@ -3,6 +3,7 @@
     <record id="tax_report" model="account.report">
         <field name="name">Tax report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="use_tax_closing" eval="True"/>
         <field name="country_id" ref="base.nl"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
@@ -363,6 +364,13 @@
                         <field name="name">5g. Total payable/reclaimable (VAT)</field>
                         <field name="code">NLTAX_B5g</field>
                         <field name="aggregation_formula">NLTAX_B1.balance + NLTAX_B2.balance + NLTAX_B4a.balance + NLTAX_B4b.balance - NLTAX_B5b.balance - NLTAX_B5d.balance - NLTAX_B5e.balance - NLTAX_B5f.balance</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_closing_expr" model="account.report.expression">
+                                <field name="label">_tax_closing</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">NLTAX_B1.balance + NLTAX_B2.balance + NLTAX_B4a.balance + NLTAX_B4b.balance - NLTAX_B5b.balance - NLTAX_B5d.balance - NLTAX_B5e.balance - NLTAX_B5f.balance</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>
