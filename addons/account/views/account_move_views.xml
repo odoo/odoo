@@ -1108,12 +1108,11 @@
                                                options="{'no_create': True}"
                                                optional="show"/>
                                         <field name="price_subtotal"
-                                               string="Tax excl."/>
+                                               column_invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"
+                                               string="Amount"/>
                                         <field name="price_total"
-                                               string="Tax incl."
-                                               column_invisible="parent.tax_calculation_rounding_method == 'round_globally'"
-                                               optional="hide"/>
-
+                                               column_invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
+                                               string="Amount"/>
                                         <!-- Others fields -->
                                         <field name="partner_id" column_invisible="True"/>
                                         <field name="currency_id" column_invisible="True"/>
@@ -1137,8 +1136,12 @@
                                                                         <field class="fw-bold" name="product_id"/>
                                                                     </div>
                                                                     <div class="col-auto fw-bold float-end text-end">
-                                                                        <field name="price_subtotal"/>
-                                                                        <field name="price_total" t-if="tax_calculation_rounding_method == 'round_per_line'"/>
+                                                                        <field name="price_subtotal"
+                                                                               t-if="['in_invoice', 'in_refund', 'in_receipt'].includes(record.move_type.raw_value)"
+                                                                               string="Amount"/>
+                                                                        <field name="price_total"
+                                                                               t-if="!['in_invoice', 'in_refund', 'in_receipt'].includes(record.move_type.raw_value)"
+                                                                               string="Amount"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-muted">
@@ -1165,6 +1168,7 @@
                                         <field name="currency_id"/>
                                         <field name="company_currency_id"/>
                                         <field name="display_type" force_save="1"/>
+                                        <field name="move_type"/>
                                     </kanban>
 
                                     <!-- Form view to cover mobile use -->
@@ -1179,7 +1183,7 @@
                                                 <label for="name" string="Description" invisible="display_type in ('line_note', 'line_section')"/>
                                                 <label for="name" string="Section" invisible="display_type != 'line_section'"/>
                                                 <label for="name" string="Note" invisible="display_type != 'line_note'"/>
-                                                <field name="name" widget="text"/>
+                                                <field name="name" widget="text" nolabel="1"/>
                                                 <field name="quantity"/>
                                                 <field name="product_uom_category_id" invisible="1"/>
                                                 <field name="product_uom_id" groups="uom.group_uom"/>
@@ -1193,11 +1197,11 @@
                                             </group>
                                             <group>
                                                 <field name="price_subtotal"
-                                                       string="Tax excl."/>
+                                                       invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"
+                                                       string="Amount"/>
                                                 <field name="price_total"
-                                                       string="Tax incl."
-                                                       invisible="tax_calculation_rounding_method == 'round_globally'"
-                                                       optional="hide"/>
+                                                       invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
+                                                       string="Amount"/>
                                             </group>
                                         </sheet>
                                     </form>
