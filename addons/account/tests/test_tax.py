@@ -86,16 +86,6 @@ class TestTaxCommon(AccountTestInvoicingCommon):
                 (4, cls.percent_tax_bis.id, 0)
             ]
         })
-        cls.group_of_group_tax = cls.env['account.tax'].create({
-            'name': "Group of group tax",
-            'amount_type': 'group',
-            'amount': 0,
-            'sequence': 7,
-            'children_tax_ids': [
-                (4, cls.group_tax.id, 0),
-                (4, cls.group_tax_bis.id, 0)
-            ]
-        })
         cls.tax_with_no_account = cls.env['account.tax'].create({
             'name': "Tax with no account",
             'amount_type': 'fixed',
@@ -183,24 +173,6 @@ class TestTax(TestTaxCommon):
     @classmethod
     def setUpClass(cls):
         super(TestTax, cls).setUpClass()
-
-    def test_tax_group_of_group_tax(self):
-        self.fixed_tax.include_base_amount = True
-        res = self.group_of_group_tax.compute_all(200.0)
-        self._check_compute_all_results(
-            263,    # 'total_included'
-            200,    # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 10.0),    # |  1  |    10  |      |     t
-                (210.0, 21.0),    # |  3  |    10% |      |
-                (210.0, 10.0),    # |  1  |    10  |      |     t
-                (220.0, 22.0),    # |  3  |    10% |      |
-                # ---------------------------------------------------
-            ],
-            res
-        )
 
     def test_tax_group(self):
         res = self.group_tax.compute_all(200.0)
