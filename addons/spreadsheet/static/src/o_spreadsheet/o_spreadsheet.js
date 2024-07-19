@@ -11372,7 +11372,7 @@
                 operand = descr;
             }
         }
-        if (isNumber(operand)) {
+        if (isNumber(operand) || isDateTime(operand)) {
             operand = toNumber(operand);
         }
         else if (operand === "TRUE" || operand === "FALSE") {
@@ -21619,10 +21619,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             row: undefined,
         };
         const { Date } = window;
-        let x = 0;
-        let y = 0;
+        let x = undefined;
+        let y = undefined;
         let lastMoved = 0;
         function getPosition() {
+            if (x === undefined || y === undefined) {
+                return { col: -1, row: -1 };
+            }
             const col = env.model.getters.getColIndex(x);
             const row = env.model.getters.getRowIndex(y);
             return { col, row };
@@ -43435,9 +43438,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.47';
-    __info__.date = '2024-07-08T05:55:12.647Z';
-    __info__.hash = 'f52ca6f';
+    __info__.version = '16.0.48';
+    __info__.date = '2024-07-18T14:28:03.435Z';
+    __info__.hash = 'a1be508';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
