@@ -9,7 +9,6 @@ import pytz
 from dateutil.relativedelta import relativedelta, weekdays
 
 from .func import lazy
-from odoo.loglevels import ustr
 
 
 __all__ = [
@@ -217,7 +216,9 @@ def json_default(obj):
         return fields.Date.to_string(obj)
     if isinstance(obj, lazy):
         return obj._value
-    return ustr(obj)
+    if isinstance(obj, bytes):
+        return obj.decode()
+    return str(obj)
 
 
 def date_range(start: D, end: D, step: relativedelta = relativedelta(months=1)) -> Iterator[datetime]:
