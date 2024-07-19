@@ -1108,12 +1108,11 @@
                                                options="{'no_create': True}"
                                                optional="show"/>
                                         <field name="price_subtotal"
-                                               string="Tax excl."/>
+                                               column_invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"
+                                               string="Amount"/>
                                         <field name="price_total"
-                                               string="Tax incl."
-                                               column_invisible="parent.tax_calculation_rounding_method == 'round_globally'"
-                                               optional="hide"/>
-
+                                               column_invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
+                                               string="Amount"/>
                                         <!-- Others fields -->
                                         <field name="partner_id" column_invisible="True"/>
                                         <field name="currency_id" column_invisible="True"/>
@@ -1139,6 +1138,14 @@
                                                                     <div class="col-auto fw-bold float-end text-end">
                                                                         <field name="price_subtotal"/>
                                                                         <field name="price_total" t-if="tax_calculation_rounding_method == 'round_per_line'"/>
+                                                                        <!-- TODO: doesnt work?
+                                                                            <field name="price_subtotal"
+                                                                                t-if="!['in_invoice', 'in_refund', 'in_receipt'].includes(record.move_type.raw_value)"
+                                                                                string="Amount"/>
+                                                                            <field name="price_total"
+                                                                                t-if="['in_invoice', 'in_refund', 'in_receipt'].includes(record.move_type.raw_value)"
+                                                                                string="Amount"/>
+                                                                        -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-muted">
@@ -1193,11 +1200,11 @@
                                             </group>
                                             <group>
                                                 <field name="price_subtotal"
-                                                       string="Tax excl."/>
+                                                       column_invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"
+                                                       string="Amount"/>
                                                 <field name="price_total"
-                                                       string="Tax incl."
-                                                       invisible="tax_calculation_rounding_method == 'round_globally'"
-                                                       optional="hide"/>
+                                                       column_invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
+                                                       string="Amount"/>
                                             </group>
                                         </sheet>
                                     </form>

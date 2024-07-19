@@ -620,12 +620,14 @@
                                     width="60px"
                                     optional="show"/>
                                 <field name="is_downpayment" column_invisible="True"/>
-                                <field name="price_subtotal" string="Tax excl." invisible="is_downpayment"/>
-                                <field name="price_total"
-                                       string="Tax incl."
-                                       column_invisible="parent.tax_calculation_rounding_method == 'round_globally'"
+                                <field name="price_subtotal"
+                                       column_invisible="parent.company_price_include == 'tax_included'"
                                        invisible="is_downpayment"
-                                       optional="hide"/>
+                                       string="Amount"/>
+                                <field name="price_total"
+                                       column_invisible="parent.company_price_include == 'tax_excluded'"
+                                       invisible="is_downpayment"
+                                       string="Amount"/>
                                 <!-- Others fields -->
                                 <field name="tax_calculation_rounding_method" column_invisible="True"/>
                                 <field name="state" column_invisible="True"/>

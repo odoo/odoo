@@ -124,8 +124,18 @@ class AccountTax(models.Model):
     amount = fields.Float(required=True, digits=(16, 4), default=0.0, tracking=True)
     description = fields.Html(string='Description', translate=html_translate)
     invoice_label = fields.Char(string='Label on Invoices', translate=True)
-    price_include = fields.Boolean(string='Included in Price', default=False, tracking=True,
-        help="Check this if the price you use on the product and invoices includes this tax.")
+    price_include = fields.Boolean(
+        compute='_compute_price_include',
+        inverse='_set_price_include',
+        search='_search_price_include',
+        help="Determines whether the price you use on the product and invoices includes this tax.")
+    company_price_include = fields.Selection(related="company_id.account_price_include")
+    price_include_override = fields.Selection(
+        selection=[('tax_included', 'Tax Included'), ('tax_excluded', 'Tax Excluded')],
+        string='Included in Price',
+        tracking=True,
+        help="Overrides the Company's default on whether the price you use on the product and invoices includes this tax."
+    )
     include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False, tracking=True,
         help="If set, taxes with a higher sequence than this one will be affected by it, provided they accept it.")
     is_base_affected = fields.Boolean(
@@ -241,6 +251,38 @@ class AccountTax(models.Model):
                 *self.env['account.tax.group']._check_company_domain(company),
                 ('country_id', '=', False),
             ], limit=1)
+
+    @api.depends('price_include_override')
+    def _compute_price_include(self):
+        for tax in self:
+            tax.price_include = (
+                tax.price_include_override == 'tax_included'
+                or (tax.company_price_include == 'tax_included'
+                    and not tax.price_include_override)
+            )
+
+    def _set_price_include(self):
+        for tax in self:
+            new_value = 'tax_included' if tax.price_include else 'tax_excluded'
+            if tax.company_price_include == new_value:
+                tax.price_include_override = False
+            else:
+                tax.price_include_override = new_value
+
+    @api.onchange('price_include')
+    def onchange_price_include(self):
+        if self.price_include:
+            self.include_base_amount = True
+
+    def _search_price_include(self, operator, value):
+        if isinstance(value, bool):
+            tax_value = 'tax_included' if value else 'tax_excluded'
+            return [
+                '|', ('price_include_override', operator, tax_value),
+                    '&', ('price_include_override', '=', False),
+                         ('company_price_include', operator, tax_value),
+            ]
+        return []
 
     def _hook_compute_is_used(self, tax_to_compute):
         '''
@@ -580,11 +622,6 @@ class AccountTax(models.Model):
             self.children_tax_ids = [(5,)]
         if self.amount_type == 'group':
             self.invoice_label = None
-
-    @api.onchange('price_include')
-    def onchange_price_include(self):
-        if self.price_include:
-            self.include_base_amount = True
 
     # -------------------------------------------------------------------------
     # HELPERS IN BOTH PYTHON/JAVASCRIPT (account_tax.js / account_tax.py)
