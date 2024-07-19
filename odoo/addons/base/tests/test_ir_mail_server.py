@@ -126,16 +126,15 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                 subject='Subject',
                 subtype='html',
             )
-            body_alternative = False
+            body_alternative = None
             for part in message.walk():
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
                 if part.get_content_type() == 'text/plain':
                     if not part.get_payload():
                         continue
-                    body_alternative = tools.ustr(part.get_content())
                     # remove ending new lines as it just adds noise
-                    body_alternative = body_alternative.strip('\n')
+                    body_alternative = part.get_content().rstrip('\n')
             self.assertEqual(body_alternative, expected)
 
     @mute_logger('odoo.sql_db')

@@ -631,7 +631,7 @@ class Message(models.Model):
                             values['attachment_ids'].append((4, attachment.id))
                             data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
                     return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
-                values['body'] = _image_dataurl.sub(base64_to_boundary, tools.ustr(values['body']))
+                values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'] or '')
 
             # delegate creation of tracking after the create as sudo to avoid access rights issues
             tracking_values_list.append(values.pop('tracking_value_ids', False))
