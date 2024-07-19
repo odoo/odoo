@@ -45,8 +45,8 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     },
     {
         content: "Give some description",
-        trigger: ".modal:contains(new resume line) .o_field_widget[name='description'] textarea",
-        run: "edit Sang some songs and played some music",
+        trigger: ".modal:contains(new resume line) .o_field_html[name='description'] p",
+        run: "editor Sang some songs and played some music",
     },
     {
         content: "Save it",
