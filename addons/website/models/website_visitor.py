@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from psycopg2 import sql
 
 import hashlib
 import pytz
@@ -11,7 +10,7 @@ import threading
 from odoo import fields, models, api, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.tools import split_every
+from odoo.tools import split_every, SQL
 from odoo.tools.misc import _format_time_ago
 from odoo.http import request
 from odoo.osv import expression
@@ -218,7 +217,7 @@ class WebsiteVisitor(models.Model):
             # used instead as the token.
             'partner_id': None if len(str(access_token)) == 32 else access_token,
         }
-        query = """
+        query = SQL("""
             INSERT INTO website_visitor (
                 partner_id, access_token, last_connection_datetime, visit_count, lang_id,
                 website_id, timezone, write_uid, create_uid, write_date, create_date, country_id)
@@ -237,23 +236,25 @@ class WebsiteVisitor(models.Model):
                                     ELSE website_visitor.visit_count
                                 END
             RETURNING id, CASE WHEN create_date = now() at time zone 'UTC' THEN 'inserted' ELSE 'updated' END AS upsert
-        """
+        """, **create_values)
 
         if force_track_values:
-            create_values['url'] = force_track_values['url']
-            create_values['page_id'] = force_track_values.get('page_id')
-            query = sql.SQL("""
+            query = SQL("""
                 WITH visitor AS (
-                    {query}, %(url)s AS url, %(page_id)s AS page_id
+                    %(query)s, %(url)s AS url, %(page_id)s AS page_id
                 ), track AS (
                     INSERT INTO website_track (visitor_id, url, page_id, visit_datetime)
                     SELECT id, url, page_id::integer, now() at time zone 'UTC' FROM visitor
                 )
                 SELECT id, upsert from visitor;
-            """).format(query=sql.SQL(query))
+                """,
+                query=query,
+                url=force_track_values['url'],
+                page_id=force_track_values.get('page_id'),
+            )
 
-        self.env.cr.execute(query, create_values)
-        return self.env.cr.fetchone()
+        [result] = self.env.execute_query(query)
+        return result
 
     def _get_visitor_from_request(self, force_create=False, force_track_values=None):
         """ Return the visitor as sudo from the request.
