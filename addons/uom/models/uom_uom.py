@@ -24,7 +24,7 @@ class UoMCategory(models.Model):
             self.uom_ids[0].factor = 1
         else:
             reference_count = sum(uom.uom_type == 'reference' for uom in self.uom_ids)
-            if reference_count == 0 and self._origin.id:
+            if reference_count == 0 and self._origin.id and len(self.uom_ids) > 1:
                 return {
                     'warning': {
                         'title': _('Warning!'),
