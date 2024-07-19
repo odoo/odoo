@@ -146,23 +146,27 @@ export class ProductsWidget extends Component {
         if (!searchProductWord) {
             return;
         }
+        const domain = [
+            "|",
+            "|",
+            ["name", "ilike", searchProductWord],
+            ["default_code", "ilike", searchProductWord],
+            ["barcode", "ilike", searchProductWord],
+            ["available_in_pos", "=", true],
+            ["sale_ok", "=", true],
+        ];
+
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            domain.push(["pos_categ_ids", "in", iface_available_categ_ids]);
+        }
 
         try {
             const limit = 30;
             const ProductIds = await this.orm.call(
                 "product.product",
                 "search",
-                [
-                    [
-                        "&",
-                        ["available_in_pos", "=", true],
-                        "|",
-                        "|",
-                        ["name", "ilike", searchProductWord],
-                        ["default_code", "ilike", searchProductWord],
-                        ["barcode", "ilike", searchProductWord],
-                    ],
-                ],
+                [domain],
                 {
                     offset: this.state.currentOffset,
                     limit: limit,
