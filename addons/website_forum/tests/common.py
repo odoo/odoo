@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
@@ -23,7 +22,7 @@ class TestForumCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestForumCommon, cls).setUpClass()
+        super().setUpClass()
 
         # default base data
         cls.base_website = cls.env.ref("website.default_website")

@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import AccessError, UserError
 
 
 class Vote(models.Model):
@@ -46,7 +45,7 @@ class Vote(models.Model):
             for vals in vals_list:
                 vals.pop('user_id', None)
 
-        votes = super(Vote, self).create(vals_list)
+        votes = super().create(vals_list)
 
         for vote in votes:
             vote._check_general_rights()
@@ -71,7 +70,7 @@ class Vote(models.Model):
                 # karma update
                 vote._vote_update_karma(vote.vote, vote_value)
 
-        res = super(Vote, self).write(values)
+        res = super().write(values)
         return res
 
     def _check_general_rights(self, vals=None):

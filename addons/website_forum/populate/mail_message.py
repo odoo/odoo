@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -7,6 +6,7 @@ from odoo.tools import populate
 
 CP_WEIGHTS = {1: 35, 2: 30, 3: 25, 4: 10}
 _logger = logging.getLogger(__name__)
+
 
 class Message(models.Model):
     _inherit = 'mail.message'
@@ -22,7 +22,7 @@ class Message(models.Model):
         """
         records = super()._populate(size)
         comment_subtype = self.env.ref('mail.mt_comment')
-        hours = [_ for _ in range(1, 24)]
+        hours = list(range(1, 24))
         random = populate.Random('comments_on_forum_posts')
         users = self.env["res.users"].browse(self.env.registry.populated_models['res.users'])
         vals_list = []

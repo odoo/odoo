@@ -1,17 +1,20 @@
 /** @odoo-module **/
 
 import { markup } from "@odoo/owl";
-import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
+
+import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { cookie } from "@web/core/browser/cookie";;
+import { cookie } from "@web/core/browser/cookie";
+import { escape } from "@web/core/utils/strings";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { session } from "@web/session";
-import { rpc } from "@web/core/network/rpc";
-import { escape } from "@web/core/utils/strings";
-import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { rpc } from "@web/core/network/rpc";
+import { session } from "@web/session";
+
+import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
+
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',

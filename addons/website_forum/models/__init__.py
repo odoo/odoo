@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import forum_forum
 from . import forum_post
 from . import forum_post_reason

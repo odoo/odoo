@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 import logging
 import math
 import re
-from datetime import datetime
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
-from odoo.exceptions import UserError, ValidationError, AccessError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import sql, SQL
 from odoo.tools.json import scriptsafe as json_safe
@@ -191,7 +190,7 @@ class Post(models.Model):
     @api.depends_context('uid')
     def _compute_user_vote(self):
         votes = self.env['forum.post.vote'].search_read([('post_id', 'in', self._ids), ('user_id', '=', self._uid)], ['vote', 'post_id'])
-        mapped_vote = dict([(v['post_id'][0], v['vote']) for v in votes])
+        mapped_vote = {v['post_id'][0]: v['vote'] for v in votes}
         for vote in self:
             vote.user_vote = mapped_vote.get(vote.id, 0)
 
@@ -261,7 +260,7 @@ class Post(models.Model):
             post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote or post.user_vote == 1
             post.can_comment = is_admin or user.karma >= post.karma_comment
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
-            post.can_view = post.can_close or post_sudo.active and (post_sudo.create_uid.karma > 0 or post_sudo.create_uid == user)
+            post.can_view = post.can_close or (post_sudo.active and (post_sudo.create_uid.karma > 0 or post_sudo.create_uid == user))
             post.can_display_biography = is_admin or (post_sudo.create_uid.karma >= post.forum_id.karma_user_bio and post_sudo.create_uid.website_published)
             post.can_post = is_admin or user.karma >= post.forum_id.karma_post
             post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag
@@ -299,7 +298,7 @@ class Post(models.Model):
     # EXTENDS WEBSITE.SEO.METADATA
 
     def _default_website_meta(self):
-        res = super(Post, self)._default_website_meta()
+        res = super()._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.plain_content
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self.create_uid, 'image_1024')
@@ -343,7 +342,7 @@ class Post(models.Model):
             if post.is_correct:
                 post.create_uid.sudo()._add_karma(post.forum_id.karma_gen_answer_accepted * -1, post, _('The accepted answer is deleted'))
                 self.env.user.sudo()._add_karma(post.forum_id.karma_gen_answer_accepted * -1, post, _('Delete the accepted answer'))
-        return super(Post, self).unlink()
+        return super().unlink()
 
     def write(self, vals):
         trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
@@ -383,7 +382,7 @@ class Post(models.Model):
             if any(key not in trusted_keys for key in vals) and not post.can_edit:
                 raise AccessError(_('%d karma required to edit a post.', post.karma_edit))
 
-        res = super(Post, self).write(vals)
+        res = super().write(vals)
 
         # if post content modify, notify followers
         if 'content' in vals or 'name' in vals:
@@ -404,8 +403,8 @@ class Post(models.Model):
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
-        if not force_website and not self.state == 'active':
-            return super(Post, self)._get_access_action(access_uid=access_uid, force_website=force_website)
+        if not force_website and self.state != 'active':
+            return super()._get_access_action(access_uid=access_uid, force_website=force_website)
         return {
             'type': 'ir.actions.act_url',
             'url': '/forum/%s/%s' % (self.forum_id.id, self.id),
@@ -425,13 +424,13 @@ class Post(models.Model):
         if content and self.env.user.karma < forum.karma_dofollow:
             for match in re.findall(r'<a\s.*href=".*?">', content):
                 escaped_match = re.escape(match)  # replace parenthesis or special char in regex
-                url_match = re.match(r'^.*href="(.*)".*', match) # extracting the link allows to rebuild a clean link tag
+                url_match = re.match(r'^.*href="(.*)".*', match)  # extracting the link allows to rebuild a clean link tag
                 url = url_match.group(1)
                 content = re.sub(escaped_match, f'<a rel="nofollow" href="{url}">', content)
 
         if self.env.user.karma < forum.karma_editor:
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'
-            content_match = re.search(filter_regexp, content, re.I)
+            content_match = re.search(filter_regexp, content, re.IGNORECASE)
             if content_match:
                 raise AccessError(_('%d karma required to post an image or link.', forum.karma_editor))
         return content
@@ -556,18 +555,14 @@ class Post(models.Model):
             if not post.can_flag:
                 raise AccessError(_('%d karma required to flag a post.', post.forum_id.karma_flag))
             if post.state == 'flagged':
-               res.append({'error': 'post_already_flagged'})
+                res.append({'error': 'post_already_flagged'})
             elif post.state == 'active':
                 # TODO: potential performance bottleneck, can be batched
                 post.write({
                     'state': 'flagged',
                     'flag_user_id': self.env.user.id,
                 })
-                res.append(
-                    post.can_moderate and
-                    {'success': 'post_flagged_moderator'} or
-                    {'success': 'post_flagged_non_moderator'}
-                )
+                res.append({'success': 'post_flagged_moderator'} if post.can_moderate else {'success': 'post_flagged_non_moderator'})
             else:
                 res.append({'error': 'post_non_flaggable'})
         return res
@@ -599,7 +594,7 @@ class Post(models.Model):
             spams = self.filtered(lambda x: x.id in values)
 
         reason_id = self.env.ref('website_forum.reason_8').id
-        _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
+        _logger.info('User %s marked as spams (in batch): %s', self.env.uid, spams)
         return spams._mark_as_offensive(reason_id)
 
     def vote(self, upvote=True):
@@ -663,7 +658,7 @@ class Post(models.Model):
         is_author = comment_sudo.author_id.id == self.env.user.partner_id.id
         karma_own = post.forum_id.karma_comment_convert_own
         karma_all = post.forum_id.karma_comment_convert_all
-        karma_convert = is_author and karma_own or karma_all
+        karma_convert = karma_own if is_author else karma_all
         can_convert = self.env.user.karma >= karma_convert
         if not can_convert:
             if is_author and karma_own < karma_all:
@@ -672,7 +667,7 @@ class Post(models.Model):
                 raise AccessError(_('%d karma required to convert a comment to an answer.', karma_all))
 
         # check the message's author has not already an answer
-        question = post.parent_id if post.parent_id else post
+        question = post.parent_id or post
         post_create_uid = comment_sudo.author_id.user_ids[0]
         if any(answer.create_uid.id == post_create_uid.id for answer in question.child_ids):
             return False
@@ -734,7 +729,7 @@ class Post(models.Model):
             for post in self.browse(res_ids):
                 if not post.can_edit:
                     raise AccessError(_('%d karma required to edit a post.', post.karma_edit))
-        return super(Post, self)._get_mail_message_access(res_ids, operation, model_name=model_name)
+        return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Add access button to everyone if the document is active. """
@@ -771,7 +766,7 @@ class Post(models.Model):
                 raise AccessError(_('%d karma required to comment.', self.karma_comment))
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
-        return super(Post, self).message_post(message_type=message_type, **kwargs)
+        return super().message_post(message_type=message_type, **kwargs)
 
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Override to avoid keeping all notified recipients of a comment.
@@ -781,7 +776,7 @@ class Post(models.Model):
             msg_vals = {}
         if msg_vals.get('message_type', message.message_type) == 'comment':
             return
-        return super(Post, self)._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
+        return super()._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
     # ----------------------------------------------------------------------
     # WEBSITE

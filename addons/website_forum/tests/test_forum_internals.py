@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website_forum.models.forum_forum import MOST_USED_TAGS_COUNT
@@ -11,7 +10,7 @@ class TestForumInternals(TestForumCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestForumInternals, cls).setUpClass()
+        super().setUpClass()
         cls._activate_multi_website()
 
     @users('admin')
@@ -129,7 +128,7 @@ class TestTags(TestForumCommon):
 
     def test_tags_usage_most_used(self):
         self._activate_tags_for_counts()
-        posts_per_tag = [(tag_id, post_count) for tag_id, post_count in zip(self.base_forum.tag_ids, range(2, 9))]
+        posts_per_tag = list(zip(self.base_forum.tag_ids, range(2, 9)))
         vals_list = [
             {'forum_id': self.base_forum.id, 'name': 'A post', 'content': 'A content', 'tag_ids': [tag_id.id]}
             for tag_id, post_count in posts_per_tag
