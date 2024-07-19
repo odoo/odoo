@@ -474,7 +474,7 @@ export class ProductScreen extends Component {
             ["sale_ok", "=", true],
         ];
 
-        if (config.limit_categories && config.iface_available_categ_ids) {
+        if (config.limit_categories && config.iface_available_categ_ids.length > 0) {
             const categIds = config.iface_available_categ_ids.map((categ) => categ.id);
             domain.push(["pos_categ_ids", "in", categIds]);
         }
