@@ -14,7 +14,7 @@ const { parseDimension, isDateField } = helpers;
 
 function addEmptyGranularity(dimensions, fields) {
     return dimensions.map((dimension) => {
-        if (dimension.name !== "id" && isDateField(fields[dimension.name])) {
+        if (dimension.fieldName !== "id" && isDateField(fields[dimension.fieldName])) {
             return {
                 granularity: "month",
                 ...dimension,
@@ -45,7 +45,10 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
         domain: [],
         context: {},
         measures: archInfo.activeMeasures.map((measure) => ({
-            name: measure,
+            id: pyEnv[resModel]._fields[measure]?.aggregator
+                ? `${measure}:${pyEnv[resModel]._fields[measure].aggregator}`
+                : measure,
+            fieldName: measure,
             aggregator: pyEnv[resModel]._fields[measure]?.aggregator,
         })),
         model: resModel,
