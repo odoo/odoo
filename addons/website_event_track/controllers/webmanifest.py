@@ -2,11 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import pytz
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import ustr
 from odoo.tools.misc import file_open
 from odoo.tools.translate import _
 
@@ -36,7 +34,7 @@ class TrackManifest(http.Controller):
             'sizes': size,
             'type': 'image/png',
         } for size in icon_sizes]
-        body = json.dumps(manifest, default=ustr)
+        body = json.dumps(manifest)
         response = request.make_response(body, [
             ('Content-Type', 'application/manifest+json'),
         ])

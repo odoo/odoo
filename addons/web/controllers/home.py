@@ -3,14 +3,12 @@
 import json
 import logging
 
-
 import odoo
 import odoo.modules.registry
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.service import security
-from odoo.tools import ustr
 from odoo.tools.translate import _
 from .utils import ensure_db, _get_login_redirect_url, is_user_internal
 
@@ -77,7 +75,7 @@ class Home(http.Controller):
             request.update_context(lang=lang)
 
         menus = request.env["ir.ui.menu"].load_web_menus(request.session.debug)
-        body = json.dumps(menus, default=ustr)
+        body = json.dumps(menus)
         response = request.make_response(body, [
             # this method must specify a content-type application/json instead of using the default text/html set because
             # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
