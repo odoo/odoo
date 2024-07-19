@@ -117,7 +117,7 @@ class ProductCategory(models.Model):
     _inherit = 'product.category'
 
     property_stock_account_production_cost_id = fields.Many2one(
-        'account.account', 'Production Account', company_dependent=True,
+        'account.account', 'Production Account', company_dependent=True, ondelete='restrict',
         domain="[('deprecated', '=', False)]", check_company=True,
         help="""This account will be used as a valuation counterpart for both components and final products for manufacturing orders.
                 If there are any workcenter/employee costs, this value will remain on the account once the production is completed.""")

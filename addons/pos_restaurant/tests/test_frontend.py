@@ -110,11 +110,11 @@ class TestFrontend(TestPointOfSaleHttpCommon):
             'position_v': 250,
         }])
 
-        cls.env['ir.property']._set_default(
-            'property_account_receivable_id',
+        cls.env['ir.default'].set(
             'res.partner',
-            cls.account_receivable,
-            main_company,
+            'property_account_receivable_id',
+            cls.account_receivable.id,
+            company_id=main_company.id,
         )
 
         cls.env['product.product'].create({

@@ -27,11 +27,11 @@ class TestVNEDI(AccountTestInvoicingCommon):
             'name': 'K24TUT',
             'invoice_template_id': cls.template.id,
         })
-        cls.env['ir.property']._set_default(
-            'l10n_vn_edi_symbol',
+        cls.env['ir.default'].set(
             'res.partner',
-            cls.symbol,
-            cls.env.company.id
+            'l10n_vn_edi_symbol',
+            cls.symbol.id,
+            company_id=cls.env.company.id
         )
 
         # Setup a vietnamese address on the partner and company.

@@ -532,18 +532,19 @@ class ResPartner(models.Model):
         string="Account Payable",
         domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
-        required=True)
+        ondelete='restrict')
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
         domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
-        required=True)
+        ondelete='restrict')
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
         help="The fiscal position determines the taxes/accounts used for this contact.")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
-        help="This payment term will be used instead of the default one for sales orders and customer invoices")
+        help="This payment term will be used instead of the default one for sales orders and customer invoices",
+        ondelete='restrict')
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Vendor Payment Terms',
         help="This payment term will be used instead of the default one for purchase orders and vendor bills")
@@ -552,7 +553,7 @@ class ResPartner(models.Model):
     invoice_ids = fields.One2many('account.move', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Partner Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
-    trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
+    trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', company_dependent=True)
     ignore_abnormal_invoice_date = fields.Boolean(company_dependent=True)
     ignore_abnormal_invoice_amount = fields.Boolean(company_dependent=True)
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
@@ -616,14 +617,15 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     def _compute_use_partner_credit_limit(self):
+        company_limit = self._fields['credit_limit'].get_company_dependent_fallback(self)
         for partner in self:
-            company_limit = self.env['ir.property']._get('credit_limit', 'res.partner')
             partner.use_partner_credit_limit = partner.credit_limit != company_limit
 
     def _inverse_use_partner_credit_limit(self):
+        company_limit = self._fields['credit_limit'].get_company_dependent_fallback(self)
         for partner in self:
             if not partner.use_partner_credit_limit:
-                partner.credit_limit = self.env['ir.property']._get('credit_limit', 'res.partner')
+                partner.credit_limit = company_limit
 
     @api.depends_context('company')
     def _compute_show_credit_limit(self):

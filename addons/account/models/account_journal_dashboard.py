@@ -903,7 +903,8 @@ class account_journal(models.Model):
                 'name': 'Deco Addict',
                 'is_company': True,
             })
-        default_expense_account = self.env['ir.property'].with_company(company)._get('property_account_expense_categ_id', 'product.category')
+        ProductCategory = self.env['product.category'].with_company(company)
+        default_expense_account = ProductCategory._fields['property_account_expense_categ_id'].get_company_dependent_fallback(ProductCategory)
         ref = 'DE%s' % invoice_date.strftime('%Y%m')
         bill = self.env['account.move'].with_context(default_extract_state='done').create({
             'move_type': 'in_invoice',

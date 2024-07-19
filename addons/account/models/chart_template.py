@@ -667,7 +667,7 @@ class AccountChartTemplate(models.AbstractModel):
         for field, model in self._get_property_accounts(additional_properties).items():
             value = template_data.get(field)
             if value and field in self.env[model]._fields:
-                self.env['ir.property']._set_default(field, model, self.ref(value).id, company=company)
+                self.env['ir.default'].set(model, field, self.ref(value).id, company_id=company.id)
 
         # Set default transfer account on the internal transfer reconciliation model
         reco = self.ref('internal_transfer_reco', raise_if_not_found=False)

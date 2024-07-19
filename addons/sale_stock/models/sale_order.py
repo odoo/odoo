@@ -61,7 +61,7 @@ class SaleOrder(models.Model):
         field = self._fields[column_name]
         default = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         value = field.convert_to_write(default, self)
-        value = field.convert_to_column(value, self)
+        value = field.convert_to_column_insert(value, self)
         if value is not None:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                 self._table, column_name, value)

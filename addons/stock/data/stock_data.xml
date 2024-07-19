@@ -69,16 +69,8 @@
         </record>
 
         <!-- Properties -->
-        <record forcecreate="True" id="property_stock_supplier" model="ir.property">
-            <field name="name">property_stock_supplier</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_supplier')]"/>
-            <field eval="'stock.location,'+str(stock_location_suppliers)" name="value"/>
-        </record>
-        <record forcecreate="True" id="property_stock_customer" model="ir.property">
-            <field name="name">property_stock_customer</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
-            <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
-        </record>
+        <function model="ir.default" name="set" eval="('res.partner', 'property_stock_supplier', obj().env.ref('stock.stock_location_suppliers').id)"/>
+        <function model="ir.default" name="set" eval="('res.partner', 'property_stock_customer', obj().env.ref('stock.stock_location_customers').id)"/>
 
         <!-- Resource: stock.warehouse -->
         <record id="warehouse0" model="stock.warehouse">

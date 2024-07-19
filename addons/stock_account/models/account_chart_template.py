@@ -12,18 +12,14 @@ class AccountChartTemplate(models.AbstractModel):
         super()._post_load_data(template_code, company, template_data)
         company = company or self.env.company
         fields_name = self.env['product.category']._get_stock_account_property_field_names()
-        account_fields = self.env['ir.model.fields'].search([('model', '=', 'product.category'), ('name', 'in', fields_name)])
-        existing_props = self.env['ir.property'].sudo().search([
-            ('fields_id', 'in', account_fields.ids),
-            ('company_id', '=', company.id),
-            ('res_id', '!=', False),
-        ])
+        ProductCategory = self.env['product.category'].with_company(company.id)
         for fname in fields_name:
-            if fname in existing_props.mapped('fields_id.name'):
+            fallback = ProductCategory._fields[fname].get_company_dependent_fallback(ProductCategory).id
+            if ProductCategory.search_count([(fname, '!=', fallback)], limit=1):
                 continue
             value = template_data.get(fname)
             if value:
-                self.env['ir.property']._set_default(fname, 'product.category', self.ref(value).id, company=company)
+                self.env['ir.default'].set('product.category', fname, self.ref(value).id, company_id=company.id)
 
     @template(model='account.journal')
     def _get_stock_account_journal(self, template_code):

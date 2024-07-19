@@ -29,10 +29,10 @@ class ResCompany(models.Model):
                 'company_id': company.id,
                 'is_subcontracting_location': True,
             })
-            self.env['ir.property']._set_default(
-                "property_stock_subcontractor",
+            self.env['ir.default'].set(
                 "res.partner",
-                subcontracting_location,
-                company,
+                "property_stock_subcontractor",
+                subcontracting_location.id,
+                company_id=company.id,
             )
             company.subcontracting_location_id = subcontracting_location

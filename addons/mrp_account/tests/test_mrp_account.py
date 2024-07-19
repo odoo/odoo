@@ -236,7 +236,8 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
                 (0, 0, {'product_id': cls.product_B.id, 'product_qty': 1}),
             ]})
         # if for some reason this default property doesn't exist, the tests that reference it will fail due to missing journal
-        cls.default_sv_account_id = cls.env['ir.property']._get_default_property('property_stock_valuation_account_id', 'product.category')[1][1]
+        field = cls.env['product.category']._fields['property_stock_valuation_account_id']
+        cls.default_sv_account_id = field.get_company_dependent_fallback(cls.env['product.category']).id
 
     def test_unbuild_account_00(self):
         """Test when after unbuild, the journal entries are the reversal of the

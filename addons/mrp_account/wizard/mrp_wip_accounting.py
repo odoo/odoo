@@ -47,9 +47,9 @@ class MrpWipAccounting(models.TransientModel):
         # ignore selected MOs that aren't a WIP
         productions = productions.filtered(lambda mo: mo.state in ['progress', 'to_close', 'confirmed'])
         if 'journal_id' in fields_list:
-            default = self.env['ir.property']._get_default_property('property_stock_journal', 'product.category')[1]
+            default = self.env['product.category']._fields['property_stock_journal'].get_company_dependent_fallback(self.env['product.category'])
             if default:
-                res['journal_id'] = default[1]
+                res['journal_id'] = default.id
         if 'reference' in fields_list:
             res['reference'] = _("Manufacturing WIP - %(orders_list)s", orders_list=productions and format_list(self.env, productions.mapped('name')) or _("Manual Entry"))
         if 'mo_ids' in fields_list:
@@ -71,10 +71,11 @@ class MrpWipAccounting(models.TransientModel):
         overhead_account = self.env.company.account_production_wip_overhead_account_id
         if overhead_account:
             return overhead_account.id
-        cop_acc = self.env['ir.property']._get_default_property('property_stock_account_production_cost_id', 'product.category')[1]
+        ProductCategory = self.env['product.category']
+        cop_acc = ProductCategory._fields['property_stock_account_production_cost_id'].get_company_dependent_fallback(ProductCategory)
         if cop_acc:
-            return cop_acc[1]
-        return self.env['ir.property']._get_default_property('property_stock_account_input_categ_id', 'product.category')[1]
+            return cop_acc.id
+        return ProductCategory._fields['property_stock_account_input_categ_id'].get_company_dependent_fallback(ProductCategory).id
 
     def _get_line_vals(self, productions=False, date=False):
         if not productions:
@@ -86,8 +87,7 @@ class MrpWipAccounting(models.TransientModel):
             for ml in productions.move_raw_ids.move_line_ids.filtered(lambda ml: ml.picked and ml.quantity and ml.date <= date)
         )
         overhead_value = productions.workorder_ids._cal_cost(date)
-        sval_acc = self.env['ir.property']._get_default_property('property_stock_valuation_account_id', 'product.category')[1]
-        sval_acc = sval_acc[1] if sval_acc else False
+        sval_acc = self.env['product.category']._fields['property_stock_valuation_account_id'].get_company_dependent_fallback(self.env['product.category']).id
         return [
             Command.create({
                 'label': _("WIP - Component Value"),

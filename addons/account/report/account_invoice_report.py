@@ -113,11 +113,11 @@ class AccountInvoiceReport(models.Model):
                    0.0) * account_currency_table.rate                               AS price_average,
                 CASE
                     WHEN move.move_type NOT IN ('out_invoice', 'out_receipt') THEN 0.0
-                    ELSE -line.balance * account_currency_table.rate - (line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product_standard_price.value_float, 0.0)
+                    ELSE -line.balance * account_currency_table.rate - (line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product.standard_price -> line.company_id::text, to_jsonb(0.0))::float
                 END
                                                                             AS price_margin,
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('out_invoice','in_refund','out_receipt') THEN -1 ELSE 1 END)
-                    * product_standard_price.value_float                    AS inventory_value,
+                    * COALESCE(product.standard_price -> line.company_id::text, to_jsonb(0.0))::float                    AS inventory_value,
                 COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
                 line.currency_id                                            AS currency_id
             ''',
@@ -136,10 +136,6 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
-                LEFT JOIN ir_property product_standard_price
-                    ON product_standard_price.res_id = CONCAT('product.product,', product.id)
-                    AND product_standard_price.name = 'standard_price'
-                    AND product_standard_price.company_id = line.company_id
                 JOIN %(currency_table)s ON account_currency_table.company_id = line.company_id
             ''',
             currency_table=self.env['res.currency']._get_simple_currency_table(self.env.companies),

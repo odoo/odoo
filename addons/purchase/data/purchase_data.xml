@@ -42,18 +42,7 @@
             <field name="code">action = records.action_share()</field>
         </record>
 
-        <!-- Default value for company_dependant field -->
-        <record forcecreate="True" id="receipt_reminder_email" model="ir.property">
-            <field name="name">receipt_reminder_email</field>
-            <field name="type" eval="'boolean'"/>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','receipt_reminder_email')]"/>
-            <field eval="False" name="value"/>
-        </record>
-        <record forcecreate="True" id="reminder_date_before_receipt" model="ir.property">
-            <field name="name">reminder_date_before_receipt</field>
-            <field name="type" eval="'integer'"/>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','reminder_date_before_receipt')]"/>
-            <field eval="1" name="value"/>
-        </record>
+        <!-- Fallback value for company_dependant field -->
+        <function model="ir.default" name="set" eval="('res.partner', 'reminder_date_before_receipt', 1)"/>
     </data>
 </odoo>

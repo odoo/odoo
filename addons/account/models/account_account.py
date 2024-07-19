@@ -9,7 +9,6 @@ from odoo import api, fields, models, _, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools import SQL, Query
-from odoo.addons.base.models.ir_property import TYPE2FIELD
 
 
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
@@ -48,6 +47,7 @@ class AccountAccount(models.Model):
     company_currency_id = fields.Many2one('res.currency', compute='_compute_company_currency_id')
     company_fiscal_country_code = fields.Char(compute='_compute_company_fiscal_country_code')
     code = fields.Char(string="Code", size=64, tracking=True, compute='_compute_code', search='_search_code', inverse='_inverse_code')
+    code_store = fields.Char(company_dependent=True)
     placeholder_code = fields.Char(string="Display code", compute='_compute_placeholder_code')
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
@@ -139,29 +139,7 @@ class AccountAccount(models.Model):
         if fname == 'internal_group':
             return SQL("split_part(account_account.account_type, '_', 1)", to_flush=self._fields['account_type'])
         if fname == 'code':
-            field = self._fields.get(fname)
-
-            company_dependent_field_alias = query.make_alias(alias, f'{field.name}_company_dependent')
-            query.add_join('LEFT JOIN', alias=company_dependent_field_alias, table='ir_property', condition=SQL(
-                    """
-                        %(ir_property_fields_id)s = %(field_id)s
-                        AND %(ir_property_company_id)s = %(root_company_id)s
-                        AND %(ir_property_res_id)s = 'account.account,' || %(account_id)s::text
-                    """,
-                    ir_property_fields_id=self.env['ir.property']._field_to_sql(company_dependent_field_alias, 'fields_id'),
-                    field_id=self.env['ir.model.fields']._get(self._name, field.name).id,
-                    ir_property_company_id=self.env['ir.property']._field_to_sql(company_dependent_field_alias, 'company_id'),
-                    root_company_id=self.env.company.root_id.id,
-                    ir_property_res_id=self.env['ir.property']._field_to_sql(company_dependent_field_alias, 'res_id'),
-                    account_id=SQL.identifier(alias, 'id'),
-                )
-            )
-
-            # This is the field on ir.property that will contain the value of 'code'.
-            value_field = self.env['ir.property']._fields[TYPE2FIELD[field.type]]
-
-            return self.env['ir.property']._field_to_sql(company_dependent_field_alias, value_field.name)
-
+            return self.with_company(self.env.company.root_id).sudo()._field_to_sql(alias, 'code_store', query, flush)
         return super()._field_to_sql(alias, fname, query, flush)
 
     @api.constrains('reconcile', 'account_type', 'tax_ids')
@@ -352,21 +330,17 @@ class AccountAccount(models.Model):
 
     @api.depends_context('company')
     def _compute_code(self):
-        values = self.env['ir.property'].with_company(self.env.company.root_id).sudo()._get_multi('code', 'account.account', self.ids)
-        for record in self:
+        for record, record_root in zip(self, self.with_company(self.env.company.root_id).sudo()):
             # Need to set record.code with `company = self.env.company`, not `self.env.company.root_id`
-            record.code = values.get(record.id)
+            record.code = record_root.code_store
 
     def _search_code(self, operator, value):
-        return self._fields['code']._search_company_dependent(self.with_company(self.env.company.root_id), operator, value)
+        return [('id', 'in', self.with_company(self.env.company.root_id).sudo()._search([('code_store', operator, value)]))]
 
     def _inverse_code(self):
-        values = {
-            # Need to access record.code with `company = self.env.company`
-            record.id: self._fields['code'].convert_to_write(record.code, record)
-            for record in self
-        }
-        self.env['ir.property'].with_company(self.env.company.root_id).sudo()._set_multi('code', 'account.account', values)
+        for record, record_root in zip(self, self.with_company(self.env.company.root_id).sudo()):
+            # Need to set record.code with `company = self.env.company`, not `self.env.company.root_id`
+            record_root.code_store = record.code
 
     @api.depends_context('company')
     @api.depends('code')
@@ -1004,19 +978,6 @@ class AccountAccount(models.Model):
             raise UserError(_('You cannot perform this action on an account that contains journal items.'))
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_account_set_on_customer(self):
-        #Checking whether the account is set as a property to any Partner or not
-        values = ['account.account,%s' % (account_id,) for account_id in self.ids]
-        partner_prop_acc = self.env['ir.property'].sudo().search([('value_reference', 'in', values)], limit=1)
-        if partner_prop_acc:
-            account_name = partner_prop_acc.get_by_record().display_name
-            raise UserError(
-                _("You can't delete the account %s, as it is used on a contact.\n\n"
-                    "Think of it as safeguarding your customer's receivables; your CFO would appreciate it :)"
-                    , account_name)
-            )
-
-    @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_fiscal_position(self):
         if self.env['account.fiscal.position.account'].search_count(['|', ('account_src_id', 'in', self.ids), ('account_dest_id', 'in', self.ids)], limit=1):
             raise UserError(_('You cannot remove/deactivate the accounts "%s" which are set on the account mapping of a fiscal position.', ', '.join(f"{a.code} - {a.name}" for a in self)))
@@ -1151,7 +1112,6 @@ class AccountAccount(models.Model):
         self.env.invalidate_all()
 
         new_account_id_by_company_id = {str(company.id): new_account.id for company, new_account in new_account_by_company.items()}
-        new_account_id_by_company_id[base_company.id] = self.id  # Needed for update of xmlids
         new_account_id_by_company_id_json = json.dumps(new_account_id_by_company_id)
         (self | new_accounts).invalidate_recordset()
 
@@ -1159,7 +1119,8 @@ class AccountAccount(models.Model):
         many2x_fields = self.env['ir.model.fields'].search([
             ('ttype', 'in', ('many2one', 'many2many')),
             ('relation', '=', 'account.account'),
-            ('store', '=', True)
+            ('store', '=', True),
+            ('company_dependent', '=', False),
         ])
         for field_to_update in many2x_fields:
             model = field_to_update.model
@@ -1195,14 +1156,30 @@ class AccountAccount(models.Model):
                 account_id=self.id,
                 company_ids_to_update=tuple(new_account_id_by_company_id),
             ))
+        for field in self.env.registry.many2one_company_dependents[self._name]:
+            self.env.cr.execute(SQL(
+                """
+                UPDATE %(table)s
+                SET %(column)s = (
+                    SELECT jsonb_object_agg(key,
+                        CASE
+                            WHEN value::int = %(account_id)s AND %(new_account_id_by_company_id_json)s ? key
+                            THEN (%(new_account_id_by_company_id_json)s::jsonb->>key)::int
+                            ELSE value::int
+                        END
+                    )
+                    FROM jsonb_each_text(%(column)s)
+                )
+                WHERE %(column)s IS NOT NULL
+                """,
+                table=SQL.identifier(self.env[field.model_name]._table),
+                column=SQL.identifier(field.name),
+                new_account_id_by_company_id_json=new_account_id_by_company_id_json,
+                account_id=self.id,
+            ))
 
         # 3.2: Update Reference fields that reference account.account
-        # Include the 'value_reference' field on ir.property that is nominally a char (used e.g. for default receivable accounts)
-        reference_fields = self.env['ir.model.fields'].search([
-            '|',
-            '&', ('ttype', '=', 'reference'), ('store', '=', True),
-            '&', ('model', '=', 'ir.property'), ('name', '=', 'value_reference'),
-        ])
+        reference_fields = self.env['ir.model.fields'].search([('ttype', '=', 'reference'), ('store', '=', True)])
         for field_to_update in reference_fields:
             model = field_to_update.model
             if not self.env[model]._auto:
@@ -1259,36 +1236,62 @@ class AccountAccount(models.Model):
                 company_ids_to_update=tuple(new_account_id_by_company_id),
             ))
 
-        # 3.4: Update ir_property.
-        # First, remove values already existing for the new accounts (e.g. their codes)
-        self.env['ir.property'].invalidate_model()
+        # 3.4: Update company_dependent fields
+        # Dispatch the values of the existing account to the new accounts.
         self.env.cr.execute(SQL(
             """
-             DELETE FROM ir_property
-              WHERE res_id = %(new_account_res_ids)s
-            """,
-            new_account_res_ids=tuple(f'account.account,{new_account.id}' for new_account in new_accounts),
-        ))
-        # Then, dispatch the values of the existing account to the new accounts.
-        self.env.cr.execute(SQL(
-            """
-             UPDATE ir_property
-                SET res_id = 'account.account,' || (%(new_account_id_by_company_id_json)s::jsonb->>company_id::text)
-              WHERE res_id = %(account_res_id)s
-                AND company_id IN %(company_ids_to_update)s
+            WITH new_account_company AS (
+                SELECT key AS company_id, value::int AS account_id
+                FROM json_each_text(%(new_account_id_by_company_id_json)s)
+            )
+            UPDATE %(table)s new
+            SET %(migrate_fields)s
+            FROM %(table)s old, new_account_company a2c
+            WHERE old.id = %(old_id)s
+            AND a2c.account_id = new.id
+            AND new.id IN %(new_ids)s
             """,
             new_account_id_by_company_id_json=new_account_id_by_company_id_json,
-            account_res_id=f'account.account,{self.id}',
-            company_ids_to_update=tuple(new_account_id_by_company_id),
+            table=SQL.identifier(self._table),
+            migrate_fields=SQL(', ').join(
+                SQL(
+                    """
+                    %(field)s = CASE WHEN old.%(field)s ? a2c.company_id
+                                THEN jsonb_build_object(a2c.company_id, old.%(field)s->a2c.company_id)
+                                ELSE NULL END
+                    """,
+                    field=SQL.identifier(field_name),
+                )
+                for field_name, field in self._fields.items()
+                if field.company_dependent
+            ),
+            old_id=self.id,
+            new_ids=tuple(new_accounts.ids)
+        ))
+        # On the original account, remove values for other companies
+        self.env.cr.execute(SQL(
+            "UPDATE %(table)s SET %(fields_drop_company_ids)s WHERE id = %(id)s",
+            table=SQL.identifier(self._table),
+            fields_drop_company_ids=SQL(', ').join(
+                SQL(
+                    "%(field)s = NULLIF(%(field)s - %(company_ids)s, '{}'::jsonb)",
+                    field=SQL.identifier(field_name),
+                    company_ids=list(new_account_id_by_company_id)
+                )
+                for field_name, field in self._fields.items()
+                if field.company_dependent
+            ),
+            id=self.id
         ))
 
         # 3.5. Split account xmlids based on the company_id that is present within the xmlid
         self.env['ir.model.data'].invalidate_model()
+        account_id_by_company_id_json = json.dumps({**new_account_id_by_company_id, str(base_company.id): self.id})
         self.env.cr.execute(SQL(
             """
              UPDATE ir_model_data
                 SET res_id = (
-                        %(new_account_id_by_company_id_json)s::jsonb->>
+                        %(account_id_by_company_id_json)s::jsonb->>
                         substring(name, %(xmlid_regex)s)
                     )::int
               WHERE module = 'account'
@@ -1296,7 +1299,7 @@ class AccountAccount(models.Model):
                 AND res_id = %(account_id)s
                 AND name ~ %(xmlid_regex)s
             """,
-            new_account_id_by_company_id_json=new_account_id_by_company_id_json,
+            account_id_by_company_id_json=account_id_by_company_id_json,
             xmlid_regex=r'([\d]+)_.*',
             account_id=self.id,
         ))

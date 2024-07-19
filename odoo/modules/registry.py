@@ -189,6 +189,9 @@ class Registry(Mapping):
         self.field_depends_context = Collector()
         self.field_inverses = Collector()
 
+        # company dependent
+        self.many2one_company_dependents = Collector()  # {model_name: (field1, field2, ...)}
+
         # cache of methods get_field_trigger_tree() and is_modifying_relations()
         self._field_trigger_trees = {}
         self._is_modifying_relations = {}
@@ -341,6 +344,7 @@ class Registry(Mapping):
         self.field_depends.clear()
         self.field_depends_context.clear()
         self.field_inverses.clear()
+        self.many2one_company_dependents.clear()
 
         # do the actual setup
         for model in models:
@@ -667,6 +671,12 @@ class Registry(Mapping):
                     expression = f'{column_expression} gin_trgm_ops'
                     method = 'gin'
                     where = ''
+                elif index == 'btree_not_null' and field.company_dependent:
+                    # company dependent condition will use extra
+                    # `AND col IS NOT NULL` to use the index.
+                    expression = f'({column_expression} IS NOT NULL)'
+                    method = 'btree'
+                    where = f'{column_expression} IS NOT NULL'
                 else:  # index in ['btree', 'btree_not_null'， True]
                     expression = f'{column_expression}'
                     method = 'btree'

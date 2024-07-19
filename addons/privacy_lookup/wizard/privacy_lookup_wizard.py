@@ -103,7 +103,7 @@ class PrivacyLookupWizard(models.TransientModel):
             if model._transient or not model._auto:
                 continue
 
-            table_name = SQL.identifier(model_name.replace('.', '_'))
+            table_name = model._table
 
             conditions = []
             # 3.1 Search Basic Personal Data Records (aka email/name usage)
@@ -130,9 +130,8 @@ class PrivacyLookupWizard(models.TransientModel):
             # 3.2 Search Indirect Personal Data References (aka partner_id)
             conditions.extend(
                 SQL(
-                    "%s.%s in (SELECT id FROM indirect_references)",
-                    table_name,
-                    SQL.identifier(field_name),
+                    "%s in (SELECT id FROM indirect_references)",
+                    model._field_to_sql(table_name, field_name),
                 )
                 for field_name, field in model._fields.items()
                 if field.comodel_name == 'res.partner'
@@ -155,7 +154,7 @@ class PrivacyLookupWizard(models.TransientModel):
                     query,
                     self.env['ir.model'].search([('model', '=', model_name)]).id,
                     SQL.identifier('active') if 'active' in model else True,
-                    table_name,
+                    SQL.identifier(table_name),
                     SQL(" OR ").join(conditions),
                 )
         return query

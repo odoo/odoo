@@ -1118,11 +1118,11 @@ class Website(models.Model):
             search_criteria.append((url, website.website_domain()))
 
         # Search the URL in every relevant field
-        html_fields_attributes = self._get_html_fields_attributes() + [
-            ('website.menu', 'website_menu', 'url', False),
+        html_fields = self._get_html_fields() + [
+            ('website.menu', 'url'),
         ]
-        for model, _table, column, _translate in html_fields_attributes:
-            Model = self.env[model]
+        for model_name, field_name in html_fields:
+            Model = self.env[model_name]
             if not Model.has_access('read'):
                 continue
 
@@ -1130,21 +1130,21 @@ class Website(models.Model):
             domains = []
             for url, website_domain in search_criteria:
                 domains.append(AND([
-                    [(column, 'ilike', url)],
+                    [(field_name, 'ilike', url)],
                     website_domain if hasattr(Model, 'website_id') else [],
                 ]))
 
             dependency_records = Model.search(OR(domains))
-            if model == 'ir.ui.view':
+            if model_name == 'ir.ui.view':
                 dependency_records = _handle_views_and_pages(dependency_records)
             if dependency_records:
-                model_name = self.env['ir.model']._display_name_for([model])[0]['display_name']
-                field_name = Model.fields_get()[column]['string']
+                model_name = self.env['ir.model']._display_name_for([model_name])[0]['display_name']
+                field_string = Model.fields_get()[field_name]['string']
                 dependencies.setdefault(model_name, [])
                 dependencies[model_name] += [{
-                    'field_name': field_name,
+                    'field_name': field_string,
                     'record_name': rec.display_name,
-                    'link': 'website_url' in rec and rec.website_url or f'/odoo/{model}/{rec.id}',
+                    'link': 'website_url' in rec and rec.website_url or f'/odoo/{model_name}/{rec.id}',
                     'model_name': model_name,
                 } for rec in dependency_records]
 
@@ -1582,18 +1582,17 @@ class Website(models.Model):
     def _get_cached(self, field):
         return self._get_cached_values()[field]
 
-    def _get_html_fields_attributes_blacklist(self):
+    def _get_html_fields_blacklist(self):
         return (
             'mail.message', 'mail.activity', 'digest.tip',
         )
 
-    def _get_html_fields_attributes(self):
-        html_fields = [('ir.ui.view', 'ir_ui_view', 'arch_db', True)]
+    def _get_html_fields(self):
+        html_fields = [('ir.ui.view', 'arch_db')]
         cr = self.env.cr
         cr.execute("""
             SELECT f.model,
-                   f.name,
-                   f.translate
+                   f.name
               FROM ir_model_fields f
               JOIN ir_model m
                 ON m.id = f.model_id
@@ -1602,14 +1601,20 @@ class Website(models.Model):
                AND m.transient = false
                AND f.model NOT LIKE 'ir.actions%%'
                AND f.model NOT IN %s
-        """, ([self._get_html_fields_attributes_blacklist()]))
-        for model, name, translate in cr.fetchall():
-            table = self.env[model]._table
-            if sqltools.table_exists(cr, table) and sqltools.column_exists(cr, table, name):
-                html_fields.append((model, table, name, translate))
+        """, ([self._get_html_fields_blacklist()]))
+        for model_name, field_name, in cr.fetchall():
+            try:
+                model = self.env[model_name]
+                field = model._fields[field_name]
+                if model._abstract or model._table_query is not None or not field.store:
+                    continue
+            except KeyError:
+                continue
+
+            html_fields.append((model_name, field_name))
         return html_fields
 
-    def _is_snippet_used(self, snippet_module, snippet_id, asset_version, asset_type, html_fields_attributes):
+    def _is_snippet_used(self, snippet_module, snippet_id, asset_version, asset_type, html_fields):
         snippet_occurences = []
         # Check snippet template definition to avoid disabling its related assets.
         # This special case is needed because snippet template definitions do not
@@ -1622,18 +1627,18 @@ class Website(models.Model):
         if self._check_snippet_used(snippet_occurences, asset_type, asset_version):
             return True
 
+        html_fields = [(self.env[model_name], field_name) for model_name, field_name in html_fields]
         # As well as every snippet dropped in html fields
-        result = self.env.execute_query(SQL(" UNION ").join(
-            SQL(
-                "SELECT regexp_matches(%s%s, %s, 'g') FROM %s",
-                SQL.identifier(column),
-                SQL("->>'en_US'") if translate else SQL(),
+        self.env.cr.execute(SQL(" UNION ").join(
+            SQL("SELECT regexp_matches(%s, %s, 'g') FROM %s",
+                model._field_to_sql(model._table, field_name),
                 f'<([^>]*data-snippet="{snippet_id}"[^>]*)>',
-                SQL.identifier(table),
+                SQL.identifier(model._table)
             )
-            for _model, table, column, translate in html_fields_attributes
+            for model, field_name in html_fields
         ))
-        snippet_occurences = [r[0][0] for r in result]
+
+        snippet_occurences = [r[0][0] for r in self.env.cr.fetchall()]
         return self._check_snippet_used(snippet_occurences, asset_type, asset_version)
 
     def _check_snippet_used(self, snippet_occurences, asset_type, asset_version):
@@ -1661,7 +1666,7 @@ class Website(models.Model):
         snippet_re = re.compile(r'(\w*)\/.*\/snippets\/(\w*)\/(\d{3})(?:_\w*)?\.(js|scss)')
         # regex will match /module/static/[.../]/snippets/snippet_id/XXX[_variable].asset_type
         # _variable is not kept since only module, snippet_id, asset_version (XXX), asset_type are relevant
-        html_fields_attributes = self._get_html_fields_attributes()
+        html_fields = self._get_html_fields()
         snippet_used = {}
         for snippet_asset in snippet_assets:
             match = snippet_re.match(snippet_asset.path)
@@ -1672,7 +1677,7 @@ class Website(models.Model):
                 asset_type = 'css'
             key = (snippet_id, asset_version, asset_type)  # module is not relevant, we want the first one in the asset id order to filter module extension
             if key not in snippet_used:
-                snippet_used[key] = self._is_snippet_used(snippet_module, snippet_id, asset_version, asset_type, html_fields_attributes)
+                snippet_used[key] = self._is_snippet_used(snippet_module, snippet_id, asset_version, asset_type, html_fields)
             is_snippet_used = snippet_used[key]
             if is_snippet_used != snippet_asset.active:
                 snippet_asset.active = is_snippet_used

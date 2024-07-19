@@ -662,8 +662,6 @@ class TestAccountAccount(TestAccountMergeCommon):
             account_to_unmerge: account_to_unmerge,
             accounts[1]: new_account,
         }
-        # `res.partner.property_account_receivable_id` won't have been automatically invalidated even though the ir_property table was changed
-        self.env['res.partner'].invalidate_model(['property_account_receivable_id'])
         for account, referencing_records_for_account in referencing_records.items():
             for referencing_record, fname in referencing_records_for_account.items():
                 expected_account = new_account_by_old_account[account]

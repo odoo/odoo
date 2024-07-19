@@ -59,10 +59,6 @@
             <field eval="0" name="list_base_price"/>
         </record>
 
-        <record forcecreate="True" id="property_delivery_carrier" model="ir.property">
-            <field name="name">property_delivery_carrier_id</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier_id')]"/>
-            <field name="value" eval="'delivery.carrier,'+str(ref('delivery_local_delivery'))"/>
-        </record>
+        <function model="ir.default" name="set" eval="('res.partner', 'property_delivery_carrier_id', obj().env.ref('delivery.delivery_local_delivery').id)"/>
 
 </odoo>

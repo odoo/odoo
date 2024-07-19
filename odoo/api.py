@@ -1209,7 +1209,7 @@ class Cache:
         if dirty:
             assert field.column_type and field.store and all(records._ids)
             self._dirty[field].update(records._ids)
-            if field in records.pool.field_depends_context:
+            if not field.company_dependent and field in records.pool.field_depends_context:
                 # put the values under conventional context key values {'context_key': None},
                 # in order to ease the retrieval of those values to flush them
                 records = records.with_env(records.env(context={}))
@@ -1478,7 +1478,7 @@ class Cache:
 
         for field, field_cache in self._data.items():
             # check column fields only
-            if not field.store or not field.column_type or callable(field.translate):
+            if not field.store or not field.column_type or field.translate or field.company_dependent:
                 continue
 
             model = env[field.model_name]
@@ -1496,6 +1496,35 @@ class Cache:
 
         if invalids:
             _logger.warning("Invalid cache: %s", pformat(invalids))
+
+    def _get_grouped_company_dependent_field_cache(self, field):
+        """
+        get a field cache proxy to group up field cache value for a company
+        dependent field
+        cache data: {field: {(company_id,): {id: value}}}
+
+        :param field: a company dependent field
+        :return: a dict like field cache proxy which is logically similar to
+              {id: {company_id, value}}
+        """
+        field_caches = self._data.get(field, EMPTY_DICT)
+        company_field_cache = {
+            context_key[0]: field_cache
+            for context_key, field_cache in field_caches.items()
+        }
+        return GroupedCompanyDependentFieldCache(company_field_cache)
+
+
+class GroupedCompanyDependentFieldCache:
+    def __init__(self, company_field_cache):
+        self._company_field_cache = company_field_cache
+
+    def __getitem__(self, id_):
+        return {
+            company_id: field_cache[id_]
+            for company_id, field_cache in self._company_field_cache.items()
+            if id_ in field_cache
+        }
 
 
 class Starred:

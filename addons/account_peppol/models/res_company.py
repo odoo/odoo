@@ -208,11 +208,11 @@ class ResCompany(models.Model):
         res = super().create(vals_list)
         if res:
             for company in res:
-                self.env['ir.property']._set_default(
-                    'peppol_verification_state',
+                self.env['ir.default'].sudo().set(
                     'res.partner',
+                    'peppol_verification_state',
                     'not_verified',
-                    company,
+                    company_id=company.id,
                 )
         return res
 

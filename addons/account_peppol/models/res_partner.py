@@ -26,7 +26,6 @@ class ResPartner(models.Model):
             ('valid', 'Valid'),
         ],
         string='Peppol endpoint verification',
-        default='not_verified',
         company_dependent=True,
     )
     is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')
