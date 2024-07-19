@@ -30,7 +30,7 @@ from .models import check_property_field_value_name
 from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
-    ustr, OrderedSet, pycompat, sql, SQL, date_utils, unique,
+    OrderedSet, pycompat, sql, SQL, date_utils, unique,
     image_process, merge_sequences, is_list_of,
     html_normalize, html_sanitize,
     DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT,
@@ -1032,7 +1032,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def convert_to_display_name(self, value, record):
         """ Convert ``value`` from the record format to a suitable display name. """
-        return ustr(value) if value else False
+        return str(value) if value else False
 
     ############################################################################
     #
@@ -1709,6 +1709,7 @@ class Monetary(Field):
 class _String(Field):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
+    size = None                         # maximum size of values (deprecated)
 
     def __init__(self, string=Default, **kwargs):
         # translate is either True, False, or a callable
@@ -1761,7 +1762,12 @@ class _String(Field):
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return None
-        return value
+
+        if isinstance(value, bytes):
+            s = value.decode()
+        else:
+            s = str(value)
+        return s[:self.size]
 
     def convert_to_record(self, value, record):
         if value is None:
@@ -1976,7 +1982,6 @@ class Char(_String):
     :type translate: bool or callable
     """
     type = 'char'
-    size = None                         # maximum size of values (deprecated)
     trim = True                         # whether value is trimmed (only by web client)
 
     def _setup_attrs(self, model_class, name):
@@ -2010,11 +2015,6 @@ class Char(_String):
         # to evaluate its length (and possibly truncate it) reliably
         return super().convert_to_column(pycompat.to_text(value)[:self.size], record, values, validate)
 
-    def convert_to_cache(self, value, record, validate=True):
-        if value is None or value is False:
-            return None
-        return pycompat.to_text(value)[:self.size]
-
 
 class Text(_String):
     """ Very similar to :class:`Char` but used for longer contents, does not
@@ -2032,11 +2032,6 @@ class Text(_String):
     @property
     def column_type(self):
         return ('jsonb', 'jsonb') if self.translate else ('text', 'text')
-
-    def convert_to_cache(self, value, record, validate=True):
-        if value is None or value is False:
-            return None
-        return ustr(value)
 
 
 class Html(_String):
