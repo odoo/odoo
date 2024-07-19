@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import json
 import mimetypes
 
 from urllib.parse import unquote, urlencode
@@ -41,12 +40,7 @@ class WebManifest(http.Controller):
                 })
         return shortcuts
 
-    @http.route('/web/manifest.webmanifest', type='http', auth='public', methods=['GET'])
-    def webmanifest(self):
-        """ Returns a WebManifest describing the metadata associated with a web application.
-        Using this metadata, user agents can provide developers with means to create user
-        experiences that are more comparable to that of a native application.
-        """
+    def _get_webmanifest(self):
         web_app_name = request.env['ir.config_parameter'].sudo().get_param('web.web_app_name', 'Odoo')
         manifest = {
             'name': web_app_name,
@@ -64,11 +58,17 @@ class WebManifest(http.Controller):
             'type': 'image/png',
         } for size in icon_sizes]
         manifest['shortcuts'] = self._get_shortcuts()
-        body = json.dumps(manifest)
-        response = request.make_response(body, [
-            ('Content-Type', 'application/manifest+json'),
-        ])
-        return response
+        return manifest
+
+    @http.route('/web/manifest.webmanifest', type='http', auth='public', methods=['GET'])
+    def webmanifest(self):
+        """ Returns a WebManifest describing the metadata associated with a web application.
+        Using this metadata, user agents can provide developers with means to create user
+        experiences that are more comparable to that of a native application.
+        """
+        return request.make_json_response(self._get_webmanifest(), {
+            'Content-Type': 'application/manifest+json'
+        })
 
     @http.route('/web/service-worker.js', type='http', auth='public', methods=['GET'])
     def service_worker(self):
