@@ -140,7 +140,7 @@ class Delivery(WebsiteSale):
         """
         order_sudo = request.website.sale_get_order()
         if request.geoip.country_code:
-            country = self.env['res.country'].search(
+            country = request.env['res.country'].search(
                 [('code', '=', request.geoip.country_code)], limit=1,
             )
         else:
