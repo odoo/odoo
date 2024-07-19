@@ -134,7 +134,6 @@ test("Only necessary requests are made when creating a new chat", async () => {
             partner_additional_values: {},
             thread_id: threadId,
             thread_model: "discuss.channel",
-            special_mentions: [],
         })}`,
         `/mail/data - ${JSON.stringify({
             channels_as_member: true, // called because mail/core/web is loaded in test bundle

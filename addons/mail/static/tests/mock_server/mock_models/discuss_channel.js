@@ -767,6 +767,12 @@ export class DiscussChannel extends models.ServerModel {
         this.write([id], {
             last_interest_dt: serializeDateTime(today()),
         });
+        if (kwargs.special_mentions?.includes("everyone")) {
+            kwargs["partner_ids"] = DiscussChannelMember._filter([
+                ["channel_id", "=", channel.id],
+            ]).map((member) => member.partner_id);
+        }
+        delete kwargs.special_mentions;
         const messageId = MailThread.message_post.call(this, [id], kwargs);
         // simulate compute of message_unread_counter
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);

@@ -408,24 +408,27 @@ export class Store extends BaseStore {
                 });
             partner_ids.push(...recipientIds);
         }
+        const postData = {
+            body: await prettifyMessageContent(body, validMentions),
+            attachment_ids: attachments.map(({ id }) => id),
+            message_type: "comment",
+            partner_ids,
+            subtype_xmlid: subtype,
+        };
+        if (thread.model === "discuss.channel" && validMentions?.specialMentions) {
+            postData.special_mentions = validMentions.specialMentions;
+        }
         return {
             context: {
                 mail_post_autofollow: !isNote && thread.hasWriteAccess,
             },
-            post_data: {
-                body: await prettifyMessageContent(body, validMentions),
-                attachment_ids: attachments.map(({ id }) => id),
-                message_type: "comment",
-                partner_ids,
-                subtype_xmlid: subtype,
-            },
+            post_data: postData,
             attachment_tokens: attachments.map((attachment) => attachment.accessToken),
             canned_response_ids: cannedResponseIds,
             partner_emails: recipientEmails,
             partner_additional_values: recipientAdditionalValues,
             thread_id: thread.id,
             thread_model: thread.model,
-            special_mentions: validMentions?.specialMentions ?? [],
         };
     }
 
