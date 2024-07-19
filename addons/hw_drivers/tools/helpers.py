@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import configparser
 import contextlib
 import datetime
 from enum import Enum
@@ -198,14 +199,22 @@ def check_image():
     version = checkFile.get(valueLastest, 'Error').replace('iotboxv', '').replace('.zip', '').split('_')
     return {'major': version[0], 'minor': version[1]}
 
+
 def save_conf_server(url, token, db_uuid, enterprise_code):
     """
-    Save config to connect IoT to the server
+    Save server configurations in odoo.conf
+    :param url: The URL of the server
+    :param token: The token to authenticate the server
+    :param db_uuid: The database UUID
+    :param enterprise_code: The enterprise code
     """
-    write_file('odoo-remote-server.conf', url)
-    write_file('token', token)
-    write_file('odoo-db-uuid.conf', db_uuid or '')
-    write_file('odoo-enterprise-code.conf', enterprise_code or '')
+    update_conf({
+        'remote_server': url,
+        'token': token,
+        'db_uuid': db_uuid,
+        'enterprise_code': enterprise_code,
+    })
+
 
 def generate_password():
     """
@@ -283,10 +292,13 @@ def get_odoo_server_url():
         ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
         if not ap:
             return False
-    return read_file_first_line('odoo-remote-server.conf')
+
+    return get_conf('remote_server')
+
 
 def get_token():
-    return read_file_first_line('token')
+    """:return: The token to authenticate the server"""
+    return get_conf('token')
 
 
 def get_commit_hash():
@@ -323,12 +335,13 @@ def get_wifi_essid():
             wifi_options.append(essid)
     return wifi_options
 
+
 def load_certificate():
     """
     Send a request to Odoo with customer db_uuid and enterprise_code to get a true certificate
     """
-    db_uuid = read_file_first_line('odoo-db-uuid.conf')
-    enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
+    db_uuid = get_conf('db_uuid')
+    enterprise_code = get_conf('enterprise_code')
     if not (db_uuid and enterprise_code):
         return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
 
@@ -359,7 +372,7 @@ def load_certificate():
     if not result:
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
-    write_file('odoo-subject.conf', result['subject_cn'])
+    update_conf({'subject': result['subject_cn']})
     if platform.system() == 'Linux':
         with writable():
             Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
@@ -375,6 +388,7 @@ def load_certificate():
     elif platform.system() == 'Linux':
         start_nginx_server()
     return True
+
 
 def delete_iot_handlers():
     """
@@ -462,11 +476,13 @@ def path_file(filename):
     elif platform_os == 'Windows':
         return Path().absolute().parent.joinpath('server/' + filename)
 
+
 def read_file_first_line(filename):
     path = path_file(filename)
     if path.exists():
         with path.open('r') as f:
             return f.readline().strip('\n')
+
 
 def unlink_file(filename):
     with writable():
@@ -474,11 +490,24 @@ def unlink_file(filename):
         if path.exists():
             path.unlink()
 
+
 def write_file(filename, text, mode='w'):
+    """
+    This function writes 'text' to 'filename' file for classic files.
+    :param filename: The name of the file to write to.
+    :param text: The text to write to the file, OR the ConfigParser object to write to the file.
+    :param mode: The mode to open the file in (Default: 'w').
+    """
     with writable():
         path = path_file(filename)
         with open(path, mode) as f:
-            f.write(text)
+            if path.suffix == '.conf' and isinstance(text, configparser.ConfigParser):
+                # As we are dealing with conf files, :filename: is a Path object, as it was created by path_file for
+                # configparser. More, :text: is assumed to be a ConfigParser object.
+                text.write(f)
+            else:
+                f.write(text)
+
 
 def download_from_url(download_url, path_to_filename):
     """
@@ -520,7 +549,88 @@ def get_hostname():
     return socket.gethostname()
 
 
+def update_conf(values, section='iot.box'):
+    """
+    Update odoo.conf with the given key and value.
+    :param values: The dictionary of key-value pairs to update the config with.
+    :param section: The section to update the key-value pairs in (Default: iot.box).
+    """
+    _logger.debug("Updating odoo.conf with values: %s", values)
+    conf = get_conf()
+    get_conf.cache_clear()  # Clear the cache to get the updated config
+
+    if not conf.has_section(section):
+        _logger.debug("Creating new section '%s' in odoo.conf", section)
+        conf.add_section(section)
+
+    for key, value in values.items():
+        conf.set(section, key, value) if value else conf.remove_option(section, key)
+
+    write_file("odoo.conf", conf)
+
+
+@cache
+def get_conf(key=None, section='iot.box'):
+    """
+    Get the value of the given key from odoo.conf, or the full config if no key is provided.
+    :param key: The key to get the value of.
+    :param section: The section to get the key from (Default: iot.box).
+    :return: The value of the key provided or None if it doesn't exist, or full conf object if no key is provided.
+    """
+    conf = configparser.ConfigParser()
+    conf.read(path_file("odoo.conf"))
+
+    return conf.get(section, key, fallback=None) if key else conf  # Return the key's value or the configparser object
+
+
 def disconnect_from_server():
-    """Disconnect the IoT Box from the server"""
-    unlink_file('odoo-remote-server.conf')
+    """Disconnect the IoT Box from the server, clears associated caches"""
     get_odoo_server_url.cache_clear()
+    update_conf({
+        'remote_server': '',
+        'token': '',
+        'db_uuid': '',
+    })
+
+
+def migrate_old_config_files_to_new_config_file():
+    """Migrate old config files to the new odoo.conf"""
+    if not get_conf().has_section('iot.box'):
+        _logger.info('Migrating old config files to the new odoo.conf')
+        iotbox_version = read_file_first_line('/var/odoo/iotbox_version')
+        db_uuid = read_file_first_line('odoo-db-uuid.conf')
+        enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
+        remote_server = read_file_first_line('odoo-remote-server.conf')
+        token = read_file_first_line('token')
+        subject = read_file_first_line('subject')
+
+        update_conf({
+            'iotbox_version': iotbox_version,
+            'remote_server': remote_server,
+            'token': token,
+            'db_uuid': db_uuid,
+            'enterprise_code': enterprise_code,
+            'subject': subject,
+        })
+
+        if platform.system() == 'Linux':
+            wifi_network_path = path_file('wifi_network.txt')
+            if wifi_network_path.exists():
+                with open(wifi_network_path, encoding="utf-8") as f:
+                    wifi_ssid = f.readline().strip('\n')
+                    wifi_password = f.readline().strip('\n')
+                update_conf({
+                    'wifi_ssid': wifi_ssid,
+                    'wifi_password': wifi_password,
+                })
+
+        get_conf.cache_clear()
+
+        _logger.info('Removing old config files')
+        unlink_file('iotbox_version')
+        unlink_file('wifi_network.txt')
+        unlink_file('odoo-db-uuid.conf')
+        unlink_file('odoo-enterprise-code.conf')
+        unlink_file('odoo-remote-server.conf')
+        unlink_file('token')
+        unlink_file('subject')
