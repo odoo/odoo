@@ -479,6 +479,7 @@ export class PosStore extends Reactive {
         let quantity = 1;
         let comboConfigurator = [];
         let attribute_custom_values = {};
+        let extras = {};
 
         if (code && product_packaging_by_barcode[code.code]) {
             quantity = product_packaging_by_barcode[code.code].qty;
@@ -508,6 +509,7 @@ export class PosStore extends Reactive {
             }
 
             comboConfigurator = payload;
+            extras.price_type = "manual";
         }
         // Gather lot information if required.
         if (product.isTracked()) {
@@ -561,6 +563,7 @@ export class PosStore extends Reactive {
             price_extra,
             comboConfigurator,
             attribute_value_ids,
+            extras,
         };
     }
 
