@@ -86,7 +86,12 @@ class AccountMoveLine(models.Model):
         else:
             price_item_document = price_line_document = 0.0
             price_unit = self.price_unit
-        discount_amount = (price_subtotal / (1 - self.discount / 100)) * self.discount / 100
+
+        if self.discount == 100:
+            price_before_discount = price_unit * self.quantity
+        else:
+            price_before_discount = price_subtotal / (1 - self.discount / 100)
+        discount_amount = price_before_discount * self.discount / 100
         values = {
             'decimal_places': main_currency.decimal_places,
             'price_item': round(price_unit, 6),
