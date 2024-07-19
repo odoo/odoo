@@ -417,7 +417,7 @@ export class MockHistory {
     }
 }
 
-export class MockLocation {
+export class MockLocation extends EventTarget {
     _anchor = document.createElement("a");
     /** @type {(() => any)[]} */
     _onReload = [];
@@ -490,21 +490,18 @@ export class MockLocation {
     }
 
     constructor() {
+        super();
         this.href = DEFAULT_URL;
+
+        makePublicListeners(this, ["reload"]);
     }
 
     assign(url) {
         this.href = url;
     }
 
-    onReload(callback) {
-        this._onReload.push(callback);
-    }
-
     reload() {
-        for (const callback of this._onReload) {
-            callback();
-        }
+        this.dispatchEvent(new CustomEvent("reload"));
     }
 
     replace(url) {
