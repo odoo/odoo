@@ -89,7 +89,7 @@ export class HootSideBarCounter extends Component {
     static template = xml`
         <t t-set="info" t-value="getCounterInfo()" />
         <span
-            t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-muted' }}"
+            t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-muted' }} {{ info[1] ? 'font-bold' : '' }}"
             t-esc="info[1]"
         />
     `;
@@ -125,27 +125,35 @@ export class HootSideBar extends Component {
             t-on-click="onClick"
         >
             <ul>
-                <t t-foreach="state.items" t-as="item" t-key="item.id">
+                <t t-foreach="state.suites" t-as="suite" t-key="suite.id">
                     <li class="flex items-center h-7 animate-slide-down">
                         <button
                             class="hoot-sidebar-suite flex items-center w-full h-full px-2 overflow-hidden hover:bg-gray-300 dark:hover:bg-gray-700"
-                            t-att-class="{ 'bg-gray-300 dark:bg-gray-700': uiState.selectedSuiteId === item.id }"
-                            t-attf-style="margin-left: {{ (item.path.length - 1) + 'rem' }};"
-                            t-att-title="item.name"
-                            t-on-click="() => this.toggleItem(item.id)"
+                            t-att-class="{ 'bg-gray-300 dark:bg-gray-700': uiState.selectedSuiteId === suite.id }"
+                            t-attf-style="margin-left: {{ (suite.path.length - 1) + 'rem' }};"
+                            t-attf-title="{{ suite.fullName }}\n- {{ suite.totalTestCount }} tests\n- {{ suite.totalSuiteCount }} suites"
+                            t-on-click="() => this.toggleItem(suite.id)"
                         >
                             <div class="flex items-center truncate gap-1 flex-1">
                                 <HootSideBarSuite
-                                    multi="item.config.multi"
-                                    name="item.name"
-                                    hasSuites="hasSuites(item)"
-                                    reporting="item.reporting"
-                                    selected="uiState.selectedSuiteId === item.id"
-                                    unfolded="state.unfolded.has(item.id)"
+                                    multi="suite.config.multi"
+                                    name="suite.name"
+                                    hasSuites="hasSuites(suite)"
+                                    reporting="suite.reporting"
+                                    selected="uiState.selectedSuiteId === suite.id"
+                                    unfolded="state.unfolded.has(suite.id)"
                                 />
+                                <span class="text-muted">
+                                    (<t t-esc="suite.totalTestCount" />)
+                                </span>
                             </div>
-                            <HootJobButtons hidden="true" job="item" />
-                            <HootSideBarCounter reporting="item.reporting" statusFilter="uiState.statusFilter" />
+                            <HootJobButtons hidden="true" job="suite" />
+                            <t t-if="env.runner.state.suites.includes(suite)">
+                                <HootSideBarCounter
+                                    reporting="suite.reporting"
+                                    statusFilter="uiState.statusFilter"
+                                />
+                            </t>
                         </button>
                     </li>
                 </t>
@@ -153,12 +161,14 @@ export class HootSideBar extends Component {
         </div>
     `;
 
+    runningSuites = new Set();
+
     setup() {
         const { runner, ui } = this.env;
 
         this.uiState = useState(ui);
         this.state = useState({
-            items: [],
+            suites: [],
             /** @type {Set<string>} */
             unfolded: new Set(),
         });
@@ -193,7 +203,7 @@ export class HootSideBar extends Component {
             if (!(suite instanceof Suite)) {
                 return;
             }
-            this.state.items.push(suite);
+            this.state.suites.push(suite);
             if (!unfolded.has(suite.id)) {
                 return;
             }
@@ -204,7 +214,7 @@ export class HootSideBar extends Component {
 
         const { unfolded } = this.state;
 
-        this.state.items = [];
+        this.state.suites = [];
         for (const suite of this.env.runner.rootSuites) {
             addSuite(suite);
         }

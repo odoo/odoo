@@ -1102,7 +1102,7 @@ test.tags("desktop")("pager, ungrouped, with limit given in options on desktop",
         limit: 2,
     });
     expect(getPagerValue()).toEqual([1, 2]);
-    expect(getPagerLimit(), 4).toBe(4);
+    expect(getPagerLimit()).toBe(4);
 });
 
 test("pager, ungrouped, with limit set on arch and given in options", async () => {
@@ -1147,7 +1147,7 @@ test.tags("desktop")(
         });
 
         expect(getPagerValue()).toEqual([1, 3]);
-        expect(getPagerLimit(), 4).toBe(4);
+        expect(getPagerLimit()).toBe(4);
     }
 );
 
@@ -1953,7 +1953,7 @@ test.tags("desktop")("quick create record with quick_create_view", async () => {
         groupBy: ["bar"],
     });
 
-    expect(".o_control_panel", "should have one control panel").toHaveCount(1);
+    expect(".o_control_panel").toHaveCount(1);
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
 
     // click on 'Create' -> should open the quick create in the first column

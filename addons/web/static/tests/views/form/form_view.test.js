@@ -8158,7 +8158,7 @@ test(`can save without any dirty translatable fields`, async () => {
 
     await contains(`.o_form_button_save`, { visible: false }).click();
     expect(`.alert .o_field_translate`).toHaveCount(0);
-    expect(`.o_form_saved`, { visible: false }).toHaveCount(1);
+    expect(`.o_form_saved`).toHaveCount(1);
     expect.verifySteps([]);
 });
 
