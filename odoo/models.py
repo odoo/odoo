@@ -4274,7 +4274,17 @@ Fields:
         return records
 
     def _compute_field_value(self, field):
-        fields.determine(field.compute, self)
+        try:
+            fields.determine(field.compute, self)
+        except Exception as e:
+            if field.name.startswith("x_"):
+                _logger.warning(
+                    'An error occurred while computing the value of the custom field "%s"', field.name, exc_info=True
+                )
+                raise UserError(
+                    _('The below issue occurs while computing the value of the custom field "%s":\n%s', field.name, e)
+                ) from e
+            raise
 
         if field.store and any(self._ids):
             # check constraints of the fields that have been computed
