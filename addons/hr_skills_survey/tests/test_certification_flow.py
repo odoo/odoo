@@ -2,6 +2,7 @@
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from markupsafe import Markup
 
 from odoo import Command, fields
 from odoo.addons.survey.tests import common
@@ -58,7 +59,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         resume_line = ResumeLine.search([('survey_id', '=', self.certification.id)], limit=1, order='id DESC')
         self.assertEqual(resume_line.employee_id, self.employee_emp)
         self.assertEqual(resume_line.name, self.certification.title)
-        self.assertEqual(resume_line.description, 'Description')
+        self.assertEqual(resume_line.description, Markup('<p>Description</p>'))
         self.assertEqual(resume_line.line_type_id, self.env.ref('hr_skills_survey.resume_type_certification'))
         self.assertEqual(resume_line.survey_id, self.certification)
         self.assertEqual(resume_line.date_start, fields.Date.today())
@@ -96,7 +97,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         ])._mark_done()
         cert_1_resume_line = ResumeLine.search([('survey_id', '=', self.certification.id)], order='id DESC')
         cert_2_resume_line = ResumeLine.search([('survey_id', '=', certification2.id)], order='id DESC')
-        self.assertEqual(cert_1_resume_line.description, 'Description 1')
+        self.assertEqual(cert_1_resume_line.description, Markup('<p>Description 1</p>'))
         self.assertFalse(cert_1_resume_line.date_end)
-        self.assertEqual(cert_2_resume_line.description, 'Description 2')
+        self.assertEqual(cert_2_resume_line.description, Markup('<p>Description 2</p>'))
         self.assertEqual(cert_2_resume_line.date_end, fields.Date.today() + relativedelta(months=9))
