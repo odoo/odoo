@@ -243,6 +243,33 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(laptop_device), 1)
         self.assertEqual(len(mobile_device), 1)
 
+    def test_retrieve_linked_ip_addresses(self):
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', ip='193.0.3.43')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', ip='192.0.2.42')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', ip='191.0.1.41')
+
+        devices, _ = self.get_devices_logs(self.user_admin)
+        self.assertEqual(len(devices), 1)
+        self.assertIn('193.0.3.43', devices.linked_ip_addresses)
+        self.assertIn('192.0.2.42', devices.linked_ip_addresses)
+        self.assertIn('191.0.1.41', devices.linked_ip_addresses)
+
+    def test_retrieve_linked_ip_addresses_according_to_devices(self):
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_chrome}, ip='193.0.3.43')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_chrome}, ip='192.0.2.42')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_firefox}, ip='191.0.1.41')
+
+        devices, _ = self.get_devices_logs(self.user_admin)
+        self.assertEqual(len(devices), 2)
+        device_chrome = devices.filtered(lambda device: device.browser == 'chrome')
+        device_firefox = devices.filtered(lambda device: device.browser == 'firefox')
+        self.assertIn('193.0.3.43', device_chrome.linked_ip_addresses)
+        self.assertIn('192.0.2.42', device_chrome.linked_ip_addresses)
+        self.assertNotIn('191.0.1.41', device_chrome.linked_ip_addresses)
+        self.assertIn('191.0.1.41', device_firefox.linked_ip_addresses)
+
     # --------------------
     # DELETION
     # --------------------
