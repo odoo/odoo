@@ -115,14 +115,16 @@ export class LinkSelectionPlugin extends Plugin {
             !isProtecting(node);
 
         const combinedFilter = (node) => defaultFilter(node) && !exclude(node);
-
-        for (const node of descendants(root).filter(combinedFilter)) {
+        const nodes = descendants(root).filter(combinedFilter);
+        if (nodes.length > 0) {
             const cursors = this.shared.preserveSelection();
-            // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
-            // nodes visible if needed.
-            const restoreSpaces = prepareUpdate(...leftPos(node));
-            cleanTextNode(node, "\uFEFF", cursors);
-            restoreSpaces();
+            for (const node of nodes) {
+                // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
+                // nodes visible if needed.
+                const restoreSpaces = prepareUpdate(...leftPos(node));
+                cleanTextNode(node, "\uFEFF", cursors);
+                restoreSpaces();
+            }
             cursors.restore();
         }
 
