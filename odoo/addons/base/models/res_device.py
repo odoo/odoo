@@ -45,13 +45,19 @@ class ResDeviceLog(models.Model):
             device.is_current = request and request.session.sid.startswith(device.session_identifier)
 
     def _compute_linked_ip_addresses(self):
-        device_group_map = dict(self._read_group(
+        device_group_map = {}
+        for *device_info, ip_array in self.env['res.device.log']._read_group(
             domain=[('session_identifier', 'in', self.mapped('session_identifier'))],
-            groupby=['session_identifier'],
+            groupby=['session_identifier', 'platform', 'browser'],
             aggregates=['ip_address:array_agg']
-        ))
+        ):
+            device_group_map[tuple(device_info)] = ip_array
         for device in self:
-            device.linked_ip_addresses = '\n'.join(OrderedSet(device_group_map.get(device.session_identifier, [])))
+            device.linked_ip_addresses = '\n'.join(
+                OrderedSet(device_group_map.get(
+                    (device.session_identifier, device.platform, device.browser), []
+                ))
+            )
 
     def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
         if field_name == 'is_current' and request:
