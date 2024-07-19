@@ -446,13 +446,7 @@ class HrAttendance(models.Model):
             return True
         # This record only exists if the scenario has been already launched
         demo_tag = self.env.ref('hr_attendance.resource_calendar_std_38h', raise_if_not_found=False)
-        if demo_tag:
-            return True
-        return bool(self.env['ir.module.module'].search_count([
-            '&',
-                ('state', 'in', ['installed', 'to upgrade', 'uninstallable']),
-                ('demo', '=', True)
-        ]))
+        return bool(demo_tag) or bool(self.env['ir.module.module'].search_count([('demo', '=', True)]))
 
     def _load_demo_data(self):
         if self.has_demo_data():
