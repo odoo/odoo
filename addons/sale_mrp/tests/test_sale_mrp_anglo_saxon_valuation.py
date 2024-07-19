@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import Form, tagged
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
@@ -530,3 +531,86 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
             {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 30},
             {'account_id': self.company_data['default_account_expense'].id,     'debit': 30,    'credit': 0},
         ])
+
+    def test_nested_kit_anglo_saxon(self):
+        """Test that nested kits use the correct bom in automatic anglo saxon
+           Flow:
+              * create a product with a nested kit bom
+              * create SO for it and corresponding invoice
+              * confirm the invoice
+           There should be no error"""
+
+        category = self.env.ref('product.product_category_1').copy({'name': 'Test category', 'property_valuation': 'real_time'})
+
+        categ_kgm = self.env.ref('uom.product_uom_categ_kgm')
+        uom_kg = self.env['uom.uom'].search([('category_id', '=', categ_kgm.id), ('uom_type', '=', 'reference')], limit=1)
+
+        # Products
+        main_kit, sub_kit, component = self.env['product.product'].create([{
+            'name': 'main kit',
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+            'categ_id': category.id,
+        },
+        {
+            'name': 'sub kit',
+            'type': 'product',
+            'uom_id': uom_kg.id,
+            'uom_po_id': uom_kg.id,
+        },
+        {
+            'name': 'component',
+            'type': 'product',
+            'standard_price': 20,
+        },
+        ])
+
+        # BOMs
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': main_kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'company_id': self.env.company.id,
+            'bom_line_ids': [Command.create({
+                'product_uom_id': uom_kg.id,
+                'product_id': sub_kit.id,
+                'product_qty': 1.0,
+            })],
+        },
+        {
+            'product_tmpl_id': sub_kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'product_uom_id': uom_kg.id,
+            'company_id': self.env.company.id,
+            'bom_line_ids': [Command.create({
+                'product_id': component.id,
+                'product_qty': 1.0,
+            })],
+        }])
+
+        # SOs
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': main_kit.name,
+                'product_id': main_kit.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+            })],
+            'company_id': self.env.company.id,
+        })
+        so.action_confirm()
+
+        # Invoice
+        so._create_invoices()
+        invoice = so.invoice_ids
+        invoice.action_post()
+
+        # Checks
+        amls = invoice.line_ids
+        aml_expense = amls.filtered(lambda l: l.display_type == 'cogs' and l.debit > 0 and l.product_id == main_kit)
+        aml_output = amls.filtered(lambda l: l.display_type == 'cogs' and l.credit > 0 and l.product_id == main_kit)
+
+        self.assertEqual(aml_expense.debit, 20, "Cost of Good Sold entry missing or mismatching for variant without kit")
+        self.assertEqual(aml_output.credit, 20, "Cost of Good Sold entry missing or mismatching for variant without kit")
