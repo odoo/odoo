@@ -656,7 +656,7 @@ class ProductTemplate(models.Model):
         'Track Inventory', store=True, compute='compute_is_storable', readonly=False,
         default=False, precompute=True)
     responsible_id = fields.Many2one(
-        'res.users', string='Responsible', default=lambda self: self.env.uid, company_dependent=True, check_company=True,
+        'res.users', string='Responsible', company_dependent=True, check_company=True,
         help="This user will be responsible of the next activities related to logistic operations for this product.")
     property_stock_production = fields.Many2one(
         'stock.location', "Production Location",
