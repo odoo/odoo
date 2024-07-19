@@ -3,10 +3,10 @@
 from datetime import datetime, timedelta
 import logging
 import pytz
-from psycopg2 import sql
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -23,10 +23,10 @@ def _drop_sequences(cr, seq_names):
     """ Drop the PostreSQL sequences if they exist. """
     if not seq_names:
         return
-    names = sql.SQL(',').join(map(sql.Identifier, seq_names))
+    names = SQL(',').join(map(SQL.identifier, seq_names))
     # RESTRICT is the default; it prevents dropping the sequence if an
     # object depends on it.
-    cr.execute(sql.SQL("DROP SEQUENCE IF EXISTS {} RESTRICT").format(names))
+    cr.execute(SQL("DROP SEQUENCE IF EXISTS %s RESTRICT", names))
 
 
 def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
@@ -37,15 +37,13 @@ def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
     if not cr.fetchone():
         # sequence is not created yet, we're inside create() so ignore it, will be set later
         return
-    statement = sql.SQL("ALTER SEQUENCE") + sql.Identifier(seq_name)
-    params = []
-    if number_increment is not None:
-        statement += sql.SQL("INCREMENT BY") + sql.Placeholder()
-        params.append(number_increment)
-    if number_next is not None:
-        statement += sql.SQL("RESTART WITH") + sql.Placeholder()
-        params.append(number_next)
-    cr.execute(statement.join(' '), params)
+    statement = SQL(
+        "ALTER SEQUENCE %s%s%s",
+        SQL.identifier(seq_name),
+        SQL(" INCREMENT BY %s", number_increment) if number_increment is not None else SQL(),
+        SQL(" RESTART WITH %s", number_next) if number_next is not None else SQL(),
+    )
+    cr.execute(statement)
 
 
 def _select_nextval(cr, seq_name):
@@ -65,19 +63,15 @@ def _predict_nextval(self, seq_id):
     """Predict next value for PostgreSQL sequence without consuming it"""
     # Cannot use currval() as it requires prior call to nextval()
     seqname = 'ir_sequence_%s' % seq_id
-    seqtable = sql.Identifier(seqname)
-    query = sql.SQL("""SELECT last_value,
-                      (SELECT increment_by
-                       FROM pg_sequences
-                       WHERE sequencename = %s),
-                      is_called
-               FROM {}""")
-    params = [seqname]
+    seqtable = SQL.identifier(seqname)
+    query = SQL("""
+        SELECT last_value,
+            (SELECT increment_by FROM pg_sequences WHERE sequencename = %s),
+            is_called
+        FROM %s""", seqname, seqtable)
     if self.env.cr._cnx.server_version < 100000:
-        query = sql.SQL("SELECT last_value, increment_by, is_called FROM {}")
-        params = []
-    self.env.cr.execute(query.format(seqtable), params)
-    (last_value, increment_by, is_called) = self.env.cr.fetchone()
+        query = SQL("SELECT last_value, increment_by, is_called FROM %s", seqtable)
+    [(last_value, increment_by, is_called)] = self.env.execute_query(query)
     if is_called:
         return last_value + increment_by
     # sequence has just been RESTARTed to return last_value next time

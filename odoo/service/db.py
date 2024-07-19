@@ -6,28 +6,24 @@ import os
 import shutil
 import subprocess
 import tempfile
-import threading
-import traceback
-from xml.etree import ElementTree as ET
 import zipfile
-
-from psycopg2 import sql
-from pytz import country_timezones
-from functools import wraps
 from contextlib import closing
-from decorator import decorator
+from xml.etree import ElementTree as ET
 
 import psycopg2
+from decorator import decorator
+from pytz import country_timezones
 
 import odoo
-from odoo import SUPERUSER_ID
-from odoo.exceptions import AccessDenied
 import odoo.release
 import odoo.sql_db
 import odoo.tools
-from odoo.sql_db import db_connect
+from odoo import SUPERUSER_ID
+from odoo.exceptions import AccessDenied
 from odoo.release import version_info
-from odoo.tools.misc import find_pg_tool, exec_pg_environ
+from odoo.sql_db import db_connect
+from odoo.tools import SQL
+from odoo.tools.misc import exec_pg_environ, find_pg_tool
 
 _logger = logging.getLogger(__name__)
 
@@ -109,10 +105,11 @@ def _create_empty_database(name):
             cr._cnx.autocommit = True
 
             # 'C' collate is only safe with template0, but provides more useful indexes
-            collate = sql.SQL("LC_COLLATE 'C'" if chosen_template == 'template0' else "")
-            cr.execute(
-                sql.SQL("CREATE DATABASE {} ENCODING 'unicode' {} TEMPLATE {}").format(
-                sql.Identifier(name), collate, sql.Identifier(chosen_template)
+            cr.execute(SQL(
+                "CREATE DATABASE %s ENCODING 'unicode' %s TEMPLATE %s",
+                SQL.identifier(name),
+                SQL("LC_COLLATE 'C'") if chosen_template == 'template0' else SQL(""),
+                SQL.identifier(chosen_template),
             ))
 
     # TODO: add --extension=trigram,unaccent
@@ -157,9 +154,10 @@ def exp_duplicate_database(db_original_name, db_name, neutralize_database=False)
         # database-altering operations cannot be executed inside a transaction
         cr._cnx.autocommit = True
         _drop_conn(cr, db_original_name)
-        cr.execute(sql.SQL("CREATE DATABASE {} ENCODING 'unicode' TEMPLATE {}").format(
-            sql.Identifier(db_name),
-            sql.Identifier(db_original_name)
+        cr.execute(SQL(
+            "CREATE DATABASE %s ENCODING 'unicode' TEMPLATE %s",
+            SQL.identifier(db_name),
+            SQL.identifier(db_original_name),
         ))
 
     registry = odoo.modules.registry.Registry.new(db_name)
@@ -206,7 +204,7 @@ def exp_drop(db_name):
         _drop_conn(cr, db_name)
 
         try:
-            cr.execute(sql.SQL('DROP DATABASE {}').format(sql.Identifier(db_name)))
+            cr.execute(SQL('DROP DATABASE %s', SQL.identifier(db_name)))
         except Exception as e:
             _logger.info('DROP DB: %s failed:\n%s', db_name, e)
             raise Exception("Couldn't drop database %s: %s" % (db_name, e))
@@ -357,7 +355,7 @@ def exp_rename(old_name, new_name):
         cr._cnx.autocommit = True
         _drop_conn(cr, old_name)
         try:
-            cr.execute(sql.SQL('ALTER DATABASE {} RENAME TO {}').format(sql.Identifier(old_name), sql.Identifier(new_name)))
+            cr.execute(SQL('ALTER DATABASE %s RENAME TO %s', SQL.identifier(old_name), SQL.identifier(new_name)))
             _logger.info('RENAME DB: %s -> %s', old_name, new_name)
         except Exception as e:
             _logger.info('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
