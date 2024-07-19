@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useRefListener, useService } from '@web/core/utils/hooks';
-import { useRef, useEffect, useState } from "@odoo/owl";
+import { onWillStart, useRef, useEffect, useState } from "@odoo/owl";
 
 export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone extends T {
     static props = [
@@ -72,12 +72,20 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
         this.notification = useService('notification');
         this.orm = useService('orm');
         this.http = useService('http');
+        this.shareTarget = useService("shareTarget");
         this.fileInput = useRef('fileInput');
         this.root = useRef("root");
 
         useBus(this.env.bus, "change_file_input", async (ev) => {
             this.fileInput.el.files = ev.detail.files;
             await this.onChangeFileInput();
+        });
+
+        onWillStart(async () => {
+            if (this.shareTarget.hasSharedFiles()) {
+                const files = this.shareTarget.getSharedFilesToUpload();
+                await this._onChangeFileInput(files);
+            }
         });
     }
 
@@ -101,9 +109,13 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
     }
 
     async onChangeFileInput() {
+        await this._onChangeFileInput([...this.fileInput.el.files]);
+    }
+
+    async _onChangeFileInput(files) {
         const params = {
             csrf_token: odoo.csrf_token,
-            ufile: [...this.fileInput.el.files],
+            ufile : files,
             model: 'hr.expense',
             id: 0,
         };
@@ -113,7 +125,7 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
         if (attachments.error) {
             throw new Error(attachments.error);
         }
-        this.onUpload(attachments);
+        await this.onUpload(attachments);
     }
 
     async onUpload(attachments) {
@@ -126,6 +138,6 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
         }
 
         const action = await this.orm.call('hr.expense', 'create_expense_from_attachments', [attachmentIds, this.env.config.viewType]);
-        this.actionService.doAction(action);
+        await this.actionService.doAction(action);
     }
 };
