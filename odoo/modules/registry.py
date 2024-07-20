@@ -674,7 +674,7 @@ class Registry(Mapping):
                                     "therefore trigram indexes may not be effective.",
                                 )
                         if field.translate:
-                            if index_key in language_index.keys():
+                            if index_key in language_index:
                                 expression = f'{column_expression}'
                                 method = 'btree'
                                 where = f"{language_index[index_key][1]}->'{language_index[index_key][0]}' IS NOT NULL"
