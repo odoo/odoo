@@ -788,8 +788,16 @@ class Base(models.AbstractModel):
 
         if field.type == 'many2many':
             if not expand:
-                domain_image = self._search_panel_domain_image(field_name, model_domain, limit=limit)
-                image_element_ids = list(domain_image.keys())
+                if field.base_field.groupable:
+                    domain_image = self._search_panel_domain_image(field_name, model_domain, limit=limit)
+                    image_element_ids = list(domain_image.keys())
+                else:
+                    model_records = self.search_read(model_domain, [field_name])
+                    image_element_ids = OrderedSet()
+                    for rec in model_records:
+                        if rec[field_name]:
+                            image_element_ids.update(rec[field_name])
+                    image_element_ids = list(image_element_ids)
                 comodel_domain = AND([
                     comodel_domain,
                     [('id', 'in', image_element_ids)],
