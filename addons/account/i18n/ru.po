@@ -28,8 +28,9 @@
 # Irina Fedulova <istartlin@gmail.com>, 2024
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2024
 # Nadia Martynova, 2024
-# Wil Odoo, 2024
 # Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:43+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +56,11 @@ msgid ""
 "The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
 "You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"Движение средств (%(move)s) не сбалансировано.\n"
+"Сумма дебетов равна %(debit_total)s, а сумма кредитов равна %(credit_total)s.\n"
+"Возможно, вы захотите указать счет по умолчанию в журнале \"%(journal)s\", чтобы автоматически сбалансировать каждое движение средств."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -508,7 +514,7 @@ msgstr "9.00"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_90days_on_the_10th
 msgid "90 days, on the 10th"
-msgstr ""
+msgstr "90 дней, на 10-й"
 
 #. module: account
 #. odoo-python
@@ -5116,12 +5122,12 @@ msgstr "Дни после даты выставления счета"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_end_of_month_on_the
 msgid "Days end of month on the"
-msgstr ""
+msgstr "Дни окончания месяца на"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__days_next_month
 msgid "Days on the next month"
-msgstr ""
+msgstr "Дни в следующем месяце"
 
 #. module: account
 #. odoo-python
@@ -5572,7 +5578,7 @@ msgstr "Отображение суммы"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
 msgid "Display Days Next Month"
-msgstr ""
+msgstr "Отображение дней в следующем месяце"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
@@ -10959,7 +10965,7 @@ msgstr "Условия оплаты: 45 дней"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_90days_on_the_10th
 msgid "Payment terms: 90 days, on the 10th"
-msgstr ""
+msgstr "Условия оплаты: 90 дней, на 10-й"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_end_following_month
@@ -14085,12 +14091,13 @@ msgstr "Выбранная дата защищена блокировкой"
 #: code:addons/account/models/account_payment_term.py:0
 msgid "The days added must be a number and has to be between 0 and 31."
 msgstr ""
+"Добавляемые дни должны быть числом и находиться в диапазоне от 0 до 31."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid "The days added must be between 0 and 31."
-msgstr ""
+msgstr "Количество добавляемых дней должно быть от 0 до 31."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id

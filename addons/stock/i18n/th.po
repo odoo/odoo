@@ -352,7 +352,7 @@ msgstr "1 สัปดาห์"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "12.0"
-msgstr ""
+msgstr "12.0"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
@@ -5558,7 +5558,7 @@ msgstr "ไม่พบการดำเนินการ มาสร้า�
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "ไม่พบผลิตภัณฑ์ที่จะสร้าง Serials/Lots สำหรับ"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -10843,6 +10843,18 @@ msgstr "คุณไม่สามารถลบเศษสินค้าท
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"คุณไม่สามารถบรรจุปริมาณโดยตรงจากการถ่ายโอนที่แตกต่างกันลงในบรรจุภัณฑ์เดียวกันผ่านมุมมองนี้"
+" ลองเพิ่มพวกเขาในการเบิกสินค้าเป็นชุดและบรรจุไว้ที่นั่น"
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot modify inventory loss quantity"
 msgstr "คุณไม่สามารถแก้ไขปริมาณที่สูญเสียในสินค้าคงคลังได้"
@@ -11316,17 +11328,17 @@ msgstr "ควรจะเติมสินค้า"
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_incoming
 msgid "stock.method_action_picking_tree_incoming"
-msgstr ""
+msgstr "stock.method_action_picking_tree_incoming"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_internal
 msgid "stock.method_action_picking_tree_internal"
-msgstr ""
+msgstr "stock.method_action_picking_tree_internal"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_outgoing
 msgid "stock.method_action_picking_tree_outgoing"
-msgstr ""
+msgstr "stock.method_action_picking_tree_outgoing"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule
