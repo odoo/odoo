@@ -1146,6 +1146,17 @@ msgstr "Tühistatud"
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+"Päevade kulu kuna marsruudi info on puudu vähemalt ühel komponendil või "
+"lõpptootel."
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Cannot delete a manufacturing order in done state."
@@ -6394,7 +6405,7 @@ msgstr "Te peaksite lisama lõpptootele partiinumbri."
 msgid ""
 "You should update the components quantity instead of directly updating the "
 "quantity of the kit product."
-msgstr ""
+msgstr "Peaksite uuendama paki koguse asemel koostisosade koguseid."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
