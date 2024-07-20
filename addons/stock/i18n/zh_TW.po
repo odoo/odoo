@@ -10196,6 +10196,16 @@ msgstr "不能刪除已完成的報廢."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr "你不可在此檢視畫面中，將不同轉移的數量直接打包至同一包裝內。請嘗試將它們添加至批量揀貨中，並在該處將其包裝。"
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot modify inventory loss quantity"
 msgstr "您不能修改庫存盤虧數量"

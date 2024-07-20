@@ -5216,6 +5216,12 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "没有作业。让我们创建一个调拨！"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "现在还没有产品， 我们先创建一个!"
@@ -8582,7 +8588,7 @@ msgstr "包含此位置的父位置。示例： '调度区域' 是 '1号门' 的
 msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
-msgstr ""
+msgstr "采购数量将四舍五入为该字段数量的倍数。如果为 0，则不四舍五入。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -8616,7 +8622,7 @@ msgstr "产品”%s“的数量小数位与单位”%s“的定义不同。 请�
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "每批次数量应始终为正值。"
 
 #. module: stock
 #. odoo-python
@@ -8631,7 +8637,7 @@ msgstr "请求的作业无法处理，因为一个程序错误，设置`product_
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "搜索不支持%(operator)s操作员或%(value)s值。"
 
 #. module: stock
 #. odoo-python
@@ -9866,7 +9872,7 @@ msgstr "当产品到达<b>%s</b>时，<br/><b>%s</b>会被建立并送到<b>%s</
 msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
-msgstr ""
+msgstr "设置为 True（真）时，stock.move 的目标位置会依照规则。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -9881,7 +9887,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
-msgstr ""
+msgstr "当虚拟库存低于此字段指定的最小数量时，Odoo 会生成采购，使预测数量高于此最小数量。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -9889,7 +9895,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, Odoo generates a "
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
-msgstr ""
+msgstr "当虚拟库存低于最小数量时，Odoo 会生成采购，使预测数量达到（或接近）该字段指定的最大数量（或最小数量，以较大者为准）。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10149,7 +10155,7 @@ msgstr "您无法改变已标记为“完成”的库存调拨的状态。"
 msgid ""
 "You cannot change the company of a lot/serial number currently in a location"
 " belonging to another company."
-msgstr ""
+msgstr "您不能更改当前位置属于其他公司的批号/序列号的公司。"
 
 #. module: stock
 #. odoo-python
@@ -10181,6 +10187,16 @@ msgstr "您无法更改计量单位，因为此产品已有库存变动。如果
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "不能删除已完成的报废。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr "您不能通过此视图，将不同转移的数量直接打包到同一个货包中。请尝试将它们添加到批次拣选中，然后在该处打包。"
 
 #. module: stock
 #. odoo-python
@@ -10484,7 +10500,7 @@ msgstr "例如：中央仓库"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "e.g. LOT-PR-00012"
-msgstr ""
+msgstr "例：LOT-PR-00012"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form

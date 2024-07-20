@@ -6363,12 +6363,12 @@ msgstr "Processar operações em levas de transferências"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process transfers in batch per worker"
-msgstr "Processar transferências em lote por trabalhador"
+msgstr "Processar transferências em lote por prestador de serviços"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
 msgid "Procurement"
-msgstr "Compra"
+msgstr "Aquisição"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
@@ -6376,12 +6376,12 @@ msgstr "Compra"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__group_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__group_id
 msgid "Procurement Group"
-msgstr "Grupo de compra"
+msgstr "Grupo de aquisição"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.procurement_group_form_view
 msgid "Procurement group"
-msgstr "Grupo de compra"
+msgstr "Grupo de aquisição"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.ir_cron_scheduler_action_ir_actions_server
@@ -10596,6 +10596,19 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "Não é possível excluir uma sucata concluída."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"Você não pode embalar quantidades de diferentes transferências na mesma "
+"embalagem nessa visualização. Tente adicioná-las a uma separação de lote e "
+"embalá-las lá."
 
 #. module: stock
 #. odoo-python
