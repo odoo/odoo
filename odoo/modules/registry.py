@@ -36,14 +36,13 @@ from odoo.tools.lru import LRU
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger('odoo.schema')
 
-
 _REGISTRY_CACHES = {
     'default': 8192,
-    'assets': 512, # arbitrary
-    'templates': 1024, # arbitrary
+    'assets': 512,  # arbitrary
+    'templates': 1024,  # arbitrary
     'routing': 1024,  # 2 entries per website
     'routing.rewrites': 8192,  # url_rewrite entries
-    'templates.cached_values': 2048, # arbitrary
+    'templates.cached_values': 2048,  # arbitrary
 }
 
 # cache invalidation dependencies, as follows:
@@ -54,6 +53,7 @@ _CACHES_BY_KEY = {
     'templates': ('templates', 'templates.cached_values'),
     'routing': ('routing', 'routing.rewrites', 'templates.cached_values'),
 }
+
 
 class Registry(Mapping):
     """ Model registry for a particular database.
@@ -117,7 +117,7 @@ class Registry(Mapping):
                 raise
         except Exception:
             _logger.exception('Failed to load registry')
-            del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
+            del cls.registries[db_name]  # pylint: disable=unsupported-delete-operation
             raise
 
         # load_modules() above can replace the registry by calling
@@ -134,7 +134,7 @@ class Registry(Mapping):
         return registry
 
     def init(self, db_name):
-        self.models = {}    # model name/model instance mapping
+        self.models = {}  # model name/model instance mapping
         self._sql_constraints = set()
         self._init = True
         self._database_translated_fields = ()  # names of translated fields in database
@@ -146,7 +146,7 @@ class Registry(Mapping):
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
-        self.updated_modules = []       # installed/updated modules
+        self.updated_modules = []  # installed/updated modules
         self.loaded_xmlids = set()
 
         self.db_name = db_name
@@ -157,8 +157,8 @@ class Registry(Mapping):
         self.test_lock = None
 
         # Indicates that the registry is
-        self.loaded = False             # whether all modules are loaded
-        self.ready = False              # whether everything is set up
+        self.loaded = False  # whether all modules are loaded
+        self.ready = False  # whether everything is set up
 
         # field dependencies
         self.field_depends = Collector()
@@ -448,10 +448,10 @@ class Registry(Mapping):
             if seq1 and seq2:
                 f1, f2 = seq1[-1], seq2[0]
                 if (
-                    f1.type == 'many2one' and f2.type == 'one2many'
-                    and f1.name == f2.inverse_name
-                    and f1.model_name == f2.comodel_name
-                    and f1.comodel_name == f2.model_name
+                        f1.type == 'many2one' and f2.type == 'one2many'
+                        and f1.name == f2.inverse_name
+                        and f1.model_name == f2.comodel_name
+                        and f1.comodel_name == f2.model_name
                 ):
                     return concat(seq1[:-1], seq2[1:])
             return seq1 + seq2
@@ -504,10 +504,10 @@ class Registry(Mapping):
             return self._is_modifying_relations[field]
         except KeyError:
             result = field in self._field_triggers and (
-                field.relational or self.field_inverses[field] or any(
-                    dep.relational or self.field_inverses[dep]
-                    for dep in self.get_dependent_fields(field)
-                )
+                    field.relational or self.field_inverses[field] or any(
+                dep.relational or self.field_inverses[dep]
+                for dep in self.get_dependent_fields(field)
+            )
             )
             self._is_modifying_relations[field] = result
             return result
@@ -611,7 +611,8 @@ class Registry(Mapping):
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
             for field in Model._fields.values()
-            if field.column_type and field.store and field.name not in LOG_ACCESS_COLUMNS and (not value_fields or f"field_{field.model_name.replace('.', '_')}__{field.name}" in value_fields)
+            if field.column_type and field.store and field.name not in LOG_ACCESS_COLUMNS and (
+                           not value_fields or f"field_{field.model_name.replace('.', '_')}__{field.name}" in value_fields)
         ]
         if not expected:
             return
@@ -649,7 +650,7 @@ class Registry(Mapping):
                         language_index.update({f"{lang_field_name}": ('en_US', field.name)})
 
                 for index_key in index_keys.split(';'):
-                    if index_key in language_index.keys():
+                    if index_key in language_index:
                         indexname = sql.make_index_name(tablename, index_key)
                     if index_key.find(',') != -1:
                         indexname = sql.make_index_name(tablename, '_'.join(index_key.split(',')))
@@ -657,7 +658,7 @@ class Registry(Mapping):
 
                     if index == 'trigram':
                         if field.translate:
-                            if index_key in language_index.keys():
+                            if index_key in language_index:
                                 column_expression = f"({language_index[index_key][1]}->>'{language_index[index_key][0]}')"
                             else:
                                 column_expression = f'''(jsonb_path_query_array({column_expression}, '$.*')::text)'''
@@ -694,7 +695,7 @@ class Registry(Mapping):
                         expression = f'{column_expression}'
                         method = 'btree'
                         where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
-                    else: # default option
+                    else:  # default option
                         expression = f'{column_expression}'
                         method = 'btree'
                         where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
@@ -879,9 +880,12 @@ class Registry(Mapping):
             # must be reloaded.
             # The `base_cache_signaling_...` sequences indicates when caches must
             # be invalidated (i.e. cleared).
-            sequence_names = ('base_registry_signaling', *(f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY))
-            cr.execute("SELECT sequence_name FROM information_schema.sequences WHERE sequence_name IN %s", [sequence_names])
-            existing_sequences = tuple(s[0] for s in cr.fetchall())  # could be a set but not efficient with such a little list
+            sequence_names = (
+            'base_registry_signaling', *(f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY))
+            cr.execute("SELECT sequence_name FROM information_schema.sequences WHERE sequence_name IN %s",
+                       [sequence_names])
+            existing_sequences = tuple(
+                s[0] for s in cr.fetchall())  # could be a set but not efficient with such a little list
 
             for sequence_name in sequence_names:
                 if sequence_name not in existing_sequences:
@@ -896,11 +900,13 @@ class Registry(Mapping):
             self.cache_sequences.update(db_cache_sequences)
 
             _logger.debug("Multiprocess load registry signaling: [Registry: %s] %s",
-                          self.registry_sequence, ' '.join('[Cache %s: %s]' % cs for cs in self.cache_sequences.items()))
+                          self.registry_sequence,
+                          ' '.join('[Cache %s: %s]' % cs for cs in self.cache_sequences.items()))
 
     def get_sequences(self, cr):
         cache_sequences_query = ', '.join([f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY])
-        cache_sequences_values_query = ',\n'.join([f'base_cache_signaling_{cache_name}.last_value' for cache_name in _CACHES_BY_KEY])
+        cache_sequences_values_query = ',\n'.join(
+            [f'base_cache_signaling_{cache_name}.last_value' for cache_name in _CACHES_BY_KEY])
         cr.execute(f"""
             SELECT base_registry_signaling.last_value, {cache_sequences_values_query}
             FROM base_registry_signaling, {cache_sequences_query}
@@ -932,7 +938,7 @@ class Registry(Mapping):
                 for cache_name, cache_sequence in self.cache_sequences.items():
                     expected_sequence = db_cache_sequences[cache_name]
                     if cache_sequence != expected_sequence:
-                        for cache in _CACHES_BY_KEY[cache_name]: # don't call clear_cache to avoid signal loop
+                        for cache in _CACHES_BY_KEY[cache_name]:  # don't call clear_cache to avoid signal loop
                             if cache not in invalidated:
                                 invalidated.append(cache)
                                 self.__caches[cache].clear()
@@ -1030,12 +1036,16 @@ class Registry(Mapping):
 
 class DummyRLock(object):
     """ Dummy reentrant lock, to be used while running rpc and js tests """
+
     def acquire(self):
         pass
+
     def release(self):
         pass
+
     def __enter__(self):
         self.acquire()
+
     def __exit__(self, type, value, traceback):
         self.release()
 
@@ -1092,8 +1102,8 @@ class TriggerTree(dict):
         called on every field to determine which fields should be kept in the
         tree nodes. This enables to discard some fields from the tree nodes.
         """
-        root_fields = OrderedSet()              # fields in the root node
-        subtrees_to_merge = defaultdict(list)   # subtrees to merge grouped by key
+        root_fields = OrderedSet()  # fields in the root node
+        subtrees_to_merge = defaultdict(list)  # subtrees to merge grouped by key
 
         for tree in trees:
             root_fields.update(tree.root)
