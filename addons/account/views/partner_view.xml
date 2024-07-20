@@ -40,9 +40,9 @@
                             <field name="auto_apply"/>
                             <field name="vat_required" invisible="not auto_apply"/>
                             <field name="foreign_vat"/>
-                            <field name="country_group_id" invisible="not auto_apply"/>
+                            <field name="country_group_id" invisible="not auto_apply and not foreign_vat" required="foreign_vat and not country_id"/>
                             <field name="country_id"
-                                required="foreign_vat"
+                                required="foreign_vat and not country_group_id"
                                 options="{'no_open': True, 'no_create': True}"/>
                             <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
                                 invisible="(not auto_apply and not foreign_vat) or not country_id or states_count == 0"/>
