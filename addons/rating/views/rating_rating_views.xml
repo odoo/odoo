@@ -86,48 +86,32 @@
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
                 <kanban create="false" sample="1">
-                    <field name="rating"/>
-                    <field name="res_name"/>
-                    <field name="feedback"/>
-                    <field name="partner_id"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click d-flex align-items-center justify-content-center">
-                                <div class="row oe_kanban_details">
-                                    <div class="col-4 my-auto">
-                                        <field name="rating_image" widget="image" class="bg-view" />
-                                    </div>
-                                    <div class="col-8 ps-1">
-                                        <strong>
-                                            <field name="rated_partner_name"/>
-                                        </strong>
-                                        <ul>
-                                            <li t-if="record.partner_id.value">
-                                                <span class="o_text_overflow">
-                                                    by
-                                                    <span t-att-title="record.partner_id.value">
-                                                        <field name="partner_id" />
-                                                    </span>
-                                                </span>
-                                            </li>
-                                            <li>
-                                                <span class="o_text_overflow">
-                                                    for
-                                                    <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
-                                                        <field name="res_name" />
-                                                    </a>
-                                                </span>
-                                            </li>
-                                            <li>
-                                                on <field name="create_date" />
-                                            </li>
-                                            <li t-if="record.feedback.raw_value" class="o_text_overflow" t-att-title="record.feedback.raw_value">
-                                                <field name="feedback"/>
-                                            </li>
-                                        </ul>
+                        <t t-name="kanban-card" class="row g-0">
+                            <aside class="col-4 my-auto align-self-center">
+                                <field name="rating_image" widget="image" class="bg-view ms-3" />
+                            </aside>
+                            <main class="col ps-2">
+                                <field name="rated_partner_name" class="fw-bolder"/>
+                                <div t-if="record.partner_id.value" class="text-truncate">
+                                    by
+                                    <span t-att-title="record.partner_id.value">
+                                        <field name="partner_id" />
+                                    </span>
                                 </div>
+                                <span class="text-truncate">
+                                    for
+                                    <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
+                                        <field name="res_name" />
+                                    </a>
+                                </span>
+                                <div>
+                                    on <field name="create_date" />
                                 </div>
-                            </div>
+                                <span class="text-truncate" t-att-title="record.feedback.raw_value">
+                                    <field name="feedback"/>
+                                </span>
+                            </main>
                         </t>
                     </templates>
                 </kanban>
@@ -141,53 +125,38 @@
             <field name="arch" type="xml">
                 <kanban create="false" class="o_rating_rating_kanban">
                     <field name="rating"/>
-                    <field name="res_name"/>
-                    <field name="feedback"/>
-                    <field name="partner_id"/>
                     <templates>
-                        <t t-name="kanban-box">
+                        <t t-name="kanban-card" class="row g-0">
                             <t t-set="val_stars" t-value="Math.round(record.rating.raw_value * 10) / 10"/>
                             <t t-set="val_integer" t-value="Math.floor(val_stars)"/>
                             <t t-set="val_decimal" t-value="val_stars - val_integer"/>
                             <t t-set="empty_star" t-value="5 - (val_integer + Math.ceil(val_decimal))"/>
-                            <div class="oe_kanban_card oe_kanban_global_click">
-                                <div class="d-flex flex-row">
-                                    <div class="o_rating_kanban_left me-3">
-                                        <h1 class="o_rating_value text-center text-primary" t-esc="val_stars"/>
-                                        <i t-foreach="[...Array(val_integer).keys()]" t-as="num"  t-key="num"
-                                           class="fa fa-star"
-                                           aria-label="A star"
-                                           role="img"/>
-                                        <i t-if="val_decimal"
-                                           class="fa fa-star-half-o"
-                                           aria-label="Half a star"
-                                           role="img"/>
-                                        <i t-foreach="[...Array(empty_star).keys()]" t-as="num" t-key="num"
-                                           class="fa fa-star text-black-25"
-                                           aria-label="A star"
-                                           role="img"/>
-                                    </div>
-                                    <div>
-                                        <div class="o_kanban_card_header">
-                                            <div class="o_kanban_card_header_title">
-                                                <span class="fw-bold"><field name="partner_id"/></span>
-                                            </div>
-                                        </div>
-                                        <div class="o_kanban_card_content mt0 d-flex flex-column">
-                                            <span>
-                                                <i class="fa fa-folder me-2" aria-label="Open folder"></i>
-                                                <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
-                                                    <field name="res_name" />
-                                                </a>
-                                            </span>
-                                            <span><i class="fa fa-clock-o me-2" aria-label="Create date"/> <field name="create_date" /></span>
-                                            <div class="d-flex mt-2">
-                                                <span t-esc="record.feedback.raw_value"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                 </div>
-                             </div>
+                            <aside class="col-3 me-2">
+                                <div class="display-3 fw-bold text-center text-primary mb-2" t-esc="val_stars"/>
+                                <i t-foreach="[...Array(val_integer).keys()]" t-as="num"  t-key="num"
+                                    class="fa fa-star"
+                                    aria-label="A star"
+                                    role="img"/>
+                                <i t-if="val_decimal"
+                                    class="fa fa-star-half-o"
+                                    aria-label="Half a star"
+                                    role="img"/>
+                                <i t-foreach="[...Array(empty_star).keys()]" t-as="num" t-key="num"
+                                    class="fa fa-star text-black-25"
+                                    aria-label="A star"
+                                    role="img"/>
+                            </aside>
+                            <main class="col">
+                                <field name="partner_id" class="fw-bold fs-5"/>
+                                <div class="mt0">
+                                    <i class="fa fa-folder me-2" aria-label="Open folder"></i>
+                                    <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
+                                        <field name="res_name" />
+                                    </a>
+                                    <div><i class="fa fa-clock-o me-2" aria-label="Create date"/> <field name="create_date" /></div>
+                                    <field name="feedback" class="mt-2"/>
+                                </div>
+                            </main>
                         </t>
                     </templates>
                 </kanban>
