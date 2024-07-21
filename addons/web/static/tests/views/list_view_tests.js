@@ -2819,6 +2819,46 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["openRecord", "openRecord"]);
     });
 
+    QUnit.test("open invalid but unchanged record", async function (assert) {
+        const listView = registry.category("views").get("list");
+        class CustomListController extends listView.Controller {
+            openRecord(record) {
+                assert.step("openRecord");
+                assert.strictEqual(record.resId, 2);
+                return super.openRecord(record);
+            }
+        }
+        registry.category("views").add("custom_list", {
+            ...listView,
+            Controller: CustomListController,
+        });
+
+        const list = await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree js_class="custom_list">
+                    <field name="foo"/>
+                    <field name="date" required="1"/>
+                </tree>`,
+        });
+
+        patchWithCleanup(list.env.services.notification, {
+            add: () => {
+                throw new Error("should not display a notification");
+            },
+        });
+
+        // second record is invalid as date is not set
+        assert.strictEqual(
+            target.querySelector(".o_data_row:nth-child(2) .o_data_cell[name=date]").innerText,
+            ""
+        );
+        await click(target.querySelector(".o_data_row:nth-child(2) .o_data_cell"));
+        assert.verifySteps(["openRecord"]);
+    });
+
     QUnit.test(
         "execute an action before and after each valid save in a list view",
         async function (assert) {
@@ -19687,17 +19727,22 @@ QUnit.module("Views", (hooks) => {
             string: "Property char",
         };
         const definition1 = {
+            type: "separator",
+            name: "property_separator",
+            string: "Group 1",
+        };
+        const definition2 = {
             type: "boolean",
             name: "property_boolean",
             string: "Property boolean",
         };
         serverData.models.bar.records[0].definitions = [definition0];
-        serverData.models.bar.records[1].definitions = [definition1];
+        serverData.models.bar.records[1].definitions = [definition1, definition2];
         for (const record of serverData.models.foo.records) {
             if (record.m2o === 1) {
                 record.properties = [{ ...definition0, value: "0" }];
             } else if (record.m2o === 2) {
-                record.properties = [{ ...definition1, value: true }];
+                record.properties = [definition1, { ...definition2, value: true }];
             }
         }
 
@@ -19714,6 +19759,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(target, ".o_optional_columns_dropdown_toggle");
+        assert.containsN(target, ".o_optional_columns_dropdown input[type='checkbox']", 2)
 
         await click(
             target.querySelectorAll(".o_optional_columns_dropdown input[type='checkbox']")[0]

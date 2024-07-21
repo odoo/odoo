@@ -72,7 +72,9 @@ describe('insert HTML', () => {
                 stepFunction: async editor => {
                     await editor.execCommand('insert', parseHTML(editor.document, '<div><p>content</p></div>'));
                 },
-                contentAfter: '<div><p>content</p></div><p>[]<br></p>',
+                // Inserts zws to avoid a Chromium bug preventing selection of
+                // contenteditable false element as first child.
+                contentAfter: '\u200b<div><p>content</p></div><p>[]<br></p>',
             });
         });
         it('should not split a pre to insert another pre but just insert the text', async () => {
@@ -303,6 +305,29 @@ describe('insert text', () => {
                 },
                 contentAfter: '<h1><font style="background-color: red;">g[]</font><br></h1><p>def</p>',
             });
+        });
+    });
+});
+describe('insert horizontal rule', () => {
+    it('should insert a horizontal rule within a p tag', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p>[]<br></p>',
+            stepFunction: editor => editor.execCommand('insertHorizontalRule'),
+            contentAfter: '<hr><p>[]<br></p>',
+        });
+    });
+    it('should insert a horizontal rule within a h1 tag', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<h1>[]<br></h1>',
+            stepFunction: editor => editor.execCommand('insertHorizontalRule'),
+            contentAfter: '<hr><h1>[]<br></h1>',
+        });
+    });
+    it('should insert a horizontal rule within a block node', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<div>[]<br></div>',
+            stepFunction: editor => editor.execCommand('insertHorizontalRule'),
+            contentAfter: '<hr><div>[]<br></div>',
         });
     });
 });

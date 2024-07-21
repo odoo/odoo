@@ -1532,7 +1532,6 @@ class Picking(models.Model):
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:
                     package = self._put_in_pack(move_line_ids)
-                    self.action_assign()
                     return self._post_put_in_pack_hook(package)
                 return res
             raise UserError(_("There is nothing eligible to put in a pack. Either there are no quantities to put in a pack or all products are already in a pack."))

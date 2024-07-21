@@ -65,13 +65,14 @@ class PhoneMixin(models.AbstractModel):
                          tablename=self._table,
                          expressions=[regex_expression],
                          where=f'{fname} IS NOT NULL')
-            # The trigram index covers operators 'like', 'ilike' and '=like' starting with a wildcard
-            create_index(self.env.cr,
-                         indexname=f'{self._table}_{fname}_partial_gin_idx',
-                         tablename=self._table,
-                         method='gin',
-                         expressions=[regex_expression + ' gin_trgm_ops'],
-                         where=f'{fname} IS NOT NULL')
+            if self.env.registry.has_trigram:
+                # The trigram index covers operators 'like', 'ilike' and '=like' starting with a wildcard
+                create_index(self.env.cr,
+                             indexname=f'{self._table}_{fname}_partial_gin_idx',
+                             tablename=self._table,
+                             method='gin',
+                             expressions=[regex_expression + ' gin_trgm_ops'],
+                             where=f'{fname} IS NOT NULL')
 
     def _search_phone_mobile_search(self, operator, value):
         value = value.strip() if isinstance(value, str) else value

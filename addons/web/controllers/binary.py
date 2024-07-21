@@ -19,7 +19,7 @@ from odoo import SUPERUSER_ID, _, http
 from odoo.addons.base.models.assetsbundle import ANY_UNIQUE
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request, Response
-from odoo.tools import file_open, file_path, replace_exceptions
+from odoo.tools import file_open, file_path, replace_exceptions, str2bool
 from odoo.tools.image import image_guess_size_from_field_name
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -75,7 +75,7 @@ class Binary(http.Controller):
             if request.httprequest.args.get('access_token'):
                 stream.public = True
 
-        send_file_kwargs = {'as_attachment': download}
+        send_file_kwargs = {'as_attachment': str2bool(download)}
         if unique:
             send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
@@ -188,7 +188,7 @@ class Binary(http.Controller):
             )
             stream.public = False
 
-        send_file_kwargs = {'as_attachment': download}
+        send_file_kwargs = {'as_attachment': str2bool(download)}
         if unique:
             send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG

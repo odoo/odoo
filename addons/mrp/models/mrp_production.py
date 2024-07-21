@@ -1945,6 +1945,7 @@ class MrpProduction(models.Model):
         # reserve new backorder moves depending on the picking type
         self.env['stock.move'].browse(assigned_moves).write({'state': 'assigned'})
         self.env['stock.move'].browse(partially_assigned_moves).write({'state': 'partially_available'})
+        self.env['stock.move.line'].create(move_lines_vals)
         move_to_assign = move_to_assign.filtered(
             lambda move: move.state in ('confirmed', 'partially_available')
             and (move._should_bypass_reservation()
@@ -1955,7 +1956,6 @@ class MrpProduction(models.Model):
         # Avoid triggering a useless _recompute_state
         self.env['stock.move.line'].browse(move_lines_to_unlink).write({'move_id': False})
         self.env['stock.move.line'].browse(move_lines_to_unlink).unlink()
-        self.env['stock.move.line'].create(move_lines_vals)
 
         moves_to_consume.write({'picked': True})
 

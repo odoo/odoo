@@ -367,13 +367,11 @@ class AccountFrFec(models.TransientModel):
         '''
 
         with io.BytesIO() as fecfile:
-            csv_writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='')
+            csv_writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='\r\n')
 
             # Write header and initial balances
             for initial_row in rows_to_write:
                 initial_row = list(initial_row)
-                # We don't skip \n at then end of the file if there are only initial balances, for simplicity. An empty period export shouldn't happen IRL.
-                initial_row[-1] += u'\r\n'
                 csv_writer.writerow(initial_row)
 
             # Write current period's data
@@ -385,13 +383,9 @@ class AccountFrFec(models.TransientModel):
                 has_more_results = self._cr.rowcount > query_limit # we load one more result than the limit to check if there is more
                 query_results = self._cr.fetchall()
                 for i, row in enumerate(query_results[:query_limit]):
-                    if i < len(query_results) - 1:
-                        # The file is not allowed to end with an empty line, so we can't use lineterminator on the writer
-                        row = list(row)
-                        row[-1] += u'\r\n'
                     csv_writer.writerow(row)
 
-            base64_result = base64.encodebytes(fecfile.getvalue())
+            base64_result = base64.encodebytes(fecfile.getvalue()[:-2])
 
         end_date = fields.Date.to_string(self.date_to).replace('-', '')
         suffix = ''

@@ -11,7 +11,6 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, registry, _
 from odoo.tools import ormcache_context, email_normalize
-from odoo.exceptions import UserError
 from odoo.osv import expression
 
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
@@ -165,7 +164,7 @@ class GoogleSync(models.AbstractModel):
         ]
         new_odoo = self.with_context(dont_notify=True)._create_from_google(new, odoo_values)
         cancelled = existing.cancelled()
-        cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
+        cancelled_odoo = self.browse(cancelled.odoo_ids(self.env)).exists()
 
         # Check if it is a recurring event that has been rescheduled.
         # We have to check if an event already exists in Odoo.
@@ -180,11 +179,16 @@ class GoogleSync(models.AbstractModel):
 
         cancelled_odoo.exists()._cancel()
         synced_records = new_odoo + cancelled_odoo
-        for gevent in existing - cancelled:
+        pending = existing - cancelled
+        pending_odoo = self.browse(pending.odoo_ids(self.env)).exists()
+        for gevent in pending:
+            odoo_record = self.browse(gevent.odoo_id(self.env))
+            if odoo_record not in pending_odoo:
+                # The record must have been deleted in the mean time; nothing left to sync
+                continue
             # Last updated wins.
             # This could be dangerous if google server time and odoo server time are different
             updated = parse(gevent.updated)
-            odoo_record = self.browse(gevent.odoo_id(self.env))
             # Use the record's write_date to apply Google updates only if they are newer than Odoo's write_date.
             odoo_record_write_date = write_dates.get(odoo_record.id, odoo_record.write_date)
             # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
