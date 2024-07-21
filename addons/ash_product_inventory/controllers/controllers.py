@@ -75,16 +75,16 @@ class ProductInventoryController(http.Controller):
                 # Create the product with required fields
                 new_product = Product.create(required_fields)
 
-                # Hardcode the new quantity value
-                new_quantity = 100  # Example fixed quantity value
-
-                # Create stock change with both product_id and product_tmpl_id
-                stock_change = StockChangeProductQty.create({
-                    'product_id': new_product.id,
-                    'product_tmpl_id': new_product.product_tmpl_id.id,  # Use product_tmpl_id
-                    'new_quantity': new_quantity,
-                })
-                stock_change.change_product_qty()
+                # Get the new quantity from the API call
+                new_quantity = product_data.get('new_quantity')
+                if new_quantity is not None:
+                    # Create stock change with both product_id and product_tmpl_id
+                    stock_change = StockChangeProductQty.create({
+                        'product_id': new_product.id,
+                        'product_tmpl_id': new_product.product_tmpl_id.id,  # Use product_tmpl_id
+                        'new_quantity': new_quantity,
+                    })
+                    stock_change.change_product_qty()
 
                 # Append created product details to response
                 created_products.append({
