@@ -1,4 +1,4 @@
-Denmark, 14-07-2024
+Denmark, 2024-07-14
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
