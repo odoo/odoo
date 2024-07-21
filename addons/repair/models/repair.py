@@ -285,6 +285,14 @@ class Repair(models.Model):
                 'warning': {'title': _("Warning"), 'message': _("Note that the warehouses of the return and repair locations don't match!")},
             }
 
+    @api.model
+    def default_get(self, fields_list):
+        # Adds the picking_id if it comes from a return. Avoids having a default_picking_id pollute the context for further move creation.
+        res = super().default_get(fields_list)
+        if 'picking_id' not in res and 'picking_id' in fields_list and 'default_repair_picking_id' in self.env.context:
+            res['picking_id'] = self.env.context.get('default_repair_picking_id')
+        return res
+
     @api.model_create_multi
     def create(self, vals_list):
         # We generate a standard reference
@@ -374,9 +382,6 @@ class Repair(models.Model):
         Writes repair order state to 'Repaired'.
         @return: True
         """
-        # Clean the context to get rid of residual default_* keys that could cause issues
-        # during the creation of stock.move.
-        self = self.with_context(clean_context(self._context))
 
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         product_move_vals = []

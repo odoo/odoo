@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from odoo import Command
 
 from odoo.exceptions import UserError
-from odoo.tests import Form, tagged
+from odoo.tests import Form, HttpCase, tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -999,3 +999,62 @@ class TestBatchPicking02(TransactionCase):
             {'quantity': 2.0, 'picked': True},
             {'quantity': 2.0, 'picked': True},
         ])
+
+
+@tagged('post_install', '-at_install')
+class TestBatchPickingSynchronization(HttpCase):
+
+    def test_stock_picking_batch_sm_to_sml_synchronization(self):
+        """ Test the synchronization between stock move and stock move line within
+            the detailed operation modal for stock picking batches.
+        """
+
+        self.env['res.config.settings'].create({'group_stock_multi_locations': True}).execute()
+        location = self.env.ref('stock.stock_location_stock')
+        loc1, loc2 = self.env['stock.location'].create([{
+            'name': 'Shelf A',
+            'location_id': location.id,
+        }, {
+            'name': 'Shelf B',
+            'location_id': location.id,
+        }])
+
+        productA = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        picking_type_internal = self.env.ref('stock.picking_type_internal')
+        self.env['stock.quant']._update_available_quantity(productA, loc1, 50)
+        picking_1 = self.env['stock.picking'].create({
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': picking_type_internal.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.move'].create({
+            'name': productA.name,
+            'product_id': productA.id,
+            'product_uom_qty': 1,
+            'product_uom': productA.uom_id.id,
+            'picking_id': picking_1.id,
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+        })
+        picking_1.action_confirm()
+        picking_1.action_assign()
+        picking_1.move_ids.move_line_ids.write({'quantity': 1})
+        picking_1.move_ids.picked = True
+
+        batch = self.env['stock.picking.batch'].create({
+            'name': 'Batch 1',
+            'company_id': self.env.company.id,
+            'picking_ids': [(4, picking_1.id)]
+        })
+
+        action_id = self.env.ref('stock_picking_batch.stock_picking_batch_menu').action
+        url = f'/web#model=stock.picking.batch&view_type=form&action={action_id.id}&id={batch.id}'
+        self.start_tour(url, "test_stock_picking_batch_sm_to_sml_synchronization", login="admin", timeout=100)
+        self.assertEqual(batch.picking_ids.move_ids.quantity, 7)
+        self.assertEqual(batch.picking_ids.move_ids.move_line_ids.quantity, 7)
