@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-import logging
+
 from odoo import api, fields, models, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError
-from psycopg2 import IntegrityError
 from odoo.tools.translate import _
-_logger = logging.getLogger(__name__)
+
+from .country_codes import COUNTRY_CODES
 
 
 FLAG_MAPPING = {
@@ -28,6 +28,10 @@ NO_FLAG_COUNTRIES = [
     "SJ", #Svalbard + Jan Mayen : separate jurisdictions : no dedicated flag
 ]
 
+COUNTRY_CODE_2_TO_3 = {codes[0]: codes[1] for codes in COUNTRY_CODES}
+COUNTRY_CODE_2_TO_NUM = {codes[0]: codes[2] for codes in COUNTRY_CODES}
+COUNTRY_CODE_2_TO_PHONE = {codes[0]: codes[3] for codes in COUNTRY_CODES}
+
 
 class Country(models.Model):
     _name = 'res.country'
@@ -40,6 +44,18 @@ class Country(models.Model):
         string='Country Code', size=2,
         required=True,
         help='The ISO country code in two chars. \nYou can use this field for quick search.')
+    iso_alpha3 = fields.Char(
+        string='Alpha-3 Code', size=3,
+        compute='_compute_iso_alpha3', store=True, readonly=False,
+        required=True, precompute=True,
+        help='The ISO country code in three chars.\nYou can use this field for quick search.'
+    )
+    iso_num = fields.Char(
+        string='Numeric Code', size=3,
+        compute='_compute_iso_num', store=True, readonly=False,
+        required=True, precompute=True,
+        help='The ISO country code in three digits.\nYou can use this field for quick search.'
+    )
     address_format = fields.Text(string="Layout in Reports",
         help="Display format to use for addresses belonging to this country.\n\n"
              "You can use python-style string pattern with all the fields of the address "
@@ -61,7 +77,11 @@ class Country(models.Model):
         compute="_compute_image_url", string="Flag",
         help="Url of static flag image",
     )
-    phone_code = fields.Integer(string='Country Calling Code')
+    phone_code = fields.Integer(
+        string='Country Calling Code',
+        compute='_compute_phone_code', store=True, readonly=False,
+        precompute=True,
+    )
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
@@ -82,13 +102,32 @@ class Country(models.Model):
             'The code of the country must be unique!')
     ]
 
+    @api.depends('code')
+    def _compute_iso_alpha3(self):
+        for country in self:
+            country.iso_alpha3 = COUNTRY_CODE_2_TO_3.get(country.code)
+
+    @api.depends('code')
+    def _compute_iso_num(self):
+        for country in self:
+            country.iso_num = COUNTRY_CODE_2_TO_NUM.get(country.code)
+
+    @api.depends('code')
+    def _compute_phone_code(self):
+        for country in self:
+            country.phone_code = COUNTRY_CODE_2_TO_PHONE.get(country.code)
+
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         if domain is None:
             domain = []
 
         ids = []
         if len(name) == 2:
-            ids = list(self._search([('code', 'ilike', name)] + domain, limit=limit, order=order))
+            ids = list(self._search([('code', '=', name.upper())] + domain, limit=limit, order=order))
+        elif len(name) == 3 and name.isalpha():
+            ids = list(self._search([('iso_alpha3', '=', name.upper())] + domain, limit=limit, order=order))
+        elif len(name) == 3 and name.isdecimal():
+            ids = list(self._search([('iso_num', '=', name)] + domain, limit=limit, order=order))
 
         search_domain = [('name', operator, name)]
         if ids:

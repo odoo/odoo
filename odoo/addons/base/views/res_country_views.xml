@@ -29,6 +29,8 @@
                                 <field name="name"/>
                                 <field name="currency_id"/>
                                 <field name="code"/>
+                                <field name="iso_alpha3" groups="base.group_no_one"/>
+                                <field name="iso_num" groups="base.group_no_one"/>
                             </group>
                             <group name="phone_vat_settings">
                                 <field name="phone_code" options="{'format': false}"/>
@@ -67,7 +69,12 @@
             <field name="model">res.country</field>
             <field name="arch" type="xml">
                 <search string="Countries">
-                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <field name="name" filter_domain="[
+                        '|', ('name', 'ilike', self),
+                        '|', ('code', '=ilike', self),
+                        '|', ('iso_alpha3', '=ilike', self),
+                             ('iso_num', '=', self),
+                    ]"/>
                     <field name="phone_code"/>
                 </search>
             </field>
