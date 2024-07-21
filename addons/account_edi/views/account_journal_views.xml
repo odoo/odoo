@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.view_account_journal_form" />
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='group_edi_config']" position="attributes">
-                    <attribute name="invisible">0</attribute>
+                    <attribute name="invisible">not compatible_edi_ids</attribute>
                 </xpath>
                 <xpath expr="//group[@name='group_edi_config']" position="inside">
                     <field name="compatible_edi_ids" invisible="1" />

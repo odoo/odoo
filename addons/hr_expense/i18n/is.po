@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Heiðar Sigurðsson, 2024
+# Kristófer Arnþórsson, 2024
 # jonasyngvi, 2024
 # 
 msgid ""
@@ -156,7 +157,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "Dagsetning bókunar"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
@@ -1271,7 +1272,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Aðal viðhengi"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__user_id
@@ -1357,7 +1358,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Name"
-msgstr ""
+msgstr "Nafn"
 
 #. module: hr_expense
 #. odoo-python
@@ -2309,6 +2310,13 @@ msgstr ""
 msgid ""
 "You cannot approve:\n"
 " %s"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "You cannot cancel an expense sheet linked to a journal entry"
 msgstr ""
 
 #. module: hr_expense
