@@ -927,7 +927,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 }, {
     isActive: ["mobile"],
-    trigger: '.o_kanban_record .o_kanban_record_title:contains("the_flow.vendor")',
+    trigger: '.o_kanban_record:contains("the_flow.vendor")',
     content: _t('Select the generated request for quotation'),
     tooltipPosition: 'bottom',
     run: "click",

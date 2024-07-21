@@ -98,11 +98,9 @@ test("many2one_avatar_resource widget in kanban view", async () => {
     await openKanbanView("resource.task", {
         arch: `<kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="display_name"/>
-                            <field name="resource_id" widget="many2one_avatar_resource"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
+                        <field name="resource_id" widget="many2one_avatar_resource"/>
                     </t>
                 </templates>
             </kanban>`,

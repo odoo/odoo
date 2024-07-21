@@ -201,34 +201,18 @@
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" sample="1" quick_create="false">
-                <field name="company_id" invisible="1"/>
-                <field name="name"/>
-                <field name="product_id"/>
-                <field name="partner_id"/>
-                <field name="state"/>
-                <field name="activity_state"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <div class="row mb4">
-                                <div class="col-6">
-                                    <strong><span><t t-esc="record.name.value"/></span></strong>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'secondary'}}"/>
-                                </div>
+                    <t t-name="kanban-card">
+                        <div class="row">
+                            <field name="name" class="col-6 fw-bolder mb-1"/>
+                            <field name="state" class="col-6 text-end mb-1" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'secondary'}}"/>
+                            <div class="col-6 text-muted">
+                                <field name="product_id" />
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </div>
-                            <div class="row">
-                                <div class="col-6 text-muted">
-                                    <span><t t-esc="record.product_id.value"/></span>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                </div>
-                                <div class="col-6">
-                                    <span class="float-end">
-                                        <field name="partner_id"/>
-                                    </span>
-                                </div>
+                            <div class="col-6">
+                                <field name="partner_id" class="float-end"/>
                             </div>
                         </div>
                     </t>
