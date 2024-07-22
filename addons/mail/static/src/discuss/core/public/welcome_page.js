@@ -6,7 +6,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 
 export class WelcomePage extends Component {
-    static props = ["data?", "proceed?"];
+    static props = ["proceed?"];
     static template = "mail.WelcomePage";
 
     setup() {

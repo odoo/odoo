@@ -9,6 +9,7 @@ declare module "models" {
         DiscussAppCategory : DiscussAppCategory,
         discuss: DiscussApp,
         action_discuss_id: number,
+        getDiscussSidebarCategoryCounter: (categoryId: number) => number,
     }
 
     export interface Thread {

@@ -1,8 +1,6 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
-import { discussSidebarItemsRegistry } from "@mail/core/web/discuss_sidebar";
-import { ChannelSelector } from "@mail/discuss/core/web/channel_selector";
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
 import { cleanTerm } from "@mail/utils/common/format";
 
 import { Component, useState } from "@odoo/owl";
@@ -24,26 +22,17 @@ export const discussSidebarChannelIndicatorsRegistry = registry.category(
 export class DiscussSidebarCategories extends Component {
     static template = "mail.DiscussSidebarCategories";
     static props = {};
-    static components = { ChannelSelector, ImStatus, ThreadIcon };
+    static components = { ImStatus, ThreadIcon };
 
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.discussCoreWebService = useState(useService("discuss.core.web"));
+        this.discusscorePublicWebService = useState(useService("discuss.core.public.web"));
         this.state = useState({
-            editing: false,
             quickSearchVal: "",
         });
-        this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
-        onExternalClick("selector", () => {
-            this.state.editing = false;
-        });
-    }
-
-    addToCategory(category) {
-        this.state.editing = category.id;
     }
 
     askConfirmation(body) {
@@ -98,36 +87,6 @@ export class DiscussSidebarCategories extends Component {
         thread.leave();
     }
 
-    openCategory(category) {
-        if (category.id === "channels") {
-            this.actionService.doAction({
-                name: _t("Public Channels"),
-                type: "ir.actions.act_window",
-                res_model: "discuss.channel",
-                views: [
-                    [false, "kanban"],
-                    [false, "form"],
-                ],
-                domain: [["channel_type", "=", "channel"]],
-            });
-        }
-    }
-
-    /**
-     * @param {import("models").Thread} thread
-     */
-    openSettings(thread) {
-        if (thread.channel_type === "channel") {
-            this.actionService.doAction({
-                type: "ir.actions.act_window",
-                res_model: "discuss.channel",
-                res_id: thread.id,
-                views: [[false, "form"]],
-                target: "current",
-            });
-        }
-    }
-
     /**
      * @param {MouseEvent} ev
      * @param {import("models").Thread} thread
@@ -135,10 +94,6 @@ export class DiscussSidebarCategories extends Component {
     openThread(ev, thread) {
         markEventHandled(ev, "sidebar.openThread");
         thread.setAsDiscussThread();
-    }
-
-    stopEditing() {
-        this.state.editing = false;
     }
 
     /**
@@ -150,7 +105,7 @@ export class DiscussSidebarCategories extends Component {
             return;
         }
         category.open = !category.open;
-        this.discussCoreWebService.broadcastCategoryState(category);
+        this.discusscorePublicWebService.broadcastCategoryState(category);
     }
 }
 
