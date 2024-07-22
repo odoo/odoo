@@ -245,6 +245,9 @@ class StockQuant(models.Model):
             domain_operator = 'in'
         return [('id', domain_operator, quant_query)]
 
+    def copy(self, default=None):
+        raise UserError(_('You cannot duplicate stock quants.'))
+
     @api.model_create_multi
     def create(self, vals_list):
         """ Override to handle the "inventory mode" and create a quant as
