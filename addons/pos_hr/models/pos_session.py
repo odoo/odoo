@@ -44,7 +44,7 @@ class PosSession(models.Model):
         payments = orders.payment_ids.filtered(lambda p: p.payment_method_id.type != "pay_later")
         cash_payment_method_ids = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash')
         default_cash_payment_method_id = cash_payment_method_ids[0] if cash_payment_method_ids else None
-        default_cash_payments = payments.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id) if default_cash_payment_method_id else []
+        default_cash_payments = payments.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id) if default_cash_payment_method_id else self.env['pos.payment']
         non_cash_payment_method_ids = self.payment_method_ids - default_cash_payment_method_id if default_cash_payment_method_id else self.payment_method_ids
         non_cash_payments_grouped_by_method_id = {pm.id: orders.payment_ids.filtered(lambda p: p.payment_method_id == pm) for pm in non_cash_payment_method_ids}
 
