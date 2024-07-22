@@ -139,7 +139,7 @@ class ProductTemplateAttributeValue(models.Model):
         ptav_to_archive = self.env['product.template.attribute.value']
         for ptav in self:
             try:
-                with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
+                with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'): # TODO savepoint in loop
                     super(ProductTemplateAttributeValue, ptav).unlink()
             except Exception:
                 # We catch all kind of exceptions to be sure that the operation

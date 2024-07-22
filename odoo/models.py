@@ -1241,10 +1241,9 @@ class BaseModel(metaclass=MetaModel):
             ]
             batch.clear()
             batch_xml_ids.clear()
-
             # try to create in batch
             try:
-                with cr.savepoint():
+                with self._cr.savepoint():
                     recs = self._load_records(data_list, mode == 'update')
                     ids.extend(recs.ids)
                 return
@@ -1259,39 +1258,43 @@ class BaseModel(metaclass=MetaModel):
 
             errors = 0
             # try again, this time record by record
-            for i, rec_data in enumerate(data_list, 1):
-                try:
-                    with cr.savepoint():
+            with self._cr.savepoint() as savepoint:
+                for i, rec_data in enumerate(data_list, 1):
+                    try:
                         rec = self._load_records([rec_data], mode == 'update')
                         ids.append(rec.id)
-                except psycopg2.Warning as e:
-                    info = rec_data['info']
-                    messages.append(dict(info, type='warning', message=str(e)))
-                except psycopg2.Error as e:
-                    info = rec_data['info']
-                    messages.append(dict(info, type='error', **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
-                    # Failed to write, log to messages, rollback savepoint (to
-                    # avoid broken transaction) and keep going
-                    errors += 1
-                except UserError as e:
-                    info = rec_data['info']
-                    messages.append(dict(info, type='error', message=str(e)))
-                    errors += 1
-                except Exception as e:
-                    _logger.debug("Error while loading record", exc_info=True)
-                    info = rec_data['info']
-                    message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
-                    moreinfo = _('Resolve other errors first')
-                    messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
-                    # Failed for some reason, perhaps due to invalid data supplied,
-                    # rollback savepoint and keep going
-                    errors += 1
-                if errors >= 10 and (errors >= i / 10):
-                    messages.append({
-                        'type': 'warning',
-                        'message': _(u"Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors.")
-                    })
-                    break
+                    except psycopg2.Warning as e:
+                        info = rec_data['info']
+                        messages.append(dict(info, type='warning', message=str(e)))
+                        savepoint.rollback()
+                    except psycopg2.Error as e:
+                        info = rec_data['info']
+                        messages.append(dict(info, type='error', **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
+                        # Failed to write, log to messages, rollback savepoint (to
+                        # avoid broken transaction) and keep going
+                        errors += 1
+                        savepoint.rollback()
+                    except UserError as e:
+                        info = rec_data['info']
+                        messages.append(dict(info, type='error', message=str(e)))
+                        errors += 1
+                        savepoint.rollback()
+                    except Exception as e:  # noqa: BLE001
+                        _logger.debug("Error while loading record", exc_info=True)
+                        info = rec_data['info']
+                        message = (_('Unknown error during import:') + ' %s: %s' % (type(e), e))
+                        moreinfo = _('Resolve other errors first')
+                        messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
+                        # Failed for some reason, perhaps due to invalid data supplied,
+                        # rollback savepoint and keep going
+                        errors += 1
+                        savepoint.rollback()
+                    if errors >= 10 and (errors >= i / 10):
+                        messages.append({
+                            'type': 'warning',
+                            'message': _("Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors.")
+                        })
+                        break
 
         # make 'flush' available to the methods below, in the case where XMLID
         # resolution fails, for instance
