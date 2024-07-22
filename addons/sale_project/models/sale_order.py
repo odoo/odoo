@@ -114,11 +114,11 @@ class SaleOrder(models.Model):
         context = clean_context(self._context)
         if len(self.company_id) == 1:
             # All orders are in the same company
-            self.order_line.sudo().with_company(self.company_id).with_context(context)._timesheet_service_generation()
+            self.order_line.sudo().with_context(context).with_company(self.company_id)._timesheet_service_generation()
         else:
             # Orders from different companies are confirmed together
             for order in self:
-                order.order_line.sudo().with_company(order.company_id).with_context(context)._timesheet_service_generation()
+                order.order_line.sudo().with_context(context).with_company(order.company_id)._timesheet_service_generation()
         return result
 
     def action_view_task(self):
