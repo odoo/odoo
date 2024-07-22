@@ -29,7 +29,7 @@
                 </a>
                 <div class="dropdown-menu">
                     <t t-foreach="grades" t-as="grade">
-                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
                         class="dropdown-item" t-out="grade['grade_id'][1]"/>
                     </t>
                 </div>
@@ -42,7 +42,7 @@
                 </a>
                 <div class="dropdown-menu">
                     <t t-foreach="countries" t-as="country" t-if="country['country_id']">
-                        <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                        <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
                         class="dropdown-item" t-out="country['country_id'][1]"/>
                     </t>
                 </div>
@@ -88,7 +88,7 @@
                                 <ul class="list-group list-group-flush">
                                     <t t-foreach="grades" t-as="grade">
                                         <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
                                             class="text-reset" aria-label="See categories filters">
                                                 <div class="form-check">
                                                     <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade['grade_id'][1]}" t-att-checked="bool(grade['active'])"/>
@@ -117,7 +117,7 @@
                                 <ul class="list-group list-group-flush">
                                     <t t-foreach="countries" t-as="country">
                                         <li t-if="country['country_id']" class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
                                             class="text-reset" aria-label="See countries filters">
                                                 <div class="form-check">
                                                     <input class="form-check-input pe-none" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="bool(country['active'])"/>
