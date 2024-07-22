@@ -709,7 +709,7 @@ class PosSession(models.Model):
                 'payment_amount': total_default_cash_payment_amount,
                 'moves': cash_in_out_list,
                 'id': default_cash_payment_method_id.id
-            } if default_cash_payment_method_id else None,
+            } if default_cash_payment_method_id else {},
             'non_cash_payment_methods': [{
                 'name': pm.name,
                 'amount': sum(non_cash_payments_grouped_by_method_id[pm].mapped('amount')),
