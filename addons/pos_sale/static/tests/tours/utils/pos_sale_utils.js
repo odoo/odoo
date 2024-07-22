@@ -31,7 +31,7 @@ export function settleNthOrder(n) {
     ];
 }
 
-export function downPaymentFirstOrder() {
+export function downPaymentFirstOrder(amount) {
     return [
         ...selectNthOrder(1),
         {
@@ -39,7 +39,7 @@ export function downPaymentFirstOrder() {
             trigger: `.selection-item:contains('Apply a down payment')`,
             run: "click",
         },
-        Numpad.click("+10"),
+        Numpad.click(amount),
         Dialog.confirm(),
     ];
 }
