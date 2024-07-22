@@ -14,7 +14,7 @@ class AccountMove(models.Model):
         company = self.env.company
         if view_type == 'form' and company.country_code in company._get_france_country_codes():
             shipping_field = arch.xpath("//field[@name='partner_shipping_id']")[0]
-            shipping_field.set('groups', '')
+            shipping_field.attrib.pop("groups", None)
         return arch, view
 
     @api.depends('company_id.country_code')
