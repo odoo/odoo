@@ -14,7 +14,9 @@ class WebsiteCustomer(GoogleMap):
     _references_per_page = 20
 
     def _get_gmap_domains(self, **kw):
-        domains = super()._get_gmap_domains(**kw)
+        if kw.get('dom', '') != "website_customer.customers":
+            return super()._get_gmap_domains(**kw)
+
         current_industry = kw.get('current_industry')
         current_country = kw.get('current_country')
 
@@ -26,8 +28,7 @@ class WebsiteCustomer(GoogleMap):
         if current_industry and current_industry != '0':
             domain += [('industry_id', '=', int(current_industry))]
 
-        domains['website_customer.customers'] = domain
-        return domains
+        return domain
 
     def sitemap_industry(env, rule, qs):
         if not qs or qs.lower() in '/customers':
@@ -131,7 +132,6 @@ class WebsiteCustomer(GoogleMap):
         )
 
         partners = Partner.sudo().search(domain, offset=pager['offset'], limit=self._references_per_page)
-        google_map_partner_ids = ','.join(str(it) for it in partners.ids)
         google_maps_api_key = request.website.google_maps_api_key
 
         tags = Tag.search([('website_published', '=', True), ('partner_ids', 'in', partners.ids)], order='classname, name ASC')
@@ -145,7 +145,6 @@ class WebsiteCustomer(GoogleMap):
             'current_industry_id': industry.id if industry else 0,
             'current_industry': industry or False,
             'partners': partners,
-            'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
             'search_path': "?%s" % werkzeug.urls.url_encode(post),

@@ -186,7 +186,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
     _references_per_page = 40
 
     def _get_gmap_domains(self, **kw):
-        domains = super()._get_gmap_domains(**kw)
+        if kw.get('dom', '') != "website_crm_partner_assign.partners":
+            return super()._get_gmap_domains(**kw)
         current_grade = kw.get('current_grade')
         current_country = kw.get('current_country')
 
@@ -200,8 +201,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         if current_grade:
             domain += [('grade_id', '=', int(current_grade))]
 
-        domains['website_crm_partner_assign.partners'] = domain
-        return domains
+        return domain
 
     def sitemap_partners(env, rule, qs):
         if not qs or qs.lower() in '/partners':
@@ -333,7 +333,6 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             offset=pager['offset'], limit=self._references_per_page)
         partners = partner_ids.sudo()
 
-        google_map_partner_ids = ','.join(str(p.id) for p in partners)
         google_maps_api_key = request.website.google_maps_api_key
 
         values = {
@@ -343,7 +342,6 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             'grades': grades,
             'current_grade': grade,
             'partners': partners,
-            'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'searches': post,
             'search_path': "%s" % werkzeug.urls.url_encode(post),
