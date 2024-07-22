@@ -25,7 +25,7 @@ class GoogleMap(http.Controller):
     '''
 
     def _get_gmap_domains(self, **kw):
-        return {}
+        return [(0, '=', 1)]
 
     @http.route(['/google_map'], type='http', auth="public", website=True, sitemap=False)
     def google_map(self, *arg, **post):
@@ -38,7 +38,7 @@ class GoogleMap(http.Controller):
                     clean_ids.append(int(partner_id))
             domain += [("id", "in", clean_ids), ('is_company', '=', True)]
         elif post.get('dom'):
-            domain = self._get_gmap_domains(**post).get(post['dom'], [])
+            domain = self._get_gmap_domains(**post)
 
         limit = post.get('limit') and int(post['limit']) or 80
 
