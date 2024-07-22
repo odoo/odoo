@@ -192,19 +192,18 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         self.assertEqual(self.project_global._get_sale_orders(), sale_order | sale_order_2)
 
         sale_order_lines = sale_order.order_line + sale_line_1_order_2  # exclude the Section and Note Sales Order Items
-        sale_items_data = self.project_global._get_sale_items(with_action=False)
-        self.assertEqual(sale_items_data['total'], len(sale_order_lines - so_line_order_new_task_new_project - so_line_order_only_project),
-                         "Should be all the sale items linked to the global project.")
+        sale_items_data = self.project_global.get_sale_items_data(limit=5, with_action=False)
         expected_sale_line_dict = {
             sol_read['id']: sol_read
-            for sol_read in sale_order_lines.read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])
+            for sol_read in sale_order_lines._read_format(['name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom', 'product_id'])
         }
         actual_sol_ids = []
-        for line in sale_items_data['data']:
-            sol_id = line['id']
-            actual_sol_ids.append(sol_id)
-            self.assertIn(sol_id, expected_sale_line_dict)
-            self.assertDictEqual(line, expected_sale_line_dict[sol_id])
+        for section in sale_items_data:
+            for line in sale_items_data[section]['data']:
+                sol_id = line['id']
+                actual_sol_ids.append(sol_id)
+                self.assertIn(sol_id, expected_sale_line_dict)
+                self.assertDictEqual(line, expected_sale_line_dict[sol_id])
         self.assertNotIn(section_sale_line_order_2.id, actual_sol_ids, 'The section Sales Order Item should not be takken into account in the Sales section of project.')
         self.assertNotIn(note_sale_line_order_2.id, actual_sol_ids, 'The note Sales Order Item should not be takken into account in the Sales section of project.')
 

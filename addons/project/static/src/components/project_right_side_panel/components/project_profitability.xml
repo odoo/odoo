@@ -6,33 +6,35 @@
                 <thead class="bg-100 align-middle">
                     <tr>
                         <th>Revenues</th>
-                        <th class="text-end">Invoiced</th>
-                        <th class="text-end">To Invoice</th>
                         <th class="text-end">Expected</th>
+                        <th class="text-end">To Invoice</th>
+                        <th class="text-end">Invoiced</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr t-foreach="revenues.data" t-as="revenue" t-key="revenue.id" t-if="revenue.invoiced !== 0 || revenue.to_invoice !== 0">
-                        <t t-set="revenue_label" t-value="props.labels[revenue.id] or revenue.id"/>
-                        <td class="align-middle">
-                            <a t-if="revenue.action" href="#"
-                                t-on-click="() => this.props.onClick(revenue.action)"
-                            >
-                                <t t-esc="revenue_label"/>
-                            </a>
-                            <t t-esc="revenue_label" t-else=""/>
-                        </td>
-                        <td t-attf-class="text-end align-middle {{ revenue.invoiced === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced)"/></td>
-                        <td t-attf-class="text-end align-middle {{ revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.to_invoice)"/></td>
-                        <td t-attf-class="text-end align-middle {{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
-                    </tr>
+                    <t t-foreach="revenues.data" t-as="revenue" t-key="revenue.id" t-if="revenue.invoiced !== 0 || revenue.to_invoice !== 0">
+                        <tr class="revenue_section">
+                            <t t-set="revenue_label" t-value="props.labels[revenue.id] or revenue.id"/>
+                            <td class="align-middle">
+                                <a class="revenue_section" t-if="revenue.action" href="#"
+                                    t-on-click="() => this.props.onClick(revenue.action)"
+                                >
+                                    <t t-esc="revenue_label"/>
+                                </a>
+                                <t t-esc="revenue_label" t-else=""/>
+                            </td>
+                            <td t-attf-class="text-end align-middle {{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
+                            <td t-attf-class="text-end align-middle {{ revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.to_invoice)"/></td>
+                            <td t-attf-class="text-end align-middle {{ revenue.invoiced === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced)"/></td>
+                        </tr>
+                    </t>
                 </tbody>
                 <tfoot>
                     <tr class="fw-bolder">
-                        <td>Total</td>
-                        <td t-attf-class="text-end {{ revenues.total.invoiced === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenues.total.invoiced)"/></td>
-                        <td t-attf-class="text-end {{ revenues.total.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenues.total.to_invoice)"/></td>
+                        <td>Total Revenues</td>
                         <td t-attf-class="text-end {{ revenues.total.invoiced + revenues.total.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenues.total.invoiced + revenues.total.to_invoice)"/></td>
+                        <td t-attf-class="text-end {{ revenues.total.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenues.total.to_invoice)"/></td>
+                        <td t-attf-class="text-end {{ revenues.total.invoiced === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenues.total.invoiced)"/></td>
                     </tr>
                 </tfoot>
             </table>
@@ -42,9 +44,9 @@
                 <thead class="bg-100">
                     <tr>
                         <th>Costs</th>
-                        <th class="text-end">Billed</th>
-                        <th class="text-end">To Bill</th>
                         <th class="text-end">Expected</th>
+                        <th class="text-end">To Bill</th>
+                        <th class="text-end">Billed</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,7 +67,7 @@
                 </tbody>
                 <tfoot>
                     <tr class="fw-bolder">
-                        <td>Total</td>
+                        <td>Total Costs</td>
                         <td t-attf-class="text-end {{ costs.total.billed === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(costs.total.billed)"/></td>
                         <td t-attf-class="text-end {{ costs.total.to_bill === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(costs.total.to_bill)"/></td>
                         <td t-attf-class="text-end {{ costs.total.billed + costs.total.to_bill  === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(costs.total.billed + costs.total.to_bill)"/></td>
@@ -77,11 +79,12 @@
             <table class="table table-sm table-borderless w-100 mb-0">
                 <thead>
                     <tr class="align-top">
-                        <th>Margin</th>
-                        <th class="text-end" t-att-class="margin.invoiced_billed &lt; 0 ? 'text-danger' : 'text-success'">
-                            <t t-out="props.formatMonetary(margin.invoiced_billed)"/><br/>
-                            <t t-if="revenues.total.invoiced != 0">
-                                <t t-out="margin.invoiced_billed > 0 ? '+' : ''"/><t t-out="(margin.invoiced_billed / revenues.total.invoiced * 100).toFixed()"/>%
+                        <th>Total</th>
+                        <th class="text-end" t-att-class="margin.total &lt; 0 ? 'text-danger' : 'text-success'">
+                            <t t-set="total_revenue" t-value="revenues.total.to_invoice + revenues.total.invoiced"/>
+                            <t t-out="props.formatMonetary(margin.total)"/><br/>
+                            <t t-if="total_revenue != 0">
+                                <t t-out="margin.total > 0 ? '+' : ''"/><t t-out="(margin.total / total_revenue * 100).toFixed()"/>%
                             </t>
                         </th>
                         <th class="text-end" t-att-class="margin.to_invoice_to_bill &lt; 0 ? 'text-danger' : 'text-success'">
@@ -90,11 +93,10 @@
                                 <t t-out="margin.to_invoice_to_bill > 0 ? '+' : ''"/><t t-out="(margin.to_invoice_to_bill / revenues.total.to_invoice * 100).toFixed()"/>%
                             </t>
                         </th>
-                        <th class="text-end" t-att-class="margin.total &lt; 0 ? 'text-danger' : 'text-success'">
-                            <t t-set="total_revenue" t-value="revenues.total.to_invoice + revenues.total.invoiced"/>
-                            <t t-out="props.formatMonetary(margin.total)"/><br/>
-                            <t t-if="total_revenue != 0">
-                                <t t-out="margin.total > 0 ? '+' : ''"/><t t-out="(margin.total / total_revenue * 100).toFixed()"/>%
+                        <th class="text-end" t-att-class="margin.invoiced_billed &lt; 0 ? 'text-danger' : 'text-success'">
+                            <t t-out="props.formatMonetary(margin.invoiced_billed)"/><br/>
+                            <t t-if="revenues.total.invoiced != 0">
+                                <t t-out="margin.invoiced_billed > 0 ? '+' : ''"/><t t-out="(margin.invoiced_billed / revenues.total.invoiced * 100).toFixed()"/>%
                             </t>
                         </th>
                     </tr>

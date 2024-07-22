@@ -9,6 +9,7 @@ export class ProjectStatusWithColorSelectionField extends SelectionField {
     static props = {
         ...SelectionField.props,
         statusLabel: { type: String, optional: true },
+        hideStatusName: { type: Boolean, optional: true },
     };
 
     static template = "project.ProjectStatusWithColorSelectionField";
@@ -34,6 +35,7 @@ export const projectStatusWithColorSelectionField = {
     extractProps: (fieldInfo, dynamicInfo) => {
         const props = selectionField.extractProps(fieldInfo, dynamicInfo);
         props.statusLabel = fieldInfo.attrs.status_label;
+        props.hideStatusName = Boolean(fieldInfo.attrs.hideStatusName);
         return props;
     },
 };
