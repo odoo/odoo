@@ -14,8 +14,9 @@
         <xpath expr="//div[@id='informations']" position="inside">
             <t t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id != o.partner_id and o.move_type.startswith('out_')">
                 <t t-set="partner" t-value="o.partner_id.commercial_partner_id"/>
-                <div class="col-auto col-3 mw-100 mb-2">
-                    <div class="fw-bold">Customer Address:</div>
+                <div class="col mb-2" name="customer_address">
+                    <strong>Customer Address:</strong>
+                    <br/>
                     <address t-field="partner.self" class="m-0" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
                 </div>
             </t>
@@ -27,20 +28,19 @@
                 <t t-set="has_service" t-value="'service' in tax_scopes"/>
                 <t t-set="has_consu" t-value="'consu' in tax_scopes"/>
 
-                <t t-if="has_service or has_consu">
-                    <div class="col-auto col-3 mw-100 mb-2">
-                        <div class="fw-bold">Operation Type:</div>
-                        <t t-if="has_service and has_consu">
-                            Mixed Operation
-                        </t>
-                        <t t-elif="has_service and not has_consu">
-                            Service Delivery
-                        </t>
-                        <t t-else="">
-                            Goods Delivery
-                        </t>
-                    </div>
-                </t>
+                <div t-if="has_service or has_consu" class="col mb-2" name="operation_type">
+                    <strong>Operation Type:</strong>
+                    <br/>
+                    <span t-if="has_service and has_consu">
+                        Mixed Operation
+                    </span>
+                    <span t-elif="has_service and not has_consu">
+                        Service Delivery
+                    </span>
+                    <span t-else="">
+                        Goods Delivery
+                    </span>
+                </div>
             </t>
         </xpath>
 
