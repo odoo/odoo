@@ -25,47 +25,25 @@
                             </group>
                         </form>
                         <kanban class="o_kanban_mobile">
-                            <field name="product_id"/>
-                            <field name="quantity"/>
-                            <field name="uom_id" groups="uom.group_uom"/>
-                            <field name="price_unit"/>
                             <field name="is_present" />
                             <templates>
-                                <t t-name="kanban-box">
-                                    <div class="oe_kanban_card oe_kanban_global_click">
-                                        <div class="row">
-                                            <div class="col-10">
-                                                <strong>
-                                                    <span>
-                                                        <t t-out="record.product_id.value"/>
-                                                    </span>
-                                                </strong>
-                                            </div>
-                                            <div class="col-2">
-                                                <button name="button_add_to_order"
-                                                    class="btn btn-link oe_link fa fa-shopping-cart"
-                                                    title="Add to order lines"
-                                                    type="object"
-                                                    invisible="is_present"/>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-12 text-muted">
-                                                <span>
-                                                    Quantity:
-                                                    <t t-out="record.quantity.value"/>
-                                                    <t t-out="record.uom_id.value" groups="uom.group_uom"/>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-12 text-muted">
-                                                <span>
-                                                    Unit Price:
-                                                    <t t-out="record.price_unit.value"/>
-                                                </span>
-                                            </div>
-                                        </div>
+                                <t t-name="kanban-card">
+                                    <div class="row">
+                                        <field name="product_id" class="col-10 fw-bolder"/>
+                                        <button name="button_add_to_order"
+                                            class="col-2 btn btn-link oe_link fa fa-shopping-cart"
+                                            title="Add to order lines"
+                                            type="object"
+                                            invisible="is_present"/>
+                                    </div>
+                                    <div class="text-muted">
+                                        Quantity:
+                                        <field name="quantity"/>
+                                        <field name="uom_id" groups="uom.group_uom"/>
+                                    </div>
+                                    <div class="text-muted">
+                                        Unit Price:
+                                        <field name="price_unit"/>
                                     </div>
                                 </t>
                             </templates>

@@ -29,8 +29,8 @@ QUnit.module("Sales Team Dashboard", {
     },
 });
 
-QUnit.test("edit target with several o_kanban_primary_bottom divs", async (assert) => {
-    assert.expect(4);
+QUnit.test("edit progressbar target", async (assert) => {
+    assert.expect(3);
 
     const fakeActionService = {
         start: () => ({
@@ -59,10 +59,8 @@ QUnit.test("edit target with several o_kanban_primary_bottom divs", async (asser
             <kanban>
                 <field name="invoiced_target"/>
                 <templates>
-                    <div t-name="kanban-box" class="container o_kanban_card_content">
+                    <div t-name="kanban-card">
                         <field name="invoiced" widget="sales_team_progressbar" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true}"/>
-                        <div class="col-12 o_kanban_primary_bottom"/>
-                        <div class="col-12 o_kanban_primary_bottom bottom_block"/>
                     </div>
                 </templates>
             </kanban>`,
@@ -83,7 +81,6 @@ QUnit.test("edit target with several o_kanban_primary_bottom divs", async (asser
         target,
         ".o_field_sales_team_progressbar:contains(Click to define an invoicing target)"
     );
-    assert.containsN(target, ".o_kanban_primary_bottom", 2);
     assert.containsNone(target, ".o_progressbar input");
 
     await click(target, ".sale_progressbar_form_link"); // should trigger a do_action

@@ -20,12 +20,14 @@
         <field name="model">crm.team.member</field>
         <field name="inherit_id" ref="sales_team.crm_team_member_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_kanban_details')]" position="after">
-                <field name="assignment_enabled" invisible="1"/>
-                <field name="assignment_optout" invisible="1"/>
+            <field name="active" position="after">
+                <field name="assignment_enabled"/>
+                <field name="assignment_optout"/>
+                <field name="assignment_max"/>
+            </field>
+            <xpath expr="//main" position="after">
                 <div class="o_member_assignment"
                         invisible="not assignment_enabled or assignment_optout">
-                    <field name="assignment_max" invisible="1"/>
                     <field name="lead_month_count" widget="gauge"
                         options="{'max_field': 'assignment_max'}"
                         invisible="assignment_max == 0"/>

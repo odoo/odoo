@@ -126,14 +126,8 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_content oe_kanban_global_click">
-                            <div class="row">
-                                <div class="col-12">
-                                <field name="display_name"/>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>

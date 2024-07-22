@@ -70,42 +70,25 @@
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" sample="1" quick_create="false">
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="amount_total"/>
-                <field name="date_order"/>
-                <field name="state"/>
                 <field name="currency_id"/>
-                <field name="activity_state"/>
                 <progressbar field="activity_state"
                     colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <div class="o_kanban_record_top mb16">
-                                <div class="o_kanban_record_headings mt4">
-                                    <strong class="o_kanban_record_title">
-                                        <span t-out="record.partner_id.value"/>
-                                    </strong>
-                                </div>
-                                <strong>
-                                    <field name="amount_total" widget="monetary"/>
-                                </strong>
-                            </div>
-                            <div class="o_kanban_record_bottom">
-                                <div class="oe_kanban_bottom_left text-muted">
-                                    <span>
-                                        <t t-out="record.name.value"/> <t t-out="record.date_order.value"/>
-                                    </span>
-                                    <field name="activity_ids" widget="kanban_activity"/>
-                                </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <field name="state"
-                                        widget="label_selection"
-                                        options="{'classes': {'draft': 'info', 'cancel': 'default', 'sale': 'success'}}"/>
-                                </div>
-                            </div>
+                    <t t-name="kanban-card">
+                        <div class="d-flex mb-2">
+                            <field name="partner_id" class="fw-bolder fs-5" />
+                            <field name="amount_total" widget="monetary" class="fw-bolder ms-auto"/>
                         </div>
+                        <footer class="fs-6">
+                            <div class="d-flex text-muted">
+                                <field name="name"/>
+                                <field name="date_order" class="ms-1"/>
+                                <field name="activity_ids" widget="kanban_activity" class="ms-2"/>
+                            </div>
+                            <field name="state"
+                                widget="label_selection"
+                                options="{'classes': {'draft': 'info', 'cancel': 'default', 'sale': 'success'}}" class="ms-auto"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
@@ -645,19 +628,8 @@
                                 <field name="company_id" column_invisible="True"/>
                             </list>
                             <kanban class="o_kanban_mobile">
-                                <field name="name"/>
-                                <field name="product_id"/>
-                                <field name="product_uom_qty"/>
-                                <field name="product_uom"/>
                                 <field name="price_subtotal"/>
-                                <field name="price_total"/>
-                                <field name="price_tax"/>
-                                <field name="price_total"/>
-                                <field name="price_unit"/>
                                 <field name="display_type"/>
-                                <field name="tax_id"/>
-                                <field name="company_id"/>
-                                <field name="tax_calculation_rounding_method"/>
                                 <field name="currency_id"/>
                                 <control>
                                     <create name="add_product_control" string="Add product"/>
@@ -670,58 +642,47 @@
                                             class="btn-secondary"/>
                                 </control>
                                 <templates>
-                                    <t t-name="kanban-box">
-                                        <div t-attf-class="oe_kanban_card oe_kanban_global_click ps-0 pe-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
-                                            <t t-if="!record.display_type.raw_value">
-                                                <div class="row g-0">
-                                                    <div class="col-2 p-1">
-                                                        <img t-att-src="kanban_image('product.product', 'image_128', record.product_id.raw_value)" t-att-title="record.product_id.value" t-att-alt="record.product_id.value" style="max-width: 100%;"/>
-                                                    </div>
-                                                    <div class="col-10">
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <span class="fa fa-exclamation-triangle text-warning me-1"
-                                                                    title="This product is archived"
-                                                                    invisible="state not in ['draft', 'sent'] or not is_product_archived"
-                                                                />
-                                                                <strong t-out="record.product_id.value" />
-                                                            </div>
-                                                            <div class="col-auto">
-                                                                <t t-set="line_price" t-value="record.price_subtotal.value"/>
-                                                                <strong class="float-end text-end pe-1" t-out="line_price" widget="monetary"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-12 text-muted">
-                                                                Quantity:
-                                                                <t t-out="record.product_uom_qty.value"/> <t t-out="record.product_uom.value"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col text-muted">
-                                                                Unit Price:
-                                                                <t t-out="record.price_unit.value"/>
-                                                            </div>
-                                                        </div>
-                                                        <t t-if="record.discount?.raw_value">
-                                                            <div class="row">
-                                                                <div class="col-12 text-muted">
-                                                                    Discount:
-                                                                    <t t-out="record.discount.value"/>%
-                                                                </div>
-                                                            </div>
-                                                        </t>
-                                                    </div>
-                                                </div>
-                                            </t>
-                                            <t t-if="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'">
+                                    <t t-name="kanban-card" class="row g-0 ps-0 pe-0">
+                                        <t t-if="!record.display_type.raw_value">
+                                            <aside class="col-2 p-1">
+                                                <span t-att-title="record.product_id.value">
+                                                    <field name="product_id" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain w-100'}"/>
+                                                </span>
+                                            </aside>
+                                            <main class="col">
                                                 <div class="row">
-                                                    <div class="col-12">
-                                                        <t t-out="record.name.value"/>
+                                                    <div class="col">
+                                                        <span class="fa fa-exclamation-triangle text-warning me-1"
+                                                            title="This product is archived"
+                                                            invisible="state not in ['draft', 'sent'] or not is_product_archived"
+                                                        />
+                                                        <field name="product_id" class="fw-bold"/>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <field name="price_subtotal" class="fw-bolder float-end pe-1" widget="monetary"/>
                                                     </div>
                                                 </div>
-                                            </t>
-                                        </div>
+                                                <div class="text-muted">
+                                                    Quantity:
+                                                    <field name="product_uom_qty"/> <field name="product_uom"/>
+                                                </div>
+                                                <div class="text-muted">
+                                                    Unit Price:
+                                                    <field name="price_unit"/>
+                                                </div>
+                                                <t t-if="record.discount?.raw_value">
+                                                    <div class="text-muted">
+                                                        Discount:
+                                                        <field name="discount"/>%
+                                                    </div>
+                                                </t>
+                                            </main>
+                                        </t>
+                                        <t t-if="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'">
+                                            <div t-attf-class="{{record.display_type.raw_value === 'line_section' ? 'fw-bold' : 'fst-italic' }}">
+                                                <field name="name"/>
+                                            </div>
+                                        </t>
                                     </t>
                                 </templates>
                             </kanban>

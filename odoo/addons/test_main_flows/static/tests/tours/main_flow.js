@@ -791,7 +791,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: '.o_field_widget[name=order_line] .oe_kanban_card:contains(the_flow.product)',
+    trigger: '.o_field_widget[name=order_line] .o_kanban_record:contains(the_flow.product)',
 },
 {
     isActive: ["mobile"],
@@ -1051,7 +1051,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".o_kanban_record .o_kanban_record_title:contains('the_flow.customer')",
+    trigger: ".o_kanban_record:contains('the_flow.customer')",
     content: _t("Go to the last sale order"),
     tooltipPosition: "bottom",
     run: "click",
