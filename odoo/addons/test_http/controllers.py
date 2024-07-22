@@ -41,21 +41,21 @@ class TestHttp(http.Controller):
 
     @http.route('/test_http/greeting-public', type='http', auth='public', readonly=_readonly)
     def greeting_public(self, readonly=True):
-        assert request.env.user, "ORM should be initialized"
-        assert request.env.cr.readonly == str2bool(readonly)
+        assert self.env.user, "ORM should be initialized"
+        assert self.env.cr.readonly == str2bool(readonly)
         return "Tek'ma'te"
 
     @http.route('/test_http/greeting-user', type='http', auth='user', readonly=_readonly)
     def greeting_user(self, readonly=True):
-        assert request.env.user, "ORM should be initialized"
-        assert request.env.cr.readonly == str2bool(readonly)
+        assert self.env.user, "ORM should be initialized"
+        assert self.env.cr.readonly == str2bool(readonly)
         return "Tek'ma'te"
 
     @http.route('/test_http/greeting-bearer', type='http', auth='bearer', readonly=_readonly)
     def greeting_bearer(self, readonly=True):
-        assert request.env.user, "ORM should be initialized"
-        assert request.env.cr.readonly == str2bool(readonly)
-        return f"Tek'ma'te; user={request.env.user.login}"
+        assert self.env.user, "ORM should be initialized"
+        assert self.env.cr.readonly == str2bool(readonly)
+        return f"Tek'ma'te; user={self.env.user.login}"
 
     @http.route('/test_http/wsgi_environ', type='http', auth='none')
     def wsgi_environ(self):
@@ -91,7 +91,7 @@ class TestHttp(http.Controller):
 
     @http.route('/test_http/echo-http-context-lang', type='http', auth='public', methods=['GET'], csrf=False)
     def echo_http_context_lang(self, **kwargs):
-        return request.env.context.get('lang', '')
+        return self.env.context.get('lang', '')
 
     @http.route('/test_http/echo-json', type='json', auth='none', methods=['POST'], csrf=False)
     def echo_json(self, **kwargs):
@@ -99,7 +99,7 @@ class TestHttp(http.Controller):
 
     @http.route('/test_http/echo-json-context', type='json', auth='user', methods=['POST'], csrf=False, readonly=True)
     def echo_json_context(self, **kwargs):
-        return request.env.context
+        return self.env.context
 
     @http.route('/test_http/echo-json-over-http', type='http', auth='none', methods=['POST'], csrf=False)
     def echo_json_over_http(self):
