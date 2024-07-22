@@ -251,7 +251,7 @@ class AccountMove(models.Model):
                 gross_price = line['price_subtotal'] / (1 - line['discount'] / 100.0)
                 line['discount_amount_before_dispatching'] = (gross_price - line['price_subtotal']) * inverse_factor
                 line['gross_price_subtotal'] = line['currency'].round(gross_price * inverse_factor)
-                line['price_unit'] = line['currency'].round(gross_price / abs(line['quantity']))
+                line['price_unit'] = gross_price / abs(line['quantity'])
             else:
                 line['gross_price_subtotal'] = line['currency'].round(line['price_unit'] * line['quantity'])
                 line['discount_amount_before_dispatching'] = line['gross_price_subtotal']
@@ -289,7 +289,7 @@ class AccountMove(models.Model):
                 'description': description or 'NO NAME',
                 'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor,
                 'unit_price': line_dict['price_unit'],
-                'discount_amount': line_dict['discount_amount'] - line_dict['discount_amount_before_dispatching'],
+                'discount_amount': ((line_dict['discount_amount'] - line_dict['discount_amount_before_dispatching']) / line.quantity) if line.quantity else 0,
                 'vat_tax': line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0),
                 'downpayment_moves': downpayment_moves,
                 'discount_type': (

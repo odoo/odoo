@@ -270,6 +270,7 @@ export class OdooEditor extends EventTarget {
                 useResponsiveFontSizes: true,
                 showResponsiveFontSizesBadges: false,
                 showExtendedTextStylesOptions: false,
+                autoActivateContentEditable: true,
                 // TODO probably move `getCSSVariableValue` and
                 // `convertNumericToUnit` as odoo-editor utils to avoid this
                 getCSSVariableValue: () => null,
@@ -344,8 +345,10 @@ export class OdooEditor extends EventTarget {
         this.editable.setAttribute('dir', this.options.direction);
 
         // Set contenteditable before clone as FF updates the content at this point.
-        this._activateContenteditable();
-
+        this.canActivateContentEditable = this.options.autoActivateContentEditable;
+        if (this.canActivateContentEditable) {
+            this._activateContenteditable();
+        }
         this._collabClientId = this.options.collaborationClientId;
         this._collabClientAvatarUrl = this.options.collaborationClientAvatarUrl;
 
@@ -2086,6 +2089,7 @@ export class OdooEditor extends EventTarget {
      * from outside the odooEditor.
      */
     activateContenteditable() {
+        this.canActivateContentEditable = true;
         this._activateContenteditable();
     }
 
@@ -2237,6 +2241,11 @@ export class OdooEditor extends EventTarget {
         }
         // Ensure empty blocks be given a <br> child.
         if (start) {
+            if (start === this.editable && startBlock.textContent === '\u200B') {
+                const p = document.createElement('p');
+                start.appendChild(p);
+                start = p;
+            }
             fillEmpty(closestBlock(start));
         }
         fillEmpty(closestBlock(range.endContainer));
@@ -2562,6 +2571,7 @@ export class OdooEditor extends EventTarget {
         }
         this.observerActive('_activateContenteditable');
     }
+
     _stopContenteditable() {
         this.observerUnactive('_stopContenteditable');
         if (this.options.isRootEditable) {
@@ -4175,24 +4185,13 @@ export class OdooEditor extends EventTarget {
         // and the toolbar so we need to fix the selection to be based on the
         // editable children. Calling `getDeepRange` ensure the selection is
         // limited to the editable.
-        const containerSelector = '#wrap>*, .oe_structure>*, [contenteditable]';
-        const container =
-            (selection &&
-                closestElement(selection.anchorNode, containerSelector)) ||
-            // In case a suitable container could not be found then the
-            // selection is restricted inside the editable area.
-            this.editable;
         if (
-            selection.anchorNode === container &&
-            selection.focusNode === container &&
+            selection.anchorNode === this.editable &&
+            selection.focusNode === this.editable &&
             selection.anchorOffset === 0 &&
-            selection.focusOffset === [...container.childNodes].length &&
-            // Checks that the container is not an empty editable structure to
-            // avoid calling "getDeepRange" if it is, otherwise it will be
-            // selected again, creating an infine loop.
-            container.childNodes.length
+            selection.focusOffset === [...this.editable.childNodes].length
         ) {
-            getDeepRange(container, {select: true});
+            getDeepRange(this.editable, {select: true});
             // The selection is changed in `getDeepRange` and will therefore
             // re-trigger the _onSelectionChange.
             return;
@@ -4602,7 +4601,10 @@ export class OdooEditor extends EventTarget {
         this._currentMouseState = ev.type;
         this._lastMouseClickPosition = [ev.x, ev.y];
 
-        this._activateContenteditable();
+        if (this.canActivateContentEditable) {
+            this._activateContenteditable();
+        }
+
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
 

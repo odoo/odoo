@@ -240,6 +240,13 @@ class DeliveryCarrier(models.Model):
                 res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.', self.amount)
                 res['price'] = 0.0
             return res
+        else:
+            return {
+                'success': False,
+                'price': 0.0,
+                'error_message': _('Error: this delivery method is not available.'),
+                'warning_message': False,
+            }
 
     def log_xml(self, xml_string, func):
         self.ensure_one()

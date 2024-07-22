@@ -13,7 +13,6 @@
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
 # Istvan <leki69@gmail.com>, 2023
 # Kovács Tibor <kovika@gmail.com>, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
 # Szabolcs Máj, 2023
 # A . <tiboreu@protonmail.com>, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2024
@@ -21,6 +20,8 @@
 # Martin Trigaux, 2024
 # Tamás Németh <ntomasz81@gmail.com>, 2024
 # Tamás Dombos, 2024
+# Gergely Toro, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tamás Dombos, 2024\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,14 +64,14 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"- Adó csoport: Az adó részadók halmaza.\n"
-"- Rögzített: Az adó összege ugyan az marad minden ár esetén.\n"
-"- Ár százaléka: Az adó összege az ár megadott százalékából:\n"
-"    pl.: 100 * (1 + 10%) = 110 (Az ár nem tartalmazza)\n"
-"    pl.: 110 / ( 1 + 10%) = 100 (Az ár tartalmazza)\n"
-"- Az ár százalékosan tartalmazza az adó-t: Az adó összege az ár hányada:\n"
-"    pl.: 180 / (1 - 10%) = 200 (Az ár nem tartalmazza)\n"
-"    pl.: 200 * (1 - 10%) = 180 (Az ár tartalmazza)"
+"- Csoportos: Az adó alárendelt adókból tevődik össze.\n"
+"- Rögzített: Az adó összege ártól függetlenül ugyanaz.\n"
+"- Az ár százaléka: Az adó összege az ár valahány százaléka:\n"
+"    pl.: 100 * (1 + 10%) = 110 (az ár nem tartalmazza az adót)\n"
+"    pl.: 110 / ( 1 + 10%) = 100 (az ár tartalmazza az adót)\n"
+"- Az adót is tartalmazó ár százaléka: Az adó összege az ár valamekkora hányada:\n"
+"    pl.: 180 / (1 - 10%) = 200 (az ár nem tartalmazza az adót)\n"
+"    pl.: 200 * (1 - 10%) = 180 (az ár tartalmazza az adót)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -450,7 +451,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
-msgstr ""
+msgstr "27.00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -482,7 +483,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "31.05"
-msgstr ""
+msgstr "31.05"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -7767,7 +7768,7 @@ msgstr "Számla elemzései"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "Számlák száma"
 
 #. module: account
 #. odoo-python
@@ -9910,7 +9911,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
-msgstr ""
+msgstr "Online fizetések"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible

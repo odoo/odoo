@@ -540,3 +540,23 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.env['pos.order'].create_from_ui([pos_order])
         self.assertEqual(sale_order.order_line[0].untaxed_amount_invoiced, 10, "Untaxed invoiced amount should be 10")
         self.assertEqual(sale_order.order_line[1].untaxed_amount_invoiced, 0, "Untaxed invoiced amount should be 0")
+
+    def test_order_does_not_remain_in_list(self):
+        """Verify that a paid order doesn't remain in the orders list"""
+
+        # Create a sale order
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': self.whiteboard_pen.id,
+                'name': self.whiteboard_pen.name,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+                'product_uom': self.whiteboard_pen.uom_id.id
+            })],
+        })
+
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosOrderDoesNotRemainInList', login="accountman")

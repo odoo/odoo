@@ -2,6 +2,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import date_utils
 
 
 class AccountPaymentTermLine(models.Model):
@@ -43,5 +44,9 @@ class AccountPaymentTermLine(models.Model):
                 days_next_month = int(self.days_next_month)
             except ValueError:
                 days_next_month = 1
+
+            if not days_next_month:
+                return date_utils.end_of(due_date + relativedelta(days=self.nb_days), 'month')
+
             return due_date + relativedelta(days=self.nb_days) + relativedelta(months=1, day=days_next_month)
         return res

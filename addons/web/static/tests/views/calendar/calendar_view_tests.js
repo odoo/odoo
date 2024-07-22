@@ -3509,6 +3509,23 @@ QUnit.module("Views", ({ beforeEach }) => {
         }
     );
 
+    QUnit.test(
+        `set event as all day when field is datetime (without all_day mapping)`,
+        async (assert) => {
+            await makeView({
+                serverData,
+                resModel: "event",
+                type: "calendar",
+                arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+            });
+            assert.containsOnce(
+                target,
+                ".fc-day-grid .fc-event-container",
+                "should be one event in the all day row"
+            );
+        }
+    );
+
     QUnit.test(`quickcreate avoid double event creation`, async (assert) => {
         assert.expect(1);
         let createCount = 0;
@@ -4135,7 +4152,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     });
 
     QUnit.test(`Monday week start week mode`, async (assert) => {
-        assert.expect(4);
+        assert.expect(5);
 
         patchDate(2019, 8, 15, 8, 0, 0); // 2019-09-15 08:00:00
         // the week start depends on the locale
@@ -4161,6 +4178,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 }
             },
         });
+        assert.containsOnce(target, ".fc-timeGridWeek-view .fc-day-grid");
 
         const dayNameHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
         const dayNumberHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_number");
@@ -4184,7 +4202,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     });
 
     QUnit.test(`Saturday week start week mode`, async (assert) => {
-        assert.expect(4);
+        assert.expect(5);
 
         patchDate(2019, 8, 12, 8, 0, 0); // 2019-09-12 08:00:00
 
@@ -4211,6 +4229,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 }
             },
         });
+        assert.containsOnce(target, ".fc-timeGridWeek-view .fc-day-grid");
 
         const dayNameHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
         const dayNumberHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_number");
@@ -5441,52 +5460,49 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(
-        "save selected date during view switching",
-        async function (assert) {
-            serverData.models.event.records = [];
-            serverData.actions = {
-                1: {
-                    id: 1,
-                    name: "Partners",
-                    res_model: "event",
-                    type: "ir.actions.act_window",
-                    views: [
-                        [false, "list"],
-                        [false, "calendar"],
-                    ],
-                },
-            };
+    QUnit.test("save selected date during view switching", async function (assert) {
+        serverData.models.event.records = [];
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partners",
+                res_model: "event",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "calendar"],
+                ],
+            },
+        };
 
-            serverData.views = {
-                "event,false,calendar": `<calendar date_start="start" date_stop="stop" mode="week"/>`,
-                "event,false,list": `<tree sample="1">
+        serverData.views = {
+            "event,false,calendar": `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+            "event,false,list": `<tree sample="1">
                     <field name="start"/>
                     <field name="stop"/>
                 </tree>`,
 
-                "event,false,search": `<search />`,
-            };
+            "event,false,search": `<search />`,
+        };
 
-            const webClient = await createWebClient({
-                serverData,
-                async mockRPC(route) {
-                    if (route.endsWith("/has_group")) {
-                        return true;
-                    }
-                },
-            });
+        const webClient = await createWebClient({
+            serverData,
+            async mockRPC(route) {
+                if (route.endsWith("/has_group")) {
+                    return true;
+                }
+            },
+        });
 
-            await doAction(webClient, 1);
+        await doAction(webClient, 1);
 
-            await click(target, ".o_cp_switch_buttons .o_calendar");
-            await click(target, ".o_calendar_button_next");
-            const weekNumber = target.querySelector(".fc-week-number").textContent;
-            await click(target, ".o_cp_switch_buttons .o_list");
-            await click(target, ".o_cp_switch_buttons .o_calendar");
-            assert.equal(weekNumber, target.querySelector(".fc-week-number").textContent);
-        }
-    );
+        await click(target, ".o_cp_switch_buttons .o_calendar");
+        await click(target, ".o_calendar_button_next");
+        const weekNumber = target.querySelector(".fc-week-number").textContent;
+        await click(target, ".o_cp_switch_buttons .o_list");
+        await click(target, ".o_cp_switch_buttons .o_calendar");
+        assert.equal(weekNumber, target.querySelector(".fc-week-number").textContent);
+    });
 
     QUnit.test(
         "sample data are not removed when switching back from calendar view",
@@ -5588,12 +5604,18 @@ QUnit.module("Views", ({ beforeEach }) => {
         await doAction(webClient, 1);
 
         await click(target, ".o_calendar_filter_item[data-value='all'] input");
-        assert.ok(document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked, "Check if the value of the 'all' filter is set to true")
+        assert.ok(
+            document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked,
+            "Check if the value of the 'all' filter is set to true"
+        );
 
         await click(target, ".o_cp_switch_buttons .o_list");
         await click(target, ".o_cp_switch_buttons .o_calendar");
 
-        assert.ok(document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked, "The value of the 'all' filter should remain the same as it was before re-rendering")
+        assert.ok(
+            document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked,
+            "The value of the 'all' filter should remain the same as it was before re-rendering"
+        );
     });
 
     QUnit.test(`Resizing Pill of Multiple Days(Allday)`, async (assert) => {

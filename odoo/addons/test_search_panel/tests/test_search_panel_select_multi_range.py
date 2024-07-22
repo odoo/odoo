@@ -558,13 +558,56 @@ class TestSelectRangeMulti(odoo.tests.TransactionCase):
             ]
         )
 
-        # no counters, no expand, no group_by, and search_domain
+        # no counters, no expand, no group_by, no search_domain, and limit
         result = self.SourceModel.search_panel_select_multi_range(
             'tag_ids',
             limit=2,
         )
-        self.assertEqual(result, SEARCH_PANEL_ERROR, )
+        self.assertEqual(result, SEARCH_PANEL_ERROR)
 
+        records = self.SourceModel.create([
+            {'name': 'Rec 5', 'tag_ids': [t2_id, t3_id]},
+            {'name': 'Rec 6', 'tag_ids': [t3_id]},
+        ])
+        r5_id, r6_id = records.ids
+
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            search_domain=[['id', '=', r5_id]],
+            limit=2,
+        )
+        self.assertEqual(result, SEARCH_PANEL_ERROR)
+
+        result = self.SourceModel.search_panel_select_multi_range(
+            'tag_ids',
+            search_domain=[['id', '=', r6_id]],
+            limit=2,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Tag 3', 'id': t3_id},
+            ]
+        )
+
+        result = self.SourceModel.search_panel_select_multi_range(
+            'computed_tag_ids',
+            search_domain=[['id', '=', r5_id]],
+            limit=2,
+        )
+        self.assertEqual(result, SEARCH_PANEL_ERROR)
+
+        result = self.SourceModel.search_panel_select_multi_range(
+            'computed_tag_ids',
+            search_domain=[['id', '=', r6_id]],
+            limit=2,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'Tag 3', 'id': t3_id},
+            ]
+        )
 
     # Selection case
 

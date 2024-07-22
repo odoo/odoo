@@ -8,7 +8,7 @@ from pytz import timezone
 from markupsafe import escape, Markup
 from werkzeug.urls import url_encode
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.osv import expression
 from odoo.tools import format_amount, format_date, formatLang, groupby
 from odoo.tools.float_utils import float_is_zero
@@ -281,6 +281,18 @@ class PurchaseOrder(models.Model):
     def _must_delete_date_planned(self, field_name):
         # To be overridden
         return field_name == 'order_line'
+
+    def onchange(self, values, field_names, fields_spec):
+        """
+        Override onchange to NOT update all date_planned on PO lines when
+        date_planned on PO is updated by the change of date_planned on PO lines.
+        """
+        result = super().onchange(values, field_names, fields_spec)
+        if any(self._must_delete_date_planned(field) for field in field_names) and 'value' in result:
+            for line in result['value'].get('order_line', []):
+                if line[0] == Command.UPDATE and 'date_planned' in line[2]:
+                    del line[2]['date_planned']
+        return result
 
     def _get_report_base_filename(self):
         self.ensure_one()
