@@ -118,7 +118,6 @@ export class MediaDialog extends Component {
     addTabs() {
         const onlyImages =
             this.props.onlyImages ||
-            this.props.multiImages ||
             (this.props.media &&
                 this.props.media.parentElement &&
                 (this.props.media.parentElement.dataset.oeField === "image" ||
