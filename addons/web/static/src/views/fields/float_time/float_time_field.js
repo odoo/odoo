@@ -21,7 +21,7 @@ export class FloatTimeField extends Component {
     };
 
     setup() {
-        useInputField({
+        this.inputFloatTimeRef = useInputField({
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
             parse: (v) => parseFloatTime(v),
