@@ -325,8 +325,6 @@ class SaleOrder(models.Model):
             # the requested quantity update.
             warning = ''
 
-        self._remove_delivery_line()
-
         order_line = self._cart_update_order_line(product_id, quantity, order_line, **kwargs)
 
         if (
@@ -339,6 +337,15 @@ class SaleOrder(models.Model):
             raise UserError(_(
                 "The given product does not have a price therefore it cannot be added to cart.",
             ))
+        if self.only_services:
+            self._remove_delivery_line()
+        elif self.carrier_id:
+            # Recompute the delivery rate.
+            rate = self.carrier_id.rate_shipment(self)
+            if rate['success']:
+                self.order_line.filtered(lambda line: line.is_delivery).price_unit = rate['price']
+            else:
+                self._remove_delivery_line()
 
         return {
             'line_id': order_line.id,

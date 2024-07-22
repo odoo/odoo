@@ -1,6 +1,6 @@
-import websiteSaleCheckout from '@website_sale/js/checkout';
+import WebsiteSaleCheckout from '@website_sale/js/checkout';
 
-websiteSaleCheckout.include({
+WebsiteSaleCheckout.include({
 
     /**
      * @override
