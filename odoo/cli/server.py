@@ -65,6 +65,11 @@ def report_configuration():
     port = config['db_port'] or os.environ.get('PGPORT', 'default')
     user = config['db_user'] or os.environ.get('PGUSER', 'default')
     _logger.info('database: %s@%s:%s', user, host, port)
+    if sys.version_info[:2] > odoo.MAX_PY_VERSION:
+        _logger.warning("Python %s is not officially supported, please use Python %s instead",
+            '.'.join(map(str, sys.version_info[:2])),
+            '.'.join(map(str, odoo.MAX_PY_VERSION))
+        )
 
 def rm_pid_file(main_pid):
     config = odoo.tools.config
