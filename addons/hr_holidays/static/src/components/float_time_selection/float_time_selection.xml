@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.FloatTimeSelectionField" t-inherit="web.FloatTimeField">
+        <xpath expr="//input" position="attributes">
+            <attribute name="t-on-input">handleInputChange</attribute>
+            <attribute name="t-on-click">onCharHoursClick</attribute>
+        </xpath>
+    </t>
+</templates>
