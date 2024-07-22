@@ -80,7 +80,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                 task: {
                     fields: {
                         file: { string: "Binary", type: "binary" },
-                        file_name: { string: "File Name", type: "char"}
+                        file_name: { string: "File Name", type: "char" },
                     },
                     records: [
                         {
@@ -420,6 +420,26 @@ QUnit.module("SettingsFormView", (hooks) => {
             [true, false]
         );
         assert.strictEqual(target.querySelector("[name='foo_text'] input").value, "Hello again");
+    });
+
+    QUnit.test("don't show noContentHelper if no search is done", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <block title="Setting title" help="Settings will appear below">
+                            <div/>
+                        </block>
+                    </app>
+                </form>`,
+        });
+        assert.isNotVisible(
+            target.querySelector(".o_nocontent_help"),
+            "record not found message shown"
+        );
     });
 
     QUnit.test("unhighlight section not matching anymore", async function (assert) {
@@ -2019,14 +2039,9 @@ QUnit.module("SettingsFormView", (hooks) => {
     });
 
     QUnit.test("BinaryField is correctly rendered in Settings form view", async function (assert) {
-
         async function send(data) {
             assert.ok(data instanceof FormData);
-            assert.strictEqual(
-                data.get("field"),
-                "file",
-                "we should download the field document"
-            );
+            assert.strictEqual(data.get("field"), "file", "we should download the field document");
             assert.strictEqual(
                 data.get("data"),
                 "coucou==\n",
