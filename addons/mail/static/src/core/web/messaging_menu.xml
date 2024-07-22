@@ -25,16 +25,22 @@
                     <button class="btn btn-link py-1 rounded-0" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
                     <button class="btn btn-link py-1 rounded-0" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
                     <button class="btn btn-link py-1 rounded-0" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
-                    <button t-if="threads.length >= 20" class="btn btn-link py-1 rounded-0 text-muted" type="button" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
+                    <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
+                    <button t-if="store.channels.status === 'fetching'" class="btn btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
                 </t>
             </t>
         </div>
-        <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="d-flex flex-column overflow-auto flex-grow-1 list-group list-group-flush">
+        <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="d-flex flex-column overflow-auto flex-grow-1 list-group list-group-flush" t-ref="notification-list">
             <div t-if="store.channels.status !== 'fetching' and !hasPreviews" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No conversation yet...
             </div>
-            <t t-if="installationRequest.isShown">
+            <div t-if="store.discuss.searchTerm and !threads.length" class="d-flex justify-content-center py-4 px-2 text-muted">
+                No thread found.
+            </div>
+            <t t-set="itemIndex" t-value="0"/>
+            <t t-if="installationRequest.isShown and !store.discuss.searchTerm">
                 <NotificationItem
+                    isActive="state.activeIndex === itemIndex"
                     body="installationRequest.body"
                     displayName="installationRequest.displayName"
                     iconSrc="installationRequest.iconSrc"
@@ -52,9 +58,11 @@
                         </t>
                     </t>
                 </NotificationItem>
+                <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
-            <t t-if="notificationRequest.isShown">
+            <t t-if="notificationRequest.isShown and !store.discuss.searchTerm">
                 <NotificationItem
+                    isActive="state.activeIndex === itemIndex"
                     body="notificationRequest.body"
                     displayName="notificationRequest.displayName"
                     iconSrc="notificationRequest.iconSrc"
@@ -64,10 +72,12 @@
                         <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
                 </NotificationItem>
+                <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
             <t t-if="store.discuss.activeTab === 'main' and !env.inDiscussApp and !store.discuss.searchTerm">
                 <t t-foreach="store.failures" t-as="failure" t-key="failure.id">
                     <NotificationItem
+                        isActive="state.activeIndex === itemIndex"
                         body="failure.body"
                         counter="failure.notifications.length > 1 ? failure.notifications.length : undefined"
                         datetime="failure.datetime"
@@ -77,11 +87,13 @@
                         onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
                         onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
                     />
+                    <t t-set="itemIndex" t-value="itemIndex + 1"/>
                 </t>
             </t>
             <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentNotEmptyOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
+                    isActive="state.activeIndex === itemIndex"
                     body="message?.inlineBody or message?.subtype_description"
                     counter="thread.needactionCounter"
                     datetime="message?.datetime"
@@ -102,6 +114,7 @@
                         </t>
                     </t>
                 </NotificationItem>
+                <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
             <t t-if="store.channels.status === 'fetching'">
                 <div class="d-flex align-items-center justify-content-center gap-2 py-4 px-2"><span class="o-visible-short-delay"><i class="fa fa-circle-o-notch fa-spin me-1"/> Loading…</span></div>

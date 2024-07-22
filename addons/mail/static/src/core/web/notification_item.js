@@ -24,6 +24,7 @@ export class NotificationItem extends Component {
         "onSwipeLeft?",
         "onSwipeRight?",
         "slots?",
+        "isActive?",
     ];
     static defaultProps = {
         counter: 0,

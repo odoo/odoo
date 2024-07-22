@@ -2,7 +2,10 @@
     &.o-important {
         background-color: mix($o-gray-100, $o-gray-200) !important;
     }
-    &:hover {
+    &.o-active {
+        box-shadow: inset 0px 0px 0px 1px rgba($o-action, 0.5);
+    }
+    &:hover, &.o-active {
         background-color: $o-gray-200 !important;
     }
 }
