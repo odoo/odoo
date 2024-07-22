@@ -50,7 +50,7 @@ class PaymentProvider(models.Model):
                 report,
                 unfiltered_providers - compatible_providers,
                 available=False,
-                reason=_("no onsite picking carriers available"),
+                reason=_("no onsite picking delivery methods available"),
             )
 
         return compatible_providers

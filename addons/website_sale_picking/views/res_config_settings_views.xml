@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="res_config_settings_view_form" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.website.sale.onsite</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//setting[@id='onsite_payment_setting']" position="inside">
-                <div class="content-group">
-                    <label class="col-lg-3" string="Picking sites" for="picking_site_ids"/>
-                    <field name="picking_site_ids" domain="[('delivery_type', '=', 'onsite')]" widget="many2many_tags"
-                           context="{'default_website_id': website_id, 'default_product_id': %(website_sale_picking.onsite_delivery_product)d, 'default_delivery_type': 'onsite', 'default_website_published': True, 'default_company_id': company_id}"/>
-                </div>
+            <xpath expr="//setting[@id='click_and_collect_setting']" position="inside">
                 <div class="mt8">
-                    <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="Customize Pickup Sites" class="btn-link" context="{'search_default_delivery_type': 'onsite'}"/>
+                    <button
+                        name="%(website_sale_picking.action_view_onsite_dms)d"
+                        icon="oi-arrow-right"
+                        type="action"
+                        string="Configure Pickup Locations"
+                        class="btn-link"
+                    />
                 </div>
             </xpath>
         </field>

@@ -31,7 +31,7 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_mondialrelay = fields.Boolean("Mondial Relay Connector")
     module_website_sale_autocomplete = fields.Boolean("Address Autocomplete")
     module_website_sale_comparison = fields.Boolean("Product Comparison Tool")
-    module_website_sale_picking = fields.Boolean("On Site Payments & Picking")
+    module_website_sale_picking = fields.Boolean("Click & Collect")
     module_website_sale_wishlist = fields.Boolean("Wishlists")
 
     # Website-dependent settings

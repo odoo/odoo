@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<template id="onsite_delivery_method" inherit_id="website_sale.delivery_method">
+        <xpath expr="//t[@t-set='is_pickup_needed']" position="attributes">
+            <attribute name="t-value" add="dm.delivery_type=='onsite'" separator=" or "/>
+        </xpath>
+    </template>
+
+</odoo>

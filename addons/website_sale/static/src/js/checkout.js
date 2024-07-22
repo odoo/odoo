@@ -12,6 +12,7 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         'click .js_change_billing': '_changeBillingAddress',
         'click .js_change_delivery': '_changeDeliveryAddress',
         'click .js_edit_address': '_preventChangingAddress',
+        'change #use_same_as_delivery': '_toggleBillingAddresses',
         // Delivery methods
         'click [name="o_delivery_radio"]': '_selectDeliveryMethod',
         'click [name="o_pickup_location_selector"]': '_selectPickupLocation',
@@ -21,6 +22,11 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
 
     async start() {
         this.mainButton = document.querySelector('a[name="website_sale_main_button"]');
+        this.billingRowClass = 'all_billing';
+        this.deliveryRowClass = 'all_delivery';
+        this.deliveryJSClass = 'js_change_delivery';
+        this.billingJSClass = 'js_change_billing';
+        this.use_same_as_delivery = document.querySelector('#use_same_as_delivery');
         await this._prepareDeliveryMethods();
     },
 
@@ -34,7 +40,31 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     async _changeBillingAddress (ev) {
-        await this._changeAddress(ev, 'all_billing', 'js_change_billing');
+        await this._changeAddress(ev, this.billingRowClass);
+    },
+
+    /**
+     * Show billing addresses row when the user checks the 'use same as delivery' else hide it.
+     *
+     * @param ev
+     * @return {void}
+     * @private
+     */
+    async _toggleBillingAddresses(ev) {
+        const billingContainer = document.querySelector('#billing_container');
+        const oldCard = this.findSelectedCardAddress(this.billingRowClass);
+        // Reset selected billing card address if any.
+        this.removePrimaryClassFromAddressCard(oldCard, this.billingRowClass);
+        if (ev.target.checked) {
+            billingContainer.classList.add('d-none');  // Hide billing addresses.
+            const selectedDeliveryCard = this.findSelectedCardAddress(this.deliveryRowClass);
+            // Set billing address same as the selected delivery address.
+            await this.updateAddress('billing', selectedDeliveryCard.dataset.partnerId);
+            this._enableMainButton();  // Try to enable the button.
+        } else {
+            this._disableMainButton();
+            billingContainer.classList.remove('d-none');  // Show billing addresses.
+        }
     },
 
     /**
@@ -45,7 +75,7 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     async _changeDeliveryAddress (ev) {
-        await this._changeAddress(ev, 'all_delivery', 'js_change_delivery');
+        await this._changeAddress(ev, this.deliveryRowClass);
     },
 
     /**
@@ -55,36 +85,45 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
      * @param {Event} ev
      * @param {String} rowAddrClass - The class of the selected address row: 'all_billing' for a
      *                                billing, 'all_delivery' for a delivery one.
-     * @param {String} cardClass - The class of an unselected address card: 'js_change_billing' for
-     *                             a billing address, `js_change_delivery` for a delivery one.
      * @return {void}
      */
-    async _changeAddress(ev, rowAddrClass, cardClass) {
-        const oldCard = document.querySelector(
-            `.${rowAddrClass} .card.border.border-primary`
-        );
-        oldCard.classList.add(cardClass);
-        oldCard.classList.remove('bg-primary', 'border', 'border-primary');
+    async _changeAddress(ev, rowAddrClass) {
+        const oldCard = this.findSelectedCardAddress(rowAddrClass);
+        this.removePrimaryClassFromAddressCard(oldCard, rowAddrClass);
 
         const newCard = ev.currentTarget.closest('div.one_kanban').querySelector('.card');
-        newCard.classList.remove(cardClass);
-        newCard.classList.add('bg-primary', 'border', 'border-primary');
+        this.addPrimaryClassToAddressCard(newCard, rowAddrClass);
         const addressType = newCard.dataset.addressType;
-        await rpc(
-            '/shop/update_address',
-            {
-                address_type: addressType,
-                partner_id: newCard.dataset.partnerId,
-            }
-        )
-
+        await this.updateAddress(addressType, newCard.dataset.partnerId);
+        this._enableMainButton();  // Try to enable the button.
         // When the delivery address is changed, update the available delivery methods.
         if (addressType === 'delivery') {
+            if (this.use_same_as_delivery.checked) {
+                // Set billing address same as the selected delivery address.
+                await this.updateAddress('billing', newCard.dataset.partnerId);
+            }
             document.getElementById('o_delivery_form').innerHTML = await rpc(
                 '/shop/delivery_methods'
             );
             await this._prepareDeliveryMethods();
         }
+    },
+
+    /**
+     * Set billing or delivery address on the order.
+     *
+     * @param addressType
+     * @param partnerId
+     * @return {Promise<void>}
+     */
+    async updateAddress(addressType, partnerId) {
+        await rpc(
+            '/shop/update_address',
+            {
+                address_type: addressType,
+                partner_id: partnerId,
+            }
+        )
     },
 
     /**
@@ -177,6 +216,39 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
     },
 
     // #=== DOM MANIPULATION ===#
+    /**
+     * Reset the selected card.
+     *
+     * @param card
+     * @param rowAddrClass
+     */
+    removePrimaryClassFromAddressCard(card, rowAddrClass) {
+        const cardClass = (rowAddrClass === this.deliveryRowClass) ? this.deliveryJSClass : this.billingJSClass;
+        card?.classList.add(cardClass);
+        card?.classList.remove('bg-primary', 'border', 'border-primary');
+    },
+
+    /**
+     * Select the card.
+     *
+     * @param card
+     * @param rowAddrClass
+     */
+    addPrimaryClassToAddressCard(card, rowAddrClass) {
+        const cardClass = (rowAddrClass === this.deliveryRowClass) ? this.deliveryJSClass : this.billingJSClass;
+        card?.classList.remove(cardClass);
+        card?.classList.add('bg-primary', 'border', 'border-primary');
+    },
+
+    /**
+     * Find the selected card of rowAddrClass.
+     *
+     * @param rowAddrClass
+     * @return {Element}
+     */
+    findSelectedCardAddress(rowAddrClass) {
+        return document.querySelector(`.${rowAddrClass} .card.border.border-primary`);
+    },
 
     /**
      * Disable the main button.
@@ -195,7 +267,7 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     _enableMainButton() {
-        if (this._isDeliveryMethodReady()) {
+        if (this._isDeliveryMethodReady() && this._isBillingAddressSelected()) {
             this.mainButton?.classList.remove('disabled');
         }
     },
@@ -317,6 +389,19 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         while (el.firstChild) {
             el.removeChild(el.lastChild);
         }
+    },
+
+    /**
+     * Checks if `use same as delivery` is checked, otherwise if a billing address card is selected.
+     *
+     * @return {boolean} - Whether a billing address is selected.
+     * @private
+     */
+
+    _isBillingAddressSelected() {
+        return (
+            this.findSelectedCardAddress(this.billingRowClass) || this.use_same_as_delivery.checked
+        );
     },
 
     // #=== DELIVERY FLOW ===#

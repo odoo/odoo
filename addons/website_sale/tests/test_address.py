@@ -449,7 +449,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
                 'parent_id': user_partner.id,
             },
             {
-                'name': 'Invalid billing', # missing email
+                'name': 'Invalid billing',  # missing email
                 'street': '215 Vine St',
                 'city': 'Scranton',
                 'zip': '18503',

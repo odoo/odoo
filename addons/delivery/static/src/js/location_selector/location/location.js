@@ -23,6 +23,7 @@ export class Location extends Component {
                 optional: true,
             },
         },
+        additionalData: { type: Object, optional: true },
         isSelected: Boolean,
         setSelectedLocation: Function,
     };

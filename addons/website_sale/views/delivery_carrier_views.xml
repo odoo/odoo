@@ -7,7 +7,12 @@
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
         <field name="arch" type="xml">
             <field name="company_id" position="after">
-                <field name="website_id" groups="website.group_multi_website" options="{'no_open': True, 'no_create_edit': True}"/>
+                <field
+                    name="website_id"
+                    groups="website.group_multi_website"
+                    options="{'no_open': True, 'no_create_edit': True}"
+                    placeholder="All websites"
+                />
             </field>
             <field name="carrier_description" position="before">
                 <field name="website_description"  placeholder="Description displayed on the eCommerce and on online quotations."/>

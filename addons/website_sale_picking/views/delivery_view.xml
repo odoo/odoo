@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+
+	<record id="action_view_onsite_dms" model="ir.actions.server">
+        <field name="name">Pickup in store</field>
+        <field name="model_id" ref="model_delivery_carrier"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_view_onsite_delivery_methods()
+        </field>
+    </record>
+
      <record id="view_delivery_carrier_form_with_onsite_picking" model="ir.ui.view">
          <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
          <field name="name">Delivery Carrier with Onsite Picking</field>
          <field name="model">delivery.carrier</field>
          <field name="arch" type="xml">
-             <xpath expr="//field[@name='integration_level']" position="before">
-                 <field invisible="delivery_type != 'onsite'" name="warehouse_id" options="{'no_quick_create': True}"
-                        domain="[('company_id', '=?', company_id)]"/>
-             </xpath>
+			 <page name="pricing" position="before">
+				 <page name="warehouses" string="Stores" invisible="delivery_type != 'onsite'">
+					 <field name="warehouse_ids">
+						 <tree>
+							 <field name="name"/>
+							 <field name="opening_hours"/>
+							 <field name="lot_stock_id" groups="stock.group_stock_multi_locations"/>
+							 <field name="partner_id"/>
+							 <field name="company_id" groups="base.group_multi_company"/>
+						</tree>
+					 </field>
+				 </page>
+			 </page>
          </field>
     </record>
 </odoo>

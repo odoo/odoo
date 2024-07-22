@@ -14,13 +14,20 @@ Allows customers to pay for their orders at a shop, instead of paying online.
         'data/payment_provider_data.xml',  # Depends on `payment_method_pay_on_site`.
         'data/website_sale_picking_data.xml',
 
+        'views/stock_warehouse_views.xml',
+        'views/delivery_form_templates.xml',
+        'views/delivery_view.xml',
         'views/res_config_settings_views.xml',
         'views/templates.xml',
-        'views/delivery_view.xml'
     ],
     'demo': [
         'data/demo.xml',
     ],
+    'assets': {
+            'web.assets_frontend': [
+                'website_sale_picking/static/src/js/location_selector/**/*'
+            ]
+    },
     'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }

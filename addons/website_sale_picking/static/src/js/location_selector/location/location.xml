@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="delivery.locationSelector.location" t-inherit-mode="extension">
+        <small name="location_opening_hours" position="before">
+            <t t-if="!!props.additionalData.is_cart_in_stock" >
+                <span class="text-success">
+                    <i class="fa fa-circle"/>
+                    Available in stock
+                </span>
+            </t>
+            <t t-else="">
+                <span class="text-danger">
+                    <i class="fa fa-times"/>
+                    Out of stock
+                </span>
+            </t>
+        </small>
+    </t>
+</templates>
