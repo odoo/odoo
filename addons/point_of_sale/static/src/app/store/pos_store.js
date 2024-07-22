@@ -1706,6 +1706,28 @@ export class PosStore extends Reactive {
     }
 
     /**
+     * This method will return a new price so that if you apply the taxes the price will remain the same
+     * For example if the original price is 50. It will compute a new price so that if you apply the tax_ids
+     * the price would still be 50.
+     */
+    compute_price_force_price_include(tax_ids, price) {
+        const AccountTax = this.models["account.tax"];
+        const taxes_to_apply = tax_ids.map((tax) => {
+            const duplicatedObject = AccountTax.duplicate(AccountTax.get(tax));
+            duplicatedObject.original_price_include = duplicatedObject.price_include;
+            duplicatedObject.price_include = true;
+            return duplicatedObject;
+        });
+        const tax_res = this.compute_all(taxes_to_apply, price, 1, this.currency.rounding);
+        let new_price = tax_res["total_excluded"];
+        new_price += tax_res.taxes
+            .filter((tax) => AccountTax.get(tax.id).original_price_include)
+            .reduce((sum, tax) => (sum += tax.amount), 0);
+        AccountTax.deleteMany(taxes_to_apply);
+        return new_price;
+    }
+
+    /**
      * Taxes after fiscal position mapping.
      * @param {number[]} taxIds
      * @param {object | falsy} fpos - fiscal position
