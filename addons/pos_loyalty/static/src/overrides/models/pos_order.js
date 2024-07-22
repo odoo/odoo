@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "./pos_store";
-import { getTaxesValues } from "@point_of_sale/app/models/utils/tax_utils";
+import { compute_price_force_price_include } from "@point_of_sale/app/models/utils/tax_utils";
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -76,7 +76,6 @@ patch(PosOrder.prototype, {
             codeActivatedProgramRules: [],
             couponPointChanges: {},
         };
-
         const oldCouponMapping = {};
         if (this.uiState.couponPointChanges) {
             for (const [key, pe] of Object.entries(this.uiState.couponPointChanges)) {
@@ -1073,20 +1072,15 @@ patch(PosOrder.prototype, {
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
         if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
-            const tax_res = getTaxesValues(
+            const new_price = compute_price_force_price_include(
                 discountProduct.taxes_id,
                 -Math.min(maxDiscount, discountable),
-                1,
                 discountProduct,
                 this.config._product_default_values,
                 this.company,
                 this.currency,
-                "total_included"
+                this.models
             );
-            let new_price = tax_res.total_excluded;
-            new_price += tax_res.taxes_data
-                .filter((tax) => this.models["account.tax"].get(tax.id).price_include)
-                .reduce((sum, tax) => (sum += tax.tax_amount), 0);
 
             return [
                 {
