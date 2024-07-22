@@ -5,7 +5,7 @@ import "@website_sale/js/checkout";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 
-const websiteSaleCheckoutWidget = publicWidget.registry.websiteSaleCheckout;
+const WebsiteSaleCheckout = publicWidget.registry.WebsiteSaleCheckout;
 
 // temporary for OnNoResultReturned bug
 import {registry} from "@web/core/registry";
@@ -18,10 +18,10 @@ function corsIgnoredErrorHandler(env, error) {
     }
 }
 
-websiteSaleCheckoutWidget.include({
+WebsiteSaleCheckout.include({
     events: Object.assign({
         "click #btn_confirm_relay": "_onClickBtnConfirmRelay",
-    }, websiteSaleCheckoutWidget.prototype.events),
+    }, WebsiteSaleCheckout.prototype.events),
 
     //--------------------------------------------------------------------------
     // Private

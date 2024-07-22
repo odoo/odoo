@@ -129,7 +129,7 @@ class Delivery(WebsiteSale):
         order_sudo._set_pickup_location(pickup_location_data)
 
     @route('/website_sale/get_pickup_locations', type='json', auth='public', website=True)
-    def website_sale_get_pickup_locations(self, zip_code=None):
+    def website_sale_get_pickup_locations(self, zip_code=None, **kwargs):
         """ Fetch the order from the request and return the pickup locations close to the zip code.
 
         Determine the country based on GeoIP or fallback on the order's delivery address' country.
@@ -139,13 +139,8 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         order_sudo = request.website.sale_get_order()
-        if request.geoip.country_code:
-            country = request.env['res.country'].search(
-                [('code', '=', request.geoip.country_code)], limit=1,
-            )
-        else:
-            country = order_sudo.partner_shipping_id.country_id
-        return order_sudo._get_pickup_locations(zip_code, country)
+        country = order_sudo.partner_shipping_id.country_id
+        return order_sudo._get_pickup_locations(zip_code, country, **kwargs)
 
     @route(_express_checkout_delivery_route, type='json', auth='public', website=True)
     def express_checkout_process_delivery_address(self, partial_delivery_address):
@@ -176,7 +171,7 @@ class Delivery(WebsiteSale):
             new_partner_sudo = self._create_new_address(
                 address_values=partial_delivery_address,
                 address_type='delivery',
-                use_same=False,
+                use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
             # Pricelists are recomputed every time the partner is changed. We don't want to
@@ -206,7 +201,7 @@ class Delivery(WebsiteSale):
             order_sudo.partner_shipping_id = child_partner_id or self._create_new_address(
                 address_values=partial_delivery_address,
                 address_type='delivery',
-                use_same=False,
+                use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
 

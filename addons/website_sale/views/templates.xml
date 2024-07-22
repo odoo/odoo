@@ -2182,58 +2182,92 @@
             <t t-set="redirect" t-valuef="/shop/checkout"/>
             <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
             <div id="shop_checkout">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h4 class="text-uppercase small fs-6 fw-bold">Billing address</h4>
-                    </div>
-                </div>
-                <t t-call="website_sale.row_addresses">
-                    <t t-set="order" t-value="order"/>
-                    <t t-set="is_invoice" t-value="True"/>
-                    <t t-set="addresses" t-value="billing_addresses"/>
-                    <t t-set="selected_address" t-value="order.partner_invoice_id"/>
-                </t>
                 <t t-if="order._has_deliverable_products()">
-                    <t groups="account.group_delivery_invoice_address">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <h4 class="text-uppercase small fs-6 fw-bold">Delivery address</h4>
-                            </div>
-                        </div>
-                        <t t-call="website_sale.row_addresses">
-                            <t t-set="order" t-value="order"/>
-                            <t t-set="is_invoice" t-value="False"/>
-                            <t t-set="addresses" t-value="delivery_addresses"/>
-                            <t t-set="selected_address" t-value="order.partner_shipping_id"/>
-                        </t>
+                    <t t-call="website_sale.delivery_address_row">
+                        <t t-set="addresses" t-value="delivery_addresses"/>
                     </t>
                     <t t-call="website_sale.delivery_form">
                         <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
                     </t>
                 </t>
+                <t t-call="website_sale.billing_address_row">
+                    <t t-set="addresses" t-value="billing_addresses"/>
+                </t>
             </div>
         </t>
     </template>
 
-    <template id="row_addresses">
-        <div t-attf-class="{{'all_billing' if is_invoice else 'all_delivery'}} row row-cols-md-2 row-cols-lg-3 g-3 flex-nowrap flex-md-wrap mb32">
-            <div t-foreach="addresses" t-as="addr"
-                    class="one_kanban col-md">
-                <t t-call="website_sale.address_kanban">
-                    <t t-set="contact" t-value="addr"/>
-                    <t t-set="selected" t-value="len(addresses) == 1 or addr == selected_address"/>
+    <template id="delivery_address_row">
+        <div id="delivery_address_row" class="mb-4">
+            <h4 class="text-uppercase small fs-6 fw-bold">Delivery address</h4>
+            <t groups="account.group_delivery_invoice_address">
+                <t t-call="website_sale.address_row">
+                    <t t-set="is_invoice" t-value="False"/>
+                    <t t-set="addresses" t-value="delivery_addresses"/>
+                    <t t-set="selected_address" t-value="order.partner_shipping_id"/>
+                </t>
+            </t>
+        </div>
+    </template>
+
+    <template id="billing_address_row">
+        <div id="billing_address_row">
+            <h4 class="text-uppercase small fs-6 fw-bold mt-3">Billing address</h4>
+            <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
+            <div t-if="has_delivery" class="form-check form-switch mt-2 mb-3">
+                <label>
+                    <input
+                        type="checkbox"
+                        id="use_delivery_as_billing"
+                        class="form-check-input"
+                        t-att-checked="use_delivery_as_billing"
+                    /> Same as delivery address
+                </label>
+            </div>
+            <div
+                id="billing_container"
+                t-attf-class="{{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
+            >
+                <t t-call="website_sale.address_row">
+                    <t t-set="is_invoice" t-value="True"/>
+                    <t t-set="addresses" t-value="billing_addresses"/>
+                    <t t-set="selected_address" t-value="order.partner_invoice_id"/>
                 </t>
             </div>
-            <div t-if="not is_invoice or not order.website_id.is_public_user()" class="one_kanban col-md">
-                <!-- We do not allow public users to have multiple billing addresses -->
+        </div>
+    </template>
+
+    <template id="address_row">
+        <div t-att-class="('all_billing' if is_invoice else 'all_delivery')
+                          + ' row row-cols-md-2 row-cols-lg-3 g-3 flex-nowrap flex-md-wrap'"
+        >
+            <div t-foreach="addresses" t-as="addr" class="one_kanban col-md">
+                <t t-call="website_sale.address_kanban">
+                    <t t-set="contact" t-value="addr"/>
+                    <t t-set="selected" t-value="addr == selected_address"/>
+                </t>
+            </div>
+            <div
+                t-if="is_invoice or not order.website_id.is_public_user()" class="one_kanban col-md"
+            >
+                <!-- We don't allow public users to have multiple delivery addresses. -->
                 <t t-if="is_invoice">
                     <t t-set="new_address_href" t-valuef="/shop/address?address_type=billing"/>
                 </t>
                 <t t-else="">
-                    <t t-set="new_address_href" t-valuef="/shop/address?address_type=delivery"/>
+                    <t
+                        t-set="new_address_href"
+                        t-valuef="/shop/address?address_type=delivery&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
+                    />
                 </t>
-                <a role="button" t-att-href="new_address_href" class="o_wsale_add_address d-flex align-items-center justify-content-center h-100 px-4 border rounded mx-auto no-decoration">
-                    <i class="fa fa-plus me-md-2"/><span class="d-none d-md-inline">Add address</span>
+                <a
+                    role="button"
+                    t-att-href="new_address_href"
+                    t-att-data-address-type="is_invoice and 'billing' or 'delivery'"
+                    class="o_wsale_add_address d-flex align-items-center justify-content-center h-100 px-4 border rounded mx-auto no-decoration"
+                >
+                    <i class="fa fa-plus me-md-2"/>
+                    <span class="d-none d-md-inline">Add address</span>
                 </a>
             </div>
         </div>
@@ -2277,22 +2311,30 @@
                         <div class="oe_cart col-12 col-lg-8">
                             <div>
                                 <t t-if="not is_anonymous_cart">
-                                    <t t-if="address_type == 'billing'">
-                                        <h3 class="mb-3">Billing address</h3>
+                                    <t t-if="use_delivery_as_billing">
+                                        <h3 class="mb-3">Your address</h3>
                                     </t>
-                                    <t t-else="">
+                                    <t t-elif="address_type == 'delivery'">
                                         <h3 class="mb-3">Delivery address</h3>
                                     </t>
+                                    <t t-else="">
+                                        <h3 class="mb-3">Billing address</h3>
+                                    </t>
                                 </t>
-                                <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
-                                    <div t-if="not only_services" class="alert alert-warning" role="alert" groups="account.group_delivery_invoice_address">
-                                        <h4 class="alert-heading">Be aware!</h4>
-                                        <p>
-                                            You are editing your <b>billing and delivery</b> addresses at the same time!<br/>
-                                            If you want to modify your delivery address, create a <a href="/shop/address?address_type=delivery">new address</a>.
-                                        </p>
-                                    </div>
-                                </t>
+                                <div
+                                    t-if="use_delivery_as_billing and not only_services"
+                                    class="alert alert-warning"
+                                    role="alert"
+                                    groups="account.group_delivery_invoice_address"
+                                >
+                                    <h4 class="alert-heading">Be aware!</h4>
+                                    <p>
+                                        You are editing your <b>delivery and billing</b> addresses
+                                        at the same time!<br/>
+                                        If you want to modify your billing address, create a
+                                        <a href="/shop/address?address_type=billing">new address</a>.
+                                    </p>
+                                </div>
                                 <div id="errors"/> <!-- for js -->
                                 <form
                                     action="/shop/address/submit"
@@ -2455,37 +2497,14 @@
                                                 </t>
                                             </select>
                                         </div>
-                                        <div class="w-100"/>
-                                        <t t-if="address_type == 'billing' and not partner_id and not only_services">
-                                            <div class="col-lg-12">
-                                                <div class="form-check form-switch mt-2 mb-3">
-                                                    <label>
-                                                        <input
-                                                            type="checkbox"
-                                                            id="use_same_as_delivery"
-                                                            name="use_same"
-                                                            value="1"
-                                                            t-att-checked="use_same"
-                                                            class="form-check-input mr8"
-                                                        />Deliver to the same address
-                                                        <span
-                                                            t-if="is_anonymous_cart"
-                                                            name="o_wsale_separate_delivery_notice"
-                                                            class="form-check-label ship_to_other text-muted"
-                                                            style="display: none"
-                                                        >
-                                                            &amp;nbsp;(<i>Your delivery address will be requested later)</i>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </t>
-                                        <t t-else="">
-                                            <input type="hidden" name="use_same" t-att-value="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id"/>
-                                        </t>
                                     </div>
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <input type="hidden" name="address_type" t-att-value="address_type"/>
+                                    <input
+                                        type="hidden"
+                                        name="use_delivery_as_billing"
+                                        t-att-value="use_delivery_as_billing"
+                                    />
                                     <t t-if="partner_id">
                                         <input type="hidden" name="partner_id" t-att-value="partner_id"/>
                                     </t>
@@ -2530,17 +2549,13 @@
     <!-- Called in `website_sale.payment`. -->
     <template id="address_on_payment" name="Address on payment">
         <div class="card">
-            <div class="card-body" id="shipping_and_billing">
+            <div class="card-body" id="delivery_and_billing">
                 <a class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-pencil me-1"/>Edit</a>
                 <t
-                    t-set="separate_billing_address"
-                    t-value="order.partner_invoice_id != order.partner_shipping_id or order.pickup_location_data"
+                    t-set="use_delivery_as_billing"
+                    t-value="order.partner_invoice_id == order.partner_shipping_id and not order.pickup_location_data"
                 />
-                <div>
-                    <b>Billing<t t-if="not separate_billing_address and not only_services"> &amp; Delivery</t>: </b>
-                    <span t-esc="order.partner_invoice_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
-                </div>
-                <div t-if="separate_billing_address and order._has_deliverable_products()" groups="account.group_delivery_invoice_address">
+                <div t-if="not use_delivery_as_billing and order._has_deliverable_products()" groups="account.group_delivery_invoice_address">
                     <t t-if="order.pickup_location_data">
                         <b>Deliver to pickup point: </b>
                         <t t-out="order.pickup_location_data.get('name', '') + ', ' + order.pickup_location_data.get('street', '') + ' ' + order.pickup_location_data.get('zip_code', '') + ' ' + order.pickup_location_data.get('city','')"/>
@@ -2553,6 +2568,10 @@
                             class="address-inline"
                         />
                     </t>
+                </div>
+                <div>
+                    <b><t t-if="use_delivery_as_billing and not only_services">Delivery &amp; </t>Billing: </b>
+                    <span t-esc="order.partner_invoice_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
                 </div>
             </div>
         </div>

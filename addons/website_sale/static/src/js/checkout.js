@@ -5,13 +5,13 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
-publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
+publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     selector: '#shop_checkout',
     events: {
         // Addresses
-        'click .js_change_billing': '_changeBillingAddress',
-        'click .js_change_delivery': '_changeDeliveryAddress',
+        'click .card': '_changeAddress',
         'click .js_edit_address': '_preventChangingAddress',
+        'change #use_delivery_as_billing': '_toggleBillingAddressRow',
         // Delivery methods
         'click [name="o_delivery_radio"]': '_selectDeliveryMethod',
         'click [name="o_pickup_location_selector"]': '_selectPickupLocation',
@@ -21,70 +21,83 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
 
     async start() {
         this.mainButton = document.querySelector('a[name="website_sale_main_button"]');
+        this.use_delivery_as_billing_toggle = document.querySelector('#use_delivery_as_billing');
         await this._prepareDeliveryMethods();
     },
 
     // #=== EVENT HANDLERS ===#
 
     /**
-     * Change the billing address.
-     *
-     * @private
-     * @param {Event} ev
-     * @return {void}
-     */
-    async _changeBillingAddress (ev) {
-        await this._changeAddress(ev, 'all_billing', 'js_change_billing');
-    },
-
-    /**
-     * Change the delivery address.
-     *
-     * @private
-     * @param {Event} ev
-     * @return {void}
-     */
-    async _changeDeliveryAddress (ev) {
-        await this._changeAddress(ev, 'all_delivery', 'js_change_delivery');
-    },
-
-    /**
      * Set the billing or delivery address on the order and update the corresponding card.
      *
      * @private
      * @param {Event} ev
-     * @param {String} rowAddrClass - The class of the selected address row: 'all_billing' for a
-     *                                billing, 'all_delivery' for a delivery one.
-     * @param {String} cardClass - The class of an unselected address card: 'js_change_billing' for
-     *                             a billing address, `js_change_delivery` for a delivery one.
      * @return {void}
      */
-    async _changeAddress(ev, rowAddrClass, cardClass) {
-        const oldCard = document.querySelector(
-            `.${rowAddrClass} .card.border.border-primary`
-        );
-        oldCard.classList.add(cardClass);
-        oldCard.classList.remove('bg-primary', 'border', 'border-primary');
+    async _changeAddress(ev) {
+        const newAddress = ev.currentTarget;
+        if (newAddress.dataset.isSelected) { // If the card is already selected.
+            return;
+        }
+        const addressType = newAddress.dataset.addressType;
 
-        const newCard = ev.currentTarget.closest('div.one_kanban').querySelector('.card');
-        newCard.classList.remove(cardClass);
-        newCard.classList.add('bg-primary', 'border', 'border-primary');
-        const addressType = newCard.dataset.addressType;
-        await rpc(
-            '/shop/update_address',
-            {
-                address_type: addressType,
-                partner_id: newCard.dataset.partnerId,
+        // Remove the highlighting from the previously selected address card.
+        const previousAddress = this._getSelectedAddress(addressType);
+        this._tuneDownAddressCard(previousAddress);
+
+        // Highlight the newly selected address card.
+        this._highlightAddressCard(newAddress);
+        const selectedPartnerId = newAddress.dataset.partnerId;
+        await this.updateAddress(addressType, selectedPartnerId);
+        if (addressType === 'delivery') {  // A delivery address is changed.
+            if (this.use_delivery_as_billing_toggle.checked) {
+                await this._selectMatchingBillingAddress(selectedPartnerId);
             }
-        )
-
-        // When the delivery address is changed, update the available delivery methods.
-        if (addressType === 'delivery') {
+            // Update the available delivery methods.
             document.getElementById('o_delivery_form').innerHTML = await rpc(
                 '/shop/delivery_methods'
             );
             await this._prepareDeliveryMethods();
         }
+        this._enableMainButton();  // Try to enable the main button.
+    },
+
+    /**
+     * Show/hide the billing address row when the user toggles the 'use delivery as billing' input.
+     *
+     * The URLs of the "create address" buttons are updated to propagate the value of the input.
+     *
+     * @private
+     * @param ev
+     * @return {void}
+     */
+    async _toggleBillingAddressRow(ev) {
+        const useDeliveryAsBilling = ev.target.checked;
+
+        const addDeliveryAddressButton = this.el.querySelector(
+            '.o_wsale_add_address[data-address-type="delivery"]'
+        );
+        if (addDeliveryAddressButton) {  // If `Add address` button for delivery.
+            // Update the `use_delivery_as_billing` query param for a new delivery address URL.
+            const addDeliveryUrl = new URL(addDeliveryAddressButton.href);
+            addDeliveryUrl.searchParams.set(
+                'use_delivery_as_billing', encodeURIComponent(useDeliveryAsBilling)
+            );
+            addDeliveryAddressButton.href = addDeliveryUrl.toString();
+        }
+
+        // Toggle the billing address row.
+        const billingContainer = this.el.querySelector('#billing_container');
+        if (useDeliveryAsBilling) {
+            billingContainer.classList.add('d-none');  // Hide the billing address row.
+            const selectedDeliveryAddress = this._getSelectedAddress('delivery');
+            await this._selectMatchingBillingAddress(selectedDeliveryAddress.dataset.partnerId);
+        } else {
+            this._disableMainButton();
+            billingContainer.classList.remove('d-none');  // Show the billing address row.
+        }
+
+        this._enableMainButton();  // Try to enable the main button.
     },
 
     /**
@@ -136,6 +149,7 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
      */
     async _selectPickupLocation(ev) {
         const { zipCode, locationId } = ev.currentTarget.dataset;
+        const deliveryMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
         this.call('dialog', 'add', LocationSelectorDialog, {
             zipCode: zipCode,
             selectedLocationId: locationId,
@@ -146,30 +160,7 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
                 await this._setPickupLocation(jsonLocation);
 
                 //  Show and set the order location details.
-                const deliveryMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
-                const pickupLocation = deliveryMethodContainer.querySelector(
-                    '[name="o_pickup_location"]'
-                );
-                pickupLocation.querySelector(
-                    '[name="o_pickup_location_name"]'
-                ).innerText = location.name;
-                pickupLocation.querySelector(
-                    '[name="o_pickup_location_address"]'
-                ).innerText = `${location.street} ${location.zip_code} ${location.city}`;
-                const editPickupLocationButton = pickupLocation.querySelector(
-                    'span[name="o_pickup_location_selector"]'
-                );
-                editPickupLocationButton.dataset.locationId = location.id;
-                editPickupLocationButton.dataset.zipCode = location.zip_code;
-                editPickupLocationButton.dataset.pickupLocationData = jsonLocation;
-                pickupLocation.querySelector(
-                    '[name="o_pickup_location_details"]'
-                ).classList.remove('d-none');
-
-                // Remove the button.
-                pickupLocation.querySelector(
-                    'button[name="o_pickup_location_selector"]'
-                )?.remove();
+                this._updatePickupLocation(deliveryMethodContainer, location, jsonLocation);
 
                 this._enableMainButton();
             },
@@ -177,6 +168,59 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
     },
 
     // #=== DOM MANIPULATION ===#
+
+    /**
+     * Update the pickup location address elements and the 'edit' button's values.
+     *
+     * @private
+     * @param deliveryMethodContainer - The container element of the delivery method.
+     * @param location - The selected location as an object.
+     * @param jsonLocation - The selected location as an JSON string.
+     * @return {void}
+     */
+    _updatePickupLocation(deliveryMethodContainer, location, jsonLocation) {
+        const pickupLocation = deliveryMethodContainer.querySelector('[name="o_pickup_location"]');
+        pickupLocation.querySelector('[name="o_pickup_location_name"]').innerText = location.name;
+        pickupLocation.querySelector(
+            '[name="o_pickup_location_address"]'
+        ).innerText = `${location.street} ${location.zip_code} ${location.city}`;
+        const editPickupLocationButton = pickupLocation.querySelector(
+            'span[name="o_pickup_location_selector"]'
+        );
+        editPickupLocationButton.dataset.locationId = location.id;
+        editPickupLocationButton.dataset.zipCode = location.zip_code;
+        editPickupLocationButton.dataset.pickupLocationData = jsonLocation;
+        pickupLocation.querySelector(
+            '[name="o_pickup_location_details"]'
+        ).classList.remove('d-none');
+
+        // Remove the button.
+        pickupLocation.querySelector('button[name="o_pickup_location_selector"]')?.remove();
+    },
+
+    /**
+     * Remove the highlighting from the address card.
+     *
+     * @private
+     * @param card - The card element of the selected address.
+     * @return {void}
+     */
+    _tuneDownAddressCard(card) {
+        if (!card) return;
+        card.classList.remove('bg-primary', 'border', 'border-primary');
+    },
+
+    /**
+     * Highlight the address card.
+     *
+     * @private
+     * @param card - The card element of the selected address.
+     * @return {void}
+     */
+    _highlightAddressCard(card) {
+        if (!card) return;
+        card.classList.add('bg-primary', 'border', 'border-primary');
+    },
 
     /**
      * Disable the main button.
@@ -189,15 +233,25 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
     },
 
     /**
-     * Enable the main button if a delivery method is selected.
+     * Enable the main button if all conditions are satisfied.
      *
      * @private
      * @return {void}
      */
     _enableMainButton() {
-        if (this._isDeliveryMethodReady()) {
+        if (this._canEnableMainButton()) {
             this.mainButton?.classList.remove('disabled');
         }
+    },
+
+    /**
+     * Return whether a delivery method and a billing address are selected.
+     *
+     * @private
+     * @return {boolean}
+     */
+    _canEnableMainButton(){
+        return this._isDeliveryMethodReady() && this._isBillingAddressSelected();
     },
 
     /**
@@ -319,6 +373,36 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         }
     },
 
+    // #=== ADDRESS FLOW ===#
+
+    /**
+     * Select the billing address matching the currently selected delivery address.
+     *
+     * @private
+     * @param selectedPartnerId - The partner id of the selected delivery address.
+     * @return {void}
+     */
+    async _selectMatchingBillingAddress(selectedPartnerId) {
+        const previousAddress = this._getSelectedAddress('billing');
+        this._tuneDownAddressCard(previousAddress);
+        await this.updateAddress('billing', selectedPartnerId);
+        const billingAddress = this.el.querySelector(
+            `.card[data-partner-id="${selectedPartnerId}"][data-address-type="billing"]`
+        );
+        this._highlightAddressCard(billingAddress);
+    },
+
+    /**
+     * Set the billing or delivery address on the order.
+     *
+     * @param addressType - The type of the address to set: 'delivery' or 'billing'.
+     * @param partnerId - The partner id of the address to set.
+     * @return {void}
+     */
+    async updateAddress(addressType, partnerId) {
+        await rpc('/shop/update_address', {address_type: addressType, partner_id: partnerId})
+    },
+
     // #=== DELIVERY FLOW ===#
 
     /**
@@ -421,6 +505,30 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
 
     // #=== GETTERS & SETTERS ===#
 
+    /** Determine and return the selected address who card has the class rowAddrClass.
+     *
+     * @private
+     * @param addressType - The type of the address: 'billing' or 'delivery'.
+     * @return {Element}
+     */
+    _getSelectedAddress(addressType) {
+        return this.el.querySelector(`.card.bg-primary[data-address-type="${addressType}"]`);
+    },
+
+    /**
+     * Return whether the "use delivery as billing" toggle is checked or a billing address is
+     * selected.
+     *
+     * @private
+     * @return {boolean} - Whether a billing address is selected.
+     */
+    _isBillingAddressSelected() {
+        const billingAddressSelected = Boolean(
+            this.el.querySelector('.card.bg-primary[data-address-type="billing"]')
+        );
+        return billingAddressSelected || this.use_delivery_as_billing_toggle.checked;
+    },
+
     /**
      * Create and return an element representing a loading spinner.
      *
@@ -484,4 +592,4 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
 
 });
 
-export default publicWidget.registry.websiteSaleCheckout;
+export default publicWidget.registry.WebsiteSaleCheckout;

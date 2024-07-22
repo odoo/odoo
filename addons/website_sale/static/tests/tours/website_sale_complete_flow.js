@@ -46,13 +46,13 @@
         total: '181.70',
     }),
     {
-        content: "Fulfill billing address form",
+        content: "Fulfill delivery address form",
         trigger: 'select[name="country_id"]',
         run: "selectByLabel Afghanistan",
     },
     {
         trigger: `input[name="name"]`,
-        run: "edit abc",
+        run: "edit abcd",
     },
     {
         trigger: `input[name="phone"]`,
@@ -64,20 +64,15 @@
     },
     {
         trigger: `input[name="street"]`,
-        run: "edit SO1 Billing Street, 33",
+        run: "edit SO1 Delivery Street, 33",
     },
     {
         trigger: `input[name="city"]`,
-        run: "edit SO1BillingCity",
+        run: "edit SO1DeliveryCity",
     },
     {
         trigger: `input[name="zip"]`,
         run: "edit 10000",
-    },
-    {
-        content: "Shipping address is not same as billing address",
-        trigger: '#use_same_as_delivery',
-        run: "click",
     },
     {
         content: "Click on next button",
@@ -85,11 +80,26 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
-        trigger: 'h3:contains("Delivery address")',
+        content: "Click for edit address",
+        trigger: 'a:contains("Edit") i',
+        run: "click",
     },
     {
-        content: "Fulfill shipping address form",
+        content: "Billing address is not same as delivery address",
+        trigger: '#use_delivery_as_billing',
+        run: "click",
+    },
+    {
+        content: "Add a billing address",
+        trigger: '.all_billing a[href^="/shop/address"]:contains("Add address")',
+        run: "click",
+    },
+    {
+        isActive: ["auto"],
+        trigger: 'h3:contains("Billing address")',
+    },
+    {
+        content: "Fulfill billing address form",
         trigger: 'select[name="country_id"]',
         run: "selectByLabel Afghanistan",
     },
@@ -102,12 +112,16 @@
         run: "edit 8888888888",
     },
     {
+        trigger: `input[name="email"]`,
+        run: "edit abc@odoo.com",
+    },
+    {
         trigger: `input[name="street"]`,
-        run: "edit 17, SO1 Shipping Road",
+        run: "edit 17, SO1 Billing Road",
     },
     {
         trigger: `input[name="city"]`,
-        run: "edit SO1ShippingCity",
+        run: "edit SO1BillingCity",
     },
     {
         trigger: `input[name="zip"]`,
@@ -119,12 +133,12 @@
         run: "click",
     },
     {
-        content: "Check selected billing address is same as typed in previous step",
-        trigger: '#shipping_and_billing:contains(SO1 Billing Street, 33):contains(SO1BillingCity):contains(Afghanistan)',
+        content: "Check selected delivery address is same as typed in previous step",
+        trigger: '#delivery_and_billing:contains(SO1 Delivery Street, 33):contains(SO1DeliveryCity):contains(Afghanistan)',
     },
     {
-        content: "Check selected shipping address is same as typed in previous step",
-        trigger: '#shipping_and_billing:contains(17, SO1 Shipping Road):contains(SO1ShippingCity):contains(Afghanistan)',
+        content: "Check selected billing address is same as typed in previous step",
+        trigger: '#delivery_and_billing:contains(17, SO1 Billing Road):contains(SO1BillingCity):contains(Afghanistan)',
     },
     {
         content: "Click for edit address",
@@ -133,7 +147,7 @@
     },
     {
         content: "Click for edit billing address",
-        trigger: '.js_edit_address:first',
+        trigger: '.all_billing .js_edit_address:first',
         run: "click",
     },
     {
@@ -168,7 +182,7 @@
         tourUtils.confirmOrder(),
     {
         content: "Check selected billing address is same as typed in previous step",
-        trigger: '#shipping_and_billing:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
+        trigger: '#delivery_and_billing:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
     },
     {
         content: "Select `Wire Transfer` payment method",
@@ -332,12 +346,12 @@
         run: "click",
     },
     {
-        content: "Add new shipping address",
+        content: "Add new delivery address",
         trigger: '.all_delivery a[href^="/shop/address"]:contains("Add address")',
         run: "click",
     },
     {
-        content: "Fulfill shipping address form",
+        content: "Fulfill delivery address form",
         trigger: 'select[name="country_id"]',
         run: "selectByLabel Afghanistan",
     },
@@ -351,11 +365,11 @@
     },
     {
         trigger: `input[name="street"]`,
-        run: "edit SO2New Shipping Street, 5",
+        run: "edit SO2New Delivery Street, 5",
     },
     {
         trigger: `input[name="city"]`,
-        run: "edit SO2NewShipping",
+        run: "edit SO2NewDelivery",
     },
     {
         trigger: `input[name="zip"]`,

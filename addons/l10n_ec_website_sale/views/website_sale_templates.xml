@@ -3,7 +3,7 @@
 
     <template id="address" inherit_id="website_sale.address">
         <div id="div_vat" position="before">
-            <t t-if="address_type == 'billing' and res_company.country_id.code == 'EC'">
+            <t t-if="res_company.country_id.code == 'EC'">
                 <!-- Break the line to put Identification Type and Number (vat) on the same line -->
                 <div class="clearfix"/>
 
