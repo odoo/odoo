@@ -70,6 +70,18 @@ class StockQuant(TransactionCase):
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
         return quants.filtered(lambda q: not (q.quantity == 0 and q.reserved_quantity == 0))
 
+    def test_copy_quant(self):
+        """
+        You should not be allowed to duplicate quants.
+        """
+        quant = self.env['stock.quant'].create([{
+            'location_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'inventory_quantity': 10,
+        }])
+        with self.assertRaises(UserError):
+            quant.copy()
+
     def test_get_available_quantity_1(self):
         """ Quantity availability with only one quant in a location.
         """
