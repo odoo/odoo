@@ -319,6 +319,22 @@ test("edit header field", async () => {
     expect("[name='foo_text'] input").toHaveValue("Hello again");
 });
 
+test("don't show noContentHelper if no search is done", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block title="Setting title" help="Settings will appear below">
+                        <div/>
+                    </block>
+                </app>
+            </form>`,
+    });
+    expect(".o_nocontent_help").not.toBeVisible({ message: "record not found message shown" });
+});
+
 test("unhighlight section not matching anymore", async () => {
     await mountView({
         type: "form",
