@@ -28,7 +28,8 @@ function createOdooChartRuntime(chart, getters) {
         ...chartJsConfig.options,
         ...getters.getChartDatasetActionCallbacks(chart),
     };
-    const colors = new ColorGenerator();
+    const dataSetsLength = Math.max(0, ...datasets.map((ds) => ds?.data?.length ?? 0));
+    const colors = new ColorGenerator(dataSetsLength);
     for (const { label, data } of datasets) {
         const backgroundColor = getPieColors(colors, datasets);
         const dataset = {
@@ -36,6 +37,7 @@ function createOdooChartRuntime(chart, getters) {
             data,
             borderColor: "#FFFFFF",
             backgroundColor,
+            hoverOffset: 30,
         };
         chartJsConfig.data.datasets.push(dataset);
     }

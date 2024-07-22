@@ -47,18 +47,18 @@ function createOdooChartRuntime(chart, getters) {
         ...chartJsConfig.options,
         ...getters.getChartDatasetActionCallbacks(chart),
     };
-    const colors = new ColorGenerator();
+    const colors = new ColorGenerator(datasets.length);
     for (const { label, data } of datasets) {
         const color = colors.next();
         const dataset = {
             label,
             data,
-            borderColor: color,
+            borderColor: "#FFFFFF",
+            borderWidth: 1,
             backgroundColor: color,
         };
         chartJsConfig.data.datasets.push(dataset);
     }
-
     return { background, chartJsConfig };
 }
 
