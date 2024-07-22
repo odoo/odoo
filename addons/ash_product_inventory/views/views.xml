@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="ash_product_inventory.list">
+      <field name="name">Ash_product_inventory list</field>
+      <field name="model">ash_product_inventory.ash_product_inventory</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="ash_product_inventory.action_window">
+      <field name="name">Ash_product_inventory window</field>
+      <field name="res_model">ash_product_inventory.ash_product_inventory</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="ash_product_inventory.action_server">
+      <field name="name">Ash_product_inventory server</field>
+      <field name="model_id" ref="model_ash_product_inventory_ash_product_inventory"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="Ash_product_inventory" id="ash_product_inventory.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="ash_product_inventory.menu_1" parent="ash_product_inventory.menu_root"/>
+    <menuitem name="Menu 2" id="ash_product_inventory.menu_2" parent="ash_product_inventory.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="ash_product_inventory.menu_1_list" parent="ash_product_inventory.menu_1"
+              action="ash_product_inventory.action_window"/>
+    <menuitem name="Server to list" id="ash_product_inventory" parent="ash_product_inventory.menu_2"
+              action="ash_product_inventory.action_server"/>
+-->
+  </data>
+</odoo>
