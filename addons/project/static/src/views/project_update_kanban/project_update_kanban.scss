@@ -1,5 +1,9 @@
 .o_project_update_kanban_view .o_kanban_renderer {
     overflow: auto;
+    .o_pupdate_kanban_width {
+        flex-basis: 15%;
+        flex-grow: 1;
+    }
     &.o_kanban_ungrouped {
         padding:0px;
         .o_pupdate_kanban_card {
@@ -13,10 +17,6 @@
                 > div {
                     display: grid;
                     align-items: center;
-                }
-                .o_pupdate_kanban_width {
-                    flex-basis: 15%;
-                    flex-grow: 1;
                 }
                 .o_pupdate_kanban_image {
                     width: 56px;

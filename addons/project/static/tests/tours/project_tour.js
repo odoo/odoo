@@ -80,7 +80,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         tooltipPosition: "right",
         run: "click",
     }, {
-        trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button",
+        trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button",
         content: 'open sub-tasks from kanban card',
         run: "click",
     }, 
@@ -112,7 +112,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         content: 'Mark the task as Canceled',
         run: "click",
     }, {
-        trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button:contains('1/2')",
+        trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button:contains('1/2')",
         content: 'Close the sub-tasks list',
         id: "quick_create_tasks",
         run: "click",

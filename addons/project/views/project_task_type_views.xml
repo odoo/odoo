@@ -87,19 +87,10 @@
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1" default_group_by="project_ids">
-                    <field name="name"/>
-                    <field name="fold"/>
-                    <field name="sequence" widget="handle"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <strong class="o_text_overflow"><t t-esc="record.name.value"/></strong>
-                                    </div>
-                                </div>
-                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="name" class="fw-bolder text-truncate"/>
+                            <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </t>
                     </templates>
                 </kanban>

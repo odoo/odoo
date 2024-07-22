@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("task_create_sol_tour", {
         },
         {
             content: "Open the task name 'Test History Project' from kanban view.",
-            trigger: "div strong.o_kanban_record_title:contains(Test History Task)",
+            trigger: ".o_kanban_record:contains(Test History Task)",
             run: "click",
         },
         {
