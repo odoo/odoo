@@ -316,24 +316,30 @@ class MrpProduction(models.Model):
             production.location_src_id = production.picking_type_id.default_location_src_id.id or fallback_loc.id
             production.location_dest_id = production.picking_type_id.default_location_dest_id.id or fallback_loc.id
 
+    @api.model
     def _search_components_availability_state(self, operator, value):
+        if operator not in ('=', '!=', 'in', 'not in'):
+            raise UserError(_('Operation not supported'))
 
-        def _get_comparison_date(move):
-            return move.raw_material_production_id.date_start
+        states = ['available', 'expected', 'late', 'unavailable']
+        if operator in ('=', '!='):
+            value = [value]
+        if operator in ('not in', '!='):
+            value = filter(lambda state: state not in value, states)
+        if not all(state in states for state in value):
+            raise UserError(_('Selection not supported.'))
 
-        if operator == '!=' and not value:
-            raise UserError(_('Operator not supported without a value.'))
-        elif operator == '=' and not value:
-            raw_stock_moves = self.env['stock.move'].search([
-                ('raw_material_production_id', '!=', False),
-                ('raw_material_production_id.state', 'in', ('cancel', 'done', 'draft'))])
-            return [('move_raw_ids', 'in', raw_stock_moves.ids)]
+        current_productions = self.search([('state', 'in', ('confirmed', 'progress', 'to_close'))])
 
-        selected_production_ids = []
-        for prod in self.env['mrp.production'].search([('state', 'not in', ('done', 'cancel', 'draft'))]):
-            if prod.move_raw_ids._match_searched_availability(operator, value, _get_comparison_date):
-                selected_production_ids.append(prod.id)
-        return [('id', 'in', selected_production_ids)]
+        productions_by_availability = dict.fromkeys(states, self.env['mrp.production'])
+        for production in current_productions:
+            productions_by_availability[production.components_availability_state] |= production
+
+        matching_production_ids = []
+        for state in value:
+            matching_production_ids.extend(productions_by_availability[state].ids)
+
+        return [('id', 'in', matching_production_ids)]
 
     @api.depends('state', 'reservation_state', 'date_start', 'move_raw_ids', 'move_raw_ids.forecast_availability', 'move_raw_ids.forecast_expected_date')
     def _compute_components_availability(self):
