@@ -4,7 +4,7 @@ clear
 printf "\033c"
 # Activate the virtual environment
 echo "Activating virtual environment..."
-source ~/dev/venv_odoo/bin/activate
+source ./venv/bin/activate
 
 # Kill existing Odoo processes
 # echo "Killing existing Odoo processes..."

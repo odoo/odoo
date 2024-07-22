@@ -41,9 +41,12 @@ execute_sql "GRANT TEMP ON DATABASE $DBNAME TO $DBUSER;"
 # Switch to the new database context and grant further privileges
 echo "Granting additional privileges within the database..."
 psql -U $PGUSER -d $DBNAME <<EOF
-GRANT USAGE ON SCHEMA public TO $DBUSER;
+GRANT ALL PRIVILEGES ON SCHEMA public TO $DBUSER;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $DBUSER;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $DBUSER;
 EOF
 
 echo "Database and user setup completed."
+
+# echo "Starting the server"
+# ./odoo-bin -d odoo -c odoo.conf -i base,web 
