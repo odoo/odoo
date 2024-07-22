@@ -99,3 +99,11 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
         internal_response = self.url_open(internal_channel.invitation_url)
         self.assertEqual(internal_response.status_code, 404)
+
+    def test_sidebar_in_public_page(self):
+        guest = self.env['mail.guest'].create({'name': 'Guest'})
+        channel_1 = self.env["discuss.channel"].channel_create(name="Channel 1", group_id=None)
+        channel_2 = self.env["discuss.channel"].channel_create(name="Channel 2", group_id=None)
+        channel_1.add_members(guest_ids=[guest.id])
+        channel_2.add_members(guest_ids=[guest.id])
+        self.start_tour(f"/discuss/channel/{channel_1.id}", "sidebar_in_public_page_tour", cookies={guest._cookie_name: guest._format_auth_cookie()})

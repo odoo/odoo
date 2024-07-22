@@ -81,7 +81,8 @@ export class Thread extends Record {
         return (
             ["channel", "group"].includes(this.channel_type) &&
             !this.message_needaction_counter &&
-            !this.group_based_subscription
+            !this.group_based_subscription &&
+            this.store.self?.type === "partner"
         );
     }
     get canUnpin() {

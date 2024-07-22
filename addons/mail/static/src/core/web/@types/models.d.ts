@@ -11,7 +11,6 @@ declare module "models" {
         activityCounter: number,
         activity_counter_bus_id: number,
         activityGroups: Object[],
-        getDiscussSidebarCategoryCounter: (categoryId: number) => number,
     }
     export interface Thread {
         recipients: Follower[],

@@ -6,13 +6,7 @@ import { patch } from "@web/core/utils/patch";
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        this.initChannelsUnreadCounter = 0;
-    },
-    onStarted() {
-        super.onStarted();
-        if (this.discuss.isActive) {
-            this.channels.fetch();
-        }
+        this.channels = this.makeCachedFetchData({ channels_as_member: true });
     },
 };
 patch(Store.prototype, StorePatch);

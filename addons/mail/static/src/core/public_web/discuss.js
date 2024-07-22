@@ -4,6 +4,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
+import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
 import {
     useMessageEdition,
     useMessageHighlight,
@@ -28,13 +29,17 @@ import { FileUploader } from "@web/views/fields/file_handler";
 export class Discuss extends Component {
     static components = {
         AutoresizeInput,
+        DiscussSidebar,
         Thread,
         ThreadIcon,
         Composer,
         FileUploader,
         ImStatus,
     };
-    static props = {};
+    static props = {
+        hasSidebar: { type: Boolean, optional: true },
+    };
+    static defaultProps = { hasSidebar: true };
     static template = "mail.Discuss";
 
     setup() {
