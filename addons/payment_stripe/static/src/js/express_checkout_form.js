@@ -17,7 +17,12 @@ paymentExpressCheckoutForm.include({
      */
     _getOrderDetails(deliveryAmount, amountFreeShipping) {
         const pending = this.paymentContext['shippingInfoRequired'] && deliveryAmount === undefined;
-        const minorAmount = parseInt(this.paymentContext['minorAmount'])
+        const orderDeliveryAmount = parseInt(this.paymentContext['deliveryAmount'])
+        let minorAmount = parseInt(this.paymentContext['minorAmount'])
+        if (orderDeliveryAmount) { // The delivery method is set on the order.
+            // Subtract the delivery amount from the total amount to display the right total.
+            minorAmount -= orderDeliveryAmount;
+        }
         const displayItems = [
             {
                 label: _t("Your order"),

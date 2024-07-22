@@ -54,6 +54,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
     def test_01_create_shipping_address_specific_user_account(self):
         ''' Ensure `website_id` is correctly set (specific_user_account) '''
         p = self.env.user.partner_id
+        p.active = True
         so = self._create_so(partner_id=p.id)
 
         with MockRequest(self.env, website=self.website, sale_order_id=so.id) as req:
@@ -379,23 +380,29 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             self.assertEqual(new_billing, so.partner_invoice_id)
             self.assertEqual(new_shipping, so.partner_shipping_id)
 
-            # 4. Logged-in user, new billing use same
-            use_same = self.default_billing_address_values | {'use_same': 'true'}
-            self.WebsiteSaleController.shop_address_submit(**use_same)
-            new_billing_use_same = self._get_last_address(self.demo_partner)
-            msg = "New billing use same should have its type set as 'other'"
-            self.assertTrue(new_billing_use_same.type == 'other', msg)
+            # 4. Logged-in user, new delivery, use delivery as billing
+            use_delivery_as_billing = (
+                self.default_address_values | {'use_delivery_as_billing': 'true'}
+            )
+            self.WebsiteSaleController.shop_address_submit(**use_delivery_as_billing)
+            new_delivery_use_same = self._get_last_address(self.demo_partner)
+            msg = "New delivery use same should have its type set as 'other'"
+            self.assertTrue(new_delivery_use_same.type == 'other', msg)
             self.assertNotEqual(new_billing, self.demo_partner)
 
             # 5. Check that invoice/shipping address of so changed
-            self.assertEqual(new_billing_use_same, so.partner_invoice_id)
-            self.assertEqual(new_billing_use_same, so.partner_shipping_id)
+            self.assertEqual(new_delivery_use_same, so.partner_invoice_id)
+            self.assertEqual(new_delivery_use_same, so.partner_shipping_id)
 
             # 6. forbid address page opening with wrong partners:
             with self.assertRaises(Forbidden):
-                self.WebsiteSaleController.shop_address_submit(partner_id=self.env.user.partner_id.id, address_type='billing')
+                self.WebsiteSaleController.shop_address_submit(
+                    partner_id=self.env.user.partner_id.id, address_type='billing'
+                )
             with self.assertRaises(Forbidden):
-                self.WebsiteSaleController.shop_address_submit(partner_id=self.env.user.partner_id.id, address_type='delivery')
+                self.WebsiteSaleController.shop_address_submit(
+                    partner_id=self.env.user.partner_id.id, address_type='delivery'
+                )
 
     def test_09_shop_update_address(self):
         self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)

@@ -6,7 +6,7 @@
             - delivery_methods: The delivery methods to display, as a `delivery.carrier` recordset.
             - selected_dm_id: The selected delivery method id.
         -->
-        <form id="o_delivery_form" class="o_delivery_form">
+        <form id="o_delivery_form" class="o_delivery_form mb-4">
             <h4 class="fs-6 small text-uppercase fw-bolder">Choose a delivery method</h4>
             <ul t-if="delivery_methods" id="o_delivery_methods" class="list-group">
                 <t t-foreach="delivery_methods" t-as="dm">
@@ -69,7 +69,10 @@
             name="o_pickup_location"
             t-attf-class="position-relative d-flex gap-2 mt-2 {{'' if is_selected else 'd-none'}}"
         >
-            <t t-set="pickup_location_data" t-value="order.pickup_location_data or {}"/>
+            <t
+                t-set="pickup_location_data"
+                t-value="(is_selected and order.pickup_location_data) or {}"
+            />
             <div
                 name="o_pickup_location_details"
                 t-attf-class="ms-4 {{'' if is_selected and pickup_location_data else 'd-none'}}"
@@ -79,7 +82,11 @@
                     <br/>
                     <i
                         name="o_pickup_location_address"
-                        t-out="pickup_location_data.get('street', '') + ' ' + pickup_location_data.get('zip_code', '') + ' ' + pickup_location_data.get('city', '')"
+                        t-out="(pickup_location_data.get('street', ) or '')
+                               + ' '
+                               + (pickup_location_data.get('zip_code') or '')
+                               + ' '
+                               + (pickup_location_data.get('city') or '')"
                     />
                 </span>
                 <span
@@ -89,7 +96,7 @@
                     aria-label="Change location"
                     t-att-data-location-id="pickup_location_data.get('id')"
                     t-att-data-zip-code="pickup_location_data.get('zip_code')"
-                    t-att-data-pickup-location-data="json_pickup_location_data"
+                    t-att-data-pickup-location-data="is_selected and json_pickup_location_data"
                 />
             </div>
             <button

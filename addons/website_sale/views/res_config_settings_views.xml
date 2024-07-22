@@ -131,17 +131,29 @@
                     </setting>
                 </block>
 
-                <block title="Shipping" id="sale_shipping_settings">
-                    <setting id="shipping_address_setting" help="Let the customer enter a shipping address">
+                <block title="Delivery" id="sale_shipping_settings">
+                    <setting id="shipping_address_setting" help="Let the customer enter a delivery address">
                         <field name="group_delivery_invoice_address"/>
                     </setting>
                     <setting id="delivery_method_setting" string="Shipping Costs" help="Compute shipping costs on orders"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
                         <div class="content-group">
                             <div class="mt16">
-                                <button type="action" name="%(delivery.action_delivery_carrier_form)d" string="Shipping Methods" class="btn-link" icon="oi-arrow-right"/>
+                                <button
+                                    string="Delivery Methods"
+                                    type="action"
+                                    name="%(delivery.action_delivery_carrier_form)d"
+                                    class="btn-link"
+                                    icon="oi-arrow-right"
+                                />
                             </div>
                         </div>
+                    </setting>
+                    <setting
+                        id="click_and_collect_setting"
+                        help="Allow customers to pick up their online purchases at your store and pay in person"
+                    >
+                        <field name="module_website_sale_collect"/>
                     </setting>
                     <setting id="ups_provider_setting" string="UPS" help="Compute shipping costs and ship with UPS"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
@@ -213,9 +225,6 @@
                     </setting>
                     <setting id="shipping_provider_mondialrelay_setting" string="Mondial Relay" help="Let the customer select a Mondial Relay shipping point">
                         <field name="module_delivery_mondialrelay"/>
-                    </setting>
-                    <setting id="onsite_payment_setting" help="Allow customers to pay in person at your stores">
-                        <field name="module_website_sale_picking"/>
                     </setting>
                 </block>
 

@@ -9,7 +9,6 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
     selector: '.o_wsale_address_fill',
     events: {
         'change select[name="country_id"]': '_onChangeCountry',
-        'change #use_same_as_delivery': '_onChangeUseSameAsDelivery',
         'click #save_address': '_onSaveAddress',
         "change select[name='state_id']": "_onChangeState",
     },
@@ -160,23 +159,6 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
     _markRequired(name, required) {
         this.addressForm[name].required = required;
         this._getInputLabel(name)?.classList.toggle('label-optional', !required);
-    },
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onChangeUseSameAsDelivery(ev) {
-        const separateDeliveryNotice = document.querySelector(
-            '[name="o_wsale_separate_delivery_notice"]'
-        );
-        if (separateDeliveryNotice) {
-            if (this.addressForm.use_same.checked) {
-                separateDeliveryNotice.style.display = 'none';
-            } else {
-                separateDeliveryNotice.style.display = '';
-            }
-        }
     },
 
     /**

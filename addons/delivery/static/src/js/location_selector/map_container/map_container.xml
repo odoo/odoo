@@ -32,6 +32,7 @@
                     <!-- large screen and + -->
                     <button
                         type="button"
+                        id="submit_location_large"
                         class="btn btn-primary d-none d-lg-block mt-3"
                         t-att-disabled="!this.props.selectedLocationId"
                         t-on-click="this.props.validateSelection">
@@ -48,6 +49,7 @@
                 <!-- medium size screen like Tablets, etc. -->
                 <button
                     type="button"
+                    id="submit_location_medium"
                     class="btn btn-primary d-block d-lg-none align-self-stretch ms-lg-4"
                     t-att-disabled="!this.props.selectedLocationId"
                     t-on-click="this.props.validateSelection">

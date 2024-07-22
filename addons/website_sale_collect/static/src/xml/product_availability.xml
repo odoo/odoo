@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-inherit="website_sale_stock.product_availability" t-inherit-mode="extension">
+        <div id="product_stock_availability" position="replace">
+            <t t-if="!show_click_and_collect_availability">$0</t>
+        </div>
+    </t>
+
+</templates>

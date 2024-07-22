@@ -729,12 +729,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order and order.state != 'draft':
             request.session['sale_order_id'] = None
             order = request.website.sale_get_order()
-        if order and order.carrier_id:
-            # Express checkout is based on the amout of the sale order. If there is already a
-            # delivery line, Express Checkout form will display and compute the price of the
-            # delivery two times (One already computed in the total amount of the SO and one added
-            # in the form while selecting the delivery carrier)
-            order._remove_delivery_line()
 
         request.session['website_sale_cart_quantity'] = order.cart_quantity
 
@@ -1029,6 +1023,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'website_sale_order': order_sudo,  # Compatibility with other templates.
             'billing_addresses': billing_partners_sudo,
             'delivery_addresses': delivery_partners_sudo,
+            'use_delivery_as_billing': (
+                order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
+            ),
             'only_services': order_sudo.only_services,
             'json_pickup_location_data': json.dumps(order_sudo.pickup_location_data or {}),
         }
@@ -1059,7 +1056,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(
         '/shop/address', type='http', methods=['GET'], auth='public', website=True, sitemap=False
     )
-    def shop_address(self, partner_id=None, address_type='billing', **query_params):
+    def shop_address(
+        self, partner_id=None, address_type='billing', use_delivery_as_billing=None, **query_params
+    ):
         """ Display the address form.
 
         A partner and/or an address type can be given through the query string params to specify
@@ -1067,12 +1066,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         :param str partner_id: The partner whose address to update with the address form, if any.
         :param str address_type: The type of the address: 'billing' or 'delivery'.
+        :param str use_delivery_as_billing: Whether the provided address should be used as both the
+                                            delivery and the billing address. 'true' or 'false'.
         :param dict query_params: The additional query string parameters forwarded to
                                   `_prepare_address_form_values`.
         :return: The rendered address form.
         :rtype: str
         """
         partner_id = partner_id and int(partner_id)
+        use_delivery_as_billing = str2bool(use_delivery_as_billing or 'false')
         order_sudo = request.website.sale_get_order()
 
         if redirection := self._check_cart(order_sudo):
@@ -1083,32 +1085,37 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order_sudo, partner_id=partner_id, address_type=address_type
         )
 
+        if partner_sudo:  # If editing an existing partner.
+            use_delivery_as_billing = (
+                order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
+            )
+
         # Render the address form.
         address_form_values = self._prepare_address_form_values(
             order_sudo,
             partner_sudo,
             address_type=address_type,
-            use_same=order_sudo._is_anonymous_cart(),
+            use_delivery_as_billing=use_delivery_as_billing,
             **query_params
         )
         return request.render('website_sale.address', address_form_values)
 
     def _prepare_address_form_values(
-        self, order_sudo, partner_sudo, address_type, use_same, callback='', **_kwargs
+        self, order_sudo, partner_sudo, address_type, use_delivery_as_billing, callback='', **kwargs
     ):
         """ Prepare and return the values to use to render the address form.
 
         :param sale.order order_sudo: The current cart.
         :param partner_sudo: The partner whose address to update through the address form.
         :param str address_type: The type of the address: 'billing' or 'delivery'.
-        :param bool use_same: Whether the provided address should be used as both the billing and
-                              the delivery address.
+        :param bool use_delivery_as_billing: Whether the provided address should be used as both the
+                                             billing and the delivery address.
         :param str callback:
         :return: The checkout page values.
         :rtype: dict
         """
         can_edit_vat = (
-            address_type == 'billing'
+            (address_type == 'billing' or use_delivery_as_billing)
             and (not partner_sudo or partner_sudo.can_edit_vat())
         )
         is_anonymous_cart = order_sudo._is_anonymous_cart()
@@ -1139,7 +1146,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'callback': callback,
             'only_services': order_sudo.only_services,
             'is_anonymous_cart': is_anonymous_cart,
-            'use_same': use_same,
+            'use_delivery_as_billing': use_delivery_as_billing,
             'discard_url': is_anonymous_cart and '/shop/cart' or '/shop/checkout',
             'country': country_sudo,
             'countries': ResCountrySudo.search([]),
@@ -1150,7 +1157,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 and address_fields.index('zip') < address_fields.index('city')
             ),
             'show_vat': (
-                address_type == 'billing'
+                (address_type == 'billing' or use_delivery_as_billing)
                 and (
                     is_anonymous_cart  # Allow inputting VAT on the new main address.
                     or (
@@ -1167,7 +1174,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         sitemap=False
     )
     def shop_address_submit(
-        self, partner_id=None, address_type='billing', use_same=None, callback=None,
+        self, partner_id=None, address_type='billing', use_delivery_as_billing=None, callback=None,
         required_fields=None, **form_data
     ):
         """ Create or update an address.
@@ -1178,8 +1185,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         :param str partner_id: The partner whose address to update with the address form, if any.
         :param str address_type: The type of the address: 'billing' or 'delivery'.
-        :param str use_same: Whether the provided address should be used as both the billing and the
-                             delivery address. 'true' or 'false'.
+        :param str use_delivery_as_billing: Whether the provided address should be used as both the
+                                            billing and the delivery address. 'true' or 'false'.
         :param str callback: The URL to redirect to in case of successful address creation/update.
         :param str required_fields: The additional required address values, as a comma-separated
                                     list of `res.partner` fields.
@@ -1194,10 +1201,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         partner_sudo, address_type = self._prepare_address_update(
             order_sudo, partner_id=partner_id and int(partner_id), address_type=address_type
         )
-        use_same = (
-            str2bool(use_same or 'false')
-            or partner_sudo == order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
-        )
+        use_delivery_as_billing = str2bool(use_delivery_as_billing or 'false')
         required_fields = required_fields or ''
 
         # Parse form data into address values, and extract incompatible data as extra form data.
@@ -1205,7 +1209,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Validate the address values and highlights the problems in the form, if any.
         invalid_fields, missing_fields, error_messages = self._validate_address_values(
-            address_values, partner_sudo, address_type, use_same, required_fields, **extra_form_data
+            address_values,
+            partner_sudo,
+            address_type,
+            use_delivery_as_billing,
+            required_fields,
+            **extra_form_data,
         )
         if error_messages:
             return json.dumps({
@@ -1216,7 +1225,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         is_new_address = False
         if not partner_sudo:  # Creation of a new address.
             is_new_address = True
-            self._complete_address_values(address_values, address_type, use_same, order_sudo)
+            self._complete_address_values(
+                address_values, address_type, use_delivery_as_billing, order_sudo
+            )
             create_context = clean_context(request.env.context)
             create_context.update({
                 'tracking_disable': True,
@@ -1236,16 +1247,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if address_type == 'billing':
             partner_fnames.add('partner_invoice_id')
-            if use_same or (is_new_address and order_sudo.only_services):
+            if is_new_address and order_sudo.only_services:
+                # The delivery address is required to make the order.
                 partner_fnames.add('partner_shipping_id')
-
             callback = callback or self._get_extra_billing_info_route(order_sudo)
-            if is_anonymous_cart and not order_sudo.only_services and not use_same:
-                # Now that the billing partner is set, request the customer to fill their delivery
-                # address if necessary.
-                callback = callback or '/shop/address?address_type=delivery'
         elif address_type == 'delivery':
             partner_fnames.add('partner_shipping_id')
+            if use_delivery_as_billing:
+                partner_fnames.add('partner_invoice_id')
 
         order_sudo._update_address(partner_id, partner_fnames)
 
@@ -1343,7 +1352,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return address_values, extra_form_data
 
     def _validate_address_values(
-        self, address_values, partner_sudo, address_type, use_same, required_fields, **_kwargs
+        self,
+        address_values,
+        partner_sudo,
+        address_type,
+        use_delivery_as_billing,
+        required_fields,
+        **_kwargs,
     ):
         """ Validate the address values and return the invalid fields, the missing fields, and any
         error messages.
@@ -1352,8 +1367,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :param res.partner partner_sudo: The partner whose address values to validate, if any (can
                                          be empty).
         :param str address_type: The type of the address: 'billing' or 'delivery'.
-        :param bool use_same: Whether the provided address should be used as both the billing and
-                              the delivery address.
+        :param bool use_delivery_as_billing: Whether the provided address should be used as both the
+                                             billing and the delivery address.
         :param str required_fields: The additional required address values, as a comma-separated
                                     list of `res.partner` fields.
         :param dict _kwargs: Locally unused parameters including the extra form data.
@@ -1437,9 +1452,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Complete the set of required fields based on the address type.
         country_id = address_values.get('country_id')
         country = request.env['res.country'].browse(country_id)
-        if address_type == 'delivery' or use_same:
+        if address_type == 'delivery' or use_delivery_as_billing:
             required_field_set |= self._get_mandatory_delivery_address_fields(country)
-        if address_type == 'billing' or use_same:
+        if address_type == 'billing' or use_delivery_as_billing:
             required_field_set |= self._get_mandatory_billing_address_fields(country)
 
         # Verify that no required field has been left empty.
@@ -1454,13 +1469,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _get_vat_validation_fields(self):
         return {'country_id', 'vat'}
 
-    def _complete_address_values(self, address_values, address_type, use_same, order_sudo):
+    def _complete_address_values(
+        self, address_values, address_type, use_delivery_as_billing, order_sudo
+    ):
         """ Complete the address values with the order, website, and request's contextual values.
 
-        :param dict address_values: The address values to complete.²
+        :param dict address_values: The address values to complete.
         :param str address_type: The type of the address: 'billing' or 'delivery'.
-        :param bool use_same: Whether the provided address should be used as both the billing and
-                              the delivery address.
+        :param bool use_delivery_as_billing: Whether the provided address should be used as both the
+                                             billing and the delivery address.
         :param sale.order order_sudo: The current cart.
         :return: None
         """
@@ -1474,36 +1491,34 @@ class WebsiteSale(payment_portal.PaymentPortal):
             address_values['website_id'] = order_sudo.website_id.id
 
         commercial_partner = order_sudo.partner_id.commercial_partner_id
-        if address_type == 'billing':
-            if order_sudo._is_anonymous_cart():
-                # New billing addresses of public customers will be their contact address.
-                address_values['type'] = 'contact'
-            elif use_same:
-                address_values['type'] = 'other'
-            else:
-                address_values['type'] = 'invoice'
-
-            # Avoid linking the address to the default archived 'Public user' partner.
-            if commercial_partner.active:
-                address_values['parent_id'] = commercial_partner.id
+        if order_sudo._is_anonymous_cart():
+            address_values['type'] = 'contact'
+        elif address_type == 'billing':
+            address_values['type'] = 'invoice'
         elif address_type == 'delivery':
-            address_values['type'] = 'delivery'
+            address_values['type'] = 'other' if use_delivery_as_billing else 'delivery'
+
+        # Avoid linking the address to the default archived 'Public user' partner.
+        if commercial_partner.active:
             address_values['parent_id'] = commercial_partner.id
 
-    def _create_new_address(self, address_values, address_type, use_same, order_sudo):
+    def _create_new_address(
+        self, address_values, address_type, use_delivery_as_billing, order_sudo
+    ):
         """ Create a new partner, must be called after the data has been verified
 
         NB: to verify (and preprocess) the data, please call `_parse_form_data` first.
 
         :param order_sudo: the current cart, as a sudoed `sale.order` recordset
-        :param str address_type: 'billing' or 'shipping'
-        :param bool use_same: whether the address is (to be) used as billing and shipping address.
+        :param str address_type: 'billing' or 'delivery'
+        :param bool use_delivery_as_billing: Whether the address must be used as the billing and the
+                                             delivery address.
         :param dict address_values: values to use to create the partner
 
         :return: The created address, as a sudoed `res.partner` recordset.
         """
         self._complete_address_values(
-            address_values, address_type, use_same, order_sudo
+            address_values, address_type, use_delivery_as_billing, order_sudo
         )
         creation_context = clean_context(request.env.context)
         creation_context.update({
@@ -1561,7 +1576,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # the price with another pricelist at this state since the customer has already accepted
             # the amount and validated the payment.
             new_partner_sudo = self._create_new_address(
-                billing_address, address_type='billing', use_same=False, order_sudo=order_sudo,
+                billing_address,
+                address_type='billing',
+                use_delivery_as_billing=False,
+                order_sudo=order_sudo,
             )
             with request.env.protecting(['pricelist_id'], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
@@ -1576,7 +1594,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo.partner_id.commercial_partner_id.id, billing_address
             )
             order_sudo.partner_invoice_id = child_partner_id or self._create_new_address(
-                billing_address, address_type='billing', use_same=False, order_sudo=order_sudo,
+                billing_address,
+                address_type='billing',
+                use_delivery_as_billing=False,
+                order_sudo=order_sudo,
             )
 
         # In a non-express flow, `sale_last_order_id` would be added in the session before the
@@ -1605,7 +1626,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     order_sudo.partner_id.commercial_partner_id.id, shipping_address
                 )
                 order_sudo.partner_shipping_id = child_partner_id or self._create_new_address(
-                    shipping_address, address_type='shipping', use_same=False, order_sudo=order_sudo,
+                    shipping_address,
+                    address_type='delivery',
+                    use_delivery_as_billing=False,
+                    order_sudo=order_sudo,
                 )
             # Process the delivery method.
             if shipping_option:
@@ -1755,6 +1779,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'landing_route': '/shop/payment/validate',
             'payment_method_unknown_id': request.env.ref('payment.payment_method_unknown').id,
             'shipping_info_required': order._has_deliverable_products(),
+            'delivery_amount': payment_utils.to_minor_currency_units(
+                order.order_line.filtered(lambda l: l.is_delivery).price_total, order.currency_id
+            ),
             'shipping_address_update_route': self._express_checkout_delivery_route,
         })
         if request.website.is_public_user():
@@ -1951,8 +1978,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         The addresses are complete and valid if:
 
         - at least one address has been added;
-        - the billing address is complete;
-        - the delivery address is complete.
+        - the delivery address is complete;
+        - the billing address is complete.
 
         :param sale.order order_sudo: The cart whose addresses to check.
         None if the cart is valid; otherwise, a redirection to the appropriate page.
@@ -1963,13 +1990,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order_sudo._is_anonymous_cart():
             return request.redirect('/shop/address')
 
-        # Check that the billing address is complete.
-        invoice_partner_sudo = order_sudo.partner_invoice_id
-        if not self._check_billing_address(invoice_partner_sudo):
-            return request.redirect(
-                f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
-            )
-
         # Check that the delivery address is complete.
         delivery_partner_sudo = order_sudo.partner_shipping_id
         if (
@@ -1979,6 +1999,33 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect(
                 f'/shop/address?partner_id={delivery_partner_sudo.id}&address_type=delivery'
             )
+        # Check that the billing address is complete.
+        invoice_partner_sudo = order_sudo.partner_invoice_id
+        if not self._check_billing_address(invoice_partner_sudo):
+            return request.redirect(
+                f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
+            )
+
+    def _check_delivery_address(self, partner_sudo):
+        """ Check that all mandatory delivery fields are filled for the given partner.
+
+        :param res.partner: The partner whose delivery address to check.
+        :return: Whether all mandatory fields are filled.
+        :rtype: bool
+        """
+        mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
+            partner_sudo.country_id
+        )
+        return all(partner_sudo.read(mandatory_delivery_fields)[0].values())
+
+    def _get_mandatory_delivery_address_fields(self, country_sudo):
+        """ Return the set of mandatory delivery field names.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
+        :return: The set of mandatory delivery field names.
+        :rtype: set
+        """
+        return self._get_mandatory_address_fields(country_sudo)
 
     def _check_billing_address(self, partner_sudo):
         """ Check that all mandatory billing fields are filled for the given partner.
@@ -2000,31 +2047,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :rtype: set
         """
         field_names = self._get_mandatory_address_fields(country_sudo)
-        # Also add required billing fields from portal logic to the e-commerce mandatory fields
+        # Include the required billing fields from the portal logic.
         field_names |= set(self._get_mandatory_fields())
-        return field_names
-
-    def _check_delivery_address(self, partner_sudo):
-        """ Check that all mandatory shipping fields are filled for the given partner.
-
-        :param res.partner: The partner whose delivery address to check.
-        :return: Whether all mandatory fields are filled.
-        :rtype: bool
-        """
-        mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
-            partner_sudo.country_id
-        )
-        return all(partner_sudo.read(mandatory_delivery_fields)[0].values())
-
-    def _get_mandatory_delivery_address_fields(self, country_sudo):
-        """ Return the set of mandatory delivery field names.
-
-        :param res.country country_sudo: The country to use to build the set of mandatory fields.
-        :return: The set of mandatory delivery field names.
-        :rtype: set
-        """
-        field_names = self._get_mandatory_address_fields(country_sudo)
-        field_names.add('phone')
         return field_names
 
     def _get_mandatory_address_fields(self, country_sudo):
@@ -2034,7 +2058,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The set of common mandatory address field names.
         :rtype: set
         """
-        field_names = {'name', 'street', 'city', 'country_id'}
+        field_names = {'name', 'street', 'city', 'country_id', 'phone'}
         if country_sudo.state_required:
             field_names.add('state_id')
         if country_sudo.zip_required:

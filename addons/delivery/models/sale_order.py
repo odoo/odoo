@@ -82,7 +82,7 @@ class SaleOrder(models.Model):
                 pickup_location = None
             self.pickup_location_data = pickup_location
 
-    def _get_pickup_locations(self, zip_code=None, country=None):
+    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
         """ Return the pickup locations of the delivery method close to a given zip code.
 
         Use provided `zip_code` and `country` or the order's delivery address to determine the zip
@@ -110,7 +110,7 @@ class SaleOrder(models.Model):
             function_name = f'_{self.carrier_id.delivery_type}_get_close_locations'
             if not hasattr(self.carrier_id, function_name):
                 return error
-            pickup_locations = getattr(self.carrier_id, function_name)(partner_address)
+            pickup_locations = getattr(self.carrier_id, function_name)(partner_address, **kwargs)
             if not pickup_locations:
                 return error
             return {'pickup_locations': pickup_locations}

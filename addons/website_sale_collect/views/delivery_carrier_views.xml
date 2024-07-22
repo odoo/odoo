@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    
+    <record id="delivery_carrier_form" model="ir.ui.view">
+        <field name="name">In-store Delivery Carrier Form</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="model">delivery.carrier</field>
+        <field name="arch" type="xml">
+            <field name="integration_level" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </field>
+            <field name="invoice_policy" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </field>
+            <page name="pricing" position="before">
+                <page string="Stores" name="warehouses" invisible="delivery_type != 'in_store'">
+                    <field name="warehouse_ids">
+                        <list create="False">
+                            <field name="name"/>
+                            <field name="opening_hours"/>
+                            <field name="lot_stock_id" groups="stock.group_stock_multi_locations"/>
+                            <field name="partner_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </list>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>
