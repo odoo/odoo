@@ -117,10 +117,13 @@ export function waitUntilSubscribe() {
 export function waitForChannels(channels, { operation = "add" } = {}) {
     const { env } = MockServer.current;
     const def = new Deferred();
+    let done = false;
 
     function check({ crashOnFail = false } = {}) {
         const userChannels = new Set(env["bus.bus"].channelsByUser[env.uid]);
-        const success = channels.every((c) => userChannels.has(c));
+        const success = channels.every((c) =>
+            operation === "add" ? userChannels.has(c) : !userChannels.has(c)
+        );
         if (!success && !crashOnFail) {
             return;
         }
@@ -137,10 +140,15 @@ export function waitForChannels(channels, { operation = "add" } = {}) {
         } else {
             def.reject(new Error(message));
         }
+        done = true;
     }
 
     const failTimeout = setTimeout(() => check({ crashOnFail: true }), TIMEOUT);
-    after(() => check({ crashOnFail: true }));
+    after(() => {
+        if (!done) {
+            check({ crashOnFail: true });
+        }
+    });
     onWebsocketEvent("subscribe", check);
     check();
     return def;
