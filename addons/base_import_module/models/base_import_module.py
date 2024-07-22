@@ -26,7 +26,7 @@ class BaseImportModule(models.TransientModel):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/web',
+            'url': '/odoo',
         }
 
     def get_dependencies_to_install_names(self):
