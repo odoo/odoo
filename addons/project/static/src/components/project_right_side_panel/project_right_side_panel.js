@@ -1,7 +1,5 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
-import { useService } from '@web/core/utils/hooks';
+import { useBus, useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/views/fields/formatters";
 import { ViewButton } from '@web/views/view_button/view_button';
 import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
@@ -11,6 +9,7 @@ import { ProjectMilestone } from './components/project_milestone';
 import { ProjectProfitability } from './components/project_profitability';
 import { getCurrency } from '@web/core/currency';
 import { Component, onWillStart, useState } from "@odoo/owl";
+import { SIZES } from "@web/core/ui/ui_service";
 
 export class ProjectRightSidePanel extends Component {
     static components = {
@@ -29,6 +28,8 @@ export class ProjectRightSidePanel extends Component {
         this.orm = useService('orm');
         this.actionService = useService('action');
         this.dialog = useService('dialog');
+        this.uiService = useService("ui");
+        useBus(this.uiService.bus, "resize", this.updateGridTemplateColumns)
         this.state = useState({
             data: {
                 milestones: {
@@ -40,10 +41,28 @@ export class ProjectRightSidePanel extends Component {
                 },
                 user: {},
                 currency_id: false,
-            }
+            },
+            gridTemplateColumns: this._getGridTemplateColumns(),
         });
 
         onWillStart(() => this.loadData());
+    }
+
+    _getGridTemplateColumns() {
+        switch (this.uiService.size) {
+            case SIZES.XS:
+                return 2;
+            case SIZES.VSM:
+                return 3;
+            case SIZES.XXL:
+                return 6;
+            default:
+                return 4;
+        }
+    }
+
+    updateGridTemplateColumns() {
+        this.state.gridTemplateColumns = this._getGridTemplateColumns();
     }
 
     get panelVisible() {

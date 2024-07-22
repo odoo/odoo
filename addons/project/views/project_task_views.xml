@@ -226,8 +226,17 @@
         <record id="project_embedded_action_project_updates" model="ir.embedded.actions">
             <field name="parent_res_model">project.project</field>
             <field name="sequence">110</field>
+            <field name="name">Dashboard</field>
             <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
             <field name="action_id" ref="project.project_update_all_action"/>
+        </record>
+
+        <record id="project_embedded_action_all_tasks_dashboard" model="ir.embedded.actions">
+            <field name="parent_res_model">project.project</field>
+            <field name="sequence">20</field>
+            <field name="name">Tasks</field>
+            <field name="parent_action_id" ref="project.project_update_all_action"/>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
         </record>
 
     <!-- Set pivot view and arrange in order -->

@@ -68,28 +68,28 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + record.color.raw_value : ''}} oe_kanban_global_click o_pupdate_kanban_card">
                             <!-- Project Update Kanban View is always ungrouped - see js_class -->
-                            <div class="o_kanban_detail_ungrouped row">
-                                <div class="col-sm-4 col-6 o_pupdate_name">
+                            <div class="o_kanban_detail_ungrouped d-flex align-items-center">
+                                <div class="pb-0 o_pupdate_name mr8 o_pupdate_kanban_width">
                                     <b><field name="name_cropped"/></b>
                                     <div class="d-flex gap-1">
                                         <field name="user_id" widget="many2one_avatar_user"/>
                                         <t t-esc="record.user_id.value"/>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 text-sm-start col-6 align-end">
+                                <div class="mr8 text-sm-start o_pupdate_kanban_width">
                                     <field name="color" invisible="1"/>
                                     <b><field name="status" readonly="1" widget="status_with_color"/></b>
                                 </div>
-                                <div class="col-sm-2 col-6 pb-0">
+                                <div class="mr8 o_pupdate_kanban_width">
                                     <b><field name="progress_percentage" widget="percentage"/></b>
                                     <div>Progress</div>
                                 </div>
-                                <div class="col-sm-2 col-6 pb-0">
+                                <div class="mr8 o_pupdate_kanban_width">
                                     <b id="tasks_stats">
                                         <field name="closed_task_count"/> / <field name="task_count"/> Tasks<span invisible="not task_count"> (<field name="closed_task_percentage"/>%)</span>
                                     </b>
                                 </div>
-                                <div class="col-sm-2 col-6 pb-0 pt-2">
+                                <div class="mr8 o_pupdate_kanban_width">
                                     <b><field name="date"/></b>
                                     <div>Date</div>
                                 </div>

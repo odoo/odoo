@@ -7,6 +7,7 @@ export class ProjectProfitability extends Component {
         data: Object,
         labels: Object,
         formatMonetary: Function,
+        onProjectActionClick: Function,
         onClick: Function,
     };
     static template = "project.ProjectProfitability";

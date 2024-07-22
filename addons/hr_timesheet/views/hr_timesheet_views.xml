@@ -510,6 +510,15 @@
             <field name="groups_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]" />
         </record>
 
+        <record id="project_embedded_action_timesheets_dashboard" model="ir.embedded.actions">
+            <field name="parent_res_model">project.project</field>
+            <field name="sequence">30</field>
+            <field name="parent_action_id" ref="project.project_update_all_action"/>
+            <field name="action_id" ref="hr_timesheet.act_hr_timesheet_line_by_project"/>
+            <field name="domain">[('allow_timesheets', '=', True)]</field>
+            <field name="groups_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]" />
+        </record>
+
         <record id="act_hr_timesheet_line_by_project_view_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
             <field name="sequence" eval="1"/>

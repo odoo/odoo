@@ -383,32 +383,66 @@ class ProjectProject(models.Model):
 
     def get_panel_data(self):
         panel_data = super().get_panel_data()
+        if self.allow_billable:
+            sale_items = self.get_sale_items_data(limit=5)
+            revenues = panel_data['profitability_items']['revenues']['data']
+            for section in revenues:
+                if section['id'] in sale_items:
+                    section['sale_items'] = sale_items[section['id']]['data']
+                    section['displayLoadMore'] = sale_items[section['id']]['displayLoadMore']
+                    section['isFolded'] = True
         return {
             **panel_data,
             'show_sale_items': self.allow_billable,
-            'sale_items': self._get_sale_items() if self.allow_billable else {},
         }
 
-    def get_sale_items_data(self, offset=0, limit=None, with_action=True):
+    def get_sale_items_data(self, offset=0, limit=None, with_action=True, section_id=None):
         if not self.env.user.has_group('project.group_project_user'):
             return {}
-        sols = self.env['sale.order.line'].sudo().search(
-            self._get_sale_items_domain(),
-            offset=offset,
-            limit=limit,
-        )
+
+        all_sols = self.env['sale.order.line']
+        sols_per_section_id = self._get_items_id_per_section_id()
+
+        if section_id:
+            all_sols = self.env['sale.order.line'].sudo().search(
+                self._get_domain_from_section_id(section_id),
+                offset=offset,
+                limit=limit,
+            )
+        else:
+            for section in sols_per_section_id:
+                sols = self.env['sale.order.line'].sudo().search(
+                    self._get_domain_from_section_id(section),
+                    offset=offset,
+                    limit=limit and limit + 1,
+                )
+                if limit and len(sols) == limit + 1:
+                    sols = sols - sols[5]
+                    sols_per_section_id[section]['displayLoadMore'] = True
+                sols_per_section_id[section]['data'] = sols
+                all_sols |= sols
+
         # filter to only get the action for the SOLs that the user can read
-        action_per_sol = sols.sudo(False)._filter_access_rules_python('read')._get_action_per_item() if with_action else {}
+        action_per_sol = all_sols.sudo(False)._filter_access_rules_python('read')._get_action_per_item() if with_action else {}
 
         def get_action(sol_id):
             """ Return the action vals to call it in frontend if the user can access to the SO related """
             action, res_id = action_per_sol.get(sol_id, (None, None))
             return {'action': {'name': action, 'resId': res_id, 'buttonContext': json.dumps({'active_id': sol_id, 'default_project_id': self.id})}} if action else {}
 
-        return [{
-            **sol_read,
-            **get_action(sol_read['id']),
-        } for sol_read in sols.with_context(with_price_unit=True).read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])]
+        if section_id:
+            # The 'section_id' param is set, which means the method was called with the 'load more' button. We don't have to sort the result.
+            return [{
+                **sol_read,
+                **get_action(sol_read['id']),
+            } for sol_read in all_sols.with_context(with_price_unit=True)._read_format(['name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom', 'product_id'])]
+
+        for section in sols_per_section_id:
+            sols = []
+            for sol_read in sols_per_section_id[section]['data'].with_context(with_price_unit=True)._read_format(['name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom', 'product_id']):
+                sols.append({**sol_read, **get_action(sol_read['id'])})
+            sols_per_section_id[section]['data'] = sols
+        return sols_per_section_id
 
     def _get_sale_items_domain(self, additional_domain=None):
         sale_items = self.sudo()._get_sale_order_items()
@@ -425,12 +459,15 @@ class ProjectProject(models.Model):
             domain = expression.AND([domain, additional_domain])
         return domain
 
-    def _get_sale_items(self, with_action=True):
-        domain = self._get_sale_items_domain()
+    def _get_items_id_per_section_id(self):
         return {
-            'total': self.env['sale.order.line'].sudo().search_count(domain),
-            'data': self.get_sale_items_data(limit=5, with_action=with_action),
+            'materials': {'data': [], 'displayLoadMore': False},
+            'service_revenues': {'data': [], 'displayLoadMore': False},
         }
+
+    def _get_domain_from_section_id(self, section_id):
+        #  When the sale_timesheet module is not installed, all service products are grouped under the 'service revenues' section.
+        return self._get_sale_items_domain([('product_type', '!=' if section_id == 'materials' else '=', 'service')])
 
     def _show_profitability(self):
         self.ensure_one()
@@ -508,7 +545,7 @@ class ProjectProject(models.Model):
                     'id': 'downpayments',
                     'sequence': sequence_per_invoice_type['downpayments'],
                     'invoiced': downpayment_amount_invoiced,
-                    'to_invoice': -downpayment_amount_invoiced
+                    'to_invoice': -downpayment_amount_invoiced,
                 }
                 if with_action and (
                     self.env.user.has_group('sales_team.group_sale_salesman_all_leads,')

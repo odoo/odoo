@@ -331,6 +331,43 @@ class ProjectProject(models.Model):
         ]))
         return query
 
+    def _get_items_id_per_section_id(self):
+        return {
+            'materials': {'data': [], 'displayLoadMore': False},
+            'billable_fixed': {'data': [], 'displayLoadMore': False},
+            'billable_milestones': {'data': [], 'displayLoadMore': False},
+            'billable_time': {'data': [], 'displayLoadMore': False},
+            'billable_manual': {'data': [], 'displayLoadMore': False},
+        }
+
+    def _get_domain_from_section_id(self, section_id):
+        section_domains = {
+            'materials': [
+                ('product_id.type', '!=', 'service')
+            ],
+            'billable_fixed': [
+                ('product_id.type', '=', 'service'),
+                ('product_id.invoice_policy', '=', 'order')
+            ],
+            'billable_milestones': [
+                ('product_id.type', '=', 'service'),
+                ('product_id.invoice_policy', '=', 'delivery'),
+                ('product_id.service_type', '=', 'milestones'),
+            ],
+            'billable_time': [
+                ('product_id.type', '=', 'service'),
+                ('product_id.invoice_policy', '=', 'delivery'),
+                ('product_id.service_type', '=', 'timesheet'),
+            ],
+            'billable_manual': [
+                ('product_id.type', '=', 'service'),
+                ('product_id.invoice_policy', '=', 'delivery'),
+                ('product_id.service_type', '=', 'manual'),
+            ],
+        }
+
+        return self._get_sale_items_domain(section_domains.get(section_id, []))
+
     def _get_profitability_labels(self):
         return {
             **super()._get_profitability_labels(),

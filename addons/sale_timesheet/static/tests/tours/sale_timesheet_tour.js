@@ -272,26 +272,27 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: "Open Dashboard",
     run: "click",
 }, {
-    trigger: ".o_rightpanel_section[name='sales'] .o_rightpanel_title:contains('Sales')",
-    content: 'Check the user sees Sales section',
-}, {
-    trigger: ".o_rightpanel_section[name='sales'] .o_rightpanel_data:contains('Prepaid Hours')",
-    content: 'Check the user sees a line in the Sales section',
-    // timer: 300,
-}, {
-    trigger: ".o_rightpanel_section .o-form-buttonbox .o_stat_text:contains('Sales Orders')",
-    content: 'Check the user sees Sales Orders Stat Button',
-}, {
     trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_title:contains('Profitability')",
     content: 'Check the user sees Profitability section',
 }, {
     trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > .o_rightpanel_subsection:eq(0) > table > thead > tr > th:eq(0):contains('Revenues')",
     content: 'Check the user sees Profitability subsection row',
 }, {
+    trigger: "button.fa-caret-right",
+    content: 'Check that the dropdown button is present',
+    run: "click",
+}, {
+    trigger: "th:contains('Sales Order Items')",
+    content: 'Check that the sale items section is present',
+}, {
+    trigger: "button.fa-caret-down",
+    content: 'Check that the button has changed',
+    run: "click",
+}, {
     trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > .o_rightpanel_subsection:eq(1) > table > thead > tr > th:eq(0):contains('Costs')",
     content: 'Check the user sees Profitability subsection row',
 }, {
-    trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > .o_rightpanel_subsection:eq(2) > table > thead > tr > th:eq(0):contains('Margin')",
+    trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > .o_rightpanel_subsection:eq(2) > table > thead > tr > th:eq(0):contains('Total')",
     content: 'Check the user sees Profitability subsection row',
 }, {
     trigger: ".o_rightpanel_section[name='milestones'] .o_rightpanel_title:contains('Milestones')",
@@ -321,12 +322,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: "div.o_field_widget[name=name] input",
     content: "Give a name to Project Update",
     run: "edit New update",
-}, {
-    trigger: ".o_field_widget[name=description] h3:contains('Sales')",
-    content: "Sales title must be in description in description",
-    }, {
-    trigger: ".o_field_widget[name=description] td:contains('Prepaid Hours')",
-    content: "Prepaid Hours title must be in description",
 }, {
     trigger: ".o_field_widget[name=description] h3:contains('Profitability')",
     content: "Profitability title must be in description",

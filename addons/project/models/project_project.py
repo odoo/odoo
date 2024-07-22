@@ -168,6 +168,7 @@ class Project(models.Model):
         tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_expand_full')
 
     update_ids = fields.One2many('project.update', 'project_id', export_string_translation=False)
+    update_count = fields.Integer(compute='_compute_total_update_ids', export_string_translation=False)
     last_update_id = fields.Many2one('project.update', string='Last Update', copy=False, export_string_translation=False)
     last_update_status = fields.Selection(selection=[
         ('on_track', 'On Track'),
@@ -367,6 +368,18 @@ class Project(models.Model):
                 project.access_instruction_message = _('Grant employees access to your project or tasks by adding them as followers. Employees automatically get access to the tasks they are assigned to.')
             else:
                 project.access_instruction_message = ''
+
+    @api.depends('update_ids')
+    def _compute_total_update_ids(self):
+        update_count_per_project = dict(
+            self.env['project.update']._read_group(
+                [('project_id', 'in', self.ids)],
+                ['project_id'],
+                ['id:count'],
+            )
+        )
+        for project in self:
+            project.update_count = update_count_per_project.get(project, 0)
 
     @api.model
     def _map_tasks_default_values(self, project):

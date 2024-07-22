@@ -36,39 +36,9 @@ $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
                 box-shadow: inset 0 -1px 0 $border-color;
 
                 .oe_stat_button {
-                    flex-basis: 25%;
-                    margin: 0;
-
-                    &:nth-child(4n):not(:last-child) {
-                        border-right-width: 0;
-                    }
 
                     .o_stat_text {
                         white-space: normal;
-                    }
-                }
-
-                @include media-breakpoint-down(lg) {
-                    .oe_stat_button {
-                        flex-basis: 33.33%;
-
-                        &:nth-child(3n):not(:last-child) {
-                            border-right-width: 0px;
-                        }
-
-                        &:nth-child(4n):not(:last-child){
-                            border-right-width: 1px;
-                        }
-                    }
-                }
-
-                @include media-breakpoint-down(md) {
-                    .oe_stat_button {
-                        flex-basis: 50%;
-
-                        &:nth-child(2n) {
-                            border-right-width: 0px;
-                        }
                     }
                 }
             }
