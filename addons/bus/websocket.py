@@ -23,12 +23,12 @@ from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
 
 import odoo
 from odoo import api
-from .models.bus import dispatch
+from .models.bus import dispatch, fetch_notifications
 from odoo.http import root, Request, Response, SessionExpiredException, get_default_session
 from odoo.modules.registry import Registry
 from odoo.service import model as service_model
 from odoo.service.server import CommonServer
-from odoo.service.security import check_session
+from odoo.service.security import check_session_with_cr
 from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
@@ -636,12 +636,11 @@ class Websocket:
         if not session:
             raise SessionExpiredException()
         with acquire_cursor(session.db) as cr:
-            env = api.Environment(cr, session.uid, session.context)
-            if session.uid is not None and not check_session(session, env):
+            if session.uid is not None and not check_session_with_cr(session, cr):
                 raise SessionExpiredException()
             # Mark the notification request as processed.
             self.__notif_sock_r.recv(1)
-            notifications = env['bus.bus']._poll(self._channels, self._last_notif_sent_id)
+            notifications = fetch_notifications(cr, self._channels, self._last_notif_sent_id)
         if not notifications:
             return
         self._last_notif_sent_id = notifications[-1]['id']

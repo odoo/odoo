@@ -76,9 +76,6 @@ class Users(models.Model):
         self.ensure_one()
         return self.totp_enabled or super()._rpc_api_keys_only()
 
-    def _get_session_token_fields(self):
-        return super()._get_session_token_fields() | {'totp_secret'}
-
     def _totp_check(self, code):
         sudo = self.sudo()
         key = base64.b32decode(sudo.totp_secret)

@@ -33,5 +33,6 @@ can setup API keys to replace their main password.
             'auth_totp/static/src/**/*',
         ],
     },
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }
