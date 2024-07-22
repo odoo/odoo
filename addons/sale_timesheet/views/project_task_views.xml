@@ -161,7 +161,8 @@
                 <xpath expr="//field[@name='remaining_hours']" position="after">
                     <field name="sale_line_id" column_invisible="True"/>
                     <field name="remaining_hours_available" column_invisible="True"/>
-                    <field name="remaining_hours_so" invisible="not sale_line_id or not remaining_hours_available" widget="timesheet_uom" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_hours_so" invisible="not sale_line_id or not remaining_hours_available" widget="timesheet_uom" optional="hide"
+                        groups="hr_timesheet.group_hr_timesheet_user" column_invisible="not context.get('allow_timesheets')"/>
                 </xpath>
             </field>
         </record>
