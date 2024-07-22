@@ -2413,7 +2413,7 @@ options.registry.collapse = options.Class.extend({
      */
     start: function () {
         var self = this;
-        this.$bsTarget.on('shown.bs.collapse hidden.bs.collapse', '[role="tabpanel"]', function () {
+        this.$bsTarget.on('shown.bs.collapse hidden.bs.collapse', '[role="region"]', function () {
             self.trigger_up('cover_update');
             self.$target.trigger('content_changed');
         });
@@ -2458,32 +2458,32 @@ options.registry.collapse = options.Class.extend({
      */
     _createIDs: function () {
         let time = new Date().getTime();
-        const $tablist = this.$target.closest('[role="tablist"]');
-        const $tab = this.$target.find('[role="tab"]');
-        const $panel = this.$target.find('[role="tabpanel"]');
+        const accordionEl = this.$target[0].closest(".accordion");
+        const accordionBtnEl = this.$target[0].querySelector(".accordion-button");
+        const accordionContentEl = this.$target[0].querySelector('[role="region"]');
         const $body = this.$target.closest('body');
 
-        const setUniqueId = ($elem, label) => {
-            let elemId = $elem.attr('id');
+        const setUniqueId = (el, label) => {
+            let elemId = el.id;
             if (!elemId || $body.find('[id="' + elemId + '"]').length > 1) {
                 do {
                     time++;
                     elemId = label + time;
                 } while ($body.find('#' + elemId).length);
-                $elem.attr('id', elemId);
+                el.id = elemId;
             }
             return elemId;
         };
 
-        const tablistId = setUniqueId($tablist, 'myCollapse');
-        $panel.attr('data-bs-parent', '#' + tablistId);
-        $panel.data('bs-parent', '#' + tablistId);
+        const accordionId = setUniqueId(accordionEl, "myCollapse");
+        accordionContentEl.dataset.bsParent = "#" + accordionId;
+        
+        const contentId = setUniqueId(accordionContentEl, "myCollapseTab");
+        accordionBtnEl.dataset.bsTarget = "#" + contentId;
+        accordionBtnEl.setAttribute("aria-controls", contentId);
 
-        const panelId = setUniqueId($panel, 'myCollapseTab');
-        $tab.attr('data-bs-target', '#' + panelId);
-        $tab.data('bs-target', '#' + panelId);
-
-        $tab[0].setAttribute("aria-controls", panelId);
+        const buttonId = setUniqueId(accordionBtnEl, "myCollapseBtn");
+        accordionContentEl.setAttribute("aria-labelledby", buttonId);
     },
 });
 

@@ -127,7 +127,7 @@
                 <t t-snippet="website.s_text_block" string="Text" group="text">
                     <keywords>content</keywords>
                 </t>
-                <t t-snippet="website.s_faq_collapse" string="Accordion" group="text">
+                <t t-snippet="website.s_faq_collapse" string="FAQ Block" group="text">
                     <keywords>common answers, common questions</keywords>
                 </t>
                 <t t-snippet="website.s_table_of_content" string="Table of Content" group="text"/>
@@ -187,6 +187,7 @@
                 <t t-snippet="website.s_hr" string="Separator" t-thumbnail="/website/static/src/img/snippets_thumbs/s_hr.svg">
                     <keywords>separator, divider</keywords>
                 </t>
+                <t t-snippet="website.s_accordion" string="Accordion" t-thumbnail="/website/static/src/img/snippets_thumbs/s_accordion.svg"/>
                 <t t-snippet="website.s_alert" string="Alert" t-thumbnail="/website/static/src/img/snippets_thumbs/s_alert.svg"/>
                 <t t-snippet="website.s_rating" string="Rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.svg">
                     <keywords>valuation, rank</keywords>
@@ -499,7 +500,7 @@
     </div>
 
     <!-- COLOR | .s_cards -->
-    <div data-selector=".accordion .card">
+    <div data-selector=".card:not(.s_card)">
         <we-colorpicker string="Color"
             data-select-style="true"
             data-css-property="background-color"
@@ -608,13 +609,13 @@
     </div>
     <!-- Accordion -->
     <div data-js="collapse"
-         data-selector='.accordion > .card'
-         data-drop-in='.accordion:has(> .card)'/>
+         data-selector='.accordion > .accordion-item'
+         data-drop-in='.accordion:has(> .accordion-item)'/>
 
-    <div data-js="MultipleItems" data-selector=".s_faq_collapse">
-        <we-row string="Item">
-            <we-button data-add-item="" data-item=".accordion > .card:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
-                Add Item
+    <div data-js="MultipleItems" data-selector=".s_accordion">
+        <we-row string="Items">
+            <we-button data-add-item="" data-item=".accordion > .accordion-item:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
+                Add New
             </we-button>
         </we-row>
     </div>
@@ -662,7 +663,7 @@
     </div>
 
     <!--  Vertical Alignment -->
-    <div data-js="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers" data-target=".row">
+    <div data-js="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse" data-target=".row">
         <we-button-group class="o_we_sublevel_1" string="Vert. Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
             <we-button title="Align Top"
                        data-select-class="align-items-start"
@@ -680,7 +681,7 @@
     </div>
 
     <!-- Move snippets around -->
-    <div data-js="SnippetMove" data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div, .s_hr" data-no-scroll=".accordion > .card">
+    <div data-js="SnippetMove" data-selector="section, .s_accordion .accordion-item, .s_showcase .row:not(.s_col_no_resize) > div, .s_hr" data-no-scroll=".s_accordion .accordion-item">
         <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true" data-name="move_up_opt"/>
         <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true" data-name="move_down_opt"/>
     </div>
@@ -773,7 +774,7 @@
     <t t-set="so_content_addition_selector" t-translation="off">
         blockquote, .s_card:not(.s_timeline_card), .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating,
         .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge,
-        .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only, .s_image, .s_cta_badge
+        .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only, .s_image, .s_cta_badge, .s_accordion
     </t>
 
     <div id="so_content_addition"
