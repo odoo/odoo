@@ -1344,17 +1344,10 @@ patch(Order.prototype, {
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
         if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
-            const tax_res = this.pos.getTaxesValues(
+            const new_price = this.pos.compute_price_force_price_include(
                 discountProduct.taxes_id,
-                -Math.min(maxDiscount, discountable),
-                1,
-                this.pos.currency.rounding,
-                true
+                -Math.min(maxDiscount, discountable)
             );
-            let new_price = tax_res.total_excluded;
-            new_price += tax_res.taxes_data
-                .filter((tax) => this.pos.models["account.tax"].get(tax.id).price_include)
-                .reduce((sum, tax) => (sum += tax.tax_amount), 0);
             return [
                 {
                     product: discountProduct,

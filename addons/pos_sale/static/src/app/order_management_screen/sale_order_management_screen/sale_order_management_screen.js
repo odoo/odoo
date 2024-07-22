@@ -276,15 +276,6 @@ export class SaleOrderManagementScreen extends Component {
         } else {
             // apply a downpayment
             if (this.pos.config.down_payment_product_id) {
-                const lines = sale_order.order_line.filter((line) => {
-                    return line.product_id !== this.pos.config.down_payment_product_id.id;
-                });
-                const tab = lines.map((line) => ({
-                    product_name: line.product_id[1],
-                    product_uom_qty: line.product_uom_qty,
-                    price_unit: line.price_unit,
-                    total: line.price_total,
-                }));
                 let down_payment_product = this.pos.config.down_payment_product_id;
 
                 if (!down_payment_product) {
@@ -362,20 +353,12 @@ export class SaleOrderManagementScreen extends Component {
                     down_payment = sale_order.amount_unpaid > 0 ? sale_order.amount_unpaid : 0;
                 }
 
-                const new_line = new Orderline(
-                    { env: this.env },
-                    {
-                        pos: this.pos,
-                        order: this.pos.get_order(),
-                        product: down_payment_product,
-                        price: down_payment,
-                        price_type: "automatic",
-                        sale_order_origin_id: clickedOrder,
-                        down_payment_details: tab,
-                    }
+                this._createDownpaymentLines(
+                    sale_order,
+                    down_payment,
+                    clickedOrder,
+                    down_payment_product
                 );
-                new_line.set_unit_price(down_payment);
-                this.pos.get_order().add_orderline(new_line);
             } else {
                 const title = _t("No down payment product");
                 const body = _t(
@@ -386,6 +369,54 @@ export class SaleOrderManagementScreen extends Component {
         }
 
         this.pos.closeScreen();
+    }
+
+    _createDownpaymentLines(sale_order, total_down_payment, clickedOrder, down_payment_product) {
+        //This function will create all the downpaymentlines. We will create on downpayment line per unique tax combination
+
+        const grouped = {};
+        sale_order.order_line.forEach((obj) => {
+            const sortedTaxes = obj.tax_id.slice().sort((a, b) => a - b);
+            const key = sortedTaxes.join(",");
+            if (!grouped[key]) {
+                grouped[key] = [];
+            }
+            grouped[key].push(obj);
+        });
+        Object.keys(grouped).forEach((key) => {
+            const group = grouped[key];
+            const tab = group.map((line) => ({
+                product_name: line.product_id[1],
+                product_uom_qty: line.product_uom_qty,
+                price_unit: line.price_unit,
+                total: line.price_total,
+            }));
+
+            // Compute the part of the downpayment that should be assigned to this group
+            const total_price = group.reduce((total, line) => (total += line.price_total), 0);
+            const ratio = total_price / sale_order.amount_total;
+            const down_payment_line_price = total_down_payment * ratio;
+            // We apply the taxes and keep the same price
+            const new_price = this.pos.compute_price_force_price_include(
+                group[0].tax_id.map((tax_id) => this.pos.models["account.tax"].get(tax_id)),
+                down_payment_line_price
+            );
+            this.pos.get_order().add_orderline(
+                new Orderline(
+                    { env: this.env },
+                    {
+                        pos: this.pos,
+                        order: this.pos.get_order(),
+                        product: down_payment_product,
+                        price: new_price,
+                        price_type: "automatic",
+                        sale_order_origin_id: clickedOrder,
+                        down_payment_details: tab,
+                        tax_ids: group[0].tax_id,
+                    }
+                )
+            );
+        });
     }
 
     async _getSaleOrder(id) {
