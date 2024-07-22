@@ -57,22 +57,11 @@
         <field name="model">project.project.stage</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" sample="1" quick_create_view="project.project_project_stage_view_form_quick_create">
-                <field name="name"/>
-                <field name="mail_template_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="o_kanban_record oe_kanban_global_click">
-                            <strong><field name="name"/></strong>
-                            <br/>
-                            <span class="text-muted" invisible="not mail_template_id">
-                                <field name="mail_template_id"/>
-                                <br/>
-                            </span>
-                            <span groups="base.group_multi_company" invisible="not company_id">
-                                <field name="company_id"/>
-                                <br/>
-                            </span>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="name" class="fw-bolder mb-4"/>
+                        <field name="mail_template_id" class="text-muted mb-2" invisible="not mail_template_id"/>
+                        <field name="company_id" groups="base.group_multi_company" invisible="not company_id" class="mb-2"/>
                     </t>
                 </templates>
             </kanban>

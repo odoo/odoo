@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         run: "click",
     }, {
         content: "Open Test History Task",
-        trigger: "div strong.o_kanban_record_title:contains('Test History Task')",
+        trigger: ".o_kanban_record:contains('Test History Task')",
         run: "click",
     },
         // edit the description content 3 times and save after each edit
@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     },
     {
         content: "Open Test History Task",
-        trigger: "div strong.o_kanban_record_title:contains('Test History Task')",
+        trigger: ".o_kanban_record:contains('Test History Task')",
         run: "click",
     },
     {

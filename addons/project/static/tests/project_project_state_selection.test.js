@@ -32,13 +32,9 @@ test("project.project (kanban): check that ProjectStateSelectionField does not p
         type: "kanban",
         arch: `
             <kanban class="o_kanban_test">
-                <field name="last_update_status"/>
-                <field name="last_update_color"/>
                 <template>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="last_update_status" widget="project_state_selection"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="last_update_status" widget="project_state_selection"/>
                     </t>
                 </template>
             </kanban>

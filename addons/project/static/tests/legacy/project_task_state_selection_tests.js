@@ -33,10 +33,8 @@ QUnit.module('Task State Tests', {
             "project.task,false,kanban":
                 `<kanban js_class="project_task_kanban">
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="state" widget="project_task_state_selection" class="project_task_state_test"/>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="state" widget="project_task_state_selection" class="project_task_state_test"/>
                         </t>
                     </templates>
                 </kanban>`,

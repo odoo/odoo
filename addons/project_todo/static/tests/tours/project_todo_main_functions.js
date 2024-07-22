@@ -67,7 +67,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_project_task_kanban_view",
 },
 {
-    trigger: ".o_kanban_record .oe_kanban_content",
+    trigger: ".o_kanban_record",
     content: "Drag &amp; drop the card to change the personal task from personal stage.",
     run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, 

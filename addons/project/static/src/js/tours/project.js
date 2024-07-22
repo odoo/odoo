@@ -101,7 +101,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_kanban_project_tasks",
 },
 {
-    trigger: ".o_kanban_record .oe_kanban_content",
+    trigger: ".o_kanban_record",
     content: markup(_t("<b>Drag &amp; drop</b> the card to change your task from stage.")),
     tooltipPosition: "bottom",
     run: "drag_and_drop(.o_kanban_group:eq(1))",
@@ -226,7 +226,7 @@ registry.category("web_tour.tours").add('project_tour', {
     run: 'click',
 }, {
     isActive: ["auto"],
-    trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button",
+    trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button",
     content: _t("You can open sub-tasks from the kanban card!"),
     run: "click",
 },
@@ -266,7 +266,7 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, {
     isActive: ["auto"],
-    trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button:contains('1/2')",
+    trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button:contains('1/2')",
     content: _t("Close the sub-tasks list"),
     run: "click",
 }, {

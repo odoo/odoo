@@ -27,13 +27,9 @@ test("project.update (kanban): check that ProjectStatusWithColorSelectionField i
         type: "kanban",
         arch: `
             <kanban  class="o_kanban_test">
-                <field name="status"/>
-                <field name="id"/>
                 <template>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="status" widget="status_with_color" readonly="1" status_label="test status label"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="status" widget="status_with_color" readonly="1" status_label="test status label"/>
                     </t>
                 </template>
             </kanban>
