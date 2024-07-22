@@ -315,48 +315,30 @@ class MrpProduction(models.Model):
             production.location_src_id = production.picking_type_id.default_location_src_id.id or fallback_loc.id
             production.location_dest_id = production.picking_type_id.default_location_dest_id.id or fallback_loc.id
 
+    @api.model
     def _search_components_availability_state(self, operator, value):
-        def get_stock_moves(moves, state):
-            if state == 'available':
-                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and not m.forecast_expected_date)
-            elif state == 'expected':
-                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and m.forecast_expected_date and m.forecast_expected_date <= m.raw_material_production_id.date_start)
-            elif state == 'late':
-                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and m.forecast_expected_date and m.forecast_expected_date > m.raw_material_production_id.date_start)
-            elif state == 'unavailable':
-                return moves.filtered(lambda m: m.forecast_availability < m.product_qty)
-            else:
-                raise UserError(_('Selection not supported.'))
-
-
-        if operator == '!=' and not value:
-            raise UserError(_('Operator not supported without a value.'))
-        elif operator == '=' and not value:
-            raw_stock_moves = self.env['stock.move'].search([
-                ('raw_material_production_id', '!=', False),
-                ('raw_material_production_id.state', 'in', ('cancel', 'done', 'draft'))])
-            return [('move_raw_ids', 'in', raw_stock_moves.ids)]
-
-        raw_stock_moves = self.env['stock.move'].search([
-            ('raw_material_production_id', '!=', False),
-            ('raw_material_production_id.state', 'not in', ('cancel', 'done', 'draft'))])
-        if operator == '=':
-            raw_stock_moves = get_stock_moves(raw_stock_moves, value)
-        elif operator == '!=':
-            raw_stock_moves = raw_stock_moves - get_stock_moves(raw_stock_moves, value)
-        elif operator == 'in':
-            search_raw_moves = self.env['stock.move']
-            for state in value:
-                search_raw_moves |= get_stock_moves(raw_stock_moves, state)
-            raw_stock_moves = search_raw_moves
-        elif operator == 'not in':
-            search_raw_moves = self.env['stock.move']
-            for state in value:
-                search_raw_moves |= raw_stock_moves - get_stock_moves(raw_stock_moves, state)
-            raw_stock_moves = search_raw_moves
-        else:
+        if operator not in ('=', '!=', 'in', 'not in'):
             raise UserError(_('Operation not supported'))
-        return [('move_raw_ids', 'in', raw_stock_moves.ids)]
+
+        states = ['available', 'expected', 'late', 'unavailable']
+        if operator in ('=', '!='):
+            value = [value]
+        if operator in ('not in', '!='):
+            value = filter(lambda state: state not in value, states)
+        if not all(state in states for state in value):
+            raise UserError(_('Selection not supported.'))
+
+        current_productions = self.search([('state', 'in', ('confirmed', 'progress', 'to_close'))])
+
+        productions_by_availability = dict.fromkeys(states, self.env['mrp.production'])
+        for production in current_productions:
+            productions_by_availability[production.components_availability_state] |= production
+
+        matching_production_ids = []
+        for state in value:
+            matching_production_ids.extend(productions_by_availability[state].ids)
+
+        return [('id', 'in', matching_production_ids)]
 
     @api.depends('state', 'reservation_state', 'date_start', 'move_raw_ids', 'move_raw_ids.forecast_availability', 'move_raw_ids.forecast_expected_date')
     def _compute_components_availability(self):
