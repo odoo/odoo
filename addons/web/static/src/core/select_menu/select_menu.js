@@ -69,12 +69,16 @@ export class SelectMenu extends Component {
         required: { type: Boolean, optional: true },
         searchable: { type: Boolean, optional: true },
         autoSort: { type: Boolean, optional: true },
+        placeholder: { type: String, optional: true },
         searchPlaceholder: { type: String, optional: true },
         value: { optional: true },
         multiSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
         onSelect: { type: Function, optional: true },
         slots: { type: Object, optional: true },
+        element: { type: HTMLElement, optional: true },
+        choiceFetchFunction: { type: Function, optional: true },
+        disabled: { type: Boolean, optional: true },
     };
 
     static SCROLL_SETTINGS = {
@@ -89,7 +93,12 @@ export class SelectMenu extends Component {
             displayedOptions: [],
             searchValue: "",
         });
+        if (this.props.element) {
+            this.props.element.style.display = "none";
+        }
+        this.buttonRef = useRef("buttonRef");
         this.inputRef = useRef("inputRef");
+        this.selectedIds = [];
         this.menuRef = useChildRef();
         this.debouncedOnInput = useDebounced(
             () => this.onInput(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
@@ -100,9 +109,20 @@ export class SelectMenu extends Component {
         this.selectedChoice = this.getSelectedChoice(this.props);
         onWillUpdateProps((nextProps) => {
             if (this.props.value !== nextProps.value) {
+                nextProps.choices = this.state.choices;
                 this.selectedChoice = this.getSelectedChoice(nextProps);
             }
         });
+        useEffect(
+            () => {
+                if (this.props.disabled) {
+                    this.buttonRef.el.setAttribute("disabled", "disabled");
+                } else {
+                    this.buttonRef.el.removeAttribute("disabled");
+                }
+            },
+            () => [this.props.disabled]
+        );
         useEffect(
             () => {
                 if (this.isOpen) {
@@ -136,6 +156,7 @@ export class SelectMenu extends Component {
                     const values = [...this.props.value];
                     values.splice(values.indexOf(c.value), 1);
                     this.props.onSelect(values);
+                    this.removeIds(values);
                 },
             };
         });
@@ -221,11 +242,40 @@ export class SelectMenu extends Component {
             if (valueIndex !== -1) {
                 values.splice(valueIndex, 1);
                 this.props.onSelect(values);
+                this.removeIds(values);
             } else {
                 this.props.onSelect([...this.props.value, value]);
+                this.addSelectedIds([...this.props.value, value]);
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
+            this.addSelectedIds(value);
+        }
+    }
+
+    addSelectedIds(value) {
+        if (this.props.element) {
+            if (this.props.multiSelect) {
+                this.props.element.value = value.join(",");
+            } else {
+                this.props.element.value = value;
+            }
+            const changeEvent = new Event("change", { bubbles: true });
+            this.props.element.dispatchEvent(changeEvent);
+        }
+    }
+
+    removeIds(values) {
+        if (this.props.element) {
+            this.selectedIds = this.selectedIds.filter((id) => {
+                return this.props.choices.some((choice) => {
+                    return choice.id === id && values.includes(choice.value);
+                });
+            });
+
+            this.props.element.value = this.selectedIds.join(",");
+            const changeEvent = new Event("change", { bubbles: true });
+            this.props.element.dispatchEvent(changeEvent);
         }
     }
 
@@ -240,10 +290,17 @@ export class SelectMenu extends Component {
      *
      * @param {String} searchString
      */
-    filterOptions(searchString = "", groups) {
-        const groupsList = groups || [{ choices: this.props.choices }, ...this.props.groups];
-
+    async filterOptions(searchString = "", groups) {
         this.state.choices = [];
+
+        if (this.props.choiceFetchFunction && !groups?.length) {
+            const choices = await this.props.choiceFetchFunction(searchString);
+            this.state.choices = choices;
+            this.props.choices = choices;
+            return this.sliceDisplayedOptions();
+        }
+
+        const groupsList = groups || [{ choices: this.props.choices }, ...this.props.groups];
 
         for (const group of groupsList) {
             let filteredOptions = [];
