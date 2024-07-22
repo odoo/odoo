@@ -75,6 +75,7 @@
         'views/snippets/s_showcase.xml',
         'views/snippets/s_timeline.xml',
         'views/snippets/s_process_steps.xml',
+        'views/snippets/s_accordion.xml',
         'views/snippets/s_text_highlight.xml',
         'views/snippets/s_progress_bar.xml',
         'views/snippets/s_blockquote.xml',
