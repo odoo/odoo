@@ -301,25 +301,12 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="user_id" string="Project Manager"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_content oe_kanban_global_click o_kanban_get_form">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <strong><field name="name" string="Project Name"/></strong>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-8">
-                                        <field name="partner_id" string="Contact"/>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="oe_kanban_bottom_right float-end">
-                                            <field name="user_id" widget="many2one_avatar_user"/>
-                                        </div>
-                                    </div>
-                                </div>
+                        <t t-name="kanban-card">
+                            <field name="name" class="fw-bolder" string="Project Name"/>
+                            <div class="d-flex">
+                                <field name="partner_id" string="Contact"/>
+                                <field name="user_id" class="ms-auto" widget="many2one_avatar_user"/>
                             </div>
                         </t>
                     </templates>

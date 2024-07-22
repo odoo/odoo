@@ -114,7 +114,7 @@
                 <field name="allow_timesheets"/>
                 <field name="encode_uom_in_days" invisible="1"/>
             </templates>
-            <div class="oe_kanban_bottom_left" position="inside">
+            <field name="priority" position="after">
                 <t name="allocated_hours" t-if="record.allocated_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
                     <t t-set="badge" t-value="'border border-success'"/>
                     <t t-set="badge" t-value="'border border-warning'" t-if="record.progress.raw_value &gt;= 0.8 and record.progress.raw_value &lt;= 1"/>
@@ -125,7 +125,7 @@
                         <field name="remaining_hours" widget="timesheet_uom" />
                     </div>
                 </t>
-            </div>
+            </field>
         </field>
     </record>
 </odoo>

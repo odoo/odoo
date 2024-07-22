@@ -7,7 +7,8 @@
         <field name="model">project.task</field>
         <field name="priority">800</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="personal_stage_type_id"
+            <kanban highlight_color="color"
+                    default_group_by="personal_stage_type_id"
                     class="o_kanban_small_column"
                     on_create="quick_create"
                     quick_create_view="project_todo.project_task_view_todo_quick_create_form"
@@ -15,55 +16,33 @@
                     js_class="project_task_kanban"
                     default_order="state, priority desc, date_deadline asc, sequence, id desc">
                 <field name="color"/>
-                <field name="priority"/>
                 <field name="sequence"/>
-                <field name="name"/>
                 <field name="active"/>
-                <field name="description"/>
-                <field name="message_partner_ids"/>
-                <field name="activity_ids" />
-                <field name="activity_state" />
                 <field name="state"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-menu">
                         <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                         <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                        <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <t t-set="todoHasAssignees" t-value="record.user_ids.raw_value.length &gt; 1"/>
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
-                            <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings">
-                                        <div class="d-flex justify-content-start">
-                                            <div t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
-                                                <strong class="o_kanban_record_title align-middle">
-                                                    <field name="name" widget="name_with_subtask_count"/>
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">
+                            <field name="name" class="fw-bolder fs-5" widget="name_with_subtask_count"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field t-if="record.displayed_image_id.value" name="displayed_image_id" widget="attachment_image"/>
+                        </div>
+                        <div class="d-flex pt-2">
+                            <div class="d-flex" t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">
+                                <field name="priority" class="me-2" widget="priority"/>
+                                <field name="activity_ids" widget="kanban_activity"/>
+                            </div>
+                            <div class="d-flex ms-auto">
+                                <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value), 'o_todo_hide_avatar': !todoHasAssignees}">
+                                    <field name="user_ids" widget="many2many_avatar_user" readonly="True"/>
                                 </div>
-                                <div class="o_kanban_record_body o_todo_kanban_card_body" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                    <div t-if="record.displayed_image_id.value">
-                                        <field name="displayed_image_id" widget="attachment_image"/>
-                                    </div>
-                                </div>
-                                <div class="o_kanban_record_bottom mt-2">
-                                    <div class="oe_kanban_bottom_left" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
-                                        <field name="priority" widget="priority"/>
-                                        <field name="activity_ids" widget="kanban_activity" style="padding-top: 1.5px;"/>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value), 'o_todo_hide_avatar': !todoHasAssignees}">
-                                            <field name="user_ids" widget="many2many_avatar_user" readonly="True"/>
-                                        </div>
-                                        <field name="state" widget="todo_done_checkmark"/>
-                                    </div>
-                                </div>
+                                <field name="state" widget="todo_done_checkmark"/>
                             </div>
                         </div>
                     </t>

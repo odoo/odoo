@@ -80,5 +80,5 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
     run: "click",
 }, {
     content: "Check that task exists",
-    trigger: '.o_kanban_record_title:contains("New Test Task")',
+    trigger: '.o_kanban_record:contains("New Test Task")',
 }]});

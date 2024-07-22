@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: '.o_kanban_project_tasks',
 },
 {
-    trigger: ".o_kanban_record .oe_kanban_content",
+    trigger: ".o_kanban_record",
     run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, {
     trigger: ".o_control_panel_navigation button i.fa-sliders",

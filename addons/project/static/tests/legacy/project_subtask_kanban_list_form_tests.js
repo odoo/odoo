@@ -46,19 +46,16 @@ QUnit.module('Subtask Kanban List tests', {
             "project.task,false,kanban":
                 `<kanban js_class="project_task_kanban">
                     <field name="subtask_count"/>
-                    <field name="closed_subtask_count"/>
                     <field name="project_id"/>
+                    <field name="user_ids"/>
+                    <field name="state"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="display_name" widget="name_with_subtask_count"/>
-                                <field name="user_ids" invisible="1" widget="many2many_avatar_user"/>
-                                <field name="state" invisible="1" widget="project_task_state_selection"/>
-                                <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
-                                    <widget name="subtask_counter"/>
-                                </t>
-                                <widget name="subtask_kanban_list" />
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="display_name" widget="name_with_subtask_count"/>
+                            <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
+                                <widget name="subtask_counter"/>
+                            </t>
+                            <widget name="subtask_kanban_list" />
                         </t>
                     </templates>
                 </kanban>`,
