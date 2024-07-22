@@ -17,7 +17,29 @@ echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
 echo "export LANG=en_US.UTF-8" >> ~/.bashrc
 echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
 locale-gen
+# Aliases
+echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo='sudo systemctl restart odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --load=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo_logs='less +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias read_mode='sudo mount -o remount,ro / && sudo mount -o remount,ro /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias install='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks; sudo chroot /root_bypass_ramdisks/; sudo mount -t proc proc /proc'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias blackbox='ls /dev/serial/by-path/'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo "
+show_odoo_aliases() {
+  echo 'Welcome to Odoo IoTBox tools'
+  echo 'odoo                Starts/Restarts Odoo server'
+  echo 'odoo_logs           Displays Odoo server logs in real time'
+  echo 'write_mode          Enables system write mode'
+  echo 'read_mode           Switches system to read-only mode'
+  echo 'install             Bypasses ramdisks to allow package installation'
+  echo 'blackbox            Lists all serial connected devices'
+}
+alias odoo_help='show_odoo_aliases'
+" | tee -a ~/.bashrc /home/pi/.bashrc
+
 source ~/.bashrc
+source /home/pi/.bashrc
 
 apt-get update
 
