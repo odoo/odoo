@@ -806,10 +806,6 @@ class AccountJournal(models.Model):
             if not vals['code']:
                 raise UserError(_("Cannot generate an unused journal code. Please change the name for journal %s.", vals['name']))
 
-        # === Fill missing refund_sequence ===
-        if 'refund_sequence' not in vals:
-            vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
-
         # === Fill missing alias name for sale / purchase, to force alias creation ===
         if journal_type in {'sale', 'purchase'}:
             if 'alias_name' not in vals:
