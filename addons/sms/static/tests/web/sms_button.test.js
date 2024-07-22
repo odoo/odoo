@@ -115,10 +115,9 @@ test(
                         <field name="mobile" widget="phone"/>
                         <field name="partner_ids">
                         <kanban>
-                            <field name="display_name"/>
                             <templates>
-                                <t t-name="kanban-box">
-                                    <div><t t-esc="record.display_name"/></div>
+                                <t t-name="kanban-card">
+                                    <field name="display_name"/>
                                 </t>
                             </templates>
                         </kanban>

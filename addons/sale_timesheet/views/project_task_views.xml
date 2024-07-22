@@ -39,34 +39,24 @@
                             <field name="cost_currency_id" column_invisible="True"/>
                         </list>
                         <kanban class="o_kanban_mobile">
-                            <field name="employee_id"/>
-                            <field name="sale_line_id"/>
-                            <field name="existing_employee_ids"/>
-                            <field name="partner_id"/>
                             <field name="currency_id"/>
                             <templates>
-                                <t t-name="kanban-box">
-                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                        <div class="row">
-                                            <div class="col-8 d-flex">
-                                                <field name="employee_id" widget="many2one_avatar_employee"/>
-                                                <strong><span class="ps-1"><t t-esc="record.employee_id.value"/></span></strong>
-                                            </div>
-                                            <div class="col-4 float-end text-end">
-                                                <b>Unit Price: </b>
-                                                <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
-                                            </div>
+                                <t t-name="kanban-card">
+                                    <div class="row">
+                                        <div class="col-8 d-flex">
+                                            <field name="employee_id" widget="many2one_avatar_employee"/>
+                                            <field name="employee_id" class="fw-bold ps-1"/>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-8 text-muted">
-                                                <span><t t-esc="record.sale_line_id.value"/></span>
-                                            </div>
-                                            <div class="col-4">
-                                                <span class="float-end text-end">
-                                                    <b>Daily Cost: </b>
-                                                    <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                                </span>
-                                            </div>
+                                        <div class="col-4 float-end text-end">
+                                            <b>Unit Price: </b>
+                                            <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <field name="sale_line_id" class="col-8 text-muted"/>
+                                        <div class="col-4 float-end text-end">
+                                            <b>Daily Cost: </b>
+                                            <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                         </div>
                                     </div>
                                 </t>
