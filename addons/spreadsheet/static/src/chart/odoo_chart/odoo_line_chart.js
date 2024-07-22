@@ -56,7 +56,7 @@ function createOdooChartRuntime(chart, getters) {
     const { datasets, labels } = chart.dataSource.getData();
     const locale = getters.getLocale();
     const chartJsConfig = getLineConfiguration(chart, labels, locale);
-    const colors = new ColorGenerator();
+    const colors = new ColorGenerator(datasets.length);
 
     for (let [index, { label, data, cumulatedStart }] of datasets.entries()) {
         const color = colors.next();

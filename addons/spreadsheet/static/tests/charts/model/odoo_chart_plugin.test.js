@@ -92,7 +92,8 @@ test("Odoo bar chart runtime loads the data", async () => {
         datasets: [
             {
                 backgroundColor: "#4EA7F2",
-                borderColor: "#4EA7F2",
+                borderColor: "#FFFFFF",
+                borderWidth: 1,
                 data: [1, 3],
                 label: "Count",
             },
@@ -124,9 +125,10 @@ test("Odoo pie chart runtime loads the data", async () => {
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data).toEqual({
         datasets: [
             {
-                backgroundColor: ["#4EA7F2", "#3188E6", "#056BD9"],
+                backgroundColor: ["#4EA7F2", "#EA6175", "#43C5B1"],
                 borderColor: "#FFFFFF",
                 data: [1, 3],
+                hoverOffset: 30,
                 label: "",
             },
         ],
