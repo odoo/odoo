@@ -1241,7 +1241,15 @@ class IrQWeb(models.AbstractModel):
         """ Generates a text value (an instance of text_type) from an arbitrary
             source.
         """
-        return pycompat.to_text(expr)
+        if expr is None or expr is False:
+            return ''
+
+        if isinstance(expr, str):
+            return expr
+        elif isinstance(expr, bytes):
+            return expr.decode()
+        else:
+            return str(expr)
 
     # order
 
