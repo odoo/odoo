@@ -3,10 +3,10 @@
         <t t-if="this.showIframe">
             <iframe t-ref="iframe"
                 t-att-class="{'d-none': !this.state.iframeVisible, 'o_readonly': true}"
-                t-att-sandbox="props.hasFullHtml ? 'allow-same-origin allow-popups allow-popups-to-escape-sandbox' : false"/>
+                t-att-sandbox="props.config.hasFullHtml ? 'allow-same-origin allow-popups allow-popups-to-escape-sandbox' : false"/>
         </t>
         <t t-else="">
-            <div t-ref="readonlyContent"  class="o_readonly" t-out="props.value" />
+            <div t-ref="readonlyContent"  class="o_readonly" t-out="props.config.value" />
         </t>
     </t>
 </templates>

@@ -28,6 +28,13 @@ import { browser } from "@web/core/browser/browser";
 import { FormController } from "@web/views/form/form_controller";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
 import { insertText, pasteText } from "./_helpers/user_actions";
+import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
+import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/readonly/embedded_components/embedding_sets";
+import {
+    getEditableDescendants,
+    getEmbeddedProps,
+} from "@html_editor/others/embedded_component_utils";
+import { onWillDestroy, xml } from "@odoo/owl";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -145,6 +152,116 @@ test("html field in readonly updated by onchange", async () => {
     expect(".odoo-editor-editable").toHaveCount(0);
     expect(`[name="txt"] .o_readonly`).toHaveCount(1);
     expect(`[name="txt"] .o_readonly`).toHaveInnerHTML("<p>hello</p>");
+});
+
+test("html field in readonly with embedded components", async () => {
+    patchWithCleanup(Counter, {
+        template: xml`
+            <span t-ref="root" class="counter" t-on-click="increment"><t t-esc="props.name || ''"/>:<t t-esc="state.value"/></span>`,
+    });
+    patchWithCleanup(Counter.prototype, {
+        setup() {
+            super.setup();
+            onWillDestroy(() => {
+                expect.step("destroyed");
+            });
+        },
+    });
+    patchWithCleanup(READONLY_MAIN_EMBEDDINGS, [
+        ...READONLY_MAIN_EMBEDDINGS,
+        {
+            name: "counter",
+            Component: Counter,
+            getProps: (host) => ({
+                ...getEmbeddedProps(host),
+            }),
+        },
+    ]);
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<div><span data-embedded="counter" data-embedded-props='{"name":"name"}'></span></div>`,
+        },
+    ];
+    Partner._onChanges = {
+        name(record) {
+            record.txt = `<div><span data-embedded="counter"></span></div>`;
+        },
+    };
+    const view = await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" readonly="1" options="{'embedded_components': True}"/>
+            </form>`,
+    });
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<div><span data-embedded="counter" data-embedded-props='{"name":"name"}'><span class="counter">name:0</span></div>`
+    );
+    click(".counter");
+    await animationFrame();
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<div><span data-embedded="counter" data-embedded-props='{"name":"name"}'><span class="counter">name:1</span></div>`
+    );
+    // trigger the onchange method for name, which will replace the txt value.
+    await contains(`.o_field_widget[name=name] input`).edit("hello");
+    await animationFrame();
+    expect.verifySteps(["destroyed"]);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<div><span data-embedded="counter"><span class="counter">:0</span></div>`
+    );
+    view.__owl__.app.destroy();
+    expect.verifySteps(["destroyed"]);
+});
+
+test("html field in readonly with embedded components and editable descendants", async () => {
+    const Wrapper = EmbeddedWrapperMixin("editable");
+    patchWithCleanup(READONLY_MAIN_EMBEDDINGS, [
+        ...READONLY_MAIN_EMBEDDINGS,
+        {
+            name: "wrapper",
+            Component: Wrapper,
+            getProps: (host) => ({ host }),
+            getEditableDescendants,
+        },
+        {
+            name: "counter",
+            Component: Counter,
+        },
+    ]);
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<div data-embedded="wrapper"><div data-embedded-editable="editable"><span data-embedded="counter"></span></div></div>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" readonly="1" options="{'embedded_components': True}"/>
+            </form>`,
+    });
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<div data-embedded="wrapper"><div class="editable"><div data-embedded-editable="editable"><span data-embedded="counter"><span class="counter">Counter:0</span></span></div></div></div>`
+    );
+    click(".counter");
+    await animationFrame();
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<div data-embedded="wrapper"><div class="editable"><div data-embedded-editable="editable"><span data-embedded="counter"><span class="counter">Counter:1</span></span></div></div></div>`
+    );
 });
 
 test("links should open on a new tab in readonly", async () => {

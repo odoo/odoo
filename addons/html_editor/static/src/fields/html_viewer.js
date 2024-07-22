@@ -1,4 +1,5 @@
 import {
+    App,
     Component,
     onMounted,
     onWillStart,
@@ -8,6 +9,7 @@ import {
     useState,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
+import { memoize } from "@web/core/utils/functions";
 
 // Ensure all links are opened in a new tab.
 function retargetLinks(container) {
@@ -20,9 +22,7 @@ function retargetLinks(container) {
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
     static props = {
-        value: { type: [Object, String] },
-        hasFullHtml: { type: Boolean, optional: true },
-        cssAssetId: { type: String, optional: true },
+        config: { type: Object },
     };
     static defaultProps = {
         hasFullHtml: false,
@@ -37,7 +37,7 @@ export class HtmlViewer extends Component {
 
         if (this.showIframe) {
             onMounted(() => {
-                const onLoadIframe = () => this.onLoadIframe(this.props.value);
+                const onLoadIframe = () => this.onLoadIframe(this.props.config.value);
                 this.iframeRef.el.addEventListener("load", onLoadIframe, { once: true });
                 // Force the iframe to call the `load` event. Without this line, the
                 // event 'load' might never trigger.
@@ -45,7 +45,7 @@ export class HtmlViewer extends Component {
             });
 
             onWillUpdateProps((nextProps) => {
-                this.updateIframeContent(nextProps.value);
+                this.updateIframeContent(nextProps.config.value);
             });
         } else {
             this.readonlyElementRef = useRef("readonlyContent");
@@ -54,20 +54,41 @@ export class HtmlViewer extends Component {
             });
         }
 
-        if (this.props.cssAssetId) {
+        if (this.props.config.cssAssetId) {
             onWillStart(async () => {
-                this.cssAsset = await getBundle(this.props.cssAssetId);
+                this.cssAsset = await getBundle(this.props.config.cssAssetId);
             });
+        }
+
+        if (this.props.config.embeddedComponents) {
+            // TODO @phoenix: should readonly iframe with embedded components be supported?
+            this.embeddedComponents = memoize((embeddedComponents = []) => {
+                const result = {};
+                for (const embedding of embeddedComponents) {
+                    result[embedding.name] = embedding;
+                }
+                return result;
+            });
+            this.components = new Set();
+            useEffect(
+                () => {
+                    if (this.readonlyElementRef?.el) {
+                        this.mountComponents();
+                    }
+                    return () => this.destroyComponents();
+                },
+                () => [this.props.config.value, this.readonlyElementRef?.el]
+            );
         }
     }
 
     get showIframe() {
-        return this.props.hasFullHtml || this.props.cssAssetId;
+        return this.props.config.hasFullHtml || this.props.config.cssAssetId;
     }
 
     updateIframeContent(content) {
         const contentWindow = this.iframeRef.el.contentWindow;
-        const iframeTarget = this.props.hasFullHtml
+        const iframeTarget = this.props.config.hasFullHtml
             ? contentWindow.document.documentElement
             : contentWindow.document.querySelector("#iframe_target");
         iframeTarget.innerHTML = content;
@@ -76,7 +97,7 @@ export class HtmlViewer extends Component {
 
     onLoadIframe(value) {
         const contentWindow = this.iframeRef.el.contentWindow;
-        if (!this.props.hasFullHtml) {
+        if (!this.props.config.hasFullHtml) {
             contentWindow.document.open("text/html", "replace").write(
                 `<!DOCTYPE html><html>
                         <head>
@@ -101,7 +122,90 @@ export class HtmlViewer extends Component {
             }
         }
 
-        this.updateIframeContent(this.props.value);
+        this.updateIframeContent(this.props.config.value);
         this.state.iframeVisible = true;
+    }
+
+    //--------------------------------------------------------------------------
+    // Embedded Components
+    //--------------------------------------------------------------------------
+
+    destroyComponent({ app, host }) {
+        const { getEditableDescendants } = this.getEmbedding(host);
+        const editableDescendants = getEditableDescendants?.(host) || {};
+        app.destroy();
+        this.components.delete(arguments[0]);
+        host.append(...Object.values(editableDescendants));
+    }
+
+    destroyComponents() {
+        for (const info of [...this.components]) {
+            this.destroyComponent(info);
+        }
+    }
+
+    forEachEmbeddedComponentHost(elem, callback) {
+        const selector = `[data-embedded]`;
+        const targets = [...elem.querySelectorAll(selector)];
+        if (elem.matches(selector)) {
+            targets.unshift(elem);
+        }
+        for (const host of targets) {
+            const embedding = this.getEmbedding(host);
+            if (!embedding) {
+                continue;
+            }
+            callback(host, embedding);
+        }
+    }
+
+    getEmbedding(host) {
+        return this.embeddedComponents(this.props.config.embeddedComponents)[host.dataset.embedded];
+    }
+
+    mountComponent(host, { Component, getEditableDescendants, getProps }) {
+        const props = getProps?.(host) || {};
+        const mainApp = this.__owl__.app;
+        const { dev, translateFn, getRawTemplate } = mainApp;
+        // TODO ABD TODO @phoenix: check if there is too much info in the htmlViewer env.
+        // i.e.: env has X because of parent component,
+        // embedded component descendant sometimes uses X from env which is set conditionally:
+        // -> it will override the one one from the parent => OK.
+        // -> it will not => the embedded component still has X in env because of its ancestors => Issue.
+        const env = Object.create(this.env);
+        if (getEditableDescendants) {
+            env.getEditableDescendants = getEditableDescendants;
+        }
+        const app = new App(Component, {
+            test: dev,
+            env,
+            translateFn,
+            getTemplate: getRawTemplate,
+            props,
+        });
+        // copy templates so they don't have to be recompiled.
+        app.rawTemplates = mainApp.rawTemplates;
+        app.templates = mainApp.templates;
+        app.mount(host);
+        // Patch mount fiber to hook into the exact call stack where app is
+        // mounted (but before). This will remove host children synchronously
+        // just before adding the app rendered html.
+        const fiber = Array.from(app.scheduler.tasks)[0];
+        const fiberComplete = fiber.complete;
+        fiber.complete = function () {
+            host.replaceChildren();
+            fiberComplete.call(this);
+        };
+        const info = {
+            app,
+            host,
+        };
+        this.components.add(info);
+    }
+
+    mountComponents() {
+        this.forEachEmbeddedComponentHost(this.readonlyElementRef.el, (host, embedding) => {
+            this.mountComponent(host, embedding);
+        });
     }
 }
