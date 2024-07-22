@@ -206,6 +206,9 @@ export class CommandPalette extends Component {
         this.categoryNames = {};
         const proms = this.providersByNamespace[namespace].map((provider) => {
             const { provide } = provider;
+            if (namespace === "=") {
+                options.searchValue = "=" + options.searchValue;
+            }
             const result = provide(this.env, options);
             return result;
         });
@@ -229,6 +232,9 @@ export class CommandPalette extends Component {
                 }
                 commands = commandsSorted;
             }
+        }
+        if (namespace === "=" && commands.length > 0) {
+            options.searchValue = commands[0].name;
         }
 
         this.state.commands = markRaw(
@@ -297,6 +303,9 @@ export class CommandPalette extends Component {
 
     async executeSelectedCommand(ctrlKey) {
         await this.searchValuePromise;
+        if (this.state.namespace === "=") {
+            this.state.searchValue = this.state.selectedCommand?.name;
+        }
         const selectedCommand = this.state.selectedCommand;
         if (selectedCommand) {
             if (!ctrlKey) {
