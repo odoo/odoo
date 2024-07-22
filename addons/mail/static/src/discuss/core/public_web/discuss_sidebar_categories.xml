@@ -11,30 +11,17 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCategory">
-        <div class="o-mail-DiscussSidebarCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
-            <button class="btn btn-link text-reset flex-grow-1 d-flex align-items-baseline mx-1 p-0 text-start opacity-100-hover opacity-75" t-on-click="() => this.toggleCategory(category)">
+        <div class="o-mail-DiscussSidebarCategory d-flex align-items-center my-1" t-att-class="category.extraClass" name="header">
+            <button class="btn btn-link text-reset flex-grow-1 d-flex align-items-baseline mx-1 p-0 text-start opacity-100-hover opacity-75" t-on-click="() => this.toggleCategory(category)" name="toggler">
                 <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-smaller me-1 fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
                 <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-smaller me-1" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
                 <span class="btn-sm p-0 text-uppercase text-break fw-bolder o-smaller"><t t-esc="category.name"/></span>
             </button>
-            <div class="d-flex me-3" t-ref="actions">
-                <div class="btn-group btn-group-sm">
-                    <button t-if="category.canView" class="btn btn-light" t-on-click="() => this.openCategory(category)" title="View or join channels">
-                        <i class="fa fa-cog" role="img"/>
-                    </button>
-                    <button t-if="category.canAdd and category.open" class="o-mail-DiscussSidebarCategory-add btn btn-light" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" t-att-data-hotkey="category.addHotkey">
-                        <i class="fa fa-plus" role="img"/>
-                    </button>
-                </div>
-            </div>
             <div t-if="!category.open and store.getDiscussSidebarCategoryCounter(category.id) > 0" class="o-mail-DiscussSidebar-badge badge rounded-pill me-3 o-discuss-badge fw-bold">
                 <t t-esc="store.getDiscussSidebarCategoryCounter(category.id)"/>
             </div>
         </div>
         <t t-if="category.open">
-            <div t-if="state.editing === category.id" class="p-2" t-ref="selector">
-                <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true" close.bind="stopEditing" />
-            </div>
             <t t-foreach="filteredThreads(category)" t-as="thread" t-key="thread.localId" t-call="mail.DiscussSidebarChannel">
                 <t t-set="thread" t-value="thread"/>
             </t>
@@ -66,9 +53,6 @@
             <div class="flex-grow-1"/>
             <div class="o-mail-DiscussSidebarChannel-commands d-none ms-1 me-2">
                 <div class="btn-group btn-group-sm">
-                    <button t-if="thread.channel_type === 'channel'" class="btn btn-secondary" t-on-click.stop="() => this.openSettings(thread)" title="Channel settings">
-                        <i t-attf-class="fa fa-cog" role="img"/>
-                    </button>
                     <button t-if="thread.canLeave" class="btn btn-secondary" t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel">
                         <i t-attf-class="fa fa-times" role="img"/>
                     </button>

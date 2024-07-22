@@ -1053,7 +1053,8 @@ class Message(models.Model):
                 "record_name": record_name,  # keep for iOS app
                 "is_note": message.subtype_id.id == note_id,
                 "is_discussion": message.subtype_id.id == com_id,
-                "subtype_description": message.subtype_id.description,
+                # sudo: mail.message.subtype - reading description on accessible message is allowed
+                "subtype_description": message.subtype_id.sudo().description,
                 "recipients": [
                     {"id": p.id, "name": p.name, "type": "partner"} for p in message.partner_ids
                 ],
