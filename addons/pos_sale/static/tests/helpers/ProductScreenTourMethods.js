@@ -59,3 +59,21 @@ export function checkOrdersListEmpty() {
         },
     ];
 }
+
+export function downPayment20PercentFirstOrder() {
+    return [
+        {
+            content: `select order`,
+            trigger: `.order-row .col.name:first`,
+        },
+        {
+            content: `click on select the order`,
+            trigger: `.selection-item:contains('Apply a down payment (percentage)')`,
+        },
+        {
+            content: `click on +10 button`,
+            trigger: `div.numpad.row button.col:contains("+20")`,
+        },
+        Dialog.confirm(),
+    ];
+}
