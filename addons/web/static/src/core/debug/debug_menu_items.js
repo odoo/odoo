@@ -9,7 +9,7 @@ function activateAssetsDebugging({ env }) {
         type: "item",
         description: _t("Activate Assets Debugging"),
         callback: () => {
-            browser.location.search = "?debug=assets";
+            router.pushState({ debug: "assets" }, { reload: true });
         },
         sequence: 410,
     };
@@ -20,7 +20,7 @@ function activateTestsAssetsDebugging({ env }) {
         type: "item",
         description: _t("Activate Tests Assets Debugging"),
         callback: () => {
-            browser.location.search = "?debug=assets,tests";
+            router.pushState({ debug: "assets,tests" }, { reload: true });
         },
         sequence: 420,
     };
@@ -57,7 +57,7 @@ function leaveDebugMode() {
         type: "item",
         description: _t("Leave the Developer Tools"),
         callback: () => {
-            router.pushState({ debug: undefined }, { reload: true });
+            router.pushState({ debug: 0 }, { reload: true });
         },
         sequence: 450,
     };
