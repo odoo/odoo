@@ -1,5 +1,125 @@
 <odoo>
 
+<<<<<<< saas-17.4
+||||||| 28568bf3a5a421efc37ae873c246e523f1f381ee
+    <!-- Own checks search view -->
+    <record model="ir.ui.view" id="view_account_payment_search">
+        <field name="name">account.check.search</field>
+        <field name="model">account.payment</field>
+        <field name="priority">20</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="check_number"/>
+            </field>
+            <filter name="date" position="after">
+                <separator/>
+            </filter>
+            <filter name="groupby_date" position="after">
+                <filter string="Check Cash-In Date"
+                    name="groupby_l10n_latam_check_payment_date"
+                    context="{'group_by': 'l10n_latam_check_payment_date'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Third party checks search view -->
+    <record model="ir.ui.view" id="view_account_payment_third_party_checks_search">
+        <field name="name">account.check.search</field>
+        <field name="model">account.payment</field>
+        <field name="priority">22</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="check_number"/>
+            </field>
+            <field name="journal_id" position="after">
+                <field name="l10n_latam_check_current_journal_id"/>
+            </field>
+            <filter name="date" position="after">
+                <separator/>
+                <filter string="Checks on hand" name="checks_on_hand"
+                    domain="[('state', '=', 'posted'),
+                                ('l10n_latam_check_current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_party_checks')]"/>
+            </filter>
+            <filter name="journal" position="after">
+                <filter name="groupby_third_party_check_current_journal"
+                    string="Current Journal"
+                    context="{'group_by': 'l10n_latam_check_current_journal_id'}"/>
+            </filter>
+            <filter name="unmatched" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </filter>
+            <filter name="groupby_date" position="after">
+                <filter string="Check Cash-In Date"
+                    name="groupby_l10n_latam_check_payment_date"
+                    context="{'group_by': 'l10n_latam_check_payment_date'}"/>
+            </filter>
+        </field>
+    </record>
+
+=======
+    <!-- Own checks search view -->
+    <record model="ir.ui.view" id="view_account_payment_search">
+        <field name="name">account.check.search</field>
+        <field name="model">account.payment</field>
+        <field name="priority">20</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="check_number"/>
+            </field>
+            <filter name="date" position="after">
+                <separator/>
+            </filter>
+            <filter name="groupby_date" position="after">
+                <filter string="Check Cash-In Date"
+                    name="groupby_l10n_latam_check_payment_date"
+                    context="{'group_by': 'l10n_latam_check_payment_date'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Third party checks search view -->
+    <record model="ir.ui.view" id="view_account_payment_third_party_checks_search">
+        <field name="name">account.check.search</field>
+        <field name="model">account.payment</field>
+        <field name="priority">22</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="check_number"/>
+            </field>
+            <field name="journal_id" position="after">
+                <field name="l10n_latam_check_current_journal_id"/>
+            </field>
+            <filter name="date" position="after">
+                <separator/>
+                <filter string="Checks on hand" name="checks_on_hand"
+                    domain="[('state', '=', 'posted'),
+                                ('l10n_latam_check_current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', 'in', ['new_third_party_checks', 'in_third_party_checks'])]"/>
+            </filter>
+            <filter name="journal" position="after">
+                <filter name="groupby_third_party_check_current_journal"
+                    string="Current Journal"
+                    context="{'group_by': 'l10n_latam_check_current_journal_id'}"/>
+            </filter>
+            <filter name="unmatched" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </filter>
+            <filter name="groupby_date" position="after">
+                <filter string="Check Cash-In Date"
+                    name="groupby_l10n_latam_check_payment_date"
+                    context="{'group_by': 'l10n_latam_check_payment_date'}"/>
+            </filter>
+        </field>
+    </record>
+
+>>>>>>> fe1a6f2eb62d61d54d7429c508cff600661dbe82
     <record id="view_account_payment_form_inherited" model="ir.ui.view">
         <field name="name">account.payment.form.inherited</field>
         <field name="model">account.payment</field>
