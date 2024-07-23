@@ -39,3 +39,12 @@ export function isNot() {
         isCheck: true,
     };
 }
+
+export function bodyIs(body) {
+    return {
+        content: "dialog is open",
+        trigger: `.modal-body:contains(${body})`,
+        in_modal: true,
+        isCheck: true,
+    };
+}
