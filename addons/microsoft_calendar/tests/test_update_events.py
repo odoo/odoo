@@ -68,7 +68,7 @@ class TestUpdateEvents(TestCommon):
         self.assertTrue(res)
         mock_patch.assert_called_once_with(
             self.simple_event.microsoft_id,
-            {"subject": "my new simple event"},
+            {"subject": "my new simple event", "isOnlineMeeting": False},
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
         )
@@ -92,7 +92,7 @@ class TestUpdateEvents(TestCommon):
         self.assertTrue(res)
         mock_patch.assert_called_once_with(
             self.simple_event.microsoft_id,
-            {"subject": "my new simple event"},
+            {"subject": "my new simple event", "isOnlineMeeting": False},
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
         )
