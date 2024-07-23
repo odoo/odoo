@@ -259,28 +259,22 @@ class ChannelMember(models.Model):
                 ],
                 load=False,
             )[0]
-            if 'channel' in fields:
-                data["thread"] = {"id": member.channel_id.id, "model": "discuss.channel"}
+            if "channel" in fields:
+                data["thread"] = Store.one(member.channel_id, as_thread=True, only_id=True)
             if "persona" in fields:
                 if member.partner_id:
                     # sudo: res.partner - reading partner related to a member is considered acceptable
-                    store.add(
+                    data["persona"] = Store.one(
                         member.partner_id.sudo(),
                         fields=member._get_store_partner_fields(fields["persona"]),
                     )
-                    data["persona"] = {"id": member.partner_id.id, "type": "partner"}
                 if member.guest_id:
                     # sudo: mail.guest - reading guest related to a member is considered acceptable
-                    store.add(member.guest_id.sudo(), fields=fields["persona"])
-                    data["persona"] = {"id": member.guest_id.id, "type": "guest"}
+                    data["persona"] = Store.one(member.guest_id.sudo(), fields=fields["persona"])
             if "fetched_message_id" in fields:
-                data["fetched_message_id"] = (
-                    {"id": member.fetched_message_id.id} if member.fetched_message_id else False
-                )
+                data["fetched_message_id"] = Store.one(member.fetched_message_id, only_id=True)
             if "seen_message_id" in fields:
-                data["seen_message_id"] = (
-                    {"id": member.seen_message_id.id} if member.seen_message_id else False
-                )
+                data["seen_message_id"] = Store.one(member.seen_message_id, only_id=True)
             if "message_unread_counter" in fields:
                 data["message_unread_counter_bus_id"] = bus_last_id
             store.add("discuss.channel.member", data)
@@ -321,20 +315,20 @@ class ChannelMember(models.Model):
         if store:
             store.add(
                 "discuss.channel",
+                {"id": self.channel_id.id, "rtcSessions": Store.many(current_rtc_sessions, "ADD")},
+            )
+            store.add(
+                "discuss.channel",
                 {
                     "id": self.channel_id.id,
-                    "rtcSessions": [
-                        ("ADD", [{"id": session.id} for session in current_rtc_sessions]),
-                        ("DELETE", [{"id": session.id} for session in outdated_rtc_sessions]),
-                    ],
+                    "rtcSessions": Store.many(outdated_rtc_sessions, "DELETE", only_id=True),
                 },
             )
-            store.add(current_rtc_sessions)
             store.add(
                 "Rtc",
                 {
                     "iceServers": ice_servers or False,
-                    "selfSession": {"id": rtc_session.id},
+                    "selfSession": Store.one(rtc_session),
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )
@@ -451,10 +445,9 @@ class ChannelMember(models.Model):
                         "discuss.channel",
                         {
                             "id": self.channel_id.id,
-                            "rtcInvitingSession": {"id": member.rtc_inviting_session_id.id},
+                            "rtcInvitingSession": Store.one(member.rtc_inviting_session_id),
                         },
                     )
-                    .add(member.rtc_inviting_session_id)
                     .get_result(),
                 )
             )
@@ -467,11 +460,11 @@ class ChannelMember(models.Model):
                     "discuss.channel",
                     {
                         "id": self.channel_id.id,
-                        "invitedMembers": [("ADD", [{"id": member.id} for member in members])],
+                        "invitedMembers": Store.many(
+                            members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
+                        ),
                     },
-                )
-                .add(members, fields={"channel": [], "persona": ["name", "im_status"]})
-                .get_result(),
+                ).get_result(),
             )
         return members
 

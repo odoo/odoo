@@ -47,20 +47,10 @@ class MailRtcSession(models.Model):
                 (
                     channel,
                     "mail.record/insert",
-                    Store(rtc_sessions)
-                    .add(
+                    Store(
                         "discuss.channel",
-                        {
-                            "id": channel.id,
-                            "rtcSessions": [
-                                (
-                                    "ADD",
-                                    [{"id": rtc_session["id"]} for rtc_session in rtc_sessions],
-                                ),
-                            ],
-                        },
-                    )
-                    .get_result(),
+                        {"id": channel.id, "rtcSessions": Store.many(rtc_sessions, "ADD")},
+                    ).get_result(),
                 )
             )
         self.env["bus.bus"]._sendmany(notifications)
@@ -92,12 +82,7 @@ class MailRtcSession(models.Model):
                         "discuss.channel",
                         {
                             "id": channel.id,
-                            "rtcSessions": [
-                                (
-                                    "DELETE",
-                                    [{"id": rtc_session["id"]} for rtc_session in rtc_sessions],
-                                ),
-                            ],
+                            "rtcSessions": Store.many(rtc_sessions, "DELETE", only_id=True),
                         },
                     ).get_result(),
                 )
@@ -171,10 +156,12 @@ class MailRtcSession(models.Model):
         return self.env['bus.bus']._sendmany([(target, 'discuss.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
 
     def _to_store(self, store: Store, extra=False):
-        store.add(self.channel_member_id, fields={"channel": [], "persona": ["name", "im_status"]})
         for rtc_session in self:
             data = rtc_session._read_format([], load=False)[0]
-            data["channelMember"] = {"id": rtc_session.channel_member_id.id}
+            data["channelMember"] = Store.one(
+                rtc_session.channel_member_id,
+                fields={"channel": [], "persona": ["name", "im_status"]},
+            )
             if extra:
                 data.update(
                     {

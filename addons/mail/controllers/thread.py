@@ -14,9 +14,7 @@ class ThreadController(http.Controller):
     @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user")
     def mail_thread_data(self, thread_model, thread_id, request_list):
         thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
-        store = Store()
-        thread._thread_to_store(store, request_list=request_list)
-        return store.get_result()
+        return Store(thread, as_thread=True, request_list=request_list).get_result()
 
     @http.route("/mail/thread/messages", methods=["POST"], type="json", auth="user")
     def mail_thread_messages(self, thread_model, thread_id, search_term=None, before=None, after=None, around=None, limit=30):
@@ -32,7 +30,7 @@ class ThreadController(http.Controller):
         return {
             **res,
             "data": Store(messages, for_current_user=True).get_result(),
-            "messages": [{"id": message.id} for message in messages],
+            "messages": Store.many_ids(messages),
         }
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")

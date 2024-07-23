@@ -107,7 +107,7 @@ class MailGuest(models.Model):
         if len(name) > 512:
             raise UserError(_("Guest's name is too long."))
         self.name = name
-        store = Store("mail.guest", {"id": self.id, "name": self.name})
+        store = Store(self, fields=["name", "write_date"])
         bus_notifs = []
         for channel in self.channel_ids:
             bus_notifs.append((channel, "mail.record/insert", store.get_result()))

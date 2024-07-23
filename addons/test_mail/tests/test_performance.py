@@ -1437,20 +1437,20 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ],
                             "res.partner": [
                                 {
-                                    "id": self.env.user.partner_id.id,
-                                    "isInternalUser": True,
-                                    "is_company": False,
-                                    "name": "OdooBot",
-                                    "userId": self.env.user.id,
-                                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
-                                },
-                                {
                                     "displayName": "Paulette Testouille",
                                     "id": self.user_test_inbox.partner_id.id,
                                 },
                                 {
                                     "displayName": "Jeannette Testouille",
                                     "id": self.user_test_inbox_2.partner_id.id,
+                                },
+                                {
+                                    "id": self.env.user.partner_id.id,
+                                    "isInternalUser": True,
+                                    "is_company": False,
+                                    "name": "OdooBot",
+                                    "userId": self.env.user.id,
+                                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
                                 },
                             ],
                         },
@@ -1537,20 +1537,20 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ],
                             "res.partner": [
                                 {
-                                    "id": self.env.user.partner_id.id,
-                                    "isInternalUser": True,
-                                    "is_company": False,
-                                    "name": "OdooBot",
-                                    "userId": self.env.user.id,
-                                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                                    "displayName": "Jeannette Testouille",
+                                    "id": self.user_test_inbox_2.partner_id.id,
                                 },
                                 {
                                     "displayName": "Paulette Testouille",
                                     "id": self.user_test_inbox.partner_id.id,
                                 },
                                 {
-                                    "displayName": "Jeannette Testouille",
-                                    "id": self.user_test_inbox_2.partner_id.id,
+                                    "id": self.env.user.partner_id.id,
+                                    "isInternalUser": True,
+                                    "is_company": False,
+                                    "name": "OdooBot",
+                                    "userId": self.env.user.id,
+                                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
                                 },
                             ],
                         },

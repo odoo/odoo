@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import timedelta
-import base64
 import random
 import re
-from operator import itemgetter
 
-from odoo import api, Command, fields, models, modules, _
+from odoo import api, Command, fields, models, _
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ImLivechatChannel(models.Model):
@@ -104,16 +103,24 @@ class ImLivechatChannel(models.Model):
     def action_join(self):
         self.ensure_one()
         self.user_ids = [Command.link(self.env.user.id)]
-        self.env["bus.bus"]._sendone(self.env.user.partner_id, "mail.record/insert", {
-            "LivechatChannel": {"id": self.id, "name": self.name, "hasSelfAsMember": True}
-        })
+        self.env["bus.bus"]._sendone(
+            self.env.user.partner_id,
+            "mail.record/insert",
+            Store(
+                "LivechatChannel", {"id": self.id, "name": self.name, "hasSelfAsMember": True}
+            ).get_result(),
+        )
 
     def action_quit(self):
         self.ensure_one()
         self.user_ids = [Command.unlink(self.env.user.id)]
-        self.env["bus.bus"]._sendone(self.env.user.partner_id, "mail.record/insert", {
-            "LivechatChannel": {"id": self.id, "name": self.name, "hasSelfAsMember": False}
-        })
+        self.env["bus.bus"]._sendone(
+            self.env.user.partner_id,
+            "mail.record/insert",
+            Store(
+                "LivechatChannel", {"id": self.id, "name": self.name, "hasSelfAsMember": False}
+            ).get_result(),
+        )
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the

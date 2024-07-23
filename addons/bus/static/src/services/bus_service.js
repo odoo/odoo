@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
@@ -67,6 +65,7 @@ export const busService = {
                 data = data.map((notification) => notification.message);
                 for (const { id, type, payload } of data) {
                     notificationBus.trigger(type, { id, payload });
+                    busService._onMessage(id, type, payload);
                 }
             } else if (type === "initialized") {
                 isInitialized = true;
@@ -221,5 +220,7 @@ export const busService = {
             startedAt,
         };
     },
+    /** Overriden to provide logs in tests. Use subscribe() in production. */
+    _onMessage(id, type, payload) {},
 };
 registry.category("services").add("bus_service", busService);

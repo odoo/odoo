@@ -27,12 +27,17 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const notifications = [];
         for (const [channelId, sessions] of Object.entries(sessionsByChannelId)) {
             const [channel] = DiscussChannel.search_read([["id", "=", Number(channelId)]]);
-            const store = new mailDataHelpers.Store("discuss.channel", {
-                id: channel.id,
-                rtcSessions: [["ADD", sessions.map((session) => ({ id: session.id }))]],
-            });
-            store.add(sessions.map((session) => session.id));
-            notifications.push([channel, "mail.record/insert", store.get_result()]);
+            notifications.push([
+                channel,
+                "mail.record/insert",
+                new mailDataHelpers.Store("discuss.channel", {
+                    id: channel.id,
+                    rtcSessions: mailDataHelpers.Store.many(
+                        this.browse(sessions.map((session) => session.id)),
+                        "ADD"
+                    ),
+                }).get_result(),
+            ]);
         }
         BusBus._sendmany(notifications);
         return sessionIds;
@@ -52,11 +57,10 @@ export class DiscussChannelRtcSession extends models.ServerModel {
 
         for (const rtcSession of this.browse(ids)) {
             const [data] = this.read(rtcSession.id, [], makeKwArgs({ load: false }));
-            store.add(
+            data.channelMember = mailDataHelpers.Store.one(
                 DiscussChannelMember.browse(rtcSession.channel_member_id),
-                makeKwArgs({ fields: { channel: true, persona: ["name", "im_status"] } })
+                makeKwArgs({ fields: { channel: [], persona: ["name", "im_status"] } })
             );
-            data.channelMember = { id: rtcSession.channel_member_id };
             if (extra) {
                 Object.assign(data, {
                     isCameraOn: rtcSession.is_camera_on,

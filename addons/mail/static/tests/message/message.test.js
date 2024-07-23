@@ -582,10 +582,8 @@ test("Two users reacting with the same emoji", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-MessageReaction", { text: "😅2" });
-    await click(".o-mail-MessageReaction");
-    await contains(".o-mail-MessageReaction", { text: "😅1" });
-    await click(".o-mail-MessageReaction");
+    await click(".o-mail-MessageReaction", { text: "😅2" });
+    await click(".o-mail-MessageReaction", { text: "😅1" });
     await contains(".o-mail-MessageReaction", { text: "😅2" });
 });
 

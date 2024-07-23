@@ -4408,13 +4408,17 @@ class MailThread(models.AbstractModel):
             domain = expression.AND([domain, subtype_domain])
         if after:
             domain = expression.AND([domain, [("id", ">", after)]])
-        followers = self.env["mail.followers"].search(domain, limit=limit, order="id ASC")
-        store.add(followers)
-        followers_data = [{"id": follower.id} for follower in followers]
-        if not reset:
-            followers_data = [("ADD", followers_data)]
-        relation = "recipients" if filter_recipients else "followers"
-        store.add("mail.thread", {"id": self.id, "model": self._name, relation: followers_data})
+        store.add(
+            "mail.thread",
+            {
+                "id": self.id,
+                "model": self._name,
+                "recipients" if filter_recipients else "followers": Store.many(
+                    self.env["mail.followers"].search(domain, limit=limit, order="id ASC"),
+                    "ADD" if not reset else "REPLACE",
+                ),
+            },
+        )
 
     # ------------------------------------------------------
     # THREAD MESSAGE UPDATE
@@ -4523,23 +4527,22 @@ class MailThread(models.AbstractModel):
         empty_messages = message.sudo()._filter_empty()
         empty_messages._cleanup_side_records()
         empty_messages.write({'pinned_at': None})
-        attachments = message.attachment_ids.sorted("id")
-        broadcast_store = Store(attachments)
         res = {
-            "attachments": [{"id": attachment.id} for attachment in attachments],
+            "attachments": Store.many(message.attachment_ids.sorted("id")),
             "body": message.body,
             "id": message.id,
             "pinned_at": message.pinned_at,
-            "recipients": [{"id": p.id, "name": p.name, "type": "partner"} for p in message.partner_ids],
+            "recipients": Store.many(message.partner_ids, fields=["name", "write_date"]),
             "write_date": message.write_date,
         }
         if "body" in msg_values:
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             res["translationValue"] = False
-        broadcast_store.add("mail.message", res)
         self.env["bus.bus"]._sendone(
-            message._bus_notification_target(), "mail.record/insert", broadcast_store.get_result()
+            message._bus_notification_target(),
+            "mail.record/insert",
+            Store("mail.message", res).get_result(),
         )
 
     # ------------------------------------------------------
@@ -4550,31 +4553,36 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
-    def _thread_to_store(self, store: Store, /, *, request_list):
-        res = {'hasWriteAccess': False, 'hasReadAccess': True, "id": self.id, "model": self._name}
+    def _thread_to_store(self, store: Store, /, *, fields=None, request_list=None):
+        if fields is None:
+            fields = []
+        res = {"id": self.id, "model": self._name}
+        if request_list:
+            res["hasReadAccess"] = True
+            res["hasWriteAccess"] = False
         if not self:
-            res['hasReadAccess'] = False
+            if request_list:
+                res["hasReadAccess"] = False
             return res
-        res['canPostOnReadonly'] = self._mail_post_access == 'read'
-
+        if request_list:
+            res["canPostOnReadonly"] = self._mail_post_access == 'read'
         self.ensure_one()
         try:
             self.check_access_rights("write")
             self.check_access_rule("write")
-            res['hasWriteAccess'] = True
+            if request_list:
+                res["hasWriteAccess"] = True
         except AccessError:
             pass
         if isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"]):
-            activities = self.with_context(active_test=True).activity_ids
-            store.add(activities)
-            res["activities"] = [{"id": activity.id} for activity in activities]
-        if 'attachments' in request_list:
-            attachments = self._get_mail_thread_data_attachments()
-            store.add(attachments)
-            res["attachments"] = [{"id": attachment.id} for attachment in attachments]
+            res["activities"] = Store.many(self.with_context(active_test=True).activity_ids)
+        if request_list and "attachments" in request_list:
+            res["attachments"] = Store.many(self._get_mail_thread_data_attachments())
             res["areAttachmentsLoaded"] = True
             res["isLoadingAttachments"] = False
-        if 'followers' in request_list:
+        if "display_name" in fields:
+            res["name"] = self.display_name
+        if request_list and "followers" in request_list:
             res['followersCount'] = self.env['mail.followers'].search_count([
                 ("res_id", "=", self.id),
                 ("res_model", "=", self._name)
@@ -4584,8 +4592,7 @@ class MailThread(models.AbstractModel):
                 ("res_model", "=", self._name),
                 ['partner_id', '=', self.env.user.partner_id.id]
             ])
-            store.add(self_follower)
-            res["selfFollower"] = {"id": self_follower.id} if self_follower else None
+            res["selfFollower"] = Store.one(self_follower)
             self._message_followers_to_store(store, reset=True)
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             res['recipientsCount'] = self.env['mail.followers'].search_count([
@@ -4596,7 +4603,9 @@ class MailThread(models.AbstractModel):
                 ("partner_id.active", "=", True)
             ])
             self._message_followers_to_store(store, filter_recipients=True, reset=True)
-        if 'suggestedRecipients' in request_list:
+        if "modelName" in fields:
+            res["modelName"] = self.env["ir.model"]._get(self._name).display_name
+        if request_list and "suggestedRecipients" in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()
         store.add("mail.thread", res)
 

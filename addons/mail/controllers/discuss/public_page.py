@@ -108,10 +108,9 @@ class PublicPageController(http.Controller):
             {
                 "companyName": request.env.company.name,
                 "inPublicPage": True,
-                "discuss_public_thread": {"id": channel.id, "model": "discuss.channel"},
+                "discuss_public_thread": Store.one(channel),
             }
         )
-        store.add(channel)
         return request.render(
             "mail.discuss_public_channel_template",
             {

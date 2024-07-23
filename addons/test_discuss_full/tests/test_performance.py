@@ -188,6 +188,7 @@ class TestDiscussFullPerformance(HttpCase):
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
+                    "active": True,
                     "id": self.users[0].partner_id.id,
                     "isAdmin": False,
                     "isInternalUser": True,
@@ -251,8 +252,8 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_channel(self.channel_chat_1),
             ],
             "discuss.channel.member": [
-                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[0].partner_id),
+                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_chat_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_chat_1, self.users[14].partner_id),
             ],
@@ -260,8 +261,8 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
             ],
             "res.partner": [
-                self._expected_result_for_persona(self.users[2], only_inviting=True),
                 self._expected_result_for_persona(self.users[0]),
+                self._expected_result_for_persona(self.users[2], only_inviting=True),
                 self._expected_result_for_persona(self.users[14]),
             ],
             "Store": {
@@ -317,11 +318,11 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_channel(self.channel_livechat_2),
             ],
             "discuss.channel.member": [
-                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_general, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_public_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_public_2, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[0].partner_id),
+                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_group_2, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_group_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_group_1, self.users[12].partner_id),
@@ -364,12 +365,12 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_thread(self.channel_livechat_2),
             ],
             "res.partner": [
-                self._expected_result_for_persona(self.users[2]),
                 self._expected_result_for_persona(
                     self.users[0],
                     also_livechat=True,
                     also_notification=True,
                 ),
+                self._expected_result_for_persona(self.users[2]),
                 self._expected_result_for_persona(self.users[12]),
                 self._expected_result_for_persona(self.users[14]),
                 self._expected_result_for_persona(self.users[15]),
@@ -1052,13 +1053,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "parentMessage": False,
                 "pinned_at": False,
                 "reactions": [],
-                "recipients": [
-                    {
-                        "id": self.users[0].partner_id.id,
-                        "name": "Ernest Employee",
-                        "type": "partner",
-                    },
-                ],
+                "recipients": [{"id": self.users[0].partner_id.id, "type": "partner"}],
                 "record_name": "public channel 1",
                 "res_id": channel.id,
                 "scheduledDatetime": False,

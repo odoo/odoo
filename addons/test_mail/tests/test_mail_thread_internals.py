@@ -388,25 +388,29 @@ class TestDiscuss(MailCommon, TestRecipients):
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "mail.thread": {
-                            "id": "starred",
-                            "messages": [["DELETE", [{"id": msg.id}]]],
-                            "model": "mail.box",
-                            "counter": 1,
-                            "counter_bus_id": bus_last_id,
-                        },
+                        "mail.thread": [
+                            {
+                                "counter": 1,
+                                "counter_bus_id": bus_last_id,
+                                "id": "starred",
+                                "messages": [["DELETE", [{"id": msg.id}]]],
+                                "model": "mail.box",
+                            }
+                        ],
                     },
                 },
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "mail.thread": {
-                            "id": "starred",
-                            "messages": [["DELETE", [{"id": msg.id}]]],
-                            "model": "mail.box",
-                            "counter": 0,
-                            "counter_bus_id": bus_last_id,
-                        },
+                        "mail.thread": [
+                            {
+                                "counter": 0,
+                                "counter_bus_id": bus_last_id,
+                                "id": "starred",
+                                "messages": [["DELETE", [{"id": msg.id}]]],
+                                "model": "mail.box",
+                            }
+                        ],
                     },
                 },
             ],

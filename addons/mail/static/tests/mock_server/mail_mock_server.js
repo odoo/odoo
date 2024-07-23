@@ -327,7 +327,7 @@ async function discuss_channel_messages(request) {
             MailMessage.browse(messages.map((message) => message.id)),
             makeKwArgs({ for_current_user: true })
         ).get_result(),
-        messages: messages.map((message) => ({ id: message.id })),
+        messages: mailDataHelpers.Store.many_ids(messages),
     };
 }
 
@@ -477,7 +477,7 @@ async function discuss_history_messages(request) {
             MailMessage.browse(messagesWithNotification.map((message) => message.id)),
             makeKwArgs({ for_current_user: true })
         ).get_result(),
-        messages: messages.map((message) => ({ id: message.id })),
+        messages: mailDataHelpers.Store.many_ids(messages),
     };
 }
 
@@ -498,7 +498,7 @@ async function discuss_inbox_messages(request) {
             MailMessage.browse(messages.map((message) => message.id)),
             makeKwArgs({ for_current_user: true, add_followers: true })
         ).get_result(),
-        messages: messages.map((message) => ({ id: message.id })),
+        messages: mailDataHelpers.Store.many_ids(messages),
     };
 }
 
@@ -655,23 +655,43 @@ async function mail_message_update_content(request) {
     const MailMessage = this.env["mail.message"];
 
     const { attachment_ids, body, message_id } = await parseRequestParams(request);
-    MailMessage.write([message_id], { body, attachment_ids });
+    const [message] = MailMessage.browse(message_id);
+    const msg_values = { body };
+    if (attachment_ids.length === 0) {
+        IrAttachment.unlink(message.attachment_ids);
+    } else {
+        const attachments = IrAttachment.browse(attachment_ids).filter(
+            (attachment) =>
+                attachment.res_model === "mail.compose.message" &&
+                attachment.create_uid === this.env.user?.id
+        );
+        IrAttachment.write(
+            attachments.map((attachment) => attachment.id),
+            {
+                model: message.model,
+                res_id: message.res_id,
+            }
+        );
+        msg_values.attachment_ids = attachment_ids;
+    }
+    MailMessage.write([message_id], msg_values);
     if (body === "" && attachment_ids.length === 0) {
         MailMessage.write([message_id], { pinned_at: false });
         MailMessage._cleanup_side_records([message_id]);
     }
-    const [message] = MailMessage.search_read([["id", "=", message_id]]);
-    const broadcast_store = new mailDataHelpers.Store(IrAttachment.browse(attachment_ids));
-    broadcast_store.add("mail.message", {
-        id: message_id,
-        body,
-        attachments: attachment_ids.map((id) => ({ id })),
-        pinned_at: message.pinned_at,
-    });
     BusBus._sendone(
-        MailMessage._bus_notification_target(message_id),
+        MailMessage._bus_notification_target(message.id),
         "mail.record/insert",
-        broadcast_store.get_result()
+        new mailDataHelpers.Store("mail.message", {
+            attachments: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
+            body: message.body,
+            id: message.id,
+            pinned_at: message.pinned_at,
+            recipients: mailDataHelpers.Store.many(
+                this.env["res.partner"].browse(message.partner_ids),
+                makeKwArgs({ fields: ["name", "write_date"] })
+            ),
+        }).get_result()
     );
     return new mailDataHelpers.Store(
         MailMessage.browse(message_id),
@@ -778,21 +798,18 @@ async function discuss_starred_messages(request) {
             MailMessage.browse(messages.map((message) => message.id)),
             makeKwArgs({ for_current_user: true })
         ).get_result(),
-        messages: messages.map((message) => ({ id: message.id })),
+        messages: mailDataHelpers.Store.many_ids(messages),
     };
 }
 
 registerRoute("/mail/thread/data", mail_thread_data);
 /** @type {RouteCallback} */
 export async function mail_thread_data(request) {
-    /** @type {import("mock_models").MailThread} */
-    const MailThread = this.env["mail.thread"];
-
     const { request_list, thread_model, thread_id } = await parseRequestParams(request);
-    const records = this.env[thread_model].search([["id", "=", thread_id]]);
-    const store = new mailDataHelpers.Store();
-    MailThread._thread_to_store.call(this.env[thread_model], [...records], store, request_list);
-    return store.get_result();
+    return new mailDataHelpers.Store(
+        this.env[thread_model].browse(thread_id),
+        makeKwArgs({ as_thread: true, request_list })
+    ).get_result();
 }
 
 registerRoute("/mail/thread/messages", mail_thread_messages);
@@ -818,7 +835,7 @@ async function mail_thread_messages(request) {
             MailMessage.browse(messages.map((message) => message.id)),
             makeKwArgs({ for_current_user: true })
         ).get_result(),
-        messages: messages.map((message) => ({ id: message.id })),
+        messages: mailDataHelpers.Store.many_ids(messages),
     };
 }
 
@@ -945,34 +962,46 @@ const ids_by_model = {
     Store: [],
 };
 
+const MANY = Symbol("MANY");
+const ONE = Symbol("ONE");
+
 class Store {
-    constructor(data, values, kwargs) {
+    constructor(data, values, as_thread, kwargs) {
         this.data = new Map();
         if (data) {
             this.add(...arguments);
         }
     }
 
-    add(data, values, kwargs) {
+    add(data, values, as_thread, kwargs) {
         if (!data) {
             return this;
         }
-        kwargs = unmakeKwArgs(getKwArgs(arguments, "data", "values"));
+        kwargs = unmakeKwArgs(getKwArgs(arguments, "data", "values", "as_thread"));
+        data = kwargs.data;
         delete kwargs.data;
         values = kwargs.values;
         delete kwargs.values;
+        as_thread = kwargs.as_thread;
+        delete kwargs.as_thread;
         let model_name;
         if (data instanceof models.Model) {
             if (values) {
                 throw new Error(`expected empty values with recordset ${data}: ${values}`);
             }
-            MockServer.env[data._name]._to_store(
-                data.map((idOrRecord) =>
-                    typeof idOrRecord === "number" ? idOrRecord : idOrRecord.id
-                ),
-                this,
-                makeKwArgs(kwargs)
+            const ids = data.map((idOrRecord) =>
+                typeof idOrRecord === "number" ? idOrRecord : idOrRecord.id
             );
+            if (as_thread) {
+                MockServer.env["mail.thread"]._thread_to_store.call(
+                    MockServer.env[data._name],
+                    ids,
+                    this,
+                    makeKwArgs(kwargs)
+                );
+            } else {
+                MockServer.env[data._name]._to_store(ids, this, makeKwArgs(kwargs));
+            }
             return this;
         } else if (typeof data === "object") {
             if (values) {
@@ -981,11 +1010,17 @@ class Store {
             if (Object.keys(kwargs).length) {
                 throw new Error(`expected empty kwargs with dict ${data}: ${kwargs}`);
             }
+            if (as_thread) {
+                throw new Error(`expected not as_thread with dict ${data}: ${values}`);
+            }
             model_name = "Store";
             values = data;
         } else {
             if (Object.keys(kwargs).length) {
                 throw new Error(`expected empty kwargs with model name ${data}: ${kwargs}`);
+            }
+            if (as_thread) {
+                throw new Error(`expected not as_thread with model name ${data}: ${values}`);
             }
             model_name = data;
         }
@@ -1003,7 +1038,7 @@ class Store {
                 record = {};
                 this.data.set(model_name, record);
             }
-            Object.assign(record, values);
+            this._add_values(values, model_name);
             return this;
         }
         // handle model with ids: add or update existing records based on ids
@@ -1036,9 +1071,41 @@ class Store {
                 record = {};
                 records.set(index, record);
             }
-            Object.assign(record, vals);
+            this._add_values(vals, model_name, index);
         }
         return this;
+    }
+
+    _add_values(values, model_name, index) {
+        const target = index ? this.data.get(model_name).get(index) : this.data.get(model_name);
+        for (const [key, val] of Object.entries(values)) {
+            if (Array.isArray(val) && val[0] === ONE) {
+                const [, subrecord, as_thread, only_id, subrecord_kwargs] = val;
+                if (subrecord && !(subrecord instanceof models.Model)) {
+                    throw new Error(`expected recordset for one ${key}: ${subrecord}`);
+                }
+                if (subrecord && subrecord.length && !only_id) {
+                    this.add(subrecord, makeKwArgs({ as_thread, ...subrecord_kwargs }));
+                }
+                target[key] = Store.one_id(subrecord, makeKwArgs({ as_thread }));
+            } else if (Array.isArray(val) && val[0] === MANY) {
+                const [, subrecords, mode, as_thread, only_id, subrecords_kwargs] = val;
+                if (subrecords && !(subrecords instanceof models.Model)) {
+                    throw new Error(`expected recordset for many ${key}: ${subrecords}`);
+                }
+                if (!["ADD", "DELETE", "REPLACE"].includes(mode)) {
+                    throw new Error(`invalid mode for many ${key}: ${mode} `);
+                }
+                if (subrecords && subrecords.length && !only_id) {
+                    this.add(subrecords, makeKwArgs({ as_thread, ...subrecords_kwargs }));
+                }
+                const rel_val = Store.many_ids(subrecords, mode, makeKwArgs({ as_thread }));
+                target[key] =
+                    key in target && mode !== "REPLACE" ? target[key].concat(rel_val) : rel_val;
+            } else {
+                target[key] = val;
+            }
+        }
     }
 
     get_result() {
@@ -1059,6 +1126,90 @@ class Store {
         throw Error(
             "Converting Store to JSON is not supported, you might want to call 'get_result()' instead."
         );
+    }
+
+    static many(records, mode = "REPLACE", as_thread, only_id, kwargs) {
+        kwargs = getKwArgs(arguments, "records", "mode");
+        records = kwargs.records;
+        delete kwargs.records;
+        mode = kwargs.mode ?? "REPLACE";
+        delete kwargs.mode;
+        as_thread = kwargs.as_thread;
+        delete kwargs.as_thread;
+        only_id = kwargs.only_id;
+        delete kwargs.only_id;
+        if (records && !(records instanceof models.Model)) {
+            throw new Error(`expected recordset for many: ${records}`);
+        }
+        return [MANY, records, mode, as_thread, only_id, makeKwArgs(kwargs)];
+    }
+
+    static one(records, as_thread, only_id, kwargs) {
+        kwargs = getKwArgs(arguments, "records");
+        records = kwargs.records;
+        delete kwargs.records;
+        as_thread = kwargs.as_thread;
+        delete kwargs.as_thread;
+        only_id = kwargs.only_id;
+        delete kwargs.only_id;
+        if (records && !(records instanceof models.Model)) {
+            throw new Error(`expected recordset for one: ${records}`);
+        }
+        return [ONE, records, as_thread, only_id, makeKwArgs(kwargs)];
+    }
+
+    static many_ids(records, mode = "REPLACE", as_thread) {
+        const kwargs = getKwArgs(arguments, "records", "mode");
+        records = kwargs.records;
+        mode = kwargs.mode ?? "REPLACE";
+        as_thread = kwargs.as_thread;
+        if (records && !(records instanceof models.Model)) {
+            throw new Error(`expected recordset for many_ids: ${records}`);
+        }
+        if (!["ADD", "DELETE", "REPLACE"].includes(mode)) {
+            throw new Error(`invalid mode for many_ids: ${mode} `);
+        }
+        let res = records.map((record) =>
+            Store.one_id(records.browse(record.id), makeKwArgs({ as_thread }))
+        );
+        if (mode === "ADD") {
+            res = [["ADD", res]];
+        } else if (mode === "DELETE") {
+            res = [["DELETE", res]];
+        }
+        return res;
+    }
+
+    static one_id(records, as_thread) {
+        const kwargs = getKwArgs(arguments, "records");
+        records = kwargs.records;
+        as_thread = kwargs.as_thread;
+        if (!records) {
+            return false;
+        }
+        if (!(records instanceof models.Model)) {
+            throw new Error(`expected recordset for one_id: ${records}`);
+        }
+        if (records.length > 1) {
+            throw new Error(`expected none or single record for one_id: ${records}`);
+        }
+        const [record] = records;
+        if (!record) {
+            return false;
+        }
+        if (as_thread) {
+            return { id: record.id, model: records._name };
+        }
+        if (records._name === "discuss.channel") {
+            return { id: record.id, model: "discuss.channel" };
+        }
+        if (records._name === "mail.guest") {
+            return { id: record.id, type: "guest" };
+        }
+        if (records._name === "res.partner") {
+            return { id: record.id, type: "partner" };
+        }
+        return { id: record.id };
     }
 }
 

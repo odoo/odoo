@@ -237,7 +237,16 @@ export class ResPartner extends webModels.ResPartner {
         for (const partner of this.browse(ids)) {
             const [data] = this.read(
                 partner.id,
-                fields.filter((field) => !["country", "display_name", "user"].includes(field)),
+                fields.filter(
+                    (field) =>
+                        ![
+                            "country",
+                            "display_name",
+                            "isAdmin",
+                            "notification_type",
+                            "user",
+                        ].includes(field)
+                ),
                 false
             );
             if (fields.includes("country")) {
@@ -264,6 +273,12 @@ export class ResPartner extends webModels.ResPartner {
                 }
                 data.userId = mainUser ? mainUser.id : false;
                 data.isInternalUser = mainUser ? !mainUser.share : false;
+                if (fields.includes("isAdmin")) {
+                    data.isAdmin = true; // mock server simplification
+                }
+                if (fields.includes("notification_type")) {
+                    data.notification_preference = mainUser.notification_type;
+                }
             }
             store.add("res.partner", data);
         }
