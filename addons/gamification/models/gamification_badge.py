@@ -100,8 +100,7 @@ class GamificationBadge(models.Model):
             return
 
         Users = self.env["res.users"]
-        query = Users._search([], bypass_access=True)
-        Users._apply_ir_rules(query)  # TODO remove this
+        query = Users._search([])
         badge_alias = query.join("res_users", "id", "gamification_badge_user", "user_id", "badges")
 
         rows = self.env.execute_query(SQL(
