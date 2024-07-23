@@ -7,7 +7,7 @@ from collections import defaultdict
 from collections.abc import Reversible
 from operator import attrgetter
 
-from odoo.exceptions import MissingError, UserError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL, OrderedSet, Query, sql, unique
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel, unquote
@@ -934,7 +934,10 @@ class One2many(_RelationalMulti):
         field_names = [inverse]
         if comodel._active_name:
             field_names.append(comodel._active_name)
-        lines = comodel.search_fetch(domain, field_names)
+        try:
+            lines = comodel.search_fetch(domain, field_names)
+        except AccessError as e:
+            raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
 
         # group lines by inverse field (without prefetching other fields)
         get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
@@ -1355,9 +1358,10 @@ class Many2many(_RelationalMulti):
 
         # make the query for the lines
         domain = self.get_comodel_domain(records)
-        query = comodel._search(domain, bypass_access=True)
-        comodel._apply_ir_rules(query, 'read')
-        query.order = comodel._order_to_sql(comodel._order, query)
+        try:
+            query = comodel._search(domain, order=comodel._order)
+        except AccessError as e:
+            raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
 
         # join with many2many relation table
         sql_id1 = SQL.identifier(self.relation, self.column1)
