@@ -21,6 +21,7 @@ import {
     mountView,
     onRpc,
     patchWithCleanup,
+    serverState,
 } from "@web/../tests/web_test_helpers";
 import { assets } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
@@ -1767,5 +1768,37 @@ describe("save image", () => {
         expect(img.getAttribute("src")).toBe("/test_image_url.png?access_token=12345");
         expect(img.classList.contains("o_b64_image_to_save")).not.toBe(true);
         expect.verifySteps(["add_data: partner 1", "generate_access_token: 123"]);
+    });
+});
+
+describe("translatable", () => {
+    test("should display translate button when html field is translatable", async () => {
+        Partner._fields.txt = fields.Html({ string: "txt", translate: true });
+        serverState.lang = "en_US";
+        serverState.multiLang = true;
+
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            arch: /* xml */ `
+                <form string="Partner">
+                    <sheet>
+                        <group>
+                            <field name="txt" widget="html"/>
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+
+        expect(".o_field_html .btn.o_field_translate").not.toBeVisible();
+
+        // Focus on the editable to make the translate button visible
+        await contains(".odoo-editor-editable").click();
+        expect(".o_field_html .btn.o_field_translate").toBeVisible();
+
+        // Click away to remove focus
+        await contains(".o_form_label").click();
+        expect(".o_field_html .btn.o_field_translate").not.toBeVisible();
     });
 });
