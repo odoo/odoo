@@ -41,3 +41,10 @@ export function isNot() {
         trigger: negate(".modal-open"),
     };
 }
+
+export function bodyIs(body) {
+    return {
+        content: "dialog is open",
+        trigger: `.modal-body:contains(${body})`,
+    };
+}

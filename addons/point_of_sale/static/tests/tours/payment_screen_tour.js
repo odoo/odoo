@@ -237,3 +237,22 @@ registry.category("web_tour.tours").add("InvoiceShipLaterAccessRight", {
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("CashRoundingPayment", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.addOrderline("Magnetic Board", "1"),
+            ProductScreen.clickPayButton(),
+
+            // Check the popup error is shown when selecting another payment method
+            PaymentScreen.totalIs("1.90"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.enterPaymentLineAmount("Cash", "1.24"),
+            Dialog.is({ title: "Rounding error in payment lines" }),
+            Dialog.bodyIs(
+                "The rounding precision is 0.10 so you should set 1.20 or 1.30 as payment amount instead of 1.24."
+            ),
+        ].flat(),
+});
