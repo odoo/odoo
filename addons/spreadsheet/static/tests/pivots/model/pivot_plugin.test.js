@@ -1204,7 +1204,7 @@ test("field matching is removed when filter is deleted", async function () {
         type: "many2one",
     };
     expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual(matching);
-    expect(model.getters.getPivot(pivotId).getComputedDomain()).toEqual([
+    expect(model.getters.getPivot(pivotId).getDomainWithGlobalFilters()).toEqual([
         ["product_id", "in", [41]],
     ]);
     model.dispatch("REMOVE_GLOBAL_FILTER", {
@@ -1213,15 +1213,15 @@ test("field matching is removed when filter is deleted", async function () {
     expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toBe(undefined, {
         message: "it should have removed the pivot and its fieldMatching and datasource altogether",
     });
-    expect(model.getters.getPivot(pivotId).getComputedDomain()).toEqual([]);
+    expect(model.getters.getPivot(pivotId).getDomainWithGlobalFilters()).toEqual([]);
     model.dispatch("REQUEST_UNDO");
     expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual(matching);
-    expect(model.getters.getPivot(pivotId).getComputedDomain()).toEqual([
+    expect(model.getters.getPivot(pivotId).getDomainWithGlobalFilters()).toEqual([
         ["product_id", "in", [41]],
     ]);
     model.dispatch("REQUEST_REDO");
     expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toBe(undefined);
-    expect(model.getters.getPivot(pivotId).getComputedDomain()).toEqual([]);
+    expect(model.getters.getPivot(pivotId).getDomainWithGlobalFilters()).toEqual([]);
 });
 
 test("Load pivot spreadsheet with models that cannot be accessed", async function () {
