@@ -22,6 +22,7 @@ export class BarcodeVideoScanner extends Component {
         close: { type: Function, optional: true },
         onResult: Function,
         onError: Function,
+        delayBetweenScan: { type: Number, optional: true },
     };
     static defaultProps = {
         cssClass: "w-100 h-100",
@@ -36,6 +37,7 @@ export class BarcodeVideoScanner extends Component {
         this.detector = null;
         this.overlayInfo = {};
         this.zoomRatio = 1;
+        this.scanPaused = false;
         this.state = useState({
             isReady: false,
         });
@@ -127,6 +129,9 @@ export class BarcodeVideoScanner extends Component {
      * Attempt to detect codes in the current camera preview's frame
      */
     async detectCode() {
+        if (this.scanPaused) {
+            return;
+        }
         try {
             const codes = await this.detector.detect(this.videoPreviewRef.el);
             for (const code of codes) {
@@ -141,12 +146,22 @@ export class BarcodeVideoScanner extends Component {
                         continue;
                     }
                 }
-                this.props.onResult(code.rawValue);
+                this.barcodeDetected(code.rawValue);
                 break;
             }
         } catch (err) {
             this.props.onError(err);
         }
+    }
+
+    barcodeDetected(barcode) {
+        if (this.props.delayBetweenScan && !this.scanPaused) {
+            this.scanPaused = true;
+            setTimeout(() => {
+                this.scanPaused = false;
+            }, this.props.delayBetweenScan);
+        }
+        this.props.onResult(barcode);
     }
 
     adaptValuesWithRatio(object, dividerRatio = false) {
