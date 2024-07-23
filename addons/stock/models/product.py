@@ -883,13 +883,13 @@ class ProductTemplate(models.Model):
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
             existing_done_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
                 ('state', '=', 'done'),
             ], limit=1)
             if existing_done_move_lines:
                 raise UserError(_("You can not change the type of a product that was already used."))
             existing_reserved_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
             ], limit=1)
             if existing_reserved_move_lines:
