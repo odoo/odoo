@@ -255,6 +255,26 @@
         <WeButton class="'fa fa-fw fa-align-right'" tooltip.translate="Right" selectClass="'text-end'"/>
     </WeButtonGroup>
 </t>
+
+<!-- Header - Borders & Shadows -->
+<t t-name="website.TopMenuColor">
+    <WeColorpicker title.translate="Background"
+                   class="'o_we_sublevel_1'"
+                   id="'option_header_transparent_color'"
+                   selectStyle="'true'"
+                   preventImportant="'true'"
+                   cssProperty="'background-color'"
+                   colorPrefix="'bg-'"
+                   excluded="'theme, common'"
+                   pageOptionName="'header_color'"/>
+    <WeColorpicker title.translate="Text Color"
+                   class="'o_we_sublevel_1'"
+                   id="'option_header_transparent_text_color'"
+                   selectStyle="'true'"
+                   cssProperty="'color'"
+                   colorPrefix="'text-'"
+                   pageOptionName="'header_text_color'"/>
+</t>
 <t t-name="website.share_social_media_option">
     <WeSelect title.translate="Title Position" applyTo="'.s_share_title, .s_social_media_title'">
         <WeButton selectClass="'d-block'">Top</WeButton>
