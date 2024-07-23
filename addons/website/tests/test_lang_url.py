@@ -254,3 +254,37 @@ class TestTranslateUrl(TestLangUrl):
         self.start_tour('/contactus', 'update_default_lang_website_url', login='admin')
         website_rewrite = self.env['website.rewrite'].search([('url_from', '=', '/contactus'), ('url_to', '=', '/contactus-fr')])
         self.assertEqual(len(website_rewrite), 1, "A rewrite route should have been created")
+
+    def test_automatic_link_on_page_translation(self):
+        # If a url is translated, the links to this url that are present on a
+        # page should automatically be translated when changing the website
+        # language.
+        view_with_anchor = self.env['ir.ui.view'].create({
+            'name': 'new_page_with_anchor',
+            'type': 'qweb',
+            'arch': f'<a id="foo" href="{self.name_page_en}">Link to page</a>',
+            'key': 'test.test_translate_url_links',
+        })
+        page_with_anchor = self.env['website.page'].create({
+            'name': 'page-link',
+            'view_id': view_with_anchor.id,
+            'url': '/page-link-en',
+            'website_id': self.website.id,
+        })
+        page_with_anchor_url_fr = '/page-link-fr'
+        page_with_anchor.with_context(lang='fr_FR').url = page_with_anchor_url_fr
+        default_website = self.env.ref('website.default_website')
+        self.page_specific_menu = self.env['website.menu'].create({
+            'name': 'page-link',
+            'page_id': page_with_anchor.id,
+            'website_id': self.website.id,
+            'parent_id': default_website.menu_id.id,
+        })
+        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}):
+            self.authenticate('admin', 'admin')
+            r = self.url_open('/fr')
+            self.assertIn(f'href="/fr{page_with_anchor_url_fr}"', r.text)
+            self.assertNotIn('href="/page-link-en"', r.text)
+            r = self.url_open(f'/fr{page_with_anchor_url_fr}', r.text)
+            self.assertIn(f'href="/fr{self.name_page_fr}"', r.text)
+            self.assertNotIn(f'href="{self.name_page_en}"', r.text)

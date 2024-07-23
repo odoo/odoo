@@ -1450,6 +1450,28 @@ class Website(models.Model):
         pages = pages.with_context(website_id=website.id)._get_most_specific_pages()
         return pages
 
+    def _get_website_page_in_all_languages(self, page_url, comparator='='):
+        """ Returns a page and the corresponding language in which it has been
+        found for given a url.
+        :param page_url: The url of the page that has to be found.
+        :param comparator: The comparator used to find the page.
+        """
+        website = self.get_current_website()
+        page_domain = [('url', comparator, page_url)] + website.website_domain()
+        # Search if the page can be found in the current language
+        search_page = self.env['website.page'].sudo().search(page_domain, order='website_id asc', limit=1)
+        if search_page:
+            return {'lang': self.env.lang, 'page': search_page}
+        else:
+            # Search if the page can be found thanks to a translation of another
+            # language installed on the website.
+            all_installed_languages = website.language_ids
+            other_installed_languages = all_installed_languages.filtered(lambda lang: lang.code != self.env.lang)
+            for language in other_installed_languages:
+                search_page = self.env['website.page'].sudo().with_context(lang=language[0].code).search(page_domain, order='website_id asc', limit=1)
+                if search_page:
+                    return {'lang': language.code, 'page': search_page}
+
     def search_pages(self, needle=None, limit=None):
         name = self.env['ir.http']._slugify(needle, max_length=50, path=True)
         res = []

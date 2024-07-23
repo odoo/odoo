@@ -129,7 +129,7 @@ class TestQwebWebsite(HttpCase):
             'type': 'qweb',
             'arch': '''
                 <section>
-                    <div>content <a href="/view-en">test</a> and <a href="/view-en">test</a></div>
+                    <div>content <a href="/view-en">test</a> and <a href="/view-fr">test</a></div>
                 </section>''',
             'key': 'test.view_1',
         })
@@ -149,11 +149,12 @@ class TestQwebWebsite(HttpCase):
                 </section>''',
             'key': 'test.view_data',
         })
-        Page.create({
+        page_data = Page.create({
             'view_id': view_data.id,
             'url': '/view-en',
             'is_published': True,
         })
+        page_data.with_context(lang='fr_FR').write({'url': '/view-fr'})
 
         with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}):
             self.authenticate('admin', 'admin')
@@ -170,6 +171,7 @@ class TestQwebWebsite(HttpCase):
             r = self.url_open(f'/fr{page_home_1.url}')
             # because debug => no post-processing
             self.assertIn('href="/view-en"', r.text)
+            self.assertIn('href="/view-fr"', r.text)
 
             # read with t-cache
             self.session.debug = ''
@@ -177,5 +179,6 @@ class TestQwebWebsite(HttpCase):
 
             # use french static node cache
             r = self.url_open(f'/fr{page_home_1.url}')
-            self.assertIn('href="/fr/view-en"', r.text)
+            self.assertIn('href="/fr/view-fr"', r.text)
+            self.assertNotIn('/view-en"', r.text)
             self.assertNotIn('href="/view-fr"', r.text)

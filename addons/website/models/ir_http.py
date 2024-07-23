@@ -5,6 +5,7 @@ import logging
 from lxml import etree
 import os
 import unittest
+import re
 
 import pytz
 import werkzeug
@@ -82,6 +83,80 @@ class Http(models.AbstractModel):
                 kw[arg] = kw[arg].with_context(slug_matching=True)
         qs = request.httprequest.query_string.decode('utf-8')
         return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
+
+    @classmethod
+    def _translate_url_page(cls, url: str, lang_url_code: str, lang_code: str) -> str:
+        """ Returns the given URL adapted for the given lang, meaning that the
+        page part of it will be translated.
+
+        :param url: The url that has to be adapted.
+        :param lang_url_code: The lang code that is potentially in the url.
+        :param lang_code: The lang in which the url has to be found.
+        """
+        if hasattr(request, 'website'):
+            try:
+                url_page = werkzeug.urls.url_parse(url).path
+            except ValueError:
+                # e.g. Invalid IPv6 URL, `werkzeug.urls.url_parse('http://]')`
+                return url
+            # Search for a potential lang in the url
+            pattern = r'\/' + lang_url_code + r'(.*)'
+            match = re.search(pattern, url_page)
+            if match:
+                # Retrieve the url without the lang
+                url_page = match.group(1)
+            page_and_lang = request.website._get_website_page_in_all_languages(url_page)
+            if page_and_lang:
+                # Replace the url of the page by the translated url
+                url_page_translated = page_and_lang['page'].with_context(lang=lang_code).url
+                url = url.replace(url_page, url_page_translated)
+        return url
+
+    @classmethod
+    def _url_lang(cls, path_or_uri: str, lang_code: str | None = None) -> dict:
+        ''' Given a relative URL, make it absolute, add the required lang or
+            remove useless lang and translate the page part of the url if any.
+            Nothing will be done for absolute or invalid URL.
+            If there is only one language installed, the lang will not be
+            handled unless forced with `lang` parameter.
+
+            :param lang_code: Must be the lang `code`. It could also be
+            something else, such as `'[lang]'` (used for url_return).
+        '''
+        url_lang = super()._url_lang(path_or_uri, lang_code)
+        location, lang_url_code, lang_code, is_url_handled = url_lang['location'], url_lang['lang_url_code'], url_lang['lang_code'], url_lang['is_url_handled']
+        if is_url_handled:
+            location = cls._translate_url_page(location, lang_url_code, lang_code)
+        return {'location': location, 'lang_url_code': lang_url_code, 'lang_code': lang_code, 'is_url_handled': is_url_handled}
+
+    @classmethod
+    def _url_localized(cls,
+                       url: str | None = None,
+                       lang_code: str | None = None,
+                       canonical_domain: str | tuple[str, str, str, str, str] | None = None,
+                       prefetch_langs: bool = False, force_default_lang: bool = False) -> str:
+        """ Returns the given URL adapted for the given lang, meaning that:
+        1. It will have the lang suffixed to it
+        2. The model converter parts will be translated
+        3. The page part will be translated
+
+        If it is not possible to rebuild a path, use the current one instead.
+        `url_quote_plus` is applied on the returned path.
+
+        It will also force the canonical domain is requested.
+        Eg:
+        - `_get_url_localized(lang_fr, '/shop/my-phone-14')` will return
+            `/fr/shop/mon-telephone-14`
+        - `_get_url_localized(lang_fr, '/shop/my-phone-14', True)` will return
+            `<base_url>/fr/shop/mon-telephone-14`
+        """
+        url_localized = super()._url_localized(url, lang_code, canonical_domain, prefetch_langs, force_default_lang)
+        if not lang_code:
+            lang = request.lang
+        else:
+            lang = request.env['res.lang']._get_data(code=lang_code)
+        url_localized = cls._translate_url_page(url_localized, lang.url_code, lang.code)
+        return url_localized
 
     @classmethod
     def _url_for(cls, url_from: str, lang_code: str | None = None) -> str:
@@ -299,21 +374,14 @@ class Http(models.AbstractModel):
         req_page = request.httprequest.path
 
         def _search_page(comparator='='):
-            page_domain = [('url', comparator, req_page)] + request.website.website_domain()
-            search_page = request.env['website.page'].sudo().search(page_domain, order='website_id asc', limit=1)
-            if search_page:
-                return search_page
-            else:
-                # Search if the page domain can be found thanks to a translation
-                # of language installed on the website.
-                all_installed_languages = request.website.language_ids
-                other_installed_languages = all_installed_languages.filtered(lambda lang: lang.code != request.env.lang)
-                for language in other_installed_languages:
-                    search_page = request.env['website.page'].sudo().with_context(lang=language[0].code).search(page_domain, order='website_id asc', limit=1)
-                    if search_page:
-                        redirect = request.redirect_query(search_page.with_context(lang=request.env.lang).url, request.httprequest.args)
-                        redirect.set_cookie('frontend_lang', request.env.lang)
-                        werkzeug.exceptions.abort(redirect)
+            page_and_lang = request.website._get_website_page_in_all_languages(req_page, comparator=comparator)
+            if page_and_lang:
+                lang, search_page = page_and_lang['lang'], page_and_lang['page']
+                if lang == request.env.lang:
+                    return search_page
+                redirect = request.redirect_query(search_page.with_context(lang=request.env.lang).url, request.httprequest.args)
+                redirect.set_cookie('frontend_lang', request.env.lang)
+                werkzeug.exceptions.abort(redirect)
 
         # specific page first
         page = _search_page()
