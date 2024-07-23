@@ -42,12 +42,12 @@ paymentExpressCheckoutForm.include({
             '[name="o_payment_express_checkout_form"]'
         ).dataset.shippingInfoRequired;
         const providerId = ev.target.parentElement.dataset.providerId;
-        let expressShippingAddress = {};
+        let expressDeliveryAddress = {};
         if (shippingInformationRequired){
             const shippingInfo = document.querySelector(
                 `#o_payment_demo_shipping_info_${providerId}`
             );
-            expressShippingAddress =  {
+            expressDeliveryAddress = {
                 'name': shippingInfo.querySelector('#o_payment_demo_shipping_name').value,
                 'email': shippingInfo.querySelector('#o_payment_demo_shipping_email').value,
                 'street': shippingInfo.querySelector('#o_payment_demo_shipping_address').value,
@@ -59,11 +59,11 @@ paymentExpressCheckoutForm.include({
             // Call the shipping address update route to fetch the shipping options.
             const availableCarriers = await rpc(
                 this.paymentContext['shippingAddressUpdateRoute'],
-                {partial_shipping_address: expressShippingAddress},
+                {partial_delivery_address: expressDeliveryAddress},
             );
             if (availableCarriers.length > 0) {
                 const id = parseInt(availableCarriers[0].id);
-                await rpc('/shop/update_carrier', {carrier_id: id});
+                await rpc('/shop/set_delivery_method', {dm_id: id});
             } else {
                 this.call('dialog', 'add', ConfirmationDialog, {
                     title: _t("Validation Error"),
@@ -77,7 +77,7 @@ paymentExpressCheckoutForm.include({
                 '[name="o_payment_express_checkout_form"]'
             ).dataset['expressCheckoutRoute'],
             {
-                'shipping_address': expressShippingAddress,
+                'shipping_address': expressDeliveryAddress,
                 'billing_address': {
                     'name': 'Demo User',
                     'email': 'demo@test.com',

@@ -167,7 +167,7 @@ paymentExpressCheckoutForm.include({
                 const availableCarriers = await rpc(
                     this.paymentContext['shippingAddressUpdateRoute'],
                     {
-                        partial_shipping_address: {
+                        partial_delivery_address: {
                             zip: ev.shippingAddress.postalCode,
                             city: ev.shippingAddress.city,
                             country: ev.shippingAddress.country,
