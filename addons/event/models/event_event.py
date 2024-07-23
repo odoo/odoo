@@ -674,7 +674,7 @@ class EventEvent(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", event.name)) for event, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", event.name)) for event, vals in zip(self, vals_list)]
 
     @api.model
     def _get_mail_message_access(self, res_ids, operation, model_name=None):

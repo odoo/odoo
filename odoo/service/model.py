@@ -13,10 +13,10 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.models import check_method_name
 from odoo.modules.registry import Registry
-from odoo.tools import DotDict
-from odoo.tools.translate import _, translate_sql_constraint
+from odoo.tools import DotDict, lazy
+from odoo.tools.translate import translate_sql_constraint
+
 from . import security
-from ..tools import lazy
 
 _logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     env = odoo.api.Environment(cr, uid, {})
     recs = env.get(obj)
     if recs is None:
-        raise UserError(_("Object %s doesn't exist", obj))
+        raise UserError(env._("Object %s doesn't exist", obj))
     result = retrying(partial(odoo.api.call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
@@ -74,9 +74,9 @@ def execute(db, uid, obj, method, *args, **kw):
 def _as_validation_error(env, exc):
     """ Return the IntegrityError encapsuled in a nice ValidationError """
 
-    unknown = _('Unknown')
-    model = DotDict({'_name': unknown.lower(), '_description': unknown})
-    field = DotDict({'name': unknown.lower(), 'string': unknown})
+    unknown = env._('Unknown')
+    model = DotDict({'_name': 'unknown', '_description': unknown})
+    field = DotDict({'name': 'unknown', 'string': unknown})
     for _name, rclass in env.registry.items():
         if exc.diag.table_name == rclass._table:
             model = rclass
@@ -85,7 +85,7 @@ def _as_validation_error(env, exc):
 
     match exc:
         case errors.NotNullViolation():
-            return ValidationError(_(
+            return ValidationError(env._(
                 "The operation cannot be completed:\n"
                 "- Create/update: a mandatory field is not set.\n"
                 "- Delete: another model requires the record being deleted."
@@ -99,7 +99,7 @@ def _as_validation_error(env, exc):
             ))
 
         case errors.ForeignKeyViolation():
-            return ValidationError(_(
+            return ValidationError(env._(
                 "The operation cannot be completed: another model requires "
                 "the record being deleted. If possible, archive it instead.\n\n"
                 "Model: %(model_name)s (%(model_tech_name)s)\n"
@@ -110,12 +110,12 @@ def _as_validation_error(env, exc):
             ))
 
     if exc.diag.constraint_name in env.registry._sql_constraints:
-        return ValidationError(_(
+        return ValidationError(env._(
             "The operation cannot be completed: %s",
             translate_sql_constraint(env.cr, exc.diag.constraint_name, env.context.get('lang', 'en_US'))
         ))
 
-    return ValidationError(_("The operation cannot be completed: %s", exc.args[0]))
+    return ValidationError(env._("The operation cannot be completed: %s", exc.args[0]))
 
 
 def retrying(func, env):

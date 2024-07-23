@@ -4,13 +4,14 @@ import ast
 import json
 from datetime import timedelta
 
-from odoo import api, Command, fields, models, _, _lt
+from odoo import api, Command, fields, models
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.rating.models import rating_data
 from odoo.exceptions import UserError
 from odoo.osv.expression import AND
 from odoo.tools import get_lang, SQL
 from odoo.tools.misc import unquote
+from odoo.tools.translate import _
 from .project_update import STATUS_COLOR
 from .project_task import CLOSED_STATES
 
@@ -96,7 +97,7 @@ class Project(models.Model):
         string='Members', export_string_translation=False, copy=False)
     is_favorite = fields.Boolean(compute='_compute_is_favorite', readonly=False, search='_search_is_favorite',
         compute_sudo=True, string='Show Project on Dashboard', export_string_translation=False)
-    label_tasks = fields.Char(string='Use Tasks as', default=lambda s: _('Tasks'), translate=True,
+    label_tasks = fields.Char(string='Use Tasks as', default=lambda s: s.env._('Tasks'), translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
@@ -421,7 +422,7 @@ class Project(models.Model):
         vals_list = super().copy_data(default=default)
         if default and 'name' in default:
             return vals_list
-        return [dict(vals, name=_("%s (copy)", project.name)) for project, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", project.name)) for project, vals in zip(self, vals_list)]
 
     def copy(self, default=None):
         default = dict(default or {})
@@ -864,21 +865,21 @@ class Project(models.Model):
         self.ensure_one()
         closed_task_count = self.task_count - self.open_task_count
         if self.task_count:
-            number = _lt(
+            number = self.env._(
                 "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)",
                 closed_task_count=closed_task_count,
                 task_count=self.task_count,
                 closed_rate=round(100 * closed_task_count / self.task_count),
             )
         else:
-            number = _lt(
+            number = self.env._(
                 "%(closed_task_count)s / %(task_count)s",
                 closed_task_count=closed_task_count,
                 task_count=self.task_count,
             )
         buttons = [{
             'icon': 'check',
-            'text': _lt('Tasks'),
+            'text': self.env._('Tasks'),
             'number': number,
             'action_type': 'object',
             'action': 'action_view_tasks',
@@ -894,7 +895,7 @@ class Project(models.Model):
                 icon = 'frown-o text-danger'
             buttons.append({
                 'icon': icon,
-                'text': _lt('Average Rating'),
+                'text': self.env._('Average Rating'),
                 'number': f'{int(self.rating_avg) if self.rating_avg.is_integer() else round(self.rating_avg, 1)} / 5',
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
@@ -904,7 +905,7 @@ class Project(models.Model):
         if self.env.user.has_group('project.group_project_user'):
             buttons.append({
                 'icon': 'area-chart',
-                'text': _lt('Burndown Chart'),
+                'text': self.env._('Burndown Chart'),
                 'action_type': 'action',
                 'action': 'project.action_project_task_burndown_chart_report',
                 'additional_context': json.dumps({
@@ -932,7 +933,7 @@ class Project(models.Model):
     def _get_values_analytic_account_batch(self, project_vals_list):
         project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
         return [{
-            'name': project_vals.get('name', _('Unknown Analytic Account')),
+            'name': project_vals.get('name', self.env._('Unknown Analytic Account')),
             'company_id': project_vals.get('company_id', False),
             'partner_id': project_vals.get('partner_id', False),
             'plan_id': project_plan.id,

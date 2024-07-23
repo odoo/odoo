@@ -2918,6 +2918,7 @@ class NameManager:
 
     def __init__(self, model, parent=None, model_groups=None):
         self.model = model
+        self.env = model.env  # for dynamically-resolved translations
         self.available_fields = collections.defaultdict(dict)  # {field_name: {'groups': groups, 'info': field_info}}
         self.available_actions = set()
         self.available_names = set()

@@ -4,13 +4,13 @@
 import datetime
 import logging
 
+from odoo import Command, api, fields, models
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
-_logger = logging.getLogger('precompute_setter')
-
-from odoo import models, fields, api, _, Command
-from odoo.exceptions import AccessError, ValidationError
 from odoo.tools.translate import html_translate
+
+_logger = logging.getLogger('precompute_setter')
 
 
 class Category(models.Model):
@@ -172,7 +172,7 @@ class Message(models.Model):
     def _check_author(self):
         for message in self.with_context(active_test=False):
             if message.discussion and message.author not in message.discussion.sudo().participants:
-                raise ValidationError(_("Author must be among the discussion participants."))
+                raise ValidationError(self.env._("Author must be among the discussion participants."))
 
     @api.depends('author.name', 'discussion.name')
     def _compute_name(self):
@@ -855,7 +855,7 @@ class ComputeOnchange(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, foo=_("%s (copy)", record.foo)) for record, vals in zip(self, vals_list)]
+        return [dict(vals, foo=self.env._("%s (copy)", record.foo)) for record, vals in zip(self, vals_list)]
 
 
 class ComputeOnchangeLine(models.Model):

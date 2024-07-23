@@ -20,7 +20,7 @@ import os
 import polib
 import re
 import tarfile
-import threading
+import typing
 import warnings
 from collections import defaultdict, namedtuple
 from contextlib import suppress
@@ -41,7 +41,7 @@ from .misc import file_open, file_path, get_iso_codes, OrderedSet, ReadonlyDict,
 
 __all__ = [
     "_",
-    "_lt",
+    "LazyTranslate",
     "html_translate",
     "xml_translate",
 ]
@@ -443,155 +443,218 @@ def translate_sql_constraint(cr, key, lang):
         """, (lang, key))
     return cr.fetchone()[0]
 
-class GettextAlias(object):
 
-    def _get_db(self):
-        # find current DB based on thread/worker db name (see netsvc)
-        db_name = getattr(threading.current_thread(), 'dbname', None)
-        if db_name:
-            return odoo.sql_db.db_connect(db_name)
-
-    def _get_cr(self, frame, allow_create=True):
-        # try, in order: cr, cursor, self.env.cr, self.cr,
-        # request.env.cr
-        if 'cr' in frame.f_locals:
-            return frame.f_locals['cr'], False
-        if 'cursor' in frame.f_locals:
-            return frame.f_locals['cursor'], False
-        s = frame.f_locals.get('self')
-        if hasattr(s, 'env'):
-            return s.env.cr, False
-        if hasattr(s, 'cr'):
-            return s.cr, False
-        try:
-            from odoo.http import request
-            return request.env.cr, False
-        except RuntimeError:
-            pass
-        if allow_create:
-            # create a new cursor
-            db = self._get_db()
-            if db is not None:
-                return db.cursor(), True
-        return None, False
-
-    def _get_uid(self, frame):
-        # try, in order: uid, user, self.env.uid
-        if 'uid' in frame.f_locals:
-            return frame.f_locals['uid']
-        if 'user' in frame.f_locals:
-            return int(frame.f_locals['user'])      # user may be a record
-        s = frame.f_locals.get('self')
-        return s.env.uid
-
-    def _get_lang(self, frame):
-        # try, in order: context.get('lang'), kwargs['context'].get('lang'),
-        # self.env.lang, request.env.lang
-        lang = None
-        if frame.f_locals.get('context'):
-            lang = frame.f_locals['context'].get('lang')
-        if not lang:
-            kwargs = frame.f_locals.get('kwargs', {})
-            if kwargs.get('context'):
-                lang = kwargs['context'].get('lang')
-        if not lang:
-            s = frame.f_locals.get('self')
-            if hasattr(s, 'env'):
-                lang = s.env.lang
-            if not lang:
-                try:
-                    from odoo.http import request
-                    lang = request.env.lang
-                except RuntimeError:
-                    pass
-            if not lang:
-                # Last resort: attempt to guess the language of the user
-                # Pitfall: some operations are performed in sudo mode, and we
-                #          don't know the original uid, so the language may
-                #          be wrong when the admin language differs.
-                (cr, dummy) = self._get_cr(frame, allow_create=False)
-                uid = self._get_uid(frame)
-                if cr and uid:
-                    env = odoo.api.Environment(cr, uid, {})
-                    lang = env['res.users'].context_get()['lang']
-        return lang
-
-    def __call__(self, source, *args, **kwargs):
-        translation = self._get_translation(source)
-        assert not (args and kwargs)
-        if args or kwargs:
-            if any(isinstance(a, Markup) for a in itertools.chain(args, kwargs.values())):
-                translation = escape(translation)
-            try:
-                return translation % (args or kwargs)
-            except (TypeError, ValueError, KeyError):
-                bad = translation
-                # fallback: apply to source before logging exception (in case source fails)
-                translation = source % (args or kwargs)
-                _logger.exception('Bad translation %r for string %r', bad, source)
+def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> str:
+    """Translate and format using a module, language, source text and args."""
+    # get the translation by using the language
+    assert lang, "missing language for translation"
+    if lang == 'en_US':
+        translation = source
+    else:
+        assert module, "missing module name for translation"
+        translation = code_translations.get_python_translations(module, lang).get(source, source)
+    # skip formatting if we have no args
+    if not args:
         return translation
+    # we need to check the args for markup values and for lazy translations
+    args_is_dict = isinstance(args, dict)
+    if any(isinstance(a, Markup) for a in (args.values() if args_is_dict else args)):
+        translation = escape(translation)
+    if any(isinstance(a, LazyGettext) for a in (args.values() if args_is_dict else args)):
+        if args_is_dict:
+            args = {k: v._translate(lang) if isinstance(v, LazyGettext) else v for k, v in args.items()}
+        else:
+            args = tuple(v._translate(lang) if isinstance(v, LazyGettext) else v for v in args)
+    # format
+    try:
+        return translation % args
+    except (TypeError, ValueError, KeyError):
+        bad = translation
+        # fallback: apply to source before logging exception (in case source fails)
+        translation = source % args
+        _logger.exception('Bad translation %r for string %r', bad, source)
+    return translation
 
-    def _get_translation(self, source, module=None):
-        try:
-            frame = inspect.currentframe().f_back.f_back
-            lang = self._get_lang(frame)
-            if lang and lang != 'en_US':
-                if not module:
-                    path = inspect.getfile(frame)
-                    path_info = odoo.modules.get_resource_from_path(path)
-                    module = path_info[0] if path_info else 'base'
-                return code_translations.get_python_translations(module, lang).get(source, source)
-            else:
-                _logger.debug('no translation language detected, skipping translation for "%r" ', source)
-        except Exception:
-            _logger.debug('translation went wrong for "%r", skipped', source)
-                # if so, double-check the root/base translations filenames
-        return source
+
+def get_translated_module(arg: str | int | typing.Any) -> str:  # frame not represented as hint
+    """Get the addons name.
+
+    :param arg: can be any of the following:
+                str ("name_of_module") returns itself;
+                str (__name__) use to resolve module name;
+                int is number of frames to go back to the caller;
+                frame of the caller function
+    """
+    if isinstance(arg, str):
+        if arg.startswith('odoo.addons.'):
+            # get the name of the module
+            return arg.split('.')[2]
+        if '.' in arg or not arg:
+            # module name is not in odoo.addons.
+            return 'base'
+        else:
+            return arg
+    else:
+        if isinstance(arg, int):
+            frame = inspect.currentframe()
+            while arg > 0:
+                arg -= 1
+                frame = frame.f_back
+        else:
+            frame = arg
+        if not frame:
+            return 'base'
+        if (module_name := frame.f_globals.get("__name__")) and module_name.startswith('odoo.addons.'):
+            # just a quick lookup because `get_resource_from_path is slow compared to this`
+            return module_name.split('.')[2]
+        path = inspect.getfile(frame)
+        path_info = odoo.modules.get_resource_from_path(path)
+        return path_info[0] if path_info else 'base'
+
+
+def _get_cr(frame):
+    # try, in order: cr, cursor, self.env.cr, self.cr,
+    # request.env.cr
+    if 'cr' in frame.f_locals:
+        return frame.f_locals['cr']
+    if 'cursor' in frame.f_locals:
+        return frame.f_locals['cursor']
+    if (local_self := frame.f_locals.get('self')) is not None:
+        if (local_env := getattr(local_self, 'env', None)) is not None:
+            return local_env.cr
+        if (cr := getattr(local_self, 'cr', None)) is not None:
+            return cr
+    try:
+        from odoo.http import request  # noqa: PLC0415
+        request_env = request.env
+        if request_env is not None and (cr := request_env.cr) is not None:
+            return cr
+    except RuntimeError:
+        pass
+    return None
+
+
+def _get_uid(frame) -> int | None:
+    # try, in order: uid, user, self.env.uid
+    if 'uid' in frame.f_locals:
+        return frame.f_locals['uid']
+    if 'user' in frame.f_locals:
+        return int(frame.f_locals['user'])      # user may be a record
+    if (local_self := frame.f_locals.get('self')) is not None:
+        if hasattr(local_self, 'env') and (uid := local_self.env.uid):
+            return uid
+    return None
+
+
+def _get_lang(frame, default_lang='') -> str:
+    # get from: context.get('lang'), kwargs['context'].get('lang'),
+    if local_context := frame.f_locals.get('context'):
+        if lang := local_context.get('lang'):
+            return lang
+    if (local_kwargs := frame.f_locals.get('kwargs')) and (local_context := local_kwargs.get('context')):
+        if lang := local_context.get('lang'):
+            return lang
+    # get from self.env
+    log_level = logging.WARNING
+    local_self = frame.f_locals.get('self')
+    local_env = local_self is not None and getattr(local_self, 'env', None)
+    if local_env:
+        if lang := local_env.lang:
+            return lang
+        # we found the env, in case we fail, just log in debug
+        log_level = logging.DEBUG
+    # get from request?
+    try:
+        from odoo.http import request  # noqa: PLC0415
+        request_env = request.env
+        if request_env and (lang := request_env.lang):
+            return lang
+    except RuntimeError:
+        pass
+    # Last resort: attempt to guess the language of the user
+    # Pitfall: some operations are performed in sudo mode, and we
+    #          don't know the original uid, so the language may
+    #          be wrong when the admin language differs.
+    cr = _get_cr(frame)
+    uid = _get_uid(frame)
+    if cr and uid:
+        env = odoo.api.Environment(cr, uid, {})
+        if lang := env['res.users'].context_get().get('lang'):
+            return lang
+    # fallback
+    if default_lang:
+        _logger.debug('no translation language detected, fallback to %s', default_lang)
+        return default_lang
+    # give up
+    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+    return ''
+
+
+def _get_translation_source(stack_level: int, module: str = '', lang: str = '', default_lang: str = '') -> tuple[str, str]:
+    if not (module and lang):
+        frame = inspect.currentframe()
+        for _index in range(stack_level + 1):
+            frame = frame.f_back
+        lang = lang or _get_lang(frame, default_lang)
+    if lang and lang != 'en_US':
+        return get_translated_module(module or frame), lang
+    else:
+        # we don't care about the module for 'en_US'
+        return module or 'base', 'en_US'
+
+
+def get_text_alias(source: str, *args, **kwargs):
+    assert not (args and kwargs)
+    assert isinstance(source, str)
+    module, lang = _get_translation_source(1)
+    return get_translation(module, lang, source, args or kwargs)
 
 
 @functools.total_ordering
-class _lt:
-    """ Lazy code translation
+class LazyGettext:
+    """ Lazy code translated term.
 
-    Similar to GettextAlias but the translation lookup will be done only at
+    Similar to get_text_alias but the translation lookup will be done only at
     __str__ execution.
+    This eases the search for terms to translate as lazy evaluated strings
+    are declared early.
 
     A code using translated global variables such as:
 
+    ```
+    _lt = LazyTranslate(__name__)
     LABEL = _lt("User")
 
     def _compute_label(self):
-        context = {'lang': self.partner_id.lang}
-        self.user_label = LABEL
+        env = self.with_env(lang=self.partner_id.lang).env
+        self.user_label = env._(LABEL)
+    ```
 
-    works as expected (unlike the classic GettextAlias implementation).
+    works as expected (unlike the classic get_text_alias implementation).
     """
 
-    __slots__ = ['_source', '_args', '_module']
+    __slots__ = ('_args', '_default_lang', '_module', '_source')
 
-    def __init__(self, source, *args, **kwargs):
-        self._source = source
+    def __init__(self, source, *args, _module='', _default_lang='', **kwargs):
         assert not (args and kwargs)
+        assert isinstance(source, str)
+        self._source = source
         self._args = args or kwargs
+        self._module = get_translated_module(_module or 2)
+        self._default_lang = _default_lang
 
-        frame = inspect.currentframe().f_back
-        path = inspect.getfile(frame)
-        path_info = odoo.modules.get_resource_from_path(path)
-        self._module = path_info[0] if path_info else 'base'
+    def _translate(self, lang: str = '') -> str:
+        module, lang = _get_translation_source(2, self._module, lang, default_lang=self._default_lang)
+        return get_translation(module, lang, self._source, self._args)
+
+    def __repr__(self):
+        """ Show for the debugger"""
+        args = {'_module': self._module, '_default_lang': self._default_lang, '_args': self._args}
+        return f"_lt({self._source!r}, **{args!r})"
 
     def __str__(self):
-        # Call _._get_translation() like _() does, so that we have the same number
-        # of stack frames calling _get_translation()
-        translation = _._get_translation(self._source, self._module)
-        if self._args:
-            try:
-                return translation % self._args
-            except (TypeError, ValueError, KeyError):
-                bad = translation
-                # fallback: apply to source before logging exception (in case source fails)
-                translation = self._source % self._args
-                _logger.exception('Bad translation %r for string %r', bad, self._source)
-        return translation
+        """ Translate."""
+        return self._translate()
 
     def __eq__(self, other):
         """ Prevent using equal operators
@@ -601,26 +664,50 @@ class _lt:
         """
         raise NotImplementedError()
 
+    def __hash__(self):
+        raise NotImplementedError()
+
     def __lt__(self, other):
         raise NotImplementedError()
 
     def __add__(self, other):
-        # Call _._get_translation() like _() does, so that we have the same number
-        # of stack frames calling _get_translation()
         if isinstance(other, str):
-            return _._get_translation(self._source) + other
-        elif isinstance(other, _lt):
-            return _._get_translation(self._source) + _._get_translation(other._source)
+            return self._translate() + other
+        elif isinstance(other, LazyGettext):
+            return self._translate() + other._translate()
         return NotImplemented
 
     def __radd__(self, other):
-        # Call _._get_translation() like _() does, so that we have the same number
-        # of stack frames calling _get_translation()
         if isinstance(other, str):
-            return other + _._get_translation(self._source)
+            return other + self._translate()
         return NotImplemented
 
-_ = GettextAlias()
+
+class LazyTranslate:
+    """ Lazy translation template.
+
+    Usage:
+    ```
+    _lt = LazyTranslate(__name__)
+    MYSTR = _lt('Translate X')
+    ```
+
+    You may specify a `default_lang` to fallback to a given language on error
+    """
+    module: str
+    default_lang: str
+
+    def __init__(self, module: str, *, default_lang: str = '') -> None:
+        self.module = module = get_translated_module(module or 2)
+        # set the default lang to en_US for lazy translations in the base module
+        self.default_lang = default_lang or ('en_US' if module == 'base' else '')
+
+    def __call__(self, source: str, *args, **kwargs) -> LazyGettext:
+        return LazyGettext(source, *args, **kwargs, _module=self.module, _default_lang=self.default_lang)
+
+
+_ = get_text_alias
+_lt = LazyGettext
 
 
 def quote(s):

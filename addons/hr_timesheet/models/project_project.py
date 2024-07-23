@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 
-from odoo import models, fields, api, _, _lt
-from odoo.exceptions import ValidationError, RedirectWarning
+from odoo import api, fields, models
+from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.tools import SQL
+from odoo.tools.translate import _
 
 
 class Project(models.Model):
@@ -236,7 +237,7 @@ class Project(models.Model):
             number = f"{round(effective)} / {round(allocated)} {encode_uom.name}"
             success_rate = round(100 * effective / allocated)
             if success_rate > 100:
-                number = _lt(
+                number = self.env._(
                     "%(effective)s / %(allocated)s %(uom_name)s",
                     effective=round(effective),
                     allocated=round(allocated),
@@ -244,7 +245,7 @@ class Project(models.Model):
                 )
                 color = "text-danger"
             else:
-                number = _lt(
+                number = self.env._(
                     "%(effective)s / %(allocated)s %(uom_name)s (%(success_rate)s%%)",
                     effective=round(effective),
                     allocated=round(allocated),
@@ -256,7 +257,7 @@ class Project(models.Model):
                 else:
                     color = "text-success"
         else:
-            number = _lt(
+            number = self.env._(
                     "%(effective)s %(uom_name)s",
                     effective=round(effective),
                     uom_name=encode_uom.name,
@@ -264,7 +265,7 @@ class Project(models.Model):
 
         buttons.append({
             "icon": f"clock-o {color}",
-            "text": _lt("Timesheets"),
+            "text": self.env._("Timesheets"),
             "number": number,
             "action_type": "object",
             "action": "action_project_timesheets",
@@ -274,8 +275,8 @@ class Project(models.Model):
         if allocated and success_rate > 100:
             buttons.append({
                 "icon": f"warning {color}",
-                "text": _lt("Extra Time"),
-                "number": _lt(
+                "text": self.env._("Extra Time"),
+                "number": self.env._(
                     "%(exceeding_hours)s %(uom_name)s (+%(exceeding_rate)s%%)",
                     exceeding_hours=round(effective - allocated),
                     uom_name=encode_uom.name,

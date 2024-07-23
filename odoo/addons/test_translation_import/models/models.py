@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models, _, _lt
-from odoo.tools.translate import xml_translate
+from odoo import fields, models
+from odoo.tools.translate import _, xml_translate, LazyTranslate
+
+_lt = LazyTranslate(__name__)
+
 
 class TestTranslationImportModel1(models.Model):
     _name = 'test.translation.import.model1'

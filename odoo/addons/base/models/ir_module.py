@@ -342,9 +342,8 @@ class Module(models.Model):
         """ Domain to retrieve the modules that should be loaded by the registry. """
         return [('state', '=', 'installed')]
 
-    @classmethod
-    def check_external_dependencies(cls, module_name, newstate='to install'):
-        terp = cls.get_module_info(module_name)
+    def check_external_dependencies(self, module_name, newstate='to install'):
+        terp = self.get_module_info(module_name)
         try:
             modules.check_manifest_dependencies(terp)
         except Exception as e:

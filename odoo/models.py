@@ -63,7 +63,7 @@ from .tools import (
 )
 from .tools.lru import LRU
 from .tools.misc import LastOrderedSet, ReversedIterable, unquote
-from .tools.translate import _, _lt
+from .tools.translate import _, LazyTranslate
 
 import typing
 if typing.TYPE_CHECKING:
@@ -72,6 +72,7 @@ if typing.TYPE_CHECKING:
     from odoo.api import Self, ValuesType, IdType
 
 
+_lt = LazyTranslate('base')
 _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
 
@@ -152,7 +153,7 @@ regex_private = re.compile(r'^(_.*|init)$')
 def check_method_name(name):
     """ Raise an ``AccessError`` if ``name`` is a private method name. """
     if regex_private.match(name):
-        raise AccessError(_('Private methods (such as %s) cannot be called remotely.', name))
+        raise AccessError(_lt('Private methods (such as %s) cannot be called remotely.', name))
 
 
 def check_property_field_value_name(property_name):
@@ -7359,17 +7360,20 @@ def itemgetter_tuple(items):
         return lambda gettable: (gettable[items[0]],)
     return operator.itemgetter(*items)
 
+
 def convert_pgerror_not_null(model, fields, info, e):
+    env = model.env
     if e.diag.table_name != model._table:
-        return {'message': _("Missing required value for the field '%(name)s' on a linked model [%(linked_model)s]", name=e.diag.column_name, linked_model=e.diag.table_name)}
+        return {'message': env._("Missing required value for the field '%(name)s' on a linked model [%(linked_model)s]", name=e.diag.column_name, linked_model=e.diag.table_name)}
 
     field_name = e.diag.column_name
     field = fields[field_name]
-    message = _("Missing required value for the field '%(name)s' (%(technical_name)s)", name=field['string'], technical_name=field_name)
+    message = env._("Missing required value for the field '%(name)s' (%(technical_name)s)", name=field['string'], technical_name=field_name)
     return {
         'message': message,
         'field': field_name,
     }
+
 
 def convert_pgerror_unique(model, fields, info, e):
     # new cursor since we're probably in an error handler in a blown
@@ -7397,7 +7401,7 @@ def convert_pgerror_unique(model, fields, info, e):
     if len(ufields) == 1:
         field_name = ufields[0]
         field = fields[field_name]
-        message = _(
+        message = model.env._(
             "The value for the field '%(field)s' already exists (this is probably '%(other_field)s' in the current model).",
             field=field_name,
             other_field=field['string'],
@@ -7407,7 +7411,7 @@ def convert_pgerror_unique(model, fields, info, e):
             'field': field_name,
         }
     field_strings = [fields[fname]['string'] for fname in ufields]
-    message = _(
+    message = model.env._(
         "The values for the fields '%(fields)s' already exist (they are probably '%(other_fields)s' in the current model).",
         fields=format_list(model.env, ufields),
         other_fields=format_list(model.env, field_strings),
@@ -7417,19 +7421,23 @@ def convert_pgerror_unique(model, fields, info, e):
         # no field, unclear which one we should pick and they could be in any order
     }
 
+
 def convert_pgerror_constraint(model, fields, info, e):
     sql_constraints = dict([(('%s_%s') % (e.diag.table_name, x[0]), x) for x in model._sql_constraints])
     if e.diag.constraint_name in sql_constraints.keys():
         return {'message': "'%s'" % sql_constraints[e.diag.constraint_name][2]}
     return {'message': tools.exception_to_unicode(e)}
 
+
 PGERROR_TO_OE = defaultdict(
     # shape of mapped converters
-    lambda: (lambda model, fvg, info, pgerror: {'message': tools.exception_to_unicode(pgerror)}), {
-    '23502': convert_pgerror_not_null,
-    '23505': convert_pgerror_unique,
-    '23514': convert_pgerror_constraint,
-})
+    lambda: (lambda model, fvg, info, pgerror: {'message': tools.exception_to_unicode(pgerror)}),
+    {
+        '23502': convert_pgerror_not_null,
+        '23505': convert_pgerror_unique,
+        '23514': convert_pgerror_constraint,
+    },
+)
 
 # keep those imports here to avoid dependency cycle errors
 # pylint: disable=wrong-import-position

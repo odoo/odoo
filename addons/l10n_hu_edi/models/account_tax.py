@@ -1,6 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _lt, fields, models, api
+from odoo import api, fields, models
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
+
 
 _SELECTION_TAX_TYPE = [
     ('VAT', 'Normal VAT (percent based)'),
@@ -58,4 +62,5 @@ class AccountTax(models.Model):
     @api.depends('l10n_hu_tax_type')
     def _compute_l10n_hu_tax_reason(self):
         for tax in self:
-            tax.l10n_hu_tax_reason = _DEFAULT_TAX_REASONS.get(tax.l10n_hu_tax_type, False)
+            reason = _DEFAULT_TAX_REASONS.get(tax.l10n_hu_tax_type, '')
+            tax.l10n_hu_tax_reason = self.env._(reason)  # pylint: disable=gettext-variable

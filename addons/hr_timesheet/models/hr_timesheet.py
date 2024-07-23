@@ -4,10 +4,11 @@ from collections import defaultdict
 from statistics import mode
 import re
 
-from odoo import api, fields, models, _, _lt
+from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_list
+from odoo.tools.translate import _
 
 
 class AccountAnalyticLine(models.Model):
@@ -230,7 +231,7 @@ class AccountAnalyticLine(models.Model):
                 employee_id_per_company_per_user[employee.user_id.id][employee.company_id.id] = employee.id
 
         # 4/ Put valid employee_id in each vals
-        error_msg = _lt('Timesheets must be created with an active employee in the selected companies.')
+        error_msg = _('Timesheets must be created with an active employee in the selected companies.')
         for vals in vals_list:
             if not vals.get('project_id'):
                 continue

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.translate import html_translate
 
 
@@ -68,7 +68,7 @@ class ProductPublicCategory(models.Model):
     def _compute_display_name(self):
         for category in self:
             category.display_name = " / ".join(category.parents_and_self.mapped(
-                lambda cat: cat.name or _("New")
+                lambda cat: cat.name or self.env._("New")
             ))
 
     #=== CONSTRAINT METHODS ===#
@@ -76,7 +76,7 @@ class ProductPublicCategory(models.Model):
     @api.constrains('parent_id')
     def check_parent_id(self):
         if self._has_cycle():
-            raise ValueError(_("Error! You cannot create recursive categories."))
+            raise ValueError(self.env._("Error! You cannot create recursive categories."))
 
     #=== BUSINESS METHODS ===#
 

@@ -129,7 +129,7 @@ class MassMailingList(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", mailing_list.name)) for mailing_list, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", mailing_list.name)) for mailing_list, vals in zip(self, vals_list)]
 
     # ------------------------------------------------------
     # ACTIONS

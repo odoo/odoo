@@ -6,6 +6,7 @@ from odoo import http
 from odoo.tests import common, tagged
 from odoo.tools.misc import get_lang
 from odoo.addons.web.controllers.export import ExportXlsxWriter, Export
+from odoo.addons.website.tools import MockRequest
 
 
 class XlsxCreatorCase(common.HttpCase):
@@ -80,8 +81,7 @@ class TestExport(XlsxCreatorCase):
             'name': {'string': 'Name', 'type': 'char'},
             'properties': {'string': 'Properties', 'type': 'properties'},
             'properties_definition': {'string': 'Properties Definition', 'type': 'properties_definition'}
-        }):
-            # TODO: change the test to handle because fields_get handle properties
+        }), MockRequest(self.env):
             fields = Export().get_fields("mock_model", import_compat=True)
             field_names = [field['id'] for field in fields]
             self.assertNotIn('properties', field_names)

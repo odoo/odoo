@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import api, fields, models, _, _lt
+from odoo import fields, models
 from odoo.osv import expression
 
 
@@ -28,7 +28,7 @@ class Project(models.Model):
     def action_open_project_purchase_orders(self):
         purchase_orders_domain = [('project_id', '=', self.id)]
         action_window = {
-            'name': _('Purchase Orders'),
+            'name': self.env._('Purchase Orders'),
             'type': 'ir.actions.act_window',
             'res_model': 'purchase.order',
             'views': [[False, 'list'], [False, 'form']],
@@ -46,7 +46,7 @@ class Project(models.Model):
     def action_profitability_items(self, section_name, domain=None, res_id=False):
         if section_name == 'purchase_order':
             action = {
-                'name': _('Purchase Order Items'),
+                'name': self.env._('Purchase Order Items'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'purchase.order.line',
                 'views': [[False, 'list'], [False, 'form']],
@@ -78,7 +78,7 @@ class Project(models.Model):
             self_sudo = self.sudo()
             buttons.append({
                 'icon': 'credit-card',
-                'text': _lt('Purchase Orders'),
+                'text': self.env._('Purchase Orders'),
                 'number': self_sudo.purchase_orders_count,
                 'action_type': 'object',
                 'action': 'action_open_project_purchase_orders',
@@ -98,7 +98,7 @@ class Project(models.Model):
 
     def _get_profitability_labels(self):
         labels = super()._get_profitability_labels()
-        labels['purchase_order'] = _lt('Purchase Orders')
+        labels['purchase_order'] = self.env._('Purchase Orders')
         return labels
 
     def _get_profitability_sequence_per_invoice_type(self):

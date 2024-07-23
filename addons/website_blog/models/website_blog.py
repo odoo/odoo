@@ -264,7 +264,7 @@ class BlogPost(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", blog.name)) for blog, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", blog.name)) for blog, vals in zip(self, vals_list)]
 
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the post on website

@@ -1,20 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import logging
 
 from datetime import datetime
 
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
-from odoo import _, _lt, fields
+from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
 from odoo.tools import clean_context, float_round, groupby, lazy, single_email_re, str2bool, SQL
 from odoo.tools.json import scriptsafe as json_scriptsafe
+from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
@@ -22,8 +22,6 @@ from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-
-_logger = logging.getLogger(__name__)
 
 
 class TableCompute:
@@ -1158,7 +1156,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     )  # On the main partner only, if the VAT was set.
                 )
             ),
-            'vat_label': _lt("VAT"),
+            'vat_label': request.env._("VAT"),
         }
 
     @route(
