@@ -11,17 +11,11 @@ export class CameraBarcodeScanner extends BarcodeVideoScanner {
             facingMode: "environment",
             onResult: (result) => this.onResult(result),
             onError: console.error,
-            close: () => {},
+            delayBetweenScan: 2000,
         };
     }
     onResult(result) {
         this.barcodeScanner.scan(result);
         this.sound.play("beep");
-        clearInterval(this.interval);
-        setTimeout(() => {
-            if (this.videoPreviewRef.el) {
-                this.interval = setInterval(this.detectCode.bind(this), 100);
-            }
-        }, 2000);
     }
 }
