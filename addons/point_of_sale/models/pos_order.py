@@ -958,7 +958,7 @@ class PosOrder(models.Model):
                 existing_draft_order = self.env['pos.order'].search(['&', ('id', '=', order['data']['server_id']), ('state', '=', 'draft')], limit=1)
 
                 # if there is no draft order, skip processing this order
-                if not existing_draft_order:
+                if not existing_draft_order and draft:
                     continue
 
             if not existing_draft_order:
