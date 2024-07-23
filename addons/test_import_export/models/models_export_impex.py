@@ -1,24 +1,22 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, fields, models, _
 
+
 def selection_fn(self):
-    return [
-        (str(key), val)
-        for key, val in enumerate([_("Corge"), _("Grault"), _("Wheee"), _("Moog")])
-    ]
+    return [(str(key), val) for key, val in enumerate([_("Corge"), _("Grault"), _("Wheee"), _("Moog")])]
+
 
 def compute_fn(records):
     for record in records:
         record.value = 3
 
+
 def inverse_fn(records):
     pass
 
+
 MODELS = [
     ('boolean', fields.Boolean()),
-    ('integer', fields.Integer()),
+    ('integer', fields.Integer(default=4)),
     ('float', fields.Float()),
     ('decimal', fields.Float(digits=(16, 3))),
     ('string.bounded', fields.Char(size=16)),
@@ -39,9 +37,10 @@ MODELS = [
 ]
 
 for name, field in MODELS:
+
     class NewModel(models.Model):
-        _name = 'export.%s' % name
-        _description = 'Export: %s' % name
+        _name = f'export.{name}'
+        _description = f'Export: {name}'
         _rec_name = 'value'
         const = fields.Integer(default=4)
         value = field
@@ -56,6 +55,7 @@ for name, field in MODELS:
                 return self._search([('value', operator, int(name.split(':')[1]))], limit=limit, order=order)
             else:
                 return []
+
 
 class One2ManyChild(models.Model):
     _name = 'export.one2many.child'
@@ -169,10 +169,12 @@ class OnlyOne(models.Model):
         ('pair_unique', 'unique (value2, value3)', "The values must be unique"),
     ]
 
+
 class InheritsParent(models.Model):
     _name = _description = 'export.inherits.parent'
 
     value_parent = fields.Integer()
+
 
 class InheritsChild(models.Model):
     _name = _description = 'export.inherits.child'
@@ -181,21 +183,25 @@ class InheritsChild(models.Model):
     parent_id = fields.Many2one('export.inherits.parent', required=True, ondelete='cascade')
     value = fields.Integer()
 
+
 class Many2String(models.Model):
     _name = _description = 'export.m2o.str'
 
     child_id = fields.Many2one('export.m2o.str.child')
+
 
 class ChidToString(models.Model):
     _name = _description = 'export.m2o.str.child'
 
     name = fields.Char()
 
+
 class WithRequiredField(models.Model):
     _name = _description = 'export.with.required.field'
 
     name = fields.Char()
     value = fields.Integer(required=True)
+
 
 class Many2OneRequiredSubfield(models.Model):
     _name = _description = 'export.many2one.required.subfield'

@@ -1,17 +1,15 @@
-# -*- coding: utf-8 -*-
 """
 Tests for various autodetection magics for CSV imports
 """
 import codecs
 
 from odoo.tests import common
-from odoo.addons.test_base_import.models.test_base_import import model as base_import_model
 
 
 class ImportCase(common.TransactionCase):
     def _make_import(self, contents):
         return self.env['base_import.import'].create({
-            'res_model': base_import_model('complex'),
+            'res_model': 'import.complex',
             'file_name': 'f',
             'file_type': 'text/csv',
             'file': contents,
@@ -59,7 +57,7 @@ class TestEncoding(ImportCase):
         """ ensure an explicitly specified encoding is not overridden by the
         auto-detection
         """
-        s = "Iñtërnâtiônàlizætiøn".encode('utf-8')
+        s = "Iñtërnâtiônàlizætiøn".encode()
         r = self._make_import(s + b'\ntext')\
             .parse_preview({
             'quoting': '"',
@@ -137,7 +135,7 @@ d|4
 class TestNumberSeparators(common.TransactionCase):
     def test_parse_float(self):
         w = self.env['base_import.import'].create({
-            'res_model': base_import_model('float'),
+            'res_model': 'import.float',
         })
         data = w._parse_import_data(
             [
