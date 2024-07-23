@@ -298,26 +298,12 @@
                         </list>
                         <kanban class="o_kanban_mobile">
                             <templates>
-                                <t t-name="kanban-box">
-                                    <div class="oe_kanban_global_click">
-                                        <div class="o_kanban_card_content">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <strong><field name="product_id"/></strong>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <field name="lot_id"/>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <field name="quantity"/>
-                                                    <field class="mx-2" name="product_uom_id" groups="uom.group_uom"/>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <t t-name="kanban-card">
+                                    <field name="product_id" class="fw-bold"/>
+                                    <field name="lot_id"/>
+                                    <div class="d-flex">
+                                        <field name="quantity"/>
+                                        <field class="mx-2" name="product_uom_id" groups="uom.group_uom"/>
                                     </div>
                                 </t>
                             </templates>
@@ -348,18 +334,9 @@
         <field name="arch" type="xml">
             <kanban sample="1" group_create="0">
                 <templates>
-                <field name="name"/>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="o_kanban_record_top mb0">
-                                <div class="col-6">
-                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
-                                </div>
-                                <div class="col-6">
-                                    <field name="package_type_id"/>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card" class="row g-0">
+                        <field name="name" class="col-6 fw-bold fs-5"/>
+                        <field name="package_type_id" class="col-6"/>
                     </t>
                 </templates>
             </kanban>

@@ -83,29 +83,12 @@
         <field name="model">stock.lot</field>
         <field name="arch" type="xml">
             <kanban group_create="false" group_delete="false">
-                <field name="name"/>
-                <field name="ref"/>
-                <field name="product_id"/>
-                <field name="create_date"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="last_delivery_partner_id"/>
-                <field name="lot_properties"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="oe_kanban_details">
-                                <strong class="o_kanban_record_title">
-                                    <field name="name"/>
-                                </strong>
-                                <div name="product_name">
-                                    <small><field name="product_id"/></small>
-                                </div>
-                                <div>
-                                    <field name="lot_properties" widget="properties"/>
-                                </div>
-                            </div>
-                            <field name="activity_ids" widget="kanban_activity"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="name" class="fw-bolder fs-5"/>
+                        <field name="product_id" class="small"/>
+                        <field name="lot_properties" widget="properties"/>
+                        <field name="activity_ids" widget="kanban_activity"/>
                     </t>
                 </templates>
             </kanban>
