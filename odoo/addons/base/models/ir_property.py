@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import functools
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import TERM_OPERATORS_NEGATION
@@ -18,19 +20,6 @@ TYPE2FIELD = {
     'datetime': 'value_datetime',
     'selection': 'value_text',
     'html': 'value_text',
-}
-
-TYPE2CLEAN = {
-    'boolean': bool,
-    'integer': lambda val: val or False,
-    'float': lambda val: val or False,
-    'char': lambda val: val or False,
-    'text': lambda val: val or False,
-    'selection': lambda val: val or False,
-    'binary': lambda val: val or False,
-    'date': lambda val: val.date() if val else False,
-    'datetime': lambda val: val or False,
-    'html': lambda val: val or False,
 }
 
 
@@ -299,7 +288,7 @@ class Property(models.Model):
                 ORDER BY p.company_id NULLS FIRST
             """.format(TYPE2FIELD[field.type])
             params = [model_pos, field_id, company_id]
-            clean = TYPE2CLEAN[field.type]
+            clean = functools.partial(field.convert_to_record, record=self.env[model].browse(ids))
 
         else:
             return dict.fromkeys(ids, False)
