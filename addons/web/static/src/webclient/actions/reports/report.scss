@@ -152,3 +152,9 @@ div[name=comment] p, div[name=address] p {
         }
     }
 }
+
+// The default ir.qweb.field.contact uses a text-truncate on the address span
+// which doesn't work in wkhtml and breaks the wrapping behavior.
+span[itemprop="streetAddress"] {
+    white-space: normal;
+}
