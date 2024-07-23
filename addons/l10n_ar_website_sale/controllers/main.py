@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, _lt
 from odoo.http import request
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -31,7 +30,7 @@ class L10nARWebsiteSale(WebsiteSale):
                 'identification_types': LatamIdentificationType.search([
                     '|', ('country_id', '=', False), ('country_id.code', '=', 'AR'),
                 ]) if can_edit_vat else LatamIdentificationType,
-                'vat_label': _lt("Number"),
+                'vat_label': request.env._("Number"),
             })
         return rendering_values
 
@@ -73,7 +72,7 @@ class L10nARWebsiteSale(WebsiteSale):
             # and if the identification type is different from CUIT
             if afip_resp.code not in ['5', '9'] and id_type != request.env.ref('l10n_ar.it_cuit'):
                 invalid_fields.add('l10n_latam_identification_type_id')
-                error_messages.append(_(
+                error_messages.append(request.env._(
                     "For the selected AFIP Responsibility you will need to set CUIT Identification Type"))
 
         return invalid_fields, missing_fields, error_messages

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-from odoo import api, models, _
+from odoo import api, models
 from odoo.tools.safe_eval import safe_eval
 #
 # Use period and Journal for selection or resources
@@ -41,7 +41,7 @@ class ReportAssertAccount(models.AbstractModel):
             'reconciled_inv': reconciled_inv,  # specific function used in different tests
             'result': None,  # used to store the result of the test
             'column_order': None,  # used to choose the display order of columns (in case you are returning a list of dict)
-            '_': _,
+            '_': self.env._,
         }
         safe_eval(code_exec, localdict, mode="exec", nocopy=True)
         result = localdict['result']
@@ -50,7 +50,7 @@ class ReportAssertAccount(models.AbstractModel):
         if not isinstance(result, (tuple, list, set)):
             result = [result]
         if not result:
-            result = [_('The test was passed successfully')]
+            result = [self.env._('The test was passed successfully')]
         else:
             def _format(item):
                 if isinstance(item, dict):

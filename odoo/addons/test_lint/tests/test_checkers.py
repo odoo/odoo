@@ -70,6 +70,28 @@ class TestPylintChecks(TransactionCase):
 
 
 @unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
+class TestGetTextLint(TestPylintChecks):
+    def check(self, testtext):
+        return super().check(testtext, "_odoo_checker_gettext", "gettext-placeholders")
+
+    def test_gettext_env(self):
+        # check that _ and self.env._ are checked in the same way
+        r, errs = self.check("""
+        def method(self, vars):
+            _("something %s %s", *vars)
+        """)
+        self.assertTrue(r, "_() should have raised for multiple placeholders")
+        self.assertEqual(errs[0]['line'], 2, errs)
+
+        r, errs = self.check("""
+        def method(self, vars):
+            self.env._("something %s %s", *vars)
+        """)
+        self.assertTrue(r, "self.env._() should have raised for multiple placeholders")
+        self.assertEqual(errs[0]['line'], 2, errs)
+
+
+@unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
 class TestSqlLint(TestPylintChecks):
     def check(self, testtext):
         return super().check(testtext, "_odoo_checker_sql_injection", "sql-injection")

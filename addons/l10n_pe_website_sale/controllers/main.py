@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _lt
-from odoo.http import request, route
-
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.http import request, route
 
 
 class L10nPEWebsiteSale(WebsiteSale):
@@ -46,7 +44,7 @@ class L10nPEWebsiteSale(WebsiteSale):
                 'identification_types': LatamIdentificationType.search([
                     '|', ('country_id', '=', False), ('country_id.code', '=', 'PE')
                 ]) if can_edit_vat else LatamIdentificationType,
-                'vat_label': _lt("Identification Number"),
+                'vat_label': request.env._("Identification Number"),
             })
 
         state = request.env['res.country.state'].browse(rendering_values['state_id'])

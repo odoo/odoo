@@ -31,7 +31,7 @@ except ImportError:
 
 from .exceptions import AccessError, UserError, CacheMiss
 from .tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL
-from .tools.translate import _
+from .tools.translate import get_translation, get_translated_module, LazyGettext
 from odoo.tools.misc import StackMap
 
 import typing
@@ -699,7 +699,7 @@ class Environment(Mapping):
             if not self.su:
                 user_company_ids = self.user._get_company_ids()
                 if set(company_ids) - set(user_company_ids):
-                    raise AccessError(_("Access to unauthorized or invalid companies."))
+                    raise AccessError(self._("Access to unauthorized or invalid companies."))
             return self['res.company'].browse(company_ids[0])
         return self.user.company_id.with_env(self)
 
@@ -729,7 +729,7 @@ class Environment(Mapping):
         if company_ids:
             if not self.su:
                 if set(company_ids) - set(user_company_ids):
-                    raise AccessError(_("Access to unauthorized or invalid companies."))
+                    raise AccessError(self._("Access to unauthorized or invalid companies."))
             return self['res.company'].browse(company_ids)
         # By setting the default companies to all user companies instead of the main one
         # we save a lot of potential trouble in all "out of context" calls, such as
@@ -751,7 +751,8 @@ class Environment(Mapping):
         """
         lang = self.context.get('lang')
         if lang and lang != 'en_US' and not self['res.lang']._get_data(code=lang):
-            raise UserError(_('Invalid language code: %s', lang))
+            # cannot translate here because we do not have a valid language
+            raise UserError(f'Invalid language code: {lang}')  # pylint: disable
         return lang or None
 
     @lazy_property
@@ -765,6 +766,41 @@ class Environment(Mapping):
         if context.get('edit_translations') or context.get('check_translations'):
             lang = '_' + lang
         return lang
+
+    def _(self, source: str | LazyGettext, *args, **kwargs) -> str:
+        """Translate the term using current environment's language.
+
+        Usage:
+
+        ```
+        self.env._("hello world")  # dynamically get module name
+        self.env._("hello %s", "test")
+        self.env._(LAZY_TRANSLATION)
+        ```
+
+        :param source: String to translate or lazy translation
+        :param ...: args or kwargs for templating
+        :return: The transalted string
+        """
+        lang = self.lang or 'en_US'
+        if isinstance(source, str):
+            assert not (args and kwargs), "Use args or kwargs, not both"
+            args = args or kwargs
+        elif isinstance(source, LazyGettext):
+            # translate a lazy text evaluation
+            assert not args and not kwargs, "All args should come from the lazy text"
+            return source._translate(lang)
+        else:
+            raise TypeError(f"Cannot translate {source!r}")
+        if lang == 'en_US':
+            # we ignore the module as en_US is not translated
+            return get_translation('base', 'en_US', source, args)
+        try:
+            module = get_translated_module(2)
+            return get_translation(module, lang, source, args)
+        except Exception:  # noqa: BLE001
+            _logger.debug('translation went wrong for "%r", skipped', source, exc_info=True)
+        return source
 
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.

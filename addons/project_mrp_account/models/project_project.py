@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models
 from odoo.osv import expression
 
 
@@ -13,7 +13,7 @@ class Project(models.Model):
 
     def _get_profitability_labels(self):
         labels = super()._get_profitability_labels()
-        labels['manufacturing_order'] = _('Manufacturing Orders')
+        labels['manufacturing_order'] = self.env._('Manufacturing Orders')
         return labels
 
     def _get_profitability_sequence_per_invoice_type(self):

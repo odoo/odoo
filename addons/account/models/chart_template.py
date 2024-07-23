@@ -10,14 +10,12 @@ from copy import deepcopy
 import logging
 import re
 
-from psycopg2.extras import Json
-
-from odoo import Command, _, models, api
+from odoo import Command, api, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessError, UserError
 from odoo.modules import get_resource_from_path
 from odoo.tools import file_open, get_lang, groupby, SQL
-from odoo.tools.translate import code_translations, TranslationImporter
+from odoo.tools.translate import _, code_translations, TranslationImporter
 
 _logger = logging.getLogger(__name__)
 
@@ -1115,7 +1113,7 @@ class AccountChartTemplate(models.AbstractModel):
                     format_tag = re.sub(r'\s+', ' ', tag.strip())
                     mapped_tag = tags.get(format_tag)
                     if not mapped_tag:
-                        raise UserError(_('Error while loading the localization. You should probably update your localization app first.'))
+                        raise UserError(self.env._('Error while loading the localization. You should probably update your localization app first.'))
                     res.append(mapped_tag)
             return res
         return mapping_getter

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, _, _lt, Command
+from odoo import api, models, Command
 from odoo.tools import html2plaintext
+
 
 class Task(models.Model):
     _inherit = 'project.task'
@@ -17,7 +18,7 @@ class Task(models.Model):
                     name = text.strip().replace('*', '').partition("\n")[0]
                     vals['name'] = (name[:97] + '...') if len(name) > 100 else name
                 else:
-                    vals['name'] = _('Untitled to-do')
+                    vals['name'] = self.env._('Untitled to-do')
         return super().create(vals_list)
 
     def _ensure_onboarding_todo(self):
@@ -28,7 +29,8 @@ class Task(models.Model):
 
     def _generate_onboarding_todo(self, user):
         user.ensure_one()
-        body = self.with_context(lang=user.lang or self.env.user.lang).env['ir.qweb']._render(
+        self_lang = self.with_context(lang=user.lang or self.env.user.lang)
+        body = self_lang.env['ir.qweb']._render(
             'project_todo.todo_user_onboarding',
             {'object': user},
             minimal_qcontext=True,
@@ -36,7 +38,7 @@ class Task(models.Model):
         )
         if not body:
             return
-        title = _lt('Welcome %s!', user.name)
+        title = self_lang.env._('Welcome %s!', user.name)
         self.env['project.task'].create([{
             'user_ids': user.ids,
             'description': body,

@@ -6,9 +6,11 @@ import contextlib
 from datetime import timedelta
 from markupsafe import Markup
 
-from odoo import fields, _
+from odoo import fields
 from odoo.exceptions import AccessError
 from odoo.addons.l10n_in_edi_ewaybill.models.error_codes import ERROR_CODES
+from odoo.tools import _, LazyTranslate
+_lt = LazyTranslate(__name__)
 
 
 _logger = logging.getLogger(__name__)
@@ -44,7 +46,7 @@ class EWayBillError(Exception):
 
 class EWayBillApi:
 
-    DEFAULT_HELP_MESSAGE = _(
+    DEFAULT_HELP_MESSAGE = _lt(
         "Somehow this E-waybill has been %s in the government portal before. "
         "You can verify by checking the details into the government "
         "(https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"

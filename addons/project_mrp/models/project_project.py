@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ProjectProject(models.Model):
@@ -35,7 +35,7 @@ class ProjectProject(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'mrp.bom',
             'domain': [('project_id', '=', self.id)],
-            'name': _('Bills of Materials'),
+            'name': self.env._('Bills of Materials'),
             'view_mode': 'list,form',
             'context': {'default_project_id': self.id},
         }
@@ -62,7 +62,7 @@ class ProjectProject(models.Model):
             self_sudo = self.sudo()
             buttons.extend([{
                 'icon': 'flask',
-                'text': _('Bills of Materials'),
+                'text': self.env._('Bills of Materials'),
                 'number': self_sudo.bom_count,
                 'action_type': 'object',
                 'action': 'action_view_mrp_bom',
@@ -71,7 +71,7 @@ class ProjectProject(models.Model):
             },
             {
                 'icon': 'wrench',
-                'text': _('Manufacturing Orders'),
+                'text': self.env._('Manufacturing Orders'),
                 'number': self_sudo.production_count,
                 'action_type': 'object',
                 'action': 'action_view_mrp_production',

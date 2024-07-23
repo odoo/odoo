@@ -2,33 +2,36 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import markupsafe
-from odoo import _, api, fields, models, release
+from odoo import api, fields, models, release
+from odoo.tools import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 # === TBAI license values ===
 L10N_ES_TBAI_LICENSE_DICT = {
     'production': {
-        'license_name': _('Production license'),  # all agencies
+        'license_name': _lt('Production license'),  # all agencies
         'license_number': 'TBAIGI5A266A7CCDE1EC',
         'license_nif': 'N0251909H',
         'software_name': 'Odoo SA',
         'software_version': release.version,
     },
     'araba': {
-        'license_name': _('Test license (Araba)'),
+        'license_name': _lt('Test license (Araba)'),
         'license_number': 'TBAIARbjjMClHKH00849',
         'license_nif': 'N0251909H',
         'software_name': 'Odoo SA',
         'software_version': release.version,
     },
     'bizkaia': {
-        'license_name': _('Test license (Bizkaia)'),
+        'license_name': _lt('Test license (Bizkaia)'),
         'license_number': 'TBAIBI00000000PRUEBA',
         'license_nif': 'A99800005',
         'software_name': 'SOFTWARE GARANTE TICKETBAI PRUEBA',
         'software_version': '1.0',
     },
     'gipuzkoa': {
-        'license_name': _('Test license (Gipuzkoa)'),
+        'license_name': _lt('Test license (Gipuzkoa)'),
         'license_number': 'TBAIGIPRE00000000965',
         'license_nif': 'N0251909H',
         'software_name': 'Odoo SA',
@@ -104,10 +107,10 @@ class ResCompany(models.Model):
             license_dict = company._get_l10n_es_tbai_license_dict()
             if license_dict:
                 license_dict.update({
-                    'tr_nif': _('Licence NIF'),
-                    'tr_number': _('Licence number'),
-                    'tr_name': _('Software name'),
-                    'tr_version': _('Software version')
+                    'tr_nif': self.env._('Licence NIF'),
+                    'tr_number': self.env._('Licence number'),
+                    'tr_name': self.env._('Software name'),
+                    'tr_version': self.env._('Software version')
                 })
                 company.l10n_es_tbai_license_html = markupsafe.Markup('''
 <strong>{license_name}</strong><br/>
@@ -119,7 +122,7 @@ class ResCompany(models.Model):
 </p>''').format(**license_dict)
             else:
                 company.l10n_es_tbai_license_html = markupsafe.Markup('''
-<strong>{tr_no_license}</strong>''').format(tr_no_license=_('TicketBAI is not configured'))
+<strong>{tr_no_license}</strong>''').format(tr_no_license=self.env._('TicketBAI is not configured'))
 
     def _get_l10n_es_tbai_license_dict(self):
         self.ensure_one()

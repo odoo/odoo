@@ -8,12 +8,15 @@ from psycopg2 import IntegrityError
 import re
 from werkzeug.exceptions import BadRequest
 
-from odoo import http, SUPERUSER_ID, _, _lt
+from odoo import http, SUPERUSER_ID
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
+from odoo.tools.translate import _, LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 
 class WebsiteForm(http.Controller):

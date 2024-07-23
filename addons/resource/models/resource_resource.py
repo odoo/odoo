@@ -5,7 +5,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 
 from .utils import timezone_datetime, make_aware, Intervals
@@ -74,7 +74,7 @@ class ResourceResource(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", resource.name)) for resource, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", resource.name)) for resource, vals in zip(self, vals_list)]
 
     def write(self, values):
         if self.env.context.get('check_idempotence') and len(self) == 1:

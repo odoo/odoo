@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-import babel.dates
 import base64
 import itertools
 import json
-import pytz
 
-from odoo import _, _lt, api, fields, models
+from odoo import api, models
 from odoo.fields import Command
 from odoo.models import BaseModel, NewId
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
-from odoo.tools import date_utils, unique
-from odoo.tools.misc import OrderedSet, get_lang
+from odoo.tools import unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
 from collections import defaultdict
+from odoo.tools.translate import LazyTranslate
 
+_lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 
 def is_true_domain(domain):
@@ -191,7 +190,7 @@ class Base(models.AbstractModel):
                         try:
                             reference_read = co_record.web_read(field_spec['fields'])
                         except AccessError:
-                            reference_read = [{'id': co_record.id, 'display_name': _("You don't have access to this record")}]
+                            reference_read = [{'id': co_record.id, 'display_name': self.env._("You don't have access to this record")}]
                         if any(fname != 'id' for fname in field_spec['fields']):
                             # we can infer that if we can read fields for the co-record, it exists
                             co_record_exists = bool(reference_read)
@@ -550,7 +549,7 @@ class Base(models.AbstractModel):
         supported_types = ['many2one', 'selection']
         if field.type not in supported_types:
             types = dict(self.env["ir.model.fields"]._fields["ttype"]._description_selection(self.env))
-            raise UserError(_(
+            raise UserError(self.env._(
                 'Only types %(supported_types)s are supported for category (found type %(field_type)s)',
                 supported_types=", ".join(types[t] for t in supported_types),
                 field_type=types[field.type],
@@ -679,8 +678,9 @@ class Base(models.AbstractModel):
         field = self._fields[field_name]
         supported_types = ['many2one', 'many2many', 'selection']
         if field.type not in supported_types:
-            raise UserError(_('Only types %(supported_types)s are supported for filter (found type %(field_type)s)',
-                              supported_types=supported_types, field_type=field.type))
+            raise UserError(self.env._(
+                'Only types %(supported_types)s are supported for filter (found type %(field_type)s)',
+                supported_types=supported_types, field_type=field.type))
 
         model_domain = kwargs.get('search_domain', [])
         extra_domain = AND([
@@ -706,19 +706,19 @@ class Base(models.AbstractModel):
 
             if group_by_field.type == 'many2one':
                 def group_id_name(value):
-                    return value or (False, _("Not Set"))
+                    return value or (False, self.env._("Not Set"))
 
             elif group_by_field.type == 'selection':
                 desc = Comodel.fields_get([group_by])[group_by]
                 group_by_selection = dict(desc['selection'])
-                group_by_selection[False] = _("Not Set")
+                group_by_selection[False] = self.env._("Not Set")
 
                 def group_id_name(value):
                     return value, group_by_selection[value]
 
             else:
                 def group_id_name(value):
-                    return (value, value) if value else (False, _("Not Set"))
+                    return (value, value) if value else (False, self.env._("Not Set"))
 
         comodel_domain = kwargs.get('comodel_domain', [])
         enable_counters = kwargs.get('enable_counters')
@@ -1025,7 +1025,7 @@ class Base(models.AbstractModel):
             result['warning'] = dict(title=title, message=message, type=type_)
         elif len(warnings) > 1:
             # concatenate warning titles and messages
-            title = _("Warnings")
+            title = self.env._("Warnings")
             message = '\n\n'.join([warn_title + '\n\n' + warn_message for warn_title, warn_message, warn_type in warnings])
             result['warning'] = dict(title=title, message=message, type='dialog')
 

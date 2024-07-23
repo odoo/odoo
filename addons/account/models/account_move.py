@@ -3512,7 +3512,7 @@ class AccountMove(models.Model):
             move_hashes = chain['moves']._calculate_hashes(chain['previous_hash'])
             for move, move_hash in move_hashes.items():
                 move.inalterable_hash = move_hash
-            chain['moves']._message_log_batch(bodies={m.id: _("This journal entry has been secured.") for m in chain['moves']})
+            chain['moves']._message_log_batch(bodies={m.id: self.env._("This journal entry has been secured.") for m in chain['moves']})
 
     def _get_chain_info(self, force_hash=False, include_pre_last_hash=False, early_stop=False):
         """All records in `self` must belong to the same journal and sequence_prefix
@@ -5006,6 +5006,7 @@ class AccountMove(models.Model):
         :param job_count: maximum number of jobs to process if specified.
         """
         def get_account_notification(moves, is_success: bool):
+            _ = self.env._
             return [
                 'account_notification',
                 {

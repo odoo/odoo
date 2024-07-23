@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class IrMailServer(models.Model):
@@ -18,7 +18,8 @@ class IrMailServer(models.Model):
         usages_super = super()._active_usages_compute()
         for record in self.filtered('mail_template_ids'):
             usages_super.setdefault(record.id, []).extend(
-                map(lambda t: _('%s (Email Template)', t.display_name), record.mail_template_ids)
+                self.env._('%s (Email Template)', t.display_name)
+                for t in record.mail_template_ids
             )
         return usages_super
 

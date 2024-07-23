@@ -4,10 +4,11 @@ import ast
 import json
 from collections import defaultdict
 
-from odoo import api, fields, models, _, _lt
+from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import Query, SQL
 from odoo.tools.misc import unquote
+from odoo.tools.translate import _
 
 
 class ProjectProject(models.Model):
@@ -490,10 +491,10 @@ class ProjectProject(models.Model):
     def _get_profitability_labels(self):
         return {
             **super()._get_profitability_labels(),
-            'service_revenues': _lt('Other Services'),
-            'materials': _lt('Materials'),
-            'other_invoice_revenues': _lt('Customer Invoices'),
-            'downpayments': _lt('Down Payments'),
+            'service_revenues': self.env._('Other Services'),
+            'materials': self.env._('Materials'),
+            'other_invoice_revenues': self.env._('Customer Invoices'),
+            'downpayments': self.env._('Down Payments'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):
@@ -746,7 +747,7 @@ class ProjectProject(models.Model):
             self_sudo = self.sudo()
             buttons.append({
                 'icon': 'dollar',
-                'text': _lt('Sales Orders'),
+                'text': self.env._('Sales Orders'),
                 'number': self_sudo.sale_order_count,
                 'action_type': 'object',
                 'action': 'action_view_sos',
@@ -759,7 +760,7 @@ class ProjectProject(models.Model):
         if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
             buttons.append({
                 'icon': 'dollar',
-                'text': _lt('Sales Order Items'),
+                'text': self.env._('Sales Order Items'),
                 'number': self.sale_order_line_count,
                 'action_type': 'object',
                 'action': 'action_view_sols',
@@ -770,7 +771,7 @@ class ProjectProject(models.Model):
             self_sudo = self.sudo()
             buttons.append({
                 'icon': 'pencil-square-o',
-                'text': _lt('Invoices'),
+                'text': self.env._('Invoices'),
                 'number': self_sudo.invoice_count,
                 'action_type': 'object',
                 'action': 'action_open_project_invoices',
@@ -781,7 +782,7 @@ class ProjectProject(models.Model):
             self_sudo = self.sudo()
             buttons.append({
                 'icon': 'pencil-square-o',
-                'text': _lt('Vendor Bills'),
+                'text': self.env._('Vendor Bills'),
                 'number': self_sudo.vendor_bill_count,
                 'action_type': 'object',
                 'action': 'action_open_project_vendor_bills',

@@ -5,11 +5,12 @@ from datetime import timedelta
 
 from markupsafe import Markup
 
-from odoo import _, _lt, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, format_date, groupby
+from odoo.tools.translate import _
 
 
 class SaleOrderLine(models.Model):
@@ -443,7 +444,7 @@ class SaleOrderLine(models.Model):
             return _("Down Payments")
 
         dp_state = self._get_downpayment_state()
-        name = _lt("Down Payment")
+        name = _("Down Payment")
         if dp_state == 'draft':
             name = _(
                 "Down Payment: %(date)s (Draft)",

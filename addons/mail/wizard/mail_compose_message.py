@@ -391,7 +391,7 @@ class MailComposer(models.TransientModel):
             if composer.parent_id and composer.composition_mode == 'comment':
                 composer.res_ids = f"{[composer.parent_id.res_id]}"
             else:
-                active_res_ids = parse_res_ids(self.env.context.get('active_ids'))
+                active_res_ids = parse_res_ids(self.env.context.get('active_ids'), self.env)
                 # beware, field is limited in storage, usage of active_ids in context still required
                 if active_res_ids and len(active_res_ids) <= self._batch_size:
                     composer.res_ids = f"{self.env.context['active_ids']}"
@@ -1391,7 +1391,8 @@ class MailComposer(models.TransientModel):
         return parse_res_ids(
             self.env.context.get('composer_force_res_ids') or
             self.res_ids or
-            self.env.context.get('active_ids')
+            self.env.context.get('active_ids'),
+            self.env,
         ) or []
 
     def _set_value_from_template(self, template_fname, composer_fname=False):

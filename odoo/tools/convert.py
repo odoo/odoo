@@ -25,7 +25,6 @@ except ImportError:
 import odoo
 from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
-from .translate import _
 from odoo.exceptions import ValidationError
 
 from .safe_eval import safe_eval as s_eval, pytz, time
@@ -648,7 +647,7 @@ def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
     if any(msg['type'] == 'error' for msg in result['messages']):
         # Report failed import and abort module install
         warning_msg = "\n".join(msg['message'] for msg in result['messages'])
-        raise Exception(_(
+        raise Exception(env._(
             "Module loading %(module)s failed: file %(file)s could not be processed:\n%(message)s",
             module=module,
             file=fname,

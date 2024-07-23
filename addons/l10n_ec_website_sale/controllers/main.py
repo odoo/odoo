@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _lt
-from odoo.http import request
-
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.http import request
 
 
 class L10nECWebsiteSale(WebsiteSale):
@@ -29,7 +27,7 @@ class L10nECWebsiteSale(WebsiteSale):
                 'identification_types': LatamIdentificationType.search([
                     '|', ('country_id', '=', False), ('country_id.code', '=', 'EC')
                 ]) if can_edit_vat else LatamIdentificationType,
-                'vat_label': _lt("Identification Number"),
+                'vat_label': request.env._("Identification Number"),
             })
 
         return rendering_values

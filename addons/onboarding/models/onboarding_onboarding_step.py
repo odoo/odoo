@@ -17,11 +17,11 @@ class OnboardingStep(models.Model):
     title = fields.Char('Title', translate=True)
     description = fields.Char('Description', translate=True)
     button_text = fields.Char(
-        'Button text', required=True, default=_("Let's do it"), translate=True,
+        'Button text', required=True, default=lambda s: s.env._("Let's do it"), translate=True,
         help="Text on the panel's button to start this step")
     done_icon = fields.Char('Font Awesome Icon when completed', default='fa-star')
     done_text = fields.Char(
-        'Text to show when step is completed', default=_('Step Completed!'), translate=True)
+        'Text to show when step is completed', default=lambda s: s.env._('Step Completed!'), translate=True)
     step_image = fields.Binary("Step Image")
     step_image_filename = fields.Char("Step Image Filename")
     step_image_alt = fields.Char(

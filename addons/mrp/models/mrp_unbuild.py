@@ -14,7 +14,7 @@ class MrpUnbuild(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
 
-    name = fields.Char('Reference', copy=False, readonly=True, default=lambda x: _('New'))
+    name = fields.Char('Reference', copy=False, readonly=True, default=lambda s: s.env._('New'))
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
         domain="[('type', '=', 'consu')]",

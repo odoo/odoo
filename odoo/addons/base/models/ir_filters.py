@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval, datetime
 
@@ -39,7 +39,7 @@ class IrFilters(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", ir_filter.name)) for ir_filter, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", ir_filter.name)) for ir_filter, vals in zip(self, vals_list)]
 
     def write(self, vals):
         new_filter = super().write(vals)
@@ -115,7 +115,7 @@ class IrFilters(models.Model):
         if matching_filters and (matching_filters[0]['id'] == defaults.id):
             return
 
-        raise UserError(_("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default", model=vals.get('model_id')))
+        raise UserError(self.env._("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default", model=vals.get('model_id')))
 
     @api.model
     @api.returns('self', lambda value: value.id)

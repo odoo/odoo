@@ -43,7 +43,7 @@ class SMSTemplate(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", template.name)) for template, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", template.name)) for template, vals in zip(self, vals_list)]
 
     def unlink(self):
         self.sudo().mapped('sidebar_action_id').unlink()

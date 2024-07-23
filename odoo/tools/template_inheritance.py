@@ -6,12 +6,13 @@ import re
 from lxml import etree
 from lxml.builder import E
 
-from odoo.tools.translate import _
+from odoo.tools.translate import LazyTranslate
 from odoo.exceptions import ValidationError
 from .misc import SKIPPED_ELEMENT_TYPES, html_escape
 
 __all__ = []
 
+_lt = LazyTranslate('base')
 _logger = logging.getLogger(__name__)
 RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
 
@@ -85,7 +86,7 @@ def locate_node(arch, spec):
         try:
             xPath = etree.ETXPath(expr)
         except etree.XPathSyntaxError as e:
-            raise ValidationError(_("Invalid Expression while parsing xpath “%s”", expr)) from e
+            raise ValidationError(_lt("Invalid Expression while parsing xpath “%s”", expr)) from e
         nodes = xPath(arch)
         return nodes[0] if nodes else None
     elif spec.tag == 'field':
@@ -130,7 +131,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
         """
         if len(spec):
             raise ValueError(
-                _("Invalid specification for moved nodes: “%s”", etree.tostring(spec, encoding='unicode'))
+                _lt("Invalid specification for moved nodes: “%s”", etree.tostring(spec, encoding='unicode'))
             )
         pre_locate(spec)
         to_extract = locate_node(source, spec)
@@ -139,7 +140,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
             return to_extract
         else:
             raise ValueError(
-                _("Element “%s” cannot be located in parent view", etree.tostring(spec, encoding='unicode'))
+                _lt("Element “%s” cannot be located in parent view", etree.tostring(spec, encoding='unicode'))
             )
 
     while len(specs):
@@ -211,7 +212,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                     node.text = spec.text
 
                 else:
-                    raise ValueError(_("Invalid mode attribute: “%s”", mode))
+                    raise ValueError(_lt("Invalid mode attribute: “%s”", mode))
             elif pos == 'attributes':
                 for child in spec.getiterator('attribute'):
                     # The element should only have attributes:
@@ -225,7 +226,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                         and not key.startswith('data-oe-')
                     ]
                     if unknown:
-                        raise ValueError(_(
+                        raise ValueError(_lt(
                             "Invalid attributes %s in element <attribute>",
                             ", ".join(map(repr, unknown)),
                         ))
@@ -235,7 +236,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
 
                     if child.get('add') or child.get('remove'):
                         if child.text:
-                            raise ValueError(_(
+                            raise ValueError(_lt(
                                 "Element <attribute> with 'add' or 'remove' cannot contain text %s",
                                 repr(child.text),
                             ))
@@ -248,7 +249,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                             # attribute containing a python expression
                             separator = separator.strip()
                             if separator not in ('and', 'or'):
-                                raise ValueError(_(
+                                raise ValueError(_lt(
                                     "Invalid separator %(separator)s for python expression %(expression)s; "
                                     "valid values are 'and' and 'or'",
                                     separator=repr(separator), expression=repr(attribute),
@@ -310,10 +311,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 add_stripped_items_before(node, spec, extract)
 
             else:
-                raise ValueError(
-                    _("Invalid position attribute: '%s'") %
-                    pos
-                )
+                raise ValueError(_lt("Invalid position attribute: '%s'", pos))
 
         else:
             attrs = ''.join([
@@ -323,7 +321,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
             ])
             tag = "<%s%s>" % (spec.tag, attrs)
             raise ValueError(
-                _("Element '%s' cannot be located in parent view", tag)
+                _lt("Element '%s' cannot be located in parent view", tag)
             )
 
     return source

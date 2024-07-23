@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.addons.onboarding.models.onboarding_progress import ONBOARDING_PROGRESS_STATES
 
 
@@ -16,7 +16,7 @@ class Onboarding(models.Model):
     step_ids = fields.Many2many('onboarding.onboarding.step', string='Onboarding steps')
 
     text_completed = fields.Char(
-        'Message at completion', default=_('Nice work! Your configuration is done.'),
+        'Message at completion', default=lambda s: s.env._('Nice work! Your configuration is done.'),
         help='Text shown on onboarding when completed')
 
     is_per_company = fields.Boolean(

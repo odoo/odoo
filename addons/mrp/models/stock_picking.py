@@ -113,7 +113,7 @@ class StockPickingType(models.Model):
         # Make sure that all picking type IDs are represented, even if empty
         picking_type_id_to_dates = {i: [] for i in production_picking_types.ids}
         picking_type_id_to_dates.update({r[0].id: r[1] for r in mrp_records})
-        mrp_records = [(i, d, _('Confirmed')) for i, d in picking_type_id_to_dates.items()]
+        mrp_records = [(i, d, self.env._('Confirmed')) for i, d in picking_type_id_to_dates.items()]
         return records + mrp_records
 
 class StockPicking(models.Model):

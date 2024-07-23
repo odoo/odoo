@@ -365,7 +365,9 @@ class AccountTax(models.Model):
             for line in old_line_values_dict.keys() & new_line_values_dict.keys()
         ]
         added_and_deleted_lines = [
-            (line, _('Removed'), old_line_values_dict[line]) if line in old_line_values_dict else (line, _('New'), new_line_values_dict[line])
+            (line, self.env._('Removed'), old_line_values_dict[line])
+            if line in old_line_values_dict
+            else (line, self.env._('New'), new_line_values_dict[line])
             for line in old_line_values_dict.keys() ^ new_line_values_dict.keys()
         ]
 

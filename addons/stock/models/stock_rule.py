@@ -383,6 +383,7 @@ class StockRule(models.Model):
         :return: the cumulative delay and cumulative delay's description
         :rtype: tuple[defaultdict(float), list[str, str]]
         """
+        _ = self.env._
         delays = defaultdict(float)
         delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
         delays['total_delay'] += delay

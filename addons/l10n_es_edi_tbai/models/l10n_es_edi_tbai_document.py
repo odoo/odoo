@@ -193,7 +193,7 @@ class L10nEsEdiTbaiDocument(models.Model):
                 except etree.XMLSyntaxError as e:
                     error = str(e)
             else:
-                error = _('No XML response received.')
+                error = self.env._('No XML response received.')
             return response.headers, response_xml, [error] if error else []
 
         if self.company_id.l10n_es_tbai_tax_agency in ('araba', 'gipuzkoa'):

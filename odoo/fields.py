@@ -40,7 +40,7 @@ from .tools import (
 from .tools.sql import pg_varchar
 from .tools.mimetypes import guess_mimetype
 from .tools.misc import unquote, has_list_types, Sentinel, SENTINEL
-from .tools.translate import html_translate, _
+from .tools.translate import html_translate
 
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
@@ -699,13 +699,13 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
                 values = [first(value[name]) for value in values]
             except AccessError as e:
                 description = records.env['ir.model']._get(records._name).name
-                raise AccessError(
-                    _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
-                        'previous_message': e.args[0],
-                        'document_kind': description,
-                        'document_model': records._name,
-                    }
-                )
+                env = records.env
+                raise AccessError(env._(
+                    "%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).",
+                    previous_message=e.args[0],
+                    document_kind=description,
+                    document_model=records._name,
+                ))
         # assign final values to records
         for record, value in zip(records, values):
             record[self.name] = self._process_related(value[self.related_field.name], record.env)
@@ -1251,8 +1251,8 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
                 record._fetch_field(self)
             if not env.cache.contains(record, self):
                 raise MissingError("\n".join([
-                    _("Record does not exist or has been deleted."),
-                    _("(Record: %(record)s, User: %(user)s)", record=record, user=env.uid),
+                    env._("Record does not exist or has been deleted."),
+                    env._("(Record: %(record)s, User: %(user)s)", record=record, user=env.uid),
                 ])) from None
             value = env.cache.get(record, self)
 
@@ -2158,7 +2158,7 @@ class Html(_String):
                             diff_str += line.rstrip() + '\n'
                     _logger.info(diff_str)
 
-                    raise UserError(_(
+                    raise UserError(record.env._(
                         "The field value you're saving (%(model)s %(field)s) includes content that is "
                         "restricted for security reasons. It is possible that someone "
                         "with higher privileges previously modified it, and you are therefore "
@@ -2444,13 +2444,13 @@ class Binary(Field):
             # Full mimetype detection
             if (guess_mimetype(decoded_value).startswith('image/svg') and
                     not record.env.is_system()):
-                raise UserError(_("Only admins can upload SVG files."))
+                raise UserError(record.env._("Only admins can upload SVG files."))
         if isinstance(value, bytes):
             return psycopg2.Binary(value)
         try:
             return psycopg2.Binary(str(value).encode('ascii'))
         except UnicodeEncodeError:
-            raise UserError(_("ASCII characters are required for %(value)s in %(field)s", value=value, field=self.name))
+            raise UserError(record.env._("ASCII characters are required for %(value)s in %(field)s", value=value, field=self.name))
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, _BINARY):
@@ -2662,7 +2662,7 @@ class Image(Binary):
         try:
             img = base64.b64decode(value or '') or False
         except:
-            raise UserError(_("Image is not encoded in base64."))
+            raise UserError(env._("Image is not encoded in base64."))
 
         if img and guess_mimetype(img, '') == 'image/webp':
             if not self.max_width and not self.max_height:
@@ -3039,7 +3039,7 @@ class _Relational(Field[M], typing.Generic[M]):
                 cids = 'company_ids'
                 field_to_check = 'company_ids'
             else:
-                _logger.warning(_(
+                _logger.warning(env._(
                     "Couldn't generate a company-dependent domain for field %s. "
                     "The model doesn't have a 'company_id' or 'company_ids' field, and isn't company-dependent either.",
                     f'{self.model_name}.{self.name}'
@@ -4519,7 +4519,7 @@ class One2many(_RelationalMulti[M]):
         if self.comodel_name in model.env:
             comodel = model.env[self.comodel_name]
             if self.inverse_name not in comodel._fields:
-                raise UserError(_(
+                raise UserError(model.env._(
                     'No inverse field "%(inverse_field)s" found for "%(comodel)s"',
                     inverse_field=self.inverse_name,
                     comodel=self.comodel_name

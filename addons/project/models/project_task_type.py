@@ -79,7 +79,7 @@ class ProjectTaskType(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", task_type.name)) for task_type, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", task_type.name)) for task_type, vals in zip(self, vals_list)]
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_remaining_personal_stages(self):

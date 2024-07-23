@@ -821,16 +821,16 @@ class AccountAccount(models.Model):
                     cache[company.id].add(new_code)
 
             if 'name' not in default:
-                vals['name'] = _("%s (copy)", account.name or '')
+                vals['name'] = self.env._("%s (copy)", account.name or '')
 
         return vals_list
 
     def copy_translations(self, new, excluded=()):
         super().copy_translations(new, excluded=tuple(excluded)+('name',))
-        if new.name == _('%s (copy)', self.name):
+        if new.name == self.env._('%s (copy)', self.name):
             name_field = self._fields['name']
             self.env.cache.update_raw(new, name_field, [{
-                lang: _('%s (copy)', tr)
+                lang: self.env._('%s (copy)', tr)
                 for lang, tr in name_field._get_stored_translations(self).items()
             }], dirty=True)
 

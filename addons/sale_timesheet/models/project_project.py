@@ -2,10 +2,11 @@
 
 import json
 
-from odoo import api, fields, models, _, _lt
+from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import SQL
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools.translate import _
 
 
 class ProjectProject(models.Model):
@@ -371,13 +372,13 @@ class ProjectProject(models.Model):
     def _get_profitability_labels(self):
         return {
             **super()._get_profitability_labels(),
-            'billable_fixed': _lt('Timesheets (Fixed Price)'),
-            'billable_time': _lt('Timesheets (Billed on Timesheets)'),
-            'billable_milestones': _lt('Timesheets (Billed on Milestones)'),
-            'billable_manual': _lt('Timesheets (Billed Manually)'),
-            'non_billable': _lt('Timesheets (Non-Billable)'),
-            'timesheet_revenues': _lt('Timesheets revenues'),
-            'other_costs': _lt('Materials'),
+            'billable_fixed': self.env._('Timesheets (Fixed Price)'),
+            'billable_time': self.env._('Timesheets (Billed on Timesheets)'),
+            'billable_milestones': self.env._('Timesheets (Billed on Milestones)'),
+            'billable_manual': self.env._('Timesheets (Billed Manually)'),
+            'non_billable': self.env._('Timesheets (Non-Billable)'),
+            'timesheet_revenues': self.env._('Timesheets revenues'),
+            'other_costs': self.env._('Materials'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):

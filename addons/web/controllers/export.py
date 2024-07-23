@@ -18,7 +18,6 @@ from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
 from odoo.tools import lazy_property, osutil
 from odoo.tools.misc import xlsxwriter
-from odoo.tools.translate import _
 
 
 _logger = logging.getLogger(__name__)
@@ -197,7 +196,7 @@ class ExportXlsxWriter:
         self.value = False
 
         if row_count > self.worksheet.xls_rowmax:
-            raise UserError(_('There are too many rows (%(count)s rows, limit: %(limit)s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.', count=row_count, limit=self.worksheet.xls_rowmax))
+            raise UserError(request.env._('There are too many rows (%(count)s rows, limit: %(limit)s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.', count=row_count, limit=self.worksheet.xls_rowmax))
 
     def __enter__(self):
         self.write_header()
@@ -231,13 +230,13 @@ class ExportXlsxWriter:
                 # fails note that you can't export
                 cell_value = cell_value.decode()
             except UnicodeDecodeError:
-                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column]) from None
+                raise UserError(request.env._("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column]) from None
         elif isinstance(cell_value, (list, tuple, dict)):
             cell_value = str(cell_value)
 
         if isinstance(cell_value, str):
             if len(cell_value) > self.worksheet.xls_strmax:
-                cell_value = _("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.", self.worksheet.xls_strmax)
+                cell_value = request.env._("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.", self.worksheet.xls_strmax)
             else:
                 cell_value = cell_value.replace("\r", " ")
         elif isinstance(cell_value, datetime.datetime):
@@ -255,7 +254,7 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
     def write_group(self, row, column, group_name, group, group_depth=0):
         group_name = group_name[1] if isinstance(group_name, tuple) and len(group_name) > 1 else group_name
         if group._groupby_type[group_depth] != 'boolean':
-            group_name = group_name or _("Undefined")
+            group_name = group_name or request.env._("Undefined")
         row, column = self._write_group_header(row, column, group_name, group, group_depth)
 
         # Recursively write sub-groups
@@ -323,10 +322,10 @@ class Export(http.Controller):
         else:
             fields['.id'] = {**fields['id']}
 
-        fields['id']['string'] = _('External ID')
+        fields['id']['string'] = request.env._('External ID')
 
         if parent_field:
-            parent_field['string'] = _('External ID')
+            parent_field['string'] = request.env._('External ID')
             fields['id'] = parent_field
 
         fields_sequence = sorted(fields.items(),
@@ -539,7 +538,7 @@ class CSVExport(ExportFormat, http.Controller):
         return '.csv'
 
     def from_group_data(self, fields, columns_headers, groups):
-        raise UserError(_("Exporting grouped data to csv is not supported."))
+        raise UserError(request.env._("Exporting grouped data to csv is not supported."))
 
     def from_data(self, fields, columns_headers, rows):
         fp = io.StringIO()

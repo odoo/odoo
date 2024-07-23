@@ -12,12 +12,14 @@ from operator import itemgetter
 
 from psycopg2.extras import Json
 
-from odoo import api, fields, models, tools, _, _lt, Command
+from odoo import api, fields, models, tools, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_list, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
+from odoo.tools.translate import _, LazyTranslate
 
+_lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
 # Messages are declared in extenso so they are properly exported in translation terms
@@ -1498,6 +1500,13 @@ class IrModelSelection(models.Model):
         ]
         if not fields:
             return
+        if invalid_fields := OrderedSet(
+            field for field in fields
+            for selection in field.selection
+            for value_label in selection
+            if not isinstance(value_label, str)
+        ):
+            raise ValidationError(_("Fields %s contain a non-str value/label in selection", invalid_fields))
 
         # determine expected and existing rows
         IMF = self.env['ir.model.fields']

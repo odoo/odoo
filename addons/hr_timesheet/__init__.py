@@ -7,7 +7,7 @@ from . import report
 from . import wizard
 from . import populate
 
-from odoo import fields, _
+from odoo import fields
 
 from odoo.addons.project import _check_exists_collaborators_for_project_sharing
 
@@ -22,7 +22,7 @@ def create_internal_project(env):
         return
     project_ids = env['res.company'].search([])._create_internal_project_task()
     env['account.analytic.line'].create([{
-        'name': _("Analysis"),
+        'name': env._("Analysis"),
         'user_id': admin.id,
         'date': fields.datetime.today(),
         'unit_amount': 0,

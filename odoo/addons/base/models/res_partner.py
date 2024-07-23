@@ -478,7 +478,7 @@ class Partner(models.Model):
         vals_list = super().copy_data(default=default)
         if default.get('name'):
             return vals_list
-        return [dict(vals, name=_("%s (copy)", partner.name)) for partner, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", partner.name)) for partner, vals in zip(self, vals_list)]
 
     @api.onchange('parent_id')
     def onchange_parent_id(self):
