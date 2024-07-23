@@ -18,7 +18,7 @@
             </div>
             <h3 t-if="this.confirmedOrder.table_id || confirmedOrder.table_stand_number" class="text-muted mb-3">
                 Service at table
-                <t t-if="selfOrder.config.self_ordering_mode === 'mobile'" t-esc="this.confirmedOrder.table_id?.name + ' (' + this.confirmedOrder.table_id?.floor_id?.name + ')'" />
+                <t t-if="selfOrder.config.self_ordering_mode === 'mobile'" t-esc="this.confirmedOrder.table_id?.getName() + ' (' + this.confirmedOrder.table_id?.floor_id?.name + ')'" />
                 <t t-else="" t-esc="confirmedOrder.table_stand_number" />
             </h3>
             <h3 t-else="">Order to pick-up at the counter</h3>

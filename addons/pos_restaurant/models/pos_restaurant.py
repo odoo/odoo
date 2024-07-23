@@ -87,8 +87,8 @@ class RestaurantTable(models.Model):
     _description = 'Restaurant Table'
     _inherit = ['pos.load.mixin']
 
-    name = fields.Char('Table Name', required=True, help='An internal identification of a table')
     floor_id = fields.Many2one('restaurant.floor', string='Floor')
+    table_number = fields.Integer('Table Number', required=True, help='The number of the table as displayed on the floor plan', default=0)
     shape = fields.Selection([('square', 'Square'), ('round', 'Round')], string='Shape', required=True, default='square')
     position_h = fields.Float('Horizontal Position', default=10,
         help="The table's horizontal position from the left side to the table's center, in pixels")
@@ -107,7 +107,7 @@ class RestaurantTable(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['name', 'width', 'height', 'position_h', 'position_v', 'parent_id', 'shape', 'floor_id', 'color', 'seats', 'active']
+        return ['table_number', 'width', 'height', 'position_h', 'position_v', 'parent_id', 'shape', 'floor_id', 'color', 'seats', 'active']
 
     def are_orders_still_in_draft(self):
         draft_orders_count = self.env['pos.order'].search_count([('table_id', 'in', self.ids), ('state', '=', 'draft')])

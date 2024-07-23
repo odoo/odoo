@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { ConnectionLostError } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
@@ -504,7 +503,7 @@ export class FloorScreen extends Component {
             };
         }
         if (!duplicateFloor) {
-            newTableData.name = this._getNewTableName();
+            newTableData.table_number = this._getNewTableNumber();
         }
         const table = await this.createTableFromRaw(newTableData);
         return table;
@@ -514,10 +513,10 @@ export class FloorScreen extends Component {
         const table = await this.pos.data.create("restaurant.table", [newTableData]);
         return table[0];
     }
-    _getNewTableName() {
+    _getNewTableNumber() {
         let firstNum = 1;
         const tablesNumber = this.activeTables
-            .map((table) => +table.name)
+            .map((table) => table.table_number)
             .sort(function (a, b) {
                 return a - b;
             });
@@ -529,7 +528,7 @@ export class FloorScreen extends Component {
                 break;
             }
         }
-        return firstNum.toString();
+        return firstNum;
     }
     get activeFloor() {
         return this.state.selectedFloorId
@@ -671,14 +670,14 @@ export class FloorScreen extends Component {
         }
         if (this.selectedTables.length === 1) {
             this.dialog.add(NumberPopup, {
-                startingValue: parseInt(this.selectedTables[0].name) || false,
+                startingValue: parseInt(this.selectedTables[0].table_number) || false,
                 title: _t("Change table number?"),
                 placeholder: _t("Enter a table number"),
                 buttons: getButtons([{ ...DECIMAL, disabled: true }, ZERO, BACKSPACE]),
                 getPayload: (newNumber) => {
-                    if (newNumber !== this.selectedTables[0].name) {
+                    if (parseInt(newNumber) !== this.selectedTables[0].table_number) {
                         this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
-                            name: newNumber,
+                            table_number: parseInt(newNumber),
                         });
                     }
                 },

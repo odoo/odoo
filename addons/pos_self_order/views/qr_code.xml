@@ -57,8 +57,8 @@
                             <tr t-foreach="floor.get('table_rows')" t-as="row" style="border: none;">
                                 <td t-foreach="row" t-as="table" style="width: 33%; text-align:center; border: none;">
                                     <div class="mb-3" style="page-break-inside: avoid">
-                                        <h4 class="fw-bold text-center" t-if="table.get('name')">
-                                            <t t-esc="table['name']"/>
+                                        <h4 class="fw-bold text-center" t-if="table.get('table_number')">
+                                            <t t-esc="table['table_number']"/>
                                         </h4>
                                         <div class="mt-1 mb-1 position-relative top-0 start-0">
                                             <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)" class="position-relative top-0 start-0" />
