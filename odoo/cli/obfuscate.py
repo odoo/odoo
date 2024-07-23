@@ -41,12 +41,12 @@ class Obfuscate(Command):
     @_ensure_cr
     def set_pwd(self, pwd):
         """Set password to cypher/uncypher datas"""
-        self.cr.execute("INSERT INTO ir_config_parameter (key, value) VALUES ('odoo_cyph_pwd', 'odoo_cyph_'||encode(pgp_sym_encrypt(%s, %s), 'base64')) ON CONFLICT(key) DO NOTHING", [pwd, pwd])
+        self.cr.execute("""INSERT INTO ir_config_parameter (key, value) VALUES ('odoo_cyph_pwd', ('"odoo_cyph_'||encode(pgp_sym_encrypt(%s, %s), 'base64')||'"')::jsonb)) ON CONFLICT(key) DO NOTHING""", [pwd, pwd])
 
     @_ensure_cr
     def check_pwd(self, pwd):
         """If password is set, check if it's valid"""
-        uncypher_pwd = self.uncypher_string(sql.Identifier('value'))
+        uncypher_pwd = self.uncypher_string(sql.Identifier('value') + '->>0')
 
         try:
             qry = sql.SQL("SELECT {uncypher_pwd} FROM ir_config_parameter WHERE key='odoo_cyph_pwd'").format(uncypher_pwd=uncypher_pwd)
