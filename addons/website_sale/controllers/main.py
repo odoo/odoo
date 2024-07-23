@@ -379,8 +379,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             domain = self._get_shop_domain(search, category, attribute_value_dict)
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
-            query = Product._where_calc(domain)
-            Product._apply_ir_rules(query, 'read')
+            query = Product._search(domain)
             sql = query.select(
                 SQL(
                     "COALESCE(MIN(list_price), 0) * %(conversion_rate)s, COALESCE(MAX(list_price), 0) * %(conversion_rate)s",

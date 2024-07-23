@@ -1970,6 +1970,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         Discussion = self.env['test_orm.discussion']
 
         # add an ir.rule that forces reading field 'name'
+        self.env['ir.model.access'].create({
+            'name': 'demo',
+            'model_id': self.env['ir.model']._get(Discussion.categories._name).id,
+            'group_id': self.env.ref('base.group_user').id,
+            'perm_read': True,
+        })
         self.env['ir.rule'].create({
             'model_id': self.env['ir.model']._get(Discussion._name).id,
             'groups': [self.env.ref('base.group_user').id],

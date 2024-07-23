@@ -307,8 +307,7 @@ class ProjectProject(models.Model):
                 domain_per_model.get(Timesheet._name, []),
                 timesheet_domain,
             ])
-        timesheet_query = Timesheet._where_calc(timesheet_domain)
-        Timesheet._apply_ir_rules(timesheet_query, 'read')
+        timesheet_query = Timesheet._search(timesheet_domain)
         timesheet_sql = timesheet_query.select(
             f'{Timesheet._table}.project_id AS id',
             f'{Timesheet._table}.so_line AS sale_line_id',
@@ -321,8 +320,7 @@ class ProjectProject(models.Model):
                 domain_per_model[EmployeeMapping._name],
                 employee_mapping_domain,
             ])
-        employee_mapping_query = EmployeeMapping._where_calc(employee_mapping_domain)
-        EmployeeMapping._apply_ir_rules(employee_mapping_query, 'read')
+        employee_mapping_query = EmployeeMapping._search(employee_mapping_domain)
         employee_mapping_sql = employee_mapping_query.select(
             f'{EmployeeMapping._table}.project_id AS id',
             f'{EmployeeMapping._table}.sale_line_id',
