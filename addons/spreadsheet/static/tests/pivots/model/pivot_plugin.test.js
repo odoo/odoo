@@ -183,6 +183,22 @@ test("rename pivot with incorrect id is refused", async () => {
     expect(result.reasons).toEqual([CommandResult.PivotIdNotFound]);
 });
 
+test("Renaming a pivot does not retrigger RPCs", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        mockRPC: function (route, { model, method, kwargs }) {
+            switch (method) {
+                case "read_group":
+                    expect.step("read_group");
+                    break;
+            }
+        },
+    });
+    expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
+    updatePivot(model, pivotId, { name: "name" });
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
 test("Undo/Redo for RENAME_PIVOT", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     expect(model.getters.getPivotName(pivotId)).toBe("Partner Pivot");
