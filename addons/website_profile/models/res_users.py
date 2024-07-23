@@ -16,12 +16,12 @@ class Users(models.Model):
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['karma']
+        return super().SELF_READABLE_FIELDS + ['karma', 'cover_image']
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
         return super().SELF_WRITEABLE_FIELDS + [
-            'country_id', 'city', 'website', 'website_description', 'website_published',
+            'country_id', 'cover_image', 'city', 'website', 'website_description', 'website_published',
         ]
 
     @api.model

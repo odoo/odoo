@@ -99,25 +99,18 @@ class WebsiteProfile(http.Controller):
         values = self._prepare_user_values(**post)
         params = self._prepare_user_profile_parameters(**post)
         values.update(self._prepare_user_profile_values(user_sudo, **params))
+        values.update(self._prepare_profile_edition(params.get('email_required') in ["1", "True"]))
         return request.render("website_profile.user_profile_main", values)
 
     # Edit Profile
     # ---------------------------------------------------
-    @http.route('/profile/edit', type='http', auth="user", website=True)
-    def view_user_profile_edition(self, **kwargs):
-        user_id = int(kwargs.get('user_id', 0))
+    def _prepare_profile_edition(self, email_required=False):
         countries = request.env['res.country'].search([])
-        if user_id and request.env.user.id != user_id and request.env.user._is_admin():
-            user = request.env['res.users'].browse(user_id)
-            values = self._prepare_user_values(searches=kwargs, user=user, is_public_user=False)
-        else:
-            values = self._prepare_user_values(searches=kwargs)
-        values.update({
-            'email_required': kwargs.get('email_required'),
+        values = {
+            'email_required': email_required,
             'countries': countries,
-            'url_param': kwargs.get('url_param'),
-        })
-        return request.render("website_profile.user_profile_edit_main", values)
+        }
+        return values
 
     def _profile_edition_preprocess_values(self, user, **kwargs):
         values = {
@@ -129,11 +122,17 @@ class WebsiteProfile(http.Controller):
             'website_description': kwargs.get('description'),
         }
 
-        if 'clear_image' in kwargs:
+        if kwargs.get('clear_image') == 'True':
             values['image_1920'] = False
         elif kwargs.get('ufile'):
             image = kwargs.get('ufile').read()
             values['image_1920'] = base64.b64encode(image)
+
+        if kwargs.get('clear_image_cover') == 'True':
+            values['cover_image'] = False
+        elif kwargs.get('ufile_image_cover'):
+            image = kwargs.get('ufile_image_cover').read()
+            values['cover_image'] = base64.b64encode(image)
 
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published') == 'True'

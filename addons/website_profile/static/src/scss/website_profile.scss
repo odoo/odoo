@@ -286,3 +286,52 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
         z-index: initial;
     }
 }
+
+// Edit profile banner
+.o_wprofile_banner {
+    position: relative;
+    height: 110px;
+    overflow: hidden;
+
+    .o_wprofile_cover_img {
+        width: 100%;
+        height: 90%;
+        &.o_wprofile_img_empty {
+            object-fit: contain;
+        }
+        &:not(.o_wprofile_img_empty) {
+            object-fit: cover;
+        }
+    }
+
+    .profile-image {
+        position: absolute;
+        bottom: 0px;
+        left: 20px;
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid white;
+    }
+
+    .profile-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .banner-buttons, .profile-buttons {
+        position: absolute;
+    }
+
+    .banner-buttons {
+        bottom: 10px;
+        right: 20px;
+    }
+
+    .profile-buttons {
+        bottom: 0px;
+        left: 70px;
+    }
+}
