@@ -939,12 +939,22 @@ class PosOrder(models.Model):
             if len(self._get_refunded_orders(order)) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
 
+<<<<<<< HEAD
             if existing_draft_order:
                 order_ids.append(self._process_order(order, existing_draft_order))
             else:
                 existing_orders = self.env['pos.order'].search([('pos_reference', '=', order.get('name', False))])
                 if all(not self._is_the_same_order(order, existing_order) for existing_order in existing_orders):
                     order_ids.append(self._process_order(order, False))
+||||||| parent of 40b68f0c4529 (temp)
+                # if there is no draft order, skip processing this order
+                if not existing_draft_order:
+                    continue
+=======
+                # if there is no draft order, skip processing this order
+                if not existing_draft_order and draft:
+                    continue
+>>>>>>> 40b68f0c4529 (temp)
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)
