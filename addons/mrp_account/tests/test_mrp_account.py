@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
+from odoo import fields
 
 
 class TestMrpAccount(TestMrpCommon):
@@ -232,6 +235,8 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_B.id, 'product_qty': 1}),
             ]})
+        # if for some reason this default property doesn't exist, the tests that reference it will fail due to missing journal
+        cls.default_sv_account_id = cls.env['ir.property']._get_default_property('property_stock_valuation_account_id', 'product.category')[1][1]
 
     def test_unbuild_account_00(self):
         """Test when after unbuild, the journal entries are the reversal of the
@@ -274,3 +279,158 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('debit', '=', 0)])
         self.assertEqual(productB_debit_line.account_id, self.stock_valuation_account)
         self.assertEqual(productB_credit_line.account_id, self.production_account)
+
+    def test_wip_accounting_00(self):
+        """ Test that posting a WIP accounting entry works as expected.
+        WIP MO = MO with some time completed on WOs and/or 'consumed' components
+        """
+        self.env.user.write({'groups_id': [(4, self.env.ref('mrp.group_mrp_routings').id)]})
+        wc = self.env['mrp.workcenter'].create({
+            'name': 'Funland',
+            'time_start': 0,
+            'time_stop': 0,
+            'costs_hour': 100,
+        })
+
+        self.bom.write({
+            'operation_ids': [
+                (0, 0, {
+                    'name': 'Fun Operation',
+                    'workcenter_id': wc.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 20,
+                    'sequence': 1,
+                }),
+            ],
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_A
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+
+        # post a WIP for an invalid MO, i.e. draft/cancelled/done results in a "Manual Entry"
+        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
+        wizard.save().confirm()
+        wip_manual_entry1 = self.env['account.move'].search([('ref', 'ilike', 'WIP - Manual Entry')])
+        self.assertEqual(len(wip_manual_entry1), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal")
+        self.assertEqual(len(wip_manual_entry1.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
+        self.assertRecordValues(wip_manual_entry1.line_ids, [
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0, 'credit': 0.0},
+        ])
+
+        # post a WIP for a valid MO - no WO time completed or components consumed => nothing to debit/credit
+        mo.action_confirm()
+        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
+        wizard.save().confirm()
+        wip_empty_entries = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name)])
+        self.assertEqual(len(wip_empty_entries), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal")
+        self.assertEqual(len(wip_empty_entries.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
+        self.assertRecordValues(wip_empty_entries.line_ids, [
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0, 'credit': 0.0},
+        ])
+
+        # WO time completed + components consumed
+        mo_form = Form(mo)
+        mo_form.qty_producing = mo.product_qty
+        mo = mo_form.save()
+        now = fields.Datetime.now()
+        workorder = mo.workorder_ids
+        self.env['mrp.workcenter.productivity'].create({
+            'workcenter_id': wc.id,
+            'workorder_id': workorder.id,
+            'date_start': now - timedelta(hours=1),
+            'date_end': now,
+            'loss_id': self.env.ref('mrp.block_reason7').id,
+        })
+        workorder.button_done()
+        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
+        wizard.save().confirm()
+        wip_entries1 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', wip_empty_entries.ids)])
+        self.assertEqual(len(wip_entries1), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal")
+        self.assertEqual(len(wip_entries1.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
+        self.assertRecordValues(wip_entries1.line_ids, [
+            {'account_id': self.default_sv_account_id,                                     'debit': self.product_B.standard_price,          'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 100.0,                                  'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0,                                    'credit': 100.0 + self.product_B.standard_price},
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0,                                    'credit': self.product_B.standard_price},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                                    'credit': 100.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 100.0 + self.product_B.standard_price,  'credit': 0.0},
+        ])
+
+        # Multi-records case
+        previous_wip_ids = wip_entries1.ids + wip_empty_entries.ids
+        mo2_form = Form(self.env['mrp.production'])
+        mo2_form.product_id = self.product_A
+        mo2_form.bom_id = self.bom
+        mo2_form.product_qty = 2
+        mo2 = mo2_form.save()
+        mos = (mo | mo2)
+
+        # Draft MOs should be ignored when selecting multiple MOs
+        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': mos.ids}))
+        wizard.save().confirm()
+        wip_entries2 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', previous_wip_ids)])
+        self.assertEqual(len(wip_entries2), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal, for 1 MO")
+        self.assertTrue(mo2.name not in wip_entries2[0].ref, "Draft MO should be completely disregarded by wizard")
+        self.assertEqual(len(wip_entries2.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
+        total_component_price = self.product_B.standard_price * sum(mo.move_raw_ids.mapped('quantity'))
+        self.assertRecordValues(wip_entries2.line_ids, [
+            {'account_id': self.default_sv_account_id,                                     'debit': total_component_price,         'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 100.0,                         'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0,                           'credit': 100.0 + total_component_price},
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0,                           'credit': total_component_price},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                           'credit': 100.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 100.0 + total_component_price, 'credit': 0.0},
+        ])
+        previous_wip_ids += wip_entries2.ids
+
+        # MOs' WIP amounts should be aggregated
+        mo2.action_confirm()
+        mo2_form = Form(mo2)
+        mo2_form.qty_producing = mo2.product_qty
+        mo2 = mo2_form.save()
+        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': mos.ids}))
+        wizard.save().confirm()
+        wip_entries3 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', previous_wip_ids)])
+        self.assertEqual(len(wip_entries3), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal, for both MOs")
+        self.assertTrue(mo2.name in wip_entries3[0].ref, "Both MOs should have been considered")
+        self.assertEqual(len(wip_entries3.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
+        total_component_price = self.product_B.standard_price * sum(mos.move_raw_ids.mapped('quantity'))
+        self.assertRecordValues(wip_entries3.line_ids, [
+            {'account_id': self.default_sv_account_id,                                     'debit': total_component_price,         'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 100.0,                         'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0,                           'credit': 100.0 + total_component_price},
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0,                           'credit': total_component_price},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                           'credit': 100.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 100.0 + total_component_price, 'credit': 0.0},
+        ])
+        previous_wip_ids += wip_entries3.ids
+
+        # Done MO should be ignored
+        mo.button_mark_done()
+        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': mos.ids}))
+        wizard.save().confirm()
+        wip_entries4 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo2.name), ('id', 'not in', previous_wip_ids)])
+        self.assertEqual(len(wip_entries4), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal, for 1 MO")
+        self.assertTrue(mo.name not in wip_entries4[0].ref, "Done MO should be completely disregarded by wizard")
+        self.assertEqual(len(wip_entries4.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
+        total_component_price = self.product_B.standard_price * sum(mo2.move_raw_ids.mapped('quantity'))
+        self.assertRecordValues(wip_entries4.line_ids, [
+            {'account_id': self.default_sv_account_id,                                     'debit': total_component_price, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                   'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0,                   'credit': total_component_price},
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0,                   'credit': total_component_price},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                   'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': total_component_price, 'credit': 0.0},
+        ])
