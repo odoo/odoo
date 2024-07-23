@@ -28,7 +28,7 @@
             </p>
             <p t-if="expense.employee_id.user_id">
                 <br/>
-                <a t-att-href="'/web#id=%s&amp;model=hr.expense&amp;view_type=form' % (expense.id)" style="background-color: #9E588B; margin-top: 10px; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;">View Expense</a>
+                <a t-att-href="'/odoo/hr.expense/%s' % (expense.id)" style="background-color: #9E588B; margin-top: 10px; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;">View Expense</a>
             </p>
         </template>
 

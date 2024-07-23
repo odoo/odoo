@@ -14,4 +14,4 @@ class TestEmployeeUi(HttpCase):
             'user_id': user.id,
         }])
 
-        self.start_tour("/web", 'hr_employee_tour', login="davidelora")
+        self.start_tour("/odoo", 'hr_employee_tour', login="davidelora")

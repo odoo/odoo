@@ -5,7 +5,7 @@
 
     registry.category("web_tour.tours").add('hr_expense_test_tour', {
         test: true,
-        url: "/web",
+        url: "/odoo",
         steps: () => [stepUtils.showAppsMenuItem(),
         {
             content: "Go to Expense",
@@ -100,7 +100,7 @@
 
     registry.category("web_tour.tours").add('hr_expense_access_rights_test_tour', {
         test: true,
-        url: "/web",
+        url: "/odoo",
         steps: () => [stepUtils.showAppsMenuItem(),
         {
             content: "Go to Expense",
