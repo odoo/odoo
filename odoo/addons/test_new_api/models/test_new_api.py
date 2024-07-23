@@ -517,6 +517,17 @@ class ComputeInverse(models.Model):
             self._context.get('log', []).append('constraint')
 
 
+class ComputeSudo(models.Model):
+    _name = 'test_new_api.compute.sudo'
+    _description = 'Model with a compute_sudo field'
+
+    name_for_uid = fields.Char(compute='_compute_name_for_uid', compute_sudo=True)
+
+    @api.depends_context('uid')
+    def _compute_name_for_uid(self):
+        for record in self:
+            record.name_for_uid = self.env.user.name
+
 class MultiComputeInverse(models.Model):
     """ Model with the same inverse method for several fields. """
     _name = 'test_new_api.multi_compute_inverse'
