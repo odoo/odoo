@@ -7,6 +7,7 @@ import logging
 import netifaces as ni
 import os
 import subprocess
+import socket
 import threading
 import time
 import werkzeug
@@ -162,6 +163,7 @@ class DisplayController(http.Controller):
             'breadcrumb': 'POS Client display',
             'display_ifaces': display_ifaces,
             'display_identifier': display_identifier,
+            'hostname': socket.gethostname(),
             'pairing_code': connection_manager.pairing_code,
         })
 
