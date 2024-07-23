@@ -56,21 +56,21 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
             'user_ids',
         ]
 
-    def _where_calc(self, domain, active_test=True):
+    @api.model
+    def _search(self, domain, offset=0, limit=None, order=None, **kwargs):
         burndown_specific_domain, task_specific_domain = self._determine_domains(domain)
-
-        main_query = super()._where_calc(burndown_specific_domain, active_test)
+        main_query = super()._search(
+            burndown_specific_domain, offset=offset, limit=limit, order=order, **kwargs)
 
         # Build the query on `project.task` with the domain fields that are linked to that model. This is done in order
         # to be able to reduce the number of treated records in the query by limiting them to the one corresponding to
         # the ids that are returned from this sub query.
-        project_task_query = self.env['project.task']._where_calc(task_specific_domain)
+        project_task_query = self.env['project.task']._search(task_specific_domain, **kwargs)
         self.env.flush_query(project_task_query.subselect())
 
         # Get the stage_id `ir.model.fields`'s id in order to inject it directly in the query and avoid having to join
         # on `ir_model_fields` table.
-        IrModelFieldsSudo = self.env['ir.model.fields'].sudo()
-        field_id = IrModelFieldsSudo.search([('name', '=', 'stage_id'), ('model', '=', 'project.task')]).id
+        field_id = self.sudo().env['ir.model.fields'].search([('name', '=', 'stage_id'), ('model', '=', 'project.task')]).id
 
         groupby = self.env.context.get('project_task_burndown_chart_report_groupby', ['date:month', 'stage_id'])
         date_groupby = [g for g in groupby if g.startswith('date')][0]

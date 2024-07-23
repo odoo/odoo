@@ -2688,7 +2688,7 @@ class CrmLead(models.Model):
             # Get leads values
             self.flush_model()
             # active_test = False as domain should take active into 'active' field it self
-            query = self.env['crm.lead'].with_context(active_test=False)._where_calc(domain)
+            query = self.env['crm.lead'].with_context(active_test=False)._search(domain, bypass_access=True)
             table = query.table
             query.order = SQL("%(table)s.team_id asc, %(table)s.id desc", table=SQL.identifier(table))
             sql_fields = [SQL.identifier(field) for field in pls_fields]

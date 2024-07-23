@@ -816,7 +816,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         """
         company_a = self.env.company
         company_b = self.env['res.company'].create({'name': 'Saucisson Inc.'})
-        self.env.company = company_a
+        self.env = company_a.with_company(company_a).env
 
         self.product_a.write({
             'seller_ids': [

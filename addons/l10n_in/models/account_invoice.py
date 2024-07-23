@@ -441,7 +441,7 @@ class AccountMove(models.Model):
         }
         aggregate_result = {}
         for frequency, frequency_domain in frequency_domains.items():
-            query = self.env['account.move.line']._where_calc(default_domain + frequency_domain)
+            query = self.env['account.move.line']._search(default_domain + frequency_domain, bypass_access=True, active_test=False)
             result = self.env.execute_query_dict(SQL(
                 """
                 SELECT COALESCE(sum(account_move_line.balance), 0) as balance,

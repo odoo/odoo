@@ -712,25 +712,25 @@ class AccountJournal(models.Model):
             dashboard_data[journal.id]['onboarding'] = onboarding_data[journal.company_id].get(journal_onboarding_map.get(journal.type))
 
     def _get_draft_sales_purchases_query(self):
-        return self.env['account.move']._where_calc([
+        return self.env['account.move']._search([
             *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
             ('state', '=', 'draft'),
             ('move_type', 'in', self.env['account.move'].get_invoice_types(include_receipts=True)),
-        ])
+        ], bypass_access=True)
 
     def _get_to_pay_select(self):
         return SQL("TRUE AS to_pay")
 
     def _get_open_sale_purchase_query(self, journal_type):
         assert journal_type in ('sale', 'purchase')
-        query = self.env['account.move']._where_calc([
+        query = self.env['account.move']._search([
             *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
             ('payment_state', 'in', ('not_paid', 'partial')),
             ('move_type', 'in', ('out_invoice', 'out_refund') if journal_type == 'sale' else ('in_invoice', 'in_refund')),
             ('state', '=', 'posted'),
-        ])
+        ], bypass_access=True)
         selects = [
             SQL("journal_id"),
             SQL("company_id"),

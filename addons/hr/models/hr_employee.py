@@ -845,7 +845,7 @@ class HrEmployee(models.Model):
         return res
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
+    def _search(self, domain, offset=0, limit=None, order=None, *, bypass_access=False, **kwargs):
         """
             We override the _search because it is the method that checks the access rights
             This is correct to override the _search. That way we enforce the fact that calling
@@ -854,12 +854,12 @@ class HrEmployee(models.Model):
             browsed on the hr.employee model. This can be trusted as the ids of the public
             employees exactly match the ids of the related hr.employee.
         """
-        if self.browse().has_access('read'):
-            return super()._search(domain, offset, limit, order)
+        if self.browse().has_access('read') or bypass_access:
+            return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
         try:
             # HACK: suppress warning if domain is optimized for another model
             domain = list(domain) if isinstance(domain, Domain) else domain
-            ids = self.env['hr.employee.public']._search(domain, offset, limit, order)
+            ids = self.env['hr.employee.public']._search(domain, offset, limit, order, **kwargs)
         except ValueError:
             raise AccessError(_('You do not have access to this document.'))
         # the result is expected from this table, so we should link tables

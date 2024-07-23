@@ -547,7 +547,7 @@ class AccountTax(models.Model):
         return ''.join(list_name)
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
+    def _search(self, domain, *args, **kwargs):
         """
         Intercept the search on `name` to allow searching more freely on taxes
         when using `like` or `ilike`.
@@ -557,7 +557,7 @@ class AccountTax(models.Model):
                 return Domain('name', cond.operator, AccountTax._parse_name_search(cond.value))
             return cond
         domain = Domain(domain).map_conditions(preprocess_name)
-        return super()._search(domain, offset, limit, order)
+        return super()._search(domain, *args, **kwargs)
 
     def _search_name(self, operator, value):
         if isinstance(value, str):

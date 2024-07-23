@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 class MailBlacklist(models.Model):
@@ -55,18 +55,17 @@ class MailBlacklist(models.Model):
             values['email'] = tools.email_normalize(values['email'])
         return super().write(values)
 
-    def _search(self, domain, offset=0, limit=None, order=None):
+    def _search(self, domain, *args, **kwargs):
         """ Override _search in order to grep search on email field and make it
         lower-case and sanitized """
-        def normalize(arg):
-            if isinstance(arg, (list, tuple)) and arg[0] == 'email' and isinstance(arg[2], str):
-                normalized = tools.email_normalize(arg[2])
-                if normalized:
-                    return (arg[0], arg[1], normalized)
-            return arg
-
-        domain = [normalize(item) for item in domain]
-        return super()._search(domain, offset, limit, order)
+        domain = Domain(domain).map_conditions(
+            lambda cond: Domain(cond.field_expr, cond.operator, norm_value)
+            if cond.field_expr == 'email'
+            and isinstance(cond.value, str)
+            and (norm_value := tools.email_normalize(cond.value))
+            else cond
+        )
+        return super()._search(domain, *args, **kwargs)
 
     def _add(self, email, message=None):
         normalized = tools.email_normalize(email)
