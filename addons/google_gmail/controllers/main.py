@@ -5,7 +5,6 @@ import json
 import logging
 
 from werkzeug.exceptions import Forbidden
-from werkzeug.urls import url_encode
 
 from odoo import _, http
 from odoo.exceptions import UserError
@@ -66,10 +65,5 @@ class GoogleGmailController(http.Controller):
             'google_gmail_refresh_token': refresh_token,
         })
 
-        url_params = {
-            'id': rec_id,
-            'model': model_name,
-            'view_type': 'form'
-        }
-        url = '/web?#' + url_encode(url_params)
+        url = f'/odoo/{model_name}/{rec_id}'
         return request.redirect(url)
