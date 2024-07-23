@@ -159,7 +159,7 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
      * @returns {Array}
      */
     getPivotComputedDomain(pivotId) {
-        return this.getters.getPivot(pivotId).getComputedDomain();
+        return this.getters.getPivot(pivotId).getDomainWithGlobalFilters();
     }
 
     /**
@@ -274,7 +274,7 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
             domainList.push(this.getters.getGlobalFilterDomain(filterId, fieldMatch));
         }
         const domain = Domain.combine(domainList, "AND").toString();
-        this.getters.getPivot(pivotId).addDomain(domain);
+        this.getters.getPivot(pivotId).addGlobalFilterDomain(domain);
     }
 
     /**
