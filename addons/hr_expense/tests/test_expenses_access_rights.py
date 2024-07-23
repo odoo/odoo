@@ -145,5 +145,5 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
                 }),
             ],
         })
-        self.start_tour("/web", 'hr_expense_access_rights_test_tour', login="test-expense")
+        self.start_tour("/odoo", 'hr_expense_access_rights_test_tour', login="test-expense")
         self.assertRecordValues(expense_sheet, [{'state': 'submit'}])
