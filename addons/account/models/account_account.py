@@ -737,20 +737,29 @@ class AccountAccount(models.Model):
         return self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type)
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        if not name and self._context.get('partner_id') and self._context.get('move_type'):
-            return self._order_accounts_by_frequency_for_partner(
-                            self.env.company.id, self._context.get('partner_id'), self._context.get('move_type'))
-        domain = domain or []
-        if name:
-            if operator in ('=', '!='):
-                name_domain = ['|', ('code', '=', name.split(' ')[0]), ('name', operator, name)]
-            else:
-                name_domain = ['|', ('code', '=like', name.split(' ')[0] + '%'), ('name', operator, name)]
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
-                name_domain = ['&', '!'] + name_domain[1:]
-            domain = expression.AND([name_domain, domain])
-        return self._search(domain, limit=limit, order=order)
+    def name_search(self, name='', args=None, operator='ilike', limit=100) -> list[tuple[int, str]]:
+        if (
+            not name
+            and (partner := self.env.context.get('partner_id'))
+            and (move_type := self._context.get('move_type'))
+        ):
+            ids = self._order_accounts_by_frequency_for_partner(
+                self.env.company.id, partner, move_type)
+            records = self.sudo().browse(ids)
+            records.fetch(['display_name'])
+            return [(record.id, record.display_name) for record in records]
+        return super().name_search(name, args, operator, limit)
+
+    @api.model
+    def _search_display_name(self, operator, value):
+        name = value or ''
+        if operator in ('=', '!='):
+            domain = ['|', ('code', '=', name.split(' ')[0]), ('name', operator, name)]
+        else:
+            domain = ['|', ('code', '=like', name.split(' ')[0] + '%'), ('name', operator, name)]
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = ['&', '!'] + domain[1:]
+        return domain
 
     @api.onchange('account_type')
     def _onchange_account_type(self):
@@ -1258,15 +1267,14 @@ class AccountGroup(models.Model):
                 prefix += '-' + str(group.code_prefix_end)
             group.display_name = ' '.join(filter(None, [prefix, group.name]))
 
-
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        if operator != 'ilike' or (name or '').strip():
+    def _search_display_name(self, operator, value):
+        domain = []
+        if operator != 'ilike' or (value or '').strip():
             criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
-            name_domain = criteria_operator + [('code_prefix_start', '=ilike', name + '%'), ('name', operator, name)]
+            name_domain = criteria_operator + [('code_prefix_start', '=ilike', value + '%'), ('name', operator, value)]
             domain = expression.AND([name_domain, domain])
-        return self._search(domain, limit=limit, order=order)
+        return domain
 
     @api.constrains('code_prefix_start', 'code_prefix_end')
     def _constraint_prefix_overlap(self):

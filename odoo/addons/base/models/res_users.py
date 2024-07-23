@@ -802,18 +802,23 @@ class Users(models.Model):
             raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        user_ids = []
-        if operator not in expression.NEGATIVE_TERM_OPERATORS:
-            if operator == 'ilike' and not (name or '').strip():
-                name_domain = []
-            else:
-                name_domain = [('login', '=', name)]
-            user_ids = self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
-        if not user_ids:
-            user_ids = self._search(expression.AND([[('name', operator, name)], domain]), limit=limit, order=order)
-        return user_ids
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        domain = args or []
+        # first search only by login, then the normal search
+        if (
+            name and operator not in expression.NEGATIVE_TERM_OPERATORS
+            and (user := self.search_fetch(expression.AND([[('login', '=', name)], domain]), ['display_name']))
+        ):
+            return [(user.id, user.display_name)]
+        return super().name_search(name, domain, operator, limit)
+
+    @api.model
+    def _search_display_name(self, operator, value):
+        domain = super()._search_display_name(operator, value)
+        if operator in ('=', 'ilike') and value:
+            name_domain = [('login', '=', value)]
+            domain = expression.OR([name_domain, domain])
+        return domain
 
     def copy_data(self, default=None):
         default = dict(default or {})
