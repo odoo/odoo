@@ -67,10 +67,7 @@ declare module "@spreadsheet" {
     }
 
     export interface OdooPivotModelParams {
-        metaData: {
-            resModel: string;
-            fields: Record<string, Field | undefined>;
-        };
+        fields: OdooFields;
         definition: OdooPivotRuntimeDefinition;
         searchParams: {
             domain: Array;

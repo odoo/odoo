@@ -6,7 +6,7 @@ import { user } from "@web/core/user";
 import { NO_RECORD_AT_THIS_POSITION, OdooPivotModel } from "./pivot_model";
 import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
-import { omit } from "@web/core/utils/objects";
+import { deepEqual, omit } from "@web/core/utils/objects";
 import { OdooPivotLoader } from "./odoo_pivot_loader";
 
 const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
@@ -23,6 +23,7 @@ const { pivotTimeAdapter, toString, areDomainArgsFieldsValid } = helpers;
  * @typedef {import("@spreadsheet").OdooPivotCoreDefinition} OdooPivotCoreDefinition
  * @typedef {import("@spreadsheet").SortedColumn} SortedColumn
  * @typedef {import("@spreadsheet").OdooGetters} OdooGetters
+ * @typedef {import("@spreadsheet/data_sources/odoo_data_provider").OdooDataProvider} OdooDataProvider
  */
 
 /**
@@ -40,33 +41,60 @@ export class OdooPivot {
     constructor(services, { definition, getters }) {
         /** @type {"ODOO"} */
         this.type = "ODOO";
+
+        /** @type {OdooPivotCoreDefinition} @protected */
         this.coreDefinition = definition;
+
         this.needsReevaluation = false;
+
         /** @type {OdooPivotRuntimeDefinition | undefined} @protected */
         this.runtimeDefinition = undefined;
+
         /** @type {OdooPivotModel | undefined} @protected */
         this.model = undefined;
-        /** @type {OdooGetters} */
+
+        /** @type {OdooGetters} @protected */
         this.getters = getters;
 
+        /** @protected */
         this.loader = new OdooPivotLoader(services.odooDataProvider, this._load.bind(this));
 
-        /** @type {OdooFields|undefined} @private */
+        /** @type {OdooFields | undefined} @protected */
         this._fields = undefined;
 
-        /** @protected */
+        /** @protected @type {OdooDataProvider}*/
         this.odooDataProvider = services.odooDataProvider;
 
-        /** @protected */
+        /** @protected @type {Object} */
         this.context = omit(definition.context, ...Object.keys(user.context));
 
         /** @protected */
         this.domainWithGlobalFilters = this.coreDefinition.domain;
-
-        this.setup();
     }
 
-    setup() {}
+    /**
+     * @param {OdooPivotCoreDefinition} nextDefinition
+     */
+    onDefinitionChange(nextDefinition) {
+        this.context = omit(nextDefinition.context, ...Object.keys(user.context));
+        this.domainWithGlobalFilters = nextDefinition.domain;
+        const actualDefinition = this.coreDefinition;
+        this.coreDefinition = nextDefinition;
+        if (
+            deepEqual(actualDefinition.columns, nextDefinition.columns) &&
+            deepEqual(actualDefinition.rows, nextDefinition.rows) &&
+            deepEqual(actualDefinition.measures, nextDefinition.measures) &&
+            deepEqual(actualDefinition.sortedColumn, nextDefinition.sortedColumn) &&
+            deepEqual(actualDefinition.domain, nextDefinition.domain) &&
+            deepEqual(actualDefinition.context, nextDefinition.context) &&
+            deepEqual(actualDefinition.actionXmlId, nextDefinition.actionXmlId) &&
+            deepEqual(actualDefinition.model, nextDefinition.model)
+        ) {
+            // Nothing change for the table structure, no need to reload the data
+            return;
+        }
+        this.load({ reload: true });
+    }
 
     async loadMetadata() {
         this._fields = await this.loader.getFields(this.coreDefinition.model);
@@ -103,7 +131,7 @@ export class OdooPivot {
         const model = new OdooPivotModel(
             { _t },
             {
-                metaData: { fields: this.getFields() },
+                fields: this.getFields(),
                 definition,
                 searchParams: {
                     context: this.context,
