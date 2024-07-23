@@ -2007,7 +2007,10 @@ class Dispatcher(ABC):
             werkzeug.exceptions.abort(Response(status=204))
 
         if 'max_content_length' in routing:
-            self.request.httprequest.max_content_length = routing['max_content_length']
+            max_content_length = routing['max_content_length']
+            if callable(max_content_length):
+                max_content_length = max_content_length(rule.endpoint.func.__self__)
+            self.request.httprequest.max_content_length = max_content_length
 
     @abstractmethod
     def dispatch(self, endpoint, args):
