@@ -533,50 +533,70 @@ class ProductProduct(models.Model):
                 product.display_name = get_display_name(name, product.default_code)
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        if name:
-            positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
-            product_ids = []
-            if operator in positive_operators:
-                product_ids = list(self._search([('default_code', '=', name)] + domain, limit=limit, order=order))
-                if not product_ids:
-                    product_ids = list(self._search([('barcode', '=', name)] + domain, limit=limit, order=order))
-            if not product_ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
+    def _search_display_name(self, operator, value):
+        is_positive = operator not in expression.NEGATIVE_TERM_OPERATORS
+        combine = expression.OR if is_positive else expression.AND
+        domains = [
+            [('name', operator, value)],
+            [('default_code', operator, value)],
+        ]
+        if operator in ('=', 'in') or (operator.endswith('like') and is_positive):
+            barcode_values = [value] if operator != 'in' else value
+            domains.append([('barcode', 'in', barcode_values)])
+        if operator == '=' and isinstance(value, str) and (m := re.search(r'(\[(.*?)\])', value)):
+            domains.append([('default_code', '=', m.group(2))])
+        if partner_id := self.env.context.get('partner_id'):
+            supplier_domain = [
+                ('partner_id', '=', partner_id),
+                '|',
+                ('product_code', operator, value),
+                ('product_name', operator, value),
+            ]
+            domains.append([('product_tmpl_id.seller_ids', 'any', supplier_domain)])
+        return combine(domains)
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if not name:
+            return super().name_search(name, args, operator, limit)
+        # search progressively by the most specific attributes
+        positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
+        is_positive = operator not in expression.NEGATIVE_TERM_OPERATORS
+        products = self.browse()
+        domain = args or []
+        if operator in positive_operators:
+            products = self.search_fetch(expression.AND([domain, [('default_code', '=', name)]]), ['display_name'], limit=limit) \
+                or self.search_fetch(expression.AND([domain, [('barcode', '=', name)]]), ['display_name'], limit=limit)
+        if not products:
+            if is_positive:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                product_ids = list(self._search(domain + [('default_code', operator, name)], limit=limit, order=order))
-                if not limit or len(product_ids) < limit:
-                    # we may underrun the limit because of dupes in the results, that's fine
-                    limit2 = (limit - len(product_ids)) if limit else False
-                    product2_ids = self._search(domain + [('name', operator, name), ('id', 'not in', product_ids)], limit=limit2, order=order)
-                    product_ids.extend(product2_ids)
-            elif not product_ids and operator in expression.NEGATIVE_TERM_OPERATORS:
-                domain2 = expression.OR([
-                    ['&', ('default_code', operator, name), ('name', operator, name)],
-                    ['&', ('default_code', '=', False), ('name', operator, name)],
-                ])
-                domain2 = expression.AND([domain, domain2])
-                product_ids = list(self._search(domain2, limit=limit, order=order))
-            if not product_ids and operator in positive_operators:
-                ptrn = re.compile(r'(\[(.*?)\])')
-                res = ptrn.search(name)
-                if res:
-                    product_ids = list(self._search([('default_code', '=', res.group(2))] + domain, limit=limit, order=order))
+                products = self.search_fetch(expression.AND([domain, [('default_code', operator, name)]]), ['display_name'], limit=limit)
+                limit_rest = limit and limit - len(products)
+                if limit_rest is None or limit_rest > 0:
+                    products |= self.search_fetch(expression.AND([domain, [('id', 'not in', products.ids)], [('name', operator, name)]]), ['display_name'], limit=limit_rest)
+            else:
+                domain_neg = [
+                    ('name', operator, name),
+                    '|', ('default_code', operator, name), ('default_code', '=', False),
+                ]
+                products = self.search_fetch(expression.AND([domain, domain_neg]), ['display_name'], limit=limit)
+        if not products and operator in positive_operators and (m := re.search(r'(\[(.*?)\])', name)):
+            match_domain = [('default_code', '=', m.group(2))]
+            products = self.search_fetch(expression.AND([domain, match_domain]), ['display_name'], limit=limit)
+        if not products and (partner_id := self.env.context.get('partner_id')):
             # still no results, partner in context: search on supplier info as last hope to find something
-            if not product_ids and self._context.get('partner_id'):
-                suppliers_ids = self.env['product.supplierinfo']._search([
-                    ('partner_id', '=', self._context.get('partner_id')),
-                    '|',
-                    ('product_code', operator, name),
-                    ('product_name', operator, name)])
-                if suppliers_ids:
-                    product_ids = self._search([('product_tmpl_id.seller_ids', 'in', suppliers_ids)], limit=limit, order=order)
-        else:
-            product_ids = self._search(domain, limit=limit, order=order)
-        return product_ids
+            supplier_domain = [
+                ('partner_id', '=', partner_id),
+                '|',
+                ('product_code', operator, name),
+                ('product_name', operator, name),
+            ]
+            match_domain = [('product_tmpl_id.seller_ids', 'any', supplier_domain)]
+            products = self.search_fetch(expression.AND([domain, match_domain]), ['display_name'], limit=limit)
+        return [(product.id, product.display_name) for product in products.sudo()]
 
     @api.model
     def view_header_get(self, view_id, view_type):

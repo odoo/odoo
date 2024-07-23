@@ -12,16 +12,22 @@ class SaleOrder(models.Model):
     expense_count = fields.Integer("# of Expenses", compute='_compute_expense_count', compute_sudo=True)
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+    def _search_display_name(self, operator, value):
         """ For expense, we want to show all sales order but only their display_name (no ir.rule applied), this is the only way to do it. """
         if (
             self._context.get('sale_expense_all_order')
             and self.env.user.has_group('sales_team.group_sale_salesman')
             and not self.env.user.has_group('sales_team.group_sale_salesman_all_leads')
         ):
-            domain = expression.AND([domain or [], ['&', ('state', '=', 'sale'), ('company_id', 'in', self.env.companies.ids)]])
-            return super(SaleOrder, self.sudo())._name_search(name, domain, operator, limit, order)
-        return super()._name_search(name, domain, operator, limit, order)
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                positive_operator = expression.TERM_OPERATORS_NEGATION[operator]
+            else:
+                positive_operator = operator
+            domain = super()._search_display_name(positive_operator, value)
+            company_domain = ['&', ('state', '=', 'sale'), ('company_id', 'in', self.env.companies.ids)]
+            query = self.sudo()._search(expression.AND([domain, company_domain]))
+            return [('id', 'in' if operator == positive_operator else 'not in', query)]
+        return super()._search_display_name(operator, value)
 
     @api.depends('expense_ids')
     def _compute_expense_count(self):

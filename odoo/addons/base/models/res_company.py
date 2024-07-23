@@ -8,6 +8,7 @@ import warnings
 
 from odoo import api, fields, models, tools, _, Command, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
+from odoo.osv import expression
 from odoo.tools import html2plaintext, file_open, ormcache
 
 _logger = logging.getLogger(__name__)
@@ -244,19 +245,21 @@ class Company(models.Model):
         return arch, view
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+    def _search_display_name(self, operator, value):
         context = dict(self.env.context)
         newself = self
+        constraint = []
         if context.pop('user_preference', None):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
             companies = self.env.user.company_ids
-            domain = (domain or []) + [('id', 'in', companies.ids)]
+            constraint = [('id', 'in', companies.ids)]
             newself = newself.sudo()
-        self = newself.with_context(context)
-        return super()._name_search(name, domain, operator, limit, order)
+        newself = newself.with_context(context)
+        domain = super(Company, newself)._search_display_name(operator, value)
+        return expression.AND([domain, constraint])
 
     @api.model
     @api.returns('self', lambda value: value.id)

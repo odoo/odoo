@@ -1,12 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
-
-_logger = logging.getLogger(__name__)
+from odoo.tools import _, SQL
 
 
 class PhoneBlackList(models.Model):
@@ -70,20 +66,15 @@ class PhoneBlackList(models.Model):
             values['number'] = sanitized
         return super(PhoneBlackList, self).write(values)
 
-    def _search(self, domain, offset=0, limit=None, order=None):
-        """ Override _search in order to grep search on sanitized number field """
-        def sanitize_number(arg):
-            if isinstance(arg, (list, tuple)) and arg[0] == 'number':
-                if isinstance(arg[2], str):
-                    sanitized = self.env.user._phone_format(number=arg[2])
-                    return arg[0], arg[1], sanitized or arg[2]
-                elif isinstance(arg[2], list) and all(isinstance(number, str) for number in arg[2]):
-                    sanitized = [self.env.user._phone_format(number=number) or number for number in arg[2]]
-                    return arg[0], arg[1], sanitized
-            return arg
-
-        domain = [sanitize_number(item) for item in domain]
-        return super()._search(domain, offset, limit, order)
+    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query) -> SQL:
+        if fname == 'number':
+            # sanitize the phone number
+            sanitize = self.env.user._phone_format
+            if isinstance(value, str):
+                value = sanitize(number=value) or value
+            elif isinstance(value, list) and all(isinstance(number, str) for number in value):
+                value = [sanitize(number=number) or number for number in value]
+        return super()._condition_to_sql(alias, fname, operator, value, query)
 
     def add(self, number, message=None):
         sanitized = self.env.user._phone_format(number=number)

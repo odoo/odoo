@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
-
 import re
 
 from collections.abc import Iterable
 
-from odoo import api, fields, models, _
-from odoo.osv import expression
+from odoo import api, fields, models
+from odoo.tools import _, SQL
+
 
 def sanitize_account_number(acc_number):
     if acc_number:
@@ -17,6 +16,7 @@ class Bank(models.Model):
     _description = 'Bank'
     _name = 'res.bank'
     _order = 'name'
+    _rec_names_search = ['name', 'bic']
 
     name = fields.Char(required=True)
     street = fields.Char()
@@ -37,14 +37,13 @@ class Bank(models.Model):
             bank.display_name = name
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        if name:
-            name_domain = ['|', ('bic', '=ilike', name + '%'), ('name', operator, name)]
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
-                name_domain = ['&', '!'] + name_domain[1:]
-            domain = domain + name_domain
-        return self._search(domain, limit=limit, order=order)
+    def _search_display_name(self, operator, value):
+        if operator in ('ilike', 'not ilike') and value:
+            domain = ['|', ('bic', '=ilike', value + '%'), ('name', 'ilike', value)]
+            if operator == 'not ilike':
+                domain = ['!', *domain]
+            return domain
+        return super()._search_display_name(operator, value)
 
     @api.onchange('country')
     def _onchange_country_id(self):
@@ -118,17 +117,11 @@ class ResPartnerBank(models.Model):
         for acc in self:
             acc.display_name = f'{acc.acc_number} - {acc.bank_id.name}' if acc.bank_id else acc.acc_number
 
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
-        def sanitize(arg):
-            if isinstance(arg, (tuple, list)) and arg[0] == 'acc_number':
-                value = arg[2]
-                if not isinstance(value, str) and isinstance(value, Iterable):
-                    value = [sanitize_account_number(i) for i in value]
-                else:
-                    value = sanitize_account_number(value)
-                return ('sanitized_acc_number', arg[1], value)
-            return arg
-
-        domain = [sanitize(item) for item in domain]
-        return super()._search(domain, offset, limit, order)
+    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query) -> SQL:
+        if fname == 'acc_number':
+            fname = 'sanitized_acc_number'
+            if not isinstance(value, str) and isinstance(value, Iterable):
+                value = [sanitize_account_number(i) for i in value]
+            else:
+                value = sanitize_account_number(value)
+        return super()._condition_to_sql(alias, fname, operator, value, query)
