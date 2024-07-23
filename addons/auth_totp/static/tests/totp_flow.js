@@ -257,12 +257,17 @@ registry.category("web_tour.tours").add('totp_login_device', {
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
-    trigger: '[name=password] input',
+    trigger: ".modal [name=password] input",
+    in_modal: false,
     run: "edit demo",
 }, {
     content: "Confirm",
-    trigger: "button:contains(Confirm Password)",
+    trigger: ".modal button:contains(Confirm Password)",
+    in_modal: false,
     run: "click",
+},
+{
+    trigger: "body:not(:has(.modal))",
 },
 ...openRoot(),
 ...openUserProfileAtSecurityTab(),

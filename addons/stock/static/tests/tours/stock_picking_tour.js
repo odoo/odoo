@@ -380,6 +380,9 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
         run: "click",
     },
     {
+        trigger: "body:not(:has(.modal))",
+    },
+    {
         trigger: '.o_searchview_input_container',
         run: () => {
             const applyButtons = document.querySelectorAll('button[name=action_apply_inventory]');
@@ -444,7 +447,7 @@ registry.category("web_tour.tours").add('test_add_new_line', {
     ]
 });
 
-registry.category("web_tour.tours").add('test_edit_existing_line', {
+registry.category("web_tour.tours").add("test_edit_existing_line", {
     test: true,
     steps: () => [
         {
@@ -453,39 +456,47 @@ registry.category("web_tour.tours").add('test_edit_existing_line', {
         },
         {
             trigger: ".o_field_widget[name=quantity] input",
-            run: 'edit 2',
+            run: "edit 2",
         },
         {
             trigger: ".fa-list",
             run: "click",
         },
         {
-            trigger: "h4:contains('Stock move')",
+            trigger: ".modal h4:contains(Stock move)",
+            in_modal: false,
             run: "click",
         },
         {
-            trigger: ".o_data_cell[name=quantity]:eq(1)",
+            trigger: ".modal .o_data_cell[name=quantity]:eq(1)",
+            in_modal: false,
             run: "click",
         },
         {
-            trigger: ".o_field_widget[name=lot_name] input",
-            run: 'edit two',
+            trigger: ".modal .o_field_widget[name=lot_name] input",
+            in_modal: false,
+            run: "edit two",
         },
         {
-            trigger: ".o_form_view.modal-content .o_form_button_save",
+            trigger: ".modal .o_form_view.modal-content .o_form_button_save:enabled",
+            in_modal: false,
             run: "click",
         },
         {
-            trigger: ".o_form_view:not(.modal-content) .o_form_button_save",
+            content: "wait the modal is totally closed before click on save",
+            trigger: "body:not(:has(.modal))",
+        },
+        {
+            trigger: ".o_form_view .o_form_button_save",
             run: "click",
         },
         {
             trigger: ".o_form_renderer.o_form_saved",
         },
-    ]
+    ],
 });
 
-registry.category("web_tour.tours").add('test_onchange_twice_lot_ids', {
+registry.category("web_tour.tours").add("test_onchange_twice_lot_ids", {
     test: true,
     steps: () => [
         {
@@ -515,5 +526,5 @@ registry.category("web_tour.tours").add('test_onchange_twice_lot_ids', {
         {
             trigger: ".o_form_renderer.o_form_saved",
         },
-    ]
+    ],
 });
