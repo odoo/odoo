@@ -3,16 +3,17 @@
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
 import { NO_RECORD_AT_THIS_POSITION, OdooPivotModel } from "./pivot_model";
 import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
+import { omit } from "@web/core/utils/objects";
+import { OdooPivotLoader } from "./odoo_pivot_loader";
 
 const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
 const { pivotTimeAdapter, toString, areDomainArgsFieldsValid, toNormalizedPivotValue } = helpers;
 
 /**
- * @typedef {import("@odoo/o-spreadsheet").FPayload} FPayload
+ * @typedef {import("@odoo/o-spreadsheet").FunctionResultObject} FunctionResultObject
  * @typedef {import("@odoo/o-spreadsheet").PivotMeasure} PivotMeasure
  * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
  * @typedef {import("@odoo/o-spreadsheet").PivotDimension} PivotDimension
@@ -27,7 +28,7 @@ const { pivotTimeAdapter, toString, areDomainArgsFieldsValid, toNormalizedPivotV
 /**
  * @implements {IPivot}
  */
-export class OdooPivot extends OdooViewsDataSource {
+export class OdooPivot {
     /**
      *
      * @override
@@ -37,66 +38,102 @@ export class OdooPivot extends OdooViewsDataSource {
      * @param {OdooGetters} params.getters
      */
     constructor(services, { definition, getters }) {
-        const params = {
-            metaData: {
-                resModel: definition.model,
-            },
-            searchParams: {
-                domain: definition.domain,
-                context: definition.context,
-            },
-        };
-        super(services, params);
         /** @type {"ODOO"} */
         this.type = "ODOO";
-        this._rawDefinition = definition;
-        /** @type {OdooPivotRuntimeDefinition | undefined} */
-        this._runtimeDefinition = undefined;
-        /** @type {OdooPivotModel | undefined} */
-        this._model = undefined;
+        this.coreDefinition = definition;
+        this.needsReevaluation = false;
+        /** @type {OdooPivotRuntimeDefinition | undefined} @protected */
+        this.runtimeDefinition = undefined;
+        /** @type {OdooPivotModel | undefined} @protected */
+        this.model = undefined;
         /** @type {OdooGetters} */
         this.getters = getters;
-        this.needsReevaluation = false;
+
+        this.loader = new OdooPivotLoader(services.odooDataProvider, this._load.bind(this));
+
+        /** @type {OdooFields|undefined} @private */
+        this._fields = undefined;
+
+        /** @protected */
+        this.odooDataProvider = services.odooDataProvider;
+
+        /** @protected */
+        this.context = omit(definition.context, ...Object.keys(user.context));
+
+        /** @protected */
+        this.domainWithGlobalFilters = this.coreDefinition.domain;
+
         this.setup();
     }
 
     setup() {}
 
-    init(params) {
-        this.load(params);
+    async loadMetadata() {
+        this._fields = await this.loader.getFields(this.coreDefinition.model);
     }
 
-    async _load() {
-        await super._load();
-        this._runtimeDefinition = new OdooPivotRuntimeDefinition(
-            this._rawDefinition,
-            this._metaData.fields
-        );
-        this._model = new OdooPivotModel(
-            { _t },
-            {
-                //@ts-ignore this._metaData.fields is loaded at this point
-                metaData: this._metaData,
-                definition: this._runtimeDefinition,
-                searchParams: this._searchParams,
-            },
-            {
-                orm: this._orm,
-                serverData: this.odooDataProvider.serverData,
-            }
-        );
-        await this._model.load(this._searchParams);
+    async getModelLabel() {
+        return this.loader.getModelLabel(this.coreDefinition.model);
     }
 
-    get definition() {
-        if (!this._runtimeDefinition) {
-            throw LOADING_ERROR;
-        }
-        return this._runtimeDefinition;
+    getFields() {
+        return this._fields || {};
     }
 
     /**
-     * @param {import("@odoo/o-spreadsheet").Maybe<FPayload>[]} args
+     * @param {object} [options] options for fetching data
+     * @param {boolean} [options.reload=false] Force the reload of the data
+     */
+    init(options) {
+        this.load(options);
+    }
+
+    /**
+     * @param {object} [options] options for fetching data
+     * @param {boolean} [options.reload=false] Force the reload of the data
+     * @returns {Promise<void>}
+     */
+    async load(options) {
+        return this.loader.load(options);
+    }
+
+    async createModelAndDefinition() {
+        await this.loadMetadata();
+        const definition = new OdooPivotRuntimeDefinition(this.coreDefinition, this.getFields());
+        const model = new OdooPivotModel(
+            { _t },
+            {
+                metaData: { fields: this.getFields() },
+                definition,
+                searchParams: {
+                    context: this.context,
+                    domain: this.coreDefinition.domain,
+                },
+            },
+            {
+                orm: this.odooDataProvider.orm,
+                serverData: this.odooDataProvider.serverData,
+            }
+        );
+        return { model, definition };
+    }
+
+    async _load() {
+        const { model, definition } = await this.createModelAndDefinition();
+        this.model = model;
+        this.runtimeDefinition = definition;
+        await this.model.load({ context: this.context, domain: this.getDomainWithGlobalFilters() });
+    }
+
+    get definition() {
+        if (!this.runtimeDefinition) {
+            throw LOADING_ERROR;
+        }
+        return this.runtimeDefinition;
+    }
+
+    /**
+     * @param {import("@odoo/o-spreadsheet").Maybe<FunctionResultObject>[]} args
      *
      * @returns {PivotDomain}
      */
@@ -139,7 +176,7 @@ export class OdooPivot extends OdooViewsDataSource {
     }
 
     /**
-     * @param {import("@odoo/o-spreadsheet").Maybe<FPayload>[]} args
+     * @param {import("@odoo/o-spreadsheet").Maybe<FunctionResultObject>[]} args
      * @returns {boolean}
      */
     areDomainArgsFieldsValid(args) {
@@ -175,7 +212,7 @@ export class OdooPivot extends OdooViewsDataSource {
      * - positional header 'PIVOT.HEADER(1,"#stage_id",1,"#user_id",1)'
      *
      * @param {PivotDomain} domain arguments of the function (except the first one which is the pivot id)
-     * @returns {FPayload}
+     * @returns {FunctionResultObject}
      */
     getPivotHeaderValueAndFormat(domain) {
         this.assertIsValid();
@@ -184,10 +221,10 @@ export class OdooPivot extends OdooViewsDataSource {
             return { value: _t("Total") };
         }
         if (lastNode.field === "measure") {
-            const measureName = lastNode.value;
-            return { value: this.getMeasure(measureName).displayName };
+            const measureId = lastNode.value;
+            return { value: this.getMeasure(measureId).displayName };
         }
-        const value = this._model.getGroupByCellValue(lastNode.field, lastNode.value);
+        const value = this.model.getGroupByCellValue(lastNode.field, lastNode.value);
         const format = this._getPivotFieldFormat(lastNode.field, lastNode.value);
         return { value, format };
     }
@@ -213,12 +250,12 @@ export class OdooPivot extends OdooViewsDataSource {
      */
     getLastPivotGroupValue(domain) {
         this.assertIsValid();
-        return this._model.getLastPivotGroupValue(domain);
+        return this.model.getLastPivotGroupValue(domain);
     }
 
     getTableStructure() {
         this.assertIsValid();
-        return this._model.getTableStructure();
+        return this.model.getTableStructure();
     }
 
     /**
@@ -250,7 +287,7 @@ export class OdooPivot extends OdooViewsDataSource {
     /**
      * @param {string} measureId
      * @param {PivotDomain} domain
-     * @returns {FPayload}
+     * @returns {FunctionResultObject}
      */
     getPivotCellValueAndFormat(measureId, domain) {
         this.assertIsValid();
@@ -258,7 +295,7 @@ export class OdooPivot extends OdooViewsDataSource {
             return { value: "" };
         }
         const measure = this.getMeasure(measureId);
-        const value = this._model.getPivotCellValue(measure.fieldName, domain);
+        const value = this.model.getPivotCellValue(measure.fieldName, domain);
         let format;
         switch (measure.aggregator) {
             case "count":
@@ -283,7 +320,7 @@ export class OdooPivot extends OdooViewsDataSource {
      */
     parseGroupField(groupFieldString) {
         this.assertIsValid();
-        return this._model.parseGroupField(groupFieldString);
+        return this.model.parseGroupField(groupFieldString);
     }
 
     /**
@@ -291,7 +328,7 @@ export class OdooPivot extends OdooViewsDataSource {
      */
     getPivotCellDomain(domain) {
         this.assertIsValid();
-        return this._model.getPivotCellDomain(domain);
+        return this.model.getPivotCellDomain(domain);
     }
 
     /**
@@ -300,34 +337,69 @@ export class OdooPivot extends OdooViewsDataSource {
      */
     getPossibleFieldValues(dimension) {
         this.assertIsValid();
-        return this._model.getPossibleFieldValues(dimension);
+        return this.model.getPossibleFieldValues(dimension);
     }
 
     async copyModelWithOriginalDomain() {
-        await this.loadMetadata();
-        this._runtimeDefinition = new OdooPivotRuntimeDefinition(
-            this._rawDefinition,
-            this._metaData.fields
-        );
-        const model = new OdooPivotModel(
-            { _t },
-            {
-                //@ts-ignore this._metaData.fields is loaded at this point
-                metaData: this._metaData,
-                definition: this._runtimeDefinition,
-                searchParams: this._initialSearchParams,
-            },
-            { orm: this._orm }
-        );
+        const { model } = await this.createModelAndDefinition();
 
-        const domain = new Domain(this._initialSearchParams.domain).toList({
-            ...this._initialSearchParams.context,
+        const domain = new Domain(this.coreDefinition.domain).toList({
+            ...this.context,
             ...user.context,
         });
 
-        const searchParams = { ...this._initialSearchParams, domain };
+        const searchParams = { context: this.context, domain };
         await model.load(searchParams);
         return model;
+    }
+
+    //--------------------------------------------------------------------------
+    // Loader
+    //--------------------------------------------------------------------------
+
+    get lastUpdate() {
+        return this.loader.lastUpdate;
+    }
+
+    isValid() {
+        return this.loader.isValid();
+    }
+
+    assertIsValid({ throwOnError } = { throwOnError: true }) {
+        return this.loader.assertIsValid({ throwOnError });
+    }
+
+    //--------------------------------------------------------------------------
+    // Global filters
+    //--------------------------------------------------------------------------
+
+    /**
+     *
+     * @param {string} globalFilterDomain
+     */
+    addGlobalFilterDomain(globalFilterDomain) {
+        const domain = Domain.and([this.coreDefinition.domain, globalFilterDomain]).toString();
+        if (domain.toString() === new Domain(this.domainWithGlobalFilters).toString()) {
+            return;
+        }
+        this.domainWithGlobalFilters = domain;
+        if (!this.loader.hasEverBeenLoaded()) {
+            // if the data source has never been loaded, there's no point
+            // at reloading it now.
+            return;
+        }
+        this.load({ reload: true });
+    }
+
+    /**
+     * Get the computed domain of this source
+     * @returns {Array}
+     */
+    getDomainWithGlobalFilters() {
+        return new Domain(this.domainWithGlobalFilters).toList({
+            ...this.context,
+            ...user.context,
+        });
     }
 }
 
