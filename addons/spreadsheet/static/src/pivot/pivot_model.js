@@ -193,11 +193,12 @@ export class OdooPivotModel extends PivotModel {
         );
         const visitTree = (tree) => {
             const { values, labels } = tree.root;
-            if (values[groupByIndex] && !valuesUniqueness.has(values[groupByIndex])) {
-                valuesUniqueness.add(values[groupByIndex]);
+            const value = values[groupByIndex];
+            if (value !== undefined && !valuesUniqueness.has(value)) {
+                valuesUniqueness.add(value);
                 valuesWithLabels.push({
-                    value: values[groupByIndex],
-                    label: labels[groupByIndex],
+                    value: value,
+                    label: labels[groupByIndex].toString(),
                 });
             }
             [...tree.directSubTrees.values()].forEach((subTree) => {
