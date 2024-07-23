@@ -26,10 +26,7 @@ registry.category("web_tour.tours").add('create_expense_no_employee_access_tour'
     {
         content: "Delete default search",
         trigger: 'input#employee_id_0',
-        run() {
-            const dropdown = document.querySelector('input#employee_id_0');
-            dropdown.value = '';
-        }
+        run: "clear",
     },
     {
         content: "Select test expense employee",
@@ -38,8 +35,12 @@ registry.category("web_tour.tours").add('create_expense_no_employee_access_tour'
     },
     {
         content: "Save",
-        trigger: '.o_form_button_save',
+        trigger: ".o_form_button_save:enabled",
         run: 'click',
+    },
+    {
+        content: "wait until the form is saved",
+        trigger: "body .o_form_saved",
     },
     {
         content: "Exit form",
