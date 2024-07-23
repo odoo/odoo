@@ -7,11 +7,9 @@ import dbus
 import io
 import logging
 import netifaces as ni
-import os
 from PIL import Image, ImageOps
 import re
 import subprocess
-from uuid import getnode as get_mac
 
 from odoo import http
 from odoo.addons.hw_drivers.connection_manager import connection_manager
@@ -49,6 +47,7 @@ def cups_notification_handler(message, uri, device_identifier, state, reason, ac
             IPP_PRINTER_STOPPED: 'stopped'
         }
         iot_devices[device_identifier].update_status(state_value[state], message, reason)
+
 
 # Create a Cups subscription if it doesn't exist yet
 try:
@@ -102,18 +101,26 @@ class PrinterDriver(Driver):
         if device.get('supported', False):
             return True
         protocol = ['dnssd', 'lpd', 'socket']
-        if any(x in device['url'] for x in protocol) and device['device-make-and-model'] != 'Unknown' or 'direct' in device['device-class']:
+        if (
+                any(x in device['url'] for x in protocol)
+                and device['device-make-and-model'] != 'Unknown'
+                or (
+                'direct' in device['device-class']
+                and 'serial=' in device['url']
+        )
+        ):
             model = cls.get_device_model(device)
-            ppdFile = ''
+            ppd_file = ''
             for ppd in PPDs:
                 if model and model in PPDs[ppd]['ppd-product']:
-                    ppdFile = ppd
+                    ppd_file = ppd
                     break
             with cups_lock:
-                if ppdFile:
-                    conn.addPrinter(name=device['identifier'], ppdname=ppdFile, device=device['url'])
+                if ppd_file:
+                    conn.addPrinter(name=device['identifier'], ppdname=ppd_file, device=device['url'])
                 else:
                     conn.addPrinter(name=device['identifier'], device=device['url'])
+
                 conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
                 conn.enablePrinter(device['identifier'])
                 conn.acceptJobs(device['identifier'])
@@ -137,7 +144,11 @@ class PrinterDriver(Driver):
 
     @classmethod
     def get_status(cls):
-        status = 'connected' if any(iot_devices[d].device_type == "printer" and iot_devices[d].device_connection == 'direct' for d in iot_devices) else 'disconnected'
+        status = 'connected' if any(
+            iot_devices[d].device_type == "printer"
+            and iot_devices[d].device_connection == 'direct'
+            for d in iot_devices
+        ) else 'disconnected'
         return {'status': status, 'messages': ''}
 
     def disconnect(self):
@@ -386,5 +397,6 @@ class PrinterController(http.Controller):
             iot_devices[printer].action(data)
             return True
         return False
+
 
 proxy_drivers['printer'] = PrinterDriver
