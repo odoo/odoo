@@ -118,7 +118,7 @@ class PrivacyLookupWizard(models.TransientModel):
                         SQL('=') if is_normalized else SQL('ilike'),  # Manage Foo Bar <foo@bar.com>
                         email_normalized if is_normalized else email
                     ))
-                    if rec_name in model and model._fields[model._rec_name].type == 'char' and not model._fields[model._rec_name].translate:
+                    if rec_name in model and model._fields[model._rec_name].store and model._fields[model._rec_name].type == 'char' and not model._fields[model._rec_name].translate:
                         conditions.append(SQL(
                             "%s ilike %s",
                             SQL.identifier(rec_name),
