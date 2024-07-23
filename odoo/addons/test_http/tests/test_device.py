@@ -79,7 +79,7 @@ class TestDevice(TestHttpBase):
 
     def test_detection_device_no_readonly(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 1)
@@ -88,7 +88,7 @@ class TestDevice(TestHttpBase):
 
     def test_detection_user_public(self):
         self.authenticate(None, None)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         devices, logs = self.get_devices_logs()
         self.assertEqual(len(devices), 0)
@@ -103,7 +103,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(logs), 1)
         self.assertEqual(len(session._trace), 1)
 
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 1)
@@ -112,7 +112,7 @@ class TestDevice(TestHttpBase):
 
     def test_detection_device_according_to_time(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 1)
@@ -120,7 +120,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(session._trace), 1)
         self.assertEqual(self.info_trace(session._trace[0])['elapsed_time'], 0)
 
-        self.hit('2024-01-01 08:30:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 08:30:00', '/test_http/greeting-public?readonly=0')
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 1)
@@ -128,7 +128,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(session._trace), 1)
         self.assertEqual(self.info_trace(session._trace[0])['elapsed_time'], 0)  # No trace update (< 3600 sec)
 
-        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public?readonly=0')
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 1)
@@ -136,7 +136,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(session._trace), 1)
         self.assertEqual(self.info_trace(session._trace[0])['elapsed_time'], 3600)
 
-        self.hit('2024-01-01 10:00:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 10:00:00', '/test_http/greeting-public?readonly=0')
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 1)
@@ -147,7 +147,7 @@ class TestDevice(TestHttpBase):
     def test_detection_device_according_to_useragent(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
 
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_chrome})
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 1)
@@ -156,7 +156,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(self.info_trace(session._trace[0])['platform'], 'linux')
         self.assertEqual(self.info_trace(session._trace[0])['browser'], 'chrome')
 
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_firefox})
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_firefox})
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 2)
@@ -167,14 +167,14 @@ class TestDevice(TestHttpBase):
 
     def test_detection_device_according_to_ipaddress(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
         self.assertEqual(len(session._trace), 1)
 
-        self.hit('2024-01-01 08:00:01', '/test_http/greeting-public-rw', ip=TEST_IP)
+        self.hit('2024-01-01 08:00:01', '/test_http/greeting-public?readonly=0', ip=TEST_IP)
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 1)
@@ -188,9 +188,9 @@ class TestDevice(TestHttpBase):
 
     def test_detection_usurpation_sid(self):
         session = self.authenticate(self.user_internal.login, self.user_internal.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user?readonly=0')
 
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw', headers={'session_id': session.sid}, ip=TEST_IP)
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user?readonly=0', headers={'session_id': session.sid}, ip=TEST_IP)
         devices, logs = self.get_devices_logs(self.user_internal)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 2)
@@ -198,25 +198,25 @@ class TestDevice(TestHttpBase):
 
     def test_detection_devices_according_to_time_useragent(self):
         self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_chrome})
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
         self.assertEqual(len(self.user_admin.device_ids), 1)
 
-        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_chrome})
+        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
         self.assertEqual(len(self.user_admin.device_ids), 1)
 
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_firefox})
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_firefox})
         self.assertEqual(len(self.user_admin.device_ids), 2)
 
-        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_firefox})
+        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_firefox})
         self.assertEqual(len(self.user_admin.device_ids), 2)
 
     def test_detection_devices_according_to_user_or_admin(self):
         self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw')
-        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
+        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public?readonly=0')
         self.authenticate(self.user_internal.login, self.user_internal.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw')
-        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
+        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public?readonly=0')
 
         devices, logs = self.get_devices_logs()
         self.assertEqual(len(devices), 2)
@@ -231,8 +231,8 @@ class TestDevice(TestHttpBase):
 
     def test_differentiate_computer_and_mobile(self):
         self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_chrome})
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_android_chrome})
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_android_chrome})
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 2)
@@ -245,9 +245,9 @@ class TestDevice(TestHttpBase):
 
     def test_retrieve_linked_ip_addresses(self):
         self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', ip='193.0.3.43')
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', ip='192.0.2.42')
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', ip='191.0.1.41')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', ip='193.0.3.43')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', ip='192.0.2.42')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', ip='191.0.1.41')
 
         devices, _ = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 1)
@@ -257,9 +257,9 @@ class TestDevice(TestHttpBase):
 
     def test_retrieve_linked_ip_addresses_according_to_devices(self):
         self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_chrome}, ip='193.0.3.43')
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_chrome}, ip='192.0.2.42')
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', headers={'User-Agent': USER_AGENT_linux_firefox}, ip='191.0.1.41')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome}, ip='193.0.3.43')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome}, ip='192.0.2.42')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_firefox}, ip='191.0.1.41')
 
         devices, _ = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 2)
@@ -280,7 +280,7 @@ class TestDevice(TestHttpBase):
             wants to block his device (and therefore its session).
         """
         self.authenticate(self.user_internal.login, self.user_internal.login)
-        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw')
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-user?readonly=0')
         self.assertNotIn('/web/login', res.url)
 
         user_internal_device = self.user_internal.device_ids
@@ -289,26 +289,26 @@ class TestDevice(TestHttpBase):
 
         user_internal_device._revoke()
 
-        res = self.hit('2024-01-01 08:00:01', '/test_http/greeting-user-rw')
+        res = self.hit('2024-01-01 08:00:01', '/test_http/greeting-user?readonly=0')
         self.assertIn('/web/login', res.url)
 
     def test_deletion_invalidate_sid(self):
         session = self.authenticate(self.user_internal.login, self.user_internal.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user?readonly=0')
 
         self.user_internal.device_ids._revoke()
 
-        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw', headers={'session_id': session.sid})
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-user?readonly=0', headers={'session_id': session.sid})
         self.assertIn('/web/login', res.url)
 
     def test_deletion_specific_device(self):
         self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw', headers={'User-Agent': USER_AGENT_linux_chrome})
-        self.hit('2024-01-01 09:00:00', '/test_http/greeting-user-rw', headers={'User-Agent': USER_AGENT_linux_chrome})
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
+        self.hit('2024-01-01 09:00:00', '/test_http/greeting-user?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
         self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw', headers={'User-Agent': USER_AGENT_linux_chrome})
-        self.hit('2024-01-01 09:00:00', '/test_http/greeting-user-rw', headers={'User-Agent': USER_AGENT_linux_chrome})
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw', headers={'User-Agent': USER_AGENT_linux_firefox})
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
+        self.hit('2024-01-01 09:00:00', '/test_http/greeting-user?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user?readonly=0', headers={'User-Agent': USER_AGENT_linux_firefox})
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 3)
@@ -317,7 +317,7 @@ class TestDevice(TestHttpBase):
 
         self.user_admin.device_ids.filtered(lambda device: 'firefox' in device.browser)._revoke()
 
-        res = self.hit('2024-01-01 08:00:30', '/test_http/greeting-user-rw', headers={'User-Agent': USER_AGENT_linux_firefox})
+        res = self.hit('2024-01-01 08:00:30', '/test_http/greeting-user?readonly=0', headers={'User-Agent': USER_AGENT_linux_firefox})
         self.assertIn('/web/login', res.url)
 
     # --------------------
@@ -331,7 +331,7 @@ class TestDevice(TestHttpBase):
             are no changes in the session itself.
         """
         session = self.authenticate(None, None)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw')
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         # As we don't have a uid in the session, we shouldn't go through
         # the session check and therefore we won't go through the device update.
