@@ -9,6 +9,14 @@
                 <field name="l10n_ar_withholding_payment_type" invisible="type_tax_use != 'none' or country_code != 'AR'"/>
                 <field name="l10n_ar_withholding_sequence_id" context="{'default_name': name}" invisible="l10n_ar_withholding_payment_type != 'supplier'"/>
             </field>
+            <field name="price_include" position="after">
+                <field name="l10n_ar_withholding_accumulated_payments"/>
+                <field name="l10n_ar_withholding_non_taxable_amount"/>
+            </field>
+            <field name="amount_type" position="after">
+                <field name="l10n_ar_tax_type"/>
+                <field name="l10n_ar_state_id" invisible="l10n_ar_tax_type != 'iibb_withholding'"/>
+            </field>
         </field>
     </record>
 </odoo>
