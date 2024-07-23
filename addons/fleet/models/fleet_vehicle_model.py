@@ -52,12 +52,15 @@ class FleetVehicleModel(models.Model):
     vehicle_range = fields.Integer(string="Range")
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        if operator != 'ilike' or (name or '').strip():
-            name_domain = ['|', ('name', 'ilike', name), ('brand_id.name', 'ilike', name)]
-            domain = expression.AND([name_domain, domain])
-        return self._search(domain, limit=limit, order=order)
+    def _search_display_name(self, operator, value):
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            positive_operator = expression.TERM_OPERATORS_NEGATION[operator]
+        else:
+            positive_operator = operator
+        domain = expression.OR([[('name', positive_operator, value)], [('brand_id.name', positive_operator, value)]])
+        if positive_operator != operator:
+            domain = ['!', *domain]
+        return domain
 
     @api.depends('brand_id')
     def _compute_display_name(self):

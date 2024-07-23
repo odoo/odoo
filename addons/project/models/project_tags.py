@@ -3,8 +3,9 @@
 
 from random import randint
 
-from odoo import api, fields, models, SUPERUSER_ID
+from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools import SQL
 
 
 class ProjectTags(models.Model):
@@ -33,14 +34,14 @@ class ProjectTags(models.Model):
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'project_id' in self.env.context:
-            tag_ids = self._name_search('')
+            tag_ids = [id_ for id_, _label in self.name_search()]
             domain = expression.AND([domain, [('id', 'in', tag_ids)]])
         return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         if 'project_id' in self.env.context:
-            tag_ids = self._name_search('')
+            tag_ids = [id_ for id_, _label in self.name_search()]
             domain = expression.AND([domain, [('id', 'in', tag_ids)]])
             return self.arrange_tag_list_by_id(super().search_read(domain=domain, fields=fields, offset=offset, limit=limit), tag_ids)
         return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
@@ -60,16 +61,15 @@ class ProjectTags(models.Model):
         return [tags_by_id[id] for id in id_order if id in tags_by_id]
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        ids = []
-        if not (name == '' and operator in ('like', 'ilike')):
-            if domain is None:
-                domain = []
-            domain += [('name', operator, name)]
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if limit is None:
+            return super().name_search(name, args, operator, limit)
+        tags = self.browse()
+        domain = expression.AND([self._search_display_name(operator, name), args or []])
         if self.env.context.get('project_id'):
             # optimisation for large projects, we look first for tags present on the last 1000 tasks of said project.
             # when not enough results are found, we complete them with a fallback on a regular search
-            self.env.cr.execute("""
+            tag_sql = SQL("""
                 SELECT DISTINCT project_tasks_tags.id
                 FROM (
                     SELECT rel.project_tags_id AS id
@@ -80,14 +80,11 @@ class ProjectTags(models.Model):
                     ORDER BY task.id DESC
                     LIMIT 1000
                 ) AS project_tasks_tags
-            """, {'project_id': self.env.context['project_id']})
-            project_tasks_tags_domain = [('id', 'in', [row[0] for row in self.env.cr.fetchall()])]
-            # we apply the domain and limit to the ids we've already found
-            ids += self.env['project.tags'].search(expression.AND([domain, project_tasks_tags_domain]), limit=limit, order=order).ids
-        if not limit or len(ids) < limit:
-            limit = limit and limit - len(ids)
-            ids += self.env['project.tags'].search(expression.AND([domain, [('id', 'not in', ids)]]), limit=limit, order=order).ids
-        return ids
+            """, project_id=self.env.context['project_id'])
+            tags += self.search_fetch(expression.AND([[('id', 'in', tag_sql)], domain]), ['display_name'], limit=limit)
+        if len(tags) < limit:
+            tags += self.search_fetch(expression.AND([[('id', 'not in', tags.ids)], domain]), ['display_name'], limit=limit - len(tags))
+        return [(tag.id, tag.display_name) for tag in tags.sudo()]
 
     @api.model
     def name_create(self, name):

@@ -33,6 +33,7 @@ class Country(models.Model):
     _name = 'res.country'
     _description = 'Country'
     _order = 'name'
+    _rec_names_search = ['name', 'code']
 
     name = fields.Char(
         string='Country Name', required=True, translate=True)
@@ -82,20 +83,22 @@ class Country(models.Model):
             'The code of the country must be unique!')
     ]
 
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        if domain is None:
-            domain = []
-
-        ids = []
-        if len(name) == 2:
-            ids = list(self._search([('code', 'ilike', name)] + domain, limit=limit, order=order))
-
-        search_domain = [('name', operator, name)]
-        if ids:
-            search_domain.append(('id', 'not in', ids))
-        ids += list(self._search(search_domain + domain, limit=limit, order=order))
-
-        return ids
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        result = []
+        domain = args or []
+        # first search by code
+        if operator not in expression.NEGATIVE_TERM_OPERATORS and name and len(name) == 2:
+            countries = self.search_fetch(expression.AND([domain, [('code', operator, name)]]), ['display_name'], limit=limit)
+            result.extend((country.id, country.display_name) for country in countries.sudo())
+            domain = expression.AND([domain, [('id', 'not in', countries.ids)]])
+            if limit is not None:
+                limit -= len(countries)
+                if limit <= 0:
+                    return result
+        # normal search
+        result.extend(super().name_search(name, domain, operator, limit))
+        return result
 
     @api.model
     @tools.ormcache('code')
@@ -158,6 +161,7 @@ class CountryState(models.Model):
     _description = "Country state"
     _name = 'res.country.state'
     _order = 'code'
+    _rec_names_search = ['name', 'code']
 
     country_id = fields.Many2one('res.country', string='Country', required=True)
     name = fields.Char(string='State Name', required=True,
@@ -169,41 +173,34 @@ class CountryState(models.Model):
     ]
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        if self.env.context.get('country_id'):
-            domain = expression.AND([domain, [('country_id', '=', self.env.context.get('country_id'))]])
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        result = []
+        domain = args or []
+        # first search by code (with =ilike)
+        if operator not in expression.NEGATIVE_TERM_OPERATORS and name:
+            states = self.search_fetch(expression.AND([domain, [('code', '=like', name)]]), ['display_name'], limit=limit)
+            result.extend((state.id, state.display_name) for state in states.sudo())
+            domain = expression.AND([domain, [('id', 'not in', states.ids)]])
+            if limit is not None:
+                limit -= len(states)
+                if limit <= 0:
+                    return result
+        # normal search
+        result.extend(super().name_search(name, domain, operator, limit))
+        return result
 
-        if operator == 'ilike' and not (name or '').strip():
-            domain1 = []
-            domain2 = []
-        else:
-            domain1 = [('code', '=ilike', name)]
-            domain2 = [('name', operator, name)]
-
-        first_state_ids = []
-        if domain1:
-            first_state_ids = list(self._search(
-                expression.AND([domain1, domain]), limit=limit, order=order,
-            ))
-        fallback_domain = None
-        if name:
-            m = re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name)
-            if m:
-                fallback_domain = [
-                    ('name', operator, m['name'].strip()),
-                    '|', ('country_id.name', 'ilike', m['country'].strip()),
-                         ('country_id.code', '=', m['country'].strip()),
-                ]
-        return first_state_ids + list(self._search(
-            expression.AND([domain2, domain, [('id', 'not in', first_state_ids)]]),
-            limit=limit,
-            order=order,
-        )) or (
-            list(self._search(expression.AND([fallback_domain, domain]), limit=limit))
-            if fallback_domain
-            else []
-        )
+    @api.model
+    def _search_display_name(self, operator, value):
+        domain = super()._search_display_name(operator, value)
+        if value and operator not in expression.NEGATIVE_TERM_OPERATORS and (m := re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", value)):
+            fallback_domain = [
+                ('name', operator, m['name'].strip()),
+                ('country_id', 'ilike', m['country'].strip()),
+            ]
+            domain = expression.OR([domain, fallback_domain])
+        if country_id := self.env.context.get('country_id'):
+            domain = expression.AND([domain, [('country_id', '=', country_id)]])
+        return domain
 
     @api.depends('country_id')
     def _compute_display_name(self):

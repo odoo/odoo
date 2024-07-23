@@ -3271,7 +3271,7 @@ class TestX2many(TransactionExpressionCase):
         # a one2many field without context does not match its inactive children
         self.assertIn(parent, Model.search([('children_ids.name', '=', 'A')]))
         self.assertNotIn(parent, Model.search([('children_ids.name', '=', 'B')]))
-        # Same result when it used _name_search
+        # Same result when it used name_search
         self.assertIn(parent, Model.search([('children_ids', '=', 'A')]))
         self.assertNotIn(parent, Model.search([('children_ids', '=', 'B')]))
         # Same result with the child_of operator
@@ -3281,7 +3281,7 @@ class TestX2many(TransactionExpressionCase):
         # a one2many field with active_test=False matches its inactive children
         self.assertIn(parent, Model.search([('all_children_ids.name', '=', 'A')]))
         self.assertIn(parent, Model.search([('all_children_ids.name', '=', 'B')]))
-        # Same result when it used _name_search
+        # Same result when it used name_search
         self.assertIn(parent, Model.search([('all_children_ids', '=', 'A')]))
         # Same result with the child_of operator
         self.assertIn(parent, Model.search([('all_children_ids', 'child_of', 'A')]))
@@ -3304,7 +3304,7 @@ class TestX2many(TransactionExpressionCase):
         # a many2many field without context does not match its inactive children
         self.assertIn(parent, Model.search([('relatives_ids.name', '=', 'A')]))
         self.assertNotIn(parent, Model.search([('relatives_ids.name', '=', 'B')]))
-        # Same result when it used _name_search
+        # Same result when it used name_search
         self.assertIn(parent, Model.search([('relatives_ids', '=', 'A')]))
         self.assertNotIn(parent, Model.search([('relatives_ids', '=', 'B')]))
         # Same result with the child_of operator
@@ -3316,7 +3316,7 @@ class TestX2many(TransactionExpressionCase):
         # a many2many field with active_test=False matches its inactive children
         self.assertIn(parent, Model.search([('all_relatives_ids.name', '=', 'A')]))
         self.assertIn(parent, Model.search([('all_relatives_ids.name', '=', 'B')]))
-        # Same result when it used _name_search
+        # Same result when it used name_search
         self.assertIn(parent, Model.search([('all_relatives_ids', '=', 'A')]))
         self.assertIn(parent, Model.search([('all_relatives_ids', '=', 'B')]))
         # Same result with the child_of operator

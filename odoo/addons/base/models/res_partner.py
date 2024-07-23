@@ -136,7 +136,6 @@ class PartnerCategory(models.Model):
         return randint(1, 11)
 
     name = fields.Char('Name', required=True, translate=True)
-    display_name = fields.Char('Display Name', compute='_compute_display_name', search='_search_display_name')
     color = fields.Integer(string='Color', default=_get_default_color, aggregator=False)
     parent_id: PartnerCategory = fields.Many2one('res.partner.category', string='Category', index=True, ondelete='cascade')
     child_ids: PartnerCategory = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
@@ -163,17 +162,11 @@ class PartnerCategory(models.Model):
             category.display_name = ' / '.join(reversed(names))
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        if name:
-            # Be sure name_search is symetric to display_name
-            name = name.split(' / ')[-1]
-            domain = [('name', operator, name)] + domain
-        return self._search(domain, limit=limit, order=order)
-
-    @api.model
     def _search_display_name(self, operator, value):
-        return [('id', 'child_of', self._search([('name', operator, value)]))]
+        domain = super()._search_display_name(operator, value)
+        if operator.endswith('like'):
+            return [('id', 'child_of', self._search(domain))]
+        return domain
 
 class PartnerTitle(models.Model):
     _name = 'res.partner.title'

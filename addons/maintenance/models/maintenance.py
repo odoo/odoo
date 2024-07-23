@@ -5,7 +5,6 @@ from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.osv import expression
 
 
 class MaintenanceStage(models.Model):
@@ -137,14 +136,6 @@ class MaintenanceEquipment(models.Model):
                 record.display_name = record.name + '/' + record.serial_no
             else:
                 record.display_name = record.name
-
-    @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        domain = domain or []
-        query = None
-        if name and operator not in expression.NEGATIVE_TERM_OPERATORS and operator != '=':
-            query = self._search([('name', '=', name)] + domain, limit=limit, order=order)
-        return query or super()._name_search(name, domain, operator, limit, order)
 
     name = fields.Char('Equipment Name', required=True, translate=True)
     active = fields.Boolean(default=True)

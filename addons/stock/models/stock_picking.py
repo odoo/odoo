@@ -298,14 +298,12 @@ class PickingType(models.Model):
                 picking_type.use_existing_lots = True
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+    def _search_display_name(self, operator, value):
         # Try to reverse the `display_name` structure
-        parts = name.split(': ')
-        domain = domain or []
-        if len(parts) == 2:
-            name_domain = [('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
-            return self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
-        return super()._name_search(name, domain, operator, limit, order)
+        parts = isinstance(value, str) and value.split(': ')
+        if parts and len(parts) == 2:
+            return ['&', ('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
+        return super()._search_display_name(operator, value)
 
     @api.depends('code')
     def _compute_default_location_src_id(self):

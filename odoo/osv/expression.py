@@ -863,7 +863,7 @@ class expression(object):
                 return list({
                     rid
                     for name in names
-                    for rid in comodel._name_search(name, [], 'ilike')
+                    for rid in comodel._search([('display_name', 'ilike', name)])
                 })
             return list(value)
 
@@ -1185,7 +1185,7 @@ class expression(object):
                     if isinstance(right, str):
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
-                        ids2 = comodel._name_search(right, domain or [], op2)
+                        ids2 = comodel._search(AND([domain or [], [('display_name', op2, right)]]))
                     elif isinstance(right, collections.abc.Iterable):
                         ids2 = right
                     else:
@@ -1263,7 +1263,7 @@ class expression(object):
                         domain = field.get_domain_list(model)
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
-                        ids2 = comodel._name_search(right, domain or [], op2)
+                        ids2 = comodel._search(AND([domain or [], [('display_name', op2, right)]]))
                     elif isinstance(right, collections.abc.Iterable):
                         ids2 = right
                     else:
@@ -1335,11 +1335,11 @@ class expression(object):
                     elif isinstance(right, list) and operator in ('!=', '='):  # for domain (FIELD,'=',['value1','value2'])
                         operator = dict_op[operator]
                     if operator in NEGATIVE_TERM_OPERATORS:
-                        res_ids = comodel._name_search(right, [], TERM_OPERATORS_NEGATION[operator])
+                        res_ids = comodel._search([('display_name', TERM_OPERATORS_NEGATION[operator], right)])
                         for dom_leaf in ('|', (left, 'not in', res_ids), (left, '=', False)):
                             push(dom_leaf, model, alias)
                     else:
-                        res_ids = comodel._name_search(right, [], operator)
+                        res_ids = comodel._search([('display_name', operator, right)])
                         push((left, 'in', res_ids), model, alias)
 
                 else:

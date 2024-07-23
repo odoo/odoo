@@ -20,12 +20,12 @@ class WebsiteRoute(models.Model):
     path = fields.Char('Route')
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        query = super()._name_search(name, domain, operator, limit, order)
-        if not query:
+    def _search_display_name(self, operator, value):
+        # in case we don't have results, refresh before returning the domain
+        domain = super()._search_display_name(operator, value)
+        if not self.search_count(domain, limit=1):
             self._refresh()
-            return super()._name_search(name, domain, operator, limit, order)
-        return query
+        return domain
 
     def _refresh(self):
         _logger.debug("Refreshing website.route")

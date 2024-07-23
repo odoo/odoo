@@ -26,8 +26,12 @@ class Category(models.Model):
     parent_path = fields.Char(index=True)
     depth = fields.Integer(compute="_compute_depth")
     root_categ = fields.Many2one(_name, compute='_compute_root_categ')
-    display_name = fields.Char(compute='_compute_display_name', recursive=True,
-                               inverse='_inverse_display_name')
+    display_name = fields.Char(
+        compute='_compute_display_name',
+        inverse='_inverse_display_name',
+        search='_search_display_name',
+        recursive=True,
+    )
     dummy = fields.Char(store=False)
     discussions = fields.Many2many('test_new_api.discussion', 'test_new_api_discussion_category',
                                    'category', 'discussion')
@@ -307,7 +311,6 @@ class MultiTag(models.Model):
     _description = 'Test New API Multi Tag'
 
     name = fields.Char()
-    display_name = fields.Char(compute='_compute_display_name')
 
     @api.depends('name')
     @api.depends_context('special_tag')

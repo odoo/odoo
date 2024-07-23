@@ -5,8 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS, TERM_OPERATORS_NEGATION
 from odoo.addons.project.models.project_task import CLOSED_STATES
 
 
@@ -59,22 +58,15 @@ class SaleOrder(models.Model):
                 and not order.project_count
             )
 
+    @api.model
     def _search_tasks_ids(self, operator, value):
-        is_name_search = operator in ['=', '!=', 'like', '=like', 'ilike', '=ilike'] and isinstance(value, str)
-        is_id_eq_search = operator in ['=', '!='] and isinstance(value, int)
-        is_id_in_search = operator in ['in', 'not in'] and isinstance(value, list) and all(isinstance(item, int) for item in value)
-        if not (is_name_search or is_id_eq_search or is_id_in_search):
-            raise NotImplementedError(_('Operation not supported'))
-
-        if is_name_search:
-            tasks_ids = self.env['project.task']._name_search(value, operator=operator, limit=None)
-        elif is_id_eq_search:
-            tasks_ids = value if operator == '=' else self.env['project.task']._search([('id', '!=', value)], order='id')
-        else:  # is_id_in_search
-            tasks_ids = self.env['project.task']._search([('id', operator, value)], order='id')
-
-        tasks = self.env['project.task'].browse(tasks_ids)
-        return [('id', 'in', tasks.sale_order_id.ids)]
+        if operator in NEGATIVE_TERM_OPERATORS:
+            positive_operator = TERM_OPERATORS_NEGATION[operator]
+        else:
+            positive_operator = operator
+        task_domain = [('display_name' if isinstance(value, str) else 'id', positive_operator, value), ('sale_order_id', '!=', False)]
+        query = self.env['project.task']._search(task_domain)
+        return [('id', 'in' if positive_operator == operator else 'not in', query.subselect('sale_order_id'))]
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):

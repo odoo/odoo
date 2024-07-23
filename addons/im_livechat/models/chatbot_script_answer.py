@@ -37,26 +37,23 @@ class ChatbotScriptAnswer(models.Model):
                 answer.display_name = answer.name
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+    def _search_display_name(self, operator, value):
         """
         Search the records whose name or step message are matching the ``name`` pattern.
         The chatbot_script_id is also passed to the context through the custom widget
         ('chatbot_triggering_answers_widget') This allows to only see the question_answer
         from the same chatbot you're configuring.
         """
-        domain = domain or []
-
-        if name and operator == 'ilike':
+        domain = []
+        if value and operator == 'ilike':
             # search on both name OR step's message (combined with passed args)
-            name_domain = [('name', operator, name)]
-            step_domain = [('script_step_id.message', operator, name)]
-            domain = expression.AND([domain, expression.OR([name_domain, step_domain])])
+            domain = ['|', ('name', operator, value), ('script_step_id.message', operator, value)]
 
         force_domain_chatbot_script_id = self.env.context.get('force_domain_chatbot_script_id')
         if force_domain_chatbot_script_id:
             domain = expression.AND([domain, [('chatbot_script_id', '=', force_domain_chatbot_script_id)]])
 
-        return self._search(domain, limit=limit, order=order)
+        return domain
 
     def _to_store(self, store: Store, /, *, fields=None):
         if fields is None:

@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.osv.expression import FALSE_DOMAIN
 
 
 def selection_fn(self):
@@ -50,11 +51,10 @@ for name, field in MODELS:
                 record.display_name = f"{self._name}:{record.value}"
 
         @api.model
-        def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-            if isinstance(name, str) and name.split(':')[0] == self._name:
-                return self._search([('value', operator, int(name.split(':')[1]))], limit=limit, order=order)
-            else:
-                return []
+        def _search_display_name(self, operator, value):
+            if isinstance(value, str) and value.split(':')[0] == self._name:
+                return [('value', operator, int(value.split(':')[1]))]
+            return FALSE_DOMAIN
 
 
 class One2ManyChild(models.Model):
@@ -73,11 +73,10 @@ class One2ManyChild(models.Model):
             record.display_name = f"{self._name}:{record.value}"
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        if isinstance(name, str) and name.split(':')[0] == self._name:
-            return self._search([('value', operator, int(name.split(':')[1]))], limit=limit, order=order)
-        else:
-            return []
+    def _search_display_name(self, operator, value):
+        if isinstance(value, str) and value.split(':')[0] == self._name:
+            return [('value', operator, int(value.split(':')[1]))]
+        return FALSE_DOMAIN
 
 
 class One2ManyMultiple(models.Model):
@@ -132,11 +131,10 @@ class Many2ManyChild(models.Model):
             record.display_name = f"{self._name}:{record.value}"
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        if isinstance(name, str) and name.split(':')[0] == self._name:
-            return self._search([('value', operator, int(name.split(':')[1]))], limit=limit, order=order)
-        else:
-            return []
+    def _search_display_name(self, operator, value):
+        if isinstance(value, str) and value.split(':')[0] == self._name:
+            return [('value', operator, int(value.split(':')[1]))]
+        return FALSE_DOMAIN
 
 
 class SelectionWithDefault(models.Model):

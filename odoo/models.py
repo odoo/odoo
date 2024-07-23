@@ -274,7 +274,10 @@ class MetaModel(api.Meta):
 
             add('id', fields.Id(automatic=True))
             add_default('display_name', fields.Char(
-                string='Display Name', automatic=True, compute='_compute_display_name'))
+                string='Display Name', automatic=True,
+                compute='_compute_display_name',
+                search='_search_display_name',
+            ))
 
             if attrs.get('_log_access', self._auto):
                 add_default('create_uid', fields.Many2one(
@@ -1671,6 +1674,27 @@ class BaseModel(metaclass=MetaModel):
                 record.display_name = f"{record._name},{record.id}"
 
     @api.model
+    def _search_display_name(self, operator, value):
+        """
+        Returns a domain that matches records whose display name matches the
+        given ``name`` pattern when compared with the given ``operator``.
+        This method is used to implement the search on the ``display_name``
+        field, and can be overridden to change the search criteria.
+        The default implementation searches the fields defined in `_rec_names_search`
+        or `_rec_name`.
+        """
+        search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
+        if not search_fnames:
+            _logger.warning("Cannot search on display_name, no _rec_name or _rec_names_search defined on %s", self._name)
+            return expression.FALSE_DOMAIN
+        if operator.endswith('like') and not value and '=' not in operator:
+            # optimize out the default criterion of ``like ''`` that matches everything
+            # return all when operator is positive
+            return expression.FALSE_DOMAIN if operator in expression.NEGATIVE_TERM_OPERATORS else expression.TRUE_DOMAIN
+        aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
+        return aggregator([[(field_name, operator, value)] for field_name in search_fnames])
+
+    @api.model
     def name_create(self, name) -> tuple[int, str] | typing.Literal[False]:
         """ name_create(name) -> record
 
@@ -1695,7 +1719,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     @api.readonly
     def name_search(self, name='', args=None, operator='ilike', limit=100) -> list[tuple[int, str]]:
-        """ name_search(name='', args=None, operator='ilike', limit=100) -> records
+        """ name_search(name='', args=None, operator='ilike', limit=100)
 
         Search for records that have a display name matching the given
         ``name`` pattern when compared with the given ``operator``, while also
@@ -1718,34 +1742,9 @@ class BaseModel(metaclass=MetaModel):
         :rtype: list
         :return: list of pairs ``(id, display_name)`` for all matching records.
         """
-        ids = self._name_search(name, args, operator, limit=limit, order=self._order)
-
-        if isinstance(ids, Query):
-            records = self._fetch_query(ids, self._determine_fields_to_fetch(['display_name']))
-        else:
-            # Some override of `_name_search` return list of ids.
-            records = self.browse(ids)
-            records.fetch(['display_name'])
-
+        domain = expression.AND([[('display_name', operator, name)], args or []])
+        records = self.search_fetch(domain, ['display_name'], limit=limit)
         return [(record.id, record.display_name) for record in records.sudo()]
-
-    @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        """ _name_search(name='', domain=None, operator='ilike', limit=None, order=None) -> ids
-
-        Private implementation of name_search, returning ids or a :class:`Query` object.
-
-        No default is applied for parameters ``limit`` and ``order``.
-        """
-        domain = list(domain or ())
-        search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
-        if not search_fnames:
-            _logger.warning("Cannot execute name_search, no _rec_name or _rec_names_search defined on %s", self._name)
-        # optimize out the default criterion of ``like ''`` that matches everything
-        elif not (name == '' and operator in ('like', 'ilike')):
-            aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-            domain += aggregator([[(field_name, operator, name)] for field_name in search_fnames])
-        return self._search(domain, limit=limit, order=order)
 
     @api.model
     def _add_missing_default_values(self, values):

@@ -138,7 +138,7 @@ class Message(models.Model):
 
     def _search_audit_log_related_record_id(self, model, operator, value):
         if operator in ['=', 'like', 'ilike', '!=', 'not ilike', 'not like'] and isinstance(value, str):
-            res_id_domain = [('res_id', 'in', self.env[model]._name_search(value, operator=operator))]
+            res_id_domain = [('res_id', 'in', self.env[model]._search([('display_name', operator, value)]))]
         elif operator in ['=', 'in', '!=', 'not in']:
             res_id_domain = [('res_id', operator, value)]
         else:
