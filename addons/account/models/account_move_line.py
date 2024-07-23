@@ -620,11 +620,13 @@ class AccountMoveLine(models.Model):
                 elif line.move_id.is_purchase_document(include_receipts=True):
                     line.account_id = accounts['expense'] or line.account_id
             elif line.partner_id:
-                line.account_id = self.env['account.account']._get_most_frequent_account_for_partner(
+                account_id = self.env['account.account']._get_most_frequent_account_for_partner(
                     company_id=line.company_id.id,
                     partner_id=line.partner_id.id,
                     move_type=line.move_id.move_type,
                 )
+                if account_id:
+                    line.account_id = account_id
         for line in self:
             if not line.account_id and line.display_type not in ('line_section', 'line_note'):
                 previous_two_accounts = line.move_id.line_ids.filtered(
@@ -672,10 +674,14 @@ class AccountMoveLine(models.Model):
                     from_currency=line.company_currency_id,
                     to_currency=line.currency_id,
                     company=line.company_id,
-                    date=line.move_id.invoice_date or line.move_id.date or fields.Date.context_today(line),
+                    date=line._get_rate_date(),
                 )
             else:
                 line.currency_rate = 1
+
+    def _get_rate_date(self):
+        self.ensure_one()
+        return self.move_id.invoice_date or self.move_id.date or fields.Date.context_today(self)
 
     @api.depends('currency_id', 'company_currency_id')
     def _compute_same_currency(self):
