@@ -7,8 +7,11 @@ from stdnum.util import clean
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.addons.base_iban.models.res_partner_bank import normalize_iban, pretty_iban, validate_iban
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError
+from odoo.tools import LazyTranslate
 from odoo.tools.misc import mod10r
+
+_lt = LazyTranslate(__name__)
 
 
 def validate_qr_iban(qr_iban):
@@ -19,11 +22,11 @@ def validate_qr_iban(qr_iban):
     sanitized_qr_iban = sanitize_account_number(qr_iban)
 
     if sanitized_qr_iban[:2] not in ['CH', 'LI']:
-        raise ValidationError(_("QR-IBAN numbers are only available in Switzerland."))
+        raise ValidationError(_lt("QR-IBAN numbers are only available in Switzerland."))
 
     # Now, check if it's valid QR-IBAN (based on its IID).
     if not check_qr_iban_range(sanitized_qr_iban):
-        raise ValidationError(_("QR-IBAN “%s” is invalid.", qr_iban))
+        raise ValidationError(_lt("QR-IBAN “%s” is invalid.", qr_iban))
 
     return True
 

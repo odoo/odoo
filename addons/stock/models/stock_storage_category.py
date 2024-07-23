@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class StorageCategory(models.Model):
@@ -41,7 +41,7 @@ class StorageCategory(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", category.name)) for category, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", category.name)) for category, vals in zip(self, vals_list)]
 
 
 class StorageCategoryProductCapacity(models.Model):

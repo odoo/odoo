@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.osv import expression
 
 class ProductTag(models.Model):
@@ -47,7 +47,7 @@ class ProductTag(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", tag.name)) for tag, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", tag.name)) for tag, vals in zip(self, vals_list)]
 
     def _search_product_ids(self, operator, operand):
         if operator in expression.NEGATIVE_TERM_OPERATORS:

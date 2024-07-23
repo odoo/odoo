@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import fields, models
 
 
 class PackageType(models.Model):
@@ -45,4 +45,4 @@ class PackageType(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", package_type.name)) for package_type, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", package_type.name)) for package_type, vals in zip(self, vals_list)]

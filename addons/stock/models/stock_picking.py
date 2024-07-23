@@ -495,7 +495,7 @@ class PickingType(models.Model):
         # Make sure that all picking type IDs are represented, even if empty
         picking_type_id_to_dates = {i: [] for i in self.ids}
         picking_type_id_to_dates.update({r[0].id: r[1] for r in records})
-        return [(i, d, _('Transfers')) for i, d in picking_type_id_to_dates.items()]
+        return [(i, d, self.env._('Transfers')) for i, d in picking_type_id_to_dates.items()]
 
     def _prepare_graph_data(self, summaries):
         """

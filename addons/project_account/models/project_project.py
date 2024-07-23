@@ -4,7 +4,7 @@ import json
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import models, _lt
+from odoo import models
 
 
 class Project(models.Model):
@@ -82,9 +82,9 @@ class Project(models.Model):
     def _get_profitability_labels(self):
         return {
             **super()._get_profitability_labels(),
-            'other_purchase_costs': _lt('Vendor Bills'),
-            'other_revenues_aal': _lt('Other Revenues'),
-            'other_costs_aal': _lt('Other Costs'),
+            'other_purchase_costs': self.env._('Vendor Bills'),
+            'other_revenues_aal': self.env._('Other Revenues'),
+            'other_costs_aal': self.env._('Other Costs'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):

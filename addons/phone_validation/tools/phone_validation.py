@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.exceptions import UserError
+from odoo.tools import LazyTranslate
 
 import logging
 
+_lt = LazyTranslate(__name__, default_lang='en_US')  # TODO pass env to functions and remove _lt
 _logger = logging.getLogger(__name__)
 _phonenumbers_lib_warning = False
 
@@ -18,15 +19,15 @@ try:
             phone_nbr = phonenumbers.parse(number, region=country_code or None, keep_raw_input=True)
         except phonenumbers.phonenumberutil.NumberParseException as e:
             raise UserError(
-                _('Unable to parse %(phone)s: %(error)s', phone=number, error=str(e))
+                _lt('Unable to parse %(phone)s: %(error)s', phone=number, error=str(e))
             ) from e
 
         if not phonenumbers.is_possible_number(phone_nbr):
             reason = phonenumbers.is_possible_number_with_reason(phone_nbr)
             if reason == phonenumbers.ValidationResult.INVALID_COUNTRY_CODE:
-                raise UserError(_('Impossible number %s: not a valid country prefix.', number))
+                raise UserError(_lt('Impossible number %s: not a valid country prefix.', number))
             if reason == phonenumbers.ValidationResult.TOO_SHORT:
-                raise UserError(_('Impossible number %s: not enough digits.', number))
+                raise UserError(_lt('Impossible number %s: not enough digits.', number))
             # in case of "TOO_LONG", we may try to reformat the number in case it was
             # entered without '+' prefix or using leading '++' not always recognized;
             # in any case final error should keep the original number to ease tracking
@@ -36,23 +37,23 @@ try:
                     try:
                         phone_nbr = phone_parse(f'+{number.lstrip("00")}', country_code)
                     except UserError:
-                        raise UserError(_('Impossible number %s: too many digits.', number))
+                        raise UserError(_lt('Impossible number %s: too many digits.', number))
                 # people may enter 33... instead of +33...
                 elif not number.startswith('+'):
                     try:
                         phone_nbr = phone_parse(f'+{number}', country_code)
                     except UserError:
-                        raise UserError(_('Impossible number %s: too many digits.', number))
+                        raise UserError(_lt('Impossible number %s: too many digits.', number))
                 else:
-                    raise UserError(_('Impossible number %s: too many digits.', number))
+                    raise UserError(_lt('Impossible number %s: too many digits.', number))
             else:
-                raise UserError(_('Impossible number %s: probably invalid number of digits.', number))
+                raise UserError(_lt('Impossible number %s: probably invalid number of digits.', number))
         if not phonenumbers.is_valid_number(phone_nbr):
             # Force format with international to force metadata to apply
             formatted_intl = phonenumbers.format_number(phone_nbr, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
             phone_nbr_intl = phonenumbers.parse(formatted_intl, region=country_code or None, keep_raw_input=True)
             if not phonenumbers.is_valid_number(phone_nbr_intl):
-                raise UserError(_('Invalid number %s: probably incorrect prefix.', number))
+                raise UserError(_lt('Invalid number %s: probably incorrect prefix.', number))
             return phone_nbr_intl
 
         return phone_nbr

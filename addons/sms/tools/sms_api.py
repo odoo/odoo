@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.addons.iap.tools import iap_tools
-from odoo.tools.translate import _lt
+from odoo.tools.translate import _, LazyTranslate
 
+_lt = LazyTranslate(__name__)
 
 ERROR_MESSAGES = {
     # Errors that could occur while updating sender name

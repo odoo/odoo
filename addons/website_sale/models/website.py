@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import SUPERUSER_ID, _, _lt, api, fields, models, tools
+from odoo import SUPERUSER_ID, api, fields, models, tools
 from odoo.http import request
 from odoo.osv import expression
+from odoo.tools.translate import _, LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 
 class Website(models.Model):

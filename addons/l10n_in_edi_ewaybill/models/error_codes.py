@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _lt
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 ERROR_CODES = {
     "100": _lt("Invalid json"),

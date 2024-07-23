@@ -20,7 +20,7 @@ class ProjectProjectStage(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=_("%s (copy)", stage.name)) for stage, vals in zip(self, vals_list)]
+        return [dict(vals, name=self.env._("%s (copy)", stage.name)) for stage, vals in zip(self, vals_list)]
 
     def unlink_wizard(self, stage_view=False):
         wizard = self.with_context(active_test=False).env['project.project.stage.delete.wizard'].create({

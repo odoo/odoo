@@ -351,7 +351,8 @@ class IrAttachment(models.Model):
                 except UserError as e:
                     # Catch error during test where we provide fake image
                     # raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
-                    _logger.info('Post processing ignored : %s', e)
+                    msg = str(e)  # the exception can be lazy-translated, resolve it here
+                    _logger.info('Post processing ignored : %s', msg)
         return values
 
     def _check_contents(self, values):

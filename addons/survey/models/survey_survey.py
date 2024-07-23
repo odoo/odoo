@@ -496,7 +496,7 @@ class Survey(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, title=_("%s (copy)", survey.title)) for survey, vals in zip(self, vals_list)]
+        return [dict(vals, title=self.env._("%s (copy)", survey.title)) for survey, vals in zip(self, vals_list)]
 
     def toggle_active(self):
         super(Survey, self).toggle_active()

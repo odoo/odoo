@@ -17,11 +17,11 @@ from random import randrange
 
 from odoo.exceptions import UserError
 from odoo.tools.misc import DotDict
-from odoo.tools.translate import _
+from odoo.tools.translate import LazyTranslate
 
 
 __all__ = ["image_process"]
-
+_lt = LazyTranslate('base')
 
 # Preload PIL with the minimal subset of image formats we need
 Image.preinit()
@@ -85,7 +85,7 @@ class ImageProcess:
             try:
                 self.image = Image.open(io.BytesIO(source))
             except (OSError, binascii.Error):
-                raise UserError(_("This file could not be decoded as an image file."))
+                raise UserError(_lt("This file could not be decoded as an image file."))
 
             # Original format has to be saved before fixing the orientation or
             # doing any other operations because the information will be lost on
@@ -96,7 +96,7 @@ class ImageProcess:
 
             w, h = self.image.size
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
-                raise UserError(_("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 1e6)))
+                raise UserError(_lt("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 1e6)))
 
     def image_quality(self, quality=0, output_format=''):
         """Return the image resulting of all the image processing
@@ -422,7 +422,7 @@ def binary_to_image(source):
     try:
         return Image.open(io.BytesIO(source))
     except (OSError, binascii.Error):
-        raise UserError(_("This file could not be decoded as an image file."))
+        raise UserError(_lt("This file could not be decoded as an image file."))
 
 def base64_to_image(base64_source: Union[str, bytes]) -> Image:
     """Return a PIL image from the given `base64_source`.
@@ -433,7 +433,7 @@ def base64_to_image(base64_source: Union[str, bytes]) -> Image:
     try:
         return Image.open(io.BytesIO(base64.b64decode(base64_source)))
     except (OSError, binascii.Error):
-        raise UserError(_("This file could not be decoded as an image file."))
+        raise UserError(_lt("This file could not be decoded as an image file."))
 
 
 def image_apply_opt(image: Image, output_format: str, **params) -> bytes:
@@ -475,7 +475,7 @@ def get_webp_size(source):
     :return: (width, height) tuple, or None if not supported
     """
     if not (source[0:4] == b'RIFF' and source[8:15] == b'WEBPVP8'):
-        raise UserError(_("This file is not a webp file."))
+        raise UserError(_lt("This file is not a webp file."))
 
     vp8_type = source[15]
     if vp8_type == 0x20:  # 0x20 = ' '

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 DAYS = ['monday_location_id', 'tuesday_location_id', 'wednesday_location_id', 'thursday_location_id', 'friday_location_id', 'saturday_location_id', 'sunday_location_id']
 
@@ -18,7 +18,7 @@ class HrEmployeeLocation(models.Model):
     day_week_string = fields.Char(compute="_compute_day_week_string")
 
     _sql_constraints = [
-        ('uniq_exceptional_per_day', 'unique(employee_id, date)', _('Only one default work location and one exceptional work location per day per employee.')),
+        ('uniq_exceptional_per_day', 'unique(employee_id, date)', 'Only one default work location and one exceptional work location per day per employee.'),
     ]
 
     @api.depends('date')

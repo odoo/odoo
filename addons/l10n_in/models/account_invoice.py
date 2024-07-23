@@ -85,8 +85,8 @@ class AccountMove(models.Model):
         def build_warning(record, action_name, message, views, domain=False):
             return {
                 'message': message,
-                'action_text': _("View %s", action_name),
-                'action': record._get_records_action(name=_("Check %s", action_name), target='current', views=views, domain=domain or [])
+                'action_text': self.env._("View %s", action_name),
+                'action': record._get_records_action(name=self.env._("Check %s", action_name), target='current', views=views, domain=domain or [])
             }
 
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and m.move_type != 'entry')

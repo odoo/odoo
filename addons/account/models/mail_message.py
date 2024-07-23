@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv.expression import OR
 
@@ -64,7 +64,7 @@ class Message(models.Model):
             title = message.subject or message.preview
             tracking_value_ids = message.sudo().tracking_value_ids._filter_has_field_access(self.env)
             if not title and tracking_value_ids:
-                title = _("Updated")
+                title = self.env._("Updated")
             if not title and message.subtype_id and not message.subtype_id.internal:
                 title = message.subtype_id.display_name
             audit_log_preview = (title or '') + '\n'
@@ -120,7 +120,7 @@ class Message(models.Model):
 
     def _search_account_audit_log_activated(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
+            raise UserError(self.env._('Operation not supported'))
         return [('message_type', '=', 'notification')] + OR([
             [('model', '=', model), ('res_id', 'in', self.env[model]._search(DOMAINS[model](operator, value)))]
             for model in DOMAINS
@@ -142,7 +142,7 @@ class Message(models.Model):
         elif operator in ['=', 'in', '!=', 'not in']:
             res_id_domain = [('res_id', operator, value)]
         else:
-            raise UserError(_('Operation not supported'))
+            raise UserError(self.env._('Operation not supported'))
         return [('model', '=', model)] + res_id_domain
 
     @api.ondelete(at_uninstall=True)
@@ -154,7 +154,7 @@ class Message(models.Model):
                 message.account_audit_log_move_id
                 and not message.account_audit_log_move_id.posted_before
             ):
-                raise UserError(_("You cannot remove parts of the audit trail. Archive the record instead."))
+                raise UserError(self.env._("You cannot remove parts of the audit trail. Archive the record instead."))
 
     def write(self, vals):
         if (

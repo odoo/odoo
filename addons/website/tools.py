@@ -23,7 +23,7 @@ def MockRequest(
         # website_sale
         sale_order_id=None, website_sale_current_pl=None,
 ):
-    # TODO move MockRequest to a package in tests
+    # TODO move MockRequest to a package in addons/web/tests
     from odoo.tests.common import HttpCase  # noqa: PLC0415
     lang_code = context.get('lang', env.context.get('lang', 'en_US'))
     env = env(context=dict(context, lang=lang_code))

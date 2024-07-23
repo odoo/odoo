@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 from collections import namedtuple
 
-from odoo import _, _lt, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, RedirectWarning
 from odoo.tools import format_list
+from odoo.tools.translate import _, LazyTranslate
 
-_logger = logging.getLogger(__name__)
+_lt = LazyTranslate(__name__)
 
 
 ROUTE_NAMES = {
@@ -778,7 +778,7 @@ class Warehouse(models.Model):
         return customer_loc, supplier_loc
 
     def _get_route_name(self, route_type):
-        return str(ROUTE_NAMES[route_type])
+        return self.env._(ROUTE_NAMES[route_type])  # pylint: disable=gettext-variable
 
     def get_rules_dict(self):
         """ Define the rules source/destination locations, picking_type and
