@@ -19,6 +19,7 @@ export class BarcodeVideoScanner extends Component {
         onResult: Function,
         onError: { type: Function, optional: true },
         notSupported: { type: Function, optional: true },
+        delayBetweenScan: { type: Number, optional: true },
     };
     /**
      * @override
@@ -141,12 +142,24 @@ export class BarcodeVideoScanner extends Component {
                         continue;
                     }
                 }
-                this.props.onResult(code.rawValue);
+                this.barcodeDetected(code.rawValue);
                 break;
             }
         } catch (err) {
             this.props.onError(err);
         }
+    }
+
+    barcodeDetected(barcode) {
+        if (this.props.delayBetweenScan) {
+            clearInterval(this.interval);
+            setTimeout(() => {
+                if (this.videoPreviewRef.el) {
+                    this.interval = setInterval(this.detectCode.bind(this), 100);
+                }
+            }, this.props.delayBetweenScan);
+        }
+        this.props.onResult(barcode);
     }
 
     adaptValuesWithRatio(object, dividerRatio = false) {
