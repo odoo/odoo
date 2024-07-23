@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
+import freezegun
+from dateutil.relativedelta import relativedelta
+
+from odoo import Command, fields
 
 from odoo.addons.gamification.tests.common import TransactionCaseGamification
 from odoo.exceptions import UserError
@@ -136,6 +140,47 @@ class test_challenge(TestGamificationCommon):
             unchanged_goal_id.user_id,
             "Only portal user last logged in before last challenge update should not have been updated.",
         )
+
+    def test_goal_notification_message(self):
+        """ Test email message successfully created after updating goal. """
+        defination = self.env['gamification.goal.definition'].create({
+            'name': 'Big bomb',
+            'computation_mode': 'manually',
+            'condition': 'higher',
+            'display_mode': 'progress'
+        })
+
+        challenge = self.env['gamification.challenge'].create({
+            'name': 'Test Challenge',
+            'state': 'inprogress',
+            'user_ids': [(6, 0, self.robot.ids)],
+            'remind_update_delay': True,
+            'line_ids': [
+                Command.create({
+                    'definition_id': defination.id,
+                    'target_goal': 1.0
+                }),
+            ]
+        })
+
+        challenge.action_check()
+        goal = self.env['gamification.goal'].search(
+            [('challenge_id', '=', challenge.id)]
+        )
+        self.assertEqual(len(goal), 1)
+        self.assertEqual(set(goal.mapped('state')), {'inprogress'})
+
+        with freezegun.freeze_time(fields.Date.today() - relativedelta(day=2)):
+            goal.target_goal = '10'
+
+        goal._check_remind_delay()
+
+        goal_message = self.env['mail.message'].search([
+            ('model', '=', 'gamification.goal'),
+            ('res_id', '=', goal.id)
+        ])
+        self.assertEqual(len(goal_message), 1)
+        self.assertEqual(goal_message.partner_ids, self.robot.partner_id)
 
 
 class test_badge_wizard(TestGamificationCommon):
