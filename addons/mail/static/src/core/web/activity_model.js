@@ -65,10 +65,10 @@ export class Activity extends Record {
         }
         assignDefined(activity, data);
         if (broadcast) {
-            this.store.activityBroadcastChannel?.postMessage({
-                type: "INSERT",
-                payload: activity.serialize(),
-            });
+            this.store.env.services["multi_tab"].broadcast(
+                "mail.activity/insert",
+                activity.serialize()
+            );
         }
         return activity;
     }
@@ -173,9 +173,9 @@ export class Activity extends Record {
             attachment_ids: attachmentIds,
             feedback: this.feedback,
         });
-        this.store.activityBroadcastChannel?.postMessage({
-            type: "RELOAD_CHATTER",
-            payload: { id: this.res_id, model: this.res_model },
+        this.store.env.services["multi_tab"].broadcast("mail.activity/reload_chatter", {
+            id: this.res_id,
+            model: this.res_model,
         });
     }
 
@@ -186,9 +186,9 @@ export class Activity extends Record {
             [[this.id]],
             { feedback: this.feedback }
         );
-        this.activityBroadcastChannel?.postMessage({
-            type: "RELOAD_CHATTER",
-            payload: { id: this.res_id, model: this.res_model },
+        this.store.env.services["multi_tab"].broadcast("mail.activity/reload_chatter", {
+            id: this.res_id,
+            model: this.res_model,
         });
         return action;
     }
@@ -196,9 +196,8 @@ export class Activity extends Record {
     remove({ broadcast = true } = {}) {
         this.delete();
         if (broadcast) {
-            this.activityBroadcastChannel?.postMessage({
-                type: "DELETE",
-                payload: { id: this.id },
+            this.store.env.services["multi_tab"].broadcast("mail.activity/delete", {
+                id: this.res_id,
             });
         }
     }
