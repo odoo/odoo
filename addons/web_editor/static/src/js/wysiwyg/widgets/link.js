@@ -95,6 +95,11 @@ const Link = Widget.extend({
             } else {
                 this.data.originalHTML = linkNode.innerHTML;
             }
+            const imgEl = linkNode.querySelector('IMG');
+            if (imgEl) {
+                this.data.isImage = true;
+                this.needLabel = false;
+            }
             this.data.url = this.$link.attr('href') || '';
         } else {
             this.data.content = this.data.content ? this.data.content.replace(/[ \t\r\n]+/g, ' ') : '';
@@ -491,7 +496,7 @@ const Link = Widget.extend({
      */
     _updateLinkContent($link, linkInfos, { force = false } = {}) {
         if (force || (this._setLinkContent && (linkInfos.content !== this.data.originalText || linkInfos.url !== this.data.url))) {
-            if (linkInfos.content === this.data.originalText) {
+            if (linkInfos.content === this.data.originalText || this.data.isImage) {
                 $link.html(this.data.originalHTML);
             } else if (linkInfos.content && linkInfos.content.length) {
                 $link.text(linkInfos.content);
