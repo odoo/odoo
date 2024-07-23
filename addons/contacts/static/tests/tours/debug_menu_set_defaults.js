@@ -5,7 +5,7 @@
 
     registry.category("web_tour.tours").add('debug_menu_set_defaults', {
         test: true,
-        url: '/web?debug=1',
+        url: '/odoo?debug=1',
         steps: () => [
             ...stepUtils.goToAppSteps('contacts.menu_contacts', "Open the contacts menu"),
             {

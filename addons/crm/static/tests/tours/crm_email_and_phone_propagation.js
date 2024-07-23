@@ -5,7 +5,7 @@
 
     registry.category("web_tour.tours").add('crm_email_and_phone_propagation_edit_save', {
         test: true,
-        url: '/web',
+        url: '/odoo',
         steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -29,7 +29,7 @@
 
     registry.category("web_tour.tours").add('crm_email_and_phone_propagation_remove_email_and_phone', {
         test: true,
-        url: '/web',
+        url: '/odoo',
         steps: () => [
         stepUtils.showAppsMenuItem(),
         {
