@@ -5,7 +5,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add("time_off_request_calendar_view", {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

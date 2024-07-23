@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from werkzeug.urls import url_encode
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
@@ -63,11 +62,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
             refused_applications |= duplicates_ids
             refuse_bodies = {}
             for duplicate in duplicates_ids:
-                url = '/web#%s' % url_encode({
-                    'id': self.applicant_ids[0].id,
-                    'model': 'hr.applicant',
-                    'view_type': 'form',
-                })
+                url = '/odoo/hr.applicant/%s' % (self.applicant_ids[0].id)
                 message = _(
                     "Refused automatically because this application has been identified as a duplicate of %(link)s",
                     link=Markup("<a href=%s>%s</a>") % (url, self.applicant_ids[0].name))

@@ -21,4 +21,4 @@ class SkillsTestUI(odoo.tests.HttpCase):
             'skill_type_id': skill_type.id,
         }])
 
-        self.start_tour("/web", 'hr_skills_tour', login='admin')
+        self.start_tour("/odoo", 'hr_skills_tour', login='admin')
