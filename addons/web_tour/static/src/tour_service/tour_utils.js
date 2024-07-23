@@ -70,7 +70,7 @@ export const stepUtils = {
     showAppsMenuItem() {
         return {
             isActive: ["auto", "community"],
-            trigger: ".o_navbar_apps_menu button",
+            trigger: ".o_navbar_apps_menu button:enabled",
             position: "bottom",
             run: "click",
         };
