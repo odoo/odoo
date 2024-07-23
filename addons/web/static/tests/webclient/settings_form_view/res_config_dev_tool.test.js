@@ -156,6 +156,6 @@ test("Activate the developer modeddd (with tests assets)", async () => {
 
     await click("a:contains('Deactivate the developer mode')");
     await tick();
-    expect(router.current).toEqual({});
+    expect(router.current).toEqual({ debug: 0 });
     expect.verifySteps(["location reload"]);
 });
