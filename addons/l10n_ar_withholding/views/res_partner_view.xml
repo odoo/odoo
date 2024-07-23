@@ -6,19 +6,18 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <page name="sales_purchases" position="after">
-                <page string="Ar Taxes" name="accounting">
-                    <field name="arba_alicuot_ids">
+            <group name="electronic_invoicing" position="after">
+                <group string="Purchase Withholding" invisible="'AR' not in fiscal_country_codes or not is_company">
+                    <field name="l10n_ar_partner_tax_ids" nolabel="1" colspan="2" widget="auto_save_res_partner">
                         <tree editable="top">
-                            <!-- <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/> -->
-                            <field name="tax_id" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="from_date"/>
-                            <field name="to_date"/>
-                            <field name="ref"/>
+                            <field name="tax_id" options="{'no_create': True, 'no_open': True}" domain="[('l10n_ar_withholding_payment_type', '!=', False)]"/>
+                            <field name="from_date" optional="hide"/>
+                            <field name="to_date" optional="hide"/>
+                            <field name="ref" optional="hide"/>
                         </tree>
                     </field>
-                </page>
-            </page>
+                </group>
+            </group>
         </field>
     </record>
 
