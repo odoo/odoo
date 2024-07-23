@@ -1,7 +1,7 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { range } from "@web/core/utils/numbers";
 
-const { toCartesian, toZone } = spreadsheet.helpers;
+const { toCartesian, toZone, toXC } = spreadsheet.helpers;
 
 /**
  * Get the value of the given cell
@@ -47,6 +47,18 @@ export function getEvaluatedFormatGrid(model, zoneXc, sheetId = model.getters.ge
         for (const col of range(left, right + 1)) {
             const cell = model.getters.getEvaluatedCell({ sheetId, col, row });
             grid[row][col] = cell.format;
+        }
+    }
+    return grid;
+}
+
+export function getFormattedValueGrid(model, zoneXc, sheetId = model.getters.getActiveSheetId()) {
+    const { top, bottom, left, right } = toZone(zoneXc);
+    const grid = {};
+    for (const row of range(top, bottom + 1)) {
+        for (const col of range(left, right + 1)) {
+            const cell = model.getters.getEvaluatedCell({ sheetId, col, row });
+            grid[toXC(col, row)] = cell.formattedValue;
         }
     }
     return grid;

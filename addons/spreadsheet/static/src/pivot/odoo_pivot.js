@@ -9,7 +9,7 @@ import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@o
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 
 const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
-const { pivotTimeAdapter, toString, areDomainArgsFieldsValid } = helpers;
+const { pivotTimeAdapter, toString, areDomainArgsFieldsValid, toNormalizedPivotValue } = helpers;
 
 /**
  * @typedef {import("@odoo/o-spreadsheet").FPayload} FPayload
@@ -105,18 +105,18 @@ export class OdooPivot extends OdooViewsDataSource {
         const domain = [];
         const stringArgs = args.map(toString);
         for (let i = 0; i < stringArgs.length; i += 2) {
-            if (stringArgs[i] === "measure") {
-                domain.push({ field: stringArgs[i], value: stringArgs[i + 1] });
+            const nameWithGranularity = stringArgs[i];
+            if (nameWithGranularity === "measure") {
+                domain.push({ field: nameWithGranularity, value: stringArgs[i + 1], type: "char" });
                 continue;
             }
-            const { dimensionWithGranularity, isPositional, field } = this.parseGroupField(
-                stringArgs[i]
-            );
+            const { dimensionWithGranularity, isPositional, field } =
+                this.parseGroupField(nameWithGranularity);
             if (isPositional) {
                 const previousDomain = [
                     ...domain,
                     // Need to keep the "#"
-                    { field: stringArgs[i], value: stringArgs[i + 1], type: "number" },
+                    { field: nameWithGranularity, value: stringArgs[i + 1], type: "number" },
                 ];
                 domain.push({
                     field: dimensionWithGranularity,
@@ -124,9 +124,13 @@ export class OdooPivot extends OdooViewsDataSource {
                     type: field.type,
                 });
             } else {
+                const normalizedValue = toNormalizedPivotValue(
+                    this.definition.getDimension(dimensionWithGranularity),
+                    args[i + 1]
+                );
                 domain.push({
                     field: dimensionWithGranularity,
-                    value: stringArgs[i + 1],
+                    value: normalizedValue,
                     type: field.type,
                 });
             }
