@@ -1484,7 +1484,7 @@ export class Wysiwyg extends Component {
                 ...this.options.linkOptions,
                 editable: this.odooEditor.editable,
                 link,
-                needLabel: true,
+                needLabel: true && !link.querySelector('img'),
                 focusField: link.innerHTML ? 'url' : '',
                 onSave: (data) => {
                     if (!data) {
