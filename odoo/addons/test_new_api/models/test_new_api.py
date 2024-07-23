@@ -353,6 +353,10 @@ class MixedModel(models.Model):
     _name = 'test_new_api.mixed'
     _description = 'Test New API Mixed'
 
+    foo = fields.Char()
+    text = fields.Text()
+    truth = fields.Boolean()
+    count = fields.Integer()
     number = fields.Float(digits=(10, 2), default=3.14)
     number2 = fields.Float(digits='New API Precision')
     date = fields.Date()
@@ -645,6 +649,7 @@ class CompanyDependent(models.Model):
     _description = 'Test New API Company'
 
     foo = fields.Char(company_dependent=True)
+    text = fields.Text(company_dependent=True)
     date = fields.Date(company_dependent=True)
     moment = fields.Datetime(company_dependent=True)
     tag_id = fields.Many2one('test_new_api.multi.tag', company_dependent=True)
