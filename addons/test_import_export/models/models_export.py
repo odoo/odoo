@@ -1,17 +1,4 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import api, fields, models
-
-class NewModel(models.Model):
-    _name = 'export.integer'
-    _description = 'Export: Integer'
-
-    value = fields.Integer(default=4)
-
-    def _compute_display_name(self):
-        for record in self:
-            record.display_name = f"{self._name}:{record.value}"
+from odoo import fields, models
 
 
 class ExportAggregator(models.Model):
