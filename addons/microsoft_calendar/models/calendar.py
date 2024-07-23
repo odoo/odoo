@@ -47,7 +47,7 @@ class Meeting(models.Model):
     def _get_microsoft_synced_fields(self):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
                 'user_id', 'privacy',
-                'attendee_ids', 'alarm_ids', 'location', 'show_as', 'active'}
+                'attendee_ids', 'alarm_ids', 'location', 'show_as', 'active', 'videocall_location'}
 
     @api.model
     def _restart_microsoft_sync(self):
@@ -520,6 +520,12 @@ class Meeting(models.Model):
 
         if 'location' in fields_to_sync:
             values['location'] = {'displayName': self.location or ''}
+
+        if not self.location and 'videocall_location' in fields_to_sync and self._need_video_call():
+            values['isOnlineMeeting'] = True
+            values['onlineMeetingProvider'] = 'teamsForBusiness'
+        else:
+            values['isOnlineMeeting'] = False
 
         if 'alarm_ids' in fields_to_sync:
             alarm_id = self.alarm_ids.filtered(lambda a: a.alarm_type == 'notification')[:1]

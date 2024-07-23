@@ -506,3 +506,11 @@ class MicrosoftSync(models.AbstractModel):
         the appropriate user accordingly.
         """
         raise NotImplementedError()
+
+    def _need_video_call(self):
+        """
+        Implement this method to return True if the event needs a video call
+        :return: bool
+        """
+        self.ensure_one()
+        return True
