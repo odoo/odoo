@@ -6,7 +6,7 @@ import { user } from "@web/core/user";
 import { NO_RECORD_AT_THIS_POSITION, OdooPivotModel } from "./pivot_model";
 import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
-import { omit } from "@web/core/utils/objects";
+import { deepEqual, omit } from "@web/core/utils/objects";
 import { OdooPivotLoader } from "./odoo_pivot_loader";
 
 const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
@@ -62,11 +62,30 @@ export class OdooPivot {
 
         /** @protected */
         this.domainWithGlobalFilters = this.coreDefinition.domain;
-
-        this.setup();
     }
 
-    setup() {}
+    /**
+     * @param {OdooPivotCoreDefinition} nextDefinition
+     */
+    onDefinitionChange(nextDefinition) {
+        this.context = omit(nextDefinition.context, ...Object.keys(user.context));
+        this.domainWithGlobalFilters = nextDefinition.domain;
+        this.coreDefinition = nextDefinition;
+        if (
+            deepEqual(this.coreDefinition.columns, nextDefinition.columns) &&
+            deepEqual(this.coreDefinition.rows, nextDefinition.rows) &&
+            deepEqual(this.coreDefinition.measures, nextDefinition.measures) &&
+            deepEqual(this.coreDefinition.sortedColumn, nextDefinition.sortedColumn) &&
+            deepEqual(this.coreDefinition.domain, nextDefinition.domain) &&
+            deepEqual(this.coreDefinition.context, nextDefinition.context) &&
+            deepEqual(this.coreDefinition.actionXmlId, nextDefinition.actionXmlId) &&
+            deepEqual(this.coreDefinition.model, nextDefinition.model)
+        ) {
+            // Nothing change for the table structure, no need to reload the data
+            return;
+        }
+        this.load({ reload: true });
+    }
 
     async loadMetadata() {
         this._fields = await this.loader.getFields(this.coreDefinition.model);
