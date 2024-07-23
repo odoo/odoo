@@ -39,4 +39,4 @@ class TestUi(HttpCase):
             'event_id': event.id,
             'product_id': self.product_event.id,
         }])
-        self.start_tour("/web", 'event_configurator_tour', login="admin")
+        self.start_tour("/odoo", 'event_configurator_tour', login="admin")

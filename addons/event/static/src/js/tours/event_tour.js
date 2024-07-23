@@ -9,7 +9,7 @@ import EventAdditionalTourSteps from "@event/js/tours/event_steps";
 import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('event_tour', {
-    url: '/web',
+    url: '/odoo',
     rainbowManMessage: _t("Great! Now all you have to do is wait for your attendees to show up!"),
     sequence: 210,
     steps: () => [stepUtils.showAppsMenuItem(), {

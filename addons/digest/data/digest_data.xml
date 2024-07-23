@@ -342,7 +342,7 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <td class="td_button td_button_open_report" style="padding: 1px 5px;height: 24px;">
-                                                                        <a t-att-href="'/web#action=%s' % kpi_info['kpi_action']">
+                                                                        <a t-att-href="'/odoo/action-%s' % kpi_info['kpi_action']">
                                                                             <span class="button" id="button_open_report">➔ Open Report</span>
                                                                         </a>
                                                                     </td>
@@ -406,7 +406,7 @@
                                                     </t>
                                                     <t t-elif="object and object._name == 'digest.digest'">
                                                         –
-                                                        <a t-att-href="'/web#view_type=form&amp;model=digest.digest&amp;id=%s' % object.id" target="_blank"
+                                                        <a t-att-href="'/odoo/digest.digest/%s' % object.id" target="_blank"
                                                             style="text-decoration: none;">
                                                             <span style="color: #878d97;">Unsubscribe</span>
                                                         </a>
