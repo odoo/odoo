@@ -62,7 +62,7 @@ patch(Navbar.prototype, {
             : this.pos.selectedTable;
     },
     get showTableIcon() {
-        return this.getTable()?.name && this.pos.showBackButton();
+        return typeof this.getTable()?.table_number === "number" && this.pos.showBackButton();
     },
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";
@@ -109,7 +109,7 @@ patch(Navbar.prototype, {
         if (!table_number) {
             return;
         }
-        const find_table = (t) => t.name === table_number;
+        const find_table = (t) => t.table_number === parseInt(table_number);
         let table = this.pos.currentFloor?.table_ids.find(find_table);
         if (!table) {
             table = this.pos.models["restaurant.table"].find(find_table);

@@ -7,6 +7,8 @@ export class RestaurantTable extends Base {
     setup(vals) {
         super.setup(vals);
 
+        this.table_number = vals.table_number || 0;
+
         this.uiState = {
             orderCount: 0,
             changeCount: 0,
@@ -70,6 +72,9 @@ export class RestaurantTable extends Base {
         this.position_h = this.getX();
         this.position_v = this.getY();
         this.parent_id = null;
+    }
+    getName() {
+        return this.table_number.toString();
     }
 }
 registry.category("pos_available_models").add(RestaurantTable.pythonModel, RestaurantTable);

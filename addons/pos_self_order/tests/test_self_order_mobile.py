@@ -20,11 +20,11 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             "name": 'Main Floor',
             "background_color": 'rgb(249,250,251)',
             "table_ids": [(0, 0, {
-                "name": '1',
+                "table_number": 1,
             }), (0, 0, {
-                "name": '2',
+                "table_number": 2,
             }), (0, 0, {
-                "name": '3',
+                "table_number": 3,
             })],
         })
 
