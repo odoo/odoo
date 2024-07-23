@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_post_wip_wizard" model="ir.ui.view">
+            <field name="name">Post Manufacturing WIP</field>
+            <field name="model">mrp.account.post.wip</field>
+            <field name="arch" type="xml">
+                <form string="Post Manufacturing WIP">
+                    <group>
+                        <group>
+                            <field name="journal_id"/>
+                            <field name="reference"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="reversal_date"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <tree editable="bottom">
+                            <field name="account_id"/>
+                            <field name="label"/>
+                            <field name="debit" sum="Total Debit"/>
+                            <field name="credit" sum="Total Credit"/>
+                            <field name="currency_id" column_invisible="True"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="confirm" string="Post WIP" data-hotkey="q" colspan="1" type="object" class="btn-primary"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_post_wip" model="ir.actions.act_window">
+            <field name="name">Post Manufacturing WIP</field>
+            <field name="res_model">mrp.account.post.wip</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

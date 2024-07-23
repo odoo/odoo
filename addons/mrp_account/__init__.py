@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import models
 from . import report
+from . import wizard
 
 
 def _configure_journals(env):
@@ -9,8 +10,9 @@ def _configure_journals(env):
     for company in env['res.company'].search([('chart_template', '!=', False)]):
         ChartTemplate = env['account.chart.template'].with_company(company)
         template_code = company.chart_template
-        template_data = ChartTemplate._get_chart_template_data(template_code)['template_data']
+        template = ChartTemplate._get_chart_template_data(template_code)
+        template_data = template['template_data']
         if 'property_stock_account_production_cost_id' in template_data:
             data = {'property_stock_account_production_cost_id': template_data['property_stock_account_production_cost_id']}
             ChartTemplate._post_load_data(template_code, company, data)
-        ChartTemplate._load_wip_accounts(company, ChartTemplate._get_chart_template_data(template_code)['res.company'])
+        ChartTemplate._load_wip_accounts(company, template['res.company'])
