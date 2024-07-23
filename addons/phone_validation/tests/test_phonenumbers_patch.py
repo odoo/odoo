@@ -132,6 +132,23 @@ class TestPhonenumbersPatch(BaseCase):
         )
         self._assert_parsing_phonenumbers(parse_test_lines_MU)
 
+    def test_region_KE_monkey_patch(self):
+        """Makes sure that patch for kenyan phone numbers work"""
+        gt_KE_number = 711123456  # what national number we expect after parsing
+        gt_KE_code = 254  # what country code we expect after parsing
+
+        parse_test_lines_KE = (
+            self.PhoneInputOutputLine("+254711123456", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
+            self.PhoneInputOutputLine("+254 711 123 456", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
+            self.PhoneInputOutputLine("+254-711-123-456", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
+            self.PhoneInputOutputLine("+254 711/123/456", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
+            self.PhoneInputOutputLine("0711123456", region="KE", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
+            self.PhoneInputOutputLine("0711 123 456", region="KE", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
+            self.PhoneInputOutputLine("0711-123-456", region="KE", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
+            self.PhoneInputOutputLine("0711/123/456", region="KE", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_KE)
+
     def test_region_PA_monkey_patch(self):
         """Makes sure that patch for Panama's phone numbers work"""
         parse_test_lines_PA = (
