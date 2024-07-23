@@ -55,7 +55,7 @@ class SMTPConnection:
 SMTP_ATTRIBUTES = [
     'auth', 'auth_cram_md5', 'auth_login', 'auth_plain', 'close', 'data', 'docmd', 'ehlo', 'ehlo_or_helo_if_needed',
     'expn', 'from_filter', 'getreply', 'has_extn', 'login', 'mail', 'noop', 'putcmd', 'quit', 'rcpt', 'rset',
-    'send_message', 'sendmail', 'set_debuglevel', 'smtp_from', 'starttls', 'verify', '_host',
+    'send_message', 'sendmail', 'set_debuglevel', 'smtp_from', 'starttls', 'user', 'verify', '_host',
 ]
 for name in SMTP_ATTRIBUTES:
     setattr(SMTPConnection, name, make_wrap_property(name))
