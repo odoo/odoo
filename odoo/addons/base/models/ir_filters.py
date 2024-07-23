@@ -31,6 +31,11 @@ class IrFilters(models.Model):
         self._cr.execute("SELECT model, name FROM ir_model ORDER BY name")
         return self._cr.fetchall()
 
+    def write(self, vals):
+        new_filter = super().write(vals)
+        self.check_access_rule('write')
+        return new_filter
+
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, name=_('%s (copy)', self.name))
