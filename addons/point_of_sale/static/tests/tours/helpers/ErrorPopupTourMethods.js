@@ -18,3 +18,12 @@ export function isShown() {
         },
     ];
 }
+
+export function messageBodyContains(text) {
+    return [
+        {
+            content: `check '${text}' is in the body of the popup`,
+            trigger: `.modal-dialog .popup-error .modal-body:contains(${text})`,
+        },
+    ];
+}
