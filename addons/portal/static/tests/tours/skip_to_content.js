@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("skip_to_content", {
             content: "Check if we have been redirected to #wrap",
             trigger: "body",
             run: () => {
-                if (!window.location.href.endsWith("/#wrap")) {
+                if (!window.location.href.endsWith("#wrap")) {
                     console.error("We should be on #wrap.");
                 }
             }
