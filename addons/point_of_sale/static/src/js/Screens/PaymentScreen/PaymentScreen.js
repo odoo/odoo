@@ -9,6 +9,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
     const Registries = require('point_of_sale.Registries');
     const { isConnectionError } = require('point_of_sale.utils');
     const utils = require('web.utils');
+    const round_pr = utils.round_precision;
 
     class PaymentScreen extends PosComponent {
         setup() {
@@ -82,6 +83,10 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         }
         addNewPaymentLine({ detail: paymentMethod }) {
             // original function: click_paymentmethods
+            if(!this.env.pos.get_order().check_paymentlines_rounding()) {
+                this._display_popup_error_paymentlines_rounding();
+                return false;
+            }
             let result = this.currentOrder.add_paymentline(paymentMethod);
             if (result){
                 NumberBuffer.reset();
@@ -93,6 +98,36 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     body: this.env._t('There is already an electronic payment in progress.'),
                 });
                 return false;
+            }
+        }
+        _display_popup_error_paymentlines_rounding() {
+            if(this.env.pos.config.cash_rounding) {
+                const orderlines = this.paymentLines;
+                const cash_rounding = this.env.pos.cash_rounding[0].rounding;
+                const default_rounding = this.env.pos.currency.rounding;
+                for(var id in orderlines) {
+                    var line = orderlines[id];
+                    var diff = round_pr(round_pr(line.amount, cash_rounding) - round_pr(line.amount, default_rounding), default_rounding);
+
+                    if(diff && (line.payment_method.is_cash_count || !this.env.pos.config.only_round_cash_method)) {
+                        const upper_amount = round_pr(round_pr(line.amount, default_rounding) + cash_rounding / 2, cash_rounding)
+                        const lower_amount = round_pr(round_pr(line.amount, default_rounding) - cash_rounding / 2, cash_rounding)
+                        this.showPopup("ErrorPopup", {
+                            title: this.env._t("Rounding error in payment lines"),
+                            body: _.str.sprintf(
+                                this.env._t(
+                                    "The amount of your payment lines must be rounded to validate the transaction.\n" +
+                                    "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
+                                ),
+                                cash_rounding.toFixed(this.env.pos.currency.decimal_places),
+                                lower_amount.toFixed(this.env.pos.currency.decimal_places),
+                                upper_amount.toFixed(this.env.pos.currency.decimal_places),
+                                line.amount.toFixed(this.env.pos.currency.decimal_places)
+                            ),
+                        });
+                        return;
+                    }
+                }
             }
         }
         _updateSelectedPaymentline() {
@@ -175,10 +210,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         async validateOrder(isForceValidate) {
             if(this.env.pos.config.cash_rounding) {
                 if(!this.env.pos.get_order().check_paymentlines_rounding()) {
-                    this.showPopup('ErrorPopup', {
-                        title: this.env._t('Rounding error in payment lines'),
-                        body: this.env._t("The amount of your payment lines must be rounded to validate the transaction."),
-                    });
+                    this._display_popup_error_paymentlines_rounding();
                     return;
                 }
             }
