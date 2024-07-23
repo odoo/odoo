@@ -16,6 +16,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 
 /**
  * @typedef CardData
@@ -32,7 +33,7 @@ import { useService } from "@web/core/utils/hooks";
  * @extends {Component<Props, Env>}
  */
 export class Call extends Component {
-    static components = { CallActionList, CallParticipantCard, PttAdBanner };
+    static components = { CallActionList, CallParticipantCard, PttAdBanner, ResizablePanel };
     static props = ["thread", "compact?"];
     static template = "discuss.Call";
 
@@ -67,6 +68,14 @@ export class Call extends Component {
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
     }
 
+    get classNames() {
+        return `o-discuss-Call user-select-none d-flex ${
+            this.state.isFullscreen ? "fixed-top vw-100 vh-100" : ""
+        } ${this.minimized ? "o-minimized" : ""} ${this.resizable ? "o-resizable" : ""} ${
+            !this.state.isFullscreen ? "position-relative" : ""
+        }`;
+    }
+
     get isActiveCall() {
         return Boolean(this.props.thread.eq(this.rtc.state?.channel));
     }
@@ -79,6 +88,10 @@ export class Call extends Component {
             return true;
         }
         return false;
+    }
+
+    get resizable() {
+        return this.env.inDiscussApp && !this.props.compact && !this.state.isFullscreen;
     }
 
     /** @returns {CardData[]} */
