@@ -32,7 +32,7 @@ class Home(http.Controller):
             return request.redirect_query('/web/login_successful', query=request.params)
         return request.redirect_query('/odoo', query=request.params)
 
-    def _web_client_readonly(self, registry, request):
+    def _web_client_readonly(self):
         return False
 
     # ideally, this route should be `auth="user"` but that don't work in non-monodb mode.

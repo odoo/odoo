@@ -72,7 +72,7 @@ class TestHttpModels(TestHttpBase):
 
 
         milky_way.invalidate_recordset()
-        res = self.url_open(f'/test_http/{milky_way.id}/setname-rw', {
+        res = self.url_open(f'/test_http/{milky_way.id}/setname?readonly=0', {
             'name': "Wilky May",
             'csrf_token': odoo.http.Request.csrf_token(self),
         })
@@ -88,7 +88,7 @@ class TestHttpModels(TestHttpBase):
 
         with self.assertLogs('odoo.http', 'WARNING') as capture_http,\
              self.assertLogs('odoo.sql_db', 'WARNING') as capture_sql_db:
-            res = self.url_open(f'/test_http/{milky_way.id}/setname-ro', {
+            res = self.url_open(f'/test_http/{milky_way.id}/setname?readonly=1', {
                 'name': "Wilky May",
                 'csrf_token': odoo.http.Request.csrf_token(self),
             })
