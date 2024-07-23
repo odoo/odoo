@@ -168,3 +168,19 @@ test("AceEditorField only trigger onchanges when blurred", async () => {
     await clickSave();
     expect.verifySteps([`web_save: [[1],{"foo":"a"}]`]);
 });
+
+test("Save and Discard buttons are displayed when necessary", async () => {
+    await mountView({
+        resModel: "res.partner",
+        resId: 1,
+        type: "form",
+        arch: `<form><field name="foo" widget="code"/></form>`,
+    });
+
+    await editAce("a");
+    expect(`.o_form_status_indicator_buttons`).toHaveCount(1);
+    expect(`.o_form_status_indicator_buttons`).not.toHaveClass("invisible");
+    await clickSave();
+    expect(`.o_form_status_indicator_buttons`).toHaveCount(1);
+    expect(`.o_form_status_indicator_buttons`).toHaveClass("invisible");
+});
