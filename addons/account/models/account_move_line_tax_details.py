@@ -15,12 +15,7 @@ class AccountMoveLine(models.Model):
         :param fallback:    Fallback on an approximated mapping if the mapping failed.
         :return:            query as SQL object
         """
-        self.env['account.move.line'].check_access('read')
-
-        query = self.env['account.move.line']._where_calc(domain)
-
-        # Wrap the query with 'company_id IN (...)' to avoid bypassing company access rights.
-        self.env['account.move.line']._apply_ir_rules(query)
+        query = self.env['account.move.line']._search(domain)
 
         return self._get_query_tax_details(query.from_clause, query.where_clause, fallback=fallback)
 
