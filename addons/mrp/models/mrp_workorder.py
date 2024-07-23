@@ -102,6 +102,7 @@ class MrpWorkorder(models.Model):
     worksheet_google_slide = fields.Char(
         'Worksheet URL', related='operation_id.worksheet_google_slide', readonly=True)
     operation_note = fields.Html("Description", related='operation_id.note', readonly=True)
+    has_operation_note = fields.Boolean("Has Description", compute='_compute_has_operation_note')
     move_raw_ids = fields.One2many(
         'stock.move', 'workorder_id', 'Raw Moves',
         domain=[('raw_material_production_id', '!=', False), ('production_id', '=', False)])
@@ -381,6 +382,12 @@ class MrpWorkorder(models.Model):
                 order.is_user_working = True
             else:
                 order.is_user_working = False
+
+    def _compute_has_operation_note(self):
+        relevant_workorders = self.env['mrp.workorder'].search_fetch(
+            ['&', ('id', 'in', self.ids), ('operation_note', '!=', False)], ['id'])
+        for workorder in self:
+            workorder.has_operation_note = workorder.id in relevant_workorders.ids
 
     def _compute_scrap_move_count(self):
         data = self.env['stock.scrap']._read_group([('workorder_id', 'in', self.ids)], ['workorder_id'], ['__count'])
