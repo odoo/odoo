@@ -46,29 +46,20 @@ const StorePatch = {
             model: "mail.box",
             name: _t("History"),
         };
-        this.env.services["multi_tab"].bus.addEventListener(
-            "mail.activity/insert",
-            ({ detail }) => {
-                this.store.Activity.insert(detail, { broadcast: false, html: true });
-            }
-        );
-        this.env.services["multi_tab"].bus.addEventListener(
-            "mail.activity/delete",
-            ({ detail }) => {
-                const activity = this.store.Activity.insert(detail, { broadcast: false });
-                activity.delete({ broadcast: false });
-            }
-        );
-        this.env.services["multi_tab"].bus.addEventListener(
-            "mail.activity/reload_chatter",
-            ({ detail }) => {
-                const thread = this.store.Thread.insert({
-                    model: detail.model,
-                    id: detail.id,
-                });
-                thread.fetchNewMessages();
-            }
-        );
+        this.env.services["multi_tab"].subscribe("mail.activity/insert", ({ detail }) => {
+            this.store.Activity.insert(detail, { broadcast: false, html: true });
+        });
+        this.env.services["multi_tab"].subscribe("mail.activity/delete", ({ detail }) => {
+            const activity = this.store.Activity.insert(detail, { broadcast: false });
+            activity.delete({ broadcast: false });
+        });
+        this.env.services["multi_tab"].subscribe("mail.activity/reload_chatter", ({ detail }) => {
+            const thread = this.store.Thread.insert({
+                model: detail.model,
+                id: detail.id,
+            });
+            thread.fetchNewMessages();
+        });
     },
     get initMessagingParams() {
         return {

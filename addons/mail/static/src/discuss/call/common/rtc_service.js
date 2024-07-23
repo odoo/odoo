@@ -207,6 +207,7 @@ export class Rtc extends Record {
         this.notification = services.notification;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
+        this.multiTab = services["multi_tab"];
         onChange(this.store.settings, "useBlur", () => {
             if (this.state.sendCamera) {
                 this.toggleVideo("camera", true);
@@ -268,6 +269,14 @@ export class Rtc extends Record {
                 // is closed. Alternatives like synchronous XHR are not reliable.
                 browser.navigator.sendBeacon("/mail/rtc/channel/leave_call", blob);
                 this.sfuClient?.disconnect();
+                this.multiTab.broadcast(
+                    "discuss.rtc/recover",
+                    {
+                        channelId: this.state.channel.id,
+                        video: this.state.sendCamera,
+                        timestamp: new Date().getTime(),
+                    },
+                );
             }
         });
         /**
@@ -288,6 +297,25 @@ export class Rtc extends Record {
             }
             this.call();
         }, 30_000);
+
+        this.multiTab.subscribe("discuss.rtc/recover", async ({ detail }) => {
+            if ((new Date().getTime() - detail.timestamp) > RECOVERY_DELAY) {
+                return;
+            }
+            // Delayed for the new main tab election
+            setTimeout(async () => {
+                if (!this.multiTab.isOnMainTab()) {
+                    return;
+                }
+                const channel = await this.store.Thread.getOrFetch({
+                    model: "discuss.channel",
+                    id: detail.channelId,
+                });
+                if (channel && !this.state.channel && Object.keys(channel.rtcSessions).length > 1) {
+                    await this.joinCall(channel, { video: detail.video });
+                }
+            }, 100);
+        });
     }
 
     setPttReleaseTimeout(duration = 200) {

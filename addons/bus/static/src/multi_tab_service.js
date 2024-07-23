@@ -29,8 +29,7 @@ export const multiTabService = {
         let broadcastChannel = null;
         if (browser.BroadcastChannel) {
             broadcastChannel = new browser.BroadcastChannel("multi.tab.service");
-            broadcastChannel.onmessage = ({ data }) =>
-                setTimeout(() => bus.trigger(data.type, data.payload), data.delay);
+            broadcastChannel.onmessage = ({ data }) => bus.trigger(data.type, data.payload);
         }
 
         // CONSTANTS
@@ -230,6 +229,9 @@ export const multiTabService = {
             unregister: unregister,
             broadcast(type, payload, delay = 0) {
                 broadcastChannel?.postMessage({ type, payload, delay });
+            },
+            subscribe(type, callback) {
+                bus.addEventListener(type, callback);
             },
         };
     },
