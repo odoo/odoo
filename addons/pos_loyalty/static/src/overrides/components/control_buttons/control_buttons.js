@@ -167,6 +167,7 @@ patch(ControlButtons.prototype, {
             await this.pos.addLineToCurrentOrder(
                 {
                     product_id: args["product"] || reward.reward_product_ids[0],
+                    qty: potentialQty || 1,
                 },
                 {}
             );
