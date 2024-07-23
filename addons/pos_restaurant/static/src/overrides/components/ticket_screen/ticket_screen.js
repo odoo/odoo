@@ -22,7 +22,7 @@ patch(TicketScreen.prototype, {
                 floorAndTable = `${table.floor_id.name}/`;
             }
 
-            floorAndTable += table.name;
+            floorAndTable += table.getName();
             return floorAndTable;
         }
     },
@@ -33,9 +33,9 @@ patch(TicketScreen.prototype, {
         }
         return Object.assign({}, super._getSearchFields(...arguments), {
             TABLE: {
-                repr: (order) => order.table_id?.name || "",
+                repr: (order) => order.table_id?.getName() || "",
                 displayName: _t("Table"),
-                modelField: "table_id.name",
+                modelField: "table_id.table_number",
             },
         });
     },

@@ -29,7 +29,7 @@ class RestaurantTable(models.Model):
 
     @api.model
     def _load_pos_self_data_fields(self, config_id):
-        return ['name', 'identifier', 'floor_id']
+        return ['table_number', 'identifier', 'floor_id']
 
     @api.model
     def _load_pos_self_data_domain(self, data):

@@ -111,7 +111,7 @@
                                     >
                                     <t t-set="offset" t-value="getTableHandleOffset(table)"/>
                                     <div class="info position-relative w-100 h-100" t-att-class="{'opacity-25': table.parent_id}">
-                                        <div t-esc="table.name" class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" />
+                                        <div t-esc="table.table_number" class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" />
                                         <div  t-esc="getOrderCount(table)" t-if="getOrderCount(table)"
                                             t-att-class="{
                                                 'text-bg-danger': table.uiState.changeCount,

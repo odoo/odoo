@@ -16,7 +16,7 @@
                         <t t-esc="floor.name" />
                     </option>
                     <option t-foreach="floor.table_ids" t-as="table" t-key="table.id" t-att-value="table.id">
-                        <t t-esc="table.name" />
+                        <t t-esc="table.table_number" />
                     </option>
                 </t>
             </select>

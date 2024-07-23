@@ -132,7 +132,7 @@ patch(PosStore.prototype, {
         const json = super.getReceiptHeaderData(...arguments);
         if (this.config.module_pos_restaurant && order) {
             if (order.getTable()) {
-                json.table = order.getTable().name;
+                json.table = order.getTable().table_number;
             }
             json.customer_count = order.getCustomerCount();
         }
@@ -251,7 +251,7 @@ patch(PosStore.prototype, {
         if (this.selectedTable && this.selectedTable.id) {
             return {
                 fieldName: "TABLE",
-                searchTerm: this.selectedTable.name,
+                searchTerm: this.selectedTable.getName(),
             };
         }
         return super.getDefaultSearchDetails();
