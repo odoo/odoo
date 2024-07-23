@@ -16,10 +16,10 @@ _logger = logging.getLogger(__name__)
 
 class DataSet(http.Controller):
 
-    def _call_kw_readonly(self, registry, request):
+    def _call_kw_readonly(self):
         params = request.get_json_data()['params']
         try:
-            model_class = registry[params['model']]
+            model_class = request.registry[params['model']]
         except KeyError as e:
             raise NotFound() from e
         method_name = params['method']
