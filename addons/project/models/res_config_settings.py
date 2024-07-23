@@ -18,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
     analytic_plan_id = fields.Many2one(
         comodel_name='account.analytic.plan',
         string="Analytic Plan",
-        config_parameter="analytic.project_plan",
+        config_parameter="analytic.analytic_plan_projects",
     )
 
     @api.model

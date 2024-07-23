@@ -900,7 +900,7 @@ class Project(models.Model):
     @api.model
     def _create_analytic_account_from_values(self, values):
         company = self.env['res.company'].browse(values.get('company_id', False))
-        project_plan_id = int(self.env['ir.config_parameter'].sudo().get_param('analytic.project_plan'))
+        project_plan_id = int(self.env['ir.config_parameter'].sudo().get_param('analytic.analytic_plan_projects'))
 
         if not project_plan_id:
             project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
