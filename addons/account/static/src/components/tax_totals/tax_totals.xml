@@ -51,15 +51,16 @@
                             <span t-att-name="subtotal['name']" style="white-space: nowrap; font-weight: bold;" t-out="subtotal['formatted_amount']"/>
                         </td>
                     </tr>
-
-                    <t t-foreach="totals.groups_by_subtotal[subtotal['name']]" t-as="taxGroup" t-key="taxGroup.group_key">
-                        <TaxGroupComponent
-                            currency="currency"
-                            taxGroup="taxGroup"
-                            isReadonly="readonly"
-                            onChangeTaxGroup.bind="_onChangeTaxValueByTaxGroup"
-                            invalidate.bind="invalidate"
-                        />
+                    <t t-if="subtotal['name'] in totals.groups_by_subtotal">
+                        <t t-foreach="totals.groups_by_subtotal[subtotal['name']]" t-as="taxGroup" t-key="taxGroup.group_key">
+                            <TaxGroupComponent
+                                currency="currency"
+                                taxGroup="taxGroup"
+                                isReadonly="readonly"
+                                onChangeTaxGroup.bind="_onChangeTaxValueByTaxGroup"
+                                invalidate.bind="invalidate"
+                            />
+                        </t>
                     </t>
                 </t>
 
