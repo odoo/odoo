@@ -26,6 +26,7 @@ export class Toolbar extends Component {
         useFontSizeInput: { type: Boolean, optional: true },
         showHistory: { type: Boolean, optional: true },
         showRemoveFormat: { type: Boolean, optional: true },
+        showDynamicplaceholder: { type: Boolean, optional: true },
 
         showStyle: { type: Boolean, optional: true },
         showJustify: { type: Boolean, optional: true },
@@ -60,6 +61,7 @@ export class Toolbar extends Component {
         useFontSizeInput: false,
         showHistory: false,
         showRemoveFormat: true,
+        showDynamicplaceholder: false,
 
         showStyle: true,
         showJustify: true,

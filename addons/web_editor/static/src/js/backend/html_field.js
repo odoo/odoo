@@ -191,22 +191,8 @@ export class HtmlField extends Component {
                         name: _t('Dynamic Placeholder'),
                         priority: 10,
                         description: _t('Insert personalized content'),
-                        fontawesome: 'fa-magic',
-                        callback: () => {
-                            this.wysiwygRangePosition = getRangePosition(document.createElement('x'), this.wysiwyg.options.document || document);
-                            this.dynamicPlaceholder.updateModel(this.props.dynamicPlaceholderModelReferenceField);
-                            // The method openDynamicPlaceholder need to be triggered
-                            // after the focus from powerBox prevalidate.
-                            setTimeout(async () => {
-                                await this.dynamicPlaceholder.open(
-                                    {
-                                        validateCallback: this.onDynamicPlaceholderValidate.bind(this),
-                                        closeCallback: this.onDynamicPlaceholderClose.bind(this),
-                                        positionCallback: this.positionDynamicPlaceholder.bind(this),
-                                    }
-                                );
-                            });
-                        },
+                        fontawesome: 'fa-hashtag',
+                        callback: this.placeholderCallback,
                     }
                 ],
                 powerboxFilters: [this._filterPowerBoxCommands.bind(this)],
@@ -227,6 +213,10 @@ export class HtmlField extends Component {
             onWysiwygBlur: this._onWysiwygBlur.bind(this),
             ...wysiwygOptions,
             ...dynamicPlaceholderOptions,
+            dynamicPlaceholder: {
+                show: this.props.dynamicPlaceholder,
+                placeholderCallback: this.placeholderCallback,
+            },
             recordInfo: {
                 res_model: this.props.record.resModel,
                 res_id: this.props.record.resId,
@@ -340,6 +330,22 @@ export class HtmlField extends Component {
             this.props.record.update({ [this.props.name]: value });
 
         }
+    }
+    /**
+     * Dynamic Placeholder Callback.
+     */
+    placeholderCallback = () => {
+        this.wysiwygRangePosition = getRangePosition(document.createElement('x'), this.wysiwyg.options.document || document);
+        this.dynamicPlaceholder.updateModel(this.props.dynamicPlaceholderModelReferenceField);
+        // The method openDynamicPlaceholder need to be triggered
+        // after the focus from powerBox prevalidate.
+        setTimeout(async () => {
+            await this.dynamicPlaceholder.open({
+                validateCallback: this.onDynamicPlaceholderValidate.bind(this),
+                closeCallback: this.onDynamicPlaceholderClose.bind(this),
+                positionCallback: this.positionDynamicPlaceholder.bind(this),
+            });
+        });
     }
     onDynamicPlaceholderValidate(chain, defaultValue) {
         if (chain) {
