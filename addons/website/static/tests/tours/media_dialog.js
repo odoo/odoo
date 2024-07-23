@@ -82,28 +82,27 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     edition: true,
 }, () => [
     ...wTourUtils.dragNDrop({
-        id: 's_process_steps',
-        name: 'Steps',
-        groupName: "Content",
+        id: 's_social_media',
+        name: 'Social Media',
     }),
     {
         content: "Open MediaDialog from a snippet icon",
-        trigger: ':iframe .s_process_steps .fa-unlock-alt',
+        trigger: ':iframe .s_social_media .fa-instagram',
         run: "dblclick",
     },
     {
         content: "Pick the same icon",
-        trigger: '.o_select_media_dialog .o_we_attachment_selected.fa-unlock-alt',
+        trigger: '.o_select_media_dialog .o_we_attachment_selected.fa-instagram',
         run: "click",
     },
     {
         content: "Check if the icon remains the same",
-        trigger: ':iframe .s_process_steps .fa-unlock-alt',
+        trigger: ':iframe .s_social_media .fa-instagram',
         run: () => null, // it's a check
     },
     {
         content: "Open MediaDialog again",
-        trigger: ':iframe .s_process_steps .fa-unlock-alt',
+        trigger: ':iframe .s_social_media .fa-instagram',
         run: "dblclick",
     },
     {
@@ -113,7 +112,7 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     },
     {
         content: "Check if the icon remains the same",
-        trigger: ':iframe .s_process_steps .fa-unlock-alt',
+        trigger: ':iframe .s_social_media .fa-instagram',
         run: () => null, // it's a check
     },
     ...wTourUtils.clickOnSave()

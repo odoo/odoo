@@ -108,9 +108,9 @@ options.registry.StepsConnector = options.Class.extend({
             const stepPaddingTop = this._getClassSuffixedInteger(stepsEls[i], 'pt');
             const nextStepPaddingTop = this._getClassSuffixedInteger(stepsEls[i + 1], 'pt');
 
-            connectorEl.style.left = `calc(50% + ${stepMainElementRect.width / 2}px)`;
+            connectorEl.style.left = `calc(50% + ${stepMainElementRect.width / 2}px + 16px)`;
             connectorEl.style.height = `${stepMainElementRect.height}px`;
-            connectorEl.style.width = `calc(${100 * (stepSize / 2 + nextStepOffset + nextStepSize / 2) / stepSize}% - ${stepMainElementRect.width / 2}px - ${nextStepMainElementRect.width / 2}px)`;
+            connectorEl.style.width = `calc(${100 * (stepSize / 2 + nextStepOffset + nextStepSize / 2) / stepSize}% - ${stepMainElementRect.width / 2}px - ${nextStepMainElementRect.width / 2}px - 32px)`;
 
             const isTheLastColOfRow = nbBootstrapCols <
                 colsInRow + stepSize + stepOffset + nextStepSize + nextStepOffset;
@@ -147,7 +147,7 @@ options.registry.StepsConnector = options.Class.extend({
      * @returns {object}
      */
     _getStepMainElementRect(stepEl) {
-        const iconEl = stepEl.querySelector(".s_process_step_icon > *");
+        const iconEl = stepEl.querySelector(".s_process_step_number");
         if (iconEl) {
             return iconEl.getBoundingClientRect();
         }
