@@ -783,7 +783,7 @@ class AccountAccount(models.Model):
         elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
             domain.append(('account_id.internal_group', '=', 'expense'))
 
-        query = self.env['account.move.line']._where_calc(domain)
+        query = self.env['account.move.line']._search(domain, bypass_access=True)
         if not filter_never_user_accounts:
             _kind, rhs_table, condition = query._joins['account_move_line__account_id']
             query._joins['account_move_line__account_id'] = (SQL("RIGHT JOIN"), rhs_table, condition)

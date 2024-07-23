@@ -433,7 +433,7 @@ class ProjectProject(models.Model):
                     ('project_id', 'in', self.ids),
                 ]),
         ]
-        sale_order_line_query = SaleOrderLine._where_calc(sale_order_line_domain)
+        sale_order_line_query = SaleOrderLine._search(sale_order_line_domain, bypass_access=True)
         sale_order_line_sql = sale_order_line_query.select(
             f'{SaleOrderLine._table}.project_id AS id',
             f'{SaleOrderLine._table}.id AS sale_line_id',

@@ -21,7 +21,7 @@ class AccountRoot(models.Model):
             ids = (ids,)
         return super().browse(ids)
 
-    def _search(self, domain, offset=0, limit=None, order=None) -> Query:
+    def _search(self, domain, offset=0, limit=None, order=None, **kw) -> Query:
         match list(domain):
             case [('id', 'in', ids)]:
                 return self.browse(sorted(ids))._as_query()

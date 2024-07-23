@@ -95,15 +95,15 @@ class MailScheduledMessage(models.Model):
         return scheduled_messages
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
+    def _search(self, domain, offset=0, limit=None, order=None, *, bypass_access=False, **kwargs):
         """ Override that add specific access rights to only get the ids of the messages
         that are scheduled on the records on which the user has mail_post (or read) access
         """
-        if self.env.is_superuser():
-            return super()._search(domain, offset, limit, order)
+        if self.env.is_superuser() or bypass_access:
+            return super()._search(domain, offset, limit, order, bypass_access=True, **kwargs)
 
         # don't use the ORM to avoid cache pollution
-        query = super()._search(domain, offset, limit, order)
+        query = super()._search(domain, offset, limit, order, **kwargs)
         fnames_to_read = ['id', 'model', 'res_id']
         rows = self.env.execute_query(query.select(
             *[self._field_to_sql(self._table, fname) for fname in fnames_to_read],

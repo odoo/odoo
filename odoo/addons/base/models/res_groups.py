@@ -149,14 +149,14 @@ class ResGroups(models.Model):
         return Domain.OR(where_domains)
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
+    def _search(self, domain, offset=0, limit=None, order=None, **kwargs):
         # add explicit ordering if search is sorted on full_name
         if order and order.startswith('full_name'):
             groups = super().search(domain)
             groups = groups.sorted('full_name', reverse=order.endswith('DESC'))
             groups = groups[offset:offset+limit] if limit else groups[offset:]
             return groups._as_query(order)
-        return super()._search(domain, offset, limit, order)
+        return super()._search(domain, offset, limit, order, **kwargs)
 
     def copy_data(self, default=None):
         default = dict(default or {})

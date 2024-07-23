@@ -794,11 +794,8 @@ class _RelationalMulti(_Relational):
         if isinstance(value, Domain):
             domain = value & field_domain
             comodel = comodel.with_context(**self.context)
-            if self.auto_join or operator in ('any!', 'not any!'):
-                # bypass access rules for auto-join
-                query = comodel._where_calc(domain)
-            else:
-                query = comodel._search(domain)
+            bypass_access = self.auto_join or operator in ('any!', 'not any!')
+            query = comodel._search(domain, bypass_access=bypass_access)
             assert isinstance(query, Query)
             return query
         if isinstance(value, Query):
@@ -1341,7 +1338,7 @@ class Many2many(_RelationalMulti):
 
         # make the query for the lines
         domain = self.get_comodel_domain(records)
-        query = comodel._where_calc(domain)
+        query = comodel._search(domain, bypass_access=True)
         comodel._apply_ir_rules(query, 'read')
         query.order = comodel._order_to_sql(comodel._order, query)
 

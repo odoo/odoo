@@ -508,9 +508,10 @@ class IrAttachment(models.Model):
         return ret_attachments
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
+    def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
         # add res_field=False in domain if not present; the arg[0] trick below
         # works for domain items and '&'/'|'/'!' operators too
+        assert not self._active_name, "active name not supported on ir.attachment"
         disable_binary_fields_attachments = False
         domain = Domain(domain)
         if (
@@ -520,9 +521,9 @@ class IrAttachment(models.Model):
             disable_binary_fields_attachments = True
             domain &= Domain('res_field', '=', False)
 
-        if self.env.is_superuser():
+        if self.env.is_superuser() or bypass_access:
             # rules do not apply for the superuser
-            return super()._search(domain, offset, limit, order)
+            return super()._search(domain, offset, limit, order, bypass_access=True)
 
         # For attachments, the permissions of the document they are attached to
         # apply, so we must remove attachments for which the user cannot access

@@ -35,7 +35,7 @@ ATTRIBUTE_WHITELIST = [
 
 FUNCTION_WHITELIST = {
     'create', 'read', 'write', 'browse', 'select', 'get', 'strip', 'items', '_select', '_from', '_where',
-    'any', 'join', 'split', 'tuple', 'get_sql', 'search', 'list', 'set', 'next', '_where_calc', 'SQL'
+    'any', 'join', 'split', 'tuple', 'get_sql', 'search', 'list', 'set', 'next', 'SQL'
 }
 
 function_definitions = collections.defaultdict(list)

@@ -1340,7 +1340,7 @@ class AccountChartTemplate(models.AbstractModel):
 
             self.env[model].flush_model(['id', company_id_field] + translatable_model_fields[model])
 
-            query = self.env[model]._where_calc([(company_id_field, 'in', company_ids)])
+            query = self.env[model]._search([(company_id_field, 'in', company_ids)], bypass_access=True)
 
             # We only want records that have at least 1 missing translation in any of its translatable fields
             missing_translation_clauses = [
