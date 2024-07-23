@@ -20,6 +20,7 @@ import { toInline } from '@web_editor/js/backend/convert_inline';
 import { getBundle, loadBundle } from '@web/core/assets';
 import {
     Component,
+    markup,
     useRef,
     useState,
     onWillStart,
@@ -35,6 +36,8 @@ import { uniqueId } from '@web/core/utils/functions';
 import '@web/views/fields/html/html_field';
 
 let stripHistoryIds;
+
+const Markup = markup().constructor;
 
 export class HtmlField extends Component {
     static template = "web_editor.HtmlField";
@@ -178,7 +181,8 @@ export class HtmlField extends Component {
         return this.props.record.fields[this.props.name].translate;
     }
     get markupValue () {
-        return this.props.record.data[this.props.name];
+        const value = this.props.record.data[this.props.name];
+        return value instanceof Markup ? value : markup(value)
     }
     get showIframe () {
         return (this.sandboxedPreview && !this.state.showCodeView) || (this.props.readonly && this.props.cssReadonlyAssetId);

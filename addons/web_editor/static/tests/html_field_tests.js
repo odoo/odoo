@@ -248,6 +248,28 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.strictEqual(editable.innerHTML, `<p>first</p>`);
     });
 
+    QUnit.test("output raw html on non html type field", async (assert) => {
+        serverData.models.partner.fields.txt.type = "text";
+        serverData.models.partner.records = [
+            { id: 1, txt: "<p>first</p>" },
+        ];
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+            <form>
+                <field name="txt" widget="html" readonly="1"/>
+            </form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector("[name=txt] .o_readonly").textContent,
+            "first"
+        );
+    });
 
     QUnit.module('Sandboxed Preview');
 
