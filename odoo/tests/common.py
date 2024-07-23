@@ -1130,14 +1130,14 @@ class ChromeBrowser:
             '--user-data-dir': user_data_dir,
             '--window-size': window_size,
             '--no-first-run': '',
-            # '--enable-precise-memory-info': '',  # uncomment to debug memory leaks in unit tests
-            # FIXME: these next flag is temporarily uncommented to allow client
+            # FIXME: these next 2 flags are temporarily uncommented to allow client
             # code to manually run garbage collection. This is done as currently
             # the Chrome unit test process doesn't have access to its available
             # memory, so it cannot run the GC efficiently and may run out of memory
             # and crash. These should be re-commented when the process is correctly
             # configured.
-            '--js-flags': '--expose-gc',  # uncomment to debug memory leaks in unit tests
+            '--enable-precise-memory-info': '',
+            '--js-flags': '--expose-gc',
         }
         if headless:
             switches.update(headless_switches)

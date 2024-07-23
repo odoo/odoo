@@ -361,36 +361,34 @@ const runTests = async () => {
  * @param {number} [testCount]
  */
 const __gcAndLogMemory = (label, testCount) => {
-    const canRunGc = typeof window.gc === "function";
-    if (canRunGc) {
-        // Cleanup last retained textarea
-        const textarea = document.createElement("textarea");
-        document.body.appendChild(textarea);
-        textarea.value = "aaa";
-        textarea.focus();
-        textarea.remove();
-
-        // Run garbage collection
-        window.gc();
+    if (typeof window.gc !== "function") {
+        return;
     }
 
-    const { memory } = window.performance;
-    if (memory) {
-        // Log memory usage
-        const logs = [
-            `[MEMINFO] ${label}${canRunGc ? " (after GC)" : ""}`,
-            "- used:",
-            memory.usedJSHeapSize,
-            "- total:",
-            memory.totalJSHeapSize,
-            "- limit:",
-            memory.jsHeapSizeLimit,
-        ];
-        if (Number.isInteger(testCount)) {
-            logs.push("- tests:", testCount);
-        }
-        console.log(...logs);
+    // Cleanup last retained textarea
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    textarea.value = "aaa";
+    textarea.focus();
+    textarea.remove();
+
+    // Run garbage collection
+    window.gc();
+
+    // Log memory usage
+    const logs = [
+        `[MEMINFO] ${label} (after GC)`,
+        "- used:",
+        window.performance.memory.usedJSHeapSize,
+        "- total:",
+        window.performance.memory.totalJSHeapSize,
+        "- limit:",
+        window.performance.memory.jsHeapSizeLimit,
+    ];
+    if (Number.isInteger(testCount)) {
+        logs.push("- tests:", testCount);
     }
+    console.log(...logs);
 };
 
 /** @extends {ModuleLoader} */
