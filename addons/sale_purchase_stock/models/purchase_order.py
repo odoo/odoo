@@ -13,3 +13,13 @@ class PurchaseOrder(models.Model):
 
     def _get_sale_orders(self):
         return super(PurchaseOrder, self)._get_sale_orders() | self.order_line.move_dest_ids.group_id.sale_id | self.order_line.move_ids.move_dest_ids.group_id.sale_id
+
+
+class PurchaseOrderLine(models.Model):
+    _inherit = 'purchase.order.line'
+
+    @api.model
+    def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, company_id, values, po):
+        res = super()._prepare_purchase_order_line_from_procurement(product_id, product_qty, product_uom, company_id, values, po)
+        res['sale_line_id'] = values.get('move_dest_ids', self.env['stock.move']).sale_line_id.id
+        return res

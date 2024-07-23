@@ -42,5 +42,5 @@ class PurchaseOrderLine(models.Model):
     @api.model
     def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, company_id, values, po):
         res = super()._prepare_purchase_order_line_from_procurement(product_id, product_qty, product_uom, company_id, values, po)
-        res['sale_line_id'] = values.get('sale_line_id', False)
+        res['sale_line_id'] = values.get('sale_line_id', res.get('sale_line_id', False))
         return res
