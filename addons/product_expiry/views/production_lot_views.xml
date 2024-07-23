@@ -58,14 +58,15 @@
         <field name="model">stock.lot</field>
         <field name="inherit_id" ref="stock.view_production_lot_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//strong[hasclass('o_kanban_record_title')]" position="after">
-                <field name="product_qty" invisible="1"/>
-                <field name="product_expiry_alert" invisible="1"/>
-                <field name="expiration_date" invisible="1"/>
+            <xpath expr="//templates" position="before">
+                <field name="product_qty"/>
+                <field name="product_expiry_alert"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
                 <span title="Alert" class="fa fa-exclamation-triangle text-danger ms-2" invisible="product_qty &lt;= 0 or not product_expiry_alert or not expiration_date"/>
                 <field name="alert_date" widget='remaining_days' class="ms-2"/>
             </xpath>
-            <xpath expr="//div[@name='product_name']" position="after">
+            <xpath expr="//field[@name='product_id']" position="after">
                 <div invisible="not expiration_date">
                     <div>
                         <label for="expiration_date">Expiration: </label>

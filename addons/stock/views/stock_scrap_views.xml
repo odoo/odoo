@@ -84,32 +84,19 @@
             <field name="model">stock.scrap</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1">
-                    <field name="name"/>
-                    <field name="product_id"/>
-                    <field name="date_done"/>
-                    <field name="scrap_qty"/>
-                    <field name="state"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click">
-                                <div class="row mb4">
-                                    <strong class="col-6">
-                                        <span t-esc="record.name.value"/>
-                                    </strong>
-                                    <strong t-if="record.date_done.value" class="col-6 text-end">
-                                        <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/><span t-esc="record.date_done.value"/>
-                                    </strong>
-                                    <div class="col-12">
-                                        <span t-esc="record.product_id.value"/>
-                                    </div>
-                                    <div class="col-6">
-                                        <span t-esc="record.scrap_qty.value"/>
-                                    </div>
-                                    <div class="col-6">
-                                        <span class="float-end badge text-bg-secondary">
-                                            <field name="state"/>
-                                        </span>
-                                    </div>
+                        <t t-name="kanban-card">
+                            <div class="row">
+                                <field name="name" class="col-6 fw-bolder"/>
+                                <div class="col-6 fw-bolder text-end">
+                                    <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/><field name="date_done"/>
+                                </div>
+                            </div>
+                            <field name="product_id"/>
+                            <div class="row">
+                                <field name="scrap_qty" class="col-6"/>
+                                <div class="col-6">
+                                    <field name="state" class="float-end badge text-bg-secondary"/>
                                 </div>
                             </div>
                         </t>

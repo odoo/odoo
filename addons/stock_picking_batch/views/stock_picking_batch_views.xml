@@ -150,29 +150,20 @@
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" sample="1">
-                <field name="name"/>
-                <field name="user_id"/>
-                <field name="state"/>
+                <field name="company_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div class="o_kanban_record_top mb16">
-                                <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
-                                </div>
-                                <field name="state" widget="label_selection"/>
-                            </div>
-                            <div class="o_kanban_record_bottom">
-                                <div class="oe_kanban_bottom_left">
-                                    <field name="picking_type_id" readonly="state != 'draft'"/>
-                                </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
-                                </div>
-                            </div>
+                    <t t-name="kanban-card">
+                        <div class="d-flex mb-4">
+                            <field name="name" class="fw-bolder fs-5"/>
+                            <field name="state" widget="label_selection" class="ms-auto"/>
                         </div>
+                        <footer class="fs-6 pt-0">
+                            <field name="picking_type_id" readonly="state != 'draft'"/>
+                            <div class="d-flex">
+                                <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                                <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
+                            </div>
+                        </footer>
                     </t>
                 </templates>
             </kanban>

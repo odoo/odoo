@@ -109,19 +109,15 @@
         <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_kanban"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//templates/t/div/div[2]" position="replace">
-                    <div class="o_kanban_record_bottom">
-                        <div class="col">
-                            <div><field name="dock_id"/></div>
-                            <div class="col">
-                                <field name="state" widget="state_selection" class="ms-auto float-start" style="padding-top: 4px; margin-right: 6px"/>
-                                <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
-                            </div>
+                <xpath expr="//footer" position="replace">
+                    <footer class="fs-6 pt-0">
+                        <field name="dock_id"/>
+                        <div>
+                            <field name="state" widget="state_selection" class="float-start pt-1 me-1"/>
+                            <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                         </div>
-                        <div class="oe_kanban_bottom_right">
-                            <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
-                        </div>
-                    </div>
+                        <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']" class="ms-auto"/>
+                    </footer>
                 </xpath>
             </data>
         </field>
