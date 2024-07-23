@@ -296,8 +296,7 @@ class CrmTeam(models.Model):
         extra_conditions = self._extra_sql_conditions() or SQL("TRUE")
         dashboard_graph_model = self._graph_get_model()
         GraphModel = self.env[dashboard_graph_model]
-        where_query = GraphModel._where_calc([])
-        GraphModel._apply_ir_rules(where_query, 'read')
+        where_query = GraphModel._search([])
         if where_clause := where_query.where_clause:
             extra_conditions = SQL("%s AND (%s)", extra_conditions, where_clause)
 

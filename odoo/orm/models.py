@@ -1732,11 +1732,9 @@ class BaseModel(metaclass=MetaModel):
             if not field.store:
                 raise ValueError(f"Group by non-stored many2many field: {groupby_spec!r}")
             # special case for many2many fields: prepare a query on the comodel
-            # in order to reuse the mechanism _apply_ir_rules, then inject the
-            # query as an extra condition of the left join
+            # and inject the query as an extra condition of the left join
             comodel = self.env[field.comodel_name]
-            coquery = comodel._where_calc([], active_test=False)
-            comodel._apply_ir_rules(coquery)
+            coquery = comodel.with_context(active_test=False)._search([])
             # LEFT JOIN {field.relation} AS rel_alias ON
             #     alias.id = rel_alias.{field.column1}
             #     AND rel_alias.{field.column2} IN ({coquery})
@@ -4923,23 +4921,6 @@ class BaseModel(metaclass=MetaModel):
                 " (optionally followed by asc/desc for the direction)",
                 word,
             ))
-
-    @api.model
-    def _apply_ir_rules(self, query: Query, mode: str = 'read') -> None:
-        """Add what's missing in ``query`` to implement all appropriate ir.rules
-          (using the ``model_name``'s rules or the current model's rules if ``model_name`` is None)
-
-        :param query: the current query object
-        """
-        if self.env.su:
-            return
-
-        # apply main rules on the object
-        domain = self.env['ir.rule']._compute_domain(self._name, mode)
-        if not domain.is_true():
-            model = self.sudo()
-            domain = domain.optimize(model, full=True)
-            query.add_where(domain._to_sql(model, query.table, query))
 
     def _order_to_sql(self, order: str, query: Query, alias: (str | None) = None,
                       reverse: bool = False) -> SQL:

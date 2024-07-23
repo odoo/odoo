@@ -126,7 +126,7 @@ class TestRules(TransactionCase):
     def test_check_access_rule_with_inherits(self):
         """
         For models in `_inherits`, verify that both methods `check_access`
-        and `_apply_ir_rules` check the rules from parent models.
+        and `_search` check the rules from parent models.
         """
         ChildModel = self.env['test_access_right.inherits']
         allowed_child, __ = children = ChildModel.create([
