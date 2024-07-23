@@ -54,13 +54,12 @@ class LinkPreview(models.Model):
         if link_preview_values:
             link_previews += link_previews.create(link_preview_values)
         if link_previews := link_previews.sorted(key=lambda p: list(urls).index(p.source_url)):
-            store = Store(
-                "mail.message",
-                {"id": message.id, "linkPreviews": [{"id": p.id} for p in link_previews]},
-            )
-            store.add(link_previews)
             self.env["bus.bus"]._sendone(
-                message._bus_notification_target(), "mail.record/insert", store.get_result()
+                message._bus_notification_target(),
+                "mail.record/insert",
+                Store(
+                    "mail.message", {"id": message.id, "linkPreviews": Store.many(link_previews)}
+                ).get_result(),
             )
 
     def _hide_and_notify(self):
@@ -74,7 +73,7 @@ class LinkPreview(models.Model):
                     "mail.message",
                     {
                         "id": link_preview.message_id.id,
-                        "linkPreviews": [("DELETE", {"id": link_preview.id})],
+                        "linkPreviews": Store.many(link_preview, "DELETE", only_id=True),
                     },
                 ).get_result(),
             )
@@ -94,7 +93,7 @@ class LinkPreview(models.Model):
                     "mail.message",
                     {
                         "id": link_preview.message_id.id,
-                        "linkPreviews": [("DELETE", {"id": link_preview.id})],
+                        "linkPreviews": Store.many(link_preview, "DELETE", only_id=True),
                     },
                 ).get_result(),
             )
@@ -138,7 +137,7 @@ class LinkPreview(models.Model):
                 ],
                 load=False,
             )[0]
-            data["message"] = {"id": preview.message_id.id} if preview.message_id else False
+            data["message"] = Store.one(preview.message_id, only_id=True)
             store.add("mail.link.preview", data)
 
     @api.autovacuum

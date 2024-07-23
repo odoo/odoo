@@ -587,21 +587,15 @@ class MailActivity(models.Model):
         return Store(self).get_result()
 
     def _to_store(self, store: Store):
-        activities = self.read()
-        self.mail_template_ids.fetch(['name'])
-        self.attachment_ids.fetch(['name'])
-        store.add(self.user_id.partner_id)
-        for record, activity in zip(self, activities):
-            activity['mail_template_ids'] = [
-                {'id': mail_template.id, 'name': mail_template.name}
-                for mail_template in record.mail_template_ids
+        for activity in self:
+            data = activity.read()[0]
+            data["mail_template_ids"] = [
+                {"id": mail_template.id, "name": mail_template.name}
+                for mail_template in activity.mail_template_ids
             ]
-            activity['attachment_ids'] = [
-                {'id': attachment.id, 'name': attachment.name}
-                for attachment in record.attachment_ids
-            ]
-            activity["persona"] = {"id": record.user_id.partner_id.id, "type": "partner"}
-            store.add("mail.activity", activity)
+            data["attachment_ids"] = Store.many(activity.attachment_ids, fields=["name"])
+            data["persona"] = Store.one(activity.user_id.partner_id)
+            store.add("mail.activity", data)
 
     @api.model
     def get_activity_data(self, res_model, domain, limit=None, offset=0, fetch_done=False):

@@ -66,9 +66,7 @@ export class MailActivity extends models.ServerModel {
 
     /** @param {number[]} ids */
     activity_format(ids) {
-        return new mailDataHelpers.Store(
-            this.search([["id", "in", ids]], makeKwArgs({ context: { active_test: false } }))
-        ).get_result();
+        return new mailDataHelpers.Store(this.browse(ids)).get_result();
     }
 
     /** @param {number[]} ids */
@@ -82,14 +80,16 @@ export class MailActivity extends models.ServerModel {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        for (const record of this.read(ids)) {
-            const activityType = record.activity_type_id
-                ? MailActivityType.find((r) => r.id === record.activity_type_id[0])
+        for (const activity of this.browse(ids)) {
+            const [data] = this.read(activity.id);
+            // simulate computes
+            const activityType = data.activity_type_id
+                ? MailActivityType.find((r) => r.id === data.activity_type_id[0])
                 : false;
             if (activityType) {
-                record.display_name = activityType.name;
-                record.icon = activityType.icon;
-                record.mail_template_ids = activityType.mail_template_ids.map((template_id) => {
+                data.display_name = activityType.name;
+                data.icon = activityType.icon;
+                data.mail_template_ids = activityType.mail_template_ids.map((template_id) => {
                     const [template] = MailTemplate.browse(template_id);
                     return {
                         id: template.id,
@@ -97,13 +97,17 @@ export class MailActivity extends models.ServerModel {
                     };
                 });
             }
-            if (record.summary) {
-                record.display_name = record.summary;
+            if (data.summary) {
+                data.display_name = data.summary;
             }
-            const [user] = ResUsers.browse(record.user_id[0]);
-            record.persona = { id: user.partner_id, type: "partner" };
-            store.add(ResPartner.browse(user.partner_id));
-            store.add("mail.activity", record);
+            const [user] = ResUsers.browse(data.user_id[0]);
+            data.persona = { id: user.partner_id, type: "partner" };
+            data["attachment_ids"] = mailDataHelpers.Store.many(
+                this.env["ir.attachment"].browse(activity.attachment_ids),
+                makeKwArgs({ fields: ["name"] })
+            );
+            data["persona"] = mailDataHelpers.Store.one(ResPartner.browse(user.partner_id));
+            store.add("mail.activity", data);
         }
     }
 

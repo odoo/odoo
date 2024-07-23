@@ -22,15 +22,11 @@ class MailMessage(models.Model):
         if format_reply:
             # sudo: mail.message: access to parent is allowed
             for message in self.sudo().filtered(lambda message: message.model == "discuss.channel"):
-                if message.parent_id:
-                    store.add(message.parent_id, format_reply=False)
                 store.add(
                     "mail.message",
                     {
                         "id": message.id,
-                        "parentMessage": (
-                            {"id": message.parent_id.id} if message.parent_id else False
-                        ),
+                        "parentMessage": Store.one(message.parent_id, format_reply=False),
                     },
                 )
 

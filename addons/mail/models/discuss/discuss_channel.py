@@ -362,7 +362,7 @@ class Channel(models.Model):
             Store(
                 "discuss.channel",
                 {
-                    "channelMembers": [("DELETE", {"id": member.id})],
+                    "channelMembers": Store.many(member, "DELETE", only_id=True),
                     "id": self.id,
                     "memberCount": self.member_count,
                 },
@@ -519,13 +519,13 @@ class Channel(models.Model):
                         "discuss.channel",
                         {
                             "id": self.id,
-                            "invitedMembers": [
-                                ("DELETE", [{"id": member.id} for member in members])
-                            ],
+                            "invitedMembers": Store.many(
+                                members,
+                                "DELETE",
+                                fields={"channel": [], "persona": ["name", "im_status"]},
+                            ),
                         },
-                    )
-                    .add(members, fields={"channel": [], "persona": ["name", "im_status"]})
-                    .get_result(),
+                    ).get_result(),
                 )
             )
         self.env["bus.bus"]._sendmany(notifications)
@@ -926,8 +926,6 @@ class Channel(models.Model):
             return []
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-        store.add(self.sudo().rtc_session_ids, extra=True)
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         self.env['discuss.channel'].flush_model()
         self.env['discuss.channel.member'].flush_model()
@@ -985,7 +983,8 @@ class Channel(models.Model):
                     info['custom_channel_name'] = member.custom_channel_name
                     info['is_pinned'] = member.is_pinned
                     if member.rtc_inviting_session_id:
-                        info["rtcInvitingSession"] = {"id": member.rtc_inviting_session_id.id}
+                        # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
+                        info["rtcInvitingSession"] = Store.one(member.rtc_inviting_session_id.sudo())
             # add members info
             if channel.channel_type != 'channel':
                 # avoid sending potentially a lot of members for big channels
@@ -994,12 +993,11 @@ class Channel(models.Model):
                 store.add(members_by_channel[channel] - member)
             # add RTC sessions info
             invited_members = invited_members_by_channel[channel]
-            store.add(invited_members, fields={"channel": [], "persona": ["name", "im_status"]})
-            info["invitedMembers"] = [("ADD", [{"id": member.id} for member in invited_members])]
-            info["rtcSessions"] = [
+            info["invitedMembers"] = Store.many(
+                invited_members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
+            )
                 # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-                ("ADD", [{"id": session.id} for session in channel.sudo().rtc_session_ids])
-            ]
+            info["rtcSessions"] = Store.many(channel.sudo().rtc_session_ids, "ADD", extra=True)
             store.add("discuss.channel", info)
 
     # User methods

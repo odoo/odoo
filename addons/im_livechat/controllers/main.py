@@ -144,14 +144,15 @@ class LivechatController(http.Controller):
         if not channel_vals:
             return False
         if not persisted:
-            operator_partner = request.env['res.partner'].sudo().browse(channel_vals['livechat_operator_id'])
-            store.add(operator_partner, fields=["user_livechat_username", "write_date"])
             channel_info = {
                 "id": -1,  # only one temporary thread at a time, id does not matter.
                 "isLoaded": True,
                 "name": channel_vals["name"],
+                "operator": Store.one(
+                    request.env["res.partner"].sudo().browse(channel_vals["livechat_operator_id"]),
+                    fields=["user_livechat_username", "write_date"],
+                ),
                 "scrollUnread": False,
-                "operator": {"id": operator_partner.id, "type": "partner"},
                 "state": "open",
                 "channel_type": "livechat",
                 "chatbot": (

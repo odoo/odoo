@@ -901,9 +901,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "notifications": [{"id": notif.id}],
                     "pinned_at": False,
                     "reactions": [],
-                    "recipients": [
-                        {"id": self.env.user.partner_id.id, "name": "Ernest Employee", "type": "partner"},
-                    ],
+                    "recipients": [{"id": self.env.user.partner_id.id, "type": "partner"}],
                     "record_name": "Test",
                     "res_id": test_record.id,
                     "scheduledDatetime": False,
@@ -936,16 +934,18 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
             ],
             "res.partner": [
                 {
+                    "displayName": "Ernest Employee",
+                    "id": self.env.user.partner_id.id,
+                    "name": "Ernest Employee",
+                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                },
+                {
                     "id": self.user_admin.partner_id.id,
                     "isInternalUser": True,
                     "is_company": False,
                     "name": "Mitchell Admin",
                     "userId": self.user_admin.id,
                     "write_date": fields.Datetime.to_string(self.user_admin.write_date),
-                },
-                {
-                    "displayName": "Ernest Employee",
-                    "id": self.env.user.partner_id.id,
                 },
             ],
         }

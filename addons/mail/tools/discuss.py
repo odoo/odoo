@@ -42,6 +42,9 @@ ids_by_model.update(
     }
 )
 
+ONE = {}
+MANY = {}
+
 
 class Store:
     """Helper to build a dict of data for sending to web client.
@@ -49,29 +52,35 @@ class Store:
     The keys of data are the name of models as defined in mail JS code, and the values are any
     format supported by store.insert() method (single dict or list of dict for each model name)."""
 
-    def __init__(self, data=None, values=None, /, **kwargs):
+    def __init__(self, data=None, values=None, /, *, as_thread=False, **kwargs):
         self.data = {}
         if data:
-            self.add(data, values, **kwargs)
+            self.add(data, values, as_thread=as_thread, **kwargs)
 
-    def add(self, data, values=None, /, **kwargs):
+    def add(self, data, values=None, /, *, as_thread=False, **kwargs):
         """Adds data to the store.
         - data can be a recordset, in which case the model must have a _to_store() method, with
           optional kwargs passed to it.
         - data can be a model name, in which case values must be a dict or list of dict.
         - data can be a dict, in which case it is considered as values for the Store model.
+        - as_thread: whether to call "_thread_to_store" or "_to_store"
         """
         if isinstance(data, models.Model):
             assert not values, f"expected empty values with recordset {data}: {values}"
-            data._to_store(self, **kwargs)
+            if as_thread:
+                data._thread_to_store(self, **kwargs)
+            else:
+                data._to_store(self, **kwargs)
             return self
         if isinstance(data, dict):
             assert not values, f"expected empty values with dict {data}: {values}"
             assert not kwargs, f"expected empty kwargs with dict {data}: {kwargs}"
+            assert not as_thread, f"expected not as_thread with dict {data}: {kwargs}"
             model_name = "Store"
             values = data
         else:
             assert not kwargs, f"expected empty kwargs with model name {data}: {kwargs}"
+            assert not as_thread, f"expected not as_thread with model name {data}: {kwargs}"
             model_name = data
         assert isinstance(model_name, str), f"expected str for model name: {model_name}: {values}"
         # skip empty values
@@ -103,15 +112,41 @@ class Store:
 
     def _add_values(self, values, model_name, index=None):
         """Adds values to the store for a given model name and index."""
+        target = self.data[model_name][index] if index else self.data[model_name]
         for key, val in values.items():
-            if isinstance(val, datetime):
-                val = fields.Datetime.to_string(val)
+            subrecord_kwargs = {}
+            if isinstance(val, tuple) and len(val) and val[0] is ONE:
+                subrecord, as_thread, only_id, subrecord_kwargs = val[1], val[2], val[3], val[4]
+                assert not subrecord or isinstance(
+                    subrecord, models.Model
+                ), f"expected recordset for one {key}: {subrecord}"
+                if subrecord and not only_id:
+                    self.add(subrecord, as_thread=as_thread, **subrecord_kwargs)
+                target[key] = self.one_id(subrecord, as_thread=as_thread)
+            elif isinstance(val, tuple) and len(val) and val[0] is MANY:
+                subrecords, mode, as_thread, only_id, subrecords_kwargs = (
+                    val[1],
+                    val[2],
+                    val[3],
+                    val[4],
+                    val[5],
+                )
+                assert not subrecords or isinstance(
+                    subrecords, models.Model
+                ), f"expected recordset for many {key}: {subrecords}"
+                assert mode in ["ADD", "DELETE", "REPLACE"], f"invalid mode for many {key}: {mode}"
+                if subrecords and not only_id:
+                    self.add(subrecords, as_thread=as_thread, **subrecords_kwargs)
+                rel_val = self.many_ids(subrecords, mode, as_thread=as_thread)
+                target[key] = (
+                    target[key] + rel_val if key in target and mode != "REPLACE" else rel_val
+                )
+            elif isinstance(val, datetime):
+                target[key] = fields.Datetime.to_string(val)
             elif isinstance(val, date):
-                val = fields.Date.to_string(val)
-            if index:
-                self.data[model_name][index][key] = val
+                target[key] = fields.Date.to_string(val)
             else:
-                self.data[model_name][key] = val
+                target[key] = val
 
     def get_result(self):
         """Gets resulting data built from adding all data together."""
@@ -122,3 +157,50 @@ class Store:
             else:
                 res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
+
+    @staticmethod
+    def many(records, mode="REPLACE", /, *, as_thread=False, only_id=False, **kwargs):
+        """Flags records to be added to the store in a Many relation.
+        - mode: "REPLACE" (default), "ADD", or "DELETE"."""
+        return (MANY, records, mode, as_thread, only_id, kwargs)
+
+    @staticmethod
+    def one(record, /, *, as_thread=False, only_id=False, **kwargs):
+        """Flags a record to be added to the store in a One relation."""
+        return (ONE, record, as_thread, only_id, kwargs)
+
+    @staticmethod
+    def many_ids(records, mode="REPLACE", /, *, as_thread=False):
+        """Converts records to a value suitable for a relation in the store.
+        - mode: "REPLACE" (default), "ADD", or "DELETE".
+
+        This method does not add the result to the Store. Calling it manually
+        should be avoided. It is kept as a public method until all remaining
+        occurences can be removed.
+        Using the method ``many(..., only_id=True)`` is preferable."""
+        res = [Store.one_id(record, as_thread=as_thread) for record in records]
+        if mode == "ADD":
+            res = [("ADD", res)]
+        elif mode == "DELETE":
+            res = [("DELETE", res)]
+        return res
+
+    @staticmethod
+    def one_id(record, /, *, as_thread=False):
+        """Converts a record to a value suitable for a relation in the store.
+
+        This method does not add the result to the Store. Calling it manually
+        should be avoided. It is kept as a public method until all remaining
+        occurences can be removed.
+        Using the method ``many(..., only_id=True)`` is preferable."""
+        if not record:
+            return False
+        if as_thread:
+            return {"id": record.id, "model": record._name}
+        if record._name == "discuss.channel":
+            return {"id": record.id, "model": "discuss.channel"}
+        if record._name == "mail.guest":
+            return {"id": record.id, "type": "guest"}
+        if record._name == "res.partner":
+            return {"id": record.id, "type": "partner"}
+        return {"id": record.id}
