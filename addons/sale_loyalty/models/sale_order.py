@@ -176,12 +176,20 @@ class SaleOrder(models.Model):
             # non-fixed tax totals. This way fixed taxes will not be discounted
             taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
             discountable += tax_data['total_excluded'] + sum(
-                tax['amount'] for tax in tax_data['taxes'] if tax['id'] in taxes.ids
+                tax['amount'] for tax in tax_data['taxes']
+                if (
+                    tax['id'] in taxes.ids
+                    or (tax['group'] and tax['group'] in taxes)
+                )
             )
             line_price = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100)
             discountable_per_tax[taxes] += line_price - sum(
                 tax['amount'] for tax in tax_data['taxes']
-                if tax['price_include'] and tax['id'] not in taxes.ids
+                if (
+                    tax['price_include']
+                    and tax['id'] not in taxes.ids
+                    and (not tax['group'] or tax['group'] not in taxes)
+                )
             )
         return discountable, discountable_per_tax
 

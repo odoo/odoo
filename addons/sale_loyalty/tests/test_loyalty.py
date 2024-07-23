@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, new_test_user
-from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
-from odoo.tools.float_utils import float_compare
 from odoo import Command
+from odoo.tests import tagged, new_test_user
+from odoo.tools.float_utils import float_compare
+
+from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 @tagged('post_install', '-at_install')
 class TestLoyalty(TestSaleCouponCommon):
@@ -747,6 +748,40 @@ class TestLoyalty(TestSaleCouponCommon):
         self._claim_reward(order, loyalty_program)
         msg = "100% discount on order should reduce total amount to 0"
         self.assertEqual(order.amount_total, 0, msg=msg)
+
+    def test_discount_on_taxes_with_child_tax(self):
+        """
+        Check whether a program discount properly apply when product contain group of tax.
+        """
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        loyalty_program = self.env['loyalty.program'].create([{
+            'name': '90% Discount',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'reward_point_amount': 1,
+                'product_ids': [self.product_a.id],
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 90,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        }])
+        self.env['loyalty.card'].create({'program_id': loyalty_program.id, 'partner_id': self.partner_a.id, 'points': 2})
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {'product_id': self.product_D.id, 'product_uom_qty': 1})],
+        })
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, loyalty_program)
+        msg = "Discountable should take child tax amount into account"
+        self.assertEqual(order.amount_total, 10, msg=msg)
 
     def test_ewallet_program_without_trigger_product(self):
         self.ewallet_program.trigger_product_ids = [Command.clear()]

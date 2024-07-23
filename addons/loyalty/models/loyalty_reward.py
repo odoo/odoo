@@ -5,6 +5,7 @@ import ast
 import json
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.osv import expression
 
 class LoyaltyReward(models.Model):
@@ -235,6 +236,12 @@ class LoyaltyReward(models.Model):
     @api.depends("reward_type")
     def _compute_user_has_debug(self):
         self.user_has_debug = self.user_has_groups('base.group_no_one')
+
+    @api.onchange('description')
+    def _ensure_reward_has_description(self):
+        for reward in self:
+            if not reward.description:
+                raise UserError(_("The reward description field cannot be empty."))
 
     def _create_missing_discount_line_products(self):
         # Make sure we create the product that will be used for our discounts
