@@ -65,17 +65,16 @@ async function get_session(request) {
     if (!persisted) {
         const store = new mailDataHelpers.Store();
         ResUsers._init_store_data(store);
-        store.add(
-            ResPartner.browse(channelVals.livechat_operator_id),
-            makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
-        );
         store.add("discuss.channel", {
             channel_type: "livechat",
             chatbot_current_step_id: channelVals.chatbot_current_step_id,
             id: -1,
             isLoaded: true,
             name: channelVals["name"],
-            operator: { id: channelVals.livechat_operator_id, type: "partner" },
+            operator: mailDataHelpers.Store.one(
+                ResPartner.browse(channelVals.livechat_operator_id),
+                makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
+            ),
             scrollUnread: false,
             state: "open",
         });

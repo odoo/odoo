@@ -88,13 +88,16 @@ export class DiscussChannel extends models.ServerModel {
         BusBus._sendone(partner, "discuss.channel/leave", custom_store.get_result());
         const store = new mailDataHelpers.Store("discuss.channel", {
             id: channel.id,
-            channelMembers: [["DELETE", { id: channelMember.id }]],
+            channelMembers: mailDataHelpers.Store.many(
+                DiscussChannelMember.browse(channelMember.id),
+                "DELETE",
+                makeKwArgs({ only_id: true })
+            ),
             memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
         });
         BusBus._sendone(channel, "mail.record/insert", store.get_result());
         // limitation of mock server, partner already unsubscribed from channel
         BusBus._sendone(partner, "mail.record/insert", store.get_result());
-        return true;
     }
 
     /**
@@ -411,9 +414,9 @@ export class DiscussChannel extends models.ServerModel {
                     state: memberOfCurrentUser.fold_state || "closed",
                 });
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
-                    res.rtcInvitingSession = {
-                        id: memberOfCurrentUser.rtc_inviting_session_id,
-                    };
+                    res.rtcInvitingSession = mailDataHelpers.Store.one(
+                        DiscussChannelMember.browse(memberOfCurrentUser.rtc_inviting_session_id)
+                    );
                 }
                 store.add(
                     DiscussChannelMember.browse(memberOfCurrentUser.id),
@@ -426,16 +429,11 @@ export class DiscussChannel extends models.ServerModel {
                 );
                 store.add(otherMembers.map((member) => member.id));
             }
-            store.add(
+            res.rtcSessions = mailDataHelpers.Store.many(
                 DiscussChannelRtcSession.browse(channel.rtc_session_ids),
+                "ADD",
                 makeKwArgs({ extra: true })
             );
-            res.rtcSessions = [
-                [
-                    "ADD",
-                    (channel.rtc_session_ids || []).map((rtcSessionId) => ({ id: rtcSessionId })),
-                ],
-            ];
             res.allow_public_upload = channel.allow_public_upload;
             store.add("discuss.channel", res);
         }

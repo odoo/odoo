@@ -66,7 +66,7 @@ class ChannelController(http.Controller):
         return {
             **res,
             "data": Store(messages, for_current_user=True).get_result(),
-            "messages": [{"id": message.id} for message in messages],
+            "messages": Store.many_ids(messages),
         }
 
     @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public")

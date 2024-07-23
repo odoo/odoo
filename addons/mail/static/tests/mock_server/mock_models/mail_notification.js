@@ -1,3 +1,5 @@
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
 import { makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class MailNotification extends models.ServerModel {
@@ -12,8 +14,7 @@ export class MailNotification extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const notifications = this.browse(ids);
-        return notifications.filter((notification) => {
+        return this.browse(ids).filter((notification) => {
             const [partner] = ResPartner.browse(notification.res_partner_id);
             if (
                 ["bounce", "exception", "canceled"].includes(notification.notification_status) ||
@@ -34,21 +35,20 @@ export class MailNotification extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const notifications = this.browse(ids);
-        for (const notification of notifications) {
+        for (const notification of this.browse(ids)) {
             const [data] = this.read(
                 notification.id,
                 ["failure_type", "notification_status", "notification_type"],
                 makeKwArgs({ load: false })
             );
-            store.add(
+            data.message = mailDataHelpers.Store.one(
+                this.env["mail.message"].browse(notification.mail_message_id),
+                makeKwArgs({ only_id: true })
+            );
+            data.persona = mailDataHelpers.Store.one(
                 ResPartner.browse(notification.res_partner_id),
                 makeKwArgs({ fields: ["display_name"] })
             );
-            data.message = { id: notification.mail_message_id };
-            data.persona = notification.res_partner_id
-                ? { id: notification.res_partner_id, type: "partner" }
-                : false;
             store.add("mail.notification", data);
         }
     }

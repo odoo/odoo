@@ -1,5 +1,6 @@
-import { getKwArgs, serverState } from "@web/../tests/web_test_helpers";
 import { mailModels } from "@mail/../tests/mail_test_helpers";
+
+import { getKwArgs, serverState } from "@web/../tests/web_test_helpers";
 
 export class ResPartner extends mailModels.ResPartner {
     /**

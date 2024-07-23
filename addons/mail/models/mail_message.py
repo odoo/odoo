@@ -866,19 +866,18 @@ class Message(models.Model):
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
         count = self.env["mail.message.reaction"].search_count(group_domain)
         group_command = "ADD" if count > 0 else "DELETE"
-        personas = [("ADD" if action == "add" else "DELETE", {"id": guest.id if guest else partner.id, "type": "guest" if guest else "partner"})] if guest or partner else []
         group_values = {
             "content": content,
             "count": count,
-            "personas": personas,
-            "message": {"id": self.id},
+            "personas": Store.many_ids(guest or partner, "ADD" if action == "add" else "DELETE"),
+            "message": Store.one_id(self),
         }
         self.env["bus.bus"]._sendone(
             self._bus_notification_target(),
             "mail.record/insert",
-            Store(
-                "mail.message", {"id": self.id, "reactions": [(group_command, group_values)]}
-            ).get_result(),
+            Store("mail.message", {"id": self.id, "reactions": [(group_command, group_values)]})
+            .add(guest or partner, fields=["name", "write_date"])
+            .get_result(),
         )
 
     # ------------------------------------------------------
@@ -976,20 +975,10 @@ class Message(models.Model):
                     self.env[record._name]._original_module
                 )
             if for_current_user and add_followers:
-                if follower := follower_by_record_and_partner.get(
-                    (record, self.env.user.partner_id)
-                ):
-                    store.add(
-                        "mail.followers",
-                        {
-                            "id": follower.id,
-                            "is_active": True,
-                            "partner": {"id": follower.partner_id.id, "type": "partner"},
-                        },
-                    )
-                    thread_data["selfFollower"] = {"id": follower.id}
-                else:
-                    thread_data["selfFollower"] = False
+                thread_data["selfFollower"] = Store.one(
+                    follower_by_record_and_partner.get((record, self.env.user.partner_id)),
+                    fields={"is_active": True, "partner": []},
+                )
             store.add("mail.thread", thread_data)
         for message in self:
             # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
@@ -1021,45 +1010,38 @@ class Message(models.Model):
             data["default_subject"] = default_subject
             reactions_per_content = defaultdict(self.env["mail.message.reaction"].sudo().browse)
             # sudo: mail.message - reading reactions on accessible message is allowed
-            for reaction in message.sudo().reaction_ids:
+            reactions = message.sudo().reaction_ids
+            for reaction in reactions:
                 reactions_per_content[reaction.content] |= reaction
+            store.add(reactions.guest_id, fields=["name", "write_date"])
+            store.add(reactions.partner_id, fields=["name", "write_date"])
             reaction_groups = [
                 {
                     "content": content,
                     "count": len(reactions),
-                    "personas": [
-                        {"id": guest.id, "name": guest.name, "type": "guest"}
-                        for guest in reactions.guest_id
-                    ]
-                    + [
-                        {"id": partner.id, "name": partner.name, "type": "partner"}
-                        for partner in reactions.partner_id
-                    ],
-                    "message": {"id": message.id},
+                    "personas": Store.many_ids(reactions.guest_id)
+                    + Store.many_ids(reactions.partner_id),
+                    "message": Store.one_id(message),
                 }
                 for content, reactions in reactions_per_content.items()
             ]
-            # sudo: mail.message - reading link preview on accessible message is allowed
-            link_previews = message.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden)
             vals = {
-                "notifications": [
-                    {"id": notif.id}
-                    for notif in message.notification_ids._filtered_for_web_client()
-                ],
+                "notifications": Store.many(message.notification_ids._filtered_for_web_client()),
                 # sudo: mail.message - reading attachments on accessible message is allowed
-                "attachments": [{"id": a.id} for a in message.sudo().attachment_ids.sorted("id")],
-                "linkPreviews": [{"id": p.id} for p in link_previews],
+                "attachments": Store.many(message.sudo().attachment_ids.sorted("id")),
+                # sudo: mail.message - reading link preview on accessible message is allowed
+                "linkPreviews": Store.many(
+                    message.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden)
+                ),
                 "reactions": reaction_groups,
                 "record_name": record_name,  # keep for iOS app
                 "is_note": message.subtype_id.id == note_id,
                 "is_discussion": message.subtype_id.id == com_id,
                 # sudo: mail.message.subtype - reading description on accessible message is allowed
                 "subtype_description": message.subtype_id.sudo().description,
-                "recipients": [
-                    {"id": p.id, "name": p.name, "type": "partner"} for p in message.partner_ids
-                ],
+                "recipients": Store.many(message.partner_ids, fields=["name", "write_date"]),
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
-                "thread": {"id": record.id, "model": record._name} if record else False
+                "thread": Store.one(record, as_thread=True, only_id=True),
             }
             if for_current_user:
                 # sudo: mail.message - filtering allowed tracking values
@@ -1083,11 +1065,6 @@ class Message(models.Model):
             store.add("mail.message", data)
         # sudo: mail.message: access to author is allowed
         self.sudo()._author_to_store(store)
-        store.add(self.notification_ids._filtered_for_web_client())
-        # sudo: mail.message - reading link preview on accessible message is allowed
-        store.add(self.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden))
-        # sudo: mail.message - reading attachments on accessible message is allowed
-        store.add(self.sudo().attachment_ids.sorted("id"))
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).
@@ -1102,12 +1079,12 @@ class Message(models.Model):
             }
             # sudo: mail.message: access to author is allowed
             if guest_author := message.sudo().author_guest_id:
-                store.add(guest_author, fields=["name"])
-                data["author"] = {"id": guest_author.id, "type": "guest"}
+                data["author"] = Store.one(guest_author, fields=["name", "write_date"])
             # sudo: mail.message: access to author is allowed
             elif author := message.sudo().author_id:
-                store.add(author, fields=["name", "is_company", "user", "write_date"])
-                data["author"] = {"id": author.id, "type": "partner"}
+                data["author"] = Store.one(
+                    author, fields=["name", "is_company", "user", "write_date"]
+                )
             store.add("mail.message", data)
 
     def _extras_to_store(self, store: Store, format_reply):
@@ -1150,31 +1127,21 @@ class Message(models.Model):
         """
         for message in self:
             message_data = {
-                "author": (
-                    {"id": message.author_id.id, "type": "partner"} if message.author_id else False
-                ),
+                "author": Store.one(message.author_id, only_id=True),
                 "id": message.id,
                 "date": message.date,
                 "message_type": message.message_type,
                 "body": message.body,
-                "notifications": [
-                    {"id": notif.id}
-                    for notif in message.notification_ids._filtered_for_web_client()
-                ],
-                "thread": False,
+                "notifications": Store.many(message.notification_ids._filtered_for_web_client()),
+                "thread": (
+                    Store.one(
+                        self.env[message.model].browse(message.res_id) if message.model else False,
+                        as_thread=True,
+                        fields=["modelName"],
+                    )
+                ),
             }
-            if message.res_id:
-                message_data["thread"] = {"id": message.res_id, "model": message.model}
-                store.add(
-                    "mail.thread",
-                    {
-                        "id": message.res_id,
-                        "model": message.model,
-                        "modelName": message.env["ir.model"]._get(message.model).display_name,
-                    },
-                )
             store.add("mail.message", message_data)
-        store.add(self.notification_ids._filtered_for_web_client())
 
     def _notify_message_notification_update(self):
         """Send bus notifications to update status of notifications in the web
@@ -1236,16 +1203,22 @@ class Message(models.Model):
             star_count_by_partner_id = dict(self.env.cr.fetchall())
             notifications = []
             for partner in outdated_starred_partners:
-                payload = {
-                    "mail.thread": {
-                        "id": "starred",
-                        "messages": [("DELETE", [{"id": msg.id} for msg in self])],
-                        "model": "mail.box",
-                        "counter": star_count_by_partner_id.get(partner.id, 0),
-                        "counter_bus_id": bus_last_id,
-                    }
-                }
-                notifications.append((partner, "mail.record/insert", payload))
+                notifications.append(
+                    (
+                        partner,
+                        "mail.record/insert",
+                        Store(
+                            "mail.thread",
+                            {
+                                "counter": star_count_by_partner_id.get(partner.id, 0),
+                                "counter_bus_id": bus_last_id,
+                                "id": "starred",
+                                "messages": Store.many(self, "DELETE", only_id=True),
+                                "model": "mail.box",
+                            },
+                        ).get_result(),
+                    )
+                )
             self.env["bus.bus"]._sendmany(notifications)
 
     def _filter_empty(self):

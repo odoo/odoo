@@ -1020,16 +1020,13 @@ class Project(models.Model):
         for partner, tasks in dict_tasks_per_partner.items():
             tasks.message_subscribe(dict_partner_ids_to_subscribe_per_partner[partner])
 
-    def _thread_to_store(self, store: Store, request_list, **kwargs):
+    def _thread_to_store(self, store: Store, /, *, request_list=None, **kwargs):
         super()._thread_to_store(store, request_list=request_list, **kwargs)
-        if "followers" in request_list:
+        if request_list and "followers" in request_list:
             store.add(
                 "mail.thread",
                 {
-                    "collaborator_ids": [
-                        {"id": partner.id, "type": "partner"}
-                        for partner in self.collaborator_ids.partner_id
-                    ],
+                    "collaborator_ids": Store.many(self.collaborator_ids.partner_id, only_id=True),
                     "id": self.id,
                     "model": "project.project",
                 },

@@ -129,8 +129,7 @@ export class DiscussChannelMember extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const members = this.browse(ids);
-        for (const member of members) {
+        for (const member of this.browse(ids)) {
             const [data] = this.read(
                 member.id,
                 Object.keys(fields).filter(
@@ -146,35 +145,38 @@ export class DiscussChannelMember extends models.ServerModel {
                 makeKwArgs({ load: false })
             );
             if ("channel" in fields) {
-                data.thread = { id: member.channel_id, model: "discuss.channel" };
+                data.thread = mailDataHelpers.Store.one(
+                    this.env["discuss.channel"].browse(member.channel_id),
+                    makeKwArgs({ as_thread: true, only_id: true })
+                );
             }
             if ("persona" in fields) {
                 if (member.partner_id) {
-                    store.add(
+                    data.persona = mailDataHelpers.Store.one(
                         ResPartner.browse(member.partner_id),
                         makeKwArgs({
                             fields: this._get_store_partner_fields([member.id], fields["persona"]),
                         })
                     );
-                    data.persona = { id: member.partner_id, type: "partner" };
                 }
                 if (member.guest_id) {
-                    store.add(
+                    data.persona = mailDataHelpers.Store.one(
                         MailGuest.browse(member.guest_id),
                         makeKwArgs({ fields: fields["persona"] })
                     );
-                    data.persona = { id: member.guest_id, type: "guest" };
                 }
             }
             if ("fetched_message_id" in fields) {
-                data.fetched_message_id = member.fetched_message_id
-                    ? { id: member.fetched_message_id }
-                    : false;
+                data.fetched_message_id = mailDataHelpers.Store.one(
+                    this.env["mail.message"].browse(member.fetched_message_id),
+                    makeKwArgs({ only_id: true })
+                );
             }
             if ("seen_message_id" in fields) {
-                data.seen_message_id = member.seen_message_id
-                    ? { id: member.seen_message_id }
-                    : false;
+                data.seen_message_id = mailDataHelpers.Store.one(
+                    this.env["mail.message"].browse(member.seen_message_id),
+                    makeKwArgs({ only_id: true })
+                );
             }
             if ("message_unread_counter" in fields) {
                 data.message_unread_counter = this._compute_message_unread_counter([member.id]);
