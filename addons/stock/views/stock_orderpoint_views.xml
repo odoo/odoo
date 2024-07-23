@@ -5,29 +5,16 @@
         <field name="model">stock.warehouse.orderpoint</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
-                <field name="name"/>
-                <field name="product_id"/>
-                <field name="trigger"/>
-                <field name="product_min_qty"/>
-                <field name="product_max_qty"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title"><t t-esc="record.name.value"/></strong>
-                                </div>
-                                <span class="badge rounded-pill"><strong>Min qty:</strong><t t-esc="record.product_min_qty.value"/></span>
-                            </div>
-                            <div class="o_kanban_record_bottom">
-                                <div class="oe_kanban_bottom_left">
-                                    <span><t t-esc="record.product_id.value"/></span>
-                                </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <span class="badge rounded-pill"><strong>Max qty:</strong><t t-esc="record.product_max_qty.value"/></span>
-                                </div>
-                            </div>
+                    <t t-name="kanban-card">
+                        <div class="d-flex">
+                            <field name="name" class="fw-bold fs-5 mb-1"/>
+                            <span class="badge rounded-pill ms-auto mt-1"><strong>Min qty:</strong><field name="product_min_qty"/></span>
                         </div>
+                        <footer class="fs-6 pt-0">
+                            <field name="product_id"/>
+                            <span class="badge rounded-pill ms-auto"><strong>Max qty:</strong><field name="product_max_qty"/></span>
+                        </footer>
                     </t>
                 </templates>
             </kanban>

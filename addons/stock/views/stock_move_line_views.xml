@@ -165,39 +165,28 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <field name="picking_id" invisible="1"/>
-                            <div class="row">
-                                <div class="col-6">
-                                    <field name="reference"/>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <field name="date"/>
-                                </div>
+                    <t t-name="kanban-card">
+                        <div class="row">
+                            <field name="reference" class="col-6"/>
+                            <field name="date" class="col-6 text-end"/>
+                        </div>
+                        <field name="product_id" class="fw-bolder"/>
+                        <div groups="stock.group_stock_multi_locations">
+                            <field name="location_id"/>
+                            →
+                            <field name="location_dest_id"/>
+                        </div>
+                        <div groups="stock.group_production_lot" invisible="not lot_id and not lot_name">
+                            Lot/SN:
+                            <field name="lot_id" invisible="not lot_id and lot_name"/>
+                            <field name="lot_name" invisible="lot_id or not lot_name"/>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <field name="quantity" string="Quantity"/>
+                                <field name="product_uom_id" string="Unit of Measure" groups="uom.group_uom"/>
                             </div>
-                            <div>
-                                <strong><field name="product_id"/></strong>
-                            </div>
-                            <div groups="stock.group_stock_multi_locations">
-                                <field name="location_id"/>
-                                →
-                                <field name="location_dest_id"/>
-                            </div>
-                            <div groups="stock.group_production_lot" invisible="not lot_id and not lot_name">
-                                Lot/SN:
-                                <field name="lot_id" invisible="not lot_id and lot_name"/>
-                                <field name="lot_name" invisible="lot_id or not lot_name"/>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <field name="quantity" string="Quantity"/>
-                                    <field name="product_uom_id" string="Unit of Measure" groups="uom.group_uom"/>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'done': 'success'}}"/>
-                                </div>
-                            </div>
+                            <field class="col-6 text-end" name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'done': 'success'}}"/>
                         </div>
                     </t>
                 </templates>
