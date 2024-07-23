@@ -4496,6 +4496,12 @@ class TestComputeQueries(TransactionCase):
             self.assertEqual(patch_compute.call_count, 1)
 
 
+class TestComputeSudo(TransactionCaseWithUserDemo):
+    def test_compute_sudo_depends_context_uid(self):
+        record = self.env['test_new_api.compute.sudo'].create({})
+        self.assertEqual(record.with_user(self.user_demo).name_for_uid, self.user_demo.name)
+
+
 class test_shared_cache(TransactionCaseWithUserDemo):
     def test_shared_cache_computed_field(self):
         # Test case: Check that the shared cache is not used if a compute_sudo stored field
