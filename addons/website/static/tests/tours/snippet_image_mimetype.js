@@ -354,12 +354,12 @@ function testImageSnippet(imageFormat, originalMimetype, formatMimetype) {
         ...testStepOnOff(setImageShape, removeImageShape, true),
 
         // Image crop
-        ...testStepOnOff(cropImage, removeImageCrop, false, false, "image/jpeg"),
+        ...testStepOnOff(cropImage, removeImageCrop, false, false, formatMimetype),
 
         // Image crop while shape on
         ...setImageShape(),
-        ...testStepOnOff(cropImage, removeImageCrop, true, true, "image/jpeg"),
-        ...removeImageShape("image/jpeg"),
+        ...testStepOnOff(cropImage, removeImageCrop, true, true, formatMimetype),
+        ...removeImageShape(formatMimetype),
     ];
 }
 
@@ -545,16 +545,16 @@ wTourUtils.registerWebsitePreviewTour(
         mockCanvasToDataURLStep,
         ...removeImageCrop("image/jpeg"), // !isChanged && Original format is smaller
         ...testImageMimetypeIs("image/jpeg"),
-        testFormatSnippetOption("800px (Original) jpeg"),
+        testFormatSnippetOption("690px (Suggested) jpeg"),
         ...setImageFormat("512 image/jpeg"),
 
         // No webp -> webp
         ...cropImage("image/jpeg"),
         ...testImageMimetypeIs("image/jpeg"),
         unmockCanvasToDataURLStep,
-        ...removeImageCrop("image/jpeg"),
-        ...testImageMimetypeIs("image/jpeg"),
-        testFormatSnippetOption("800px (Original) jpeg"),
+        ...removeImageCrop("image/webp"),
+        ...testImageMimetypeIs("image/webp"),
+        testFormatSnippetOption("690px (Suggested) webp"),
     ]
 );
 

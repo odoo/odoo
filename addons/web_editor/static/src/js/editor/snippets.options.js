@@ -6567,7 +6567,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     async _getOriginalSize() {
         const image = this._getImg();
         const originalImage = await loadImage(this.originalSrc);
-        return image.dataset.width ? image.naturalWidth : originalImage.naturalWidth;
+        return Math.round(image.dataset.width) || originalImage.naturalWidth;
     },
     /**
      * @param {HTMLImageElement} img
@@ -6762,7 +6762,6 @@ registry.ImageTools = ImageHandlerOption.extend({
         // temporarily into the body.
         const imageCropWrapperElement = document.createElement('div');
         document.body.append(imageCropWrapperElement);
-        img.dataset.targetMimetype = img.dataset.mimetypeBeforeConversion;
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
             rpc: this.rpc,
             activeOnStart: true,
@@ -6776,6 +6775,11 @@ registry.ImageTools = ImageHandlerOption.extend({
         imageCropWrapperElement.remove();
 
         await this._reapplyCurrentShape();
+
+        // Reset to "Suggested" format
+        await this._computeAvailableFormats(); // Update this.optimizedWidth
+        const optimizedMimetype = canExportCanvasAsWebp() ? "image/webp" : "image/jpeg";
+        await this.selectFormat(false, `${this.optimizedWidth} ${optimizedMimetype}`);
     },
     /**
      * Resets the image rotation and translation
