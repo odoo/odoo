@@ -32,6 +32,9 @@ class TestHttp(http.Controller):
     def _readonly(self):
         return str2bool(request.httprequest.args.get('readonly', True))
 
+    def _max_content_length_1kiB(self):
+        return 1024
+
     # =====================================================
     # Greeting
     # =====================================================
@@ -120,7 +123,8 @@ class TestHttp(http.Controller):
         })
 
     @http.route('/test_http/<model("test_http.galaxy"):galaxy>/setname',
-                methods=['GET', 'POST'], type='http', auth='user', readonly=_readonly)
+                methods=['GET', 'POST'], type='http', auth='user', readonly=_readonly,
+                max_content_length=_max_content_length_1kiB)
     def galaxy_set_name(self, galaxy, name, readonly=True):
         galaxy.name = name
         return galaxy.name
