@@ -122,6 +122,9 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(tx_sudo.sale_order_ids.transaction_ids, tx_sudo)
 
         tx_sudo._set_done()
+
+        self.sale_order.require_payment = True
+        self.assertTrue(self.sale_order._has_to_be_paid())
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
             tx_sudo._finalize_post_processing()
         self.assertEqual(self.sale_order.state, 'draft') # Only a partial amount was paid
