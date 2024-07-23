@@ -6,7 +6,7 @@ const today = luxon.DateTime.now();
 
 registry.category("web_tour.tours").add('crm_forecast', {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [
     stepUtils.showAppsMenuItem(),
     {

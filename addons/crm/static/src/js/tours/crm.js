@@ -7,7 +7,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('crm_tour', {
-    url: "/web",
+    url: "/odoo",
     rainbowManMessage: _t("Congrats, best of luck catching such big fish! :)"),
     sequence: 10,
     steps: () => [stepUtils.showAppsMenuItem(), {
