@@ -91,15 +91,17 @@ const defineModuleSet = async (entryPoints, additionalAddons) => {
              */
             addons.add("odoo");
         }
-        const joinedAddons = [...addons].sort().join(",");
-        const filter = (path) => joinedAddons.includes(getAddonName(path));
+        const filter = (path) => addons.has(getAddonName(path));
+
         // Module names are cached for each configuration of addons
+        const joinedAddons = [...addons].sort().join(",");
         if (!moduleNamesCache.has(joinedAddons)) {
             moduleNamesCache.set(
                 joinedAddons,
                 sortedModuleNames.filter((name) => !name.endsWith(TEST_SUFFIX) && filter(name))
             );
         }
+
         moduleSet.filter = filter;
         moduleSet.moduleNames = moduleNamesCache.get(joinedAddons);
     }
