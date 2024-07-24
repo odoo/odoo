@@ -192,7 +192,7 @@ class SaleReport(models.Model):
             JOIN res_partner partner ON s.partner_id = partner.id
             LEFT JOIN product_product p ON l.product_id=p.id
             LEFT JOIN product_template t ON p.product_tmpl_id=t.id
-            LEFT JOIN uom_uom u ON u.id=l.product_uom
+            LEFT JOIN uom_uom u ON u.id=l.product_uom_id
             LEFT JOIN uom_uom u2 ON u2.id=t.uom_id
             JOIN {currency_table} ON currency_table.company_id = s.company_id
             """

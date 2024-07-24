@@ -61,7 +61,7 @@ class TestSaleFlow(TestSaleCommonBase):
                     'product_id': self.company_data['product_order_cost'].id,
                     'product_uom_qty': 2,
                     'qty_delivered': 1,
-                    'product_uom': self.company_data['product_order_cost'].uom_id.id,
+                    'product_uom_id': self.company_data['product_order_cost'].uom_id.id,
                     'price_unit': self.company_data['product_order_cost'].list_price,
                 }),
                 (0, 0, {
@@ -69,7 +69,7 @@ class TestSaleFlow(TestSaleCommonBase):
                     'product_id': self.company_data['product_delivery_cost'].id,
                     'product_uom_qty': 4,
                     'qty_delivered': 1,
-                    'product_uom': self.company_data['product_delivery_cost'].uom_id.id,
+                    'product_uom_id': self.company_data['product_delivery_cost'].uom_id.id,
                     'price_unit': self.company_data['product_delivery_cost'].list_price,
                 }),
             ],

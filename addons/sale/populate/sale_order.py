@@ -93,6 +93,6 @@ class SaleOrderLine(models.Model):
         return [
             ("order_id", populate.randomize(order_ids)),
             ("product_id", populate.randomize(product_ids)),
-            ("product_uom", populate.compute(get_product_uom)),
+            ("product_uom_id", populate.compute(get_product_uom)),
             ("product_uom_qty", populate.randint(1, 200)),
         ]

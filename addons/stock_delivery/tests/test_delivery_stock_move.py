@@ -47,7 +47,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
                 'name': 'Cable Management Box',
                 'product_id': self.product_cable_management_box.id,
                 'product_uom_qty': 2,
-                'product_uom': self.product_uom_unit.id,
+                'product_uom_id': self.product_uom_unit.id,
                 'price_unit': 750.00,
             })],
         })
@@ -114,7 +114,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
                 'name': 'Cable Management Box',
                 'product_id': self.product_cable_management_box.id,
                 'product_uom_qty': 2,
-                'product_uom': self.product_uom_unit.id,
+                'product_uom_id': self.product_uom_unit.id,
                 'price_unit': 750.00,
             })],
         })
@@ -195,7 +195,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
                 "name": "Cable Management Box",
                 "product_id": self.product_cable_management_box.id,
                 "product_uom_qty": 2,
-                "product_uom": self.product_uom_unit.id,
+                "product_uom_id": self.product_uom_unit.id,
                 "price_unit": 750.00,
             })],
         })
@@ -216,7 +216,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
                 "name": "Another product to deliver",
                 "product_id": self.product_11.id,
                 "product_uom_qty": 2,
-                "product_uom": self.product_uom_unit.id,
+                "product_uom_id": self.product_uom_unit.id,
                 "price_unit": 750.00,
             })],
         })
@@ -247,7 +247,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
                 "name": "Cable Management Box",
                 "product_id": self.product_cable_management_box.id,
                 "product_uom_qty": 1,
-                "product_uom": self.product_uom_unit.id,
+                "product_uom_id": self.product_uom_unit.id,
                 "price_unit": 750.00,
             })],
         })

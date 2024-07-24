@@ -62,7 +62,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
                 'name': self.mto_product.name,
                 'product_id': self.mto_product.id,
                 'product_uom_qty': 10,
-                'product_uom': self.mto_product.uom_id.id,
+                'product_uom_id': self.mto_product.uom_id.id,
                 'price_unit': 1,
             })],
         })
@@ -115,7 +115,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 1,
-                    'product_uom': product.uom_id.id,
+                    'product_uom_id': product.uom_id.id,
                     'price_unit': product.list_price,
                 })]
             },
@@ -125,7 +125,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 2,
-                    'product_uom': product.uom_id.id,
+                    'product_uom_id': product.uom_id.id,
                     'price_unit': product.list_price,
                 })]
             },
@@ -191,14 +191,14 @@ class TestSalePurchaseStockFlow(TransactionCase):
                     'name': red_product.name,
                     'product_id': red_product.id,
                     'product_uom_qty': 2,
-                    'product_uom': red_product.uom_id.id,
+                    'product_uom_id': red_product.uom_id.id,
                     'price_unit': 20,
                 }),
                 Command.create({
                     'name': blue_product.name,
                     'product_id': blue_product.id,
                     'product_uom_qty': 3,
-                    'product_uom': blue_product.uom_id.id,
+                    'product_uom_id': blue_product.uom_id.id,
                     'price_unit': 30,
                 }),
             ],

@@ -42,12 +42,12 @@ class ProjectUpdate(models.Model):
         company_uom = self.env.company.timesheet_encode_uom_id
         for sol in sols:
             #We only want to consider hours and days for this calculation
-            is_unit = sol.product_uom == product_uom_unit
-            if sol.product_uom.category_id == company_uom.category_id or is_unit:
-                product_uom_qty = sol.product_uom._compute_quantity(sol.product_uom_qty, company_uom, raise_if_failure=False)
-                qty_delivered = sol.product_uom._compute_quantity(sol.qty_delivered, company_uom, raise_if_failure=False)
-                qty_invoiced = sol.product_uom._compute_quantity(sol.qty_invoiced, company_uom, raise_if_failure=False)
-                unit = sol.product_uom if is_unit else company_uom
+            is_unit = sol.product_uom_id == product_uom_unit
+            if sol.product_uom_id.category_id == company_uom.category_id or is_unit:
+                product_uom_qty = sol.product_uom_id._compute_quantity(sol.product_uom_qty, company_uom, raise_if_failure=False)
+                qty_delivered = sol.product_uom_id._compute_quantity(sol.qty_delivered, company_uom, raise_if_failure=False)
+                qty_invoiced = sol.product_uom_id._compute_quantity(sol.qty_invoiced, company_uom, raise_if_failure=False)
+                unit = sol.product_uom_id if is_unit else company_uom
                 services.append({
                     'name': sol.with_context(with_price_unit=True).display_name,
                     'sold_value': product_uom_qty,

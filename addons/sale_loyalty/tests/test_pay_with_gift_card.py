@@ -20,7 +20,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             Command.create({
                 'product_id': self.product_A.id,
                 'name': 'Ordinary Product A',
-                'product_uom': self.uom_unit.id,
+                'product_uom_id': self.uom_unit.id,
                 'product_uom_qty': 1.0,
             })
         ]})
@@ -41,7 +41,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             Command.create({
                 'product_id': self.product_B.id,
                 'name': 'Ordinary Product b',
-                'product_uom': self.uom_unit.id,
+                'product_uom_id': self.uom_unit.id,
                 'product_uom_qty': 1.0,
             })
         ]})
@@ -62,7 +62,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             Command.create({
                 'product_id': self.product_A.id,
                 'name': 'Ordinary Product A',
-                'product_uom': self.uom_unit.id,
+                'product_uom_id': self.uom_unit.id,
                 'product_uom_qty': 20.0,
             })
         ]})
@@ -83,7 +83,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             Command.create({
                 'product_id': self.product_C.id,
                 'name': 'Ordinary Product C',
-                'product_uom': self.uom_unit.id,
+                'product_uom_id': self.uom_unit.id,
                 'product_uom_qty': 1.0,
             })
         ]})
@@ -124,7 +124,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             Command.create({
                 'product_id': self.product_C.id,
                 'name': 'Ordinary Product C',
-                'product_uom': self.uom_unit.id,
+                'product_uom_id': self.uom_unit.id,
                 'product_uom_qty': 1.0,
             })
         ]})
@@ -180,7 +180,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             Command.create({
                 'product_id': self.product_B.id,
                 'name': 'Ordinary Product b',
-                'product_uom': self.uom_unit.id,
+                'product_uom_id': self.uom_unit.id,
                 'product_uom_qty': 1.0,
                 'price_unit': 200.0,
             })

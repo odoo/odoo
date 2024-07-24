@@ -20,7 +20,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
                 'name': self.company_data['product_delivery_no'].name,
                 'product_id': self.company_data['product_delivery_no'].id,
                 'product_uom_qty': 2,
-                'product_uom': self.company_data['product_delivery_no'].uom_id.id,
+                'product_uom_id': self.company_data['product_delivery_no'].uom_id.id,
                 'price_unit': self.company_data['product_delivery_no'].list_price,
             })],
         })
@@ -166,7 +166,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'product_uom_qty': 2,
-                'product_uom': self.product_a.uom_id.id,
+                'product_uom_id': self.product_a.uom_id.id,
                 'price_unit': self.product_a.list_price,
             })],
         })

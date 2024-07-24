@@ -23,7 +23,7 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': quantity,
-                    'product_uom': product.uom_po_id.id,
+                    'product_uom_id': product.uom_po_id.id,
                     'price_unit': 66.0,
                 })],
             'date_order': date,

@@ -36,7 +36,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
                     'name': cls.product_a.name,
                     'product_id': cls.product_a.id,
                     'product_qty': 10.0,
-                    'product_uom': cls.product_a.uom_id.id,
+                    'product_uom_id': cls.product_a.uom_id.id,
                     'price_unit': cls.product_a.list_price,
                     'taxes_id': False,
                     'analytic_distribution': {
@@ -48,7 +48,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
                     'name': cls.product_b.name,
                     'product_id': cls.product_b.id,
                     'product_qty': 10.0,
-                    'product_uom': cls.product_b.uom_id.id,
+                    'product_uom_id': cls.product_b.uom_id.id,
                     'price_unit': cls.product_b.list_price,
                     'taxes_id': False,
                     'analytic_distribution': {

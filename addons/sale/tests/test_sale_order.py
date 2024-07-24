@@ -370,7 +370,7 @@ class TestSaleOrder(SaleCommon):
         """
         order_line = self.sale_order.order_line[0]
         order_line.product_uom_qty = 0.0
-        order_line.product_uom = self.uom_dozen
+        order_line.product_uom_id = self.uom_dozen
         self.assertEqual(order_line.product_uom_qty, 0.0)
 
     def test_discount_rounding(self):

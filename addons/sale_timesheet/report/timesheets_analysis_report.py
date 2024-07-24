@@ -50,7 +50,7 @@ class TimesheetsAnalysisReport(models.Model):
     def _from(self):
         return super()._from() + """
             LEFT JOIN sale_order_line SOL ON A.so_line = SOL.id
-            LEFT JOIN uom_uom sol_product_uom ON sol_product_uom.id = SOL.product_uom
+            LEFT JOIN uom_uom sol_product_uom ON sol_product_uom.id = SOL.product_uom_id
             INNER JOIN uom_uom a_product_uom ON a_product_uom.id = A.product_uom_id
             LEFT JOIN product_product P ON P.id = SOL.product_id
             LEFT JOIN product_template T ON T.id = P.product_tmpl_id
