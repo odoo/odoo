@@ -18,7 +18,7 @@ export const accessSurveysteps = [
         run: "click",
     },
     {
-        trigger: '.oe_kanban_card:contains("User Session Survey")',
+        trigger: '.o_kanban_record:contains("User Session Survey")',
         run: "click",
     },
 ];

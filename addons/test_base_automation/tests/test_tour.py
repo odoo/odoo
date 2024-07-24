@@ -47,12 +47,8 @@ class BaseAutomationTestUi(HttpCase):
                 "arch": """
                     <kanban default_group_by="tag_ids">
                         <templates>
-                            <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
-                                    <div class="o_kanban_card_content">
-                                        <field name="name" />
-                                    </div>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="name" />
                             </t>
                         </templates>
                     </kanban>

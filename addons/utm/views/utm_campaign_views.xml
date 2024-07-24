@@ -85,15 +85,14 @@
         <field name="name">utm.campaign.view.kanban</field>
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
-            <kanban default_group_by='stage_id' class="o_utm_kanban" on_create="quick_create" quick_create_view="utm.utm_campaign_view_form_quick_create" examples="utm_campaign" sample="1">
-                <field name='color'/>
+            <kanban highlight_color="color" default_group_by='stage_id' class="o_utm_kanban" on_create="quick_create" quick_create_view="utm.utm_campaign_view_form_quick_create" examples="utm_campaign" sample="1">
                 <field name='user_id'/>
                 <field name="stage_id"/>
                 <field name='active'/>
                 <templates>
                     <t t-name="kanban-menu">
                         <t t-if="widget.editable">
-                            <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                            <a role="menuitem" type="open" class="dropdown-item">Edit</a>
                         </t>
                         <t t-if="widget.deletable">
                             <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
@@ -103,29 +102,16 @@
                             <t t-else="">Restore</t>
                         </a>
                         <div role="separator" class="dropdown-divider"/>
-                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                        <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings">
-                                        <h3 class="oe_margin_bottom_8 o_kanban_record_title"><field name="title"/></h3>
-                                    </div>
-                                </div>
-                                <div class="o_kanban_record_body">
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                    <ul id="o_utm_actions" class="list-group list-group-horizontal my-0"/>
-                                </div>
-                                <div class="o_kanban_record_bottom h5 mt-2 mb-0">
-                                    <div class="oe_kanban_bottom_left py-auto"/>
-                                    <div class="oe_kanban_bottom_right">
-                                         <field name="user_id" widget="many2one_avatar_user"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="title" class="fw-bold fs-5"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <ul id="o_utm_actions" class="list-group list-group-horizontal my-0"/>
+                        <footer class="mt-2 mb-0 pt-0">
+                            <div class="py-auto"/>
+                            <field name="user_id" widget="many2one_avatar_user" class="ms-auto"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
