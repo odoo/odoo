@@ -2662,6 +2662,25 @@ class BaseModel(metaclass=MetaModel):
                 row['__domain'] = expression.AND([row['__domain'], [(fullname, '=', row[fullname])]])
 
     @api.model
+    def _read_group_get_annotated_groupby(self, groupby, lazy):
+        groupby = [groupby] if isinstance(groupby, str) else groupby
+        lazy_groupby = groupby[:1] if lazy else groupby
+
+        annotated_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
+        for group_spec in lazy_groupby:
+            field_name, property_name, granularity = parse_read_group_spec(group_spec)
+            if field_name not in self._fields:
+                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+            field = self._fields[field_name]
+            if property_name and field.type != 'properties':
+                raise ValueError(f"Property name {property_name!r} has to be used on a property field.")
+            if field.type in ('date', 'datetime'):
+                annotated_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
+            else:
+                annotated_groupby[group_spec] = group_spec
+        return annotated_groupby
+
+    @api.model
     @api.readonly
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """Get the list of records in list view grouped by the given ``groupby`` fields.
@@ -2710,18 +2729,7 @@ class BaseModel(metaclass=MetaModel):
         # - Modify `groupby` default value 'month' into specific groupby specification
         # - Modify `fields` into aggregates specification of _read_group
         # - Modify the order to be compatible with the _read_group specification
-        annotated_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
-        for group_spec in lazy_groupby:
-            field_name, property_name, granularity = parse_read_group_spec(group_spec)
-            if field_name not in self._fields:
-                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-            field = self._fields[field_name]
-            if property_name and field.type != 'properties':
-                raise ValueError(f"Property name {property_name!r} has to be used on a property field.")
-            if field.type in ('date', 'datetime'):
-                annotated_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
-            else:
-                annotated_groupby[group_spec] = group_spec
+        annotated_groupby = self._read_group_get_annotated_groupby(groupby, lazy=lazy)
 
         annotated_aggregates = {  # Key as the name in the result, value as the explicit aggregate specification
             f"{lazy_groupby[0].split(':')[0]}_count" if lazy and len(lazy_groupby) == 1 else '__count': '__count',
