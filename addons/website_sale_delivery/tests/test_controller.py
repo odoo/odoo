@@ -9,7 +9,7 @@ from odoo.tests import tagged
 
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.sale.tests.common import SaleCommon
-from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
+from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery, PaymentPortalDelivery
 from odoo.addons.website.tools import MockRequest
 
 @tagged('post_install', '-at_install')
@@ -128,3 +128,22 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
             self.Controller.cart_update_json(product_id=storable_product.id, add_qty=1)
             with self.assertRaises(ValidationError):
                 self.Controller.shop_payment_validate()
+
+    def test_check_order_delivery_before_payment(self):
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'sale_ok': True,
+            'website_published': True,
+            'lst_price': 1000.0,
+            'standard_price': 800.0,
+        })
+        website = self.website.with_user(self.public_user)
+        with MockRequest(product.with_user(self.public_user).env, website=website):
+            sale_order = self.env['sale.order'].create({
+                'partner_id': self.public_user.id,
+                'order_line': [Command.create({'product_id': product.id})],
+                'access_token': 'test_token',
+            })
+            # Try processing payment with a storable product and no carrier_id
+            with self.assertRaises(ValidationError):
+                PaymentPortalDelivery().shop_payment_transaction(sale_order.id, sale_order.access_token)
