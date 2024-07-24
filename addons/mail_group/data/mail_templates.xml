@@ -14,7 +14,7 @@
             <div style="max-width: 600px">
                 <p>Hello <t t-esc="moderator.partner_id.name"/>,</p>
                 <p>You have messages to moderate, please go for the proceedings.</p>
-                <p><a t-attf-href="/web#action=mail_group.mail_group_action&amp;id={{group.id}}&amp;view_type=form" class="o_default_snippet_text">Moderate Messages</a></p>
+                <p><a t-attf-href="/odoo/action-mail_group.mail_group_action/{{group.id}}" class="o_default_snippet_text">Moderate Messages</a></p>
                 <p>Thank you!</p>
             </div>
         </template>

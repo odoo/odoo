@@ -13,6 +13,7 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { omit } from "@web/core/utils/objects";
 import { url } from "@web/core/utils/urls";
+import { stateToUrl } from "@web/core/browser/router";
 
 const { DateTime } = luxon;
 export class Message extends Record {
@@ -256,7 +257,7 @@ export class Message extends Record {
     }
 
     get resUrl() {
-        return `${url("/web")}#model=${this.thread.model}&id=${this.thread.id}`;
+        return url(stateToUrl({ model: this.thread.model, resId: this.thread.id }));
     }
 
     get editDate() {

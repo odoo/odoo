@@ -549,7 +549,7 @@ test("error notifications should not be shown in Inbox", async () => {
     await openDiscuss();
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small", { text: "on Demo User" });
-    await contains(`.o-mail-Message-header a[href*='/web#model=res.partner&id=${partnerId}']`, {
+    await contains(`.o-mail-Message-header a[href*='/odoo/res.partner/${partnerId}']`, {
         text: "Demo User",
     });
     await contains(".o-mail-Message-notification", { count: 0 });
@@ -636,7 +636,7 @@ test("Counter should be incremented by 1 when receiving a message with a mention
     withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: {
-                body: `<a href="https://www.hoot.test/web#model=res.partner&amp;id=17" class="o_mail_redirect" data-oe-id="${mention[0]}" data-oe-model="res.partner" target="_blank" contenteditable="false">@${mentionName}</a> mention`,
+                body: `<a href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="${mention[0]}" data-oe-model="res.partner" target="_blank" contenteditable="false">@${mentionName}</a> mention`,
                 message_type: "comment",
                 partner_ids: mention,
                 subtype_xmlid: "mail.mt_comment",

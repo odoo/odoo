@@ -178,11 +178,11 @@ test("url with number in subdomain", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    const messageBody = "https://www.45017478-master-all.runbot134.odoo.com/web";
+    const messageBody = "https://www.45017478-master-all.runbot134.odoo.com/odoo";
     await insertText(".o-mail-Composer-input", messageBody);
     await click("button[aria-label='Send']:enabled");
     await contains(
-        ".o-mail-Message a:contains(https://www.45017478-master-all.runbot134.odoo.com/web)"
+        ".o-mail-Message a:contains(https://www.45017478-master-all.runbot134.odoo.com/odoo)"
     );
 });
 

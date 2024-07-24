@@ -4,6 +4,7 @@ import { Component, xml } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
+import { stateToUrl } from "@web/core/browser/router";
 
 class EditorMentionList extends Component {
     static template = xml`<div class="popover" t-on-pointerdown.stop="() => {}">
@@ -43,9 +44,10 @@ export class MentionPlugin extends Plugin {
         this.mentionList.close();
         const mentionBlock = renderToElement("mail.Wysiwyg.mentionLink", {
             option,
-            href: `${url("/web")}#model=${option.partner ? "res.partner" : "discuss.channel"}&id=${
-                option.partner ? option.partner.id : option.channel.id
-            }`,
+            href: url(stateToUrl({
+                model: option.partner ? "res.partner" : "discuss.channel",
+                resId: option.partner ? option.partner.id : option.channel.id,
+            })),
         });
         const nameNode = this.document.createTextNode(
             `${option.partner ? "@" : "#"}${option.label}`

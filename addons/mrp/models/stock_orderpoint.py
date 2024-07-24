@@ -23,7 +23,6 @@ class StockWarehouseOrderpoint(models.Model):
             domain = AND([domain, [('write_date', '>=', self.env.context.get('written_after'))]])
         production = self.env['mrp.production'].search(domain, limit=1)
         if production:
-            action = self.env.ref('mrp.action_mrp_production_form')
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
@@ -32,7 +31,7 @@ class StockWarehouseOrderpoint(models.Model):
                     'message': '%s',
                     'links': [{
                         'label': production.name,
-                        'url': f'/web#action={action.id}&id={production.id}&model=mrp.production'
+                        'url': f'/odoo/action-mrp.action_mrp_production_form/{production.id}'
                     }],
                     'sticky': False,
                     'next': {'type': 'ir.actions.act_window_close'},
