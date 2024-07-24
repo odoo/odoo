@@ -868,6 +868,8 @@ class StockMove(models.Model):
         ]
         if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
             fields.append('date')
+        if self.env.context.get('merge_extra'):
+            fields.pop(fields.index('procure_method'))
         if not self.env['ir.config_parameter'].sudo().get_param('stock.merge_ignore_date_deadline'):
             fields.append('date_deadline')
         return fields
@@ -1712,7 +1714,7 @@ class StockMove(models.Model):
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
             extra_move = self.copy(default=extra_move_vals).with_context(avoid_putaway_rules=True)
 
-            merge_into_self = all(self[field] == extra_move[field] for field in self._prepare_merge_moves_distinct_fields())
+            merge_into_self = all(self[field] == extra_move[field] for field in self.with_context(merge_extra=True)._prepare_merge_moves_distinct_fields())
 
             if merge_into_self:
                 extra_move = extra_move._action_confirm(merge_into=self)

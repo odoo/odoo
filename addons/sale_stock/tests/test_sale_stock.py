@@ -1640,3 +1640,32 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(out1.move_line_ids.product_qty, 3)
         self.assertEqual(out2.state, 'assigned')
         self.assertEqual(out2.move_line_ids.product_qty, 1)
+
+    def test_3_steps_qty_exceeding_demand(self):
+        """
+        Validating a picking for a quantity exceeding the demand generate extra moves to trigger push rules
+
+        Check that these moves are correctly merged with the original move.
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_pack_ship'
+        so = self._get_new_sale_order(amount=2.0, product=self.product_a)
+        so.action_confirm()
+        pick = so.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pick_type_id)
+        self.assertTrue(pick)
+        pick_move = pick.move_lines
+        self.assertRecordValues(pick_move, [{'state': 'assigned', 'product_qty': 2.0, 'quantity_done': 0.0}])
+        pick_move.quantity_done = 5.0
+        pick.button_validate()
+        self.assertEqual(pick_move, pick.move_lines)
+        self.assertRecordValues(pick_move, [{'state': 'done', 'product_qty': 2.0, 'quantity_done': 5.0}])
+
+        # doing it with the pack since the 'procure_method' of the move is different from above
+        pack = so.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pack_type_id)
+        self.assertTrue(pack)
+        pack_move = pack.move_lines
+        self.assertRecordValues(pack_move, [{'state': 'assigned', 'product_qty': 2.0, 'quantity_done': 0.0}])
+        pack_move.quantity_done = 4.0
+        pack.button_validate()
+        self.assertEqual(pack_move, pack.move_lines)
+        self.assertRecordValues(pack_move, [{'state': 'done', 'product_qty': 2.0, 'quantity_done': 4.0}])
