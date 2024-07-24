@@ -45,7 +45,6 @@ registry.category("web_tour.tours").add("product_attribute_multi_type", {
     }, {
         content: "Click on Confirm",
         trigger: ".modal button:contains(Confirm)",
-        in_modal: false,
         run: "click",
     }, ...stepUtils.saveForm()
 ]});

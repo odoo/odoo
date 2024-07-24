@@ -51,7 +51,6 @@ registry.category("web_tour.tours").add('event_tour', {
 }, {
     content: _t("Apply change."),
     trigger: '.o_datetime_picker .o_datetime_buttons .o_apply',
-    in_modal: false,
     run: "click",
 }, {
     trigger: '.o_event_form_view div[name="event_ticket_ids"] .o_field_x2many_list_row_add a',

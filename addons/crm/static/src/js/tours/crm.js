@@ -40,7 +40,6 @@ registry.category("web_tour.tours").add('crm_tour', {
 }, {
     isActive: ["auto"],
     trigger: ".ui-menu-item > a",
-    in_modal: false,
     run: "click",
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",

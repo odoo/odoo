@@ -26,35 +26,28 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 }, {
     content: "Check that we have to enter enhanced security mode",
     trigger: ".modal div:contains(enter your password)",
-    in_modal: false,
 }, {
     content: "Input password",
     trigger: '.modal [name=password] input',
-    in_modal: false,
     run: "edit demo",
 }, {
     content: "Confirm",
     trigger: ".modal button:contains(Confirm Password)",
-    in_modal: false,
     run: "click",
 }, {
     content: "Check that we're now on the key description dialog",
     trigger: '.modal p:contains("Enter a description of and purpose for the key.")',
-    in_modal: false,
 }, {
     content: "Enter description",
     trigger: '.modal [name=name] input',
-    in_modal: false,
     run: "edit my key",
 }, {
     content: "Confirm key creation",
     trigger: '.modal button:contains("Generate key")',
-    in_modal: false,
     run: "click",
 }, {
     content: "Check that we're on the last step & grab key",
     trigger: '.modal p:contains("Here is your new API key")',
-    in_modal: false,
     run: async () => {
         const key = queryText("code [name=key] span");
         await rpc('/web/dataset/call_kw', {
@@ -95,12 +88,10 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
 }, {
     content: "Input password for security mode again",
     trigger: ".modal [name=password] input",
-    in_modal: false,
     run: "edit demo",
 }, {
     content: "And confirm",
     trigger: ".modal button:contains(Confirm Password)",
-    in_modal: false,
     run: "click",
 },
 {

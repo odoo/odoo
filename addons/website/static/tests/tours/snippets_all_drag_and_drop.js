@@ -93,7 +93,6 @@ for (let snippet of snippetsNames) {
             run: "click",
         });
     } else if (isModal) {
-        snippetSteps[3]['in_modal'] = false;
         snippetSteps.splice(4, 3, {
             content: `Hide the ${snippet.name} popup`,
             trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,

@@ -3,9 +3,8 @@ export function increaseQuantityOfTicket(ticket) {
     return [
         {
             content: `increase quantity`,
-            trigger: `.o_event_configurator_popup div:contains('${ticket}') .fa.fa-plus`,
+            trigger: `.modal .o_event_configurator_popup div:contains('${ticket}') .fa.fa-plus`,
             run: "click",
-            in_modal: true,
         },
     ];
 }
@@ -14,9 +13,8 @@ export function decreaseQuantityOfTicket(ticket) {
     return [
         {
             content: `decrease quantity`,
-            trigger: `.o_event_configurator_popup div:contains('${ticket}') .fa.fa-minus`,
+            trigger: `.modal .o_event_configurator_popup div:contains('${ticket}') .fa.fa-minus`,
             run: "click",
-            in_modal: true,
         },
     ];
 }
@@ -45,8 +43,7 @@ export function pickTicket(name) {
     return [
         {
             content: `pick ticket with name: ${name}`,
-            trigger: `.o-event-ticket:contains('${name}')`,
-            in_modal: true,
+            trigger: `.modal .o-event-ticket:contains('${name}')`,
             run: "click",
         },
     ];

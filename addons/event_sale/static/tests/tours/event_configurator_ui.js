@@ -38,7 +38,6 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
         {
             trigger: "ul.ui-autocomplete a:contains(Design)",
             run: "click",
-            in_modal: false,
         },
         {
             trigger: 'div[name="event_ticket_id"] input',
@@ -47,11 +46,9 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
         {
             trigger: "ul.ui-autocomplete a:contains(VIP)",
             run: "click",
-            in_modal: false,
         },
         {
             trigger: ".modal .o_event_sale_js_event_configurator_ok",
-            in_modal: false,
             run: "click",
         },
         {
@@ -95,11 +92,9 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
         {
             trigger: "ul.ui-autocomplete a:contains(Standard)",
             run: "click",
-            in_modal: false,
         },
         {
             trigger: ".modal .o_event_sale_js_event_configurator_ok",
-            in_modal: false,
             run: "click",
         },
         {

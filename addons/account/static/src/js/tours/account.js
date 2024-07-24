@@ -120,7 +120,6 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     {
         trigger: ".modal button[name=document_layout_save]",
-        in_modal: false,
         content: _t("Configure document layout."),
         run: "click",
     },
@@ -147,7 +146,6 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     {
         trigger: "button[name=action_invoice_sent]:contains(send & print)",
-        in_modal: false,
         content: _t("Send the invoice and check what the customer will receive."),
         run: "click",
     }, 
@@ -157,7 +155,6 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     {
         trigger: ".modal button[name=action_send_and_print]",
-        in_modal: false,
         content: _t("Let's send the invoice."),
         position: "top",
         run: "click",

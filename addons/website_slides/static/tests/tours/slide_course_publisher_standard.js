@@ -44,7 +44,6 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }, {
     content: 'eLearning: seems cool, create it',
     trigger: '.modal button:contains("Save")',
-    in_modal: false,
     run: "click",
 },
 {

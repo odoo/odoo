@@ -124,17 +124,14 @@ registry.category("web_tour.tours").add('course_member', {
     run: "click",
 },
 {
-    in_modal: false,
     trigger: ".modal .modal-body i.fa.fa-star:eq(2)",
     run: 'click',
 },
 {
-    in_modal: false,
     trigger: ".modal .modal-body textarea",
     run: "edit This is a great course. Top !",
 },
 {
-    in_modal: false,
     trigger: ".modal button:contains(review)",
     run: "click",
 },

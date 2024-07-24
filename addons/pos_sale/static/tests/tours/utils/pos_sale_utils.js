@@ -10,7 +10,6 @@ function selectNthOrder(n) {
         {
             content: `select nth order`,
             trigger: `.modal:not(.o_inactive_modal) table.o_list_table tbody tr.o_data_row:nth-child(${n}) td`,
-            in_modal: false,
             run: "click",
         },
     ];
@@ -22,7 +21,6 @@ export function settleNthOrder(n) {
         {
             content: `Choose to settle the order`,
             trigger: `.modal:not(.o_inactive_modal) .selection-item:contains('Settle the order')`,
-            in_modal: false,
             run: "click",
         },
         {

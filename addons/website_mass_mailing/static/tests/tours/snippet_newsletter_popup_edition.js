@@ -16,7 +16,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
     {
         content: "Check the modal is opened for edition",
         trigger: ':iframe .o_newsletter_popup .modal:visible',
-        in_modal: false,
     },
     ...wTourUtils.clickOnSave(),
     {

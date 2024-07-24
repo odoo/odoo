@@ -23,7 +23,6 @@ const clickEditLink = [{
 }, {
     content: "Ensure popover is closed",
     trigger: ':iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
-    in_modal: false,
 }];
 
 wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {

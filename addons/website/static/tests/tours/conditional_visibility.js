@@ -116,7 +116,6 @@ wTourUtils.goBackToBlocks(),
 ...wTourUtils.dragNDrop(snippets[2]),
 {
     content: "Toggle the visibility of the popup",
-    in_modal: false,
     trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup')",
     run: "click",
 },

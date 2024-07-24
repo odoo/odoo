@@ -49,7 +49,6 @@ registry.category("web_tour.tours").add("sale_tour", {
         {
             isActive: ["auto"],
             trigger: ".ui-menu-item > a:contains('Agrolait')",
-            in_modal: false,
             run: "click",
         },
         {

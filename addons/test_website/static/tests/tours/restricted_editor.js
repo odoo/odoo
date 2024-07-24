@@ -9,22 +9,18 @@ const checkNoTranslate = {
 const translate = [{
     content: "Open Edit menu",
     trigger: ".o_menu_systray .o_edit_website_container button:contains(edit)",
-    in_modal: false,
     run: "click",
 }, {
     content: "Click on translate button",
     trigger: ".o_popover .o_translate_website_dropdown_item:contains(translate)",
-    in_modal: false,
     run: "click",
 }];
 const closeErrorDialog = [{
     content: "Check has error dialog",
     trigger: ".modal:contains(error) .o_error_dialog.modal-content",
-    in_modal: false,
 }, {
     content: "Close error dialog",
     trigger: ".modal .modal-footer button.btn.btn-primary",
-    in_modal: false,
     run: "click",
 }, {
     trigger: "body:not(:has(.modal))",
@@ -122,7 +118,6 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     {
         content: "Close the dialog",
         trigger: ".modal .modal-footer .btn-primary",
-        in_modal: false,
         run: "click",
     },
     {

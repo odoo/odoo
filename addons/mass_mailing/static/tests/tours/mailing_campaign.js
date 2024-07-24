@@ -50,7 +50,6 @@ registry.category('web_tour.tours').add('mailing_campaign', {
         {
             content: 'Save form',
             trigger: ".modal .o_form_button_save:contains(Save & Close)",
-            in_modal: false,
             run: "click",
         },
         {
