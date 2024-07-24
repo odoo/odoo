@@ -64,3 +64,14 @@ export function login(name, pin) {
         Dialog.confirm(),
     ]);
 }
+
+export function refreshPage() {
+    return [
+        {
+            trigger: ".pos",
+            run: () => {
+                window.location.reload();
+            },
+        },
+    ];
+}
