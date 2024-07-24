@@ -238,6 +238,12 @@ class PurchaseOrder(models.Model):
             return self.dest_address_id.property_stock_customer.id
         return self.picking_type_id.default_location_dest_id.id
 
+    def _get_final_location_record(self):
+        self.ensure_one()
+        if self.dest_address_id and self.picking_type_id.code == 'dropship':
+            return self.dest_address_id.property_stock_customer
+        return self.picking_type_id.warehouse_id.lot_stock_id
+
     @api.model
     def _get_picking_type(self, company_id):
         picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
