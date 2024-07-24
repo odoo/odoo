@@ -107,3 +107,11 @@ export function shippingDateExists() {
         },
     ];
 }
+export function checkTaxDetails(tax, amount, base, total) {
+    return [
+        {
+            trigger: `.pos-receipt-taxes span:contains('${tax}') ~ span:contains('${amount}') ~ span:contains('${base}') ~ span:contains('${total}')`,
+            run: () => {},
+        },
+    ];
+}

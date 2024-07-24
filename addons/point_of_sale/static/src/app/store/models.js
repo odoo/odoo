@@ -2223,10 +2223,12 @@ export class Order extends PosModel {
                     taxDetails[taxId] = Object.assign({}, taxValues, {
                         amount: 0.0,
                         base: 0.0,
+                        display_base: 0.0,
                         tax_percentage: taxValues.amount,
                     });
                 }
-                taxDetails[taxId].base += taxValues.display_base;
+                taxDetails[taxId].base += taxValues.base;
+                taxDetails[taxId].display_base += taxValues.display_base;
                 taxDetails[taxId].amount += taxValues.tax_amount_factorized;
             }
         }
