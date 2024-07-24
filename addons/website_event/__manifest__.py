@@ -69,6 +69,7 @@
             '/website_event/static/src/snippets/s_events/options.js',
             '/website_event/static/src/snippets/s_events/options.xml',
             'website_event/static/src/snippets/options.js',
+            'website_event/static/src/snippets/options.xml',
         ],
         'website.assets_editor': [
             'website_event/static/src/js/systray_items/*.js',

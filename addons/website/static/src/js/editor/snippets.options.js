@@ -3139,24 +3139,16 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
  * Allows edition of 'cover_properties' in website models which have such
  * fields (blogs, posts, events, ...).
  */
-options.registry.CoverProperties = options.Class.extend({
+export class CoverProperties extends SnippetOption {
     /**
      * @constructor
      */
-    init: function () {
-        this._super.apply(this, arguments);
+    constructor() {
+        super(...arguments);
 
         this.$image = this.$target.find('.o_record_cover_image');
         this.$filter = this.$target.find('.o_record_cover_filter');
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        this.$filterValueOpts = this.$el.find('[data-filter-value]');
-
-        return this._super.apply(this, arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -3167,7 +3159,7 @@ options.registry.CoverProperties = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    background: async function (previewMode, widgetValue, params) {
+    async background(previewMode, widgetValue, params) {
         if (previewMode === false) {
             this.$image[0].classList.remove("o_b64_image_to_save");
         }
@@ -3195,46 +3187,45 @@ options.registry.CoverProperties = options.Class.extend({
             }
             this.$image.css('background-image', `url('${widgetValue}')`);
             this.$target.addClass('o_record_has_cover');
-            const $defaultSizeBtn = this.$el.find('.o_record_cover_opt_size_default');
-            $defaultSizeBtn.click();
-            $defaultSizeBtn.closest('we-select').click();
+            // TODO: @owl-options Obviously wrong because it impacts previewMode - but kept as it was
+            this.findWidget("record_cover_default_size_opt").enable();
         }
 
         if (!previewMode) {
             this._updateSavingDataset();
         }
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
-    filterValue: function (previewMode, widgetValue, params) {
+    filterValue(previewMode, widgetValue, params) {
         this.$filter.css('opacity', widgetValue || 0);
         this.$filter.toggleClass('oe_black', parseFloat(widgetValue) !== 0);
 
         if (!previewMode) {
             this._updateSavingDataset();
         }
-    },
+    }
     /**
      * @override
      */
-    selectStyle: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
+    async selectStyle(previewMode, widgetValue, params) {
+        await super.selectStyle(...arguments);
 
         if (!previewMode) {
             this._updateSavingDataset(widgetValue);
         }
-    },
+    }
     /**
      * @override
      */
-    selectClass: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
+    async selectClass(previewMode, widgetValue, params) {
+        await super.selectClass(...arguments);
 
         if (!previewMode) {
             this._updateSavingDataset();
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -3243,7 +3234,7 @@ options.registry.CoverProperties = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'filterValue': {
                 return parseFloat(this.$filter.css('opacity')).toFixed(1);
@@ -3256,24 +3247,24 @@ options.registry.CoverProperties = options.Class.extend({
                 return '';
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
-    _computeWidgetVisibility: function (widgetName, params) {
+    _computeWidgetVisibility(widgetName, params) {
         if (params.coverOptName) {
             return this.$target.data(`use_${params.coverOptName}`) === 'True';
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @private
      */
     _updateColorDataset(bgColorStyle = '', bgColorClass = '') {
         this.$target[0].dataset.bgColorStyle = bgColorStyle;
         this.$target[0].dataset.bgColorClass = bgColorClass;
-    },
+    }
     /**
      * Updates the cover properties dataset used for saving.
      *
@@ -3305,8 +3296,8 @@ options.registry.CoverProperties = options.Class.extend({
         this.$target[0].dataset.filterValue = filterValue || 0.0;
         // TODO there is probably a better way and this should be refactored to
         // use more standard colorpicker+imagepicker structure
-        const ccValue = colorPickerWidget._ccValue;
-        const colorOrGradient = colorPickerWidget._value;
+        const ccValue = colorPickerWidget._state.ccValue;
+        const colorOrGradient = colorPickerWidget._state.value;
         const isGradient = weUtils.isColorGradient(colorOrGradient);
         const valueIsCSSColor = !isGradient && isCSSColor(colorOrGradient);
         const colorNames = [];
@@ -3320,8 +3311,18 @@ options.registry.CoverProperties = options.Class.extend({
         const bgColorStyle = valueIsCSSColor ? `background-color: ${colorOrGradient};` :
             isGradient ? `background-color: rgba(0, 0, 0, 0); background-image: ${colorOrGradient};` : '';
         this._updateColorDataset(bgColorStyle, bgColorClass);
-    },
+    }
+}
+
+registerWebsiteOption("CoverProperties", {
+    Class: CoverProperties,
+    template: "website.cover_properties_option",
+    selector: ".o_record_cover_container",
+    noCheck: true,
+    withColorCombinations: true,
+    withGradients: true,
 });
+
 
 class ScrollButton extends SnippetOption {
     constructor() {

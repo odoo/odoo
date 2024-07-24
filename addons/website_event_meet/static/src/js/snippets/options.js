@@ -1,15 +1,21 @@
 /** @odoo-module **/
 
-import options from '@web_editor/js/editor/snippets.options.legacy';
+import { _t } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
+import {
+    registerWebsiteOption,
+} from "@website/js/editor/snippets.registry";
+import { WebsiteEvent } from "@website_event/snippets/options";
 
-options.registry.WebsiteEvent.include({
+
+patch(WebsiteEvent.prototype, {
 
     /**
      * @override
      */
-    async start() {
-        const res = await this._super(...arguments);
-        const rpcData = await this.orm.read("event.event", [this.eventId], ["meeting_room_allow_creation"]);
+    async willStart() {
+        const res = await super.willStart(...arguments);
+        const rpcData = await this.env.services.orm.read("event.event", [this.eventId], ["meeting_room_allow_creation"]);
         this.meetingRoomAllowCreation = rpcData[0]['meeting_room_allow_creation'];
         return res;
     },
@@ -22,7 +28,7 @@ options.registry.WebsiteEvent.include({
      * @see this.selectClass for parameters
      */
     allowRoomCreation(previewMode, widgetValue, params) {
-        return this.orm.write("event.event", [this.eventId], {
+        return this.env.services.orm.write("event.event", [this.eventId], {
             meeting_room_allow_creation: widgetValue,
         });
     },
@@ -40,6 +46,18 @@ options.registry.WebsiteEvent.include({
                 return this.meetingRoomAllowCreation;
             }
         }
-        return this._super(...arguments);
+        return super._computeWidgetState(...arguments);
+    },
+});
+
+registerWebsiteOption("EventMeetPageOption", {
+    Class: WebsiteEvent,
+    selector: "main:has(.o_wemeet_container)",
+    template: "website_event_meet.event_meet_page_option",
+    noCheck: true,
+    data: {
+        string: _t("Event Page"),
+        pageOptions: true,
+        groups: ["website.group_website_designer"],
     },
 });

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website_blog.cover_properties_option" t-inherit="website.cover_properties_option" t-inherit-mode="extension">
+    <xpath expr="//WeSelect[@name=&quot;'size_opt'&quot;]" position="replace">
+	    <WeSelect t-if="renderContext.isBlogCover and renderContext.isRegularCover" name="'size_opt'" coverOptName="'size'" title.translate="Size">
+	        <WeButton selectClass="'o_full_screen_height'">Large</WeButton>
+	        <WeButton name="'record_cover_default_size_opt'" selectClass="'o_half_screen_height'">Medium</WeButton>
+	        <WeButton selectClass="'cover_auto'">Tiny</WeButton>
+	    </WeSelect>
+	    <t t-else="">$0</t>
+    </xpath>
+</t>
+<t t-name="website_blog.blog_post_tag_selection_option">
+    <WeMany2many title.translate="Tags"
+        noPreview="'true'"
+        model="'blog.post'"
+        m2oField="'tag_ids'"
+        setTags="''"
+        createMethod="'createTag'"/>
+</t>
+<t t-name="website_blog.blog_list_page_option">
+    <WeCheckbox name="'blog_cover_opt'" title.translate="Top Banner"
+                customizeWebsiteViews="'website_blog.opt_blog_cover_post'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Full-Width"
+                customizeWebsiteViews="'website_blog.opt_blog_cover_post_fullwidth_design'"
+                dependencies="'blog_cover_opt'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeSelect noPreview="'true'" reload="'/'" title.translate="Layout">
+        <WeButton customizeWebsiteViews="''">Grid</WeButton>
+        <WeButton customizeWebsiteViews="'website_blog.opt_blog_list_view'">List</WeButton>
+    </WeSelect>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Cards"
+                customizeWebsiteViews="'website_blog.opt_blog_cards_design'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Increase Readability"
+                customizeWebsiteViews="'website_blog.opt_blog_readable'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox name="'blog_posts_sidebar_opt'" title.translate="Sidebar"
+                customizeWebsiteViews="'website_blog.opt_blog_sidebar_show'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Archives"
+                dependencies="'blog_posts_sidebar_opt'"
+                customizeWebsiteViews="'website_blog.opt_sidebar_blog_index_archives'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Follow Us"
+                dependencies="'blog_posts_sidebar_opt'"
+                customizeWebsiteViews="'website_blog.opt_sidebar_blog_index_follow_us'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Tags List"
+                dependencies="'blog_posts_sidebar_opt'"
+                customizeWebsiteViews="'website_blog.opt_sidebar_blog_index_tags'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeSelect noPreview="'true'" reload="'/'" title.translate="Posts List">
+        <WeButton customizeWebsiteViews="''">No Cover</WeButton>
+        <WeButton customizeWebsiteViews="'website_blog.opt_posts_loop_show_cover'">Cover</WeButton>
+    </WeSelect>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Author"
+                customizeWebsiteViews="'website_blog.opt_posts_loop_show_author'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Comments/Views Stats"
+                customizeWebsiteViews="'website_blog.opt_posts_loop_show_stats'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Teaser &amp; Tags"
+                customizeWebsiteViews="'website_blog.opt_posts_loop_show_teaser'"
+                noPreview="'true'"
+                reload="'/'"/>
+</t>
+<t t-name="website_blog.blog_post_page_option">
+    <WeSelect noPreview="'true'" reload="'/'" title.translate="Layout">
+        <WeButton customizeWebsiteViews="'website_blog.opt_blog_post_regular_cover'">Title Above Cover</WeButton>
+        <WeButton customizeWebsiteViews="''">Title Inside Cover</WeButton>
+    </WeSelect>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Increase Readability"
+                customizeWebsiteViews="'website_blog.opt_blog_post_readable'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox name="'blog_post_sidebar_opt'" title.translate="Sidebar"
+                customizeWebsiteViews="'website_blog.opt_blog_post_sidebar'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Archive"
+                dependencies="'blog_post_sidebar_opt'"
+                customizeWebsiteViews="'website_blog.opt_blog_post_archive_display'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Author"
+                dependencies="'blog_post_sidebar_opt'"
+                customizeWebsiteViews="'website_blog.opt_blog_post_author_avatar_display'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Blogs List"
+                dependencies="'blog_post_sidebar_opt'"
+                customizeWebsiteViews="'website_blog.opt_blog_post_blogs_display'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Share Links"
+                dependencies="'blog_post_sidebar_opt'"
+                customizeWebsiteViews="'website_blog.opt_blog_post_share_links_display'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Tags"
+                dependencies="'blog_post_sidebar_opt'"
+                customizeWebsiteViews="'website_blog.opt_blog_post_tags_display'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox title.translate="Breadcrumb"
+                customizeWebsiteViews="'website_blog.opt_blog_post_breadcrumb'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeRow class="'o_we_full_row'" title.translate="Bottom">
+        <WeButton customizeWebsiteViews="'website_blog.opt_blog_post_read_next'"
+                  noPreview="'true'"
+                  reload="'/'">Next Article</WeButton>
+        <WeButton name="'allow_comments_opt'"
+                  customizeWebsiteViews="'website_blog.opt_blog_post_comment'"
+                  noPreview="'true'"
+                  reload="'/'">Comments</WeButton>
+    </WeRow>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Select to Comment"
+                dependencies="'allow_comments_opt'"
+                customizeWebsiteViews="'website_blog.opt_blog_post_select_to_comment'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox title.translate="Select to Tweet"
+                customizeWebsiteViews="'website_blog.opt_blog_post_select_to_tweet'"
+                noPreview="'true'"
+                reload="'/'"/>
+</t>
+</templates>

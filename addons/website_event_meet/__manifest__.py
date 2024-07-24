@@ -21,7 +21,6 @@
         'views/event_meeting_room_views.xml',
         'views/event_event_views.xml',
         'views/event_type_views.xml',
-        'views/snippets.xml',
     ],
     'installable': True,
     'assets': {
@@ -33,6 +32,7 @@
         ],
         'website.assets_wysiwyg': [
             'website_event_meet/static/src/js/snippets/options.js',
+            'website_event_meet/static/src/js/snippets/options.xml',
         ],
     },
     'license': 'LGPL-3',

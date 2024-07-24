@@ -64,19 +64,7 @@ patch(WysiwygAdapterComponent.prototype, {
      * @private
      * @param {OdooEvent} ev
      */
-    _onSetBlogPostUpdatedTags: function (ev) {
-        this.blogTagsPerBlogPost[ev.data.blogPostID] = ev.data.tags;
-    },
-
-    /**
-     * @override
-     */
-    _trigger_up(ev) {
-        if (ev.name === 'set_blog_post_updated_tags') {
-            this._onSetBlogPostUpdatedTags(ev);
-            return;
-        } else {
-            return super._trigger_up(...arguments);
-        }
+    _onSetBlogPostUpdatedTags: function (blogPostID, tags) {
+        this.blogTagsPerBlogPost[blogPostID] = tags;
     },
 });

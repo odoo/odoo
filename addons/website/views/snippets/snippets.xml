@@ -890,36 +890,6 @@
         data-target=".modal">
     </div>
 
-    <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
-        <we-row string="Background" class="o_we_full_row">
-            <t t-call="web_editor.snippet_options_background_color_widget">
-                <t t-set="with_color_combinations" t-value="True"/>
-                <t t-set="with_gradients" t-value="True"/>
-            </t>
-            <we-button-group class="ms-auto">
-                <we-imagepicker title="Image" data-background="" data-button-style="true"/>
-                <we-button class="fa fa-fw fa-ban" title="None" data-background="">
-                </we-button>
-            </we-button-group>
-        </we-row>
-        <we-select string="Size" data-name="size_opt" data-cover-opt-name="size">
-            <we-button data-select-class="o_full_screen_height">Full Screen</we-button>
-            <we-button class="o_record_cover_opt_size_default" data-select-class="o_half_screen_height">Half Screen</we-button>
-            <we-button data-select-class="cover_auto">Fit text</we-button>
-        </we-select>
-        <we-select string="Filter Intensity" data-name="filters_opt" data-cover-opt-name="filters">
-            <we-button data-filter-value="0.0">None</we-button>
-            <we-button data-filter-value="0.2">Low</we-button>
-            <we-button data-filter-value="0.4">Medium</we-button>
-            <we-button data-filter-value="0.6">High</we-button>
-        </we-select>
-        <we-select string="Text Alignment" data-name="text_align_opt" data-cover-opt-name="text_align">
-            <we-button data-select-class="">Left</we-button>
-            <we-button data-select-class="text-center">Centered</we-button>
-            <we-button data-select-class="text-end">Right</we-button>
-        </we-select>
-    </div>
-
     <!-- Cookies Bar -->
     <div data-selector="#website_cookies_bar" data-js="CookiesBar" data-target=".modal">
         <we-select string="Layout" class="o_we_inline">

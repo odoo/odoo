@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website_event.events_page_option">
+    <WeSelect noPreview="'true'" reload="'/'" title.translate="Layout">
+        <WeButton customizeWebsiteViews="'website_event.opt_events_list_columns'">Grid</WeButton>
+        <WeButton customizeWebsiteViews="''">List</WeButton>
+    </WeSelect>
+    <WeCheckbox title.translate="Card design"
+                customizeWebsiteViews="'website_event.opt_events_list_cards'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox title.translate="Template badge"
+                customizeWebsiteViews="'website_event.opt_events_list_categories'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeRow class="'o_we_full_row'" title.translate="Top Bar Filter">
+        <WeButton customizeWebsiteViews="'website_event.event_time'"
+                  noPreview="'true'"
+                  reload="'/'">Date</WeButton>
+        <WeButton customizeWebsiteViews="'website_event.event_location'"
+                  noPreview="'true'"
+                  reload="'/'">Countries</WeButton>
+    </WeRow>
+    <WeCheckbox title.translate="Sidebar"
+                name="'events_sidebar_opt'"
+                customizeWebsiteViews="'website_event.opt_index_sidebar'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="About Us"
+                dependencies="'events_sidebar_opt'"
+                customizeWebsiteViews="'website_event.index_sidebar_about_us'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Follow Us"
+                dependencies="'events_sidebar_opt'"
+                customizeWebsiteViews="'website_event.index_sidebar_follow_us'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Photos"
+                dependencies="'events_sidebar_opt'"
+                customizeWebsiteViews="'website_event.index_sidebar_photos'"
+                noPreview="'true'"
+                reload="'/'"/>
+    <WeCheckbox class="'o_we_sublevel_1'" title.translate="Quotes"
+                dependencies="'events_sidebar_opt'"
+                customizeWebsiteViews="'website_event.index_sidebar_quotes'"
+                noPreview="'true'"
+                reload="'/'"/>
+</t>
+<t t-name="website_event.event_page_option">
+    <WeCheckbox title.translate="Sub-menu (Specific)"
+                displaySubmenu="'true'"
+                noPreview="'true'"
+                reload="'/'"/>
+</t>
+<t t-name="website_event.cover_position_option">
+    <WeSelect noPreview="'true'" reload="'/'" title.translate="Cover Position">
+        <WeButton customizeWebsiteViews="''">Inside content</WeButton>
+        <WeButton customizeWebsiteViews="'website_event.opt_event_description_cover_top'">Top</WeButton>
+        <WeButton customizeWebsiteViews="'website_event.opt_event_description_cover_hidden'">Hidden (visitor only)</WeButton>
+    </WeSelect>
+</t>
+</templates>

@@ -820,6 +820,33 @@
         <WeButton changeGridImageMode="'contain'">Contain</WeButton>
     </WeSelect>
 </t>
+<t t-name="website.cover_properties_option">
+    <WeRow class="'o_we_full_row'" title.translate="Background">
+        <t t-call="web_editor.snippet_options_background_color_widget">
+            <t t-set="option" t-value="{withColorCombinations: true, withGradients: true}"/>
+        </t>
+        <WeButtonGroup class="'ms-auto'">
+            <WeMediapicker mediaType="'images'" tooltip.translate="Image" background="''" buttonStyle="'true'"/>
+            <WeButton class="'fa fa-fw fa-ban'" tooltip.translate="None" background="''"/>
+        </WeButtonGroup>
+    </WeRow>
+    <WeSelect name="'size_opt'" coverOptName="'size'" title.translate="Size">
+        <WeButton selectClass="'o_full_screen_height'">Full Screen</WeButton>
+        <WeButton name="'record_cover_default_size_opt'" selectClass="'o_half_screen_height'">Half Screen</WeButton>
+        <WeButton selectClass="'cover_auto'">Fit text</WeButton>
+    </WeSelect>
+    <WeSelect name="'filters_opt'" coverOptName="'filters'" title.translate="Filter Intensity">
+        <WeButton filterValue="'0.0'">None</WeButton>
+        <WeButton filterValue="'0.2'">Low</WeButton>
+        <WeButton filterValue="'0.4'">Medium</WeButton>
+        <WeButton filterValue="'0.6'">High</WeButton>
+    </WeSelect>
+    <WeSelect name="'text_align_opt'" coverOptName="'text_align'" title.translate="Text Alignment">
+        <WeButton selectClass="''">Left</WeButton>
+        <WeButton selectClass="'text-center'">Centered</WeButton>
+        <WeButton selectClass="'text-end'">Right</WeButton>
+    </WeSelect>
+</t>
 <t t-name="website.header_option">
     <WeRow title.translate="Template">
         <WeSelect variable="'header-template'"

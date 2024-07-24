@@ -3,8 +3,15 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import options from "@web_editor/js/editor/snippets.options.legacy";
-import "@website/js/editor/snippets.options";
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
+import {
+    CoverProperties,
+} from "@website/js/editor/snippets.options";
+import {
+    registerWebsiteOption,
+} from "@website/js/editor/snippets.registry";
 import { uniqueId } from "@web/core/utils/functions";
+import { patch } from "@web/core/utils/patch";
 
 const NEW_TAG_PREFIX = 'new-blog-tag-';
 
@@ -35,45 +42,26 @@ options.registry.many2one.include({
     }
 });
 
-options.registry.CoverProperties.include({
+patch(CoverProperties.prototype, {
     /**
      * @override
      */
-    updateUI: async function () {
-        const isBlogCover = this.$target[0].classList.contains('o_wblog_post_page_cover');
-        if (!isBlogCover) {
-            return this._super(...arguments);
-        }
-        var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
-        var $coverFull = this.$el.find('[data-select-class*="o_full_screen_height"]');
-        var $coverMid = this.$el.find('[data-select-class*="o_half_screen_height"]');
-        var $coverAuto = this.$el.find('[data-select-class*="cover_auto"]');
-        this._coverFullOriginalLabel = this._coverFullOriginalLabel || $coverFull.text();
-        this._coverMidOriginalLabel = this._coverMidOriginalLabel || $coverMid.text();
-        this._coverAutoOriginalLabel = this._coverAutoOriginalLabel || $coverAuto.text();
-        $coverFull.children('div').text(isRegularCover ? _t("Large") : this._coverFullOriginalLabel);
-        $coverMid.children('div').text(isRegularCover ? _t("Medium") : this._coverMidOriginalLabel);
-        $coverAuto.children('div').text(isRegularCover ? _t("Tiny") : this._coverAutoOriginalLabel);
-        return this._super(...arguments);
-    },
+    async _getRenderContext() {
+        const context = await super._getRenderContext();
+        context.isBlogCover = this.$target[0].classList.contains('o_wblog_post_page_cover');
+        context.isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
+        return context;
+    }
 });
 
-options.registry.BlogPostTagSelection = options.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.notification = this.bindService("notification");
-    },
-
+export class BlogPostTagSelection extends SnippetOption {
     /**
      * @override
      */
     async willStart() {
-        const _super = this._super.bind(this);
-
         this.blogPostID = parseInt(this.$target[0].dataset.blogId);
         this.isEditingTags = false;
-        const tags = await this.orm.searchRead(
+        const tags = await this.env.services.orm.searchRead(
             "blog.tag",
             [],
             ["id", "name", "display_name", "post_ids"]
@@ -87,14 +75,14 @@ options.registry.BlogPostTagSelection = options.Class.extend({
             }
         }
 
-        return _super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
      * @override
      */
     cleanForSave() {
         this._notifyUpdatedTags();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -109,7 +97,7 @@ options.registry.BlogPostTagSelection = options.Class.extend({
             return;
         }
         this.tagIDs = JSON.parse(widgetValue).map(tag => tag.id);
-    },
+    }
     /**
      * @see this.selectClass for params
      */
@@ -124,7 +112,7 @@ options.registry.BlogPostTagSelection = options.Class.extend({
                 && (typeof(tag.id) === 'number' || this.tagIDs.includes(tag.id));
         });
         if (existing) {
-            return this.notification.add(_t("This tag already exists"), {
+            return this.env.services.notification.add(_t("This tag already exists"), {
                 type: 'warning',
             });
         }
@@ -140,23 +128,7 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         // after createTag. This would reset the tagIds to the value before
         // adding the newly created tag. It therefore needs to be prevented.
         this._preventNextSetTagsCall = true;
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async updateUI() {
-        if (this.rerender) {
-            this.rerender = false;
-            await this._rerenderXML();
-            return;
-        }
-        return this._super(...arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -169,22 +141,46 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         if (methodName === 'setTags') {
             return JSON.stringify(this.tagIDs.map(id => this.allTagsByID[id]));
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @private
      */
     _notifyUpdatedTags() {
-        this.trigger_up('set_blog_post_updated_tags', {
-            blogPostID: this.blogPostID,
-            tags: this.tagIDs.map(tagID => this.allTagsByID[tagID]),
-        });
+        this.options.wysiwyg._onSetBlogPostUpdatedTags(
+            this.blogPostID,
+            this.tagIDs.map(tagID => this.allTagsByID[tagID]),
+        );
+    }
+}
+
+registerWebsiteOption("BlogPostTagSelection", {
+    Class: BlogPostTagSelection,
+    template: "website_blog.blog_post_tag_selection_option",
+    selector: ".o_wblog_post_page_cover",
+    target: "#o_wblog_post_name",
+    noCheck: true,
+});
+
+registerWebsiteOption("BlogPostListPageOption", {
+    selector: "main:has(#o_wblog_index_content)",
+    template: "website_blog.blog_list_page_option",
+    noCheck: true,
+    data: {
+        string: _t("Blogs Page"),
+        pageOptions: true,
+        groups: ["website.group_website_designer"],
     },
-    /**
-     * @override
-     */
-    async _renderCustomXML(uiFragment) {
-        uiFragment.querySelector('we-many2many').dataset.recordId = this.blogPostID;
+});
+
+registerWebsiteOption("BlogPostPageOption", {
+    selector: "main:has(#o_wblog_post_main)",
+    template: "website_blog.blog_post_page_option",
+    noCheck: true,
+    data: {
+        string: _t("Blog Page"),
+        pageOptions: true,
+        groups: ["website.group_website_designer"],
     },
 });
 
