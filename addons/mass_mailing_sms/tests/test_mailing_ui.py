@@ -36,4 +36,4 @@ class TestMailingUi(HttpCase):
 
         # Ensure that both activities appear in the systray and that clicking on
         # one activity opens a view where the other activity isn't listed
-        self.start_tour("/web", 'mailing_activities_split', login="admin")
+        self.start_tour("/odoo", 'mailing_activities_split', login="admin")

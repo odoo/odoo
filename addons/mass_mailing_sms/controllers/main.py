@@ -30,7 +30,7 @@ class MailingSMSController(http.Controller):
     def blacklist_page(self, mailing_id, trace_code, **post):
         check_res = self._check_trace(mailing_id, trace_code)
         if not check_res.get('trace'):
-            return request.redirect('/web')
+            return request.redirect('/odoo')
         return request.render('mass_mailing_sms.blacklist_main', {
             'mailing_id': mailing_id,
             'trace_code': trace_code,
@@ -40,7 +40,7 @@ class MailingSMSController(http.Controller):
     def blacklist_number(self, mailing_id, trace_code, **post):
         check_res = self._check_trace(mailing_id, trace_code)
         if not check_res.get('trace'):
-            return request.redirect('/web')
+            return request.redirect('/odoo')
         # parse and validate number
         sms_number = post.get('sms_number', '').strip(' ')
         country = request.env['res.country'].search([('code', '=', request.geoip.country_code)], limit=1)

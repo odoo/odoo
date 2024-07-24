@@ -9,7 +9,7 @@
     const { DateTime } = luxon;
 
     registry.category("web_tour.tours").add('mass_mailing_tour', {
-        url: '/web',
+        url: '/odoo',
         rainbowManMessage: _t('Congratulations, I love your first mailing. :)'),
         sequence: 200,
         steps: () => [stepUtils.showAppsMenuItem(), {

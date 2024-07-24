@@ -21,7 +21,7 @@ class MailController(http.Controller):
 
     @classmethod
     def _redirect_to_messaging(cls):
-        url = '/web#%s' % url_encode({'action': 'mail.action_discuss'})
+        url = '/odoo/action-mail.action_discuss'
         return request.redirect(url)
 
     @classmethod
@@ -125,22 +125,12 @@ class MailController(http.Controller):
         elif not record_action['type'] == 'ir.actions.act_window':
             return cls._redirect_to_messaging()
 
-        url_params = {
-            'model': model,
-            'id': res_id,
-            'active_id': res_id,
-            'action': record_action.get('id'),
-        }
         menu_id = request.env['ir.ui.menu']._get_best_backend_root_menu_id_for_model(model)
-        if menu_id:
-            url_params['menu_id'] = menu_id
         view_id = record_sudo.get_formview_id()
-        if view_id:
-            url_params['view_id'] = view_id
-
         if cids:
             request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
-        url = '/web?#%s' % url_encode(url_params)
+        params = url_encode({'menu_id': menu_id, 'view_id': view_id})
+        url = f'/odoo/{model}/{res_id}?{params}'
         return request.redirect(url)
 
     @http.route('/mail/view', type='http', auth='public')

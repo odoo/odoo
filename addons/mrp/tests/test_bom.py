@@ -2352,8 +2352,7 @@ class TestTourBoM(HttpCase):
 
         self.assertEqual(len(bom.bom_line_ids), 0)
 
-        action = self.env.ref('mrp.mrp_bom_form_action')
-        url = '/web#model=mrp.bom&view_type=form&action=%s&id=%s' % (str(action.id), str(bom.id))
+        url = f'/odoo/action-mrp.mrp_bom_form_action/{bom.id}'
 
         self.start_tour(url, 'test_mrp_bom_product_catalog', login='admin')
         self.assertEqual(len(bom.bom_line_ids), 1)
@@ -2362,6 +2361,5 @@ class TestTourBoM(HttpCase):
         """
         Create a new MO by pressing the "Manufacture" button in BoM Overview
         """
-        action = self.env.ref('mrp.mrp_bom_form_action')
-        url = f'/web#model=mrp.bom&view_type=list&action={action.id}'
+        url = '/odoo/action-mrp.mrp_bom_form_action'
         self.start_tour(url, 'test_manufacture_from_bom', login='admin', timeout=100)
