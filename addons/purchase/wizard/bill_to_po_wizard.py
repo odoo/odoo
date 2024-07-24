@@ -51,7 +51,7 @@ class BillToPoWizard(models.TransientModel):
             {
                 'name': _("Down Payment (ref: %(ref)s)", ref=aml.display_name),
                 'product_qty': 0.0,
-                'product_uom': aml.product_uom_id.id,
+                'product_uom_id': aml.product_uom_id.id,
                 'is_downpayment': True,
                 'price_unit': aml.price_unit,
                 'taxes_id': aml.tax_ids,

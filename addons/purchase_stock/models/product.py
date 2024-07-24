@@ -46,7 +46,7 @@ class ProductProduct(models.Model):
         qty_by_product_location, qty_by_product_wh = super()._get_quantity_in_progress(location_ids, warehouse_ids)
         domain = self._get_lines_domain(location_ids, warehouse_ids)
         groups = self.env['purchase.order.line']._read_group(domain,
-            ['order_id', 'product_id', 'product_uom', 'orderpoint_id', 'location_final_id'],
+            ['order_id', 'product_id', 'product_uom_id', 'orderpoint_id', 'location_final_id'],
             ['product_qty:sum'])
         for order, product, uom, orderpoint, location_final, product_qty_sum in groups:
             if orderpoint:
@@ -132,7 +132,7 @@ class ProductSupplierinfo(models.Model):
         if 'buy' not in orderpoint.route_id.rule_ids.mapped('action'):
             orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1).route_id.id
         orderpoint.supplier_id = self
-        supplier_min_qty = self.product_uom._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
+        supplier_min_qty = self.product_uom_id._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
         if orderpoint.qty_to_order < supplier_min_qty:
             orderpoint.qty_to_order = supplier_min_qty
         if self._context.get('replenish_id'):

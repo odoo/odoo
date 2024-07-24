@@ -10,7 +10,6 @@ class TestDeliveryCost(common.TransactionCase):
         """
         self.partner_18 = self.env['res.partner'].create({'name': 'My Test Customer'})
         self.product_4 = self.env['product.product'].create({'name': 'A product to deliver', 'weight': 1.0})
-        self.product_uom_unit = self.env.ref('uom.product_uom_unit')
 
         product_delivery = self.env['product.product'].create({
             'name': 'Delivery Charges',
@@ -35,7 +34,6 @@ class TestDeliveryCost(common.TransactionCase):
                 'name': 'PC Assamble + 2GB RAM',
                 'product_id': self.product_4.id,
                 'product_uom_qty': 2,
-                'product_uom': self.product_uom_unit.id,
                 'price_unit': 120.00,
             })],
         })

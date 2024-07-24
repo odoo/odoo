@@ -96,7 +96,7 @@ class SaleOrderTemplateLine(models.Model):
             'display_type': self.display_type,
             'product_id': self.product_id.id,
             'product_uom_qty': self.product_uom_qty,
-            'product_uom': self.product_uom_id.id,
+            'product_uom_id': self.product_uom_id.id,
             'sequence': self.sequence,
         }
         if self.name:

@@ -105,10 +105,10 @@ class SaleOrderLine(models.Model):
         for line in self:
             last_purchase_line = self.env['purchase.order.line'].search([('sale_line_id', '=', line.id)], order='create_date DESC', limit=1)
             if last_purchase_line.state in ['draft', 'sent', 'to approve']:  # update qty for draft PO lines
-                quantity = line.product_uom._compute_quantity(new_qty, last_purchase_line.product_uom)
+                quantity = line.product_uom_id._compute_quantity(new_qty, last_purchase_line.product_uom_id)
                 last_purchase_line.write({'product_qty': quantity})
             elif last_purchase_line.state in ['purchase', 'done', 'cancel']:  # create new PO, by forcing the quantity as the difference from SO line
-                quantity = line.product_uom._compute_quantity(new_qty - origin_values.get(line.id, 0.0), last_purchase_line.product_uom)
+                quantity = line.product_uom_id._compute_quantity(new_qty - origin_values.get(line.id, 0.0), last_purchase_line.product_uom_id)
                 line._purchase_service_create(quantity=quantity)
 
     def _purchase_get_date_order(self, supplierinfo):
@@ -183,7 +183,7 @@ class SaleOrderLine(models.Model):
         if quantity:
             product_quantity = quantity
 
-        purchase_qty_uom = self.product_uom._compute_quantity(product_quantity, self.product_id.uom_po_id)
+        purchase_qty_uom = self.product_uom_id._compute_quantity(product_quantity, self.product_id.uom_po_id)
 
         # determine vendor (real supplier, sharing the same partner as the one from the PO, but with more accurate informations like validity, quantity, ...)
         # Note: one partner can have multiple supplier info for the same product
@@ -205,7 +205,7 @@ class SaleOrderLine(models.Model):
             'name': name,
             'product_qty': purchase_qty_uom,
             'product_id': self.product_id.id,
-            'product_uom': self.product_id.uom_po_id.id,
+            'product_uom_id': self.product_id.uom_po_id.id,
             'price_unit': price_unit,
             'date_planned': purchase_order.date_order + relativedelta(days=int(supplierinfo.delay)),
             'taxes_id': [(6, 0, taxes.ids)],
@@ -219,7 +219,7 @@ class SaleOrderLine(models.Model):
 
     def _purchase_service_match_supplier(self, warning=True):
         # determine vendor of the order (take the first matching company and product)
-        suppliers = self.product_id._select_seller(partner_id=self._retrieve_purchase_partner(), quantity=self.product_uom_qty, uom_id=self.product_uom)
+        suppliers = self.product_id._select_seller(partner_id=self._retrieve_purchase_partner(), quantity=self.product_uom_qty, uom_id=self.product_uom_id)
         if warning and not suppliers:
             raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.", self.product_id.display_name))
         return suppliers[0]

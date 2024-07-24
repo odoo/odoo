@@ -45,7 +45,6 @@ class TestStockValuation(ValuationReconciliationTestCommon):
                 'name': self.product1.name,
                 'product_id': self.product1.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product1.uom_id.id,
                 'price_unit': 12,
                 'tax_id': [(6, 0, [])],
             })],

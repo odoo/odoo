@@ -277,7 +277,7 @@ class PurchaseOrderLine(models.Model):
                 continue
             for line in pol.order_id.requisition_id.line_ids:
                 if line.product_id == pol.product_id:
-                    pol.price_unit = line.product_uom_id._compute_price(line.price_unit, pol.product_uom)
+                    pol.price_unit = line.product_uom_id._compute_price(line.price_unit, pol.product_uom_id)
                     partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
                     params = {'order_id': pol.order_id}
                     seller = pol.product_id._select_seller(

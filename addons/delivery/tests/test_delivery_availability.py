@@ -64,7 +64,7 @@ class TestDeliveryAvailability(DeliveryCommon, SaleCommon):
             'order_line': [Command.create({
                 'product_id': self.product.id,
                 'product_uom_qty': 1,
-                'product_uom': self.uom_dozen.id,
+                'product_uom_id': self.uom_dozen.id,
             })],
         })
 
@@ -115,7 +115,7 @@ class TestDeliveryAvailability(DeliveryCommon, SaleCommon):
             'order_line': [Command.create({
                 'product_id': self.product.id,
                 'product_uom_qty': 1,
-                'product_uom': self.uom_dozen.id,
+                'product_uom_id': self.uom_dozen.id,
             })],
         })
 

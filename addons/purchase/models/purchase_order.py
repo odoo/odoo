@@ -299,7 +299,7 @@ class PurchaseOrder(models.Model):
             if line.product_id:
                 seller = line.product_id._select_seller(
                     partner_id=line.partner_id, quantity=line.product_qty,
-                    date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
+                    date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom_id)
                 line.date_planned = line._get_date_planned(seller)
         return new_pos
 
@@ -564,9 +564,9 @@ class PurchaseOrder(models.Model):
             if line.product_id and not already_seller and len(line.product_id.seller_ids) <= 10:
                 price = line.price_unit
                 # Compute the price for the template's UoM, because the supplier's UoM is related to that UoM.
-                if line.product_id.product_tmpl_id.uom_po_id != line.product_uom:
+                if line.product_id.product_tmpl_id.uom_po_id != line.product_uom_id:
                     default_uom = line.product_id.product_tmpl_id.uom_po_id
-                    price = line.product_uom._compute_price(price, default_uom)
+                    price = line.product_uom_id._compute_price(price, default_uom)
 
                 supplierinfo = self._prepare_supplier_info(partner, line, price, line.currency_id)
                 # In case the order partner is a contact address, a new supplierinfo is created on
@@ -575,7 +575,7 @@ class PurchaseOrder(models.Model):
                     partner_id=line.partner_id,
                     quantity=line.product_qty,
                     date=line.order_id.date_order and line.order_id.date_order.date(),
-                    uom_id=line.product_uom)
+                    uom_id=line.product_uom_id)
                 if seller:
                     supplierinfo['product_name'] = seller.product_name
                     supplierinfo['product_code'] = seller.product_code
@@ -736,7 +736,7 @@ class PurchaseOrder(models.Model):
                 rfqs -= oldest_rfq
                 for rfq_line in rfqs.order_line:
                     existing_line = oldest_rfq.order_line.filtered(lambda l: l.product_id == rfq_line.product_id and
-                                                                                l.product_uom == rfq_line.product_uom and
+                                                                                l.product_uom_id == rfq_line.product_uom_id and
                                                                                 l.product_packaging_id == rfq_line.product_packaging_id and
                                                                                 l.product_packaging_qty == rfq_line.product_packaging_qty and
                                                                                 l.analytic_distribution == rfq_line.analytic_distribution and
@@ -1201,7 +1201,7 @@ class PurchaseOrder(models.Model):
                 partner_id=pol.partner_id,
                 quantity=pol.product_qty,
                 date=pol.order_id.date_order and pol.order_id.date_order.date() or fields.Date.context_today(pol),
-                uom_id=pol.product_uom)
+                uom_id=pol.product_uom_id)
             if seller:
                 # Fix the PO line's price on the seller's one.
                 pol.price_unit = seller.price_discounted

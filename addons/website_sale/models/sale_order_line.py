@@ -33,7 +33,7 @@ class SaleOrderLine(models.Model):
             return self.env['product.pricelist.item']._compute_price_before_discount(
                 product=self.product_id.with_context(**self._get_product_price_context()),
                 quantity=self.product_uom_qty or 1.0,
-                uom=self.product_uom,
+                uom=self.product_uom_id,
                 date=self.order_id.date_order,
                 currency=self.currency_id,
             )

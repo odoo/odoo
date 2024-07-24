@@ -92,7 +92,6 @@ class TestSaleMrpInvoices(AccountTestInvoicingCommon):
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 8.0,
-                    'product_uom': product.uom_id.id,
                     'price_unit': product.list_price,
                 })]
             },
@@ -102,7 +101,6 @@ class TestSaleMrpInvoices(AccountTestInvoicingCommon):
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 7.0,
-                    'product_uom': product.uom_id.id,
                     'price_unit': product.list_price,
                 })]
             },
