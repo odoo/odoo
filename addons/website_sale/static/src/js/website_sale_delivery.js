@@ -365,12 +365,16 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         if (radio.checked && !this._shouldDisplayPickupLocations(ev) && !this.forceClickCarrier) {
             return;
         }
-        this.forceClickCarrier = false;
 
         this._disablePayButton();
         this._showLoading(radio);
         radio.checked = true;
-        await this._onClickShowLocations(ev);
+        if (this.forceClickCarrier){
+            await this._onClickRemoveLocation(ev);
+            this.forceClickCarrier = false;
+        } else {
+            await this._onClickShowLocations(ev);
+        }
         await this._handleCarrierUpdateResult(radio);
         this._disablePayButtonNoPickupPoint(ev);
     },
