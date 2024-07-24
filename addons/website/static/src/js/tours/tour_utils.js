@@ -129,7 +129,6 @@ function changePaddingSize(direction) {
     return {
         trigger: `:iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
         content: markup(_t("<b>Slide</b> this button to change the %s padding", direction)),
-        consumeEvent: 'mousedown',
         position: position,
         run: "click",
     };
