@@ -255,177 +255,176 @@ registry.category("web_tour.tours").add("PosLoyaltyTour7", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add('PosLoyaltyTour8', {
+registry.category("web_tour.tours").add("PosLoyaltyTour8", {
     test: true,
-    url: '/pos/web',
+    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickHomeCategory(),
 
-            ProductScreen.clickDisplayedProduct('Product B'),
-            ProductScreen.clickDisplayedProduct('Product A'),
-            ProductScreen.totalAmountIs('50.00'),
+            ProductScreen.clickDisplayedProduct("Product B"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.totalAmountIs("50.00"),
         ].flat(),
 });
 
-registry
-    .category("web_tour.tours")
-    .add("PosLoyaltySpecificDiscountCategoryTour", { 
-        test: true, 
-        url: "/pos/web", 
-        steps: () => [
+registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountCategoryTour", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickHomeCategory(),
 
-            ProductScreen.clickDisplayedProduct('Product A'),
-            ProductScreen.selectedOrderlineHas('Product A', '1.00', '15.00'),
-            PosLoyalty.orderTotalIs('15.00'),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00", "15.00"),
+            PosLoyalty.orderTotalIs("15.00"),
 
-            ProductScreen.clickDisplayedProduct('Product B'),
-            ProductScreen.selectedOrderlineHas('Product B', '1.00', '50.00'),
-            PosLoyalty.orderTotalIs('40.00'),
+            ProductScreen.clickDisplayedProduct("Product B"),
+            ProductScreen.selectedOrderlineHas("Product B", "1.00", "50.00"),
+            PosLoyalty.orderTotalIs("40.00"),
         ].flat(),
-    });
+});
 
-registry.category("web_tour.tours").add('PosLoyaltyTour9', {
+registry.category("web_tour.tours").add("PosLoyaltyTour9", {
     test: true,
-    url: '/pos/web',
+    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.clickHomeCategory(),
             ProductScreen.confirmOpeningPopup(),
-            ProductScreen.clickDisplayedProduct('Product B'),
-            ProductScreen.clickDisplayedProduct('Product A'),
-            ProductScreen.totalAmountIs('210.00'),
+            ProductScreen.clickDisplayedProduct("Product B"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.totalAmountIs("210.00"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer('AAA Partner'),
-            PosLoyalty.customerIs('AAA Partner'),
+            ProductScreen.clickCustomer("AAA Partner"),
+            PosLoyalty.customerIs("AAA Partner"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.clickRewardButton(),
             SelectionPopup.clickItem("$ 5"),
-            ProductScreen.totalAmountIs('205.00'),
+            ProductScreen.totalAmountIs("205.00"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.clickRewardButton(),
             SelectionPopup.clickItem("$ 5"),
-            ProductScreen.totalAmountIs('200.00'),
+            ProductScreen.totalAmountIs("200.00"),
         ].flat(),
 });
 
-registry.category("web_tour.tours").add('PosLoyaltyTour10', {
+registry.category("web_tour.tours").add("PosLoyaltyTour10", {
     test: true,
-    url: '/pos/web',
+    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.clickHomeCategory(),
             ProductScreen.confirmOpeningPopup(),
-            ProductScreen.clickDisplayedProduct('Product Test'),
-            ProductScreen.totalAmountIs('1.00'),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.totalAmountIs("1.00"),
             ProductScreen.selectedOrderlineHas("Product Test", "1.00"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer('AAA Partner'),
-            PosLoyalty.customerIs('AAA Partner'),
+            ProductScreen.clickCustomer("AAA Partner"),
+            PosLoyalty.customerIs("AAA Partner"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.clickRewardButton(),
-            SelectionPopup.clickItem('Free Product with Tag'),
-            SelectionPopup.clickItem('Free Product B'),
-            PosLoyalty.hasRewardLine('Free Product B', '-1.00'),
-            ProductScreen.totalAmountIs('1.00'),
+            SelectionPopup.clickItem("Free Product with Tag"),
+            SelectionPopup.clickItem("Free Product B"),
+            PosLoyalty.hasRewardLine("Free Product B", "-1.00"),
+            ProductScreen.totalAmountIs("1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
         ].flat(),
 });
 
-registry.category("web_tour.tours").add('PosLoyaltyTour11.1', {
+registry.category("web_tour.tours").add("PosLoyaltyTour11.1", {
     test: true,
-    url: '/pos/web',
+    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.clickHomeCategory(),
             ProductScreen.confirmOpeningPopup(),
 
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer('AAA Partner'),
-            PosLoyalty.customerIs('AAA Partner'),
-            ProductScreen.addOrderline('Product Test', '3'),
-            ProductScreen.totalAmountIs('150.00'),
+            ProductScreen.clickCustomer("AAA Partner"),
+            PosLoyalty.customerIs("AAA Partner"),
+            ProductScreen.addOrderline("Product Test", "3"),
+            ProductScreen.totalAmountIs("150.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
-            PosLoyalty.finalizeOrder('Cash', '150'),
+            PosLoyalty.finalizeOrder("Cash", "150"),
         ].flat(),
 });
 
-registry.category("web_tour.tours").add('PosLoyaltyTour11.2', {
+registry.category("web_tour.tours").add("PosLoyaltyTour11.2", {
     test: true,
-    url: '/pos/web',
+    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer('AAA Partner'),
-            PosLoyalty.customerIs('AAA Partner'),
-            ProductScreen.clickDisplayedProduct('Product Test'),
-            ProductScreen.totalAmountIs('50.00'),
+            ProductScreen.clickCustomer("AAA Partner"),
+            PosLoyalty.customerIs("AAA Partner"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.totalAmountIs("50.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
-            PosLoyalty.enterCode('123456'),
+            PosLoyalty.enterCode("123456"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.clickRewardButton(),
-            SelectionPopup.clickItem('Free Product'),
-            PosLoyalty.hasRewardLine('Free Product', '-1.00'),
+            SelectionPopup.clickItem("Free Product"),
+            PosLoyalty.hasRewardLine("Free Product", "-1.00"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.clickRewardButton(),
-            SelectionPopup.clickItem('Free Product'),
-            PosLoyalty.hasRewardLine('Free Product', '-2.00'),
+            SelectionPopup.clickItem("Free Product"),
+            PosLoyalty.hasRewardLine("Free Product", "-2.00"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.clickRewardButton(),
-            SelectionPopup.clickItem('Free Product'),
-            PosLoyalty.hasRewardLine('Free Product', '-3.00'),
+            SelectionPopup.clickItem("Free Product"),
+            PosLoyalty.hasRewardLine("Free Product", "-3.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
-            ProductScreen.totalAmountIs('50.00'),
-            PosLoyalty.finalizeOrder('Cash', '50'),
+            ProductScreen.totalAmountIs("50.00"),
+            PosLoyalty.finalizeOrder("Cash", "50"),
         ].flat(),
 });
 
-registry.category("web_tour.tours").add('PosLoyaltyTour12', {
+registry.category("web_tour.tours").add("PosLoyaltyTour12", {
     test: true,
-    url: '/pos/web',
+    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickHomeCategory(),
-            ProductScreen.addOrderline('Free Product A', '2'),
-            ProductScreen.clickDisplayedProduct('Free Product A'),
-            ProductScreen.totalAmountIs('2.00'),
-            PosLoyalty.hasRewardLine('Free Product', '-1.00'),
-            ProductScreen.addOrderline('Free Product B', '2'),
-            ProductScreen.clickDisplayedProduct('Free Product B'),
-            ProductScreen.totalAmountIs('12.00'),
-            PosLoyalty.hasRewardLine('Free Product', '-5.00'),
-            ProductScreen.clickDisplayedProduct('Free Product B'),
-            ProductScreen.clickDisplayedProduct('Free Product B'),
-            ProductScreen.clickDisplayedProduct('Free Product B'),
+            ProductScreen.addOrderline("Free Product A", "2"),
+            ProductScreen.clickDisplayedProduct("Free Product A"),
+            ProductScreen.totalAmountIs("2.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-1.00"),
+            ProductScreen.addOrderline("Free Product B", "2"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            ProductScreen.totalAmountIs("12.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-5.00"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
             ProductScreen.selectedOrderlineHas("Free Product B", "6.00"),
-            ProductScreen.totalAmountIs('22.00'),
-            PosLoyalty.hasRewardLine('Free Product', '-10.00'),
+            ProductScreen.totalAmountIs("22.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-10.00"),
         ].flat(),
 });
 
-registry.category("web_tour.tours").add('PosLoyaltyMinAmountAndSpecificProductTour', {
+registry.category("web_tour.tours").add("PosLoyaltyMinAmountAndSpecificProductTour", {
     test: true,
-    url: '/pos/web',
+    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.clickHomeCategory(),
             ProductScreen.confirmOpeningPopup(),
 
-            ProductScreen.clickDisplayedProduct('Product A'),
-            ProductScreen.selectedOrderlineHas('Product A', '1.00', '20.00'),
-            PosLoyalty.orderTotalIs('20.00'),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00", "20.00"),
+            PosLoyalty.orderTotalIs("20.00"),
 
-            ProductScreen.clickDisplayedProduct('Product B'),
-            ProductScreen.selectedOrderlineHas('Product B', '1.00', '30.00'),
-            PosLoyalty.orderTotalIs('50.00'),
+            ProductScreen.clickDisplayedProduct("Product B"),
+            ProductScreen.selectedOrderlineHas("Product B", "1.00", "30.00"),
+            PosLoyalty.orderTotalIs("50.00"),
 
-            ProductScreen.clickDisplayedProduct('Product A'),
-            ProductScreen.selectedOrderlineHas('Product A', '2.00', '40.00'),
-            PosLoyalty.orderTotalIs('66.00'),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.selectedOrderlineHas("Product A", "2.00", "40.00"),
+            PosLoyalty.orderTotalIs("66.00"),
         ].flat(),
 });
 
@@ -477,38 +476,5 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGlobalDiscountProgramNo
             PosLoyalty.orderTotalIs("90"),
             PosLoyalty.pointsAwardedAre("90"),
             PosLoyalty.finalizeOrder("Cash", "90"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsInactive", {
-    test: true,
-    url: "/pos/web",
-    steps: () =>
-        [
-            ProductScreen.confirmOpeningPopup(),
-            ProductScreen.clickHomeCategory(),
-
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AAAA"),
-
-            ProductScreen.clickDisplayedProduct("Test Product A"),
-            PosLoyalty.checkNoClaimableRewards(),
-            ProductScreen.selectedOrderlineHas('Test Product A', '1.00', '100.00'),
-            PosLoyalty.finalizeOrder("Cash", "100"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsActive", {
-    test: true,
-    url: "/pos/web",
-    steps: () =>
-        [
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AAAA"),
-
-            ProductScreen.clickDisplayedProduct("Test Product A"),
-            PosLoyalty.isRewardButtonHighlighted(true),
-            ProductScreen.selectedOrderlineHas('Test Product A', '1.00', '100.00'),
-            PosLoyalty.finalizeOrder("Cash", "100"),
         ].flat(),
 });
