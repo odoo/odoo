@@ -33,6 +33,31 @@
             }
         },
         {
+            content: "Create a new expense",
+            trigger: "button.o_list_button_add",
+            run: "click",
+        },
+        {
+            content: "Enter category for new expense in Many2One field",
+            trigger: ".o_field_widget.o_field_many2one[name=product_id] input",
+            run: "edit [COMM] Communication",
+        },
+        {
+            isActive: ["auto"],
+            trigger: ".ui-autocomplete > li > a:contains('[COMM] Communication')",
+            run: "click",
+        },
+        {
+            content: "Enter a value for the total",
+            trigger: "div[name=total_amount_currency] input",
+            run: "edit 100",
+        },
+        {
+            content: "Breadcrumb back to My Expenses",
+            trigger: ".breadcrumb-item:contains('My Expenses')",
+            run: "click",
+        },
+        {
             content: "Check Create Report Button, but not click on it",
             trigger: "button.o_switch_view.o_list.active",
             run() {
