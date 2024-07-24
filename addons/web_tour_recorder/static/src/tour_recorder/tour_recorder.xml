@@ -71,6 +71,7 @@
 </t>
 
 <t t-name="web_tour.ToursRecorderDialog.Table" t-inherit="web_tour.ToursDialog.Table" t-inherit-mode="primary">
+    <xpath expr="//button[hasclass('o_copy_url_tour')]" position="replace"/>
     <xpath expr="//caption">
         <input type="file" t-ref="import_tour_input" hidden="true" t-on-change="importTour"/>
         <button class="o_button_import btn btn-link ms-1 fa" title="Import a tour custom from JSON file" t-on-click.prevent="() => importTourInput.el.click()"><span class="fa fa-fw fa-download"></span></button>
