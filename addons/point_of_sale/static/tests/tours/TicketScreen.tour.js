@@ -221,6 +221,7 @@ registry.category("web_tour.tours").add("LotRefundTour", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+            ReceiptScreen.checkTaxDetails("10%", 20, 200, 200),
             ReceiptScreen.clickNextOrder(),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("-0001"),

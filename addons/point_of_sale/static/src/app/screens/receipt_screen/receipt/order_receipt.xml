@@ -72,7 +72,7 @@
                     <span t-if="taxValues.amount_type != 'fixed'"><t t-esc="taxValues.tax_percentage"/>%</span>
                     <span t-else="" t-esc="taxValues.name"/>
                     <span t-esc="props.formatCurrency(taxValues.amount, false)" />
-                    <span t-esc="props.formatCurrency(taxValues.base, false)" />
+                    <span t-esc="props.formatCurrency(taxValues.display_base || taxValues.base, false)" />
                     <span t-esc="props.formatCurrency(taxValues.amount + taxValues.base, false)" />
                 </t>
                 <t t-if="props.data.tax_details.length > 1">

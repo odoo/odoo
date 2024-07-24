@@ -1052,6 +1052,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="pos_user")
 
     def test_lot_refund(self):
+        percent_included_tax = self.env['account.tax'].create({
+            'name': 'fixed amount tax',
+            'amount_type': 'division',
+            'amount': 10,
+            'price_include': True,
+        })
 
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
@@ -1059,6 +1065,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'tracking': 'serial',
             'categ_id': self.env.ref('product.product_category_all').id,
             'available_in_pos': True,
+            'list_price': 200,
+            'taxes_id': [(6, 0, [percent_included_tax.id])],
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
