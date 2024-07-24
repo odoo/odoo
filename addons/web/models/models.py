@@ -244,9 +244,10 @@ class Base(models.AbstractModel):
         if not groups:
             length = 0
         elif limit and len(groups) == limit:
+            annotated_groupby = self._read_group_get_annotated_groupby(groupby, lazy=lazy)
             length = limit + len(self._read_group(
                 domain,
-                groupby=groupby if not lazy else [groupby[0]],
+                groupby=annotated_groupby.values(),
                 offset=limit,
             ))
 
