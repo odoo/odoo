@@ -84,7 +84,6 @@ export const datetimePickerService = {
                         return;
                     }
 
-                    lastInitialProps = null; // Next pickerProps are considered final
                     inputsChanged = ensureArray(pickerProps.value).map(() => false);
 
                     hookParams.onApply?.(pickerProps.value);
@@ -467,16 +466,19 @@ export const datetimePickerService = {
                                 editableInputs++;
                             }
                         }
-                        const calendarIconGroupEl = getInput(0)?.parentElement
-                            .querySelector(".input-group-text .fa-calendar")?.parentElement;
+                        const calendarIconGroupEl = getInput(0)?.parentElement.querySelector(
+                            ".input-group-text .fa-calendar"
+                        )?.parentElement;
                         if (calendarIconGroupEl) {
                             // TODO: Remove this line and the `pe-none` class
                             // from templates in master
                             calendarIconGroupEl.classList.remove("pe-none");
                             calendarIconGroupEl.classList.add("cursor-pointer");
-                            cleanups.push(addListener(calendarIconGroupEl, "click", () => {
-                                openPicker(0);
-                            }));
+                            cleanups.push(
+                                addListener(calendarIconGroupEl, "click", () => {
+                                    openPicker(0);
+                                })
+                            );
                         }
                         if (!editableInputs && popover.isOpen) {
                             saveAndClose();
