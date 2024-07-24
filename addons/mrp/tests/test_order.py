@@ -4254,8 +4254,7 @@ class TestTourMrpOrder(HttpCase):
         })
 
         self.assertEqual(len(mo.move_raw_ids), 0)
-        action = self.env.ref('mrp.mrp_production_action')
-        url = '/web#model=mrp.production&view_type=form&action=%s&id=%s' % (str(action.id), str(mo.id))
+        url = f'/odoo/action-mrp.mrp_production_action/{mo.id}'
 
         self.start_tour(url, 'test_mrp_production_product_catalog', login='admin')
         self.assertEqual(len(mo.move_raw_ids), 1)

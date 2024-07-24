@@ -25,7 +25,7 @@ class TestOdoobot(MailCommon, TestRecipients):
             'partner_ids': [],
             'subtype_xmlid': 'mail.mt_comment'
         }
-        cls.odoobot_ping_body = '<a href="http://odoo.com/web#model=res.partner&amp;id=%s" class="o_mail_redirect" data-oe-id="%s" data-oe-model="res.partner" target="_blank">@OdooBot</a>' % (cls.odoobot.id, cls.odoobot.id)
+        cls.odoobot_ping_body = f'<a href="http://odoo.com/odoo/res.partner/{cls.odoobot.id}" class="o_mail_redirect" data-oe-id="{cls.odoobot.id}" data-oe-model="res.partner" target="_blank">@OdooBot</a>'
         cls.test_record_employe = cls.test_record.with_user(cls.user_employee)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

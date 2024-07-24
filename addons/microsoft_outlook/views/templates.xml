@@ -6,7 +6,7 @@
             <div class="alert alert-warning w-50 mx-auto" role="alert">
                 <t t-esc="error"/>
                 <br/>
-                <a t-attf-href="/web?#id=#{rec_id}&amp;model=#{model_name}&amp;view_type=form">
+                <a t-attf-href="/odoo/{model_name}/{rec_id}">
                     Go back to your mail server
                 </a>
             </div>

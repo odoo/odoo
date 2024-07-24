@@ -9,7 +9,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 class TestUi(HttpCaseWithUserDemo):
 
     def test_01_mail_tour(self):
-        self.start_tour("/web", 'discuss_channel_tour', login="admin")
+        self.start_tour("/odoo", 'discuss_channel_tour', login="admin")
 
     def test_02_mail_create_channel_no_mail_tour(self):
         self.env['res.users'].create({
@@ -19,8 +19,8 @@ class TestUi(HttpCaseWithUserDemo):
             'login': 'testuser',
             'password': 'testuser',
         })
-        self.start_tour("/web", 'discuss_channel_tour', login='testuser')
+        self.start_tour("/odoo", 'discuss_channel_tour', login='testuser')
 
     # basic rendering test of the configuration menu in Discuss
     def test_03_mail_discuss_configuration_tour(self):
-        self.start_tour("/web", "discuss_configuration_tour", login="admin")
+        self.start_tour("/odoo", "discuss_configuration_tour", login="admin")

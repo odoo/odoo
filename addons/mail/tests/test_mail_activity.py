@@ -149,7 +149,7 @@ class TestMailActivityChatter(HttpCase):
             'password': 'testuser',
         })
         self.start_tour(
-            f"/web#id={testuser.partner_id.id}&model=res.partner",
+            f"/odoo/res.partner/{testuser.partner_id.id}",
             "mail_activity_schedule_from_chatter",
             login="admin",
         )

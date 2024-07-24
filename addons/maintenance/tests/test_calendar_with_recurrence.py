@@ -35,8 +35,7 @@ class TestCalendarWithRecurrence(HttpCase):
         # The event should have a different id from the record
         self.assertNotEqual(request.id, 1)
 
-        action = self.env["ir.actions.actions"]._for_xml_id("maintenance.hr_equipment_request_action_cal")
-        url = '/web?#action=%s' % (action['id'])
+        url = '/odoo/action-maintenance.hr_equipment_request_action_cal'
         self.start_tour(url, 'test_dblclick_event_from_calendar', login='admin')
 
         self.assertEqual(request.name, 'make your bed')
@@ -67,8 +66,7 @@ class TestCalendarWithRecurrence(HttpCase):
         # The event should have a different id from the record
         self.assertNotEqual(request.id, 1)
 
-        action = self.env["ir.actions.actions"]._for_xml_id("maintenance.hr_equipment_request_action_cal")
-        url = '/web?#action=%s' % (action['id'])
+        url = '/odoo/action-maintenance.hr_equipment_request_action_cal'
         self.start_tour(url, 'test_drag_and_drop_event_in_calendar', login='admin')
 
         today_as_weekday = (date.today().weekday() + 1) % 7  # Sunday is the first day of the week in the calendar

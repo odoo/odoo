@@ -1284,7 +1284,7 @@ class MassMailing(models.Model):
                        mailing_name=self.subject
                        ),
             'top_button_label': _('More Info'),
-            'top_button_url': url_join(web_base_url, f'/web#id={self.id}&model=mailing.mailing&view_type=form'),
+            'top_button_url': url_join(web_base_url, f'/odoo/mailing.mailing/{self.id}'),
             'kpi_data': [
                 kpi,
                 {
