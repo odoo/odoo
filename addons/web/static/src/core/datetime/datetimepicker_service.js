@@ -84,7 +84,6 @@ export const datetimePickerService = {
                         return;
                     }
 
-                    lastInitialProps = null; // Next pickerProps are considered final
                     inputsChanged = ensureArray(pickerProps.value).map(() => false);
 
                     hookParams.onApply?.(pickerProps.value);
@@ -475,13 +474,16 @@ export const datetimePickerService = {
                                 editableInputs++;
                             }
                         }
-                        const calendarIconGroupEl = getInput(0)?.parentElement
-                            .querySelector(".o_input_group_date_icon");
+                        const calendarIconGroupEl = getInput(0)?.parentElement.querySelector(
+                            ".o_input_group_date_icon"
+                        );
                         if (calendarIconGroupEl) {
                             calendarIconGroupEl.classList.add("cursor-pointer");
-                            cleanups.push(addListener(calendarIconGroupEl, "click", () => {
-                                openPicker(0);
-                            }));
+                            cleanups.push(
+                                addListener(calendarIconGroupEl, "click", () => {
+                                    openPicker(0);
+                                })
+                            );
                         }
                         if (!editableInputs && popover.isOpen) {
                             saveAndClose();
