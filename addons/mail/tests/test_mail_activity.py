@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
-from odoo import fields
+from odoo import exceptions, fields
 from odoo.addons.mail.models.mail_activity import MailActivity
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import Form, tagged, HttpCase
@@ -147,7 +147,7 @@ class ActivityScheduleCase(MailCommon):
         }))
 
 
-@tagged("-at_install", "post_install")
+@tagged("-at_install", "post_install", "mail_activity")
 class TestMailActivityChatter(HttpCase):
 
     def test_mail_activity_schedule_from_chatter(self):
@@ -162,3 +162,23 @@ class TestMailActivityChatter(HttpCase):
             "mail_activity_schedule_from_chatter",
             login="admin",
         )
+
+
+@tagged("-at_install", "post_install", "mail_activity", "prout")
+class TestMailActivityIntegrity(ActivityScheduleCase):
+
+    def test_mail_activity_type_master_data(self):
+        """ Test master data integrity
+
+          * 'todo' and 'meeting' should always be cross model;
+          * 'todo' cannot be removed
+        """
+        todo = self.env.ref('mail.mail_activity_data_todo')
+        meeting = self.env.ref('mail.mail_activity_data_meeting')
+        with self.assertRaises(exceptions.UserError):
+            todo.write({'res_model': 'res.partner'})
+        with self.assertRaises(exceptions.UserError):
+            meeting.write({'res_model': 'res.partner'})
+
+        with self.assertRaises(exceptions.UserError):
+            todo.unlink()
