@@ -103,7 +103,6 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
         trigger: `${option_block} ${weName}, ${option_block} [title='${weName}']`,
         content: markup(_t("<b>Click</b> on this option to change the %s of the block.", optionTooltipLabel)),
         position: position,
-        in_modal: false,
         run: "click",
     };
 }
@@ -254,7 +253,6 @@ function clickOnSave(position = "bottom", timeout) {
             // after save though so it's not that big of an issue. The problem will
             // of course be solved (or at least prevented in stable). More details
             // in related commit message.
-            in_modal: false,
         content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
             position: position,
             timeout: timeout,

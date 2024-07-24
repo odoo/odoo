@@ -45,7 +45,6 @@ stepUtils.showAppsMenuItem(),
 }, {
     content: "select the pricelist",
     trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
-    in_modal: false,
     run: "click",
 }, {
     trigger: 'a:contains("Add a product")',
@@ -75,7 +74,6 @@ stepUtils.showAppsMenuItem(),
 {
     content: "add to SO",
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: "click",
 }, {
     content: "verify SO final price excluded",

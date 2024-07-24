@@ -3,7 +3,6 @@ export function pickRadio(name) {
         {
             content: `picking radio attribute with name ${name}`,
             trigger: `.modal .attribute-name-cell:contains('${name}') input`,
-            in_modal: false,
             run: "click",
         },
     ];
@@ -13,7 +12,6 @@ export function pickSelect(name) {
         {
             content: `picking select attribute with name ${name}`,
             trigger: `.modal .configurator_select:has(option:contains('${name}'))`,
-            in_modal: false,
             run: `select ${name}`,
         },
     ];
@@ -23,7 +21,6 @@ export function pickColor(name) {
         {
             content: `picking color attribute with name ${name}`,
             trigger: `.modal .configurator_color[data-color='${name}']`,
-            in_modal: false,
             run: "click",
         },
     ];
@@ -33,7 +30,6 @@ export function fillCustomAttribute(value) {
         {
             content: `filling custom attribute with value ${value}`,
             trigger: `.modal .custom_value`,
-            in_modal: false,
             run: `edit ${value}`,
         },
     ];

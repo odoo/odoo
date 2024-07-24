@@ -53,7 +53,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
         {
             isActive: ["auto"],
             trigger: ".ui-menu-item > a",
-            in_modal: false,
             run: "click",
         },
         {

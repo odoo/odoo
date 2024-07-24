@@ -191,7 +191,6 @@ export class TourInteractive {
      *  anchor: string,
      *  altAnchor: string?,
      *  isActive: string[]?,
-     *  inModal: boolean?,
      *  pointerInfo: { position: string?, content: string? },
      * }[]}
      */
@@ -219,7 +218,6 @@ export class TourInteractive {
                     anchor: step.trigger,
                     pointerInfo,
                     isActive: step.isActive,
-                    inModal: step.in_modal,
                 });
                 action = "drop";
             }
@@ -230,7 +228,6 @@ export class TourInteractive {
                 altAnchor: step.alt_trigger,
                 pointerInfo,
                 isActive: step.isActive,
-                inModal: step.in_modal,
             });
         }
 

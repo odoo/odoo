@@ -49,14 +49,12 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     run: "click",
 }, {
     trigger: ".modal .o_matrix_input_table",
-    in_modal: false,
     run: function () {
         // fill the whole matrix with 1's
         [...document.querySelectorAll(".o_matrix_input")].forEach((el) => (el.value = 1));
     }
 }, {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: "click",
 }, 
 {
@@ -78,7 +76,6 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     run: "click",
 }, {
     trigger: ".modal .o_matrix_input_table",
-    in_modal: false,
     run: function () {
         // whitespace normalization: removes newlines around text from markup
         // content, then collapse & convert internal whitespace to regular
@@ -96,7 +93,6 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     }
 }, {
     trigger: ".modal button:contains(Confirm)", // apply the matrix
-    in_modal: false,
     run: "click",
 }, 
 {
@@ -118,14 +114,12 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     run: "click",
 }, {
     trigger: ".modal .o_matrix_input_table",
-    in_modal: false,
     run: function () {
         // reset all qties to 1
         [...document.querySelectorAll(".o_matrix_input")].forEach((el) => (el.value = 1));
     }
 }, {
     trigger: ".modal button:contains(Confirm)", // apply the matrix
-    in_modal: false,
     run: "click",
 }, 
 {
@@ -152,7 +146,6 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     run: "click",
 }, {
     trigger: ".modal .o_matrix_input_table",
-    in_modal: false,
     run: function () {
         // update some of the matrix values.
         [...document.querySelectorAll(".o_matrix_input")]
@@ -161,7 +154,6 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     } // set the qty to 4 for half of the matrix products.
 }, {
     trigger: ".modal button:contains(Confirm)", // apply the matrix
-    in_modal: false,
     run: "click",
 }, 
 {
@@ -194,7 +186,6 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     }
 }, {
     trigger: ".modal button:contains(Confirm)", // apply the matrix
-    in_modal: false,
     run: "click",
         },
         {

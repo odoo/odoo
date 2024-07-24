@@ -38,7 +38,6 @@ const commonSteps = [
     },
     {
         trigger: 'tr:contains("Step 1")',
-        in_modal: false,
     },
     {
         trigger: "textarea#message_0",
@@ -50,7 +49,6 @@ const commonSteps = [
     },
     {
         trigger: 'tr:contains("Step 2")',
-        in_modal: false,
     },
     {
         trigger: "textarea#message_0",
@@ -91,7 +89,6 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: 'tr:contains("Step 3")',
-            in_modal: false,
         },
         {
             trigger: "textarea#message_0",
@@ -103,7 +100,6 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: 'tr:contains("Step 4")',
-            in_modal: false,
         },
         {
             trigger: "textarea#message_0",
@@ -137,7 +133,6 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: 'tr:contains("Step 6")',
-            in_modal: false,
         },
         ...stepUtils.discardForm(),
     ],

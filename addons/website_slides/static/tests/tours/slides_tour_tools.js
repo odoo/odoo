@@ -107,7 +107,6 @@ var addArticleToSection = function (sectionName, pageName, backend) {
 }, {
     content: 'eLearning: select Practice tag',
     trigger: prefix + 'div.o_select_menu_item_label:contains("Practice")',
-    in_modal: false,
     run: "click",
 }, {
 	content: 'eLearning: fill article completion time',
@@ -281,7 +280,6 @@ var addExistingCourseTag = function (backend = false) {
 }, {
     content: 'eLearning: select advanced tag',
     trigger: prefix + 'div.o_select_menu_item_label:contains("Advanced")',
-    in_modal: false,
     run: "click",
 }, {
     content: 'eLearning: add existing course tag',
@@ -320,7 +318,6 @@ var addNewCourseTag = function (courseTagName, backend) {
 }, {
 	content: 'eLearning: select Tags tag group',
     trigger: prefix + 'div.o_select_menu_item_label:contains("Tags")',
-	in_modal: false,
     run: "click",
 }, {
     content: 'eLearning: add new course tag',

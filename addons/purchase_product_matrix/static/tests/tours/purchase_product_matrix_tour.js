@@ -40,7 +40,6 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     }
 }, {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: 'click'
 }, {
     trigger: '.o_form_button_save',
@@ -66,7 +65,6 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     } // set the qty to 4 for half of the matrix products.
 }, {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: 'click' // apply the matrix
 }, 
 {
@@ -99,7 +97,6 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     }
 }, {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: 'click' // apply the matrix
 },
 {

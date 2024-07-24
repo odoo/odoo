@@ -48,37 +48,30 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
         },
         {
             trigger: ".modal button:contains(Confirm)",
-            in_modal: false,
             run: "click",
         },
         {
             trigger: ".modal .o_input_dropdown input",
-            in_modal: false,
             run: "edit Test",
         },
         {
             trigger: '.modal div[name="event_id"] input',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: '.modal div[name="event_ticket_id"] input',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: '.modal ul.ui-autocomplete a:contains("Kid + meal")',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: ".modal .o_event_sale_js_event_configurator_ok",
-            in_modal: false,
             run: "click",
         },
         {
@@ -116,37 +109,30 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
         configuratorTourUtils.assertPriceTotal("150.00"),
         {
             trigger: ".modal button:contains(Confirm)",
-            in_modal: false,
             run: "click",
         },
         {
             trigger: ".modal .o_input_dropdown input",
-            in_modal: false,
             run: "edit Test",
         },
         {
             trigger: '.modal div[name="event_id"] input',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: '.modal div[name="event_ticket_id"] input',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: '.modal ul.ui-autocomplete a:contains("Adult")',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: ".modal .o_event_sale_js_event_configurator_ok",
-            in_modal: false,
             run: "click",
         },
         {
@@ -179,37 +165,30 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
         configuratorTourUtils.assertPriceTotal(60.0),
         {
             trigger: ".modal button:contains(Confirm)",
-            in_modal: false,
             run: "click",
         },
         {
             trigger: ".modal .o_input_dropdown input",
-            in_modal: false,
             run: "edit Test",
         },
         {
             trigger: '.modal div[name="event_id"] input',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: '.modal div[name="event_ticket_id"] input',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: '.modal ul.ui-autocomplete a:contains("VIP")',
-            in_modal: false,
             run: "click",
         },
         {
             trigger: ".modal .o_event_sale_js_event_configurator_ok",
-            in_modal: false,
             run: "click",
         },
         {

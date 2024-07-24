@@ -25,7 +25,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_image", {
 {
     content: "Verify that the image placeholder is within the page",
     trigger: ":iframe footer .s_image > svg",
-    in_modal: false,
 },
 {
     content: "Click on the image",
