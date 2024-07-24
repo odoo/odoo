@@ -25,7 +25,6 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: `edit SomeChannel_${new Date().getTime()}`,
         },
         {
-            isActive: ["auto"],
             trigger: ".o-discuss-ChannelSelector-suggestion",
         },
         {
@@ -91,7 +90,6 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o-discuss-ChannelSelector",
         },
     ],

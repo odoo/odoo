@@ -32,7 +32,6 @@ registry.category("web_tour.tours").add('account_tour', {
     ...accountTourSteps.onboarding(),
     ...accountTourSteps.newInvoice(),
     {
-        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
@@ -46,7 +45,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "edit Test",
     }, 
     {
-        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
@@ -56,7 +54,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     }, 
     {
-        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
@@ -66,7 +63,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     }, 
     {
-        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
@@ -75,7 +71,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
@@ -85,7 +80,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "edit Test",
     },
     {
-        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
@@ -96,7 +90,6 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     ...stepUtils.saveForm(),
     {
-        isActive: ["auto"],
         trigger: "button.o_form_button_create",
     },
     {
@@ -105,7 +98,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
@@ -115,7 +107,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: "div.modal-dialog",
     },
     {
@@ -142,7 +133,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     }, 
     {
-        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
     },
     {
@@ -152,7 +142,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     }, 
     {
-        isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
@@ -163,7 +152,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: "body:has(.o_form_saved)",
     },
     {

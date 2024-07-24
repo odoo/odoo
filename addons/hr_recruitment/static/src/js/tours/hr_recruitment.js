@@ -29,7 +29,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_hr_job_simple_form",
 },
 {
@@ -39,7 +38,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: '.o_hr_job_simple_form',
 },
 {
@@ -59,7 +57,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_applicant",
 },
 {
@@ -69,7 +66,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_hr_recruitment_kanban",
 },
 {
@@ -79,7 +75,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_applicant",
 },
 {
@@ -89,7 +84,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_applicant",
 },
 {
@@ -99,7 +93,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_applicant_form",
 },
 {
@@ -109,7 +102,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_applicant_form",
 },
 {
@@ -119,7 +111,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_applicant_form",
 },
 {
@@ -129,7 +120,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_applicant_form",
 },
 {
@@ -139,7 +129,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_hr_employee_form_view",
 },
 {

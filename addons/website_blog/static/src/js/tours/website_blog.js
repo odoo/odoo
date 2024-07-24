@@ -24,7 +24,6 @@
         run: "edit Test",
     },
     {
-        isActive: ["auto"],
         trigger: 'div.o_field_widget[name="blog_id"]',
     },
     {
@@ -41,7 +40,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: "#oe_snippets.o_loaded",
         timeout: 15000,
     },
@@ -52,7 +50,6 @@
         run: "editor Test",
     },
     {
-        isActive: ["auto"],
         trigger: `:iframe #wrap h1[data-oe-expression="blog_post.name"]:not(:contains(''))`,
     },
     {
@@ -84,7 +81,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: ".o_website_preview.o_is_mobile",
     },
     {
@@ -94,7 +90,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: ":iframe body:not(.editor_enable)",
     },
     {
@@ -103,7 +98,6 @@
         content: markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
         run: "click",
     }, {
-        isActive: ["auto"],
         trigger: '.o_menu_systray_item a:contains("Published")',
     }
 ]);

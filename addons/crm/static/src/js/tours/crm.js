@@ -24,7 +24,6 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
 },
 {
@@ -49,7 +48,6 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
 },
 {
@@ -59,7 +57,6 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(2))",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
 },
 {
@@ -70,7 +67,6 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
 },
 {
@@ -91,7 +87,6 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(3))",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_opportunity_kanban",
 },
 {

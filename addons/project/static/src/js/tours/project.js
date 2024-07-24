@@ -24,7 +24,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_project_kanban",
 },
 {
@@ -54,7 +53,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_group",
 },
 {
@@ -69,7 +67,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_group:eq(1)",
 },
 {
@@ -79,7 +76,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_project_tasks",
 },
 {
@@ -89,7 +85,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "edit Test",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_project_tasks",
 },
 {
@@ -99,7 +94,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_project_tasks",
 },
 {
@@ -109,7 +103,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_project_tasks",
 },
 {
@@ -119,7 +112,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_form_project_tasks",
 },
 {
@@ -129,7 +121,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_form_project_tasks",
 },
 {
@@ -139,7 +130,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_form_project_tasks",
 },
 {
@@ -148,11 +138,6 @@ registry.category("web_tour.tours").add('project_tour', {
     position: "bottom",
     run: "click",
 }, 
-{
-    trigger: ".o_form_project_tasks",
-    isActive: ["auto"],
-},
-
 {
     trigger: ".o_form_project_tasks",
 },
@@ -165,7 +150,6 @@ registry.category("web_tour.tours").add('project_tour', {
 
 {
     trigger: ".o_form_project_tasks",
-    isActive: ["auto"],
 },
 {
     trigger: ".o_field_widget[name='user_ids'] input",
@@ -199,7 +183,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "edit New Sub-task",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_form_project_tasks .o_form_dirty",
 },
 {
@@ -210,7 +193,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_form_project_tasks",
 },
 {
@@ -225,7 +207,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".o_widget_subtask_kanban_list .subtask_list",
 },
 {
@@ -235,7 +216,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".subtask_create_input",
 },
 {
@@ -250,7 +230,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, 
 {
-    isActive: ["auto"],
     trigger: ".dropdown-menu",
 },
 {

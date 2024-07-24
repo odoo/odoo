@@ -31,7 +31,6 @@
     },
         tourUtils.goToCart({quantity: 2}),
     {
-        isActive: ["auto"],
         trigger:
             '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
     },
@@ -85,7 +84,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: 'h3:contains("Delivery address")',
     },
     {
@@ -137,7 +135,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: 'h3:contains("Billing address")',
     },
     {
@@ -176,7 +173,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger:
             'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
     },
@@ -210,7 +206,6 @@
     },
     // Sign in as admin change config auth_signup -> b2b, sale_show_tax -> total and Logout
     {
-        isActive: ["auto"],
         trigger: ".o_header_standard:not(.o_transitioning)",
     },
     {
@@ -248,7 +243,6 @@
         run: "click"
     },
     {
-        isActive: ["auto"],
         trigger: ".o_frontend_to_backend_nav", // Check if the user is connected
     },
     {
@@ -299,7 +293,6 @@
     },
         tourUtils.goToCart({quantity: 2}),
         {
-            isActive: ["auto"],
             trigger:
                 '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
         },
@@ -372,7 +365,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
     },
     {
@@ -381,7 +373,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: '.oe_cart .oe_website_sale_tx_status',
     },
     {
@@ -390,7 +381,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: "header#top li.dropdown .js_usermenu.show",
     },
     {
@@ -401,7 +391,6 @@
 
     // enable extra step on website checkout and check extra step on checkout process
     {
-        isActive: ["auto"],
         trigger: ".o_header_standard:not(.o_transitioning)",
     },
     {
@@ -444,7 +433,6 @@
         url: '/shop/cart',
         steps: () => [
     {
-        isActive: ["auto"],
         trigger: '.o_wizard:contains("Extra Info")',
     },
     {

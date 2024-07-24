@@ -37,7 +37,6 @@
         }
     },
     {
-        isActive: ["auto"],
         trigger: `.modal-dialog input[type=text]:not(:value(""))`,
     },
     {

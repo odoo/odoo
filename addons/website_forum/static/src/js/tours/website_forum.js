@@ -17,7 +17,6 @@
         run: "edit Test",
     },
     {
-        isActive: ["auto"],
         trigger: `input[name=post_name]:not(:empty)`,
     },
     {
@@ -27,7 +26,6 @@
         run: "editor Test",
     },
     {
-        isActive: ["auto"],
         trigger: `.note-editable p:not(:contains(/^<br>$/))`,
     },
     {
@@ -40,7 +38,6 @@
         run: "edit Test",
     },
     {
-        isActive: ["auto"],
         trigger: `input[id=s2id_autogen2]:not(:contains(Tags))`,
     },
     {
@@ -66,7 +63,6 @@
         run: "editor Test",
     },
     {
-        isActive: ["auto"],
         trigger: `.note-editable p:not(:contains(/^<br>$/))`,
     },
     {
@@ -84,7 +80,6 @@
         position: "right",
         run: "click",
     }, {
-        isActive: ["auto"],
         content: "Check edit button is there",
         trigger: "a:contains('Edit your answer')",
     }]);

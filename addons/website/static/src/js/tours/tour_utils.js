@@ -184,7 +184,6 @@ function clickOnEditAndWaitEditMode(position = "bottom") {
         position: position,
         run: "click",
     }, {
-        isActive: ["auto"], // Checking step only for automated tests
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     }];
@@ -208,7 +207,6 @@ function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
         position: position,
         run: "click",
     }, {
-        isActive: ["auto"], // Checking step only for automated tests
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     }];
@@ -261,7 +259,6 @@ function clickOnSave(position = "bottom", timeout) {
             run: "click",
         },
         {
-            isActive: ["auto"], // Just making sure save is finished in automatic tests
             trigger: ":iframe body:not(.editor_enable)",
             noPrepend: true,
             timeout: timeout,
@@ -411,7 +408,6 @@ function registerWebsitePreviewTour(name, options, steps) {
             // of course.
             if (options.edition) {
                 tourSteps.unshift({
-                    isActive: ["auto"],
                     content: "Wait for the edit mode to be started",
                     trigger: ".o_website_preview.editor_enable.editor_has_snippets",
                     timeout: 30000,

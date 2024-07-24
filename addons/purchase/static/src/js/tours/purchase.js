@@ -31,7 +31,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_purchase_order",
         },
         {
@@ -41,7 +40,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_purchase_order",
         },
         {
@@ -57,7 +55,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_field_many2one[name='partner_id'] .o_external_button",
         },
         {
@@ -67,7 +64,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_purchase_order",
         },
         {
@@ -90,11 +86,9 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: '.o_form_editable textarea[name="name"].product_creation_success',
         },
         {
-            isActive: ["auto"],
             trigger: ".o_purchase_order",
         },
         {
@@ -104,7 +98,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "edit 12.0",
         },
         {
-            isActive: ["auto", "mobile"],
+            isActive: ["mobile"],
             trigger: ".o_statusbar_buttons .o_arrow_button_current[name='action_rfq_send']",
         },
         ...stepUtils.statusbarButtonsSteps(
@@ -116,7 +110,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "edit agrolait@example.com",
         },
         {
-            isActive: ["auto"],
             trigger: ".modal-footer button[name='action_send_mail']",
         },
         {
@@ -126,7 +119,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_purchase_order",
         },
         {

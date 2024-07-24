@@ -11,7 +11,6 @@
     },
     () => [
     {
-        isActive: ["auto"],
         trigger: ":iframe .js_sale",
     },
     {
@@ -36,7 +35,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: "#oe_snippets.o_loaded",
     },
     {
@@ -47,7 +45,6 @@
         timeout: 30000,
     },
     {
-        isActive: ["auto"],
         trigger: ":iframe .product_price .o_dirty .oe_currency_value:not(:contains(/^1.00$/))",
     },
     {
@@ -64,7 +61,6 @@
     },
     wTourUtils.goBackToBlocks(),
     {
-        isActive: ["auto"],
         trigger: "body:not(.modal-open)",
     },
     {
@@ -83,7 +79,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: ":iframe body:not(.editor_enable)",
     },
     {

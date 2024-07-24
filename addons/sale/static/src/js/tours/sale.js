@@ -27,7 +27,6 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_sale_order",
         },
         {
@@ -37,7 +36,6 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_sale_order",
         },
         {
@@ -59,7 +57,6 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_sale_order",
         },
         {
@@ -88,11 +85,9 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
         },
         {
-            isActive: ["auto"],
             trigger: ".oi-arrow-right", // Wait for product creation
         },
         {
@@ -107,7 +102,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            isActive: ["auto", "mobile"],
+            isActive: ["mobile"],
             trigger: ".o_statusbar_buttons button[name='action_quotation_send']",
         },
         ...stepUtils.statusbarButtonsSteps(
