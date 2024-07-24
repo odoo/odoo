@@ -195,6 +195,8 @@ class PosConfig(models.Model):
         string='Closing Entry by product',
         help="Display the breakdown of sales lines by product in the automatically generated closing entry.")
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
+    orderlines_sequence_in_cart_by_category = fields.Boolean(string="Order cart by category's sequence", default=False,
+        help="When active, orderlines will be sorted based on product category and sequence in the product screen's order cart.")
 
     @api.model
     def _load_pos_data_domain(self, data):

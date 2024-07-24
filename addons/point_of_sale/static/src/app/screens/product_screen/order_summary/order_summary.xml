@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderSummary">
-      <OrderWidget lines="currentOrder.lines" t-slot-scope="scope" class="'bg-light'"
+      <OrderWidget lines="currentOrder.getSortedOrderlines()" t-slot-scope="scope" class="'bg-light'"
           total="env.utils.formatCurrency(currentOrder.get_total_with_tax())"
           tax="!env.utils.floatIsZero(currentOrder.get_total_tax()) and env.utils.formatCurrency(currentOrder.get_total_tax()) or ''">
           <t t-set="line" t-value="scope.line" />
