@@ -261,13 +261,12 @@ class ReportSaleDetails(models.AbstractModel):
         for config in configs:
             config_names.append(config.name)
 
-        discount_number = 0
-        discount_amount = 0
+        discount_number = len(orders.filtered(lambda o: o.lines.filtered(lambda l: l.discount > 0)))
+        discount_amount = sum(l._get_discount_amount() for l in orders.lines.filtered(lambda l: l.discount > 0))
+
         invoiceList = []
         invoiceTotal = 0
         for session in sessions:
-            discount_number += len(session.order_ids.filtered(lambda o: o.lines.filtered(lambda l: l.discount > 0)))
-            discount_amount += session.get_total_discount()
             invoiceList.append({
                 'name': session.name,
                 'invoices': session._get_invoice_total_list(),
