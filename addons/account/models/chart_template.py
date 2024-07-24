@@ -616,7 +616,7 @@ class AccountChartTemplate(models.AbstractModel):
         company.get_unaffected_earnings_account()
 
         # Set newly created Cash difference and Suspense accounts to the Cash and Bank journals
-        for journal in [self.ref(kind, raise_if_not_found=False) for kind in ('bank', 'cash')]:
+        for journal in [self.ref(kind, raise_if_not_found=False) for kind in ('bank', 'cash', 'credit')]:
             if journal:
                 journal.suspense_account_id = journal.suspense_account_id or company.account_journal_suspense_account_id
                 journal.profit_account_id = journal.profit_account_id or company.default_cash_difference_income_account_id
@@ -980,7 +980,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'type': 'general',
                 'code': _('MISC'),
                 'show_on_dashboard': False,
-                'sequence': 8,
+                'sequence': 9,
             },
             "exch": {
                 'name': _('Exchange Difference'),
@@ -999,6 +999,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'type': 'bank',
                 'show_on_dashboard': True,
                 'sequence': 7,
+            },
+            "credit": {
+                'name': _('Credit Card'),
+                'type': 'credit',
+                'show_on_dashboard': True,
+                'sequence': 8,
             },
             "cash": {
                 'name': _('Cash'),

@@ -22,19 +22,19 @@
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                             <t t-value="record.type.raw_value" t-set="journal_type"/>
                             <t t-value="!record.has_entries.raw_value" t-set="journal_is_empty"/>
-                            <t t-set="bank_unconfigured" t-value="journal_type == 'bank'
+                            <t t-set="bank_unconfigured" t-value="(journal_type == 'bank' or journal_type == 'credit')
                                                                   and ['undefined', 'online_sync'].includes(dashboard.bank_statements_source)
                                                                   and journal_is_empty"/>
                             <t t-call="JournalTop"/>
                             <div t-att-class="'container o_kanban_card_content' + (dashboard.is_sample_data ? ' o_sample_data' : '')">
                                 <div class="row">
-                                    <t t-if="journal_type == 'bank'" t-call="JournalBodyBank"/>
+                                    <t t-if="journal_type == 'bank' || journal_type == 'credit'" t-call="JournalBodyBank"/>
                                     <t t-if="journal_type == 'cash'" t-call="JournalBodyBankCash"/>
                                     <t t-if="journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodySalePurchase"/>
                                     <t t-if="journal_type == 'general'" t-call="JournalMiscelaneous"/>
                                 </div>
                                 <div class="row mt-auto">
-                                    <t t-if="['bank', 'cash', 'sale'].includes(journal_type)
+                                    <t t-if="['bank', 'cash', 'credit', 'sale'].includes(journal_type)
                                              and !bank_unconfigured
                                              or (journal_type == 'purchase' and !journal_is_empty)"
                                        t-call="JournalBodyGraph"/>
@@ -68,14 +68,15 @@
                         <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                         <t t-value="record.type.raw_value" t-set="journal_type"/>
                         <div class="container">
-                            <!-- For bank and cash -->
-                            <div t-if="journal_type == 'bank' || journal_type == 'cash'" class="row" id="bank_and_cash_container">
+                            <!-- For bank, cash and credit -->
+                            <div t-if="journal_type == 'bank' || journal_type == 'cash' || journal_type == 'credit'" class="row" id="bank_and_cash_container">
                                 <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
                                     <h5 id="card_action_view_menus" class="o_kanban_card_manage_title">
                                         <span role="separator">View</span>
                                     </h5>
                                     <div id="action_card_statements">
                                         <a t-if="journal_type == 'bank'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_tree', 'search_default_journal': True}">Statements</a>
+                                        <a t-if="journal_type == 'credit'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_credit_statement_tree', 'search_default_journal': True}">Statements</a>
                                         <a t-if="journal_type == 'cash'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_view_bank_statement_tree', 'search_default_journal': True}">Cash Registers</a>
                                     </div>
                                     <div>
@@ -254,7 +255,7 @@
                         <div id="dashboard_bank_cash_left" class="col mb-3 mb-sm-0 o_kanban_primary_left">
                             <div name="bank_cash_buttons" class="clearfix">
                                 <t t-set="bank_requires_setup" t-value="!record.bank_account_id.raw_value and ['undefined', 'online_sync'].includes(dashboard.bank_statements_source)"/>
-                                <div name="setup_bank_btn" class="float-start me-1" t-if="journal_type == 'bank' and bank_requires_setup">
+                                <div name="setup_bank_btn" class="float-start me-1" t-if="(journal_type == 'bank' or journal_type == 'credit') and bank_requires_setup">
                                     <button name="action_configure_bank_journal" type="object" class="btn btn-primary" groups="account.group_account_basic">Setup Bank</button>
                                 </div>
                                 <div name="transactions_btn" class="float-start me-1">
@@ -392,7 +393,7 @@
                         </div>
                     </t>
                     <t t-name="JournalBodyGraph">
-                        <field name="kanban_dashboard_graph" t-att-graph_type="['cash','bank'].includes(journal_type) ? 'line' : 'bar'" widget="dashboard_graph"/>
+                        <field name="kanban_dashboard_graph" t-att-graph_type="['cash', 'bank', 'credit'].includes(journal_type) ? 'line' : 'bar'" widget="dashboard_graph"/>
                     </t>
             </templates>
             </kanban>

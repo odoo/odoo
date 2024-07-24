@@ -768,7 +768,7 @@ class AccountMove(models.Model):
         elif self.is_purchase_document(include_receipts=True):
             return ['purchase']
         elif self.payment_id or self.statement_line_id or self.env.context.get('is_payment') or self.env.context.get('is_statement_line'):
-            return ['bank', 'cash']
+            return ['bank', 'cash', 'credit']
         return ['general']
 
     def _search_default_journal(self):
@@ -3149,7 +3149,7 @@ class AccountMove(models.Model):
                 year_part = "%s-%s" % ((self.date + relativedelta(years=-1)).strftime('%y'), self.date.strftime('%y'))
         # Arbitrarily use annual sequence for sales documents, but monthly
         # sequence for other documents
-        if self.journal_id.type in ['sale', 'bank', 'cash']:
+        if self.journal_id.type in ['sale', 'bank', 'cash', 'credit']:
             # We reduce short code to 4 characters (0000) in case of staggered
             # year to avoid too long sequences (see Indian GST rule 46(b) for
             # example). Note that it's already the case for monthly sequences.
