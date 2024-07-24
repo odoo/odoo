@@ -514,6 +514,26 @@
             <field name="image_1920" type="base64" file="product/static/img/product_product_d01-image.jpg"/>
         </record>
 
+        <record id="product_product_local_delivery" model="product.product">
+            <field name="name">Local Delivery</field>
+            <field name="default_code">Delivery_010</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product_category_3"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">10.0</field>
+        </record>
+
+        <record id="product_product_furniture" model="product.product">
+            <field name="name">Furniture Assembly</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">2000.00</field>
+            <field name="standard_price">2500.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+        </record>
+
         <record id="product_template_dining_table" model="product.template">
             <field name="name">Outdoor dining table</field>
             <field name="categ_id" ref="product_category_outdoor_furniture"/>
