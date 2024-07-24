@@ -342,7 +342,7 @@
                                 <span>Taxes</span>
                             </th>
                             <th t-if="display_price_and_taxes" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">Disc.%</th>
-                            <th class="text-end" t-if="order.state in ['purchase', 'done']" >
+                            <th class="text-end" t-if="not update_dates and order.state in ['purchase', 'done']" >
                                 <span>Amount</span>
                             </th>
                         </tr>
