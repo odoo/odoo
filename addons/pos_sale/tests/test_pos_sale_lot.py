@@ -54,7 +54,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'product_id': self.product.id,
                 'name': self.product.name,
                 'product_uom_qty': 2,
-                'product_uom': self.product.uom_id.id,
                 'price_unit': self.product.lst_price,
             })],
         })

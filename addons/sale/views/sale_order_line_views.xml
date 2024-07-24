@@ -14,7 +14,7 @@
                 <field name="qty_delivered"/>
                 <field name="qty_invoiced"/>
                 <field name="qty_to_invoice"/>
-                <field name="product_uom" string="Unit of Measure" groups="uom.group_uom"/>
+                <field name="product_uom_id" string="Unit of Measure" groups="uom.group_uom"/>
                 <field name="price_subtotal" sum="Total" widget="monetary"/>
                 <field name="currency_id" column_invisible="True"/>
             </list>
@@ -52,12 +52,12 @@
                                 invisible="state not in ['sale', 'done']"
                                 readonly="qty_delivered_method != 'manual'"/>
                             <field name="qty_invoiced" invisible="state not in ['sale', 'done']"/>
-                            <field name="product_uom"
+                            <field name="product_uom_id"
                                 force_save="1"
                                 groups="uom.group_uom"
                                 readonly="product_uom_readonly"
                                 required="not display_type"/>
-                            <field name="product_uom" groups="!uom.group_uom" invisible="1"/>
+                            <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="order_partner_id" invisible="1"/>
                             <field name="display_type" invisible="1"/>

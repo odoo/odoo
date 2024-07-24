@@ -51,7 +51,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_id': self.kit.id,
                 'name': self.kit.name,
                 'product_uom_qty': 10,
-                'product_uom': self.kit.uom_id.id,
                 'price_unit': self.kit.lst_price,
             })],
         })
@@ -139,13 +138,11 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_id': product_a.id,
                 'name': product_a.name,
                 'product_uom_qty': 1,
-                'product_uom': product_a.uom_id.id,
                 'price_unit': product_a.lst_price,
             }), (0, 0, {
                 'product_id': product_b.id,
                 'name': product_b.name,
                 'product_uom_qty': 1,
-                'product_uom': product_b.uom_id.id,
                 'price_unit': product_b.lst_price,
             }), (0, 0, {
                 # Add this line to test that it should not cause any issue when settling this order.
@@ -180,7 +177,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'name': self.product_a.name,
                 'product_uom_qty': 1,
                 'price_unit': 100,
-                'product_uom': self.product_a.uom_id.id
             })],
         })
         sale_order.action_confirm()
@@ -292,7 +288,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_id': product_a.id,
                 'name': product_a.name,
                 'product_uom_qty': 1,
-                'product_uom': product_a.uom_id.id,
                 'price_unit': product_a.lst_price,
             })],
         })
@@ -333,7 +328,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_id': product_a.id,
                 'name': product_a.name,
                 'product_uom_qty': 3.5,
-                'product_uom': product_a.uom_id.id,
                 'price_unit': 8,  # manually set a different price than the lst_price
             })],
         })
@@ -354,7 +348,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_id': self.whiteboard_pen.product_variant_id.id,
                 'name': self.whiteboard_pen.name,
                 'product_uom_qty': 1,
-                'product_uom': self.whiteboard_pen.uom_id.id,
                 'price_unit': self.whiteboard_pen.product_variant_id.lst_price,
             }), (0, 0, {
                 'name': 'Customer note 2',
@@ -432,13 +425,11 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_id': product_a.id,
                 'name': product_a.name,
                 'product_uom_qty': 1,
-                'product_uom': product_a.uom_id.id,
                 'price_unit': product_a.lst_price,
             }), (0, 0, {
                 'product_id': product_b.id,
                 'name': product_b.name,
                 'product_uom_qty': 1,
-                'product_uom': product_b.uom_id.id,
                 'price_unit': product_b.lst_price,
             })],
         })
@@ -492,7 +483,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'name': self.whiteboard_pen.name,
                 'product_uom_qty': 1,
                 'price_unit': 100,
-                'product_uom': self.whiteboard_pen.uom_id.id
             })],
         })
 
@@ -524,7 +514,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_id': product_a.id,
                 'name': product_a.name,
                 'product_uom_qty': 1,
-                'product_uom': product_a.uom_id.id,
                 'price_unit': product_a.lst_price,
             })],
         })
@@ -567,7 +556,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                     'name': self.product_a.name,
                     'product_id': self.product_a.id,
                     'product_uom_qty': 10.0,
-                    'product_uom': self.product_a.uom_id.id,
                     'price_unit': 100,
                     'tax_id': False,
                 })],
@@ -628,19 +616,16 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_id': product_a.id,
                 'name': product_a.name,
                 'product_uom_qty': 1,
-                'product_uom': product_a.uom_id.id,
                 'price_unit': product_a.lst_price,
             }), (0, 0, {
                 'product_id': product_b.id,
                 'name': product_b.name,
                 'product_uom_qty': 1,
-                'product_uom': product_b.uom_id.id,
                 'price_unit': product_b.lst_price,
             }), (0, 0, {
                 'product_id': product_c.id,
                 'name': product_c.name,
                 'product_uom_qty': 1,
-                'product_uom': product_c.uom_id.id,
                 'price_unit': product_c.lst_price,
             })],
         })
@@ -676,7 +661,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                     'name': self.product_a.name,
                     'product_id': self.product_a.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': self.product_a.uom_id.id,
                     'price_unit': 100,
                     'tax_id': False,
                 })],
@@ -777,7 +761,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_id': product_a.id,
                 'name': product_a.name,
                 'product_uom_qty': 1,
-                'product_uom': product_a.uom_id.id,
                 'price_unit': product_a.lst_price,
             })],
         })

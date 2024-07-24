@@ -35,7 +35,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': amount,
-                'product_uom': product.uom_id.id,
                 'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
@@ -56,7 +55,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                     'name': p.name,
                     'product_id': p.id,
                     'product_uom_qty': 2,
-                    'product_uom': p.uom_id.id,
                     'price_unit': p.list_price,
                 }) for p in (
                     self.company_data['product_order_no'],
@@ -130,7 +128,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': p.name,
                 'product_id': p.id,
                 'product_uom_qty': 2,
-                'product_uom': p.uom_id.id,
                 'price_unit': p.list_price,
                 }) for p in (
                     self.company_data['product_order_no'],
@@ -190,7 +187,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': self.product.name,
                 'product_id': self.product.id,
                 'product_uom_qty': 5.0,
-                'product_uom': self.product.uom_id.id,
                 'price_unit': self.product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
@@ -260,8 +256,8 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
-                (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'price_unit': item2.list_price}),
             ],
         })
         self.so.action_confirm()
@@ -308,7 +304,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         # add a new sale order lines
         self.so.write({
             'order_line': [
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'price_unit': item1.list_price}),
             ]
         })
         self.assertEqual(sum(backorder.move_ids.filtered(lambda m: m.product_id.id == item1.id).mapped('product_qty')), 2)
@@ -327,8 +323,8 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
-                (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'price_unit': item2.list_price}),
             ],
         })
         self.so.action_confirm()
@@ -362,7 +358,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': item1.name,
                 'product_id': item1.id,
                 'product_uom_qty': 1,
-                'product_uom': item1.uom_id.id,
                 'price_unit': item1.list_price,
             })],
         })
@@ -399,7 +394,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': item1.name,
                 'product_id': item1.id,
                 'product_uom_qty': 1,
-                'product_uom': uom_dozen.id,
+                'product_uom_id': uom_dozen.id,
                 'price_unit': item1.list_price,
             })],
         })
@@ -477,21 +472,21 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                     'name': item1.name,
                     'product_id': item1.id,
                     'product_uom_qty': 1,
-                    'product_uom': uom_dozen.id,
+                    'product_uom_id': uom_dozen.id,
                     'price_unit': item1.list_price,
                 }),
                 (0, 0, {
                     'name': item1.name,
                     'product_id': item1.id,
                     'product_uom_qty': 1,
-                    'product_uom': uom_dozen.id,
+                    'product_uom_id': uom_dozen.id,
                     'price_unit': item1.list_price,
                 }),
                 (0, 0, {
                     'name': item1.name,
                     'product_id': item1.id,
                     'product_uom_qty': 1,
-                    'product_uom': uom_dozen.id,
+                    'product_uom_id': uom_dozen.id,
                     'price_unit': item1.list_price,
                 }),
             ],
@@ -525,7 +520,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                     'name': item1.name,
                     'product_id': item1.id,
                     'product_uom_qty': 10,
-                    'product_uom': uom_unit.id,
+                    'product_uom_id': uom_unit.id,
                     'price_unit': item1.list_price,
                 }),
             ],
@@ -584,7 +579,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'price_unit': item1.list_price}),
             ],
         })
         line = so.order_line[0]
@@ -613,9 +608,9 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
-                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'price_unit': item1.list_price}),
             ],
         })
         self.assertEqual(so.order_line.mapped('free_qty_today'), [10, 5, 0])
@@ -885,7 +880,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 5.0,
-                'product_uom': product.uom_id.id,
                 'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
@@ -994,7 +988,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 (0, 0, {
                     'product_id': product.id,
                     'product_uom_qty': 10.0,
-                    'product_uom': product.uom_id.id,
                     'product_packaging_id': packOf10.id,
                 })],
         })
@@ -1039,7 +1032,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 2,
-                'product_uom': product.uom_id.id,
                 'price_unit': product.list_price
             })],
         })
@@ -1069,7 +1061,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 4.0,
-                    'product_uom': yards_uom.id,
+                    'product_uom_id': yards_uom.id,
                     'price_unit': 1.0,
                 })
             ],
@@ -1095,7 +1087,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
-                (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 50, 'product_uom': product.uom_id.id, 'price_unit': product.list_price}),
+                (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 50, 'price_unit': product.list_price}),
             ],
         })
         sale_order.action_confirm()
@@ -1158,7 +1150,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         self.assertEqual(so.order_line[1].product_id, self.product_b)
         self.assertEqual(so.order_line[1].qty_delivered, 1)
-        self.assertEqual(so.order_line[1].product_uom.id, uom_km_id)
+        self.assertEqual(so.order_line[1].product_uom_id.id, uom_km_id)
 
     def test_19_deliver_update_so_line_qty(self):
         """
@@ -1471,7 +1463,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'product_uom_qty': 10,
-                'product_uom': self.product_a.uom_id.id,
                 'price_unit': 1,
             })],
         })
@@ -1625,7 +1616,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': p.name,
                 'product_id': p.id,
                 'product_uom_qty': 1,
-                'product_uom': p.uom_id.id,
                 'price_unit': p.list_price,
             }) for p in (
                 self.product_a,
@@ -1734,7 +1724,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product_a.uom_id.id,
                 'price_unit': self.product_a.list_price,
             })],
         })
@@ -1994,7 +1983,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                     'name': 'sol_p1',
                     'product_id': self.env['product.product'].create({'name': 'p1'}).id,
                     'product_uom_qty': 10,
-                    'product_uom': self.env.ref('uom.product_uom_unit').id,
                 }),
             ],
         })
@@ -2041,7 +2029,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                     'name': 'sol_p1',
                     'product_id': self.env['product.product'].create({'name': 'p1'}).id,
                     'product_uom_qty': 5,
-                    'product_uom': self.env.ref('uom.product_uom_unit').id,
                 }),
             ],
         })
@@ -2097,7 +2084,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                     'name': storable_product.name,
                     'product_id': storable_product.id,
                     'product_uom_qty': 1,
-                    'product_uom': storable_product.uom_id.id,
                 }),
             ],
         })

@@ -167,7 +167,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         sale_line_1_order_2 = SaleOrderLine.create({
             'product_id': self.product_order_service1.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_service1.uom_id.id,
             'price_unit': self.product_order_service1.list_price,
             'order_id': sale_order_2.id,
         })
@@ -197,7 +196,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         expected_sale_line_dict = {
             sol_read['id']: sol_read
             for sol_read in sale_order_lines._read_format(
-                ['name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom', 'product_id'])
+                ['name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom_id', 'product_id'])
         }
         actual_sol_ids = []
         for line in sale_items_data['sol_items']:
@@ -220,7 +219,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'name': self.product_order_service3.name,
             'product_id': self.product_order_service3.id,
             'product_uom_qty': 5,
-            'product_uom': self.product_order_service3.uom_id.id,
             'price_unit': self.product_order_service3.list_price
         })
         self.assertFalse(sale_order_line.is_service, "As the product is consumable, the SOL should not be a service")
@@ -438,12 +436,10 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
                         'name': self.product_order_service2.display_name,
                         'sale_order_template_id': quotation_template.id,
                         'product_id': self.product_order_service2.id,
-                        'product_uom_id': self.product_order_service2.uom_id.id,
                     }, {
                         'name': self.product_order_service3.display_name,
                         'sale_order_template_id': quotation_template.id,
                         'product_id': self.product_order_service3.id,
-                        'product_uom_id': self.product_order_service3.uom_id.id,
                     }]).ids
                 )
             ]
@@ -647,7 +643,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 10,
-            'product_uom': product.uom_id.id,
             'price_unit': product.list_price,
         })
         names = ['To Do', 'In Progress', 'Done', 'Cancelled']
@@ -819,7 +814,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         sale_line_1_order_2 = SaleOrderLine.create({
             'product_id': self.product_order_service1.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_service1.uom_id.id,
             'price_unit': self.product_order_service1.list_price,
             'order_id': sale_order_2.id,
         })

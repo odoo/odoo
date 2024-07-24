@@ -236,7 +236,6 @@ class TestSaleMrpProcurement(TransactionCase):
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': product.uom_id.id,
                     'price_unit': 1,
                 })],
         })
@@ -330,7 +329,7 @@ class TestSaleMrpProcurement(TransactionCase):
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 510,
-                    'product_uom': uom_gram.id,
+                    'product_uom_id': uom_gram.id,
                     'price_unit': 1,
                 })],
         })
@@ -349,7 +348,7 @@ class TestSaleMrpProcurement(TransactionCase):
                     'name': product.name,
                     'product_id': product.id,
                     'product_uom_qty': 510,
-                    'product_uom': uom_gram.id,
+                    'product_uom_id': uom_gram.id,
                     'price_unit': 1,
                 })],
         })
@@ -374,13 +373,11 @@ class TestSaleMrpProcurement(TransactionCase):
                     'name': 'sol_p1',
                     'product_id': self.env['product.product'].create({'name': 'p1'}).id,
                     'product_uom_qty': 1,
-                    'product_uom': self.env.ref('uom.product_uom_unit').id,
                 }),
                 Command.create({
                     'name': 'sol_p2',
                     'product_id': self.env['product.product'].create({'name': 'p2'}).id,
                     'product_uom_qty': 1,
-                    'product_uom': self.env.ref('uom.product_uom_unit').id,
                 }),
             ],
         })

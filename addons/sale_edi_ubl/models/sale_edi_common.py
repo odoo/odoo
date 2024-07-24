@@ -56,11 +56,8 @@ class SaleEdiCommon(models.AbstractModel):
             line_values = {
                 **line_values,
                 'product_uom_qty': line_values['quantity'],
-                'product_uom': line_values['product_uom_id'],
             }
             del line_values['quantity']
-            # To do: rename product_uom field to `product_uom_id` of sale.order.line
-            del line_values['product_uom_id']
             if not line_values['product_id']:
                 logs += [_("Could not retrieve product for line '%s'", line_values['name'])]
             # To do: rename tax_id field to `tax_ids` of sale.order.line
@@ -69,8 +66,8 @@ class SaleEdiCommon(models.AbstractModel):
             )
             logs += tax_logs
             lines_values += self._retrieve_line_charges(order, line_values, line_values['tax_id'])
-            if not line_values['product_uom']:
-                line_values.pop('product_uom')  # if no uom, pop it so it's inferred from the product_id
+            if not line_values['product_uom_id']:
+                line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
             lines_values.append(line_values)
 
         return lines_values, logs

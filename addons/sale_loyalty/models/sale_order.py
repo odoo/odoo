@@ -219,7 +219,6 @@ class SaleOrder(models.Model):
             'coupon_id': coupon.id,
             'points_cost': cost,
             'reward_identifier_code': _generate_random_reward_code(),
-            'product_uom': product.uom_id.id,
             'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=10) + 1,
             'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes]
         }]
@@ -471,7 +470,6 @@ class SaleOrder(models.Model):
         base_reward_line_values = {
             'product_id': reward_product.id,
             'product_uom_qty': 1.0,
-            'product_uom': reward_product.uom_id.id,
             'tax_id': [Command.clear()],
             'name': reward.description,
             'reward_id': reward.id,

@@ -94,7 +94,7 @@ class SaleOrderLine(models.Model):
         for sale_line in self:
             if sale_line.product_type or (sale_line.is_downpayment and sale_line.price_unit != 0):
                 product_uom = sale_line.product_id.uom_id
-                sale_line_uom = sale_line.product_uom
+                sale_line_uom = sale_line.product_uom_id
                 item = sale_line.read(field_names, load=False)[0]
                 if sale_line.product_id.tracking != 'none':
                     item['lot_names'] = sale_line.move_ids.move_line_ids.lot_id.mapped('name')
@@ -126,7 +126,7 @@ class SaleOrderLine(models.Model):
         if DIR='p2s': convert from product uom to sale line uom
         """
         product_uom = sale_line.product_id.uom_id
-        sale_line_uom = sale_line.product_uom
+        sale_line_uom = sale_line.product_uom_id
         if direction == 's2p':
             return sale_line_uom._compute_quantity(qty, product_uom, False)
         elif direction == 'p2s':

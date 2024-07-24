@@ -64,17 +64,17 @@ class TestSalePrices(SaleCommon):
             Command.create({
                 'product_id': self.product.id,
                 'product_uom_qty': 1.0,
-                'product_uom': self.uom_dozen.id,
+                'product_uom_id': self.uom_dozen.id,
             }),
             Command.create({
                 'product_id': self.product.id,
                 'product_uom_qty': 0.4,
-                'product_uom': self.uom_dozen.id,
+                'product_uom_id': self.uom_dozen.id,
             }),
             Command.create({
                 'product_id': self.product.id,
                 'product_uom_qty': 0.3,
-                'product_uom': self.uom_dozen.id,
+                'product_uom_id': self.uom_dozen.id,
             })
         ]
 
@@ -203,7 +203,7 @@ class TestSalePrices(SaleCommon):
         self.empty_order.order_line = [
             Command.create({
                 'product_id': self.product.id,
-                'product_uom': self.uom_dozen.id,
+                'product_uom_id': self.uom_dozen.id,
                 'product_uom_qty': 2.0,
             }),
         ]
@@ -227,7 +227,7 @@ class TestSalePrices(SaleCommon):
                 'order_line': [
                     Command.create({
                         'product_id': self.product.id,
-                        'product_uom': self.uom_dozen.id,
+                        'product_uom_id': self.uom_dozen.id,
                         'product_uom_qty': 2.0,
                     }),
                 ]
@@ -344,7 +344,7 @@ class TestSalePrices(SaleCommon):
 
         # force compute uom and prices
         self.assertEqual(order_line.discount, 10, "First pricelist rule not applied")
-        order_line.product_uom = new_uom
+        order_line.product_uom_id = new_uom
         self.assertEqual(order_line.price_total, 1800, "First pricelist rule not applied")
 
     def test_multi_currency_discount(self):

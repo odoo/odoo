@@ -79,7 +79,7 @@ class ProductPricelistItem(models.Model):
         ondelete='cascade', check_company=True,
         domain="[('product_tmpl_id', '=', product_tmpl_id)]",
         help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
-    product_uom = fields.Char(related='product_tmpl_id.uom_name')
+    product_uom_name = fields.Char(related='product_tmpl_id.uom_name')
     product_variant_count = fields.Integer(related='product_tmpl_id.product_variant_count')
 
     base = fields.Selection(
@@ -350,7 +350,7 @@ class ProductPricelistItem(models.Model):
                     product_id=None,
                     product_tmpl_id=None,
                     applied_on='2_product_category',
-                    product_uom=None,
+                    product_uom_name=None,
                 ))
 
     @api.onchange('price_markup')

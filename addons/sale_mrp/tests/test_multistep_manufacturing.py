@@ -66,7 +66,6 @@ class TestMultistepManufacturing(TestMrpCommon):
             line.name = cls.product_manu.name
             line.product_id = cls.product_manu
             line.product_uom_qty = 1.0
-            line.product_uom = cls.uom_unit
             line.price_unit = 10.0
         cls.sale_order = sale_form.save()
 

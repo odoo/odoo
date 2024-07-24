@@ -37,7 +37,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 'name': 'FIFO Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 10.0,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 50.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
         })
@@ -64,7 +64,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 'name': 'FIFO Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 30.0,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
             })
@@ -145,14 +145,14 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                     'name': 'FIFO Ice Cream',
                     'product_id': product_cable_management_box.id,
                     'product_qty': 30,
-                    'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                    'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
                     'price_unit': 0.150,
                     'date_planned': time.strftime('%Y-%m-%d')}),
                 (0, 0, {
                     'name': product_cable_management_box.name,
                     'product_id': product_cable_management_box.id,
                     'product_qty': 10.0,
-                    'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                    'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
                     'price_unit': 150.0,
                     'date_planned': time.strftime('%Y-%m-%d')})]
                 })
@@ -278,7 +278,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fifo_negative.id,
                 'product_qty': 50.0,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 50.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
         })
@@ -297,7 +297,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 'name': product_cable_management_box.name,
                 'product_id': product_fifo_negative.id,
                 'product_qty': 600.0,
-                'product_uom': self.env.ref('uom.product_uom_kgm').id,
+                'product_uom_id': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
         })
@@ -340,7 +340,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 'name': super_product.name,
                 'product_id': super_product.id,
                 'product_qty': 1000,
-                'product_uom': super_product.uom_id.id,
+                'product_uom_id': super_product.uom_id.id,
                 'price_unit': super_product.standard_price,
                 'date_planned': time.strftime('%Y-%m-%d'),
                 'taxes_id': [(4, tax.id)],

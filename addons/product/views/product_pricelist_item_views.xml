@@ -128,8 +128,8 @@
                                 <field name="fixed_price"
                                     widget="monetary"
                                     options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                <span class="d-flex gap-2 p-0" invisible="not product_uom ">per<field
-                                        name="product_uom"/></span>
+                                <span class="d-flex gap-2 p-0" invisible="not product_uom_name">per<field
+                                        name="product_uom_name"/></span>
                             </div>
                             <label for="percent_price" string="Discount"
                                 invisible="compute_price != 'percentage'"/>

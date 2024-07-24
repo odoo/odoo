@@ -558,7 +558,7 @@
                                         <td class="text-end" id="quote_qty_td">
                                             <div id="quote_qty">
                                                 <span t-field="line.product_uom_qty"/>
-                                                <span t-field="line.product_uom"/>
+                                                <span t-field="line.product_uom_id"/>
                                             </div>
                                         </td>
                                         <td t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">

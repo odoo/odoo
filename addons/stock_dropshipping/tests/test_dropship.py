@@ -54,7 +54,6 @@ class TestDropship(common.TransactionCase):
                 'name': self.dropship_product.name,
                 'product_id': self.dropship_product.id,
                 'product_uom_qty': 1.00,
-                'product_uom': self.dropship_product.uom_id.id,
                 'price_unit': 12,
             })],
             'picking_policy': 'direct',

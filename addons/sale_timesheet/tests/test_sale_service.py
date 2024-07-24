@@ -92,7 +92,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 5,
-            'product_uom': uom_days.id,
+            'product_uom_id': uom_days.id,
         })
         self.sale_order.action_confirm()
         task = self.env['project.task'].search([('sale_line_id', '=', sale_order_line.id)])
@@ -578,7 +578,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             sol_vals.update({
                 'name': uom_name,
                 'product_id': product.id,
-                'product_uom': uom_id.id,
+                'product_uom_id': uom_id.id,
             })
             SaleOrderLine.create(sol_vals)
 
@@ -608,7 +608,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'name': product_create.name,
             'product_id': product_create.id,
             'product_uom_qty': 5,
-            'product_uom': product_create.uom_id.id,
             'price_unit': product_create.list_price,
         })
         self.sale_order.action_confirm()
@@ -620,7 +619,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'name': product_add.name,
             'product_id': product_add.id,
             'product_uom_qty': 5,
-            'product_uom': product_add.uom_id.id,
             'price_unit': product_add.list_price,
             'task_id': sale_order_line_create.task_id.id,
         })
@@ -709,22 +707,22 @@ class TestSaleService(TestCommonSaleTimesheet):
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 2,
-            'product_uom': self.env.ref('uom.product_uom_day').id, # 16 hours
+            'product_uom_id': self.env.ref('uom.product_uom_day').id,  # 16 hours
         }, {
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 8,
-            'product_uom': self.env.ref('uom.product_uom_hour').id, # 8 hours
+            'product_uom_id': self.env.ref('uom.product_uom_hour').id,  # 8 hours
         }, {
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 1,
-            'product_uom': self.env.ref('uom.product_uom_dozen').id, # 0 hours
+            'product_uom_id': self.env.ref('uom.product_uom_dozen').id,  # 0 hours
         }, {
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 6,
-            'product_uom': self.env.ref('uom.product_uom_unit').id, # 6 hours
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,  # 6 hours
         }])
         self.sale_order.action_confirm()
         allocated_hours = self.sale_order.project_ids.allocated_hours
@@ -835,7 +833,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_delivery_timesheet3.uom_id.id,
             'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })

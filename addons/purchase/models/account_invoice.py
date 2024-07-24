@@ -526,7 +526,7 @@ class AccountMoveLine(models.Model):
             {
                 'product_id': line.product_id.id,
                 'product_qty': line.quantity,
-                'product_uom': line.product_uom_id.id,
+                'product_uom_id': line.product_uom_id.id,
                 'price_unit': line.price_unit,
                 'discount': line.discount,
             }
