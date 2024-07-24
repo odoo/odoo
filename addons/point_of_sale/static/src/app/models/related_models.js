@@ -24,6 +24,7 @@ function mapObj(obj, fn) {
 const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
 const AVAILABLE_EVENT = ["create", "update", "delete"];
+<<<<<<< HEAD
 const SERIALIZABLE_MODELS = [
     "pos.order",
     "pos.order.line",
@@ -33,6 +34,16 @@ const SERIALIZABLE_MODELS = [
     "event.registration", // FIXME should be overrided from pos_event
     "event.registration.answer",
 ];
+||||||| parent of 605e51b8c392 (temp)
+=======
+export const CONFIG = {
+    exemptedAutomaticLoad: [(field) => ["pos.session", "pos.config"].includes(field.relation)],
+};
+
+function isFieldExemptedAutoLoad(field) {
+    return CONFIG.exemptedAutomaticLoad.some((condition) => condition(field));
+}
+>>>>>>> 605e51b8c392 (temp)
 
 function processModelDefs(modelDefs) {
     modelDefs = clone(modelDefs);
@@ -880,6 +891,39 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                                     const toConnect = records[field.relation][id];
                                     if (toConnect) {
                                         connect(field, recorded, toConnect);
+<<<<<<< HEAD
+||||||| parent of 605e51b8c392 (temp)
+                                    } else if (
+                                        this[field.relation] &&
+                                        !EXEMPTED_AUTOMATIC_LOAD.includes(field.relation)
+                                    ) {
+                                        if (!missingRecords[field.relation]) {
+                                            missingRecords[field.relation] = new Set([id]);
+                                        } else {
+                                            missingRecords[field.relation].add(id);
+                                        }
+                                        const key = `${field.relation}_${id}`;
+                                        if (!missingFields[key]) {
+                                            missingFields[key] = [[recorded, field]];
+                                        } else {
+                                            missingFields[key].push([recorded, field]);
+                                        }
+=======
+                                    } else if (this[field.relation]) {
+                                        if (!isFieldExemptedAutoLoad(field)) {
+                                            if (!missingRecords[field.relation]) {
+                                                missingRecords[field.relation] = new Set([id]);
+                                            } else {
+                                                missingRecords[field.relation].add(id);
+                                            }
+                                        }
+                                        const key = `${field.relation}_${id}`;
+                                        if (!missingFields[key]) {
+                                            missingFields[key] = [[recorded, field]];
+                                        } else {
+                                            missingFields[key].push([recorded, field]);
+                                        }
+>>>>>>> 605e51b8c392 (temp)
                                     }
                                 }
                             }
@@ -890,6 +934,39 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                             const toConnect = records[field.relation][id];
                             if (toConnect) {
                                 connect(field, recorded, toConnect);
+<<<<<<< HEAD
+||||||| parent of 605e51b8c392 (temp)
+                            } else if (
+                                this[field.relation] &&
+                                !EXEMPTED_AUTOMATIC_LOAD.includes(field.relation)
+                            ) {
+                                if (!missingRecords[field.relation]) {
+                                    missingRecords[field.relation] = new Set([id]);
+                                } else {
+                                    missingRecords[field.relation].add(id);
+                                }
+                                const key = `${field.relation}_${id}`;
+                                if (!missingFields[key]) {
+                                    missingFields[key] = [[recorded, field]];
+                                } else {
+                                    missingFields[key].push([recorded, field]);
+                                }
+=======
+                            } else if (this[field.relation]) {
+                                if (!isFieldExemptedAutoLoad(field)) {
+                                    if (!missingRecords[field.relation]) {
+                                        missingRecords[field.relation] = new Set([id]);
+                                    } else {
+                                        missingRecords[field.relation].add(id);
+                                    }
+                                }
+                                const key = `${field.relation}_${id}`;
+                                if (!missingFields[key]) {
+                                    missingFields[key] = [[recorded, field]];
+                                } else {
+                                    missingFields[key].push([recorded, field]);
+                                }
+>>>>>>> 605e51b8c392 (temp)
                             }
                         }
                     }
