@@ -17,7 +17,7 @@ class ProductAttribute(models.Model):
 
     name = fields.Char('Attribute', required=True, translate=True)
     value_ids = fields.One2many('product.attribute.value', 'attribute_id', 'Values', copy=True)
-    sequence = fields.Integer('Sequence', help="Determine the display order", index=True)
+    sequence = fields.Integer('Sequence', help="Determine the display order", index=True, default=20)
     attribute_line_ids = fields.One2many('product.template.attribute.line', 'attribute_id', 'Lines')
     create_variant = fields.Selection([
         ('always', 'Instantly'),
