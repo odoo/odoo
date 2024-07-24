@@ -24,6 +24,7 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS, compute='_compute_totp_secret', inverse='_inverse_token')
+    totp_last_counter = fields.Integer(copy=False, groups=fields.NO_ACCESS)
     totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled', search='_totp_enable_search')
     totp_trusted_device_ids = fields.One2many('auth_totp.device', 'user_id', string="Trusted Devices")
 
@@ -71,14 +72,19 @@ class ResUsers(models.Model):
             if match is None:
                 _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
                 raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
+
+            if sudo.totp_last_counter and match <= sudo.totp_last_counter:
+                _logger.warning("2FA check: REUSE for %s %r", self, sudo.login)
+                raise AccessDenied(_("Verification failed, please use the latest 6-digit code"))
+
+            sudo.totp_last_counter = match
             _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
             return {
                 'uid': self.env.user.id,
                 'auth_method': 'totp',
                 'mfa': 'default',
             }
-        else:
-            return super()._check_credentials(credentials, env)
+        return super()._check_credentials(credentials, env)
 
     def _totp_try_setting(self, secret, code):
         if self.totp_enabled or self != self.env.user:
@@ -92,6 +98,7 @@ class ResUsers(models.Model):
             return False
 
         self.sudo().totp_secret = secret
+        self.sudo().totp_last_counter = match
         if request:
             self.env.flush_all()
             # update session token so the user does not get logged out (cache cleared by change)
@@ -175,6 +182,7 @@ class ResUsers(models.Model):
             user.totp_secret = self.env.cr.fetchone()[0]
 
     def _inverse_token(self):
+        self.sudo().totp_last_counter = False
         for user in self:
             secret = user.totp_secret if user.totp_secret else None
             self.env.cr.execute('UPDATE res_users SET totp_secret = %s WHERE id=%s', (secret, user.id))
