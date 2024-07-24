@@ -54,6 +54,8 @@ class PosSession(models.Model):
                     'role': role,
                     'barcode': bp_per_employee_id[employee['id']]['barcode'],
                     'pin': bp_per_employee_id[employee['id']]['pin'],
+                    'id': employee['id'],
+                    'name': employee['name'],
                 }
 
             response['data']['hr.employee'] = employees
