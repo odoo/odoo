@@ -38,7 +38,6 @@ import { TourInteractive } from "./tour_interactive";
  * @property {string} [content] Description of the step.
  * @property {"top" | "botton" | "left" | "right"} [position] The position where the UI helper is shown.
  * @property {RunCommand} [run] The action to perform when trigger conditions are verified.
- * @property {boolean} [in_modal] When true, check that trigger node is present in the last visible .modal.
  * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
  * You can change this value to lengthen or shorten the time before the error occurs [ms].
  * @property {string} [consumeEvent] Only in manual mode (onboarding tour). It's the event we want the customer to do.
@@ -59,7 +58,6 @@ function checkTourStepKeyValues(tourStep) {
         content: { type: [String, Object], optional: true }, //allow object for _t && markup
         position: { type: String, optional: true },
         run: { type: [String, Function], optional: true },
-        in_modal: { type: Boolean, optional: true },
         timeout: { type: Number, optional: true },
         consumeEvent: { type: String, optional: true },
         title: { type: String, optional: true },
