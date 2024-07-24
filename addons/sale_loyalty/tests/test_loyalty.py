@@ -881,6 +881,40 @@ class TestLoyalty(TestSaleCouponCommon):
         msg = "100% discount on order should reduce total amount to 0"
         self.assertEqual(order.amount_total, 0, msg=msg)
 
+    def test_discount_on_taxes_with_child_tax(self):
+        """
+        Check whether a program discount properly apply when product contain group of tax.
+        """
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        loyalty_program = self.env['loyalty.program'].create([{
+            'name': '90% Discount',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'reward_point_amount': 1,
+                'product_ids': [self.product_a.id],
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 90,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        }])
+        self.env['loyalty.card'].create({'program_id': loyalty_program.id, 'partner_id': self.partner_a.id, 'points': 2})
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {'product_id': self.product_D.id, 'product_uom_qty': 1})],
+        })
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, loyalty_program)
+        msg = "Discountable should take child tax amount into account"
+        self.assertEqual(order.amount_total, 10, msg=msg)
+
     def test_ewallet_program_without_trigger_product(self):
         self.ewallet_program.trigger_product_ids = [Command.clear()]
         self.ewallet.points = 1000
@@ -918,3 +952,56 @@ class TestLoyalty(TestSaleCouponCommon):
         order.action_confirm()
 
         self.assertEqual(self.ewallet.points, 50)
+
+    def test_archived_reward_products(self):
+        """
+        Check that we do not use loyalty rewards that have no active reward product.
+        In the case where the reward is based on reward_product_tag_id we also check
+        the case where at least one reward is  active.
+        """
+
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+        loyalty_program_tag = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+
+        free_product_tag = self.env['product.tag'].create({'name': 'Free Product'})
+        self.product_b.write({'product_tag_ids': [(4, free_product_tag.id)]})
+        product_c = self.env['product.template'].create(
+            {
+                'name': 'Free Product C',
+                'list_price': 1,
+                'product_tag_ids': [(4, free_product_tag.id)],
+            }
+        )
+
+        loyalty_program.reward_ids[0].write({
+            'reward_type': 'product',
+            'required_points': 1,
+            'reward_product_id': self.product_b,
+        })
+        loyalty_program_tag.reward_ids[0].write({
+            'reward_type': 'product',
+            'required_points': 1,
+            'reward_product_tag_id': free_product_tag.id,
+        })
+        self.product_b.active = False
+        product_c.active = False
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                }),
+            ]
+        })
+
+        order._update_programs_and_rewards()
+        rewards = [value.ids for value in order._get_claimable_rewards().values()]
+        self.assertTrue(all(loyalty_program.reward_ids[0].id not in r for r in rewards))
+        self.assertTrue(all(loyalty_program_tag.reward_ids[0].id not in r for r in rewards))
+
+        product_c.active = True
+        order._update_programs_and_rewards()
+        rewards = [value.ids for value in order._get_claimable_rewards().values()]
+        self.assertTrue(any(loyalty_program_tag.reward_ids[0].id in r for r in rewards))

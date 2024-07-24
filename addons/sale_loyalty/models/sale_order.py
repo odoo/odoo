@@ -182,12 +182,20 @@ class SaleOrder(models.Model):
             # non-fixed tax totals. This way fixed taxes will not be discounted
             taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
             discountable += tax_data['total_excluded'] + sum(
-                tax['amount'] for tax in tax_data['taxes'] if tax['id'] in taxes.ids
+                tax['amount'] for tax in tax_data['taxes']
+                if (
+                    tax['id'] in taxes.ids
+                    or (tax['group'] and tax['group'] in taxes)
+                )
             )
             line_price = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100)
             discountable_per_tax[taxes] += line_price - sum(
                 tax['amount'] for tax in tax_data['taxes']
-                if tax['price_include'] and tax['id'] not in taxes.ids
+                if (
+                    tax['price_include']
+                    and tax['id'] not in taxes.ids
+                    and (not tax['group'] or tax['group'] not in taxes)
+                )
             )
         return discountable, discountable_per_tax
 
@@ -639,6 +647,7 @@ class SaleOrder(models.Model):
         total_is_zero = float_is_zero(self.amount_total, precision_digits=2)
         result = defaultdict(lambda: self.env['loyalty.reward'])
         global_discount_reward = self._get_applied_global_discount()
+        active_products_domain = self.env['loyalty.reward']._get_active_products_domain()
         for coupon in all_coupons:
             points = self._get_real_points_for_coupon(coupon)
             for reward in coupon.program_id.reward_ids:
@@ -647,6 +656,10 @@ class SaleOrder(models.Model):
                 # Discounts are not allowed if the total is zero unless there is a payment reward, in which case we allow discounts.
                 # If the total is 0 again without the payment reward it will be removed.
                 if reward.reward_type == 'discount' and total_is_zero and (not has_payment_reward or reward.program_id.is_payment_program):
+                    continue
+                if reward.reward_type == 'product' and not reward.filtered_domain(
+                    active_products_domain
+                ):
                     continue
                 if points >= reward.required_points:
                     result[coupon] |= reward
