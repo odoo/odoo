@@ -744,8 +744,8 @@ const orderByField = (model, orderBy, records) => {
             }
             case "reference":
             case "selection": {
-                v1 = valuesMap.get(v1);
-                v2 = valuesMap.get(v2);
+                v1 &&= valuesMap.get(v1);
+                v2 &&= valuesMap.get(v2);
                 break;
             }
         }
