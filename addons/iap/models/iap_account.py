@@ -208,14 +208,13 @@ class IapAccount(models.Model):
     def get_config_account_url(self):
         """ Called notably by ajax partner_autocomplete. """
         account = self.env['iap.account'].get('partner_autocomplete')
-        action = self.env.ref('iap.iap_account_action')
         menu = self.env.ref('iap.iap_account_menu')
         if not self.env.user.has_group('base.group_no_one'):
             return False
         if account:
-            url = "/web#id=%s&action=%s&model=iap.account&view_type=form&menu_id=%s" % (account.id, action.id, menu.id)
+            url = f"/odoo/action-iap.iap_account_action/{account.id}?menu_id={menu.id}"
         else:
-            url = "/web#action=%s&model=iap.account&view_type=form&menu_id=%s" % (action.id, menu.id)
+            url = f"/odoo/action-iap.iap_account_action?menu_id={menu.id}"
         return  url
 
     @api.model
