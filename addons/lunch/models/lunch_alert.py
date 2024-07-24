@@ -195,6 +195,8 @@ class LunchAlert(models.Model):
         partners = self.env['lunch.order'].search(order_domain).user_id.partner_id
         if partners:
             self.env['mail.thread'].message_notify(
+                model=self._name,
+                res_id=self.id,
                 body=self.message,
                 partner_ids=partners.ids,
                 subject=_('Your Lunch Order'),
