@@ -102,7 +102,6 @@
             <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" multi_edit="1">
                 <field name="company_id" column_invisible="True"/>
                 <field name="active" column_invisible="True"/>
-                <field name="sequence" widget="handle"/>
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
                 <field name="is_empty" invisible="usage not in ['internal', 'transit']"/>
