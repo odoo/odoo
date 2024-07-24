@@ -35,15 +35,18 @@ _logger = logging.getLogger(__name__)
 
 
 MAX_TRY_ON_POOL_ERROR = 10
-DELAY_ON_POOL_ERROR = 0.03
+DELAY_ON_POOL_ERROR = 0.3
+JITTER_ON_POOL_ERROR = 0.3
 
 
 def acquire_cursor(db):
     """ Try to acquire a cursor up to `MAX_TRY_ON_POOL_ERROR` """
-    for tryno in range(1, MAX_TRY_ON_POOL_ERROR + 1):
+    delay = DELAY_ON_POOL_ERROR
+    for _ in range(MAX_TRY_ON_POOL_ERROR):
         with suppress(PoolError):
             return odoo.registry(db).cursor()
-        time.sleep(random.uniform(DELAY_ON_POOL_ERROR, DELAY_ON_POOL_ERROR * tryno))
+        time.sleep(delay + random.uniform(0, JITTER_ON_POOL_ERROR))
+        delay *= 1.25
     raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
 
 

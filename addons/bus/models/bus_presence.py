@@ -9,7 +9,7 @@ from odoo import tools
 from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
-UPDATE_PRESENCE_DELAY = 60
+UPDATE_PRESENCE_DELAY = 1200  # 20 minutes
 DISCONNECTION_TIMER = UPDATE_PRESENCE_DELAY + 5
 AWAY_TIMER = 1800  # 30 minutes
 

@@ -4,7 +4,9 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { timings } from "@bus/misc";
 
-export const UPDATE_BUS_PRESENCE_DELAY = 60000;
+export const UPDATE_BUS_PRESENCE_DELAY = 600000; // 10 minutes
+export const UPDATE_BUS_PRESENCE_JITTER = 600000; // 10 minutes
+
 /**
  * This service updates periodically the user presence in order for the
  * im_status to be up to date.
@@ -32,7 +34,7 @@ export const imStatusService = {
                 throttledUpdateBusPresence,
                 UPDATE_BUS_PRESENCE_DELAY
             );
-        }, UPDATE_BUS_PRESENCE_DELAY);
+        }, UPDATE_BUS_PRESENCE_DELAY + UPDATE_BUS_PRESENCE_JITTER * Math.random());
 
         bus_service.addEventListener("connect", () => {
             // wait for im_status model/ids to be registered before starting.
