@@ -39,12 +39,6 @@ function findTrigger(tour, step) {
         return null;
     }
     const options = {};
-    if (step.in_modal !== false) {
-        const visibleModal = hoot.queryAll(".modal", { visible: true }).at(-1);
-        if (visibleModal) {
-            options.root = visibleModal;
-        }
-    }
     try {
         const nodes = hoot.queryAll(step.trigger, options);
         const triggerEl = step.trigger.includes(":visible")
