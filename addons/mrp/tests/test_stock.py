@@ -339,18 +339,18 @@ class TestKitPicking(common.TestMrpCommon):
             'product_id': kit_2.id,
             'product_qty': 2.0,
             'bom_id': bom_kit_parent.id})
-        bom_kit_3 = cls.env['mrp.bom'].create({
+        cls.bom_kit_3 = cls.env['mrp.bom'].create({
             'product_tmpl_id': kit_3.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom'})
         BomLine.create({
             'product_id': component_f.id,
             'product_qty': 1.0,
-            'bom_id': bom_kit_3.id})
+            'bom_id': cls.bom_kit_3.id})
         BomLine.create({
             'product_id': component_g.id,
             'product_qty': 2.0,
-            'bom_id': bom_kit_3.id})
+            'bom_id': cls.bom_kit_3.id})
         BomLine.create({
             'product_id': kit_3.id,
             'product_qty': 1.0,
@@ -534,3 +534,26 @@ class TestKitPicking(common.TestMrpCommon):
         aggregate_kit_values = delivery.move_line_ids._get_aggregated_product_quantities(kit_name=bom_kit.product_id.name)
         self.assertEqual(len(aggregate_kit_values.keys()), 2)
         self.assertTrue(all('Component' in val for val in aggregate_kit_values), 'Only kit products should be included')
+
+    def test_scrap_kit(self):
+        """ Checks that the scrap of a kit creates the exploded moves for its components, not the kit itself
+        """
+        # Set enough quantity for the kit components
+        compo_f, compo_g = self.bom_kit_3.bom_line_ids.product_id
+        self.env['stock.quant']._update_available_quantity(compo_f, self.location_1, 1)
+        self.env['stock.quant']._update_available_quantity(compo_g, self.location_1, 2)
+
+        with Form(self.env['stock.scrap']) as scrap_form:
+            scrap_form.product_id = self.bom_kit_3.product_tmpl_id.product_variant_id
+            scrap_form.scrap_qty = 1
+            scrap_form.location_id = self.location_1
+            scrap_form.bom_id = self.bom_kit_3
+            scrap = scrap_form.save()
+
+        scrap.action_validate()
+        self.assertEqual(scrap.state, 'done')
+        self.assertEqual(len(scrap.move_ids), 2)
+        self.assertRecordValues(scrap.move_ids, [
+            {'product_id': compo_f.id, 'quantity': 1},
+            {'product_id': compo_g.id, 'quantity': 2},
+        ])

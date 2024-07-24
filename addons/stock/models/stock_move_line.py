@@ -337,7 +337,8 @@ class StockMoveLine(models.Model):
 
         move_to_recompute_state = self.env['stock.move']
         for move_line in mls:
-            if move_line.state == 'done':
+            if move_line.state == 'done' or (move_line.state == 'draft' and move_line.move_id.scrapped):
+                # Scrapped moves are created with their move lines, even in draft. Should not reserve in this case.
                 continue
             location = move_line.location_id
             product = move_line.product_id
