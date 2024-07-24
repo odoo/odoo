@@ -197,8 +197,9 @@ class SMSCase(MockSMS):
         self.assertEqual(self.env['mail.notification'].search(base_domain), self.env['mail.notification'])
         self.assertEqual(self._sms, [])
 
-    def assertSMSNotification(self, recipients_info, content, messages=None, check_sms=True, sent_unlink=False):
-        """ Check content of notifications.
+    def assertSMSNotification(self, recipients_info, content, messages=None, check_sms=True, sent_unlink=False,
+                              mail_message_values=None):
+        """ Check content of notifications and sms.
 
           :param recipients_info: list[{
             'partner': res.partner record (may be empty),
@@ -206,6 +207,8 @@ class SMSCase(MockSMS):
             'state': ready / pending / sent / exception / canceled (pending by default),
             'failure_type': optional: sms_number_missing / sms_number_format / sms_credit / sms_server
             }, { ... }]
+          :param content: SMS content
+          :param mail_message_values: dictionary of expected mail message fields values
         """
         partners = self.env['res.partner'].concat(*list(p['partner'] for p in recipients_info if p.get('partner')))
         numbers = [p['number'] for p in recipients_info if p.get('number')]
@@ -240,7 +243,8 @@ class SMSCase(MockSMS):
                 )
             self.assertTrue(notif, 'SMS: not found notification for %s (number: %s, state: %s)\n%s' % (partner, number, state, debug_info))
             self.assertEqual(notif.author_id, notif.mail_message_id.author_id, 'SMS: Message and notification should have the same author')
-
+            for field_name, expected_value in (mail_message_values or {}).items():
+                self.assertEqual(notif.mail_message_id[field_name], expected_value)
             if state not in {'process', 'sent', 'ready', 'canceled', 'pending'}:
                 self.assertEqual(notif.failure_type, recipient_info['failure_type'])
             if check_sms:
@@ -259,8 +263,11 @@ class SMSCase(MockSMS):
                     raise NotImplementedError('Not implemented')
 
         if messages is not None:
-            for message in messages:
-                self.assertEqual(content, tools.html2plaintext(message.body).rstrip('\n'))
+            sanitize_tags = {**tools.mail.SANITIZE_TAGS}
+            sanitize_tags['remove_tags'] = [*sanitize_tags['remove_tags'] + ['a']]
+            with patch('odoo.tools.mail.SANITIZE_TAGS', sanitize_tags):
+                for message in messages:
+                    self.assertEqual(content, tools.html2plaintext(tools.html_sanitize(message.body)).rstrip('\n'))
 
     def assertSMSLogged(self, records, body):
         for record in records:
