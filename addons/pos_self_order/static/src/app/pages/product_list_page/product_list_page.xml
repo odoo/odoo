@@ -27,19 +27,6 @@
                         <small class="d-block fw-bold text-center category-name" t-esc="category.name"/>
                     </a>
                 </nav>
-
-                <button class="search-button btn btn-light border-0 border-start rounded-0" t-on-click="focusSearch">
-                    <i class="oi oi-search"/>
-                </button>
-
-                <div t-att-class="{ 'd-none': !this.state.search }" t-attf-class="position-absolute top-0 start-0 w-100 h-100 px-3 pe-4 d-flex align-items-center bg-view">
-                    <input type="text"
-                        t-ref="searchInput"
-                        class="form-control py-3 ps-0 border-0 shadow-none"
-                        placeholder="Search product"
-                        t-model="state.searchInput" />
-                    <button class="btn-close" t-on-click="focusSearch"/>
-                </div>
             </div>
 
             <!-- Products list -->
@@ -61,7 +48,7 @@
                     t-ref="productsWithCategory_{{category.id}}"
                     class="product-list-category d-empty-none bg-view px-3 pb-4">
                     <t t-set="products" t-value="this.selfOrder.productByCategIds[category.id] || []" />
-                    <t t-set="availableProducts" t-value="!state.searchInput ? products : getFilteredProducts(products)" />
+                    <t t-set="availableProducts" t-value="products" />
                     <t t-set="nbrItem" t-value="availableProducts.length + nbrItem" />
                     <t t-if="availableProducts.length > 0">
                         <div class="pt-4 pb-2 px-3 mb-4 mx-n3 bg-200 fw-bold">
