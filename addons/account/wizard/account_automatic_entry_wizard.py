@@ -261,6 +261,7 @@ class AutomaticEntryWizard(models.TransientModel):
             'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
             'move_type': 'entry',
             'line_ids': [],
+            'name': '/',  # ensure to not provide a sequence number while the move stays in draft
             'ref': _('Adjusting Entry'),
             'date': fields.Date.to_string(self.date),
             'journal_id': self.journal_id.id,
@@ -273,6 +274,7 @@ class AutomaticEntryWizard(models.TransientModel):
                 'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
                 'move_type': 'entry',
                 'line_ids': [],
+                'name': '/',  # ensure to not provide a sequence number while the move stays in draft
                 'ref': self._format_strings(_('Adjusting Entry of {date} ({percent:.2f}% recognized on {new_date})'), grouped_lines[0].move_id, amount),
                 'date': fields.Date.to_string(date),
                 'journal_id': self.journal_id.id,

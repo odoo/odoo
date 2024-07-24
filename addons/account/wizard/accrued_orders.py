@@ -212,6 +212,7 @@ class AccruedExpenseRevenue(models.TransientModel):
 
         move_type = _('Expense') if is_purchase else _('Revenue')
         move_vals = {
+            'name': '/',  # ensure to not provide a sequence number while the move stays in draft
             'ref': _('Accrued %s entry as of %s', move_type, format_date(self.env, self.date)),
             'journal_id': self.journal_id.id,
             'date': self.date,
@@ -229,6 +230,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         move = self.env['account.move'].create(move_vals)
         move._post()
         reverse_move = move._reverse_moves(default_values_list=[{
+            'name': '/',
             'ref': _('Reversal of: %s', move.ref),
             'date': self.reversal_date,
         }])
