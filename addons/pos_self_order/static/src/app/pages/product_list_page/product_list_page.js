@@ -1,11 +1,10 @@
-import { Component, useEffect, useRef, useState, onWillStart } from "@odoo/owl";
+import { Component, useEffect, useRef, onWillStart } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
 import { useService, useChildRef } from "@web/core/utils/hooks";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { _t } from "@web/core/l10n/translation";
-import { fuzzyLookup } from "@web/core/utils/search";
 
 export class ProductListPage extends Component {
     static template = "pos_self_order.ProductListPage";
@@ -18,25 +17,11 @@ export class ProductListPage extends Component {
         this.router = useService("router");
         this.productsList = useRef("productsList");
         this.categoryList = useRef("categoryList");
-        this.searchInput = useRef("searchInput");
         this.currentProductCard = useChildRef();
-        this.state = useState({
-            search: false,
-            searchInput: "",
-        });
         this.categoryButton = Object.fromEntries(
             this.selfOrder.productCategories.map((category) => {
                 return [category.id, useRef(`category_${category.id}`)];
             })
-        );
-
-        useEffect(
-            () => {
-                if (this.state.search) {
-                    this.searchInput.el.focus();
-                }
-            },
-            () => [this.state.search]
         );
 
         useEffect(
@@ -87,22 +72,6 @@ export class ProductListPage extends Component {
         onWillStart(() => {
             this.selfOrder.computeAvailableCategories();
         });
-    }
-
-    focusSearch() {
-        this.state.search = !this.state.search;
-
-        if (!this.state.search) {
-            this.state.searchInput = "";
-        }
-    }
-
-    getFilteredProducts(products) {
-        return fuzzyLookup(
-            this.state.searchInput,
-            products,
-            (product) => product.name + product.description_sale
-        );
     }
 
     scrollTo(ref = null, { behavior = "smooth" } = {}) {
