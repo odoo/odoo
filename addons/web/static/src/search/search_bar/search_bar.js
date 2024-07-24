@@ -17,6 +17,7 @@ const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text"
 const FOLDABLE_TYPES = ["properties", "many2one", "many2many"];
 
 let nextItemId = 1;
+const SUB_ITEMS_DEFAULT_LIMIT = 8;
 
 export class SearchBar extends Component {
     static template = "web.SearchBar";
@@ -50,6 +51,7 @@ export class SearchBar extends Component {
             expanded: [],
             focusedIndex: 0,
             query: "",
+            subItemsLimits: {},
         });
 
         // derived state
@@ -106,6 +108,9 @@ export class SearchBar extends Component {
             if (searchItem.type === "field" && searchItem.fieldType === "properties") {
                 tasks.push({ id, prom: this.getSearchItemsProperties(searchItem) });
             } else if (!subItems[id]) {
+                if (!this.state.subItemsLimits[id]) {
+                    this.state.subItemsLimits[id] = SUB_ITEMS_DEFAULT_LIMIT;
+                }
                 tasks.push({ id, prom: this.computeSubItems(searchItem, query) });
             }
         }
@@ -307,13 +312,21 @@ export class SearchBar extends Component {
             query = query.slice(1, -1);
             nameSearchOperator = "=";
         }
+        const limitToFetch = this.state.subItemsLimits[searchItem.id] + 1;
         const options = await this.orm.call(relation, "name_search", [], {
             args: domain,
             operator: nameSearchOperator,
             context,
-            limit: 8,
+            limit: limitToFetch,
             name: query.trim(),
         });
+
+        let showLoadMore = false;
+        if (options.length === limitToFetch) {
+            options.pop();
+            showLoadMore = true;
+        }
+
         const subItems = [];
         if (options.length) {
             const operator = searchItem.operator || "=";
@@ -325,6 +338,21 @@ export class SearchBar extends Component {
                     value,
                     label,
                     operator,
+                });
+            }
+            if (showLoadMore) {
+                subItems.push({
+                    id: nextItemId++,
+                    isChild: true,
+                    searchItemId: searchItem.id,
+                    label: _t("Load more"),
+                    unselectable: true,
+                    loadMore: () => {
+                        this.state.subItemsLimits[searchItem.id] += SUB_ITEMS_DEFAULT_LIMIT;
+                        const newSubItems = [...this.subItems];
+                        newSubItems[searchItem.id] = undefined;
+                        this.computeState({ subItems: newSubItems });
+                    },
                 });
             }
         } else {
@@ -362,6 +390,7 @@ export class SearchBar extends Component {
     }
 
     resetState() {
+        this.state.subItemsLimits = {};
         this.computeState({ expanded: [], focusedIndex: 0, query: "", subItems: [] });
         this.inputRef.el.focus();
     }
@@ -394,7 +423,12 @@ export class SearchBar extends Component {
             }
             this.env.searchModel.addAutoCompletionValues(searchItemId, autoCompleteValues);
         }
-        this.resetState();
+
+        if (item.loadMore) {
+            item.loadMore();
+        } else {
+            this.resetState();
+        }
     }
 
     /**
