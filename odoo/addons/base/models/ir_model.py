@@ -142,6 +142,8 @@ def upsert_en(model, fnames, rows, conflict):
         return val
 
     def jsonify(val):
+        if isinstance(val, dict):
+            return Json(val)
         return Json({'en_US': val}) if val is not None else val
 
     wrappers = [(jsonify if model._fields[fname].translate else identity) for fname in fnames]
@@ -366,6 +368,33 @@ class IrModel(models.Model):
         }
         return self.create(vals).name_get()[0]
 
+    def _preserve_model_translate_params(self, model):
+        fields_to_keep = {
+            "name": model._description,
+        }
+        table_name = "ir_model"
+        self._cr.execute(
+            """
+            SELECT %s FROM %s
+            WHERE
+            model = %s
+            """,
+            (
+                psycopg2.extensions.AsIs(','.join(fields_to_keep)),
+                psycopg2.extensions.AsIs(table_name),
+                model._name,
+            ),
+        )
+        result = self._cr.dictfetchall()
+        translatable_values = {}
+        if result:
+            row = result[0]
+            for fname, default_value in fields_to_keep.items():
+                value = row.get(fname)
+                if value and default_value == value.get('en_US'):
+                    translatable_values[fname] = value
+        return translatable_values
+
     def _reflect_model_params(self, model):
         """ Return the values to write to the database for the given model. """
         return {
@@ -375,6 +404,7 @@ class IrModel(models.Model):
             'info': next(cls.__doc__ for cls in self.env.registry[model._name].mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
             'transient': model._transient,
+            **self._preserve_model_translate_params(model),
         }
 
     def _reflect_models(self, model_names):
@@ -1021,6 +1051,37 @@ class IrModelFields(models.Model):
             res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
         return res
 
+    def _preserve_field_translate_params(self, field):
+        fields_to_keep = {
+            "field_description": field.string,
+            "help": field.help,
+        }
+        table_name = "ir_model_fields"
+        self._cr.execute(
+            """
+            SELECT %s FROM %s
+            WHERE
+            name = %s
+            AND
+            model = %s
+            """,
+            (
+                psycopg2.extensions.AsIs(','.join(fields_to_keep)),
+                psycopg2.extensions.AsIs(table_name),
+                field.name,
+                field.model_name,
+            ),
+        )
+        result = self._cr.dictfetchall()
+        translatable_values = {}
+        if result:
+            row = result[0]
+            for fname, default_value in fields_to_keep.items():
+                value = row.get(fname)
+                if value and default_value == value.get('en_US'):
+                    translatable_values[fname] = value
+        return translatable_values
+
     def _reflect_field_params(self, field, model_id):
         """ Return the values to write to the database for the given field. """
         return {
@@ -1046,6 +1107,7 @@ class IrModelFields(models.Model):
             'relation_table': field.relation if field.type == 'many2many' else None,
             'column1': field.column1 if field.type == 'many2many' else None,
             'column2': field.column2 if field.type == 'many2many' else None,
+            **self._preserve_field_translate_params(field)
         }
 
     def _reflect_fields(self, model_names):
