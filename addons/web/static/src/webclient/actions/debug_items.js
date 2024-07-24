@@ -68,7 +68,7 @@ function viewFields({ action, env }) {
                 },
             });
         },
-        sequence: 120,
+        sequence: 130,
     };
 }
 
@@ -88,7 +88,7 @@ function ViewModel({ action, env }) {
             )[0];
             editModelDebug(env, modelName, "ir.model", modelId);
         },
-        sequence: 130,
+        sequence: 120,
     };
 }
 
