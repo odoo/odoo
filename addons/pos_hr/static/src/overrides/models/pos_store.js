@@ -5,7 +5,9 @@ patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
         if (this.config.module_pos_hr) {
-            this.showScreen("LoginScreen");
+            if (!this.hasLoggedIn) {
+                this.showScreen("LoginScreen");
+            }
         }
     },
     get employeeIsAdmin() {
@@ -15,7 +17,12 @@ patch(PosStore.prototype, {
     async processServerData() {
         await super.processServerData(...arguments);
         if (this.config.module_pos_hr) {
-            this.reset_cashier();
+            const saved_cashier_id = Number(sessionStorage.getItem("connected_cashier"));
+            if (saved_cashier_id) {
+                this.set_cashier(this.models["hr.employee"].get(saved_cashier_id));
+            } else {
+                this.reset_cashier();
+            }
         }
     },
     async actionAfterIdle() {
@@ -26,7 +33,8 @@ patch(PosStore.prototype, {
     async afterProcessServerData() {
         await super.afterProcessServerData(...arguments);
         if (this.config.module_pos_hr) {
-            this.hasLoggedIn = !this.config.module_pos_hr;
+            const saved_cashier = Number(sessionStorage.getItem("connected_cashier"));
+            this.hasLoggedIn = saved_cashier ? true : false;
         }
     },
     createNewOrder() {
@@ -40,9 +48,11 @@ patch(PosStore.prototype, {
     },
     reset_cashier() {
         this.cashier = false;
+        sessionStorage.removeItem("connected_cashier");
     },
     set_cashier(employee) {
         this.cashier = employee;
+        sessionStorage.setItem("connected_cashier", employee.id);
         const o = this.get_order();
         if (o && !o.get_orderlines().length) {
             // Order without lines can be considered to be un-owned by any employee.
