@@ -23,16 +23,10 @@
         </record>
 
         <!-- Local Delivery -->
-        <record id="product_product_local_delivery" model="product.product">
-            <field name="name">Local Delivery</field>
-            <field name="default_code">Delivery_010</field>
-            <field name="type">service</field>
+        <record id="product.product_product_local_delivery" model="product.product">
             <field name="categ_id" ref="delivery.product_category_deliveries"/>
-            <field name="sale_ok" eval="False"/>
-            <field name="purchase_ok" eval="False"/>
-            <field name="list_price">10.0</field>
-            <field name="invoice_policy">order</field>
         </record>
+
         <record id="delivery_local_delivery" model="delivery.carrier">
             <field name="name">Local Delivery</field>
             <field name="fixed_price">5.0</field>
@@ -40,7 +34,7 @@
             <field name="amount">50</field>
             <field name="sequence">4</field>
             <field name="delivery_type">fixed</field>
-            <field name="product_id" ref="delivery.product_product_local_delivery"/>
+            <field name="product_id" ref="product.product_product_local_delivery"/>
         </record>
 
         <record id="delivery_price_rule1" model="delivery.price.rule">
