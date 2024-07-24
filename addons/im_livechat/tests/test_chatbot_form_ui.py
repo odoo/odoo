@@ -12,7 +12,7 @@ class TestLivechatChatbotFormUI(HttpCaseWithUserDemo):
         creates a few steps, then verify sequences are properly applied. """
 
         self.start_tour(
-            '/web',
+            '/odoo',
             'im_livechat_chatbot_steps_sequence_tour',
             login='admin',
             step_delay=1000
@@ -36,7 +36,7 @@ class TestLivechatChatbotFormUI(HttpCaseWithUserDemo):
         move records around. """
 
         self.start_tour(
-            '/web',
+            '/odoo',
             'im_livechat_chatbot_steps_sequence_with_move_tour',
             login='admin',
             step_delay=1000
