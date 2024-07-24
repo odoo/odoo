@@ -66,14 +66,7 @@
             <field name="project_id" ref="project.project_home_construction"/>
         </record>
 
-        <record id="product_product_furniture" model="product.product">
-            <field name="name">Furniture Assembly</field>
-            <field name="categ_id" ref="product.product_category_construction"/>
-            <field name="list_price">2000.00</field>
-            <field name="standard_price">2500.00</field>
-            <field name="type">service</field>
-            <field name="uom_id" ref="uom.product_uom_hour"/>
-            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+        <record id="product.product_product_furniture" model="product.product">
             <field name="service_policy">ordered_prepaid</field>
             <field name="service_tracking">task_global_project</field>
             <field name="project_id" ref="project.project_home_construction"/>
@@ -166,7 +159,7 @@
         <record id="sale_line_construction_2" model="sale.order.line">
             <field name="order_id" ref="sale_project.sale_order_construction"/>
             <field name="sequence" eval="2"/>
-            <field name="product_id" ref="product_product_furniture"/>
+            <field name="product_id" ref="product.product_product_furniture"/>
             <field name="product_uom_qty">15</field>
             <field name="qty_delivered">12</field>
         </record>
