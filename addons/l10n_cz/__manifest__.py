@@ -24,6 +24,7 @@ Tento modul definuje:
         'base_vat',
     ],
     'data': [
+        'data/menuitem_data.xml',
         'data/tax_report.xml',
         'views/report_invoice.xml',
         'views/res_partner_views.xml',
