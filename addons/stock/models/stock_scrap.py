@@ -187,7 +187,8 @@ class StockScrap(models.Model):
             location=self.location_id.id,
             lot_id=self.lot_id.id,
             package_id=self.package_id.id,
-            owner_id=self.owner_id.id
+            owner_id=self.owner_id.id,
+            strict=True,
         ).product_id.qty_available
         scrap_qty = self.product_uom_id._compute_quantity(self.scrap_qty, self.product_id.uom_id)
         return float_compare(available_qty, scrap_qty, precision_digits=precision) >= 0
