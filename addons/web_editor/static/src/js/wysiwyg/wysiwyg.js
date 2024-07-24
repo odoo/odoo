@@ -1368,7 +1368,7 @@ const Wysiwyg = Widget.extend({
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
             // Refocus again to save updates when calling `_onWysiwygBlur`
-            params.node.ownerDocument.defaultView.focus();
+            this.odooEditor.editable.focus();
         } else {
             return this.odooEditor.execCommand('insert', element);
         }

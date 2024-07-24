@@ -130,7 +130,7 @@ const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
             $oEditable.attr('contenteditable', true);
         }
         // Refocus again to save updates when calling `_onWysiwygBlur`
-        this.$editable.get(0).ownerDocument.defaultView.focus();
+        this.$editable.focus();
     },
     /**
      * @override
