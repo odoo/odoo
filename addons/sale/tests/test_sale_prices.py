@@ -19,8 +19,8 @@ class TestSalePrices(SaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.discount = 10  # %
         cls._enable_discounts()
+        cls.discount = 10  # %
 
         # Needed when run without demo data
         #   s.t. taxes creation doesn't fail

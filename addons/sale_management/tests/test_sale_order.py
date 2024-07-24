@@ -17,6 +17,7 @@ class TestSaleOrder(SaleManagementCommon):
         # some variables to ease asserts in tests
         cls.pub_product_price = 100.0
         cls.pl_product_price = 80.0
+        cls._enable_discounts()
         cls.tpl_discount = 10.0
         cls.pl_discount = (cls.pub_product_price - cls.pl_product_price) * 100 / cls.pub_product_price
         cls.merged_discount = 100.0 - (100.0 - cls.pl_discount) * (100.0 - cls.tpl_discount) / 100.0
