@@ -84,14 +84,16 @@ const defineModuleSet = async (entryPoints, additionalAddons) => {
             additionalAddons.add(getAddonName(entryPoint));
         }
         const addons = await fetchDependencies(additionalAddons);
-        const joinedAddons = [...addons].sort().join(",");
-        const filter = (path) => joinedAddons.includes(getAddonName(path));
+        const filter = (path) => addons.has(getAddonName(path));
+
         // Module names are cached for each configuration of addons
+        const joinedAddons = [...addons].sort().join(",");
         if (!moduleNamesCache[joinedAddons]) {
             moduleNamesCache[joinedAddons] = sortedModuleNames.filter(
                 (name) => !name.endsWith(TEST_SUFFIX) && filter(name)
             );
         }
+
         moduleSet.filter = filter;
         moduleSet.moduleNames = moduleNamesCache[joinedAddons];
     }
