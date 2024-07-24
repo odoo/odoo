@@ -60,3 +60,14 @@ export function clickLockButton() {
         run: "click",
     };
 }
+
+export function refreshPage() {
+    return [
+        {
+            trigger: ".pos",
+            run: () => {
+                window.location.reload();
+            },
+        },
+    ];
+}

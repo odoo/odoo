@@ -85,3 +85,25 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Dialog.is("Closing Register"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("CashierStayLogged", {
+    test: true,
+    steps: () =>
+        [
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Pos Employee1"),
+            SelectionPopup.has("Pos Employee2"),
+            SelectionPopup.has("Mitchell Admin"),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open session"),
+            PosHr.cashierNameIs("Mitchell Admin"),
+            PosHr.refreshPage(),
+            ProductScreen.isShown(),
+            PosHr.cashierNameIs("Mitchell Admin"),
+            Chrome.clickMenuButton(),
+            PosHr.clickLockButton(),
+            PosHr.refreshPage(),
+            PosHr.loginScreenIsShown(),
+        ].flat(),
+});
