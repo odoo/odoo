@@ -37,7 +37,7 @@ export const cartHandlerMixin = {
         if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
             updateCartNavBar(data);
         };
-        showCartNotification(this.call.bind(this), data.notification_info);
+        this.call("website_sale", "addToCart", data)
         return data;
     },
 };
@@ -133,32 +133,9 @@ function showCartNotification(callService, props, options = {}) {
     }
 }
 
-/**
- * Displays `message` in an alert box at the top of the page if it's a
- * non-empty string.
- *
- * @param {string | null} message
- */
-function showWarning(message) {
-    if (!message) {
-        return;
-    }
-    var $page = $('.oe_website_sale');
-    var cart_alert = $page.children('#data_warning');
-    if (!cart_alert.length) {
-        cart_alert = $(
-            '<div class="alert alert-danger alert-dismissible" role="alert" id="data_warning">' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button> ' +
-                '<span></span>' +
-            '</div>').prependTo($page);
-    }
-    cart_alert.children('span:last-child').text(message);
-}
-
 export default {
     animateClone: animateClone,
     updateCartNavBar: updateCartNavBar,
     cartHandlerMixin: cartHandlerMixin,
     showCartNotification: showCartNotification,
-    showWarning: showWarning,
 };

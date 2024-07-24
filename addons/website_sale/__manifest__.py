@@ -108,6 +108,9 @@
             'website_sale/static/src/js/notification/warning_notification/warning_notification.js',
             'website_sale/static/src/js/notification/warning_notification/warning_notification.xml',
             'website_sale/static/src/js/notification/notification_service.js',
+
+            'website_sale/static/src/js/website_sale_service.js',
+            'website_sale/static/src/js/components/cart_icon/**/*',
             'sale/static/src/js/badge_extra_price/*',
             'sale/static/src/js/product/*',
             'sale/static/src/js/product_configurator_dialog/*',

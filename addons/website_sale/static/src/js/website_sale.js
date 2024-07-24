@@ -216,7 +216,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
 
             wSaleUtils.updateCartNavBar(data);
-            wSaleUtils.showWarning(data.notification_info.warning);
+            // TODO VCR check fonctionnal POV
+            wSaleUtils.showCartNotification(data.notification_info);
             // Propagating the change to the express checkout forms
             Component.env.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);
         });
