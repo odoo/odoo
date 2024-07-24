@@ -534,7 +534,7 @@ test("edit a datetime field in form view with show_seconds option", async () => 
     const [dateField1, dateField2] = queryAll(".o_input.cursor-pointer");
     click(dateField1);
     await animationFrame();
-    expect(".o_time_picker_select").toHaveCount(3);  // 3rd 'o_time_picker_select' is for the seconds
+    expect(".o_time_picker_select").toHaveCount(3); // 3rd 'o_time_picker_select' is for the seconds
     edit("02/08/2017 11:00:00", { confirm: "Enter" });
     await animationFrame();
 
@@ -544,5 +544,35 @@ test("edit a datetime field in form view with show_seconds option", async () => 
 
     expect(dateField2).toHaveValue("02/08/2017 11:00:00", {
         message: "seconds should be visible for showSeconds true",
+    });
+});
+
+test("list datetime with date widget test", async () => {
+    mockTimeZone(+2);
+    onRpc("has_group", () => true);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+            <tree editable="bottom">
+                <field name="datetime" widget="datetime" options="{'show_time': false}"/>
+                <field name="datetime" widget="datetime" />
+            </tree>
+        `,
+    });
+
+    const dates = queryAll(".o_field_cell");
+
+    expect(dates[0]).toHaveText("02/08/2017", {
+        message: "for date field only date should be visible with date widget",
+    });
+    expect(dates[1]).toHaveText("02/08/2017 12:00:00", {
+        message: "for datetime field only date should be visible with date widget",
+    });
+    click(dates[0]);
+    await animationFrame();
+    expect(queryFirst(".o_field_datetime input").value).toBe("02/08/2017 12:00:00", {
+        message: "for datetime field both date and time should be visible with datetime widget",
     });
 });
