@@ -37,6 +37,9 @@ class TestReorderingRule(TransactionCase):
         """
             - Receive products in 2 steps
             - The product has a reordering rule
+            - Manually create and confirm a PO => the forecast should be updated
+            - Cancel the PO => the forecast should be updated
+            - Create a picking that automatically generates another PO
             - On the po generated, the source document should be the name of the reordering rule
             - Increase the quantity on the RFQ, the extra quantity should follow the push rules
             - Increase the quantity on the PO, the extra quantity should follow the push rules
@@ -62,6 +65,23 @@ class TestReorderingRule(TransactionCase):
         orderpoint_form.product_min_qty = 0.000
         orderpoint_form.product_max_qty = 0.000
         order_point = orderpoint_form.save()
+
+        # Manually create a PO, and check orderpoint forecast
+        manual_po = self.env['purchase.order'].create({
+            'name': 'Manual PO',
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product_01.id,
+                'product_qty': 10,
+            })],
+        })
+
+        manual_po.button_confirm()
+        self.assertEqual(order_point.qty_forecast, 10)
+
+        manual_po.button_cancel()
+        self.assertEqual(order_point.qty_forecast, 0)
+
         # Create Delivery Order of 10 product
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = self.partner
@@ -75,7 +95,7 @@ class TestReorderingRule(TransactionCase):
         self.env['procurement.group'].run_scheduler()
 
         # Check purchase order created or not
-        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id), ('state', '!=', 'cancel')])
         self.assertTrue(purchase_order, 'No purchase order created.')
         # Check the picking type on the purchase order
         purchase_order.picking_type_id = warehouse_2.in_type_id
