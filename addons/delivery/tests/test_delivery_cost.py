@@ -109,7 +109,6 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
                 Command.create({
                     'product_id': self.product_consultant.id,
                     'product_uom_qty': 24,
-                    'product_uom': self.product_uom_hour.id,
                     'price_unit': 75.00,
                 }),
                 Command.create({
@@ -452,7 +451,6 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
                 Command.create({
                     'product_id': product_test.id,
                     'product_uom_qty': 10,
-                    'product_uom': self.uom_unit.id,
                 }),
             ],
         })
@@ -545,7 +543,6 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
                 'name': 'PC Assamble + 2GB RAM',
                 'product_id': self.product.id,
                 'product_uom_qty': 1,
-                'product_uom': self.uom_unit.id,
                 'price_unit': 750.00,
             })],
         })

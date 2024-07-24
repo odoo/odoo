@@ -642,7 +642,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': sale_order.id,
             'product_id': self.product_order_timesheet3.id,
-            'product_uom': uom_days.id,
+            'product_uom_id': uom_days.id,
         })
         sale_order.action_confirm()
         task = sale_order_line.task_id
@@ -706,7 +706,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': sale_order.id,
             'product_id': self.product_order_timesheet3.id,
-            'product_uom': uom_days.id,
+            'product_uom_id': uom_days.id,
         })
         sale_order.action_confirm()
         task = sale_order_line.task_id
@@ -816,7 +816,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
             'product_uom_qty': 50,
-            'product_uom': self.product_delivery_timesheet2.uom_id.id,
             'price_unit': self.product_delivery_timesheet2.list_price,
             'order_id': sale_order.id,
         })
@@ -853,7 +852,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'name': self.product_order_timesheet3.name,
             'product_id': self.product_order_timesheet3.id,
             'product_uom_qty': 1,
-            'product_uom': self.product_order_timesheet3.uom_id.id,
             'price_unit': product_price,
             'order_id': sale_order.id,
         })
@@ -914,14 +912,12 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
                 'name': product_1.name,
                 'product_id': product_1.id,
                 'product_uom_qty': 10,
-                'product_uom': product_1.uom_id.id,
                 'price_unit': product_1.list_price,
             }, {
                 'order_id': sale_order.id,
                 'name': product_2.name,
                 'product_id': product_2.id,
                 'product_uom_qty': 5,
-                'product_uom': product_2.uom_id.id,
                 'price_unit': product_2.list_price,
             },
         ])
@@ -995,7 +991,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 10,
-            'product_uom': product.uom_id.id,
             'price_unit': product.list_price,
         })
         project = sale_order_line._timesheet_create_project()

@@ -112,7 +112,7 @@ class SaleOrderOption(models.Model):
             'name': self.name,
             'product_id': self.product_id.id,
             'product_uom_qty': self.quantity,
-            'product_uom': self.uom_id.id,
+            'product_uom_id': self.uom_id.id,
             'discount': self.discount,
             'sequence': max(self.order_id.order_line.mapped('sequence'), default=0) + 1
         }

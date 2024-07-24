@@ -52,7 +52,7 @@
             <field name="order_id" ref="purchase_order_for_home_construction"/>
             <field name="name" model="purchase.order.line" eval="obj().env.ref('project_purchase.product_product_cement').partner_ref"/>
             <field name="product_id" ref="project_purchase.product_product_cement"/>
-            <field name="product_uom" ref="uom.product_uom_ton"/>
+            <field name="product_uom_id" ref="uom.product_uom_ton"/>
             <field name="price_unit">150</field>
             <field name="product_qty">5</field>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
@@ -63,7 +63,7 @@
             <field name="order_id" ref="purchase_order_for_home_construction"/>
             <field name="name" model="purchase.order.line" eval="obj().env.ref('project_purchase.product_product_sand').partner_ref"/>
             <field name="product_id" ref="project_purchase.product_product_sand"/>
-            <field name="product_uom" ref="uom.product_uom_ton"/>
+            <field name="product_uom_id" ref="uom.product_uom_ton"/>
             <field name="price_unit">100</field>
             <field name="product_qty">10</field>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
@@ -74,7 +74,7 @@
             <field name="order_id" ref="purchase_order_for_home_construction"/>
             <field name="name" model="purchase.order.line" eval="obj().env.ref('project_purchase.product_product_bricks').partner_ref"/>
             <field name="product_id" ref="project_purchase.product_product_bricks"/>
-            <field name="product_uom" ref="uom.product_uom_ton"/>
+            <field name="product_uom_id" ref="uom.product_uom_ton"/>
             <field name="price_unit">50</field>
             <field name="product_qty">15</field>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>

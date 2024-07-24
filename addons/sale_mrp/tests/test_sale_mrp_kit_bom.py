@@ -134,7 +134,6 @@ class TestSaleMrpKitBom(TransactionCase):
                     'name': self.kit_product.name,
                     'product_id': self.kit_product.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': self.kit_product.uom_id.id,
                 })],
         })
         so.action_confirm()
@@ -173,7 +172,6 @@ class TestSaleMrpKitBom(TransactionCase):
                     'name': self.kit.name,
                     'product_id': self.kit.id,
                     'product_uom_qty': 10.0,
-                    'product_uom': self.kit.uom_id.id,
                     'price_unit': 1,
                     'tax_id': False,
                 })],
@@ -238,7 +236,6 @@ class TestSaleMrpKitBom(TransactionCase):
                     'name': self.kitA.name,
                     'product_id': self.kitA.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': self.kitA.uom_id.id,
                     'price_unit': 1,
                     'tax_id': False,
                 })],
@@ -292,7 +289,6 @@ class TestSaleMrpKitBom(TransactionCase):
                     'name': kitA.name,
                     'product_id': kitA.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': kitA.uom_id.id,
                     'price_unit': 1,
                     'tax_id': False,
                 })]
@@ -367,7 +363,6 @@ class TestSaleMrpKitBom(TransactionCase):
                     'name': kitAB.name,
                     'product_id': kitAB.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': kitAB.uom_id.id,
                     'price_unit': 1,
                     'tax_id': False,
                 }),
@@ -375,7 +370,6 @@ class TestSaleMrpKitBom(TransactionCase):
                     'name': kitABC.name,
                     'product_id': kitABC.id,
                     'product_uom_qty': 1.0,
-                    'product_uom': kitABC.uom_id.id,
                     'price_unit': 1,
                     'tax_id': False,
                 })],

@@ -25,7 +25,7 @@ class ProjectMilestone(models.Model):
     quantity_percentage = fields.Float('Quantity (%)', compute="_compute_quantity_percentage", store=True, help='Percentage of the ordered quantity that will automatically be delivered once the milestone is reached.')
 
     sale_line_display_name = fields.Char("Sale Line Display Name", related='sale_line_id.display_name', export_string_translation=False)
-    product_uom = fields.Many2one(related="sale_line_id.product_uom", export_string_translation=False)
+    product_uom_id = fields.Many2one(related="sale_line_id.product_uom_id", export_string_translation=False)
     product_uom_qty = fields.Float("Quantity", compute="_compute_product_uom_qty", readonly=False)
 
     @api.depends('sale_line_id.product_uom_qty', 'product_uom_qty')

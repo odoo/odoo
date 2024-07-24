@@ -131,7 +131,7 @@ class SaleOrder(models.Model):
                     'discount': 0.0,
                     'name': lines[0].name_short if lines.reward_id.reward_type != 'product' else lines[0].name,
                     'product_uom_qty': 1,
-                    'product_uom': lines[0].product_uom.id,
+                    'product_uom_id': lines[0].product_uom_id.id,
                     'order_id': order.id,
                     'is_reward_line': True,
                     'coupon_id': lines.coupon_id,

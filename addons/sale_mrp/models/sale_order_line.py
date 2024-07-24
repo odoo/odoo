@@ -69,9 +69,9 @@ class SaleOrderLine(models.Model):
                         'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
                         'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
                     }
-                    order_qty = order_line.product_uom._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
+                    order_qty = order_line.product_uom_id._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
                     qty_delivered = moves._compute_kit_quantities(order_line.product_id, order_qty, relevant_bom, filters)
-                    order_line.qty_delivered += relevant_bom.product_uom_id._compute_quantity(qty_delivered, order_line.product_uom)
+                    order_line.qty_delivered += relevant_bom.product_uom_id._compute_quantity(qty_delivered, order_line.product_uom_id)
 
                 # If no relevant BOM is found, fall back on the all-or-nothing policy. This happens
                 # when the product sold is made only of kits. In this case, the BOM of the stock moves
@@ -151,7 +151,7 @@ class SaleOrderLine(models.Model):
             moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped)
             filters = self._get_incoming_outgoing_moves_filter()
             order_qty = previous_product_uom_qty.get(self.id, 0) if previous_product_uom_qty else self.product_uom_qty
-            order_qty = self.product_uom._compute_quantity(order_qty, bom.product_uom_id)
+            order_qty = self.product_uom_id._compute_quantity(order_qty, bom.product_uom_id)
             qty = moves._compute_kit_quantities(self.product_id, order_qty, bom, filters)
-            return bom.product_uom_id._compute_quantity(qty, self.product_uom)
+            return bom.product_uom_id._compute_quantity(qty, self.product_uom_id)
         return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)

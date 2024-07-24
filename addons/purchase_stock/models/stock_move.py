@@ -49,8 +49,8 @@ class StockMove(models.Model):
         order = line.order_id
         received_qty = line.qty_received
         if self.state == 'done':
-            received_qty -= self.product_uom._compute_quantity(self.quantity, line.product_uom, rounding_method='HALF-UP')
-        if line.product_id.purchase_method == 'purchase' and float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
+            received_qty -= self.product_uom._compute_quantity(self.quantity, line.product_uom_id, rounding_method='HALF-UP')
+        if line.product_id.purchase_method == 'purchase' and float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom_id.rounding) > 0:
             move_layer = line.move_ids.sudo().stock_valuation_layer_ids
             invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
@@ -83,7 +83,7 @@ class StockMove(models.Model):
             # TODO currency check
             remaining_value = total_invoiced_value - receipt_value
             # TODO qty_received in product uom
-            remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id)
+            remaining_qty = invoiced_qty - line.product_uom_id._compute_quantity(received_qty, line.product_id.uom_id)
             if order.currency_id != order.company_id.currency_id and remaining_value and remaining_qty:
                 # will be rounded during currency conversion
                 price_unit = remaining_value / remaining_qty

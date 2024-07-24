@@ -36,7 +36,7 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
                 Command.create({
                     'product_id': self.product_1.id,
                     'price_unit': 1.0,
-                    'product_uom': self.uom_day.id,
+                    'product_uom_id': self.uom_day.id,
                     'product_uom_qty': 1.0,
             })],
             'partner_id': self.partner_b.id,

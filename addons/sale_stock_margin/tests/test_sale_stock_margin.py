@@ -38,7 +38,6 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'price_unit': price_unit,
             'product_id': product.id,
             'product_uom_qty': quantity,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
         })
 
     def _create_product(self):

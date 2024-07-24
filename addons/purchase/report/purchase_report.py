@@ -27,7 +27,7 @@ class PurchaseReport(models.Model):
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Vendor', readonly=True)
     date_approve = fields.Datetime('Confirmation Date', readonly=True)
-    product_uom = fields.Many2one('uom.uom', 'Reference Unit of Measure', required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Reference Unit of Measure', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
     user_id = fields.Many2one('res.users', 'Buyer', readonly=True)
@@ -74,7 +74,7 @@ class PurchaseReport(models.Model):
                     p.product_tmpl_id,
                     t.categ_id as category_id,
                     c.currency_id,
-                    t.uom_id as product_uom,
+                    t.uom_id as product_uom_id,
                     extract(epoch from age(po.date_approve,po.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,po.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr_lines,
@@ -105,7 +105,7 @@ class PurchaseReport(models.Model):
                     left join product_product p on (l.product_id=p.id)
                         left join product_template t on (p.product_tmpl_id=t.id)
                 left join res_company C ON C.id = po.company_id
-                left join uom_uom line_uom on (line_uom.id=l.product_uom)
+                left join uom_uom line_uom on (line_uom.id=l.product_uom_id)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
                 left join %(currency_table)s ON account_currency_table.company_id = po.company_id
             """,
@@ -132,7 +132,7 @@ class PurchaseReport(models.Model):
                 l.price_unit,
                 po.date_approve,
                 l.date_planned,
-                l.product_uom,
+                l.product_uom_id,
                 po.dest_address_id,
                 po.fiscal_position_id,
                 l.product_id,

@@ -68,7 +68,7 @@ class TestDeleteOrder(PurchaseTestCommon):
                 Command.create({
                     'product_id': self.product_2.id,
                     'product_qty': 1.0,
-                    'product_uom': self.product_2.uom_id.id,
+                    'product_uom_id': self.product_2.uom_id.id,
                     'propagate_cancel': False,
                 })],
         })

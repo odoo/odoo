@@ -155,7 +155,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             line.product_id = self.product_09
             line.product_qty = 5.0
             line.price_unit = unit_price
-            line.product_uom = self.env.ref('uom.product_uom_dozen')
+            line.product_uom_id = self.env.ref('uom.product_uom_dozen')
         with po_form.order_line.new() as line:
             line.display_type = "line_section"
             line.name = "Products"
@@ -178,7 +178,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(len(alt_po_1.order_line), 3)
         self.assertEqual(orig_po.order_line[0].product_id, alt_po_1.order_line[0].product_id, "Alternative PO should have copied the product to purchase from original PO")
         self.assertEqual(orig_po.order_line[0].product_qty, alt_po_1.order_line[0].product_qty, "Alternative PO should have copied the qty to purchase from original PO")
-        self.assertEqual(orig_po.order_line[0].product_uom, alt_po_1.order_line[0].product_uom, "Alternative PO should have copied the product unit of measure from original PO")
+        self.assertEqual(orig_po.order_line[0].product_uom_id, alt_po_1.order_line[0].product_uom_id, "Alternative PO should have copied the product unit of measure from original PO")
         self.assertEqual((orig_po.order_line[1].display_type, orig_po.order_line[1].name), (alt_po_1.order_line[1].display_type, alt_po_1.order_line[1].name))
         self.assertEqual((orig_po.order_line[2].display_type, orig_po.order_line[2].name), (alt_po_1.order_line[2].display_type, alt_po_1.order_line[2].name))
         self.assertEqual(len(alt_po_1.alternative_po_ids), 2, "Newly created PO should be auto-linked to itself and original PO")
@@ -298,7 +298,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         with po_form.order_line.new() as line:
             line.product_id = self.product_09
             line.product_qty = 1
-            line.product_uom = self.env.ref('uom.product_uom_dozen')
+            line.product_uom_id = self.env.ref('uom.product_uom_dozen')
         po_1 = po_form.save()
         self.assertEqual(po_1.order_line[0].price_unit, 120)
 
@@ -311,7 +311,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         alt_po_wizard.action_create_alternative()
 
         po_2 = po_1.alternative_po_ids - po_1
-        self.assertEqual(po_2.order_line[0].product_uom, po_1.order_line[0].product_uom)
+        self.assertEqual(po_2.order_line[0].product_uom_id, po_1.order_line[0].product_uom_id)
         self.assertEqual(po_2.order_line[0].price_unit, 120)
 
     def test_11_alternative_po_from_po_with_requisition_id(self):

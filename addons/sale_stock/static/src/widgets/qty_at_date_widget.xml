@@ -17,11 +17,11 @@
                 <t t-if="!props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
                     <tr>
                         <td><strong>Forecasted Stock</strong><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
-                        <td class="text-end"><b t-out='props.record.data.virtual_available_at_date'/> <t t-out='props.record.data.product_uom[1]'/></td>
+                        <td class="text-end"><b t-out='props.record.data.virtual_available_at_date'/> <t t-out='props.record.data.product_uom_id[1]'/></td>
                     </tr>
                     <tr>
                         <td><strong>Available</strong><br /><small>All planned operations included</small></td>
-                        <td class="text-end"><b t-out='props.record.data.free_qty_today' t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out='props.record.data.product_uom[1]'/></td>
+                        <td class="text-end"><b t-out='props.record.data.free_qty_today' t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out='props.record.data.product_uom_id[1]'/></td>
                     </tr>
                 </t>
                 <t t-elif="props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
@@ -39,7 +39,7 @@
                             <strong>Reserved</strong><br/>
                         </td>
                         <td style="min-width: 50px; text-align: right;">
-                            <b t-out='props.record.data.qty_available_today'/> <t t-out='props.record.data.product_uom[1]'/>
+                            <b t-out='props.record.data.qty_available_today'/> <t t-out='props.record.data.product_uom_id[1]'/>
                         </td>
                     </tr>
                     <tr t-if="props.record.data.qty_available_today &lt; props.record.data.qty_to_deliver">

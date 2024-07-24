@@ -181,7 +181,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
                 'name': product_2.name,
                 'product_id': product_2.id,
                 'product_qty': 5.0,
-                'product_uom': product_2.uom_po_id.id,
+                'product_uom_id': product_2.uom_po_id.id,
             })
         ]})
         order_line = self.env['purchase.order.line'].search([

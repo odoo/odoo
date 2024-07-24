@@ -240,7 +240,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             ptavIds: ptavIds,
             customPtavs: customPtavs,
             quantity: saleOrderLine.product_uom_qty,
-            productUOMId: saleOrderLine.product_uom[0],
+            productUOMId: saleOrderLine.product_uom_id[0],
             companyId: saleOrderRecord.data.company_id[0],
             pricelistId: saleOrderRecord.data.pricelist_id[0],
             currencyId: saleOrderLine.currency_id[0],

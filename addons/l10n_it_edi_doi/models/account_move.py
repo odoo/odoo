@@ -121,7 +121,7 @@ class AccountMove(models.Model):
                         order = sale_line.order_id
                         if order.l10n_it_edi_doi_id == declaration:
                             linked_orders |= order
-                        qty_invoiced = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, sale_line.product_uom) * -move.direction_sign
+                        qty_invoiced = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, sale_line.product_uom_id) * -move.direction_sign
                         sale_line_id = sale_line.ids[0]  # do not just use `id` in case of NewId
                         additional_invoiced_qty[sale_line_id] = additional_invoiced_qty.get(sale_line_id, 0) + qty_invoiced
                 for order in linked_orders:

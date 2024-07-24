@@ -42,7 +42,6 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
                 Command.create({
                 'product_id': self.product_A.id,
                 'name': 'Ordinary Product A',
-                'product_uom': self.uom_unit.id,
                 'product_uom_qty': 1.0,
                 }),
             ],

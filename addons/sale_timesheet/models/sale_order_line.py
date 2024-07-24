@@ -47,7 +47,7 @@ class SaleOrderLine(models.Model):
         uom_hour = self.env.ref('uom.product_uom_hour')
         for line in self:
             is_ordered_prepaid = line.product_id.service_policy == 'ordered_prepaid'
-            is_time_product = line.product_uom.category_id == uom_hour.category_id
+            is_time_product = line.product_uom_id.category_id == uom_hour.category_id
             line.remaining_hours_available = is_ordered_prepaid and is_time_product
 
     @api.depends('qty_delivered', 'product_uom_qty', 'analytic_line_ids')
@@ -57,7 +57,7 @@ class SaleOrderLine(models.Model):
             remaining_hours = None
             if line.remaining_hours_available:
                 qty_left = line.product_uom_qty - line.qty_delivered
-                remaining_hours = line.product_uom._compute_quantity(qty_left, uom_hour)
+                remaining_hours = line.product_uom_id._compute_quantity(qty_left, uom_hour)
             line.remaining_hours = remaining_hours
 
     @api.depends('product_id')
@@ -91,7 +91,7 @@ class SaleOrderLine(models.Model):
     def _convert_qty_company_hours(self, dest_company):
         company_time_uom_id = dest_company.project_time_mode_id
         allocated_hours = 0.0
-        product_uom = self.product_uom
+        product_uom = self.product_uom_id
         if product_uom == self.env.ref('uom.product_uom_unit'):
             product_uom = self.env.ref('uom.product_uom_hour')
         if product_uom.category_id == company_time_uom_id.category_id:
@@ -117,7 +117,7 @@ class SaleOrderLine(models.Model):
         # dict of inverse factors for each relevant UoM found in SO
         factor_inv_per_id = {
             uom.id: uom.factor_inv
-            for uom in self.order_id.order_line.product_uom
+            for uom in self.order_id.order_line.product_uom_id
             if uom.category_id == project_uom.category_id
         }
         # if sold as units, assume hours for time allocation
@@ -130,8 +130,8 @@ class SaleOrderLine(models.Model):
             if line.is_service \
                     and line.product_id.service_tracking in ['task_in_project', 'project_only'] \
                     and line.product_id.project_template_id == self.product_id.project_template_id \
-                    and line.product_uom.id in factor_inv_per_id:
-                uom_factor = project_uom.factor * factor_inv_per_id[line.product_uom.id]
+                    and line.product_uom_id.id in factor_inv_per_id:
+                uom_factor = project_uom.factor * factor_inv_per_id[line.product_uom_id.id]
                 allocated_hours += line.product_uom_qty * uom_factor
 
         project.write({

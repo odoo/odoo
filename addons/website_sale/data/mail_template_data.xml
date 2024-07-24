@@ -31,7 +31,7 @@
                                         <strong t-out="line.product_id.display_name or ''">[FURN_7800] Desk Combination</strong><br/><t t-out="line.name or ''">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>
                                     </td>
                                     <td width="100px" align="right">
-                                        <t t-out="int(line.product_uom_qty) or ''">10000</t> <t t-out="line.product_uom.name or ''">Units</t>
+                                        <t t-out="int(line.product_uom_qty) or ''">10000</t> <t t-out="line.product_uom_id.name or ''">Units</t>
                                     </td>
                                 </tr>
                             </table>

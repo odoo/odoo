@@ -27,7 +27,6 @@ class TestAccruedStockSaleOrders(AccountTestInvoicingCommon):
                     'name': cls.product_order.name,
                     'product_id': cls.product_order.id,
                     'product_uom_qty': 10.0,
-                    'product_uom': cls.product_order.uom_id.id,
                     'price_unit': cls.product_order.list_price,
                     'tax_id': False,
                 })

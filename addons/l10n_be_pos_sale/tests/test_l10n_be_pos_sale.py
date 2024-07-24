@@ -29,7 +29,6 @@ class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
             'order_line': [Command.create({
                 'product_id': self.product_a.id,
                 'product_uom_qty': 10,
-                'product_uom': self.product_a.uom_id.id,
                 'price_unit': 10,
                 'tax_id': False,
             })],
@@ -56,7 +55,6 @@ class TestPoSSaleL10NBeNormalCompany(TestPointOfSaleHttpCommon):
             'order_line': [Command.create({
                 'product_id': self.product_a.id,
                 'product_uom_qty': 10,
-                'product_uom': self.product_a.uom_id.id,
                 'price_unit': 10,
             })],
         })

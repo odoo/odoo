@@ -25,7 +25,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             for move in dest_moves:
                 if not move.raw_material_production_id:
                     continue
-                prod_qty = min(line_qty, move.product_uom._compute_quantity(move.product_uom_qty, po_line.product_uom))
+                prod_qty = min(line_qty, move.product_uom._compute_quantity(move.product_uom_qty, po_line.product_uom_id))
                 res.append(self._format_extra_replenishment(po_line, prod_qty, move.raw_material_production_id.id))
                 line_qty -= prod_qty
             if line_qty:
@@ -48,7 +48,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'id': po.id,
             'cost': price,
             'quantity': quantity,
-            'uom': po_line.product_uom,
+            'uom': po_line.product_uom_id,
             'production_id': production_id
         }
 
@@ -69,7 +69,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             if supplier:
                 return {
                     'delay': supplier.delay + rules_delay,
-                    'cost': supplier.price * uom_id._compute_quantity(quantity, supplier.product_uom),
+                    'cost': supplier.price * uom_id._compute_quantity(quantity, supplier.product_uom_id),
                     'currency': supplier.currency_id,
                 }
         return res
@@ -91,7 +91,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             price = po_line.taxes_id.compute_all(
                 po_line.price_unit,
                 currency=po.currency_id,
-                quantity=uom_id._compute_quantity(quantity, move_in.purchase_line_id.product_uom),
+                quantity=uom_id._compute_quantity(quantity, move_in.purchase_line_id.product_uom_id),
                 product=po_line.product_id,
                 partner=po.partner_id,
                 rounding_method='round_globally',

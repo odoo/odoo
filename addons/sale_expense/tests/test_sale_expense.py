@@ -20,7 +20,6 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
                 'name': self.company_data['product_delivery_no'].name,
                 'product_id': self.company_data['product_delivery_no'].id,
                 'product_uom_qty': 2,
-                'product_uom': self.company_data['product_delivery_no'].uom_id.id,
                 'price_unit': self.company_data['product_delivery_no'].list_price,
             })],
         })
@@ -78,7 +77,6 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'name': 'Car Travel',
             'product_id': prod_exp_2.id,
             'analytic_distribution': {analytic_account.id: 100},
-            'product_uom_id': self.env.ref('uom.product_uom_km').id,
             'quantity': 100,
             'employee_id': self.expense_employee.id,
             'sheet_id': sheet.id,

@@ -101,7 +101,6 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
                 'name': self.product_A.name,
                 'product_id': self.product_A.id,
                 'product_uom_qty': 5,
-                'product_uom': self.product_A.uom_id.id,
                 'price_unit': self.product_A.list_price,
             })]
         })

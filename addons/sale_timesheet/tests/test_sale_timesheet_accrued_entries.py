@@ -23,7 +23,6 @@ class TestAccruedTimeSheetSaleOrders(TestCommonSaleTimesheet):
             'name': cls.product_delivery_timesheet2.name,
             'product_id': cls.product_delivery_timesheet2.id,
             'product_uom_qty': 50,
-            'product_uom': cls.product_delivery_timesheet2.uom_id.id,
             'price_unit': cls.product_delivery_timesheet2.list_price,
             'order_id': cls.sale_order.id,
         })

@@ -52,7 +52,7 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
                 (0, 0, {
                     'product_id': product.id,
                     'product_qty': 1.0,
-                    'product_uom': product.uom_id.id,
+                    'product_uom_id': product.uom_id.id,
                     'product_packaging_id': packaging.id,
                 })],
         })
@@ -68,12 +68,12 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
                 Command.create({
                     'product_id': self.product_1.id,
                     'product_qty': 2.0,
-                    'product_uom': self.product_1.uom_id.id,
+                    'product_uom_id': self.product_1.uom_id.id,
                 }),
                 Command.create({
                     'product_id': self.product_2.id,
                     'product_qty': 3.0,
-                    'product_uom': self.product_2.uom_id.id,
+                    'product_uom_id': self.product_2.uom_id.id,
                 })],
         })
         purchase_order.button_confirm()

@@ -71,7 +71,7 @@ class TestPurchase(AccountTestInvoicingCommon):
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'product_uom_qty': 10,
-                'product_uom': self.product_a.uom_id.id,
+                'product_uom_id': self.product_a.uom_id.id,
                 'price_unit': 1,
             })],
         })
@@ -350,7 +350,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""
-        # Required for `product_uom` to be visibile in the view
+        # Required for `product_uom_id` to be visibile in the view
         self.env.user.groups_id += self.env.ref('uom.group_uom')
         uom_units = self.env.ref('uom.product_uom_unit')
         uom_dozens = self.env.ref('uom.product_uom_dozen')
@@ -377,7 +377,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_id = product_01
         with po_form.order_line.new() as po_line:
             po_line.product_id = product_02
-            po_line.product_uom = uom_dozens
+            po_line.product_uom_id = uom_dozens
         po = po_form.save()
 
         self.assertEqual(po.order_line[0].price_unit, 200)
@@ -486,7 +486,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             'order_line': [(0, 0, {
                 'product_id': product_b.id,
                 'product_qty': 1,
-                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             })],
         })
 
@@ -519,7 +519,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({
                 'product_id': product.id,
-                'product_uom': product.uom_po_id.id,
+                'product_uom_id': product.uom_po_id.id,
             })],
         })
         po_line = purchase_order.order_line
@@ -590,7 +590,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             'order_line': [(0, 0, {
                 'product_id': product.id,
                 'product_qty': 1,
-                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                 'price_unit': 1,
             })],
         }).button_confirm()
@@ -604,7 +604,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             'order_line': [(0, 0, {
                 'product_id': product.id,
                 'product_qty': 1,
-                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                 'price_unit': 2,
             })],
         }).button_confirm()

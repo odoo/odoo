@@ -581,8 +581,8 @@ class TestSaleToInvoice(TestSaleCommon):
 
         # Rounding to 0.1, should be rounded with UP (ceil) rounding_method
         # Not floor or half up rounding.
-        sol_prod_deliver.product_uom.rounding *= 10
-        sol_prod_deliver.product_uom.flush_recordset(['rounding'])
+        sol_prod_deliver.product_uom_id.rounding *= 10
+        sol_prod_deliver.product_uom_id.flush_recordset(['rounding'])
         expected_qty = 5.2
         qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
@@ -747,7 +747,7 @@ class TestSaleToInvoice(TestSaleCommon):
             'display_type': 'line_note',
             'product_id': False,
             'product_uom_qty': 0,
-            'product_uom': False,
+            'product_uom_id': False,
             'price_unit': 0,
             'order_id': self.sale_order.id,
             'tax_id': False,

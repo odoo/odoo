@@ -170,7 +170,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     fields.Float.compare(
                         l.qty_to_invoice,
                         0,
-                        precision_rounding=l.product_uom.rounding,
+                        precision_rounding=l.product_uom_id.rounding,
                     ) != 0
                 )
                 for order_line in lines:

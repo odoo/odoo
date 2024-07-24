@@ -337,7 +337,6 @@ class TestReInvoice(TestSaleCommon):
             'order_line': [Command.create({
                 'product_id': prod_gap.id,
                 'product_uom_qty': 2,
-                'product_uom': prod_gap.uom_id.id,
                 'price_unit': prod_gap.list_price,
             })],
         })
