@@ -687,7 +687,7 @@ describe.tags("desktop")("DebugMenu", () => {
         });
 
         await contains(".o_debug_manager button").click();
-        expect(queryAll(".dropdown-menu .dropdown-item")[1]).toHaveText("View Model: res.partner");
+        expect(queryAll(".dropdown-menu .dropdown-item")[0]).toHaveText("View Model: res.partner");
         await contains(".dropdown-menu .dropdown-item:contains('View Model:')").click();
 
         expect(".breadcrumb-item").toHaveCount(1);
