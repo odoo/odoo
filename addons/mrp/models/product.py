@@ -45,7 +45,7 @@ class ProductTemplate(models.Model):
 
     @api.depends_context('company')
     def _compute_is_kits(self):
-        domain = [('company_id', 'in', [False] + self.env.companies.ids),
+        domain = [('company_id', 'in', [False, self.env.company.id]),
                   ('product_tmpl_id', 'in', self.ids),
                   ('active', '=', True),
                   ('type', '=', 'phantom')]
@@ -145,7 +145,7 @@ class ProductProduct(models.Model):
     @api.depends_context('company')
     def _compute_is_kits(self):
         domain = [
-            '&', ('company_id', 'in', [False] + self.env.companies.ids),
+            '&', ('company_id', 'in', [False, self.env.company.id]),
             '&', ('active', '=', True),
             '&', ('type', '=', 'phantom'),
             '|', ('product_id', 'in', self.ids),
