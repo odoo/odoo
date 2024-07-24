@@ -61,3 +61,13 @@ class TestUi(TestPosHrHttpCommon):
             "PosHrTour",
             login="pos_admin",
         )
+
+    def test_cashier_stay_logged_in(self):
+        # open a session, the /pos/ui controller will redirect to it
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "CashierStayLogged",
+            login="pos_admin",
+        )
