@@ -243,7 +243,7 @@ registry.category("web_tour.tours").add("BillScreenTour", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickControlButton("Bill"),
             // HACK: is_modal should be false so that the trigger can be found.
-            { ...negateStep(billScreenQRCode), in_modal: false },
+            { ...negateStep(billScreenQRCode) },
             BillScreen.closeBillPopup(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),

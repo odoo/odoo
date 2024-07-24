@@ -26,51 +26,43 @@ registry.category("web_tour.tours").add("do_not_create_zero_amount_expense_in_sh
         {
             content: "Create new expense line",
             trigger: ".modal .modal-footer .o_create_button",
-            in_modal: false,
             run: "click",
         },
         {
             content: "Add expense name",
             trigger: ".modal .modal-body .o_field_widget[name=name] input",
-            in_modal: false,
             run: "edit expense_for_tour",
         },
         {
             content: "Set total amount to zero",
             trigger: ".modal .modal-body .o_field_widget[name=total_amount_currency] input",
-            in_modal: false,
             run: "edit 0.0",
         },
         {
             content: "Select category to Expense",
             trigger: ".modal .modal-body .o_field_widget[name=product_id] input",
-            in_modal: false,
             run: "click",
         },
         {
             content: "Choose category to Expense",
             trigger:
                 ".o_field_widget[name=product_id] .o-autocomplete--dropdown-menu li:contains([EXP_GEN])",
-            in_modal: false,
             run: "click",
         },
         {
             content: "Click Save",
             trigger: ".modal .modal-footer .o_form_button_save",
-            in_modal: false,
             run: "click",
         },
         {
             content:
                 "Close the displayed user error indicating that the expense total cannot be set to zero if it is linked to a report.",
             trigger: ".modal .modal-footer .btn-primary.o-default-button",
-            in_modal: false,
             run: "click",
         },
         {
             content: "Set total amount to ten",
             trigger: ".modal .modal-body .o_field_widget[name=total_amount_currency] input",
-            in_modal: false,
             run: "edit 10.0",
         },
         {
@@ -81,7 +73,6 @@ registry.category("web_tour.tours").add("do_not_create_zero_amount_expense_in_sh
         {
             content: "Wait the modal is closed",
             trigger: "body:not(:has(.modal))",
-            in_modal: false,
         },
         // Save the report
         ...stepUtils.saveForm(),

@@ -13,7 +13,6 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
 }, {
     content: "Check that we have to enter enhanced security mode",
     trigger: ".modal div:contains(enter your password)",
-    in_modal: false,
 }, {
     content: "Input password",
     trigger: '[name=password]',
@@ -90,7 +89,6 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
 }, {
     content: "Check that we have to enter enhanced security mode",
     trigger: ".modal div:contains(enter your password)",
-    in_modal: false,
 }, {
     content: "Input password",
     trigger: '[name=password]',

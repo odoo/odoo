@@ -80,73 +80,59 @@ const registerSteps = [
     {
         content: "Select 2 units of 'Standard' ticket type",
         trigger: ".modal .o_wevent_ticket_selector select",
-        in_modal: false,
         run: "select 2",
     },
     {
         content: "Click on 'Register' button",
         trigger: ".modal #o_wevent_tickets .btn-primary:contains(Register):enabled",
-        in_modal: false,
         run: "click",
     },
     {
         content: "Fill attendees details",
         trigger: '.modal form[id="attendee_registration"] .btn[type=submit]',
-        in_modal: false,
     },
     {
         trigger: ".modal input[name*='1-name']",
-        in_modal: false,
         run: "edit Raoulette Poiluchette",
     },
     {
         trigger: ".modal input[name*='1-phone']",
-        in_modal: false,
         run: "edit 0456112233",
     },
     {
         trigger: ".modal input[name*='1-email']",
-        in_modal: false,
         run: "edit raoulette@example.com",
     },
     {
         trigger: ".modal select[name*='1-simple_choice']",
-        in_modal: false,
         run: "selectByLabel Consumers",
     },
     {
         trigger: ".modal input[name*='2-name']",
-        in_modal: false,
         run: "edit Michel Tractopelle",
     },
     {
         trigger: ".modal input[name*='2-phone']",
-        in_modal: false,
         run: "edit 0456332211",
     },
     {
         trigger: ".modal input[name*='2-email']",
-        in_modal: false,
         run: "edit michel@example.com",
     },
     {
         trigger: ".modal select[name*='2-simple_choice']",
-        in_modal: false,
         run: "selectByLabel Research",
     },
     {
         trigger: ".modal textarea[name*='text_box']",
-        in_modal: false,
         run: "edit An unicorn told me about you. I ate it afterwards.",
     },
     {
         trigger: ".modal input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
-        in_modal: false,
     },
     {
         content: "Validate attendees details",
         trigger: ".modal button[type=submit]:enabled",
-        in_modal: false,
         run: "click",
     },
     {

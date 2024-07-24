@@ -61,7 +61,10 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
 
             TextInputPopup.inputText("100"),
             // pressing enter should confirm the text input popup
-            { trigger: "textarea", run: "press Enter", in_modal: true },
+            {
+                trigger: ".modal textarea",
+                run: "press Enter",
+            },
             FloorScreen.clickTable("100"),
             FloorScreen.selectedTableIs("100"),
 

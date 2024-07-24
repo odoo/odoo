@@ -52,7 +52,6 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
     run: "click",
 }, {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: "click",
 }, 
 {

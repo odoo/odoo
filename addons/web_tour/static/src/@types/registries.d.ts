@@ -1,7 +1,6 @@
 declare module "registries" {
     interface TourStep {
         content: string;
-        in_modal?: boolean;
         trigger: string;
         run: string | (() => (void | Promise<void>));
     }

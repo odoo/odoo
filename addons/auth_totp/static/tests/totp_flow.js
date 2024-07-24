@@ -82,7 +82,6 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 },
 {
     trigger: ".modal div:contains(enter your password)",
-    in_modal: false,
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
@@ -95,11 +94,9 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 }, {
     content: "Check the wizard has opened",
     trigger: '.modal li:contains("When requested to do so")',
-    in_modal: false,
 }, {
     content: "Get secret from collapsed div",
     trigger: `.modal a:contains("Cannot scan it?")`,
-    in_modal: false,
     async run(helpers) {
         const secret = this.anchor
             .closest("div")
@@ -117,7 +114,6 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 }, 
 {
     trigger: ".modal button.btn-primary:contains(Activate)",
-    in_modal: false,
     run: "click",
 },
 {
@@ -249,17 +245,14 @@ registry.category("web_tour.tours").add('totp_login_device', {
 },
 {
     trigger: ".modal div:contains(enter your password)",
-    in_modal: false,
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
     trigger: ".modal [name=password] input",
-    in_modal: false,
     run: "edit demo",
 }, {
     content: "Confirm",
     trigger: ".modal button:contains(Confirm Password)",
-    in_modal: false,
     run: "click",
 },
 {
@@ -344,17 +337,14 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
 },
 {
     trigger: ".modal div:contains(enter your password)",
-    in_modal: false,
 },
 { // enhanced security yo
     content: "Check that we have to enter enhanced security mode & input password",
     trigger: '.modal [name=password] input',
-    in_modal: false,
     run: "edit admin",
 }, {
     content: "Confirm",
     trigger: ".modal button:contains(Confirm Password)",
-    in_modal: false,
     run: "click",
 }, 
 {

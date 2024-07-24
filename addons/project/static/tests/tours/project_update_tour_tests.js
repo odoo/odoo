@@ -90,11 +90,9 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "click",
 }, {
     trigger: ".modal .o_field_widget[name=fold] input",
-    in_modal: false,
     run: "click",
 }, {
     trigger: ".modal .modal-footer button",
-    in_modal: false,
     run: "click",
 },
 {

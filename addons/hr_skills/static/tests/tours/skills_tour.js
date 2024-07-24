@@ -36,25 +36,21 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Enter some company name",
         trigger: ".modal:contains(new resume line) .modal-body .o_field_widget[name='name'] input",
-        in_modal: false,
         run: "edit Mamie Rock",
     },
     {
         content: "Set start date",
         trigger: ".modal:contains(new resume line) .o_field_widget[name='date_start'] input",
-        in_modal: false,
         run: "edit 12/05/2017",
     },
     {
         content: "Give some description",
         trigger: ".modal:contains(new resume line) .o_field_widget[name='description'] textarea",
-        in_modal: false,
         run: "edit Sang some songs and played some music",
     },
     {
         content: "Save it",
         trigger: ".modal:contains(new resume line) .o_form_button_save:contains(save)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -68,7 +64,6 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Change type",
         trigger: ".modal:contains(new resume line) .o_field_widget[name='line_type_id'] input",
-        in_modal: false,
         run: "edit Experience",
     },
     {
@@ -79,7 +74,6 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Save experience change",
         trigger: ".modal:contains(new resume line) .o_form_button_save:contains(save)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -93,13 +87,11 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Select Music",
         trigger: ".modal:contains(select skills) .o_field_widget[name='skill_type_id'] label:contains('Best Music')",
-        in_modal: false,
         run: "click",
     },
     {
         content: "Select a song",
         trigger: ".modal:contains(select skills) .o_field_widget[name='skill_id'] input",
-        in_modal: false,
         run: "edit Fortun",
     },
     {
@@ -110,7 +102,6 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Select a level",
         trigger: ".modal:contains(select skills) .o_field_widget[name='skill_level_id'] input",
-        in_modal: false,
         run: "edit Level",
     },
     {
@@ -121,7 +112,6 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Save new skill",
         trigger: ".modal:contains(select skills) .o_form_button_save:contains(save & close)",
-        in_modal: false,
         run: "click",
     },
     {
@@ -136,7 +126,6 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Select a song", // "Music" should be already selected
         trigger: ".modal:contains(select skills) .o_field_widget[name='skill_id'] input",
-        in_modal: false,
         run: "edit Mary",
     },
     {
@@ -147,7 +136,6 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Select a level",
         trigger: ".modal:contains(select skills) .o_field_widget[name='skill_level_id'] input",
-        in_modal: false,
         run: "edit Level 7",
     },
     {
@@ -158,7 +146,6 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Save new skill",
         trigger: ".modal:contains(select skills) .o_form_button_save:contains(save & close)",
-        in_modal: false,
         run: "click",
     },
     {

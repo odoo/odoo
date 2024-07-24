@@ -45,7 +45,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     checkScrollbar(false),
     {
         content: 'Click on the s_popup snippet',
-        in_modal: false,
         trigger: ':iframe .s_popup .modal',
         run: "click",
     },
@@ -112,14 +111,12 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     checkScrollbar(true), //the popup backdrop is activated so there should have a scrollbar on #wrapwrap
     {
         content: 'Click on the s_popup snippet',
-        in_modal: false,
         trigger: ':iframe .s_popup .modal',
         run: "click",
     },
     {
         content: "Remove the s_popup snippet",
         trigger: ".o_we_customize_panel we-customizeblock-options:contains('Popup') we-button.oe_snippet_remove:first",
-        in_modal: false,
         async run(helpers) {
             helpers.click();
             // TODO: remove the below setTimeout. Without it, goBackToBlocks() not works.

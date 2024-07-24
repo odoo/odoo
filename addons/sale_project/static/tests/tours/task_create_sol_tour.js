@@ -55,7 +55,6 @@ registry.category("web_tour.tours").add("task_create_sol_tour", {
         {
             content: "Save Sales Order Item",
             trigger: ".modal .o_form_button_save",
-            in_modal: false,
             run: "click",
         },
         {

@@ -44,7 +44,6 @@ export function setUp() {
         {
             content: "waiting for loading to finish",
             trigger: "body:not(:has(.pos-loader))", // Pos has finished loading
-            in_modal: false,
             run: function () {
                 var product_wall_shelf = posmodel.data.models["product.product"]
                     .getAll()
@@ -100,7 +99,6 @@ export function waitForUnitTest() {
         {
             content: "wait for unit tests to finish",
             trigger: ".pos.done-testing",
-            in_modal: false,
         },
     ];
 }

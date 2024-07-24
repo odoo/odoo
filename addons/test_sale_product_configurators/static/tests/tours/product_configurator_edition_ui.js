@@ -41,7 +41,6 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Aluminium, White)"))',
 }, {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: "click",
 }, 
 {
@@ -76,7 +75,6 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     trigger: 'div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Custom, Black)")',
 }, {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: "click",
 }, 
 {
@@ -102,7 +100,6 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     configuratorTourUtils.setCustomAttribute("Customizable Desk", "Legs", "another nice custom value"),
 {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: "click",
 }, 
 {
@@ -127,7 +124,6 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     configuratorTourUtils.assertPriceTotal("1,200.00"),
 {
     trigger: ".modal button:contains(Confirm)",
-    in_modal: false,
     run: "click",
 }, {
     // check quantity

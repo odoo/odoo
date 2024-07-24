@@ -35,7 +35,6 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         {
             isActive: ["auto"],
             trigger: `.ui-autocomplete .ui-menu-item a:contains("${leaveType}")`,
-            in_modal: false,
             run: "click",
         },
         {
