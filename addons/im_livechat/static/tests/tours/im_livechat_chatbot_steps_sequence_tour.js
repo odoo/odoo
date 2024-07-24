@@ -63,7 +63,7 @@ const commonSteps = [
  */
 registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_tour", {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [
         ...commonSteps,
         {
@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_tour
  */
 registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with_move_tour", {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [
         ...commonSteps,
         {
