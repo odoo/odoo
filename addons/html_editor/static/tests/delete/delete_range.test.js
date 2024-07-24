@@ -380,7 +380,7 @@ describe("DELETE_SELECTION command", () => {
                         `<div class="container o_text_columns">
                             <div class="row">
                                 <div class="col-6">a[]</div>
-                                <div class="col-6 o-we-hint" placeholder="Empty column"><br></div>
+                                <div class="col-6"><br></div>
                             </div>
                         </div>
                         <p>i</p>`

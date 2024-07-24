@@ -194,15 +194,15 @@ export class FontPlugin extends Plugin {
                 },
             },
         ],
-        emptyBlockHints: [
-            { selector: "H1", hint: _t("Heading 1") },
-            { selector: "H2", hint: _t("Heading 2") },
-            { selector: "H3", hint: _t("Heading 3") },
-            { selector: "H4", hint: _t("Heading 4") },
-            { selector: "H5", hint: _t("Heading 5") },
-            { selector: "H6", hint: _t("Heading 6") },
-            { selector: "PRE", hint: _t("Code") },
-            { selector: "BLOCKQUOTE", hint: _t("Quote") },
+        hints: [
+            { selector: "H1", text: _t("Heading 1") },
+            { selector: "H2", text: _t("Heading 2") },
+            { selector: "H3", text: _t("Heading 3") },
+            { selector: "H4", text: _t("Heading 4") },
+            { selector: "H5", text: _t("Heading 5") },
+            { selector: "H6", text: _t("Heading 6") },
+            { selector: "PRE", text: _t("Code") },
+            { selector: "BLOCKQUOTE", text: _t("Quote") },
         ],
     });
 

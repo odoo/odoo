@@ -1114,7 +1114,8 @@ describe("Selection not collapsed", () => {
             stepFunction: deleteForward,
             // The flagged 200B is there to preserve the font so if we
             // write now, we still write in the font element's style.
-            contentAfterEdit: '<h1><i data-oe-zws-empty-inline="">[]\u200B</i><br></h1>',
+            contentAfterEdit:
+                '<h1 placeholder="Heading 1" class="o-we-hint"><i data-oe-zws-empty-inline="">[]\u200B</i><br></h1>',
             // The flagged 200B is removed by the sanitizer if its
             // parent remains empty.
             contentAfter: "<h1>[]<br></h1>",
@@ -1304,26 +1305,30 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: "<h1><u>[abcd</u></h1><p>ef]</p><h2>1</h2>",
             stepFunction: deleteForward,
-            contentAfterEdit: '<h1><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>1</h2>',
+            contentAfterEdit:
+                '<h1 placeholder="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>1</h2>',
             contentAfter: "<h1>[]<br></h1><h2>1</h2>",
         });
         await testEditor({
             contentBefore: "<h1>[<u>abcd</u></h1><p>ef]</p><h2>2</h2>",
             stepFunction: deleteForward,
-            contentAfterEdit: '<h1><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>2</h2>',
+            contentAfterEdit:
+                '<h1 placeholder="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>2</h2>',
             contentAfter: "<h1>[]<br></h1><h2>2</h2>",
         });
         // Backward selection
         await testEditor({
             contentBefore: "<h1><u>]abcd</u></h1><p>ef[</p><h2>3</h2>",
             stepFunction: deleteForward,
-            contentAfterEdit: '<h1><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>3</h2>',
+            contentAfterEdit:
+                '<h1 placeholder="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>3</h2>',
             contentAfter: "<h1>[]<br></h1><h2>3</h2>",
         });
         await testEditor({
             contentBefore: "<h1>]<u>abcd</u></h1><p>ef[</p><h2>4</h2>",
             stepFunction: deleteForward,
-            contentAfterEdit: '<h1><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>4</h2>',
+            contentAfterEdit:
+                '<h1 placeholder="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>4</h2>',
             contentAfter: "<h1>[]<br></h1><h2>4</h2>",
         });
     });

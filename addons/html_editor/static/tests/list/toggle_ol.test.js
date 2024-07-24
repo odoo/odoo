@@ -87,14 +87,14 @@ describe("Range collapsed", () => {
                     <table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
-                                <td class="o_selected_td"><ol><li placeholder="List" class="o-we-hint">[<br></li></ol></td>
-                                <td class="o_selected_td"><ol><li placeholder="List" class="o-we-hint"><br></li></ol></td>
-                                <td class="o_selected_td"><ol><li placeholder="List" class="o-we-hint"><br></li></ol></td>
+                                <td class="o_selected_td"><ol><li>[<br></li></ol></td>
+                                <td class="o_selected_td"><ol><li><br></li></ol></td>
+                                <td class="o_selected_td"><ol><li><br></li></ol></td>
                             </tr>
                             <tr>
-                                <td class="o_selected_td"><ol><li placeholder="List" class="o-we-hint"><br></li></ol></td>
-                                <td class="o_selected_td"><ol><li placeholder="List" class="o-we-hint"><br></li></ol></td>
-                                <td class="o_selected_td"><ol><li placeholder="List" class="o-we-hint">]<br></li></ol></td>
+                                <td class="o_selected_td"><ol><li><br></li></ol></td>
+                                <td class="o_selected_td"><ol><li><br></li></ol></td>
+                                <td class="o_selected_td"><ol><li>]<br></li></ol></td>
                             </tr>
                         </tbody>
                     </table>

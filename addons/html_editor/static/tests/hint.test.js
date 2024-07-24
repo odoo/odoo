@@ -78,7 +78,7 @@ test("should not lose track of temporary hints on split block", async () => {
     );
 });
 
-test("temporary hint should not be displayed where there's a permanent one", async () => {
+test("hint should only Be display for focused empty block element", async () => {
     const { el, editor } = await setupEditor("<p>[]<br></p>", {});
     expect(getContent(el)).toBe(
         `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
@@ -91,7 +91,7 @@ test("temporary hint should not be displayed where there's a permanent one", asy
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
-            <h1 placeholder="Heading 1" class="o-we-hint"><br></h1>
+            <h1><br></h1>
             <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
