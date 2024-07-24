@@ -6757,3 +6757,24 @@ class StockMove(TransactionCase):
         # Since both moves have the same date, ensure that the reservation is changed on the latest created
         self.assertEqual(move_1.state, 'assigned')
         self.assertEqual(move_2.state, 'partially_available')
+
+    def test_recompute_stock_reference(self):
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'move_ids': [(0, 0, {
+                'name': self.product.name,
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': self.product.id,
+                'product_uom': self.product.uom_id.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        old_reference = receipt.move_ids.reference
+        receipt.write({
+            'picking_type_id': self.env.ref('stock.picking_type_internal').id,
+        })
+        receipt.action_confirm()
+        self.assertNotEqual(old_reference, receipt.move_ids.reference)
