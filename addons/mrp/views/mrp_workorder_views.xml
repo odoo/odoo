@@ -505,4 +505,22 @@
         <field name="view_id" ref="view_work_center_load_graph"/>
         <field name="act_window_id" ref="action_mrp_workcenter_load_report_graph"/>
     </record>
+
+    <record id="action_start_workorders" model="ir.actions.server">
+        <field name="name">Start</field>
+        <field name="model_id" ref="mrp.model_mrp_workorder"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_workorder"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.button_start(raise_on_invalid_state=True)</field>
+    </record>
+
+    <record id="action_pause_workorders" model="ir.actions.server">
+        <field name="name">Pause</field>
+        <field name="model_id" ref="mrp.model_mrp_workorder"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_workorder"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.button_pending()</field>
+    </record>
 </odoo>

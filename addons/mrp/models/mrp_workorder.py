@@ -553,13 +553,15 @@ class MrpWorkorder(models.Model):
             total += (duration / 60.0) * wo.workcenter_id.costs_hour
         return total
 
-    def button_start(self):
+    def button_start(self, raise_on_invalid_state=False):
         if any(wo.working_state == 'blocked' for wo in self):
             raise UserError(_('Please unblock the work center to start the work order.'))
         for wo in self:
             if any(not time.date_end for time in wo.time_ids.filtered(lambda t: t.user_id.id == self.env.user.id)):
                 continue
             if wo.state in ('done', 'cancel'):
+                if raise_on_invalid_state:
+                    continue
                 raise UserError(_('You cannot start a work order that is already done or cancelled'))
 
             if wo.product_tracking == 'serial' and wo.qty_producing == 0:
@@ -602,7 +604,6 @@ class MrpWorkorder(models.Model):
                 if wo.date_finished and wo.date_finished < date_start:
                     vals['date_finished'] = date_start
                 wo.with_context(bypass_duration_calculation=True).write(vals)
-        return True
 
     def button_finish(self):
         date_finished = fields.Datetime.now()
@@ -648,7 +649,6 @@ class MrpWorkorder(models.Model):
 
     def button_pending(self):
         self.end_previous()
-        return True
 
     def button_unblock(self):
         for order in self:
