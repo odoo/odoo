@@ -40,7 +40,6 @@ import { TourInteractive } from "./tour_interactive";
  * @property {RunCommand} [run] The action to perform when trigger conditions are verified.
  * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
  * You can change this value to lengthen or shorten the time before the error occurs [ms].
- * @property {string} [consumeEvent] Only in manual mode (onboarding tour). It's the event we want the customer to do.
  * @property {string} [title]
 
  * @typedef {"manual" | "auto"} TourMode
@@ -59,7 +58,6 @@ function checkTourStepKeyValues(tourStep) {
         position: { type: String, optional: true },
         run: { type: [String, Function], optional: true },
         timeout: { type: Number, optional: true },
-        consumeEvent: { type: String, optional: true },
         title: { type: String, optional: true },
         debugHelp: { type: String, optional: true },
         noPrepend: { type: Boolean, optional: true },
