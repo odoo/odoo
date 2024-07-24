@@ -64,13 +64,13 @@
         <field name="model">utm.campaign</field>
         <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="after">
+            <xpath expr="//field[@name='active']" position="after">
                 <field name="mailing_mail_ids" groups="mass_mailing.group_mass_mailing_user"/>
                 <field name="is_mailing_campaign_activated"/>
             </xpath>
             <xpath expr="//ul[@id='o_utm_actions']">
                 <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
-                    t-attf-class="oe_mailings #{record.mailing_mail_ids.raw_value.length === 0 ? 'text-muted' : ''}"
+                    t-attf-class="pe-2 oe_mailings #{record.mailing_mail_ids.raw_value.length === 0 ? 'text-muted' : ''}"
                     t-if="record.is_mailing_campaign_activated.raw_value"
                     groups="mass_mailing.group_mass_mailing_user">
                     <t t-out="record.mailing_mail_ids.raw_value.length"/> Mailings
