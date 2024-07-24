@@ -198,11 +198,15 @@ class TestMrpMulticompany(common.TransactionCase):
         template1 = product1.product_tmpl_id
         template2 = product2.product_tmpl_id
 
+        self.assertFalse(product1.with_context(allowed_company_ids=[self.company_b.id, self.company_a.id]).is_kits)
+        self.assertFalse(template1.with_context(allowed_company_ids=[self.company_b.id, self.company_a.id]).is_kits)
         self.assertTrue(product1.with_company(self.company_a).is_kits)
         self.assertTrue(template1.with_company(self.company_a).is_kits)
         self.assertFalse(product1.with_company(self.company_b).is_kits)
         self.assertFalse(template1.with_company(self.company_b).is_kits)
 
+        self.assertTrue(product2.with_context(allowed_company_ids=[self.company_b.id, self.company_a.id]).is_kits)
+        self.assertTrue(template2.with_context(allowed_company_ids=[self.company_b.id, self.company_a.id]).is_kits)
         self.assertTrue(product2.with_company(self.company_a).is_kits)
         self.assertTrue(template2.with_company(self.company_a).is_kits)
         self.assertTrue(product2.with_company(self.company_b).is_kits)
