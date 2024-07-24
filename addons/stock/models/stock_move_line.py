@@ -733,8 +733,8 @@ class StockMoveLine(models.Model):
             current_picking_first = lambda cand: (
                 cand.picking_id != self.move_id.picking_id,
                 -(cand.picking_id.scheduled_date or cand.move_id.date).timestamp()
-                if cand.picking_id or cand.move_id
-                else -cand.id,
+                if cand.picking_id or cand.move_id else 0,
+                -cand.id,
             )
             outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(current_picking_first)
 
