@@ -369,14 +369,6 @@
                                         <div class="o_row">
                                             <field name="oee_target"/> %
                                         </div>
-                                    </group>
-                                    <group string="Costing Information" name="costing">
-                                        <label for="costs_hour"/>
-                                        <div id="costs_hour">
-                                            <field name="costs_hour" widget="monetary" class="oe_inline"/> per workcenter
-                                        </div>
-                                    </group>
-                                    <group>
                                         <label for="time_start"/>
                                         <div>
                                             <field name="time_start" widget="float_time" class="oe_inline"/> minutes
@@ -384,6 +376,12 @@
                                         <label for="time_stop"/>
                                         <div>
                                             <field name="time_stop" widget="float_time" class="oe_inline"/> minutes
+                                        </div>
+                                    </group>
+                                    <group string="Costing Information" name="costing">
+                                        <label for="costs_hour"/>
+                                        <div id="costs_hour">
+                                            <field name="costs_hour" widget="monetary" class="oe_inline"/> per workcenter
                                         </div>
                                     </group>
                                 </group>
