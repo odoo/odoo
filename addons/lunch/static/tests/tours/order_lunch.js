@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('order_lunch_tour', {
-    url: "/web",
+    url: "/odoo",
     test: true,
     steps: () => [{
     trigger: 'a[data-menu-xmlid="lunch.menu_lunch"]',
