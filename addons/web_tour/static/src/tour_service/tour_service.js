@@ -373,6 +373,10 @@ export const tourService = {
         }
 
         if (!window.frameElement) {
+            const paramsTourName = new URLSearchParams(browser.location.search).get("tour");
+            if (paramsTourName && paramsTourName in tours) {
+                startTour(paramsTourName, { mode: "manual " });
+            }
             // Resume running tours.
             for (const tourName of tourState.getActiveTourNames()) {
                 if (tourName in tours) {
