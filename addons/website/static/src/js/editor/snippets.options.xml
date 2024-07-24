@@ -257,6 +257,13 @@
 </t>
 
 <!-- Header - Borders & Shadows -->
+<t t-name="website.TopMenuVisibility">
+    <WeSelect title.translate="Header Position" noPreview="'true'" dependencies="'!header_sidebar_opt'">
+        <WeButton visibility="'transparent'">Over The Content</WeButton>
+        <WeButton visibility="'regular'">Regular</WeButton>
+        <WeButton visibility="'hidden'">Hidden</WeButton>
+    </WeSelect>
+</t>
 <t t-name="website.TopMenuColor">
     <WeColorpicker title.translate="Background"
                    class="'o_we_sublevel_1'"
@@ -275,6 +282,12 @@
                    colorPrefix="'text-'"
                    pageOptionName="'header_text_color'"/>
 </t>
+
+<!-- Footer - Borders & Shadows -->
+<t t-name="website.HideFooter">
+    <WeCheckbox title.translate="Page Visibility" visibility="'hidden|shown'" noPreview="'true'"/>
+</t>
+
 <t t-name="website.share_social_media_option">
     <WeSelect title.translate="Title Position" applyTo="'.s_share_title, .s_social_media_title'">
         <WeButton selectClass="'d-block'">Top</WeButton>

@@ -2543,10 +2543,23 @@ options.registry.HeaderNavbar = options.Class.extend({
     },
 });
 
-const VisibilityPageOptionUpdate = options.Class.extend({
-    pageOptionName: undefined,
-    showOptionWidgetName: undefined,
-    shownValue: '',
+/**
+ * @abstract
+ */
+export class VisibilityPageOptionUpdate extends SnippetOption {
+    /**
+     * @abstract
+     * @type {string}
+     */
+    static pageOptionName = undefined;
+
+    constructor({ callbacks, options }) {
+        super(...arguments);
+        this.requestUserValue = callbacks.requestUserValue;
+        this.updateSnippetOptionVisibility = callbacks.updateSnippetOptionVisibility;
+        this.wysiwyg = options.wysiwyg;
+        this.shownValue = "";
+    }
 
     /**
      * @override
@@ -2563,9 +2576,8 @@ const VisibilityPageOptionUpdate = options.Class.extend({
         // header appear for edition, its actual visibility for the page is
         // toggled (otherwise it would be about editing an element which
         // is actually never displayed on the page).
-        const widget = this._requestUserValueWidgets(this.showOptionWidgetName)[0];
-        widget.enable();
-    },
+        await this.visibility(this.shownValue);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -2576,16 +2588,9 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      */
     async visibility(previewMode, widgetValue, params) {
         const show = (widgetValue !== 'hidden');
-        await new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: this.pageOptionName, value: show}],
-                onSuccess: () => resolve(),
-                onFailure: reject,
-            });
-        });
-        this.trigger_up('snippet_option_visibility_update', {show: show});
-    },
+        await this.wysiwyg.togglePageOption(this.constructor.pageOptionName, show);
+        this.updateSnippetOptionVisibility(show);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2600,26 +2605,21 @@ const VisibilityPageOptionUpdate = options.Class.extend({
             return shown ? this.shownValue : 'hidden';
         }
         return this._super(...arguments);
-    },
+    }
     /**
      * @private
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
     async _isShown() {
-        return new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'get_page_option',
-                params: [this.pageOptionName],
-                onSuccess: v => resolve(!!v),
-                onFailure: reject,
-            });
-        });
-    },
-});
+        return await this.wysiwyg.getPageOption(this.constructor.pageOptionName);
+    }
+}
 
-options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
-    pageOptionName: 'header_visible',
-    showOptionWidgetName: 'regular_header_visibility_opt',
+export class TopMenuVisibility extends VisibilityPageOptionUpdate {
+    /**
+     * @override
+     */
+    static pageOptionName = "header_visible";
 
     //--------------------------------------------------------------------------
     // Options
@@ -2631,14 +2631,14 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
      * @see this.selectClass for params
      */
     async visibility(previewMode, widgetValue, params) {
-        await this._super(...arguments);
+        await super.visibility(...arguments);
         await this._changeVisibility(widgetValue);
         // TODO this is hacky but changing the header visibility may have an
         // effect on features like FullScreenHeight which depend on viewport
         // size so we simulate a resize.
         const targetWindow = this.$target[0].ownerDocument.defaultView;
         targetWindow.dispatchEvent(new targetWindow.Event('resize'));
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2653,52 +2653,29 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
             return;
         }
         const transparent = (widgetValue === 'transparent');
-        await new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: 'header_overlay', value: transparent}],
-                onSuccess: () => resolve(),
-                onFailure: reject,
-            });
-        });
+        await this.wysiwyg.togglePageOption("header_overlay", transparent);
         if (!transparent) {
             return;
         }
-        // TODO should be able to change both options at the same time, as the
-        // `params` list suggests.
-        await new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: 'header_color', value: ''}],
-                onSuccess: () => resolve(),
-                onFailure: reject,
-            });
-        });
-        await new Promise(resolve => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: 'header_text_color', value: ''}],
-                onSuccess: () => resolve(),
-            });
-        });
-    },
+        await this.wysiwyg.togglePageOption("header_color", "");
+        await this.wysiwyg.togglePageOption("header_text_color", "");
+    }
     /**
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        const _super = this._super.bind(this);
         if (methodName === 'visibility') {
-            this.shownValue = await new Promise((resolve, reject) => {
-                this.trigger_up('action_demand', {
-                    actionName: 'get_page_option',
-                    params: ['header_overlay'],
-                    onSuccess: v => resolve(v ? 'transparent' : 'regular'),
-                    onFailure: reject,
-                });
-            });
+            const pageHeaderOverlay = await this.wysiwyg.getPageOption("header_overlay");
+            this.shownValue = pageHeaderOverlay ? "transparent" : "regular";
         }
-        return _super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
+}
+registerWebsiteOption("TopMenuVisibility", {
+    Class: TopMenuVisibility,
+    template: "website.TopMenuVisibility",
+    selector: "[data-main-object^='website.page('] #wrapwrap > header",
+    noCheck: true,
 });
 
 export class TopMenuColor extends SnippetOption {
@@ -2843,10 +2820,25 @@ registerWebsiteOption("DeviceVisibility", {
 /**
  * Hide/show footer in the current page.
  */
-options.registry.HideFooter = VisibilityPageOptionUpdate.extend({
-    pageOptionName: 'footer_visible',
-    showOptionWidgetName: 'hide_footer_page_opt',
-    shownValue: 'shown',
+export class HideFooter extends VisibilityPageOptionUpdate {
+    /**
+     * @override
+     */
+    static pageOptionName = "footer_visible";
+
+    constructor() {
+        super(...arguments);
+        this.shownValue = "shown";
+    }
+}
+registerWebsiteOption("HideFooter", {
+    Class: HideFooter,
+    template: "website.HideFooter",
+    selector: "[data-main-object^='website.page('] #wrapwrap > footer",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
+    },
 });
 
 /**

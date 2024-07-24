@@ -653,19 +653,6 @@
         </we-select>
     </div>
 
-    <div data-js="TopMenuVisibility"
-         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
-         data-no-check="true">
-        <we-select string="Header Position" data-no-preview="true"
-                   data-dependencies="!header_sidebar_opt">
-            <we-button data-name="over_content_header_visibility_opt"
-                       data-visibility="transparent">Over The Content</we-button>
-            <we-button data-name="regular_header_visibility_opt"
-                       data-visibility="regular">Regular</we-button>
-            <we-button data-visibility="hidden">Hidden</we-button>
-        </we-select>
-    </div>
-
     <div data-js="HeaderElements"
          data-selector="#wrapwrap > header"
          data-no-check="true"
@@ -843,16 +830,6 @@
                 <we-button string="Right" data-select-class="justify-content-end"/>
             </we-select>
         </we-row>
-    </div>
-
-    <div data-js="HideFooter"
-        data-selector="[data-main-object^='website.page('] #wrapwrap > footer"
-        data-no-check="true"
-        groups="website.group_website_designer">
-        <we-checkbox string="Page Visibility"
-                     data-name="hide_footer_page_opt"
-                     data-visibility="hidden|shown"
-                     data-no-preview="true"/>
     </div>
 
 
