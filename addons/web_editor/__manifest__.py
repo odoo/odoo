@@ -128,7 +128,9 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/editor/odoo-editor/src/checklist.scss',
         ],
         'web_editor.assets_wysiwyg': [
-            # legacy stuff that are no longer in assets_backend
+            # legacy stuff that are no longer in assets_backend (to remove...)
+            'web/static/lib/jquery/jquery.js',
+            'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/core/class.js',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/mixins.js',
