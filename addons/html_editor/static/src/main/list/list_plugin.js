@@ -106,13 +106,7 @@ export class ListPlugin extends Plugin {
                 },
             },
         ],
-        emptyBlockHints: [
-            { selector: "UL LI", hint: _t("List") },
-            { selector: "OL LI", hint: _t("List") },
-            // @todo @phoenix: hint for checklists was supposed to be "To-do",
-            // but never worked because of the ::before pseudo-element is used
-            // to display the checkbox.
-        ],
+        hints: [{ selector: "LI", text: _t("List") }],
         onInput: { handler: p.onInput.bind(p) },
     });
 
