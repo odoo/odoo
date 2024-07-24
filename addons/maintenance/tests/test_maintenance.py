@@ -78,3 +78,22 @@ class TestEquipment(TransactionCase):
         # I check that maintenance request is in the "In Progress" stage
         self.assertEqual(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_1'))
 
+    def test_forever_maintenance_repeat_type(self):
+        """
+        Test that a maintenance request with repeat_type = forever will be duplicated when it
+        is moved to a 'done' stage, and the new request will be placed in the first stage.
+        """
+        maintenance_request = self.env['maintenance.request'].create({
+            'name': 'Test forever maintenance',
+            'repeat_type': 'forever',
+            'maintenance_type': 'preventive',
+            'recurring_maintenance': True,
+        })
+        done_maintenance_stage = self.env['maintenance.stage'].create({
+            'name': 'Test Done',
+            'done': True,
+        })
+        maintenance_stages = self.env['maintenance.stage'].search([])
+        maintenance_request.with_context(default_stage_id=maintenance_stages[1].id).stage_id = done_maintenance_stage
+        new_maintenance = self.env['maintenance.request'].search([('name', '=', 'Test forever maintenance'), ('stage_id', '=', maintenance_stages[0].id)])
+        self.assertTrue(new_maintenance)
