@@ -497,3 +497,32 @@ test("datetime field: use picker with arabic numbering system", async () => {
     await animationFrame();
     expect(queryFirst("[name=datetime] input")).toHaveValue("٠٢/٠٨/٢٠١٧ ١١:٤٥:٠٠");
 });
+
+test("list datetime with date widget test", async () => {
+    mockTimeZone(+2);
+    onRpc("has_group", () => true);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */
+            `<tree editable="bottom">
+                <field name="datetime" widget="datetime" options="{'show_time': false}"/>
+                <field name="datetime" widget="datetime" />
+            </tree>`,
+    });
+
+    const dates = queryAll(".o_field_cell");
+
+    expect(dates[0]).toHaveText("02/08/2017", {
+        message: "for date field only date should be visible with date widget",
+    });
+    expect(dates[1]).toHaveText("02/08/2017 12:00:00", {
+        message: "for datetime field only date should be visible with date widget",
+    });
+    click(dates[0]);
+    await animationFrame();
+    expect(queryFirst(".o_field_datetime input").value).toBe("02/08/2017 12:00:00", {
+        message: "for datetime field both date and time should be visible with datetime widget",
+    });
+});
