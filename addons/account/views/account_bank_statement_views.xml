@@ -29,15 +29,15 @@
             <field name="name">account.bank.statement.search</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <search string="Search Bank Statements">
-                    <field name="name" string="Bank Statement"/>
+                <search string="Search Statements">
+                    <field name="name" string="Statement"/>
                     <field name="date"/>
                     <filter string="Empty" name="empty" domain="[('line_ids','=',False)]"/>
                     <filter name="invalid" string="Invalid"
                             domain="['|', ('is_valid', '=', False),('is_complete', '=', False)]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>
-                    <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]" />
+                    <field name="journal_id" domain="[('type', 'in', ('bank', 'cash', 'credit'))]" />
                     <group expand="0" string="Group By">
                         <filter string="Journal" name="journal" context="{'group_by': 'journal_id'}"/>
                         <filter string="Date" name="date" context="{'group_by': 'date'}"/>
@@ -51,7 +51,7 @@
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_mode">tree,pivot,graph,form</field>
-            <field name="domain">['|', ('journal_id', '=', False), ('journal_id.type', '=', 'bank')]</field>
+            <field name="domain">[('journal_id.type', '=', 'bank')]</field>
             <field name="context">{'journal_type':'bank'}</field>
             <field name="search_view_id" ref="view_bank_statement_search"/>
             <field name="help" type="html">
@@ -67,6 +67,28 @@
               </p>
             </field>
         </record>
+
+        <record id="action_credit_statement_tree" model="ir.actions.act_window">
+            <field name="name">Credit Statements</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_mode">tree,pivot,graph</field>
+            <field name="domain">[('journal_id.type', '=', 'credit')]</field>
+            <field name="context">{'journal_type': 'credit'}</field>
+            <field name="search_view_id" ref="view_bank_statement_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Register a bank statement
+              </p><p>
+                A credit statement is a summary of all financial transactions
+                occurring over a given period of time on a credit account. You
+                should receive this periodically from your bank.
+              </p><p>
+                Odoo allows you to reconcile a statement line directly with
+                the related sale or purchase invoices.
+              </p>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
@@ -105,7 +127,7 @@
             <field name="view_mode">tree,pivot,graph</field>
             <field name="view_id" ref="view_bank_statement_tree"/>
             <field name="search_view_id" ref="view_bank_statement_search"/>
-            <field name="domain">['|', ('journal_id', '=', False), ('journal_id.type', '=', 'cash')]</field>
+            <field name="domain">[('journal_id.type', '=', 'cash')]</field>
             <field name="context">{'journal_type':'cash'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
