@@ -6725,3 +6725,35 @@ class StockMove(TransactionCase):
         })
         line2.quant_id = quant
         self.assertEqual(move.move_line_ids[1].quantity, 1.0)
+
+    def test_free_reservation(self):
+        """ Checks that the free_reservation uses the latest move line when the picking or date are equal.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 5)
+        # Create two moves using the all available quantity and reserve them
+        move_1, move_2 = self.env['stock.move'].create([{
+            'name': 'New move',
+            'product_id': self.product.id,
+            'product_uom_qty': qty,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        } for qty in [2, 3]])
+        (move_1 | move_2)._action_confirm()
+        (move_1 | move_2)._action_assign()
+
+        self.assertEqual(move_1.date, move_2.date)
+        self.assertEqual(move_1.state, 'assigned')
+        self.assertEqual(move_2.state, 'assigned')
+
+        # Create a scrap order, that will remove some on the available quantity
+        with Form(self.env['stock.scrap']) as scrap_form:
+            scrap_form.product_id = self.product
+            scrap_form.scrap_qty = 2
+            scrap_form.location_id = self.stock_location
+            scrap = scrap_form.save()
+        scrap.action_validate()
+
+        # Since both moves have the same date, ensure that the reservation is changed on the latest created
+        self.assertEqual(move_1.state, 'assigned')
+        self.assertEqual(move_2.state, 'partially_available')
