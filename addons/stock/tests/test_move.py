@@ -5176,6 +5176,23 @@ class StockMove(TransactionCase):
         self.assertFalse(quant_scrap.reserved_quantity)
         self.assertFalse(quant_scrap.quantity)
 
+    def test_scrap_12_qty_in_sublocation(self):
+        """ Checks that if a product is only available in a sublocation, then trying to validate a scrap order from a
+            parent location should trigger the insufficient quantity warning.
+        """
+        # 10 units are available in Stock/Shelf, none in Stock directly
+        subloc = self.stock_location.child_ids[0]
+        self.env['stock.quant']._update_available_quantity(self.product, subloc, 10)
+
+        with Form(self.env['stock.scrap']) as scrap_form:
+            scrap_form.product_id = self.product
+            scrap_form.scrap_qty = 5
+            scrap_form.location_id = self.stock_location
+            scrap = scrap_form.save()
+
+        warning = scrap.action_validate()
+        self.assertEqual(warning.get('res_model'), 'stock.warn.insufficient.qty.scrap', "Should trigger the warning as no qty in location")
+
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.
         """
