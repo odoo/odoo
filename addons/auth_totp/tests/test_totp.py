@@ -9,9 +9,12 @@ from odoo import http
 from odoo.tests import tagged, get_db_name, new_test_user, HttpCase
 from odoo.tools import mute_logger
 
+from odoo.addons.auth_totp.models.totp import TOTP as auth_TOTP
+
 from ..controllers.home import Home
 
 _logger = logging.getLogger(__name__)
+
 
 class TestTOTPMixin:
     @classmethod
@@ -22,30 +25,43 @@ class TestTOTPMixin:
         )
 
     def install_totphook(self):
+        baseline_time = time.time()
+        last_offset = 0
         totp = None
+
         # might be possible to do client-side using `crypto.subtle` instead of
         # this horror show, but requires working on 64b integers, & BigInt is
         # significantly less well supported than crypto
-        def totp_hook(self, secret=None):
-            nonlocal totp
+        def totp_hook(self, secret=None, offset=0):
+            nonlocal totp, last_offset
+            last_offset = offset * 30
             if totp is None:
                 totp = TOTP(secret)
-            if secret:
-                return totp.generate().token
-            else:
-                # on check, take advantage of window because previous token has been
-                # "burned" so we can't generate the same, but tour is so fast
-                # we're pretty certainly within the same 30s
-                return totp.generate(time.time() + 30).token
+
+            # generate the token for the given time offset
+            # we can't generate the same token twice, but tour is so fast
+            # we're pretty certainly within the same 30s
+            token = totp.generate(baseline_time + last_offset).token
+            _logger.info("TOTP secret:%s offset:%s token:%s", secret, offset, token)
+            return token
         # because not preprocessed by ControllerType metaclass
         totp_hook.routing_type = 'json'
         self.env.registry.clear_cache('routing')
         # patch Home to add test endpoint
         Home.totp_hook = http.route('/totphook', type='jsonrpc', auth='none')(totp_hook)
+
+        def totp_match(self, code, t=None, **kwargs):
+            # Allow going beyond the 30s window
+            return origin_match(self, code, t=baseline_time + last_offset, **kwargs)
+
+        origin_match = auth_TOTP.match
+        auth_TOTP.match = totp_match
+
         # remove endpoint and destroy routing map
         @self.addCleanup
         def _cleanup():
             del Home.totp_hook
+            auth_TOTP.match = origin_match
             self.env.registry.clear_cache('routing')
 
 
@@ -77,7 +93,11 @@ class TestTOTP(TestTOTPMixin, HttpCase):
             )
 
         # 3. Check 2FA is required
-        self.start_tour('/', 'totp_login_enabled', login=None)
+        with self.assertLogs("odoo.addons.auth_totp.models.res_users", "WARNING") as cm:
+            self.start_tour('/', 'totp_login_enabled', login=None)
+
+        self.assertEqual(len(cm.output), 1)
+        self.assertIn("2FA check: REUSE", cm.output[0])
 
         # 4. Check 2FA is not requested on saved device and disable it
         self.start_tour('/', 'totp_login_device', login=None)
@@ -93,7 +113,6 @@ class TestTOTP(TestTOTPMixin, HttpCase):
             'res.users', 'read', [uid, ['login']]
         )
         self.assertEqual(r['login'], 'test_user')
-
 
     def test_totp_administration(self):
         self.start_tour('/web', 'totp_tour_setup', login='test_user')
