@@ -19,7 +19,7 @@ registry.category('web_tour.tours').add('mailing_campaign', {
         },
         {
             content: 'Select "Newsletter" campaign',
-            trigger: '.oe_kanban_card:contains("Newsletter")',
+            trigger: '.o_kanban_record:contains("Newsletter")',
             run: "click",
         },
         {

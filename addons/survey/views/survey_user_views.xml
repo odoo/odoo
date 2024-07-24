@@ -137,28 +137,13 @@
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <kanban create="false" group_create="false">
-                <field name="survey_id"/>
-                <field name="create_date"/>
-                <field name="partner_id"/>
-                <field name="email"/>
-                <field name="state"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title"><t t-esc="record.survey_id.value"/></strong>
-                                </div>
-                            </div>
-                            <div class="o_kanban_record_bottom">
-                                <div class="oe_kanban_bottom_left">
-                                    <field name="create_date"/>
-                                </div>
-                                <div class="oe_kanban_bottom_right mr4">
-                                    <field name="state" widget="label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'in_progress':'warning'}}"/>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="survey_id" class="fw-bold fs-5 mb-1"/>
+                        <footer class="fs-6 pt-0">
+                            <field name="create_date"/>
+                            <field name="state" widget="label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'in_progress':'warning'}}" class="ms-auto"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>

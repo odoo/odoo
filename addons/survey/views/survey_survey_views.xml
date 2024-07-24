@@ -221,36 +221,30 @@
         <field name="name">survey.survey.view.kanban</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban js_class="survey_view_kanban">
+            <kanban highlight_color="color" js_class="survey_view_kanban">
                 <field name="active"/>
                 <field name="certification"/>
-                <field name="color"/>
                 <field name="create_date"/>
                 <field name="scoring_type"/>
                 <field name="session_state"/>
-                <field name="success_ratio"/>
-                <field name="session_available" invisible="1"/>
+                <field name="session_available"/>
                 <templates>
                     <div t-name="kanban-menu" t-if="widget.editable">
-                        <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
+                        <a role="menuitem" type="open" class="dropdown-item">Edit Survey</a>
                         <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
                         <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                         <div role="separator" class="dropdown-divider"/>
                         <div role="separator" class="dropdown-item-text">Color</div>
-                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                        <field name="color" widget="kanban_color_picker"/>
                     </div>
-                    <div t-name="kanban-box"
-                        t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)}
-                                      oe_kanban_card oe_kanban_global_click
-                                      o_survey_kanban_card #{record.certification.raw_value ? 'o_survey_kanban_card_certification' : ''}">
+                    <div t-name="kanban-card"
+                        t-attf-class="o_survey_kanban_card #{record.certification.raw_value ? 'o_survey_kanban_card_certification' : ''}" class="px-0">
                         <!-- displayed in ungrouped mode -->
-                        <div class="o_survey_kanban_card_ungrouped row mx-0">
-                            <widget name="web_ribbon" title="Archived"
-                                bg_color="text-bg-danger"
-                                invisible="active"/>
-                            <div class="col-lg-2 col-sm-8 py-0 my-2 my-lg-0 col-12">
+                        <div class="o_survey_kanban_card_ungrouped row mx-4">
+                            <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                            <div class="col-lg-2 col-sm-8 py-0 my-2 my-lg-0 col-12 g-0">
                                 <div class="d-flex flex-grow-1 flex-column my-0 my-lg-2">
-                                    <span class="fw-bold"><field name="title"/></span>
+                                    <field name="title" class="fw-bold"/>
                                     <span t-if="!selection_mode" class="d-flex align-items-center">
                                         <field name="user_id" widget="many2one_avatar_user"
                                             options="{'display_avatar_name': True}"/>
@@ -260,16 +254,14 @@
                                 </div>
                             </div>
                             <div t-attf-class="col-lg-1 col-sm-4 d-none d-sm-block py-0 my-2 col-#{selection_mode ? '12' : '6'}">
-                                <span class="fw-bold"><field name="question_count"/></span><br t-if="!selection_mode"/>
+                                <field name="question_count" class="fw-bold"/><br t-if="!selection_mode"/>
                                 <span class="text-muted">Questions</span>
                             </div>
                             <div t-if="selection_mode" class="col-12 d-flex justify-content-end">
                                 <field name="user_id" widget="many2one_avatar_user"/>
                             </div>
                             <div t-if="!selection_mode" class="col-lg-1 col-sm-4 col-6 py-0 my-2">
-                                <span class="fw-bold">
-                                    <field name="answer_duration_avg" widget="float_time"/>
-                                </span><br />
+                                <field name="answer_duration_avg" widget="float_time" class="fw-bold"/>
                                 <span class="text-muted">Average Duration</span>
                             </div>
                             <div t-if="!selection_mode" class="col-lg-1 col-sm-4 col-6 py-0 my-2">
@@ -294,7 +286,7 @@
                                    type="object"
                                    name="action_survey_user_input_certified"
                                    class="fw-bold">
-                                    <field name="success_ratio" widget="progressbar" class="d-block"/>
+                                    <field name="success_ratio" widget="progressbar" class="d-block" style="word-break: normal;"/>
                                     <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
                                     <span class="text-muted" t-else="">Certified</span>
                                 </a>
@@ -302,13 +294,13 @@
                             <div t-if="!selection_mode" class="col-lg-3 col-sm-12 d-none d-sm-flex justify-content-end gap-1 my-2 ms-auto pb-lg-3 py-0">
                                 <button name="action_send_survey"
                                         string="Share" type="object"
-                                        class="btn btn-secondary"
+                                        class="btn btn-secondary text-nowrap"
                                         invisible="not active">
                                     Share
                                 </button>
                                 <button name="action_test_survey"
                                         string="Test" type="object"
-                                        class="btn btn-secondary"
+                                        class="btn btn-secondary text-nowrap"
                                         invisible="not active">
                                     Test
                                 </button>
@@ -333,35 +325,29 @@
                             </div>
                         </div>
                         <!-- displayed in grouped mode -->
-                        <div class="o_survey_kanban_card_grouped">
-                            <widget name="web_ribbon" title="Archived"
-                                bg_color="text-bg-danger"
-                                invisible="active"/>
-                            <div class="o_kanban_record_top">
-                                <h4 class="o_kanban_record_title p-0 mb4"><field name="title" /></h4>
-                            </div>
+                        <div class="o_survey_kanban_card_grouped px-1">
+                            <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                            <field name="title" class="fw-bold mb-1 fs-5 mb-1"/>
                             <div class="row g-0">
-                                <div class="col-10 p-0 pb-1">
-                                    <div class="container o_kanban_card_content" t-if="record.answer_count.raw_value != 0">
-                                        <div class="row mt-4 ms-2">
-                                            <div class="col-4 p-0">
-                                                <a name="action_survey_user_input" type="object" class="d-flex flex-column align-items-center">
-                                                    <span class="fw-bold"><field name="answer_count"/></span>
-                                                    <span class="text-break text-muted">Registered</span>
-                                                </a>
-                                            </div>
-                                            <div class="col-4 p-0 border-start">
-                                                <a name="action_survey_user_input_completed" type="object" class="d-flex flex-column align-items-center">
-                                                    <span class="fw-bold"><field name="answer_done_count"/></span>
-                                                    <span class="text-break text-muted">Completed</span>
-                                                </a>
-                                            </div>
-                                            <div class="col-4 p-0 border-start" t-if="record.scoring_type.raw_value != 'no_scoring'" >
-                                                <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
-                                                    <span class="fw-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
-                                                    <span class="text-break text-muted" >Success</span>
-                                                </a>
-                                            </div>
+                                <div class="col-10 p-0 pb-1" t-if="record.answer_count.raw_value != 0">
+                                    <div class="row mt-4 ms-2">
+                                        <div class="col-4 p-0">
+                                            <a name="action_survey_user_input" type="object" class="d-flex flex-column align-items-center">
+                                                <field name="answer_count" class="fw-bold"/>
+                                                <span class="text-break text-muted">Registered</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-4 p-0 border-start">
+                                            <a name="action_survey_user_input_completed" type="object" class="d-flex flex-column align-items-center">
+                                                <field name="answer_done_count" class="fw-bold"/>
+                                                <span class="text-break text-muted">Completed</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-4 p-0 border-start" t-if="record.scoring_type.raw_value != 'no_scoring'" >
+                                            <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="fw-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
+                                                <span class="text-break text-muted">Success</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

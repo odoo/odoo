@@ -59,15 +59,12 @@
         <field name="model">utm.campaign</field>
         <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="after">
-                <field name="mailing_sms_count" groups="mass_mailing.group_mass_mailing_user"/>
-            </xpath>
             <xpath expr="//ul[@id='o_utm_actions']">
                 <a name="action_redirect_to_mailing_sms" type="object"
-                    t-attf-class="oe_mailings #{record.mailing_sms_count.raw_value === 0 ? 'text-muted' : ''}"
+                    t-attf-class="pe-2 oe_mailings #{record.mailing_sms_count.raw_value === 0 ? 'text-muted' : ''}"
                     t-if="record.is_mailing_campaign_activated.raw_value"
                     groups="mass_mailing.group_mass_mailing_user">
-                    <t t-out="record.mailing_sms_count.raw_value"/> SMS
+                    <field name="mailing_sms_count"/> SMS
                 </a>
             </xpath>
         </field>

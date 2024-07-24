@@ -54,9 +54,6 @@
         <field name="model">survey.survey</field>
         <field name="inherit_id" ref="survey.survey_survey_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='session_state']" position="after">
-                <field name="slide_channel_count"/>
-            </xpath>
             <xpath expr="//div[@name='o_survey_kanban_card_section_success']" position="after">
                 <div class="col-lg-1 col-sm-4 col-6 py-0 my-2" groups="website_slides.group_website_slides_officer">
                     <a t-if="record.slide_channel_count.raw_value"
