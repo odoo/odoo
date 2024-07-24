@@ -336,7 +336,15 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <strong>Amount of discounts</strong>: <span t-out="discount_amount">50.00</span>
+                            <strong>Amount of discounts</strong>:
+                            <span t-if="currency['position']">
+                                <span t-out="discount_amount" t-options="{'widget': 'float', 'precision': currency['precision']}">50.00</span>
+                                <span t-out='currency["symbol"]'>$</span>
+                            </span>
+                            <span t-else="">
+                                <span t-out='currency["symbol"]'>$</span>
+                                <span t-out="discount_amount" t-options="{'widget': 'float', 'precision': currency['precision']}">50.00</span>
+                            </span>
                         </div>
                     </div>
                     <br/>
