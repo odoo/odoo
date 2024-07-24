@@ -3,6 +3,39 @@
     <!-- # Domestic -->
     <!-- ## Domestic:sales -->
     <!-- ### Domestic:sales:goods -->
+    <record id="tax_dom_sales_goods_25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5%</field>
+        <field name="description">25.5%</field>
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+              'plus_report_line_ids':  [ref('tax_report_sales_25_5')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+              'minus_report_line_ids':  [ref('tax_report_sales_25_5')],
+            }),
+        ]"/>
+    </record>
     <record id="tax_dom_sales_goods_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">24%</field>
@@ -139,6 +172,40 @@
     </record>
 
     <!-- ### Domestic:sales:service -->
+    <record id="tax_dom_sales_service_25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5% S</field>
+        <field name="description">25.5%</field>
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+              'plus_report_line_ids':  [ref('tax_report_sales_25_5')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+              'minus_report_line_ids':  [ref('tax_report_sales_25_5')],
+            }),
+        ]"/>
+    </record>
     <record id="tax_dom_sales_service_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">24% S</field>
@@ -246,6 +313,39 @@
     <!-- ## Domestic:purchase -->
 
     <!-- ### Domestic:purchase:goods -->
+    <record id="tax_dom_purchase_goods_25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5%</field>
+        <field name="description">25.5%</field>
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'plus_report_line_ids':  [ref('tax_report_deductible')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'minus_report_line_ids':  [ref('tax_report_deductible')],
+            }),
+        ]"/>
+    </record>
     <record id="tax_dom_purchase_goods_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">24%</field>
@@ -349,6 +449,39 @@
     </record>
 
     <!-- ### Domestic:purchase:service -->
+    <record id="tax_dom_purchase_service_25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5% S</field>
+        <field name="description">25.5%</field>
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'plus_report_line_ids': [ref('tax_report_deductible')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'minus_report_line_ids': [ref('tax_report_deductible')],
+            }),
+        ]"/>
+    </record>
     <record id="tax_dom_purchase_service_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">24% S</field>
@@ -452,6 +585,42 @@
     </record>
 
     <!-- ### Domestic:purchase:brutto -->
+    <record id="tax_dom_purchase_brutto_25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5% incl</field>
+        <field name="description">25.5% incl</field>
+        <field name="price_include" eval="1" />
+        <field name="include_base_amount" eval="1" />
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="active" eval="False"/>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'plus_report_line_ids': [ref('tax_report_deductible')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'minus_report_line_ids': [ref('tax_report_deductible')],
+            }),
+        ]"/>
+    </record>
     <record id="tax_dom_purchase_brutto_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">24% incl</field>
@@ -642,6 +811,51 @@
 
     <!-- ## Europe:purchase -->
     <!-- ### Europe:purchase:goods -->
+    <record id="tax_eu_purchase_goods_25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5% EU G</field>
+        <field name="description">25.5%</field>
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+              'plus_report_line_ids': [ref('tax_report_base_purchase_goods_eu')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_goods_eu')],
+            }),
+            (0,0, {
+              'factor_percent': -100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+              'minus_report_line_ids': [ref('tax_report_base_purchase_goods_eu')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_goods_eu')],
+            }),
+            (0,0, {
+              'factor_percent': -100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+            }),
+        ]"/>
+    </record>
     <record id="tax_eu_purchase_goods_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">24% EU G</field>
@@ -781,6 +995,51 @@
     </record>
 
     <!-- ### Europe:purchase:service -->
+    <record id="tax_eu_purchase_service_25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5% EU S</field>
+        <field name="description">25.5%</field>
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+              'plus_report_line_ids': [ref('tax_report_base_purchase_service_eu')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_service_eu')],
+            }),
+            (0,0, {
+              'factor_percent': -100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+              'minus_report_line_ids': [ref('tax_report_base_purchase_service_eu')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_purchase_service_eu')],
+            }),
+            (0,0, {
+              'factor_percent': -100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+            }),
+        ]"/>
+    </record>
     <record id="tax_eu_purchase_service_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">24% EU S</field>
@@ -1016,6 +1275,40 @@
             }),
         ]"/>
     </record>
+    <record id="tax_construct_purchase_25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5% Construct</field>
+        <field name="description">25.5%</field>
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="active" eval="False"/>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'plus_report_line_ids': [ref('tax_report_deductible')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'minus_report_line_ids': [ref('tax_report_deductible')],
+            }),
+        ]"/>
+    </record>
     <record id="tax_construct_purchase_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">24% Construct</field>
@@ -1047,6 +1340,54 @@
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
               'minus_report_line_ids': [ref('tax_report_deductible')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_construct_purchase_25_5_finland" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5% FI Construct</field>
+        <field name="description">25.5%</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="amount">25.5</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="active" eval="False"/>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+              'plus_report_line_ids': [ref('tax_report_base_purchase_construct_service')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'plus_report_line_ids': [ref('tax_report_deductible')],
+            }),
+            (0,0, {
+              'factor_percent': -100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+              'minus_report_line_ids': [ref('tax_report_tax_purchase_construct_service')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+              'minus_report_line_ids': [ref('tax_report_base_purchase_construct_service')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'minus_report_line_ids': [ref('tax_report_deductible')],
+            }),
+            (0,0, {
+              'factor_percent': -100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+              'plus_report_line_ids': [ref('tax_report_tax_purchase_construct_service')],
             }),
         ]"/>
     </record>
@@ -1137,6 +1478,52 @@
     <!-- # Non EU -->
     <!-- ## Non EU:purchase -->
     <!-- ## Non EU:purchase:goods -->
+    <record id="tax_non_eu_purchase_goods_25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5% EX G</field>
+        <field name="description">25.5%</field>
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="active" eval="False"/>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+              'plus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'plus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_import_goods_no_eu')],
+            }),
+            (0,0, {
+              'factor_percent': -100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+              'minus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'minus_report_line_ids': [ref('tax_report_deductible'), ref('tax_report_tax_import_goods_no_eu')],
+            }),
+            (0,0, {
+              'factor_percent': -100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_2930'),
+            }),
+        ]"/>
+    </record>
     <record id="tax_non_eu_purchase_goods_24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">24% EX G</field>
@@ -1309,6 +1696,42 @@
             }),
         ]"/>
     </record>
+    <record id="import_pay25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5% Import Pay</field>
+        <field name="description">25.5%</field>
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="active" eval="False"/>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+              'plus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'minus_report_line_ids': [ref('tax_report_tax_import_goods_no_eu')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+              'minus_report_line_ids': [ref('tax_report_base_import_goods_no_eu')],
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'plus_report_line_ids': [ref('tax_report_tax_import_goods_no_eu')],
+            }),
+        ]"/>
+    </record>
     <record id="import_pay24" model="account.tax.template">
         <field name="chart_template_id" ref="fi_chart_template"/>
         <field name="name">24% Import Pay</field>
@@ -1342,6 +1765,40 @@
               'repartition_type': 'tax',
               'account_id': ref('account_1765'),
               'plus_report_line_ids': [ref('tax_report_tax_import_goods_no_eu')],
+            }),
+        ]"/>
+    </record>
+    <record id="import_deduct25_5" model="account.tax.template">
+        <field name="chart_template_id" ref="fi_chart_template"/>
+        <field name="name">25.5% Import Deduct</field>
+        <field name="description">25.5%</field>
+        <field name="amount">25.5</field>
+        <field name="tax_group_id" ref="tax_group_25_5"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="active" eval="False"/>
+        <field name="amount_type">percent</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'plus_report_line_ids': [ref('tax_report_deductible')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'base',
+            }),
+            (0,0, {
+              'factor_percent': 100,
+              'repartition_type': 'tax',
+              'account_id': ref('account_1765'),
+              'minus_report_line_ids': [ref('tax_report_deductible')],
             }),
         ]"/>
     </record>
