@@ -299,6 +299,10 @@ class AccountTestInvoicingCommon(ProductCommon):
                     ('company_id', '=', company.id),
                     ('type', '=', 'cash')
                 ], limit=1),
+            'default_journal_credit': cls.env['account.journal'].search([
+                    ('company_id', '=', company.id),
+                    ('type', '=', 'credit')
+                ], limit=1),
             'default_tax_sale': company.account_sale_tax_id,
             'default_tax_purchase': company.account_purchase_tax_id,
         }

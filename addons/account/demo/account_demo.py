@@ -295,6 +295,13 @@ class AccountChartTemplate(models.AbstractModel):
             ],
             limit=1,
         )
+        ccd_journal = self.env['account.journal'].search(
+            domain=[
+                *self.env['account.journal']._check_company_domain(cid),
+                ('type', '=', 'credit'),
+            ],
+            limit=1,
+        )
         return {
             'demo_bank_statement_1': {
                 'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-01/1',
@@ -313,6 +320,19 @@ class AccountChartTemplate(models.AbstractModel):
                         'amount': 1275.0,
                         'date': time.strftime('%Y-01-01'),
                         'partner_id': 'base.res_partner_12',
+                    }),
+                ]
+            },
+            'demo_credit_statement_1': {
+                'name': f'{ccd_journal.name} - {time.strftime("%Y")}-01-01/1',
+                'balance_end_real': -1055.0,
+                'balance_start': 0.0,
+                'line_ids': [
+                    Command.create({
+                        'journal_id': ccd_journal.id,
+                        'payment_ref': 'Initial balance',
+                        'amount': -1055.0,
+                        'date': time.strftime('%Y-01-01'),
                     }),
                 ]
             },

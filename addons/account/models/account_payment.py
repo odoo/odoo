@@ -127,7 +127,7 @@ class AccountPayment(models.Model):
     destination_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Destination Journal',
-        domain="[('type', 'in', ('bank','cash')), ('id', '!=', journal_id)]",
+        domain="[('type', 'in', ('bank', 'cash', 'credit')), ('id', '!=', journal_id)]",
         check_company=True,
     )
 
@@ -522,7 +522,7 @@ class AccountPayment(models.Model):
             '|',
             ('company_id', 'parent_of', self.env.company.id),
             ('company_id', 'child_of', self.env.company.id),
-            ('type', 'in', ('bank', 'cash')),
+            ('type', 'in', ('bank', 'cash', 'credit')),
         ])
         for pay in self:
             if pay.payment_type == 'inbound':
@@ -992,8 +992,8 @@ class AccountPayment(models.Model):
             payment_vals_to_write = {}
 
             if 'journal_id' in changed_fields:
-                if pay.journal_id.type not in ('bank', 'cash'):
-                    raise UserError(_("A payment must always belongs to a bank or cash journal."))
+                if pay.journal_id.type not in ('bank', 'cash', 'credit'):
+                    raise UserError(_("A payment must always belongs to a bank, cash or credit journal."))
 
             if 'line_ids' in changed_fields:
                 all_lines = move.line_ids

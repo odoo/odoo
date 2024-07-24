@@ -46,7 +46,7 @@ class AccountPaymentMethod(models.Model):
         if not code:
             return []
         information = self._get_payment_method_information().get(code)
-        journal_types = information.get('type', ('bank', 'cash'))
+        journal_types = information.get('type', ('bank', 'cash', 'credit'))
         domains = [[('type', 'in', journal_types)]]
 
         if with_currency and (currency_ids := information.get('currency_ids')):
@@ -75,7 +75,7 @@ class AccountPaymentMethod(models.Model):
         - ``country_id``: The id of the country needed on the company for it to be eligible.
         """
         return {
-            'manual': {'mode': 'multi', 'type': ('bank', 'cash')},
+            'manual': {'mode': 'multi', 'type': ('bank', 'cash', 'credit')},
         }
 
     @api.model

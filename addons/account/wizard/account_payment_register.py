@@ -178,7 +178,7 @@ class AccountPaymentRegister(models.TransientModel):
         company = batch_result['lines'].company_id
         journals = self.env['account.journal'].search([
             *self.env['account.journal']._check_company_domain(company),
-            ('type', 'in', ('bank', 'cash')),
+            ('type', 'in', ('bank', 'cash', 'credit')),
         ])
         if payment_type == 'inbound':
             return journals.filtered('inbound_payment_method_line_ids')
@@ -204,7 +204,7 @@ class AccountPaymentRegister(models.TransientModel):
 
         default_domain = [
             *self.env['account.journal']._check_company_domain(company),
-            ('type', 'in', ('bank', 'cash')),
+            ('type', 'in', ('bank', 'cash', 'credit')),
             ('id', 'in', self.available_journal_ids.ids)
         ]
 
@@ -463,7 +463,7 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.journal_id = self.env['account.journal'].search([
                     *self.env['account.journal']._check_company_domain(wizard.company_id),
-                    ('type', 'in', ('bank', 'cash')),
+                    ('type', 'in', ('bank', 'cash', 'credit')),
                     ('id', 'in', self.available_journal_ids.ids)
                 ], limit=1)
 
@@ -786,7 +786,7 @@ class AccountPaymentRegister(models.TransientModel):
 
             if 'journal_id' in res and not self.env['account.journal'].browse(res['journal_id']).filtered_domain([
                 *self.env['account.journal']._check_company_domain(lines.company_id),
-                ('type', 'in', ('bank', 'cash')),
+                ('type', 'in', ('bank', 'cash', 'credit')),
             ]):
                 # default can be inherited from the list view, should be computed instead
                 del res['journal_id']

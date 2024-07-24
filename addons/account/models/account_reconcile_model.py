@@ -232,7 +232,7 @@ class AccountReconcileModel(models.Model):
         tracking=True,
     )
     match_journal_ids = fields.Many2many('account.journal', string='Journals Availability',
-        domain="[('type', 'in', ('bank', 'cash'))]",
+        domain="[('type', 'in', ('bank', 'cash', 'credit'))]",
         check_company=True,
         help='The reconciliation model will only be available from the selected journals.')
     match_nature = fields.Selection(selection=[

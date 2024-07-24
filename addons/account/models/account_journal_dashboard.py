@@ -68,7 +68,7 @@ class account_journal(models.Model):
 
     @api.depends('current_statement_balance')
     def _kanban_dashboard_graph(self):
-        bank_cash_journals = self.filtered(lambda journal: journal.type in ('bank', 'cash'))
+        bank_cash_journals = self.filtered(lambda journal: journal.type in ('bank', 'cash', 'credit'))
         bank_cash_graph_datas = bank_cash_journals._get_bank_cash_graph_data()
         for journal in bank_cash_journals:
             journal.kanban_dashboard_graph = json.dumps(bank_cash_graph_datas[journal.id])
@@ -232,6 +232,8 @@ class account_journal(models.Model):
             return ['', _('Cash: Balance')]
         elif self.type == 'bank':
             return ['', _('Bank: Balance')]
+        elif self.type == 'credit':
+            return ['', _('Credit Card: Balance')]
 
     def _get_bank_cash_graph_data(self):
         """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
@@ -414,7 +416,7 @@ class account_journal(models.Model):
 
     def _fill_bank_cash_dashboard_data(self, dashboard_data):
         """Populate all bank and cash journal's data dict with relevant information for the kanban card."""
-        bank_cash_journals = self.filtered(lambda journal: journal.type in ('bank', 'cash'))
+        bank_cash_journals = self.filtered(lambda journal: journal.type in ('bank', 'cash', 'credit'))
         if not bank_cash_journals:
             return
 
@@ -493,7 +495,7 @@ class account_journal(models.Model):
             accessible = journal.company_id.id in journal.company_id._accessible_branches().ids
             nb_direct_payments, direct_payments_balance = direct_payment_balances[journal.id]
             drag_drop_settings = {
-                'image': '/account/static/src/img/bank.svg' if journal.type == 'bank' else '/web/static/img/rfq.svg',
+                'image': '/account/static/src/img/bank.svg' if journal.type in ('bank', 'credit') else '/web/static/img/rfq.svg',
                 'text': _('Drop to import transactions'),
             }
 
@@ -946,6 +948,8 @@ class account_journal(models.Model):
             return self._context.get('action_name')
         elif self.type == 'bank':
             return 'action_bank_statement_tree'
+        elif self.type == 'credit':
+            return 'action_credit_statement_tree'
         elif self.type == 'cash':
             return 'action_view_bank_statement_tree'
         elif self.type == 'sale':
