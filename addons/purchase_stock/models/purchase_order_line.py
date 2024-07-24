@@ -276,7 +276,7 @@ class PurchaseOrderLine(models.Model):
         self._check_orderpoint_picking_type()
         product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
         location_dest = self.env['stock.location'].browse(self.order_id._get_destination_location())
-        location_final = self.location_final_id
+        location_final = self.location_final_id or self.order_id._get_final_location_record()
         if location_final and location_final._child_of(location_dest):
             location_dest = location_final
         date_planned = self.date_planned or self.order_id.date_planned
