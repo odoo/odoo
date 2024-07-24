@@ -109,6 +109,16 @@ class TestPhonenumbersPatch(BaseCase):
         )
         self._assert_parsing_phonenumbers(parse_test_lines_CO)
 
+    def test_region_IL_monkey_patch(self):
+        """ Makes sure that patch for Israeli phone numbers work
+            Example of wrong phone number: +972 55 731 1234
+        """
+        parse_test_lines_IL = (
+            self.PhoneInputOutputLine("055 294 1234", "IL"),
+            self.PhoneInputOutputLine("+972 55 295 1235"),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_IL)
+
     def test_region_MA_monkey_patch(self):
         """Makes sure that patch for Morocco phone numbers work"""
         parse_test_lines_MA = (
