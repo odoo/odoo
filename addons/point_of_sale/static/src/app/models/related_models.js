@@ -27,8 +27,14 @@ function mapObj(obj, fn) {
 
 const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
-const EXEMPTED_AUTOMATIC_LOAD = ["pos.session", "pos.config"];
 const AVAILABLE_EVENT = ["create", "update", "delete"];
+export const CONFIG = {
+    exemptedAutomaticLoad: [(field) => ["pos.session", "pos.config"].includes(field.relation)],
+};
+
+function isFieldExemptedAutoLoad(field) {
+    return CONFIG.exemptedAutomaticLoad.some((condition) => condition(field));
+}
 
 function processModelDefs(modelDefs) {
     modelDefs = clone(modelDefs);
@@ -758,14 +764,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                                     const toConnect = records[field.relation].get(id);
                                     if (toConnect) {
                                         connect(field, recorded, toConnect);
-                                    } else if (
-                                        this[field.relation] &&
-                                        !EXEMPTED_AUTOMATIC_LOAD.includes(field.relation)
-                                    ) {
-                                        if (!missingRecords[field.relation]) {
-                                            missingRecords[field.relation] = new Set([id]);
-                                        } else {
-                                            missingRecords[field.relation].add(id);
+                                    } else if (this[field.relation]) {
+                                        if (!isFieldExemptedAutoLoad(field)) {
+                                            if (!missingRecords[field.relation]) {
+                                                missingRecords[field.relation] = new Set([id]);
+                                            } else {
+                                                missingRecords[field.relation].add(id);
+                                            }
                                         }
                                         const key = `${field.relation}_${id}`;
                                         if (!missingFields[key]) {
@@ -783,14 +788,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                             const toConnect = records[field.relation].get(id);
                             if (toConnect) {
                                 connect(field, recorded, toConnect);
-                            } else if (
-                                this[field.relation] &&
-                                !EXEMPTED_AUTOMATIC_LOAD.includes(field.relation)
-                            ) {
-                                if (!missingRecords[field.relation]) {
-                                    missingRecords[field.relation] = new Set([id]);
-                                } else {
-                                    missingRecords[field.relation].add(id);
+                            } else if (this[field.relation]) {
+                                if (!isFieldExemptedAutoLoad(field)) {
+                                    if (!missingRecords[field.relation]) {
+                                        missingRecords[field.relation] = new Set([id]);
+                                    } else {
+                                        missingRecords[field.relation].add(id);
+                                    }
                                 }
                                 const key = `${field.relation}_${id}`;
                                 if (!missingFields[key]) {
