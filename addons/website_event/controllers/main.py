@@ -42,10 +42,13 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_event)
     def events(self, page=1, **searches):
-        if searches.get('tags') and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
+        if searches.get('tags', '[]').count(',') > 0 and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
             # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
             # This permanent redirect is placed to instruct the bots that this page is no longer valid
+            # Note: We allow a single tag to be GET, to keep crawlers & indexes on those pages
+            # What we really want to avoid is combinatorial explosions
+            # (Tags are formed as a JSON array, so we count ',' to keep it simple)
             # TODO: remove in a few stable versions (v19?), including the "prevent_redirect" param in templates
             return request.redirect('/event', code=301)
 
