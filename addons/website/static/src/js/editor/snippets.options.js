@@ -1913,12 +1913,13 @@ registerWebsiteOption("Theme Advanced", {
     noCheck: true,
 });
 
-options.registry.menu_data = options.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.notification = this.bindService("notification");
-    },
+export class MenuElementOverlay extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.notification = this.env.services.notification;
+        this.orm = this.env.services.orm;
+        this.website = this.env.services.website;
+    }
 
     /**
      * When the users selects a menu, a popover is shown with 4 possible
@@ -1929,25 +1930,21 @@ options.registry.menu_data = options.Class.extend({
      *
      * @override
      */
-    start: function () {
-        const wysiwyg = $(this.ownerDocument.getElementById('wrapwrap')).data('wysiwyg');
+    async willStart() {
         const popoverContainer = this.ownerDocument.getElementById('oe_manipulators');
         NavbarLinkPopoverWidget.createFor({
             target: this.$target[0],
-            wysiwyg,
+            wysiwyg: this.options.wysiwyg,
             container: popoverContainer,
             notify: this.notification.add,
             checkIsWebsiteDesigner: () => user.hasGroup("website.group_website_designer"),
             onEditLinkClick: (widget) => {
                 var $menu = widget.$target.find('[data-oe-id]');
-                this.trigger_up('menu_dialog', {
-                    name: $menu.text(),
-                    url: $menu.parent().attr('href'),
-                    save: (name, url) => {
-                        let websiteId;
-                        this.trigger_up('context_get', {
-                            callback: ctx => websiteId = ctx['website_id'],
-                        });
+                this.options.wysiwyg.openMenuDialog(
+                    $menu.text(),
+                    $menu.parent().attr('href'),
+                    (name, url) => {
+                        const websiteId = this.website.currentWebsite.id;
                         const data = {
                             id: $menu.data('oe-id'),
                             name,
@@ -1957,36 +1954,40 @@ options.registry.menu_data = options.Class.extend({
                             "website.menu",
                             "save",
                             [websiteId, {'data': [data]}]
-                        ).then(function () {
-                            widget.wysiwyg.odooEditor.observerUnactive();
+                        ).then(() => {
+                            this.options.wysiwyg.odooEditor.observerUnactive();
                             widget.$target.attr('href', url);
                             $menu.text(name);
-                            widget.wysiwyg.odooEditor.observerActive();
+                            this.options.wysiwyg.odooEditor.observerActive();
                         });
                     },
-                });
+                );
                 widget.popover.hide();
             },
             onEditMenuClick: (widget) => {
                 const contentMenu = widget.target.closest('[data-content_menu_id]');
                 const rootID = contentMenu ? parseInt(contentMenu.dataset.content_menu_id, 10) : undefined;
-                this.trigger_up('action_demand', {
-                    actionName: 'edit_menu',
-                    params: [rootID],
-                });
+                this.options.wysiwyg.openEditMenuDialog(rootID);
             },
         });
-        return this._super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
       * When the users selects another element on the page, makes sure the
       * popover is closed.
       *
       * @override
       */
-    onBlur: function () {
+    async onBlur() {
         this.$target.popover('hide');
-    },
+    }
+}
+
+registerWebsiteOption("MenuElementOverlay", {
+    Class: MenuElementOverlay,
+    selector: ".top_menu li > a, [data-content_menu_id] li > a",
+    exclude: ".dropdown-toggle, li.o_header_menu_button a, [data-toggle], .o_offcanvas_logo",
+    noCheck: true,
 });
 
 class Carousel extends CarouselHandler {
@@ -2478,14 +2479,11 @@ registerWebsiteOption("Accordion", {
     dropIn: ".accordion:has(> .accordion-item)",
 });
 
-options.registry.HeaderElements = options.Class.extend({
-    /**
-     * @constructor
-     */
-    init() {
-        this._super(...arguments);
+export class HeaderElements extends SnippetOption {
+    constructor() {
+        super(...arguments);
         this._rpc = options.serviceCached(rpc);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2495,7 +2493,6 @@ options.registry.HeaderElements = options.Class.extend({
      * @override
      */
     async _computeWidgetVisibility(widgetName, params) {
-        const _super = this._super.bind(this);
         switch (widgetName) {
             case "header_language_selector_opt":
                 this._languages = await this._rpc.call("/website/get_languages");
@@ -2504,23 +2501,62 @@ options.registry.HeaderElements = options.Class.extend({
                 }
                 break;
         }
-        return _super(...arguments);
+        return super._computeWidgetVisibility(...arguments);
+    }
+}
+
+registerWebsiteOption("HeaderElements", {
+    Class: HeaderElements,
+    template: "website.HeaderElements",
+    selector: "#wrapwrap > header",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
+    },
+}, {
+    sequence: 80,
+});
+
+registerWebsiteOption("HeaderScrollEffect", {
+    template: "website.HeaderScrollEffect",
+    selector: "#wrapwrap > header",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
+    },
+}, {
+    sequence: 50,
+});
+
+registerWebsiteOption("HeaderLanguageSelector", {
+    template: "website.HeaderLanguageSelector",
+    selector: "#wrapwrap > header nav.navbar .o_header_language_selector",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
     },
 });
 
-options.registry.HeaderNavbar = options.Class.extend({
+registerWebsiteOption("HeaderBrand", {
+    template: "website.HeaderBrand",
+    selector: "#wrapwrap > header nav.navbar .navbar-brand",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
+    },
+});
+
+export class HeaderNavbar extends SnippetOption {
     /**
      * Particular case: we want the option to be associated on the header navbar
      * in XML so that the related options only appear on navbar click (not
      * header), in a different section, etc... but we still want the target to
      * be the header itself.
-     *
-     * @constructor
      */
-    init() {
-        this._super(...arguments);
+    constructor() {
+        super(...arguments);
         this.setTarget(this.$target.closest('#wrapwrap > header'));
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2539,7 +2575,17 @@ options.registry.HeaderNavbar = options.Class.extend({
                 return !!this.$('.navbar-brand').length;
             }
         }
-        return this._super(...arguments);
+        return super._computeWidgetVisibility(...arguments);
+    }
+}
+
+registerWebsiteOption("HeaderNavbar", {
+    Class: HeaderNavbar,
+    template: "website.HeaderNavbar",
+    selector: "#wrapwrap > header nav.navbar",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
     },
 });
 
@@ -2676,6 +2722,8 @@ registerWebsiteOption("TopMenuVisibility", {
     template: "website.TopMenuVisibility",
     selector: "[data-main-object^='website.page('] #wrapwrap > header",
     noCheck: true,
+}, {
+    sequence: 60,
 });
 
 export class TopMenuColor extends SnippetOption {
@@ -2721,6 +2769,8 @@ registerWebsiteOption("TopMenuColor", {
     template: "website.TopMenuColor",
     selector: "[data-main-object^='website.page('] #wrapwrap > header",
     noCheck: true,
+}, {
+    sequence: 70,
 });
 
 /**
@@ -2835,6 +2885,15 @@ registerWebsiteOption("HideFooter", {
     Class: HideFooter,
     template: "website.HideFooter",
     selector: "[data-main-object^='website.page('] #wrapwrap > footer",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
+    },
+});
+
+registerWebsiteOption("FooterScrolltop", {
+    template: "website.FooterScrolltop",
+    selector: "#wrapwrap > footer",
     noCheck: true,
     data: {
         groups: ["website.group_website_designer"],
@@ -3017,7 +3076,7 @@ registerWebsiteOption("AnchorModal", {
     target: ".modal",
 });
 
-options.registry.HeaderBox = options.registry.Box.extend({
+export class HeaderBox extends Box {
 
     //--------------------------------------------------------------------------
     // Options
@@ -3037,8 +3096,8 @@ options.registry.HeaderBox = options.registry.Box.extend({
             }
             return this.customizeWebsiteVariable(previewMode, widgetValue, params);
         }
-        return this._super(...arguments);
-    },
+        return super.selectStyle(...arguments);
+    }
     /**
      * @override
      */
@@ -3050,8 +3109,8 @@ options.registry.HeaderBox = options.registry.Box.extend({
             const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
             return this.customizeWebsiteVariable(previewMode, defaultShadow, params);
         }
-        return this._super(...arguments);
-    },
+        return super.setShadow(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -3060,8 +3119,18 @@ options.registry.HeaderBox = options.registry.Box.extend({
     /**
      * @override
      */
+    async _getRenderContext() {
+        return {
+            ...(await super._getRenderContext(...arguments)),
+            noBorderRadius: this.$target[0].classList.contains("o_header_force_no_radius"),
+        };
+    }
+
+    /**
+     * @override
+     */
     async _computeWidgetState(methodName, params) {
-        const value = await this._super(...arguments);
+        const value = await super._computeWidgetState(...arguments);
         if (methodName === "selectStyle" && params.cssProperty === "border-width") {
             // One-sided borders return "0px 0px 3px 0px", which prevents the
             // option from being displayed properly. We only keep the affected
@@ -3069,7 +3138,19 @@ options.registry.HeaderBox = options.registry.Box.extend({
             return value.replace(/(^|\s)0px/gi, "").trim() || value;
         }
         return value;
+    }
+}
+registerWebsiteOption("HeaderBox", {
+    Class: HeaderBox,
+    template: "website.HeaderBox",
+    selector: "#wrapwrap > header",
+    target: "nav",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
     },
+}, {
+    sequence: 40,
 });
 
 export class CookiesBar extends SnippetPopup {
@@ -4648,6 +4729,16 @@ options.registry.sizing.include({
             const moveHandleEl = this.$overlay[0].querySelector('.o_move_handle');
             moveHandleEl.classList.add('d-none');
         }
+    },
+});
+
+registerWebsiteOption("InfoPage", {
+    template: "website.InfoPage",
+    selector: "main:has(.o_website_info)",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
+        pageOptions: true,
     },
 });
 

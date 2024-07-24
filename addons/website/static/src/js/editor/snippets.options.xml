@@ -257,6 +257,19 @@
 </t>
 
 <!-- Header - Borders & Shadows -->
+<t t-name="website.HeaderBox">
+    <t t-call="website.snippet_options_border_widgets">
+        <t t-set="so_rounded_no_dependencies" t-value="True"/>
+        <t t-set="width_variable" t-value="'menu-border-width'"/>
+        <t t-set="style_variable" t-value="'menu-border-style'"/>
+        <t t-set="color_variable" t-value="'menu-border-color'"/>
+        <t t-set="radius_variable" t-value="'menu-border-radius'"/>
+        <t t-set="no_border_radius" t-value="this.renderContext.noBorderRadius"/>
+    </t>
+    <t t-call="website.snippet_options_shadow_widgets">
+        <t t-set="shadow_variable" t-value="'menu-box-shadow'"/>
+    </t>
+</t>
 <t t-name="website.TopMenuVisibility">
     <WeSelect title.translate="Header Position" noPreview="'true'" dependencies="'!header_sidebar_opt'">
         <WeButton visibility="'transparent'">Over The Content</WeButton>
@@ -283,9 +296,247 @@
                    pageOptionName="'header_text_color'"/>
 </t>
 
+<t t-name="website.HeaderElements">
+    <WeRow title.translate="Elements" class="'o_we_full_row align-items-start'">
+        <WeButton tooltip.translate="Show/hide text element" class="'d-flex justify-content-center flex-grow-1'"
+                img="'/website/static/src/img/snippets_options/header_extra_element_text.svg'"
+                customizeWebsiteViews="'website.header_text_element'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+        <WeButton tooltip.translate="Show/hide language selector" class="'fa fa-flag d-flex justify-content-center flex-grow-1'"
+                name="'header_language_selector_opt'"
+                customizeWebsiteViews="'website.header_language_selector'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+        <WeButton tooltip.translate="Show/hide search bar" class="'fa fa-search d-flex justify-content-center flex-grow-1'"
+                customizeWebsiteViews="'website.header_search_box'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+        <WeButton tooltip.translate="Show/hide sign in button" class="'fa fa-sign-in d-flex justify-content-center flex-grow-1'"
+                customizeWebsiteViews="'portal.user_sign_in'"
+                reload="'/'"
+                noPreview="'true'"/>
+    </WeRow>
+    <WeRow title="' '" class="'o_we_full_row align-items-start mt-1'">
+        <WeButton tooltip.translate="Show/hide social links" class="'flex-grow-1 d-flex justify-content-center'"
+                img="'/website/static/src/img/snippets_options/header_extra_element_social.svg'"
+                customizeWebsiteViews="'website.header_social_links'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+        <WeButton tooltip.translate="Show/hide button" class="'flex-grow-1 d-flex justify-content-center'"
+                img="'/website/static/src/img/snippets_options/header_extra_element_cta.svg'"
+                customizeWebsiteViews="'website.header_call_to_action'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+        <WeButton tooltip.translate="Show/hide logo" class="'flex-grow-1 d-flex justify-content-center'"
+                img="'/website/static/src/img/snippets_options/header_extra_element_logo.svg'"
+                customizeWebsiteViews="'|website.option_header_brand_name|website.option_header_brand_logo'"
+                resetViewArch="'true'"
+                reload="'/'"/>
+    </WeRow>
+</t>
+
+<t t-name="website.HeaderScrollEffect">
+    <WeSelect title.translate="Scroll Effect" dependencies="'!header_sidebar_opt'"
+              class="'o_scroll_effects_selector'"
+              variable="'header-scroll-effect'">
+        <WeButton id="'option_header_visibility_standard'"
+                  customizeWebsiteVariable="`'standard'`"
+                  name="'header_visibility_standard_opt'"
+                  selectClass="'o_header_standard'"
+                  customizeWebsiteViews="'website.header_visibility_standard'"
+                  img="'/website/static/src/img/snippets_options/header_effect_standard.png'"
+                  animateImg="'true'">
+            Standard
+        </WeButton>
+        <WeButton id="'option_header_effect_scroll'"
+                  customizeWebsiteVariable="`'scroll'`"
+                  name="'header_effect_scroll_opt'"
+                  selectClass="''"
+                  customizeWebsiteViews="''"
+                  img="'/website/static/src/img/snippets_options/header_effect_scroll.png'"
+                  animateImg="'true'">
+            Scroll
+        </WeButton>
+        <WeButton id="'option_header_effect_fixed'"
+                  customizeWebsiteVariable="`'fixed'`"
+                  name="'header_effect_fixed_opt'"
+                  selectClass="'o_header_fixed'"
+                  customizeWebsiteViews="'website.header_visibility_fixed'"
+                  img="'/website/static/src/img/snippets_options/header_effect_fixed.png'"
+                  animateImg="'true'">
+            Fixed
+        </WeButton>
+        <WeButton id="'option_header_effect_disappears'"
+                  customizeWebsiteVariable="`'disappears'`"
+                  name="'header_effect_disappears_opt'"
+                  selectClass="'o_header_disappears'"
+                  customizeWebsiteViews="'website.header_visibility_disappears'"
+                  img="'/website/static/src/img/snippets_options/header_effect_disappears.png'"
+                  animateImg="'true'">
+            Disappears
+        </WeButton>
+        <WeButton id="'option_header_effect_fade_out'"
+                  customizeWebsiteVariable="`'fade-out'`"
+                  name="'header_effect_fade_out_opt'"
+                  selectClass="'o_header_fade_out'"
+                  customizeWebsiteViews="'website.header_visibility_fade_out'"
+                  img="'/website/static/src/img/snippets_options/header_effect_fade_out.png'"
+                  animateImg="'true'">
+           Fade Out
+        </WeButton>
+    </WeSelect>
+</t>
+
+<t t-name="website.HeaderLanguageSelector">
+    <WeSelect title.translate="Style" reload="'/'">
+        <WeButton customizeWebsiteViews="'website.header_language_selector'">
+            Dropdown
+        </WeButton>
+        <WeButton customizeWebsiteViews="'website.header_language_selector, website.header_language_selector_inline'">
+            Inline
+        </WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Label" class="'o_we_sublevel_1'" reload="'/'" noPreview="'true'">
+        <WeButton customizeWebsiteViews="''">
+            Text
+        </WeButton>
+        <WeButton customizeWebsiteViews="'website.header_language_selector_flag, website.header_language_selector_no_text'">
+            Flag
+        </WeButton>
+        <WeButton customizeWebsiteViews="'website.header_language_selector_flag'">
+            Flag and Text
+        </WeButton>
+        <WeButton customizeWebsiteViews="'website.header_language_selector_code, website.header_language_selector_no_text'">
+            Code
+        </WeButton>
+        <WeButton customizeWebsiteViews="'website.header_language_selector_flag, website.header_language_selector_code, website.header_language_selector_no_text'">
+            Flag and Code
+        </WeButton>
+    </WeSelect>
+</t>
+
+<t t-name="website.HeaderBrand">
+    <WeSelect title.translate="Logo" reload="'/'">
+        <WeButton customizeWebsiteViews="''" name="'option_header_brand_none'">None</WeButton>
+        <WeButton customizeWebsiteViews="'website.option_header_brand_name'">Text</WeButton>
+        <WeButton customizeWebsiteViews="'website.option_header_brand_logo'">Image</WeButton>
+    </WeSelect>
+    <WeInput title.translate="Height" class="'o_we_sublevel_1'"
+             dependencies="'!option_header_brand_none'"
+             customizeWebsiteVariable="'null'"
+             variable="'logo-height'"
+             unit="'px'"
+             saveUnit="'rem'"/>
+    <WeInput title.translate="Height (Scrolled)" class="'o_we_sublevel_1'"
+             name="'option_logo_height_scrolled'"
+             customizeWebsiteVariable="'null'"
+             variable="'fixed-logo-height'"
+             unit="'px'"
+             saveUnit="'rem'"
+             dependencies="'!header_effect_scroll_opt'"/> <!-- TODO: @owl-options - dependency doesn't work -->
+</t>
+
+<!-- Header > Navbar Options -->
+<t t-name="website.HeaderNavbar">
+    <WeSelect title.translate="Mobile Alignment"
+              name="'header_mobile_alignment_opt'"
+              variable="'hamburger-position-mobile'"
+              reload="'/'">
+        <WeButton customizeWebsiteViews="''" customizeWebsiteVariable="`'left'`">Left</WeButton>
+        <WeButton customizeWebsiteViews="'website.template_header_mobile_align_center, website.template_header_hamburger_mobile_align_center'"
+                  customizeWebsiteVariable="`'center'`">Center</WeButton>
+        <WeButton customizeWebsiteViews="'website.template_header_mobile_align_right, website.template_header_hamburger_mobile_align_right'"
+                  customizeWebsiteVariable="`'right'`">Right</WeButton>
+    </WeSelect>
+
+    <WeRow title.translate="Font">
+        <WeFontFamilyPicker variable="'navbar-font'"/>
+    </WeRow>
+
+    <WeRow title.translate="Format" class="'o_we_header_font_row'">
+        <WeInput customizeWebsiteVariable="'null'" variable="'header-font-size'" unit="'px'" saveUnit="'rem'"/>
+        <WeColorpicker variable="'header-text-color'" customizeWebsiteVariable="''"/>
+        <!-- Generic alignment option controlling all the template at once. -->
+        <!-- Currently needed to be this way as the SCSS variable controls -->
+        <!-- the mobile alignment which is the same for all templates. -->
+        <WeSelect class="'o_we_icon_select'"
+                  name="'header_alignment_opt'"
+                  variable="'hamburger-position'"
+                  reload="'/'"
+                  tooltip.translate="Alignment"
+                  dependencies="'header_default_opt, header_hamburger_opt, header_boxed_opt, header_stretch_opt, header_search_opt, header_sales_one_opt, header_sales_two_opt, header_sales_four_opt, header_sidebar_opt'">
+            <WeButton customizeWebsiteViews="''"
+                      customizeWebsiteVariable="`'left'`"
+                      icon="'fa-align-left'"/>
+            <WeButton customizeWebsiteViews="'website.template_header_default_align_center, website.template_header_boxed_align_center, website.template_header_stretch_align_center, website.template_header_search_align_center, website.template_header_sales_one_align_center, website.template_header_sales_two_align_center, website.template_header_sales_four_align_center, website.template_header_sidebar_align_center'"
+                      customizeWebsiteVariable="`'center'`"
+                      icon="'fa-align-center'"
+                      dependencies="'!header_hamburger_opt'"/>
+            <WeButton customizeWebsiteViews="'website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_boxed_align_right, website.template_header_stretch_align_right, website.template_header_search_align_right, website.template_header_sales_one_align_right, website.template_header_sales_two_align_right, website.template_header_sales_four_align_right, website.template_header_sidebar_align_right'"
+                      customizeWebsiteVariable="`'right'`"
+                      icon="'fa-align-right'"/>
+        </WeSelect>
+    </WeRow>
+
+    <WeSelect title.translate="Links Style"
+              variable="'header-links-style'"
+              reload="'/'"
+              dependencies="'!header_stretch_opt'">
+        <WeButton name="'option_header_navbar_links_default'"
+                  customizeWebsiteViews="''"
+                  customizeWebsiteVariable="`'default'`">Default</WeButton>
+        <WeButton name="'option_header_navbar_links_fill'"
+                  customizeWebsiteViews="'website.header_navbar_pills_style'"
+                  customizeWebsiteVariable="`'fill'`">Fill</WeButton>
+        <WeButton name="'option_header_navbar_links_outline'"
+                  customizeWebsiteViews="''"
+                  customizeWebsiteVariable="`'outline'`">Outline</WeButton>
+        <WeButton name="'option_header_navbar_links_pills'"
+                  customizeWebsiteViews="'website.header_navbar_pills_style'"
+                  customizeWebsiteVariable="`'pills'`">Pills</WeButton>
+        <WeButton name="'option_header_navbar_block'"
+                  customizeWebsiteViews="'website.header_navbar_pills_style'"
+                  customizeWebsiteVariable="`'block'`">Block</WeButton>
+        <WeButton name="'option_header_navbar_border_bottom'"
+                  customizeWebsiteViews="''"
+                  customizeWebsiteVariable="`'border-bottom'`">Border Bottom</WeButton>
+    </WeSelect>
+
+    <WeSelect title.translate="Sub Menus"
+              id="'option_header_dropdown'"
+              dependencies="'!header_hamburger_opt'"
+              noPreview="'true'">
+        <WeButton selectClass="'o_hoverable_dropdown'"
+                  customizeWebsiteViews="'website.header_hoverable_dropdown'">
+            On Hover
+        </WeButton>
+        <WeButton selectClass="''"
+                  name="'header_dropdown_on_click_opt'">
+            On Click
+        </WeButton>
+    </WeSelect>
+</t>
+
 <!-- Footer - Borders & Shadows -->
 <t t-name="website.HideFooter">
     <WeCheckbox title.translate="Page Visibility" visibility="'hidden|shown'" noPreview="'true'"/>
+</t>
+
+<!-- Scroll to Top -->
+<t t-name="website.FooterScrolltop">
+    <WeRow title.translate="Scroll Top Button">
+        <WeCheckbox name="'footer_scrolltop_opt'"
+                    customizeWebsiteViews="'website.option_footer_scrolltop'"
+                    customizeWebsiteVariable="'false|true'"
+                    variable="'footer-scrolltop'"
+                    reload="'/'"/>
+        <WeSelect dependencies="'footer_scrolltop_opt'" applyTo="'#o_footer_scrolltop_wrapper'">
+            <WeButton selectClass="'justify-content-start'">Left</WeButton>
+            <WeButton selectClass="'justify-content-center'">Center</WeButton>
+            <WeButton selectClass="'justify-content-end'">Right</WeButton>
+        </WeSelect>
+    </WeRow>
 </t>
 
 <t t-name="website.share_social_media_option">
@@ -1127,4 +1378,13 @@
         </WeSelect>
     </WeRow>
 </t>
+
+<!-- Info page ('/website/info') -->
+<t t-name="website.InfoPage">
+    <WeCheckbox title.translate="Odoo Information"
+                customizeWebsiteViews="'website.show_website_info'"
+                noPreview="'true'"
+                reload="'/'"/>
+</t>
+
 </templates>

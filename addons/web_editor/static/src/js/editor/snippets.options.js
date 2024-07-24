@@ -473,37 +473,6 @@ export class UserValue {
         el.appendChild(this.containerEl);
         return $el;
     }
-    /**
-     * @TODO: @owl-options: This should be moved into the component
-     */
-    async old_start() {
-        await this._super(...arguments);
-
-        if (this.el.classList.contains('o_we_img_animate')) {
-            const buildImgExtensionSwitcher = (from, to) => {
-                const regex = new RegExp(`${from}$`, 'i');
-                return ev => {
-                    const img = ev.currentTarget.getElementsByTagName("img")[0];
-                    img.src = img.src.replace(regex, to);
-                };
-            };
-            this.$el.on('mouseenter.img_animate', buildImgExtensionSwitcher('png', 'gif'));
-            this.$el.on('mouseleave.img_animate', buildImgExtensionSwitcher('gif', 'png'));
-        }
-    }
-    /**
-     * @TODO: @owl-options: This should be moved into the component
-     */
-    destroy() {
-        // Check if $el exists in case the widget is destroyed before it has
-        // been fully initialized.
-        // TODO there is probably better to do. This case was found only in
-        // tours, where the editor is left before the widget icon is loaded.
-        if (this.$el) {
-            this.$el.off('.img_animate');
-        }
-        this._super(...arguments);
-    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -861,8 +830,13 @@ export class UserValueComponent extends Component {
     static props = {
         name: { type: String, optional: true },
         slots: { type: Object, optional: true },
+        animateImg: { type: String, optional: true },
         // Allow any prop as they will reference a method of SnippetOption
         "*": {},
+    };
+
+    static defaultProps = {
+        animateImg: false,
     };
 
     static StateModel = UserValue;
@@ -915,7 +889,11 @@ export class UserValueComponent extends Component {
                 if (src.split(".").pop() === "svg") {
                     this.svg = await buildSvgElement(src);
                 } else {
-                    this.img = this.props.img;
+                    this.img = src;
+
+                    if (this.props.animateImg) {
+                        this.previewImg = this.img.replace(/png$/i, "gif");
+                    }
                 }
             }
         });
@@ -971,6 +949,7 @@ export class UserValueComponent extends Component {
             "d-none": !this.state.show,
             "o_we_widget_opened": this.state.opened,
             "o_we_icon_button": this.img || this.svg || this.props.icon,
+            "o_we_img_animate": this.props.animateImg,
             ...this.getPropsClass(),
         };
     }
@@ -6277,6 +6256,9 @@ export class vAlignment extends SnippetOption {
  */
 export class WeOverlay extends Component {
     static template = "__portal__";
+    static props = [
+        "target",
+    ];
 
     setup() {
         const node = this.__owl__;

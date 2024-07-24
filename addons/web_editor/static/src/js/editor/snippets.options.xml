@@ -202,7 +202,7 @@
                t-att="getAllDataAttributes()">
             <div>
                 <t t-if="this.img">
-                    <img t-att-src="this.img"/>
+                    <img t-att-src="this.previewImg &amp;&amp; this.state.isPreviewed() ? this.previewImg : this.img"/>
                 </t>
                 <t t-if="this.props.icon">
                     <i t-attf-class="fa {{ this.props.icon }}"/>
