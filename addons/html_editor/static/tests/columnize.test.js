@@ -20,7 +20,7 @@ function columnize(numberOfColumns) {
 }
 
 describe("2 columns", () => {
-    test("should display hint for empty columns", async () => {
+    test("should display hint for focused empty column.", async () => {
         await testEditor({
             /* eslint-disable */
             contentBefore:
@@ -31,7 +31,7 @@ describe("2 columns", () => {
             contentAfterEdit:
                 columnsContainer(
                     column(6, `<p placeholder="Empty column" class="o-we-hint">[]<br></p>`) +
-                    column(6, `<p placeholder="Empty column" class="o-we-hint"><br></p>`)
+                    column(6, `<p><br></p>`)
                 ),
             /* eslint-enable */
         });
@@ -57,7 +57,7 @@ describe("2 columns", () => {
             /* eslint-disable */
                 columnsContainer(
                     column(6, "<p>[]abcd</p>") +
-                    column(6, `<p placeholder="Empty column" class="o-we-hint"><br></p>`)
+                    column(6, `<p><br></p>`)
                 ) +
                 "<p><br></p>",
             contentAfter:
@@ -107,7 +107,7 @@ describe("2 columns", () => {
 
         press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p placeholder="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p><br></p></div></div></div><p><br></p>`
         );
 
         insertText(editor, "/columns");
@@ -129,7 +129,7 @@ describe("3 columns", () => {
             contentBeforeEdit:
                 columnsContainer(
                     column(4, "<p>abcd</p>") +
-                    column(4, `<p placeholder="Empty column" class="o-we-hint"><br></p>`) +
+                    column(4, `<p><br></p>`) +
                     column(4, `<p placeholder="Empty column" class="o-we-hint">[]<br></p>`)
                 ),
             /* eslint-enable */
@@ -148,8 +148,8 @@ describe("3 columns", () => {
             contentAfterEdit:
                 columnsContainer(
                     column(4, "<p>ab[]cd</p>") +
-                    column(4, `<p placeholder="Empty column" class="o-we-hint"><br></p>`) +
-                    column(4, `<p placeholder="Empty column" class="o-we-hint"><br></p>`)
+                    column(4, `<p><br></p>`) +
+                    column(4, `<p><br></p>`)
                 ) + "<p><br></p>",
             contentAfter:
                 columnsContainer(
@@ -200,7 +200,7 @@ describe("3 columns", () => {
 
         press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-4"><p>ab[]cd</p></div><div class="col-4"><p placeholder="Empty column" class="o-we-hint"><br></p></div><div class="col-4"><p placeholder="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns"><div class="row"><div class="col-4"><p>ab[]cd</p></div><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div></div></div><p><br></p>`
         );
 
         insertText(editor, "/columns");
@@ -286,7 +286,7 @@ describe("4 columns", () => {
 
         press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-3"><p>ab[]cd</p></div><div class="col-3"><p placeholder="Empty column" class="o-we-hint"><br></p></div><div class="col-3"><p placeholder="Empty column" class="o-we-hint"><br></p></div><div class="col-3"><p placeholder="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns"><div class="row"><div class="col-3"><p>ab[]cd</p></div><div class="col-3"><p><br></p></div><div class="col-3"><p><br></p></div><div class="col-3"><p><br></p></div></div></div><p><br></p>`
         );
 
         insertText(editor, "/columns");
@@ -356,7 +356,7 @@ describe("remove columns", () => {
         // add 2 columns
         press("enter");
         expect(getContent(el)).toBe(
-            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p placeholder="Empty column" class="o-we-hint"><br></p></div></div></div><p><br></p>`
+            `<div class="container o_text_columns"><div class="row"><div class="col-6"><p>ab[]cd</p></div><div class="col-6"><p><br></p></div></div></div><p><br></p>`
         );
 
         insertText(editor, "/removecolumns");
