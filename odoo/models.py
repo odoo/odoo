@@ -4595,6 +4595,7 @@ class BaseModel(metaclass=MetaModel):
 
         if check_company and self._check_company_auto:
             self._check_company()
+        self.check_access_rule('write')
         return True
 
     def _write(self, vals):
