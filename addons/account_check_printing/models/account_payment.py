@@ -9,21 +9,6 @@ from odoo.tools.sql import column_exists, create_column
 INV_LINES_PER_STUB = 9
 
 
-class AccountPaymentRegister(models.TransientModel):
-    _inherit = "account.payment.register"
-
-    @api.depends('payment_type', 'journal_id', 'partner_id')
-    def _compute_payment_method_line_id(self):
-        super()._compute_payment_method_line_id()
-        for record in self:
-            preferred = record.partner_id.with_company(record.company_id).property_payment_method_id
-            method_line = record.journal_id.outbound_payment_method_line_ids.filtered(
-                lambda l: l.payment_method_id == preferred
-            )
-            if record.payment_type == 'outbound' and method_line:
-                record.payment_method_line_id = method_line[0]
-
-
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
@@ -127,16 +112,6 @@ class AccountPayment(models.Model):
             if payment.check_number:
                 sequence = payment.journal_id.check_sequence_id.sudo()
                 sequence.padding = len(payment.check_number)
-
-    @api.depends('payment_type', 'journal_id', 'partner_id')
-    def _compute_payment_method_line_id(self):
-        super()._compute_payment_method_line_id()
-        for record in self:
-            preferred = record.partner_id.with_company(record.company_id).property_payment_method_id
-            method_line = record.journal_id.outbound_payment_method_line_ids\
-                .filtered(lambda l: l.payment_method_id == preferred)
-            if record.payment_type == 'outbound' and method_line:
-                record.payment_method_line_id = method_line[0]
 
     def _get_aml_default_display_name_list(self):
         # Extends 'account'
