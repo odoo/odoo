@@ -1,26 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_pdf_quote_builder
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# Martin Trigaux, 2024
+# Nadia Martynova, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-03-26 15:06+0000\n"
+"PO-Revision-Date: 2024-03-27 13:34+0000\n"
+"Last-Translator: Nadia Martynova, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
-msgid "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"
-msgstr "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"
+msgid ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
+msgstr ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -33,19 +41,12 @@ msgstr "<i class=\"fa fa-arrow-right\"/> Примеры для скачиван�
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
 "Leave it empty if you don't want to share this document with sales customer.\n"
-"Quotation: the document will be sent to and accessible by customers at any time.\n"
+"On quote: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
-"Confirmed order: the document will be sent to and accessible by customers.\n"
+"On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote pdf: The document will be included in the pdf of the quotation between the header pages and the quote table. "
 msgstr ""
-"Позволяет поделиться документом с клиентами в рамках продажи.\n"
-"Оставьте это поле пустым, если вы не хотите предоставлять этот документ покупателям.\n"
-"Предложение: документ будет отправлен клиентам и доступен им в любое время.\n"
-"например, этот параметр может быть полезен для обмена файлами с описанием товара.\n"
-"Подтвержденный заказ: документ будет отправлен клиентам и доступен для просмотра.\n"
-"например, эта опция может быть полезна для обмена руководствами пользователя или цифровым контентом, купленным в электронной коммерции.\n"
-"Внутренняя цитата: Документ будет включен в pdf-файл коммерческого предложения между заголовочными страницами и таблицей коммерческого предложения."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -56,6 +57,18 @@ msgstr "Компании"
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
 msgid "Config Settings"
 msgstr "Параметры конфигурации"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"Похоже, мы не можем обработать этот pdf-файл внутри коммерческого "
+"предложения. Он либо зашифрован, либо закодирован в формате, который мы не "
+"поддерживаем."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
@@ -73,8 +86,8 @@ msgstr "Заглавные страницы"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
-msgid "Inside quote"
-msgstr "Внутренняя цитата"
+msgid "Inside quote pdf"
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -83,14 +96,25 @@ msgstr "Узнайте больше из документации."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
-msgid "Make your quote attractive by adding header pages, product descriptions and footer pages to your quote."
-msgstr "Сделайте свое предложение привлекательным, добавив к нему начальные страницы, описания товаров и нижние колонтитулы."
+msgid ""
+"Make your quote attractive by adding header pages, product descriptions and "
+"footer pages to your quote."
+msgstr ""
+"Сделайте свое предложение привлекательным, добавив к нему начальные "
+"страницы, описания товаров и нижние колонтитулы."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 msgid "Only PDF documents can be attached inside a quote."
 msgstr "В цитату можно вложить только документы в формате PDF."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -145,7 +169,7 @@ msgstr "Коммерческое предложение/заказ"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
 msgid "Quotation Template"
-msgstr "Шаблон котировки"
+msgstr "Шаблон предложения"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
@@ -167,11 +191,6 @@ msgid "Sale Header Name"
 msgstr "Название заголовка продажи"
 
 #. module: sale_pdf_quote_builder
-#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
-msgid "Sales Order"
-msgstr "Заказ на продажу"
-
-#. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid ""
 "Some information specific to the quote (customer name, quotation reference, ... )\n"
@@ -184,5 +203,5 @@ msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
-msgid "Visible at"
-msgstr "Виден на"
+msgid "Visibility"
+msgstr "Видимость"
