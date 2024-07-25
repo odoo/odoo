@@ -129,14 +129,3 @@ class PosPaymentMethod(models.Model):
             }
 
         return self.sudo()._get_stripe_payment_provider()._stripe_make_request(endpoint, data)
-
-    def action_stripe_key(self):
-        res_id = self._get_stripe_payment_provider().id
-        # Redirect
-        return {
-            'name': _('Stripe'),
-            'res_model': 'payment.provider',
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_id': res_id,
-        }

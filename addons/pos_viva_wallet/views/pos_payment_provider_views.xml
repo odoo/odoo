@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_provider_view_form_inherit_pos_viva_wallet" model="ir.ui.view">
+        <field name="name">pos.payment.provider.form.inherit.viva.wallet</field>
+        <field name="model">pos.payment.provider</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_provider_view_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group name="viva_wallet_credentials" invisible="code != 'viva_wallet'">
+                    <field name="viva_wallet_merchant_id" required="code == 'viva_wallet'"/>
+                    <field name="viva_wallet_api_key" required="code == 'viva_wallet'" password="True"/>
+                    <field name="viva_wallet_client_id" required="code == 'viva_wallet'"/>
+                    <field name="viva_wallet_client_secret" required="code == 'viva_wallet'"/>
+                    <field name="viva_wallet_webhook_endpoint" required="code == 'viva_wallet'" invisible="not viva_wallet_webhook_verification_key" widget="CopyClipboardChar"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

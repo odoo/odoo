@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv.expression import AND
 
 
 class PosPaymentMethod(models.Model):
@@ -61,14 +62,35 @@ class PosPaymentMethod(models.Model):
         help='Type of QR-code to be generated for this payment method.',
     )
     hide_qr_code_method = fields.Boolean(compute='_compute_hide_qr_code_method')
+    terminal_identifier = fields.Text(string='Device ID/Serial Number', help='Terminal Identifier to identify method based on Serial Number')
+    pos_payment_provider_id = fields.Many2one('pos.payment.provider', string='Corresponding Provider (Terminal)', help='Provider related to this terminal-based method')
+
+    @api.constrains('terminal_identifier')
+    def _check_terminal_identifier(self):
+        for payment_method in self:
+            if not payment_method.terminal_identifier:
+                continue
+            # sudo() to search all companies
+            existing_payment_method = self.sudo().search([('id', '!=', payment_method.id),
+                                                   ('terminal_identifier', '=', payment_method.terminal_identifier)],
+                                                  limit=1)
+            if existing_payment_method:
+                if existing_payment_method.company_id == payment_method.company_id:
+                    raise ValidationError(_('Terminal %(terminal)s is already used on payment method %(payment_method)s.',
+                                      terminal=payment_method.terminal_identifier, payment_method=existing_payment_method.display_name))
+                else:
+                    raise ValidationError(_('Terminal %(terminal)s is already used in company %(company)s on payment method %(payment_method)s.',
+                                             terminal=payment_method.terminal_identifier,
+                                             company=existing_payment_method.company_id.name,
+                                             payment_method=existing_payment_method.display_name))
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return ['|', ('active', '=', False), ('active', '=', True)]
+        return AND([['|', ('active', '=', False), ('active', '=', True)], ['|', ('pos_payment_provider_id', '=', False), ('pos_payment_provider_id.mode', '!=', 'disabled')]])
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr']
+        return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr', 'terminal_identifier', 'pos_payment_provider_id']
 
     @api.depends('type', 'payment_method_type')
     def _compute_hide_use_payment_terminal(self):

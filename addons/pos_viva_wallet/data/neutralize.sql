@@ -1,2 +1,2 @@
-UPDATE pos_payment_method
-   SET viva_wallet_test_mode = true;
+UPDATE pos_payment_provider
+   SET mode = 'test';

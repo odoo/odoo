@@ -7,6 +7,8 @@
     'sequence': 6,
     'summary': 'Integrate your POS with a Stripe payment terminal',
     'data': [
+        'data/pos_payment_provider_data.xml',
+        'views/pos_payment_provider_views.xml',
         'views/pos_payment_method_views.xml',
         'views/assets_stripe.xml',
     ],

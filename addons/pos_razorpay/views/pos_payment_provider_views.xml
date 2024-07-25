@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_provider_view_form_inherit_pos_razorpay" model="ir.ui.view">
+        <field name="name">pos.payment.provider.form.inherit.razorpay</field>
+        <field name="model">pos.payment.provider</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_provider_view_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group name="razorpay_credentials" invisible="code != 'razorpay'">
+                    <field name="razorpay_username" required="code == 'razorpay' and mode != 'disabled'"/>
+                    <field name="razorpay_api_key" required="code == 'razorpay' and mode != 'disabled'" password="True"/>
+                    <field name="razorpay_allowed_payment_modes" required="code == 'razorpay' and mode != 'disabled'"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>
