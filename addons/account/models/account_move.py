@@ -14,6 +14,7 @@ import re
 from textwrap import shorten
 
 from odoo import api, fields, models, _, Command
+from odoo.tools.sql import column_exists, create_column
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.osv import expression
@@ -392,6 +393,14 @@ class AccountMove(models.Model):
         exportable=False,
     )
 
+    preferred_payment_method_line_id = fields.Many2one(
+        string="Preferred Payment Method Line",
+        comodel_name='account.payment.method.line',
+        compute='_compute_preferred_payment_method_line_id',
+        store=True,
+        readonly=False,
+    )
+
     # === Currency fields === #
     company_currency_id = fields.Many2one(
         string='Company Currency',
@@ -645,6 +654,9 @@ class AccountMove(models.Model):
                                  ON account_move(name, journal_id)
                               WHERE (state = 'posted' AND name != '/')
             """)
+
+        if not column_exists(self.env.cr, "account_move", "preferred_payment_method_line_id"):
+            create_column(self.env.cr, "account_move", "preferred_payment_method_line_id", "int4")
 
     def init(self):
         super().init()
@@ -1225,6 +1237,15 @@ class AccountMove(models.Model):
 
             move.invoice_outstanding_credits_debits_widget = payments_widget_vals
             move.invoice_has_outstanding = True
+
+    @api.depends('partner_id', 'company_id')
+    def _compute_preferred_payment_method_line_id(self):
+        for move in self:
+            partner = move.partner_id.with_company(move.company_id)
+            if move.is_sale_document():
+                move.preferred_payment_method_line_id = partner.property_inbound_payment_method_line_id
+            else:
+                move.preferred_payment_method_line_id = partner.property_outbound_payment_method_line_id
 
     @api.depends('move_type', 'line_ids.amount_residual')
     def _compute_payments_widget_reconciled_info(self):

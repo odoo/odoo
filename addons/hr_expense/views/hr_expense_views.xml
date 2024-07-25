@@ -835,7 +835,6 @@
                                    context="{'default_company_id': company_id}"/>
                             <field name="selectable_payment_method_line_ids" invisible="1"/>
                             <field name="payment_method_line_id"
-                                   context="{'show_payment_journal_id': 1}"
                                    options="{'no_open': True, 'no_create': True}"
                                    invisible="payment_mode != 'company_account'"
                                    readonly="not is_editable"

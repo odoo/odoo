@@ -477,11 +477,6 @@ class HrExpenseSheet(models.Model):
     # ORM Overrides
     # ----------------------------------------
 
-    def _read_format(self, fnames, load='_classic_read'):
-        # setting the context in the field on the view is not enough
-        self = self.with_context(show_payment_journal_id=True)
-        return super()._read_format(fnames, load)
-
     @api.model_create_multi
     def create(self, vals_list):
         context = clean_context(self.env.context)
