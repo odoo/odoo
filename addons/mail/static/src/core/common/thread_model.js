@@ -357,10 +357,6 @@ export class Thread extends Record {
         );
     }
 
-    get hasMemberList() {
-        return ["channel", "group"].includes(this.channel_type);
-    }
-
     get hasAttachmentPanel() {
         return this.model === "discuss.channel";
     }
@@ -521,14 +517,6 @@ export class Thread extends Record {
         return !this.messages.some((message) => !message.isEmpty);
     }
 
-    offlineMembers = Record.many("ChannelMember", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.channelMembers.filter((member) => member.persona?.im_status !== "online");
-        },
-        sort: (m1, m2) => (m1.persona?.name < m2.persona?.name ? -1 : 1),
-    });
-
     get nonEmptyMessages() {
         return this.messages.filter((message) => !message.isEmpty);
     }
@@ -588,20 +576,6 @@ export class Thread extends Record {
             return res;
         },
     });
-
-    onlineMembers = Record.many("ChannelMember", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.channelMembers.filter((member) => member.persona.im_status === "online");
-        },
-        sort(m1, m2) {
-            return this.store.Thread.sortOnlineMembers(m1, m2);
-        },
-    });
-
-    static sortOnlineMembers(m1, m2) {
-        return m1.persona.name?.localeCompare(m2.persona.name) || m1.id - m2.id;
-    }
 
     get unknownMembersCount() {
         return this.memberCount - this.channelMembers.length;
