@@ -130,7 +130,7 @@
       <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
           <t t-set="o_portal_fullwidth_alert" groups="purchase.group_purchase_manager">
               <t t-call="portal.portal_back_in_edit_mode">
-                  <t t-set="backend_url" t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (order._name, order.id, order.env.ref('purchase.purchase_rfq').id)"/>
+                  <t t-set="backend_url" t-value="'/odoo/action-purchase.purchase_rfq/%s' % (order.id)"/>
               </t>
           </t>
           <div class="modal fade" id="accept_quotation" role="dialog">

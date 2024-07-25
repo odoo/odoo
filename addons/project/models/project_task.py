@@ -1948,13 +1948,10 @@ class Task(models.Model):
         )
 
     def action_redirect_to_project_task_form(self):
+        menu_id = self.env.ref('project.menu_project_management_all_tasks').id
         return {
             'type': 'ir.actions.act_url',
-            'url': '/web#model=project.task&id=%s&active_id=1&menu_id=%s&action=%s&view_type=form' % (
-                self.id,
-                self.env.ref('project.menu_project_management_all_tasks').id,
-                self.env.ref('project.act_project_project_2_project_task_all').id,
-            ),
+            'url': f"/odoo/1/action-project.act_project_project_2_project_task_all/{self.id}?menu_id={menu_id}",
             'target': 'new',
         }
 

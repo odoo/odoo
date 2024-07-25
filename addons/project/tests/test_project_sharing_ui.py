@@ -80,11 +80,11 @@ class TestProjectSharingUi(HttpCase):
             'stage_id': self.project_portal.type_ids[0].id,
         })
 
-        self.start_tour("/web", 'project_sharing_with_blocked_task_tour', login="georges1")
+        self.start_tour("/odoo", 'project_sharing_with_blocked_task_tour', login="georges1")
 
     def test_01_project_sharing(self):
         """ Test Project Sharing UI with an internal user """
-        self.start_tour("/web", 'project_sharing_tour', login="admin")
+        self.start_tour("/odoo", 'project_sharing_tour', login="admin")
 
     def test_02_project_sharing(self):
         """ Test project sharing ui with a portal user.
