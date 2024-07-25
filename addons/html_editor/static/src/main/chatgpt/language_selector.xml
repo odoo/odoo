@@ -1,0 +1,22 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.LanguageSelector">
+        <button t-if="state.languages.length === 1"
+            class="btn btn-light px-1"
+            title="Translate with AI"
+            t-on-click="() => this.onSelected(state.languages[0][1])">
+                Translate
+        </button>
+        <Dropdown t-elif="state.languages.length > 1">
+            <button class="btn btn-light">
+                Translate
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="state.languages" t-as="language" t-key="language[0]">
+                    <DropdownItem onSelected="() => this.onSelected(language[1])">
+                        <div class="user-select-none lang" t-esc="language[1]"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

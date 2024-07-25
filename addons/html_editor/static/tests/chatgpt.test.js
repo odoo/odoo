@@ -6,12 +6,14 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { insertText } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
 import { ChatGPTPlugin } from "../src/main/chatgpt/chatgpt_plugin";
+import { loadLanguages } from "@web/core/l10n/translation";
 
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { DEFAULT_ALTERNATIVES_MODES } from "../src/main/chatgpt/chatgpt_alternatives_dialog";
 
 const PROMPT_DIALOG_TITLE = "Generate Text with AI";
 const ALTERNATIVES_DIALOG_TITLE = "AI Copywriter";
+const TRANSLATE_DIALOG_TITLE = "Translate with AI";
 
 const openFromPowerbox = async (editor) => {
     insertText(editor, "/ChatGPT");
@@ -20,6 +22,12 @@ const openFromPowerbox = async (editor) => {
 };
 const openFromToolbar = async () => {
     await contains(".o-we-toolbar [name='ai'] .btn").click();
+};
+const translateButtonFromToolbar = async () => {
+    await contains(".o-we-toolbar [name='translate'] .btn").click();
+};
+const translateDropdownFromToolbar = async () => {
+    await contains(".lang:contains('French (BE) / Français (BE)')").click();
 };
 
 test("ChatGPT dialog opens in prompt mode when selection is collapsed (with Powerbox)", async () => {
@@ -54,6 +62,59 @@ test("ChatGPT dialog opens in alternatives mode when selection is not collapsed 
     // Expect the ChatGPT Prompt Dialog not to be open.
     const promptDialogHeaderSelector = `.o_dialog .modal-header:contains("${PROMPT_DIALOG_TITLE}")`;
     expect(promptDialogHeaderSelector).toHaveCount(0);
+});
+
+test("ChatGPT dialog opens in translate mode when clicked on translate button in toolbar", async () => {
+    await setupEditor("<p>te[s]t</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
+    });
+
+    // Expect the toolbar to not have translate dropdown.
+    expect(".o-we-toolbar [name='translate'] .o-dropdown").toHaveCount(0);
+
+    // Expect the toolbar to have translate button.
+    expect(".o-we-toolbar [name='translate'] .btn").toHaveCount(1);
+
+    // Select Translate button in the toolbar.
+    await translateButtonFromToolbar();
+
+    // Expect the ChatGPT Translate Dialog to be open.
+    const translateDialogHeaderSelector = `.o_dialog .modal-header:contains("${TRANSLATE_DIALOG_TITLE}")`;
+    await waitFor(translateDialogHeaderSelector);
+
+    // Expect the ChatGPT Alternatives Dialog not to be open.
+    const alternativesDialogHeaderSelector = `.o_dialog .modal-header:contains("${ALTERNATIVES_DIALOG_TITLE}")`;
+    expect(alternativesDialogHeaderSelector).toHaveCount(0);
+});
+
+test("ChatGPT dialog opens in translate mode when clicked on translate dropdown in toolbar", async () => {
+    loadLanguages.installedLanguages = false;
+    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => {
+        return [
+            ["en_US", "English (US)"],
+            ["fr_BE", "French (BE) / Français (BE)"],
+        ];
+    });
+    await setupEditor("<p>te[s]t</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
+    });
+
+    // Expect the toolbar to have translate dropdown.
+    expect(".o-we-toolbar [name='translate'] .o-dropdown").toHaveCount(1);
+
+    // Select Translate button in the toolbar.
+    await translateButtonFromToolbar();
+    await waitFor(".dropdown-menu");
+    await translateDropdownFromToolbar();
+
+    // Expect the ChatGPT Translate Dialog to be open.
+    const translateDialogHeaderSelector = `.o_dialog .modal-header:contains("${TRANSLATE_DIALOG_TITLE}")`;
+    await waitFor(translateDialogHeaderSelector);
+
+    // Expect the ChatGPT Alternatives Dialog not to be open.
+    const alternativesDialogHeaderSelector = `.o_dialog .modal-header:contains("${ALTERNATIVES_DIALOG_TITLE}")`;
+    expect(alternativesDialogHeaderSelector).toHaveCount(0);
+    loadLanguages.installedLanguages = false;
 });
 
 test("ChatGPT alternatives dialog generates alternatives for each button", async () => {
@@ -140,6 +201,34 @@ test("insert the response from ChatGPT alternatives dialog", async () => {
 
     // Expect the response to have replaced the selected text.
     expect(getContent(el)).toBe(`<p>tAlternative #3[]t</p>`);
+});
+
+test("insert the response from ChatGPT translate dialog", async () => {
+    loadLanguages.installedLanguages = false;
+    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => {
+        return [
+            ["en_US", "English (US)"],
+            ["fr_BE", "French (BE) / Français (BE)"],
+        ];
+    });
+    const { el } = await setupEditor("<p>[Hello]</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
+    });
+    onRpc("/html_editor/generate_text", () => `Bonjour`);
+
+    // Select Translate button in the toolbar.
+    await translateButtonFromToolbar();
+    await waitFor(".dropdown-menu");
+    await translateDropdownFromToolbar();
+
+    // Insert the response.
+    await waitFor(".o-chatgpt-translated");
+    expect("footer button.btn[disabled]").toHaveCount(0);
+    await contains("footer button.btn").click();
+
+    // Expect the response to have been inserted in the middle of the text.
+    expect(getContent(el)).toBe(`<p>Bonjour[]</p>`);
+    loadLanguages.installedLanguages = false;
 });
 
 test("ChatGPT prompt dialog properly formats an unordered list", async () => {
