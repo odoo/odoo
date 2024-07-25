@@ -1371,6 +1371,16 @@
                                         <field name="invoice_incoterm_id"/>
                                         <field name="incoterm_location"/>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
+                                        <field name="preferred_payment_method_line_id"
+                                               string="Payment Method Line"
+                                               domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]"
+                                               invisible="move_type in ('in_invoice', 'in_refund')"
+                                        />
+                                        <field name="preferred_payment_method_line_id"
+                                               string="Payment Method Line"
+                                               domain="[('payment_type', '=', 'outbound'), ('company_id', '=', company_id)]"
+                                               invisible="move_type in ('out_invoice', 'out_refund')"
+                                        />
                                         <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding" readonly="state != 'draft'"/>
                                         <field name="invoice_source_email"
                                                widget="email"
@@ -1475,6 +1485,11 @@
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Partner Payment Method"
+                                name="preferred_payment_method"
+                                context="{'group_by': 'preferred_payment_method_line_id'}"
+                                groups="account.group_account_invoice,account.group_account_readonly"
+                        />
                         <filter string="Date" name="by_date" domain="[]" context="{'group_by': 'date'}" help="Journal Entries by Date"/>
                         <filter string="Invoice Date" name="by_invoice_date" domain="[]" context="{'group_by': 'invoice_date'}"/>
                         <filter string="Company" name="by_company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
@@ -1546,6 +1561,11 @@
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
                         <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <filter string="Partner Payment Method"
+                                name="preferred_payment_method_line"
+                                context="{'group_by': 'preferred_payment_method_line_id'}"
+                                groups="account.group_account_invoice,account.group_account_readonly"
+                        />
                         <filter string="Journal" name="groupy_by_journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <filter string="Company" name="group_by_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <separator/>

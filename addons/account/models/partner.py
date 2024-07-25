@@ -620,6 +620,22 @@ class ResPartner(models.Model):
         compute='_compute_duplicated_bank_account_partners_count',
     )
 
+    property_outbound_payment_method_line_id = fields.Many2one(
+        comodel_name='account.payment.method.line',
+        company_dependent=True,
+        domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', '=', self.env.company.id)],
+        help="Preferred payment method when buying from this vendor. This will be set by default on all"
+             " outgoing payments created for this vendor",
+    )
+
+    property_inbound_payment_method_line_id = fields.Many2one(
+        comodel_name='account.payment.method.line',
+        company_dependent=True,
+        domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', '=', self.env.company.id)],
+        help="Preferred payment method when selling to this customer. This will be set by default on all"
+             " incoming payments created for this customer",
+    )
+
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['__count'])
         mapped_data = {partner.id: count for partner, count in bank_data}

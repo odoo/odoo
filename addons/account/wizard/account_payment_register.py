@@ -453,7 +453,10 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('available_journal_ids')
     def _compute_journal_id(self):
         for wizard in self:
-            if wizard.can_edit_wizard:
+            move_payment_method_lines = wizard.line_ids.move_id.preferred_payment_method_line_id
+            if move_payment_method_lines and len(move_payment_method_lines) == 1:
+                wizard.journal_id = move_payment_method_lines.journal_id
+            elif wizard.can_edit_wizard:
                 batch = wizard._get_batches()[0]
                 wizard.journal_id = wizard._get_batch_journal(batch)
             else:
@@ -504,7 +507,11 @@ class AccountPaymentRegister(models.TransientModel):
 
             # Select the first available one by default.
             if available_payment_method_lines:
-                wizard.payment_method_line_id = available_payment_method_lines[0]._origin
+                move_payment_method_lines = wizard.line_ids.move_id.preferred_payment_method_line_id
+                if len(move_payment_method_lines) == 1 and move_payment_method_lines.id in available_payment_method_lines.ids:
+                    wizard.payment_method_line_id = move_payment_method_lines
+                else:
+                    wizard.payment_method_line_id = available_payment_method_lines[0]._origin
             else:
                 wizard.payment_method_line_id = False
 
