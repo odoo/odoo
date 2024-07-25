@@ -146,7 +146,7 @@ class SaleOrder(models.Model):
             for idx, (view_id, view_type) in enumerate(action['views']):
                 if view_type == 'kanban':
                     action['views'][idx] = (kanban_view_id, 'kanban')
-                elif view_type == 'tree':
+                elif view_type == 'list':
                     action['views'][idx] = (list_view_id, 'list')
                 elif view_type == 'form':
                     action['views'][idx] = (form_view_id, 'form')

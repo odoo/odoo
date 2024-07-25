@@ -4682,7 +4682,6 @@ class AccountMove(models.Model):
         return {
             'name': _("Print & Send"),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.move.send',
             'target': 'new',

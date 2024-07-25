@@ -112,7 +112,7 @@ class TestHttpWebJson_18_0(TestHttpBase):
     def test_webjson_form_viewtype_list(self):
         self.authenticate('demo', 'demo')
         url = f'/json/18.0/test_http.stargate/{self.earth.id}'
-        res = self.url_open(f'{url}?view_type=tree')
+        res = self.url_open(f'{url}?view_type=list')
         res.raise_for_status()
         self.assertEqual(res.json(), {
             'id': self.earth.id,

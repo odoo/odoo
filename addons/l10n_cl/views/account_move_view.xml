@@ -25,7 +25,7 @@
     </record>
 
     <record id="view_complete_invoice_refund_tree" model="ir.ui.view">
-        <field name="name">account.move.tree2</field>
+        <field name="name">account.move.list2</field>
         <field name="model">account.move</field>
         <field name="arch" type="xml">
             <list decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
