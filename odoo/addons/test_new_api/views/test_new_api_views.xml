@@ -7,21 +7,21 @@
         <record id="action_discussions" model="ir.actions.act_window">
             <field name="name">Discussions</field>
             <field name="res_model">test_new_api.discussion</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
         <menuitem id="menu_discussions" action="action_discussions" parent="menu_sub" sequence="10"/>
 
         <record id="action_messages" model="ir.actions.act_window">
             <field name="name">Messages</field>
             <field name="res_model">test_new_api.message</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
         <menuitem id="menu_messages" action="action_messages" parent="menu_sub" sequence="20"/>
 
         <record id="action_multi" model="ir.actions.act_window">
             <field name="name">Multi</field>
             <field name="res_model">test_new_api.multi</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
         <menuitem id="menu_multi" action="action_multi" parent="menu_sub"/>
 
@@ -30,7 +30,7 @@
         <record id="action_categories" model="ir.actions.act_window">
             <field name="name">Categories</field>
             <field name="res_model">test_new_api.category</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
         <menuitem id="menu_categories" action="action_categories" parent="menu_config"/>
 
@@ -54,11 +54,11 @@
                         <notebook>
                             <page string="Messages">
                                 <field name="messages">
-                                    <tree string="Messages">
+                                    <list string="Messages">
                                         <field name="name"/>
                                         <field name="body"/>
                                         <field name="important"/>
-                                    </tree>
+                                    </list>
                                     <form string="Message">
                                         <group>
                                             <field name="name"/>
@@ -73,12 +73,12 @@
                             </page>
                             <page string="Emails">
                                 <field name="important_emails">
-                                    <tree name="Important Messages">
+                                    <list name="Important Messages">
                                         <field name="name"/>
                                         <field name="body"/>
                                         <field name="important"/>
                                         <field name="email_to"/>
-                                    </tree>
+                                    </list>
                                     <form string="Important Message">
                                         <group>
                                             <field name="name"/>
@@ -94,9 +94,9 @@
                             </page>
                             <page string="Participants">
                                 <field name="participants" widget="many2many">
-                                    <tree string="Participants">
+                                    <list string="Participants">
                                         <field name="display_name"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -123,13 +123,13 @@
                         <notebook>
                             <page string="Messages">
                                 <field name="messages">
-                                    <tree name="Messages" editable="bottom">
+                                    <list name="Messages" editable="bottom">
                                         <field name="name"/>
                                         <field name="author"/>
                                         <field name="body" required="1"/>
                                         <field name="size"/>
                                         <field name="has_important_sibling"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                             <page string="Participants">
@@ -148,7 +148,7 @@
             <field name="name">Discussions 2</field>
             <field name="res_model">test_new_api.discussion</field>
             <field name="view_ids" eval="[Command.clear(),
-                          (0,0,{'view_mode':'tree'}),
+                          (0,0,{'view_mode':'list'}),
                           (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_2')})]"/>
         </record>
         <menuitem id="menu_discussions_2" action="action_discussions_2" parent="menu_sub" sequence="10"/>
@@ -167,11 +167,11 @@
                         <group>
                             <field name="messages" />
                             <field name="important_messages">
-                                <tree string="Important messages">
+                                <list string="Important messages">
                                     <field name="name"/>
                                     <field name="author"/>
                                     <field name="size"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </sheet>
@@ -183,23 +183,23 @@
             <field name="name">Discussions 3</field>
             <field name="res_model">test_new_api.discussion</field>
             <field name="view_ids" eval="[Command.clear(),
-                          (0,0,{'view_mode':'tree'}),
+                          (0,0,{'view_mode':'list'}),
                           (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_3')})]"/>
         </record>
         <menuitem id="menu_discussions_3" action="action_discussions_3" parent="menu_sub" sequence="11"/>
 
 
-        <!-- Message tree view -->
+        <!-- Message list view -->
         <record id="message_tree" model="ir.ui.view">
-            <field name="name">message tree view</field>
+            <field name="name">message list view</field>
             <field name="model">test_new_api.message</field>
             <field name="arch" type="xml">
-                <tree string="Messages">
+                <list string="Messages">
                     <field name="name"/>
                     <field name="author"/>
                     <field name="size"/>
                     <field name="important"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -224,14 +224,14 @@
             </field>
         </record>
 
-        <!-- Category tree view -->
+        <!-- Category list view -->
         <record id="category_tree" model="ir.ui.view">
-            <field name="name">category tree view</field>
+            <field name="name">category list view</field>
             <field name="model">test_new_api.category</field>
             <field name="arch" type="xml">
-                <tree string="Categories">
+                <list string="Categories">
                     <field name="display_name"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -254,14 +254,14 @@
             </field>
         </record>
 
-        <!-- Multi tree view -->
+        <!-- Multi list view -->
         <record id="multi_tree" model="ir.ui.view">
-            <field name="name">multi tree view</field>
+            <field name="name">multi list view</field>
             <field name="model">test_new_api.multi</field>
             <field name="arch" type="xml">
-                <tree string="Multi">
+                <list string="Multi">
                     <field name="name"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -278,19 +278,19 @@
                         </group>
                         <label for="lines"/>
                         <field name="lines">
-                            <tree string="Lines">
+                            <list string="Lines">
                                 <field name="name"/>
                                 <field name="partner"/>
-                            </tree>
+                            </list>
                             <form string="Lines">
                                 <group>
                                     <field name="name"/>
                                     <field name="partner"/>
                                 </group>
                                 <field name="tags">
-                                    <tree string="Tags" editable="bottom">
+                                    <list string="Tags" editable="bottom">
                                         <field name="name"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </form>
                         </field>
@@ -312,10 +312,10 @@
                         </group>
                         <label for="child_ids"/>
                         <field name="child_ids">
-                            <tree string="Children" editable="bottom">
+                            <list string="Children" editable="bottom">
                                 <field name="name"/>
                                 <field name="cost"/>
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>
@@ -332,11 +332,11 @@
                             <field name="name"/>
                             <field name="total_amount"/>
                             <field name="line_ids">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="parent_id"/>
                                     <field name="amount"/>
                                     <field name="user_id"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </sheet>
@@ -352,13 +352,13 @@
                 <form>
                     <sheet>
                         <field name="precision_rounding"/>
-                        <field name="line_ids" mode="tree">
-                            <tree editable="bottom">
+                        <field name="line_ids" mode="list">
+                            <list editable="bottom">
                                 <field name="value"/>
                                 <field name="edit"/>
                                 <field name="count"/>
                                 <field name="one_compute"/>
-                            </tree>
+                            </list>
                             <form>
                                 <!-- this view makes sure that field "same" is not considered -->
                                 <field name="value"/>
@@ -394,17 +394,17 @@
         </record>
 
         <record id="view_model_some_access_tree" model="ir.ui.view">
-            <field name="name">Test attrs and groups tree</field>
+            <field name="name">Test attrs and groups list</field>
             <field name="model">test_new_api.model.some_access</field>
             <field name="arch" type="xml">
-                <tree string="Test python expression in tree" decoration-muted="a == 1">
+                <list string="Test python expression in list" decoration-muted="a == 1">
                     <field name="b"/>
                     <field name="c"/>
                     <field name="d" decoration-warning="c"/>
                     <groupby name="g_id">
                         <button string="Action" type="object" name="action_full" invisible="ab != 1"/>
                     </groupby>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -453,7 +453,7 @@
             <field name="name">Test Active List</field>
             <field name="model">test_new_api.model_active_field</field>
             <field name="arch" type="xml">
-                <tree editable='bottom' decoration-muted="not active">
+                <list editable='bottom' decoration-muted="not active">
                     <field name="active"/>
                     <field name="name"/>
                     <field name="parent_id"/>
@@ -461,7 +461,7 @@
                     <field name="all_children_ids" widget="many2many_tags"/>
                     <field name="relatives_ids" widget="many2many_tags"/>
                     <field name="all_relatives_ids" widget="many2many_tags"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -485,7 +485,7 @@
         <record id="action_tests_active" model="ir.actions.act_window">
             <field name="name">Active Tests</field>
             <field name="res_model">test_new_api.model_active_field</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="search_view_id" ref="view_model_model_active_field_search"/>
         </record>
         <menuitem id="menu_active" name="Active Test" action="action_tests_active" parent="menu_main" sequence="12"/>

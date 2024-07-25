@@ -403,7 +403,7 @@ export function makeActionManager(env, router = _router) {
             action.target = action.target || "current";
         }
         if (action.type === "ir.actions.act_window") {
-            action.views = [...action.views.map((v) => [v[0], v[1] === "tree" ? "list" : v[1]])]; // manipulate a copy to keep cached action unmodified
+            action.views = [...action.views.map((v) => [v[0], v[1]])]; // manipulate a copy to keep cached action unmodified
             action.controllers = {};
             const target = action.target;
             if (target !== "inline" && !(target === "new" && action.views[0][1] === "form")) {
