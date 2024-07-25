@@ -242,7 +242,7 @@
             <td>
                 <span t-esc="aggregated_lines[line]['name']"/>
                 <p t-if="aggregated_lines[line]['description']">
-                    <span t-esc="aggregated_lines[line]['description']"/>
+                    <span t-esc="aggregated_lines[line]['description']"  t-options="{'widget': 'text'}"/>
                 </p>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_ordered">
