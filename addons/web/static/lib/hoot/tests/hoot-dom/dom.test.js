@@ -12,6 +12,7 @@ import {
     isEditable,
     isEventTarget,
     isFocusable,
+    isInDOM,
     isVisible,
     queryAll,
     queryAllRects,
@@ -282,6 +283,30 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
         expect(isFocusable("input:first")).toBe(true);
         expect(isFocusable("li:first")).toBe(false);
+    });
+
+    test("isInDom", async () => {
+        await mountOnFixture(FULL_HTML_TEMPLATE);
+        await waitForIframes();
+
+        expect(isInDOM(document)).toBe(true);
+        expect(isInDOM(document.body)).toBe(true);
+        expect(isInDOM(document.head)).toBe(true);
+        expect(isInDOM(document.documentElement)).toBe(true);
+
+        const form = queryOne`form`;
+        expect(isInDOM(form)).toBe(true);
+
+        form.remove();
+
+        expect(isInDOM(form)).toBe(false);
+
+        const paragraph = queryOne`:iframe p`;
+        expect(isInDOM(paragraph)).toBe(true);
+
+        paragraph.remove();
+
+        expect(isInDOM(paragraph)).toBe(false);
     });
 
     test("isDisplayed", async () => {
