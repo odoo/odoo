@@ -59,6 +59,39 @@ test("can shape an image", async () => {
     expect(img).toHaveClass("img-thumbnail");
 });
 
+test("shape_circle and shape_rounded are mutually exclusive", async () => {
+    await setupEditor(`
+        <img src="${base64Img}">
+    `);
+    const img = queryOne("img");
+    click(img);
+    await waitFor(".o-we-toolbar");
+
+    const buttons = {};
+    for (const buttonName of ["shape_rounded", "shape_circle", "shape_shadow", "shape_thumbnail"]) {
+        buttons[buttonName] = `.o-we-toolbar button[name='${buttonName}']`;
+    }
+
+    click(buttons["shape_rounded"]);
+    await animationFrame();
+    expect(buttons["shape_rounded"]).toHaveClass("active");
+    expect(img).toHaveClass("rounded");
+
+    click(buttons["shape_circle"]);
+    await animationFrame();
+    expect(buttons["shape_circle"]).toHaveClass("active");
+    expect(img).toHaveClass("rounded-circle");
+    expect(buttons["shape_rounded"]).not.toHaveClass("active");
+    expect(img).not.toHaveClass("rounded");
+
+    click(buttons["shape_rounded"]);
+    await animationFrame();
+    expect(buttons["shape_rounded"]).toHaveClass("active");
+    expect(img).toHaveClass("rounded");
+    expect(buttons["shape_circle"]).not.toHaveClass("active");
+    expect(img).not.toHaveClass("rounded-circle");
+});
+
 test("can undo a shape", async () => {
     const { editor } = await setupEditor(`
         <img src="${base64Img}">
