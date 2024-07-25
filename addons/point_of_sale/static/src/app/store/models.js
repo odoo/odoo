@@ -1063,7 +1063,7 @@ export class Payment extends PosModel {
 // plus the associated payment information (the Paymentlines)
 // there is always an active ('selected') order in the Pos, a new one is created
 // automaticaly once an order is completed and sent to the server.
-export class Order extends PosModel {
+class Order_Original extends PosModel {
     setup(_defaultObj, options) {
         super.setup(...arguments);
         var self = this;
@@ -2143,6 +2143,9 @@ export class Order extends PosModel {
     get_total_with_tax() {
         return this.get_total_without_tax() + this.get_total_tax();
     }
+    get totalWithTax() {
+        return this.get_total_with_tax();
+    }
     get_total_without_tax() {
         return round_pr(
             this.orderlines.reduce(function (sum, orderLine) {
@@ -2524,3 +2527,5 @@ export class Order extends PosModel {
         return {};
     }
 }
+
+export const Order = createModelWithLazyGetters(Order_Original);
