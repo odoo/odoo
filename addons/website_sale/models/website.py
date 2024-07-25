@@ -352,7 +352,7 @@ class Website(models.Model):
 
         if not (sale_order_sudo or force_create):
             # Do not create a SO record unless needed
-            if request.session.get('sale_order_id'):
+            if request.session.get('sale_order_id') and not request.session.is_dirty:
                 request.session.pop('sale_order_id')
                 request.session.pop('website_sale_cart_quantity', None)
             return self.env['sale.order']
