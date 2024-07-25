@@ -3083,6 +3083,29 @@ class TestFields(TransactionCaseWithUserDemo):
             for index, record in enumerate(records):
                 record.write({'harry': index + 2})
 
+    def test_html_sanitize(self):
+        # the following use case happens in test TestWebsiteCrm.test_tour for crm.lead.description
+        # but since the test process and check are in different requests, no inconsistency is detected
+        record = self.env['test_new_api.mixed'].create({})
+        write_value = "<div>EXTERNAL SUBMISSION - Customer not verified<br>\n<br>\n<p>### TOUR DATA ###</p></div>"
+        cache_value = record_value = "EXTERNAL SUBMISSION - Customer not verified<br>\n<br>\n<p>### TOUR DATA ###</p>"  # html_sanitized once
+        db_value = new_record_value = "<p>EXTERNAL SUBMISSION - Customer not verified<br>\n<br>\n</p><p>### TOUR DATA ###</p>"
+        record.comment0 = write_value
+        # the value in cache is equal to the value in when read record, they are sanitized once by convert_to_cache
+        self.assertEqual(record.comment0, record_value)
+        record.invalidate_recordset()
+        # the value flushed to the db is sanitized again by convert_to_column and get extra <p></p>
+        # after fetch the value in cache becomes different than the previous value
+        self.assertEqual(record.comment0, new_record_value)
+
+        # the problem comes form the html_sanitize which is not idempotent
+        from odoo.tools import html_sanitize
+        sanitize_vals = {'sanitize_attributes': True, 'sanitize_form': True, 'sanitize_style': False, 'sanitize_tags': True,
+         'silent': True, 'strip_classes': False, 'strip_style': False}
+        self.assertEqual(cache_value, html_sanitize(write_value, **sanitize_vals))
+        self.assertEqual(db_value, html_sanitize(cache_value, **sanitize_vals))
+        self.assertNotEqual(cache_value, db_value)
+
 
 class TestX2many(TransactionCase):
 
