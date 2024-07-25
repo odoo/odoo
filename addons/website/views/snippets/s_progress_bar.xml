@@ -2,11 +2,13 @@
 <odoo>
 
 <template name="Progress Bar" id="s_progress_bar">
-    <div class="s_progress_bar" data-display="inline">
-        <h4 class="mb-0">We are almost done!</h4>
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%; min-width: 3%" aria-label="Progress bar">
-                <span class="s_progress_bar_text">80% Development</span>
+    <div class="s_progress_bar s_progress_bar_label_inline mb-2" data-display="inline" data-vcss="001">
+        <h4 class="h6-fs">We are almost done!</h4>
+        <div class="s_progress_bar_wrapper d-flex gap-2">
+            <div class="progress" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar overflow-visible" style="width: 80%; min-width: 3%" aria-label="Progress bar">
+                    <span class="s_progress_bar_text small">80%</span>
+                </div>
             </div>
         </div>
     </div>
@@ -16,16 +18,18 @@
     <xpath expr="." position="inside">
         <div data-js="progress" data-selector=".s_progress_bar" >
             <we-input string="Value" data-progress-bar-value="" data-unit="%"/>
-            <we-select string="Display">
-                <we-button data-display="inline">Inline</we-button>
-                <we-button data-display="below">Below Each Other</we-button>
+            <we-select string="Label">
+                <we-button data-display="inline" data-select-class="s_progress_bar_label_inline">Display Inside</we-button>
+                <we-button data-display="below" data-select-class="s_progress_bar_label_below">Display Below</we-button>
+                <we-button data-display="after" data-select-class="s_progress_bar_label_after">Display After</we-button>
+                <we-button data-display="none" data-select-class="s_progress_bar_label_hidden">Hide</we-button>
             </we-select>
             <we-colorpicker string="Colors" data-apply-to=".progress-bar"
                 data-select-style="true"
                 data-css-property="background-color"
                 data-color-prefix="bg-"/>
-            <we-checkbox string="Striped" data-select-class="progress-bar-striped" data-apply-to=".progress-bar"/>
-            <we-checkbox string="Animated" data-select-class="progress-bar-animated" data-apply-to=".progress-bar"/>
+            <we-checkbox string="Striped" data-name="progress_striped_opt" data-select-class="progress-bar-striped" data-apply-to=".progress-bar" data-no-preview="true"/>
+            <we-checkbox string="Animated" class="o_we_sublevel_1" data-dependencies="progress_striped_opt" data-select-class="progress-bar-animated" data-apply-to=".progress-bar" data-no-preview="true"/>
         </div>
     </xpath>
     <xpath expr="//div[@id='so_content_addition']" position="attributes">
@@ -34,5 +38,11 @@
     </xpath>
 </template>
 
-<!-- No related CSS but there is some in theme overrides -->
+
+<record id="website.s_progress_bar_001_scss" model="ir.asset">
+    <field name="name">Progress bar 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_progress_bar/001.scss</field>
+</record>
+
 </odoo>
