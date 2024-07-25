@@ -169,10 +169,17 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_create_project_prepare_values(self):
         """Generate project values"""
+        account = self.order_id.analytic_account_id
+        if not account:
+            service_products = self.order_id.order_line.product_id.filtered(
+                lambda p: p.type == 'service' and p.default_code)
+            default_code = service_products.default_code if len(service_products) == 1 else None
+            self.order_id._create_analytic_account(prefix=default_code)
+            account = self.order_id.analytic_account_id
         # create the project or duplicate one
         return {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
-            'analytic_account_id': self.order_id.analytic_account_id.id,
+            'analytic_account_id': account.id,
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
             'active': True,
