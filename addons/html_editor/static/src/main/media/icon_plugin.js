@@ -68,6 +68,22 @@ export class IconPlugin extends Plugin {
                         },
                     ],
                 },
+                {
+                    id: "icon_spin",
+                    sequence: 3,
+                    namespace: "icon",
+                    buttons: [
+                        {
+                            id: "icon_spin",
+                            action(dispatch) {
+                                dispatch("TOGGLE_SPIN_ICON");
+                            },
+                            icon: "fa-play",
+                            name: _t("Toggle icon spin"),
+                            isFormatApplied: () => p.hasSpinIcon(),
+                        },
+                    ],
+                },
             ],
         };
     }
@@ -79,22 +95,29 @@ export class IconPlugin extends Plugin {
 
     handleCommand(command, payload) {
         switch (command) {
-            case "RESIZE_ICON":
-                {
-                    const selectedIcon = this.getSelectedIcon();
-                    if (!selectedIcon) {
-                        return;
-                    }
-                    for (const classString of selectedIcon.classList) {
-                        if (classString.match(/^fa-[2-5]x$/)) {
-                            selectedIcon.classList.remove(classString);
-                        }
-                    }
-                    if (payload !== "1") {
-                        selectedIcon.classList.add(`fa-${payload}x`);
+            case "RESIZE_ICON": {
+                const selectedIcon = this.getSelectedIcon();
+                if (!selectedIcon) {
+                    return;
+                }
+                for (const classString of selectedIcon.classList) {
+                    if (classString.match(/^fa-[2-5]x$/)) {
+                        selectedIcon.classList.remove(classString);
                     }
                 }
+                if (payload !== "1") {
+                    selectedIcon.classList.add(`fa-${payload}x`);
+                }
                 break;
+            }
+            case "TOGGLE_SPIN_ICON": {
+                const selectedIcon = this.getSelectedIcon();
+                if (!selectedIcon) {
+                    return;
+                }
+                selectedIcon.classList.toggle("fa-spin");
+                break;
+            }
         }
     }
 
@@ -109,5 +132,13 @@ export class IconPlugin extends Plugin {
             );
         }
         return selectedIcon.classList.contains(`fa-${size}x`);
+    }
+
+    hasSpinIcon() {
+        const selectedIcon = this.getSelectedIcon();
+        if (!selectedIcon) {
+            return;
+        }
+        return selectedIcon.classList.contains("fa-spin");
     }
 }
