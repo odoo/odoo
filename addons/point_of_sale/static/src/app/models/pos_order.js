@@ -612,7 +612,7 @@ export class PosOrder extends Base {
             newPaymentLine.setAmount(totalAmountDue);
 
             if (
-                payment_method.payment_terminal ||
+                (payment_method.payment_terminal && !this._isRefundOrder()) ||
                 payment_method.payment_method_type === "qr_code"
             ) {
                 newPaymentLine.setPaymentStatus("pending");
@@ -822,6 +822,15 @@ export class PosOrder extends Base {
 
     isPaid() {
         return this.getDue() <= 0;
+    }
+
+    isRefundInProcess() {
+        return (
+            this._isRefundOrder() &&
+            this.payment_ids.some(
+                (pl) => pl.payment_method_id.use_payment_terminal && pl.payment_status !== "done"
+            )
+        );
     }
 
     isPaidWithCash() {
