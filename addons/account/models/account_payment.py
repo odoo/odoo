@@ -375,8 +375,6 @@ class AccountPayment(models.Model):
                 pay.payment_method_id = pay.payment_method_id
             elif available_payment_methods:
                 pay.payment_method_id = available_payment_methods[0]._origin
-            else:
-                pay.payment_method_id = False
 
     @api.depends('payment_type',
                  'journal_id.inbound_payment_method_ids',
