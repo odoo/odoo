@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { redirect } from "@web/core/utils/urls";
 
 // This tour relies on data created on the Python test.
 registry.category("web_tour.tours").add('sale_signature', {
@@ -43,7 +44,7 @@ registry.category("web_tour.tours").add('sale_signature', {
     }, {
         trigger: '#quote_content',
         run: function () {
-            window.location.href = window.location.origin + '/web';
+            redirect("/odoo");
         },  // Avoid race condition at the end of the tour by returning to the home page.
     },
     {

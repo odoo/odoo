@@ -13,7 +13,7 @@
                     <h1 class="mt32">403: Forbidden</h1>
                     <p>The page you were looking for could not be authorized.</p>
                     <p>Maybe you were looking for
-                        <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form">this page</a> ?
+                        <a t-attf-href="/odoo/action-survey.action_survey_form/{survey.id}">this page</a> ?
                     </p>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                         <h1><span t-field="survey.title"/> survey is empty</h1>
                         <p t-if="env.user.has_group('survey.group_survey_user')">
                             Please make sure you have at least one question in your survey. You also need at least one section if you chose the "Page per section" layout.<br />
-                            <a t-att-href="'/web#view_type=form&amp;model=survey.survey&amp;id=%s&amp;action=survey.action_survey_form' % survey.id"
+                            <a t-att-href="'/odoo/action-survey.action_survey_form/%s' % survey.id"
                                 class="btn btn-secondary"
                                 groups="survey.group_survey_manager">Edit in backend</a>
                         </p>
@@ -99,7 +99,7 @@
         <div t-ignore="true" class="alert alert-info p-2 border-0 rounded-0 d-print-none css_editable_mode_hidden mb-0 text-center">
             <p class="mb-1">This is a Test Survey Entry.</p>
             <div class="survey_button_form_view_hook d-inline-block">
-                <a t-if="env.user.has_group('survey.group_survey_user')" t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form">
+                <a t-if="env.user.has_group('survey.group_survey_user')" t-attf-href="/odoo/action-survey.action_survey_form/{survey.id}">
                     <i class="oi oi-fw oi-arrow-right"/>Go to Survey</a>
             </div>
         </div>

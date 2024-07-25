@@ -106,10 +106,10 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         })
 
     def test_task_create_sol_ui(self):
-        self.start_tour('/web', 'task_create_sol_tour', login='admin')
+        self.start_tour('/odoo', 'task_create_sol_tour', login='admin')
 
     def test_project_create_sol_ui(self):
-        self.start_tour('/web', 'project_create_sol_tour', login='admin')
+        self.start_tour('/odoo', 'project_create_sol_tour', login='admin')
 
     def test_sale_order_with_project_task(self):
         SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
