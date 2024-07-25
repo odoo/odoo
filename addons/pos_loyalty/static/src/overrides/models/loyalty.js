@@ -548,6 +548,7 @@ patch(Order.prototype, {
                         coupon_id: coupon.id,
                         barcode: pa.barcode,
                         appliedRules: pointsForProgramsCountedRules[program.id],
+                        giftCardId: pa.giftCardId
                     };
                 }
             }
