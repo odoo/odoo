@@ -99,3 +99,12 @@
 .carousel-indicators {
     list-style: none;
 }
+
+
+// Progress Bar
+
+// Solve a BS 5.3 issue causing progress bar's animation to flicker when
+// the component's height is modified using CSS variables.
+@keyframes progress-bar-stripes {
+    0% { background-position-x: var(--progress-height, #{$progress-height}); }
+}
