@@ -401,7 +401,7 @@ patch(PosOrder.prototype, {
         }
 
         // Check if the reward line is part of the rule
-        if (!(rule.any_product || rule.valid_product_ids.includes(line._reward_product_id))) {
+        if (!(rule.any_product || rule.validProductIds.has(line._reward_product_id?.id))) {
             return false;
         }
 
@@ -502,10 +502,7 @@ patch(PosOrder.prototype, {
                 }
                 for (const rule of program.rule_ids) {
                     // Skip lines to which the rule doesn't apply.
-                    if (
-                        rule.any_product ||
-                        rule.valid_product_ids.find((p) => p.id === line.product_id.id)
-                    ) {
+                    if (rule.any_product || rule.validProductIds.has(line.product_id.id)) {
                         if (!linesPerRule[rule.id]) {
                             linesPerRule[rule.id] = [];
                         }
@@ -544,14 +541,12 @@ patch(PosOrder.prototype, {
                 const qtyPerProduct = {};
                 let orderedProductPaid = 0;
                 for (const line of orderLines) {
-                    const valid_product_ids = rule.valid_product_ids.map((p) => p.id);
-
                     if (
-                        ((!line._reward_product_id &&
-                            (rule.any_product || valid_product_ids.includes(line.product_id.id))) ||
-                            (line._reward_product_id &&
+                        ((!line.reward_product_id &&
+                            (rule.any_product || rule.validProductIds.has(line.product_id.id))) ||
+                            (line.reward_product_id &&
                                 (rule.any_product ||
-                                    valid_product_ids.includes(line._reward_product_id.id)))) &&
+                                    rule.validProductIds.has(line._reward_product_id?.id)))) &&
                         !line.ignoreLoyaltyPoints({ program })
                     ) {
                         // We only count reward products from the same program to avoid unwanted feedback loops
@@ -603,10 +598,9 @@ patch(PosOrder.prototype, {
                         );
                     } else if (rule.reward_point_mode === "money") {
                         for (const line of orderLines) {
-                            const valid_product_ids = rule.valid_product_ids.map((p) => p.id);
                             if (
                                 line.is_reward_line ||
-                                !valid_product_ids.includes(line.product_id.id) ||
+                                !rule.validProductIds.has(line.product_id.id) ||
                                 line.get_quantity() <= 0 ||
                                 line.ignoreLoyaltyPoints({ program })
                             ) {
@@ -671,10 +665,7 @@ patch(PosOrder.prototype, {
     _computeNItems(rule) {
         return this._get_regular_order_lines().reduce((nItems, line) => {
             let increment = 0;
-            if (
-                rule.any_product ||
-                rule.valid_product_ids.find((p) => p.id === line.product_id.id)
-            ) {
+            if (rule.any_product || rule.validProductIds.has(line.product_id.id)) {
                 increment = line.get_quantity();
             }
             return nItems + increment;
@@ -1125,8 +1116,7 @@ patch(PosOrder.prototype, {
     _isRewardProductPartOfRules(reward, product) {
         return (
             reward.program_id.rule_ids.filter(
-                (rule) =>
-                    rule.any_product || rule.valid_product_ids.find((p) => p.id === product.id)
+                (rule) => rule.any_product || rule.validProductIds.has(product.id)
             ).length > 0
         );
     },
@@ -1180,10 +1170,7 @@ patch(PosOrder.prototype, {
                 let factor = 0;
                 let orderPoints = 0;
                 for (const rule of appliedRules) {
-                    if (
-                        rule.any_product ||
-                        rule.valid_product_ids.find((p) => p.id === product.id)
-                    ) {
+                    if (rule.any_product || rule.validProductIds.has(product.id)) {
                         if (rule.reward_point_mode === "order") {
                             orderPoints += rule.reward_point_amount;
                         } else if (rule.reward_point_mode === "money") {
