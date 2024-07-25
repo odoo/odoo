@@ -212,6 +212,7 @@ export class AccountMoveListController extends ListController {
     setup() {
         super.setup();
         this.account_move_service = useService("account_move");
+        this.showUploadButton = this.props.context.default_move_type !== 'entry' || 'active_id' in this.props.context;
     }
 
     async onDeleteSelectedRecords() {
@@ -249,6 +250,10 @@ export class AccountMoveUploadKanbanController extends KanbanController {
         ...KanbanController.components,
         AccountFileUploader,
     };
+    setup() {
+        super.setup();
+        this.showUploadButton = this.props.context.default_move_type !== 'entry' || 'active_id' in this.props.context;
+    }
 }
 
 export const AccountMoveUploadKanbanView = {
