@@ -657,6 +657,9 @@ class SaleOrder(models.Model):
                 # If the total is 0 again without the payment reward it will be removed.
                 if reward.reward_type == 'discount' and total_is_zero and (not has_payment_reward or reward.program_id.is_payment_program):
                     continue
+                # Skip discount that has already been applied
+                if reward.reward_type == 'discount' and coupon in self.order_line.coupon_id:
+                    continue
                 if reward.reward_type == 'product' and not reward.filtered_domain(
                     active_products_domain
                 ):
