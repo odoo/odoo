@@ -242,9 +242,9 @@ class TestViewInheritance(ViewCase):
         self.a22 = self.makeView("A22", self.a2.id)
         self.makeView("A221", self.a22.id)
 
-        self.b = self.makeView('B', arch=self.arch_for("B", 'tree'))
-        self.makeView('B1', self.b.id, arch=self.arch_for("B1", 'tree', parent=self.b))
-        self.c = self.makeView('C', arch=self.arch_for("C", 'tree'))
+        self.b = self.makeView('B', arch=self.arch_for("B", 'list'))
+        self.makeView('B1', self.b.id, arch=self.arch_for("B1", 'list', parent=self.b))
+        self.c = self.makeView('C', arch=self.arch_for("C", 'list'))
         self.c.write({'priority': 1})
 
     def test_get_inheriting_views(self):
@@ -269,8 +269,8 @@ class TestViewInheritance(ViewCase):
         default = self.View.default_view(model=self.model, view_type='form')
         self.assertEqual(default, self.view_ids['A'].id)
 
-        default_tree = self.View.default_view(model=self.model, view_type='tree')
-        self.assertEqual(default_tree, self.view_ids['C'].id)
+        default_list = self.View.default_view(model=self.model, view_type='list')
+        self.assertEqual(default_list, self.view_ids['C'].id)
 
     def test_no_default_view(self):
         self.assertFalse(self.View.default_view(model='no_model.exist', view_type='form'))
@@ -2918,7 +2918,7 @@ class TestViews(ViewCase):
             </tree>
         """
         self.assertValid(arch % '')
-        self.assertInvalid(arch % '<group/>', "Tree child can only have one of field, button, control, groupby, widget, header tag (not group)")
+        self.assertInvalid(arch % '<group/>', "List child can only have one of field, button, control, groupby, widget, header tag (not group)")
 
     def test_tree_groupby(self):
         arch = """
@@ -4598,7 +4598,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
         module_log_views = defaultdict(list)
         module_error_views = defaultdict(list)
         uncommented_regexp = r'''(<field [^>]*invisible=['"](True|1)['"][^>]*>)[\s\t\n ]*(.*)'''
-        views = self.env['ir.ui.view'].search([('type', 'in', ('tree', 'form')), '|', ('arch_db', 'like', 'invisible=_True_'), ('arch_db', 'like', 'invisible=_1_')])
+        views = self.env['ir.ui.view'].search([('type', 'in', ('list', 'form')), '|', ('arch_db', 'like', 'invisible=_True_'), ('arch_db', 'like', 'invisible=_1_')])
         for view in views:
             for field, _val, comment in re.findall(uncommented_regexp, view.arch_db):
                 if (not comment or not comment.startswith('<!--')) and view.model_data_id:
@@ -4717,7 +4717,7 @@ class ViewModifiers(ViewCase):
             {"company_id", "field_1"},
         )
 
-        # fields in a tree view
+        # fields in a list view
         tree = etree.fromstring('''
             <tree>
                 <header>
@@ -4775,13 +4775,13 @@ class ViewModifiers(ViewCase):
         view = self.assertValid("""
             <form string="View">
                 <field name="type" invisible="1"/>
-                <field name="name" invisible="context.get('foo') and type == 'tree'"/>
+                <field name="name" invisible="context.get('foo') and type == 'list'"/>
             </form>
         """)
         for type_value, context, expected in [
-            ('tree', {}, False),
+            ('list', {}, False),
             ('form', {}, False),
-            ('tree', {'foo': True}, True),
+            ('list', {'foo': True}, True),
             ('form', {'foo': True}, False),
         ]:
             arch = self.View.with_context(**context).get_view(view.id)['arch']

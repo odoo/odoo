@@ -290,7 +290,7 @@ export class MockServer {
         // find the arch
         let [viewId, viewType] = args;
         if (!viewId) {
-            const contextKey = (viewType === "list" ? "tree" : viewType) + "_view_ref";
+            const contextKey = viewType + "_view_ref";
             if (contextKey in kwargs.context) {
                 viewId = kwargs.context[contextKey];
             }
@@ -404,13 +404,12 @@ export class MockServer {
                 if (inFormView && level === 0 && !node.getAttribute("widget") && !isInvisible) {
                     const inlineViewTypes = Array.from(node.children).map((c) => c.tagName);
                     const missingViewtypes = [];
-                    const mode = node.getAttribute("mode") || "kanban,tree";
+                    const mode = node.getAttribute("mode") || "kanban,list";
                     if (!intersection(inlineViewTypes, mode.split(",")).length) {
                         // TODO: use a kanban view by default in mobile
                         missingViewtypes.push((node.getAttribute("mode") || "list").split(",")[0]);
                     }
                     for (let type of missingViewtypes) {
-                        type = type === "tree" ? "list" : type;
                         let key = `${field.relation},false,${type}`;
                         if (!this.archs[key]) {
                             const regexp = new RegExp(`${field.relation},[a-z._0-9]+,${type}`);
@@ -483,7 +482,7 @@ export class MockServer {
                 fieldsInView[fname] = field;
             }
         });
-        const viewType = doc.tagName === "tree" ? "list" : doc.tagName;
+        const viewType = doc.tagName;
         return {
             arch: processedArch,
             model: modelName,
@@ -496,7 +495,7 @@ export class MockServer {
         switch (node.tagName) {
             case "form":
                 return true;
-            case "tree":
+            case "list":
                 return node.getAttribute("editable") || node.getAttribute("multi_edit");
             case "field": {
                 const fname = node.getAttribute("name");
@@ -515,7 +514,7 @@ export class MockServer {
     _onchangeAbleView(node) {
         if (node.tagName === "form") {
             return true;
-        } else if (node.tagName === "tree") {
+        } else if (node.tagName === "list") {
             return true;
         } else if (node.tagName === "kanban") {
             return true;

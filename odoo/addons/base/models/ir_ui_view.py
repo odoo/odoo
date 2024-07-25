@@ -150,7 +150,7 @@ class View(models.Model):
     model = fields.Char(index=True)
     key = fields.Char(index='btree_not_null')
     priority = fields.Integer(string='Sequence', default=16, required=True)
-    type = fields.Selection([('tree', 'Tree'),
+    type = fields.Selection([('list', 'List'),
                              ('form', 'Form'),
                              ('graph', 'Graph'),
                              ('pivot', 'Pivot'),
@@ -1022,14 +1022,14 @@ actual arch.
                 #   <field name="bar"/>
                 # <group>
                 # so the web client adds the label as expected.
-                # This is also to avoid having <t> nodes in tree views
+                # This is also to avoid having <t> nodes in list views
                 # e.g.
-                # <tree>
+                # <list>
                 #   <field name="foo"/>
                 #   <t groups="foo">
                 #     <field name="bar" groups="bar"/>
                 #   </t>
-                # </tree>
+                # </list>
                 for child in reversed(node):
                     node.addnext(child)
                 node.getparent().remove(node)
@@ -1172,7 +1172,7 @@ actual arch.
             # the mandatory field does not have groups).
             attrs = {
                 'name': name,
-                'invisible' if root.tag != 'tree' else 'column_invisible': 'True',
+                'invisible' if root.tag != 'list' else 'column_invisible': 'True',
                 'readonly': 'True',
                 'data-used-by': '; '.join(
                     f"{attr}={expr!r} ({node.tag},{node.get('name')})"
@@ -1228,9 +1228,9 @@ actual arch.
         """
         current_view_types = [el.tag for el in field_node.xpath("./*[descendant::field]")]
         missing_view_types = []
-        if not any(view_type in current_view_types for view_type in field_node.get('mode', 'kanban,tree').split(',')):
+        if not any(view_type in current_view_types for view_type in field_node.get('mode', 'kanban,list').split(',')):
             missing_view_types.append(
-                field_node.get('mode', 'kanban' if node_info.get('mobile') else 'tree').split(',')[0]
+                field_node.get('mode', 'kanban' if node_info.get('mobile') else 'list').split(',')[0]
             )
 
         if not missing_view_types:
@@ -1285,7 +1285,7 @@ actual arch.
                 and node.get('invisible') not in ('1', 'True')
                 and not name_manager.parent
             ):
-                # Embed kanban/tree/form views for visible x2many fields in form views
+                # Embed kanban/list/form views for visible x2many fields in form views
                 # if no widget or the widget requires it.
                 # So the web client doesn't have to call `get_views` for x2many fields not embedding their view
                 # in the main form view.
@@ -1306,7 +1306,7 @@ actual arch.
                 name_manager.must_have_fields(node, vnames, node_info, ('context', context))
 
             for child in node:
-                if child.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
+                if child.tag in ('form', 'list', 'graph', 'kanban', 'calendar'):
                     node_info['children'] = []
                     self._postprocess_view(child, field.comodel_name, editable=node_info['editable'], node_info=node_info)
 
@@ -1346,7 +1346,7 @@ actual arch.
             self._postprocess_view(searchpanel[0], name_manager.model._name, editable=False, node_info=node_info)
             node_info['children'] = [child for child in node if child.tag != 'searchpanel']
 
-    def _postprocess_tag_tree(self, node, name_manager, node_info):
+    def _postprocess_tag_list(self, node, name_manager, node_info):
         # reuse form view post-processing
         self._postprocess_tag_form(node, name_manager, node_info)
 
@@ -1365,7 +1365,7 @@ actual arch.
     def _editable_tag_form(self, node, name_manager):
         return True
 
-    def _editable_tag_tree(self, node, name_manager):
+    def _editable_tag_list(self, node, name_manager):
         return node.get('editable') or node.get('multi_edit')
 
     def _editable_tag_field(self, node, name_manager):
@@ -1380,7 +1380,7 @@ actual arch.
     def _onchange_able_view_form(self, node):
         return True
 
-    def _onchange_able_view_tree(self, node):
+    def _onchange_able_view_list(self, node):
         return True
 
     def _onchange_able_view_kanban(self, node):
@@ -1388,7 +1388,7 @@ actual arch.
 
     def _modifiers_from_model(self, node):
         modifier_names = []
-        if node.tag in ('kanban', 'tree', 'form'):
+        if node.tag in ('kanban', 'list', 'form'):
             modifier_names += ['readonly', 'required']
         return modifier_names
 
@@ -1478,7 +1478,7 @@ actual arch.
     def _validate_tag_form(self, node, name_manager, node_info):
         pass
 
-    def _validate_tag_tree(self, node, name_manager, node_info):
+    def _validate_tag_list(self, node, name_manager, node_info):
         # reuse form view validation
         self._validate_tag_form(node, name_manager, node_info)
         if not node_info['validate']:
@@ -1496,7 +1496,7 @@ actual arch.
         for child in node.iterchildren(tag=etree.Element):
             if child.tag not in allowed_tags and not isinstance(child, etree._Comment):
                 msg = _(
-                    'Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)',
+                    'List child can only have one of %(tags)s tag (not %(wrong_tag)s)',
                     tags=', '.join(allowed_tags), wrong_tag=child.tag,
                 )
                 self._raise_view_error(msg, child)
@@ -1574,7 +1574,7 @@ actual arch.
                 name_manager.must_have_fields(node, {field._description_definition_record}, node_info, use=f"definition record of {field.name}")
 
             for child in node:
-                if child.tag not in ('form', 'tree', 'graph', 'kanban', 'calendar'):
+                if child.tag not in ('form', 'list', 'graph', 'kanban', 'calendar'):
                     continue
                 node.remove(child)
                 self._validate_view(
@@ -1721,7 +1721,7 @@ actual arch.
             self._log_view_warning('<img> tag must contain an alt attribute', node)
 
     def _validate_tag_a(self, node, name_manager, node_info):
-        #('calendar', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
+        # ('calendar', 'form', 'graph', 'kanban', 'pivot', 'search', 'list', 'activity')
         if node_info['validate'] and any('btn' in node.get(cl, '') for cl in att_names('class')):
             if node.get('role') != 'button':
                 msg = '"<a>" tag with "btn" class must have "button" role'
@@ -1742,7 +1742,7 @@ actual arch.
     #------------------------------------------------------
 
     def _check_dropdown_menu(self, node):
-        #('calendar', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
+        # ('calendar', 'form', 'graph', 'kanban', 'pivot', 'search', 'list', 'activity')
         if any('dropdown-menu' in node.get(cl, '') for cl in att_names('class')):
             if node.get('role') != 'menu':
                 msg = 'dropdown-menu class must have menu role'
@@ -2447,21 +2447,21 @@ class Model(models.AbstractModel):
     def _get_default_search_view(self):
         """ Generates a single-field search view, based on _rec_name.
 
-        :returns: a tree view as an lxml document
+        :returns: a search view as an lxml document
         :rtype: etree._Element
         """
         element = E.field(name=self._rec_name_fallback())
         return E.search(element, string=self._description)
 
     @api.model
-    def _get_default_tree_view(self):
-        """ Generates a single-field tree view, based on _rec_name.
+    def _get_default_list_view(self):
+        """ Generates a single-field list view, based on _rec_name.
 
-        :returns: a tree view as an lxml document
+        :returns: a list view as an lxml document
         :rtype: etree._Element
         """
         element = E.field(name=self._rec_name_fallback())
-        return E.tree(element, string=self._description)
+        return E.list(element, string=self._description)
 
     @api.model
     def _get_default_pivot_view(self):
@@ -2569,7 +2569,7 @@ class Model(models.AbstractModel):
 
         result['views'] = {
             v_type: self.get_view(
-                v_id, v_type if v_type != 'list' else 'tree',
+                v_id, v_type,
                 **options
             )
             for [v_id, v_type] in views
@@ -2601,7 +2601,6 @@ class Model(models.AbstractModel):
                         else result['views'].keys()
                     )
                     for view_type in view_types:
-                        view_type = view_type if view_type != 'tree' else 'list'
                         if view_type in result['views']:
                             result['views'][view_type]['toolbar'].setdefault(key, []).append(action)
 
@@ -2617,7 +2616,7 @@ class Model(models.AbstractModel):
         """Get the model view combined architecture (the view along all its inheriting views).
 
         :param int view_id: id of the view or None
-        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
+        :param str view_type: type of the view to return if view_id is None ('form', 'list', ...)
         :param dict options: bool options to return additional features:
             - bool mobile: true if the web client is currently using the responsive mobile view
               (to use kanban views instead of list views for x2many fields)
@@ -2675,7 +2674,7 @@ class Model(models.AbstractModel):
         This method is meant to be overriden by models needing additional keys.
 
         :param int view_id: id of the view or None
-        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
+        :param str view_type: type of the view to return if view_id is None ('form', 'list', ...)
         :param dict options: bool options to return additional features:
             - bool mobile: true if the web client is currently using the responsive mobile view
               (to use kanban views instead of list views for x2many fields)
@@ -2699,7 +2698,7 @@ class Model(models.AbstractModel):
         for users not part of the given groups.
 
         :param int view_id: id of the view or None
-        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
+        :param str view_type: type of the view to return if view_id is None ('form', 'list', ...)
         :param dict options: boolean options to return additional features:
             - bool mobile: true if the web client is currently using the responsive mobile view
               (to use kanban views instead of list views for x2many fields)
@@ -2740,7 +2739,7 @@ class Model(models.AbstractModel):
         context lang and TYPE_view_ref (other context values cannot be used).
 
         :param int view_id: id of the view or None
-        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
+        :param str view_type: type of the view to return if view_id is None ('form', 'list', ...)
         :param dict options: boolean options to return additional features:
             - bool mobile: true if the web client is currently using the responsive mobile view
             (to use kanban views instead of list views for x2many fields)
@@ -2751,7 +2750,7 @@ class Model(models.AbstractModel):
             * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
             * if some tag other than 'position' is found in parent view
 
-        :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc... defined on the structure
+        :raise Invalid ArchitectureError: if there is view type other than form, list, calendar, search etc... defined on the structure
         """
         self.check_access_rights('read')
 
@@ -2775,7 +2774,7 @@ class Model(models.AbstractModel):
         :return: dict holding the models and field required by the web client given the view type.
         :rtype: list
         """
-        if view_type in ('kanban', 'tree', 'form'):
+        if view_type in ('kanban', 'list', 'form'):
             for model, model_fields in models.items():
                 model_fields.add('id')
                 if 'write_date' in self.env[model]._fields:
