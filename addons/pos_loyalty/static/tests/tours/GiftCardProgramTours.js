@@ -133,3 +133,21 @@ registry.category("web_tour.tours").add("PosLoyaltyGiftCardTaxes", {
             ProductScreen.checkTaxAmount("-6.52"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyGiftCardNoPoints", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            TextInputPopup.isShown(),
+            TextInputPopup.inputText("044123456"),
+            TextInputPopup.clickConfirm(),
+            PosLoyalty.orderTotalIs("0.00"),
+            ProductScreen.pressNumpad("Price"),
+            ProductScreen.modeIsActive("Price"),
+            ProductScreen.pressNumpad("5"),
+            PosLoyalty.orderTotalIs("5.00"),
+            PosLoyalty.finalizeOrder("Cash", "5"),
+        ].flat(),
+});
