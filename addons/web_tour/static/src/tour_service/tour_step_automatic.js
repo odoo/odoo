@@ -7,12 +7,14 @@ import { callWithUnloadCheck } from "./tour_utils";
 import { TourHelpers } from "./tour_helpers";
 import { TourStep } from "./tour_step";
 import { pick } from "@web/core/utils/objects";
+import { tourDebuggerPlayer } from "@web_tour/tour_debugger/tour_debugger_player";
 
 export class TourStepAutomatic extends TourStep {
     triggerFound = false;
     hasRun = false;
     isBlocked = false;
     running = false;
+    pause = false;
     constructor(data) {
         super(data, data.tour);
         return this;
@@ -36,12 +38,19 @@ export class TourStepAutomatic extends TourStep {
 
         return [
             {
-                action: () => {
+                action: async () => {
                     this.running = true;
                     setupEventActions(document.createElement("div"));
-                    if (this.break && debugMode !== false) {
-                        // eslint-disable-next-line no-debugger
-                        debugger;
+                    if (debugMode !== false) {
+                        tourDebuggerPlayer.render();
+                        if (debugMode !== false && this.pause) {
+                            tourDebuggerPlayer.setStatus("PAUSED");
+                        }
+                        await tourDebuggerPlayer.waitFor("PLAY");
+                        if (this.break) {
+                            // eslint-disable-next-line no-debugger
+                            debugger;
+                        }
                     }
                 },
             },
@@ -108,30 +117,8 @@ export class TourStepAutomatic extends TourStep {
                             );
                         }
                     }
-                    return result;
-                },
-            },
-            {
-                action: async () => {
-                    if (this.pause && debugMode !== false) {
-                        const styles = [
-                            "background: black; color: white; font-size: 14px",
-                            "background: black; color: orange; font-size: 14px",
-                        ];
-                        console.log(
-                            `%cTour is paused. Use %cplay()%c to continue.`,
-                            styles[0],
-                            styles[1],
-                            styles[0]
-                        );
-                        await new Promise((resolve) => {
-                            window.play = () => {
-                                resolve();
-                                delete window.play;
-                            };
-                        });
-                    }
                     this.running = false;
+                    return result;
                 },
             },
         ];
@@ -220,6 +207,14 @@ export class TourStepAutomatic extends TourStep {
         if (debugMode !== false) {
             // eslint-disable-next-line no-debugger
             debugger;
+        }
+    }
+
+    togglePause() {
+        const debugMode = tourState.get(this.tour.name, "debug");
+        if (debugMode !== false) {
+            this.pause = !this.pause;
+            tourDebuggerPlayer.render();
         }
     }
 

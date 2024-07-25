@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_tour.TourDebugger">
+	<div class="o_tour_debugger">
+		<div class="d-flex position-fixed bottom-0 start-0 bg-primary">
+			<div class="d-flex">
+				<div t-ref="player.status"></div>
+			</div>
+			<div class="d-flex">
+				<button t-if="player.status !== 'PLAY'" t-on-click="() => this.player.trigger('PLAY')">PLAY</button>
+				<button t-if="player.status === 'FINISHED'" t-on-click="() => this.player.trigger('REPLAY')">REPLAY</button>
+				<button t-if="player.status === 'FINISHED'" t-on-click="() => this.player.trigger('STOP')">STOP</button>
+			</div>
+		</div>
+		<div t-if="props.tour" class="d-flex flex-column h-100 position-fixed bottom-0 end-0 bg-secondary w-25">
+			<div class="o_tour_debugger_summary">
+				<div class="p-2">
+					<div>Player: <t t-esc="player.status"></t></div>
+					<div>Tour: <t t-esc="props.tour.name"/></div>
+					<div>Steps: [<t t-esc="props.tour.steps.length"/>]</div>
+				</div>
+			</div>
+			<div class="overflow-auto h-100">
+				<div class="" t-foreach="props.tour.steps" t-as="step" t-key="i">
+					<div class="d-flex">
+						<button t-on-click="() => step.togglePause()">PAUSE [<t t-esc="step.pause ? 'TRUE' : 'FALSE'"></t>]</button>
+					</div>
+					<div t-att-class="{'bg-primary text-light': step.running, 'bg-secondary': !step.running}">
+						<div class="p-2" t-esc="step.describeMe"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</t>
+</templates>

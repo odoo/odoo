@@ -166,7 +166,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
 
     def test_02_demo_survey_tour(self):
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="demo")
+        self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="demo", debug=True)
 
     def test_03_public_survey_tour(self):
         access_token = self.survey_feedback.access_token

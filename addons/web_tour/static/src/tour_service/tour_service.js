@@ -12,7 +12,6 @@ import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
 import { TourInteractive } from "./tour_interactive";
 import { TourAutomatic } from "./tour_automatic";
-import * as hoot from "@odoo/hoot-dom";
 
 export const tourService = {
     // localization dependency to make sure translations used by tours are loaded
@@ -197,12 +196,6 @@ export const tourService = {
             tourState.set(tourName, "showPointerDuration", options.showPointerDuration);
             tourState.set(tourName, "mode", options.mode);
             tourState.set(tourName, "sequence", tour.sequence);
-            if (tourState.get(tourName, "debug") !== false) {
-                window.hoot = hoot;
-                // Starts the tour with a debugger to allow you to choose devtools configuration.
-                // eslint-disable-next-line no-debugger
-                debugger;
-            }
             const pointer = createPointer(tourName, {
                 bounce: !(options.mode === "auto" && options.keepWatchBrowser),
             });
@@ -215,7 +208,7 @@ export const tourService = {
 
             if (!willUnload) {
                 if (options.mode === "auto") {
-                    new TourAutomatic(tour, macroEngine).start(pointer, () => {
+                    new TourAutomatic(tour, macroEngine, overlay).start(pointer, () => {
                         pointer.stop();
                         endTour(tour);
                     });
@@ -242,7 +235,7 @@ export const tourService = {
                 bounce: !(mode === "auto" && keepWatchBrowser),
             });
             if (mode === "auto") {
-                new TourAutomatic(tour, macroEngine).start(pointer, () => {
+                new TourAutomatic(tour, macroEngine, overlay).start(pointer, () => {
                     pointer.stop();
                     endTour(tour);
                 });
