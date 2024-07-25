@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { listView } from "@web/views/list/list_view";
 import { AutoColumnWidthListRenderer } from "@stock/views/list/auto_column_width_list_renderer";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 
@@ -15,3 +16,10 @@ export const mrpWorkorderX2ManyField = {
 };
 
 registry.category("fields").add("mrp_workorder_one2many", mrpWorkorderX2ManyField);
+
+export const mrpWorkorderListView = {
+    ...listView,
+    Renderer: AutoColumnWidthListRenderer,
+};
+
+registry.category("views").add("mrp_workorder_list_view", mrpWorkorderListView);
