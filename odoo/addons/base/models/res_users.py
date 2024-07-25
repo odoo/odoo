@@ -413,19 +413,24 @@ class Users(models.Model):
         # match the "extended" MCF and pass those through passlib.
         # Alternative: iterate on *all* passwords and use CryptContext.identify
         cr.execute(r"""
-        SELECT id, password FROM res_users
+        SELECT array_agg(id), password FROM res_users
         WHERE password IS NOT NULL
           AND password !~ '^\$[^$]+\$[^$]+\$.'
+        GROUP BY password
         """)
         if self.env.cr.rowcount:
             Users = self.sudo()
-            for uid, pw in cr.fetchall():
-                Users.browse(uid).password = pw
+            for uids, pw in cr.fetchall():
+                Users.browse(uids).password = pw
 
     def _set_password(self):
         ctx = self._crypt_context()
+        plain_encrypt = {}
         for user in self:
-            self._set_encrypted_password(user.id, ctx.hash(user.password))
+            if user.password not in plain_encrypt:
+                plain_encrypt[user.password] = ctx.hash(user.password)
+            pwd_encrypt = plain_encrypt[user.password]
+            self._set_encrypted_password(user.id, pwd_encrypt)
 
     def _set_encrypted_password(self, uid, pw):
         assert self._crypt_context().identify(pw) != 'plaintext'
