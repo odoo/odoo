@@ -137,3 +137,9 @@ class EventRegistration(models.Model):
             'has_to_pay': self.sale_status == 'to_pay',
         })
         return res
+
+    def _get_event_registration_ids_from_order(self):
+        self.ensure_one()
+        return self.sale_order_id.order_line.filtered(
+            lambda line: line.event_id == self.event_id
+        ).registration_ids.ids
