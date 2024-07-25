@@ -86,6 +86,7 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
 const {
     clearTimeout,
     console: { groupEnd: $groupEnd, log: $log, table: $table },
+    EventTarget,
     Map,
     Math: { floor: $floor },
     Object: {
@@ -204,33 +205,50 @@ const shuffle = (array) => {
 };
 
 /**
+ * @param {Test} test
  * @param {boolean} shouldSuppress
  */
-const suppressErrorsAndWarnings = (shouldSuppress) => {
-    if (!shouldSuppress) {
-        return noop;
-    }
+const handleConsoleIssues = (test, shouldSuppress) => {
+    if (shouldSuppress && test.config.todo) {
+        const restoreConsole = () => $assign(globalThis.console, originalMethods);
 
-    /**
-     * @param {string} label
-     * @param {string} color
-     */
-    const suppressedMethod = (label, color) => {
-        const groupName = [`%c[${label}]%c suppressed by "test.todo"`, `color: ${color}`, ""];
-        return (...args) => {
-            logger.groupCollapsed(...groupName);
-            $log(...args);
-            $groupEnd();
+        /**
+         * @param {string} label
+         * @param {string} color
+         */
+        const suppressIssueLogger = (label, color) => {
+            const groupName = [`%c[${label}]%c suppressed by "test.todo"`, `color: ${color}`, ""];
+            return (...args) => {
+                logger.groupCollapsed(...groupName);
+                $log(...args);
+                $groupEnd();
+            };
         };
-    };
 
-    const originalMethods = { ...globalThis.console };
-    $assign(globalThis.console, {
-        error: suppressedMethod("ERROR", "#9f1239"),
-        warn: suppressedMethod("WARNING", "#f59e0b"),
-    });
+        const originalMethods = { ...globalThis.console };
+        $assign(globalThis.console, {
+            error: suppressIssueLogger("ERROR", "#9f1239"),
+            warn: suppressIssueLogger("WARNING", "#f59e0b"),
+        });
 
-    return () => $assign(globalThis.console, originalMethods);
+        return restoreConsole;
+    } else {
+        const offConsoleEvents = () => {
+            while (cleanups.length) {
+                cleanups.pop()();
+            }
+        };
+
+        const cleanups = [];
+        if (globalThis.console instanceof EventTarget) {
+            cleanups.push(
+                on(globalThis.console, "error", () => test.logs.error++),
+                on(globalThis.console, "warn", () => test.logs.warn++)
+            );
+        }
+
+        return offConsoleEvents;
+    }
 };
 
 /**
@@ -888,7 +906,7 @@ export class Runner {
 
             // Suppress console errors and warnings if test is in "todo" mode
             // (and not in debug).
-            const restoreConsole = suppressErrorsAndWarnings(test.config.todo && !this.debug);
+            const restoreConsole = handleConsoleIssues(test, !this.debug);
 
             // Before test
             this.state.currentTest = test;
