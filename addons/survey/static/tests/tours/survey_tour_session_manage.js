@@ -134,7 +134,7 @@ const checkAnswersCount = (chartData, expectedCount) => {
  * - Close the survey session
  */
 registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
-    url: "/web",
+    url: "/odoo",
     test: true,
     steps: () => [].concat(accessSurveysteps, [{
     trigger: 'button[name="action_open_session_manager"]',
