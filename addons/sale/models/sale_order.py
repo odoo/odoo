@@ -458,9 +458,11 @@ class SaleOrder(models.Model):
     def _compute_amounts(self):
         """Compute the total amounts of the SO."""
         for order in self:
+            order = order.with_company(order.company_id)
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
 
             if order.company_id.tax_calculation_rounding_method == 'round_globally':
+<<<<<<< HEAD
                 tax_results = self.env['account.tax']._compute_taxes(
                     [
                         line._convert_to_tax_base_line_dict()
@@ -468,6 +470,17 @@ class SaleOrder(models.Model):
                     ],
                     order.company_id,
                 )
+||||||| parent of 07a99a056c8a (temp)
+                tax_results = self.env['account.tax']._compute_taxes([
+                    line._convert_to_tax_base_line_dict()
+                    for line in order_lines
+                ])
+=======
+                tax_results = order.env['account.tax']._compute_taxes([
+                    line._convert_to_tax_base_line_dict()
+                    for line in order_lines
+                ])
+>>>>>>> 07a99a056c8a (temp)
                 totals = tax_results['totals']
                 amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
                 amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
@@ -669,8 +682,9 @@ class SaleOrder(models.Model):
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
     def _compute_tax_totals(self):
         for order in self:
+            order = order.with_company(order.company_id)
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
-            order.tax_totals = self.env['account.tax']._prepare_tax_totals(
+            order.tax_totals = order.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
                 order.currency_id or order.company_id.currency_id or self.env.company.currency_id,
                 order.company_id or self.env.company,
