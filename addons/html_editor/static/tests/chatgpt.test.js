@@ -211,7 +211,7 @@ test("insert the response from ChatGPT translate dialog", async () => {
             ["fr_BE", "French (BE) / Français (BE)"],
         ];
     });
-    const { el } = await setupEditor("<p>[Hello]</p>", {
+    const { editor, el } = await setupEditor("<p>[Hello]</p>", {
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
     onRpc("/html_editor/generate_text", () => `Bonjour`);
@@ -229,6 +229,12 @@ test("insert the response from ChatGPT translate dialog", async () => {
     // Expect the response to have been inserted in the middle of the text.
     expect(getContent(el)).toBe(`<p>Bonjour[]</p>`);
     loadLanguages.installedLanguages = false;
+
+    // Expect to undo and redo the inserted text.
+    editor.dispatch("HISTORY_UNDO");
+    expect(getContent(el)).toBe(`<p>[]Hello</p>`);
+    editor.dispatch("HISTORY_REDO");
+    expect(getContent(el)).toBe(`<p>Bonjour[]</p>`);
 });
 
 test("ChatGPT prompt dialog properly formats an unordered list", async () => {
