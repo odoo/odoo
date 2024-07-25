@@ -1,9 +1,9 @@
 import { registry } from "@web/core/registry";
-import { listView } from "@web/views/list/list_view";
+import { fileUploadListView } from "@account/views/file_upload_list/file_upload_list_view";
 import { SaleListRenderer } from "./sale_onboarding_list_renderer";
 
 export const SaleListView = {
-    ...listView,
+    ...fileUploadListView,
     Renderer: SaleListRenderer,
 };
 

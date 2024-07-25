@@ -1,10 +1,10 @@
-import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { FileUploadKanbanRenderer } from "@account/views/file_upload_kanban/file_upload_kanban_renderer";
 import { SaleActionHelper } from "../../js/sale_action_helper/sale_action_helper";
 
-export class SaleKanbanRenderer extends KanbanRenderer {
+export class SaleKanbanRenderer extends FileUploadKanbanRenderer {
     static template = "sale.SaleKanbanRenderer";
     static components = {
-        ...KanbanRenderer.components,
+        ...FileUploadKanbanRenderer.components,
         SaleActionHelper,
     };
 };
