@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_invoice_document" inherit_id="sale.report_invoice_document_inherit_sale">
+        <xpath expr="//t[@t-set='information_block']/div[@name='shipping_address_block']" position="attributes">
+            <attribute name="groups"/>
+            <attribute name="t-if">(o.l10n_fr_is_company_french and o.move_type.startswith('out_')) or o.env.user.has_group('sale.group_delivery_invoice_address')</attribute>
+        </xpath>
+
         <xpath expr="//address" position="after">
             <div class="mb-3" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.siret">
                 SIRET: <t t-esc="o.partner_id.commercial_partner_id.siret"/>
