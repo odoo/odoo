@@ -15,6 +15,19 @@
     </xpath>
 </template>
 
+<template id="event_confirmation_end_page_hook" inherit_id="website_event.event_confirmation_end_page_hook">
+    <xpath expr="//div[hasclass('o_wevent_confirmation_end_page_hook')]" position="inside">
+        <div t-if="event.website_track" class="row mt-5 mb-3">
+            <div class="col-12">
+                <h3>Book your seats to the best talks</h3>
+                <p>Get prepared and
+                    <a t-att-href="'/event/%s/track' % (slug(event))">register to your favorites talks now.</a>
+                </p>
+            </div>
+        </div>
+    </xpath>
+</template>
+
 <template id="layout" inherit_id="website_event.layout">
     <xpath expr='//t[@t-call="website.layout"]' position="inside">
         <t t-set="pageName" t-value="'event'"/>
