@@ -57,6 +57,10 @@ export class Test extends Job {
     static ABORTED = 3;
 
     code = "";
+    logs = reactive({
+        error: 0,
+        warn: 0,
+    });
     /** @type {import("./expect").TestResult[]} */
     results = reactive([]);
     /** @type {() => MaybePromise<void> | null} */
