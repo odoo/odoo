@@ -1039,3 +1039,14 @@ class TestSalesTeam(SaleCommon):
         self.env.flush_all()
         self.assertEqual(so.amount_tax, 12.35)
         self.assertEqual(so.amount_total, 135.85)
+        # set "Rounding Method" of company A to "Round Globally"
+        company_a.tax_calculation_rounding_method = 'round_globally'
+        # edit the price unit
+        so.write({
+            'order_line': [
+                Command.update(so.order_line[0].id, {'price_unit': 123.6}),
+            ],
+        })
+        self.env.flush_all()
+        self.assertEqual(so.amount_tax, 12.36)
+        self.assertEqual(so.amount_total, 135.96)
