@@ -56,7 +56,9 @@ export default class ToursDialog extends Component {
      * @param {MouseEvent} ev
      */
     _copyUrlTour(ev) {
-        navigator.clipboard.writeText(`${browser.location.origin}?tour=${ev.target.dataset.name}`);
+        navigator.clipboard.writeText(
+            `${browser.location.origin}/odoo?tour=${ev.target.dataset.name}`
+        );
         this.notification.add(_t("Url copied to clipboard"), { type: "info" });
     }
 }
