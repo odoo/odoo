@@ -1,3 +1,4 @@
+import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
@@ -14,6 +15,26 @@ const threadPatch = {
         this.fetchChannelMutex = new Mutex();
         this.fetchChannelInfoDeferred = undefined;
         this.fetchChannelInfoState = "not_fetched";
+        this.onlineMembers = Record.many("ChannelMember", {
+            /** @this {import("models").Thread} */
+            compute() {
+                return this.channelMembers.filter(
+                    (member) => member.persona.im_status === "online"
+                );
+            },
+            sort(m1, m2) {
+                return this.store.sortOnlineMembers(m1, m2);
+            },
+        });
+        this.offlineMembers = Record.many("ChannelMember", {
+            /** @this {import("models").Thread} */
+            compute() {
+                return this.channelMembers.filter(
+                    (member) => member.persona?.im_status !== "online"
+                );
+            },
+            sort: (m1, m2) => (m1.persona?.name < m2.persona?.name ? -1 : 1),
+        });
     },
     get avatarUrl() {
         if (this.channel_type === "channel" || this.channel_type === "group") {
@@ -25,6 +46,9 @@ const threadPatch = {
             return this.correspondent.persona.avatarUrl;
         }
         return super.avatarUrl;
+    },
+    get hasMemberList() {
+        return ["channel", "group"].includes(this.channel_type);
     },
     async fetchChannelInfo() {
         return this.fetchChannelMutex.exec(async () => {
