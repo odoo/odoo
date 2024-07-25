@@ -71,6 +71,13 @@ export class TourInteractive {
         }
 
         this.currentAction = this.actions.at(this.currentActionIndex);
+
+        if (this.currentAction.event === "warn") {
+            console.warn(`Step '${this.currentAction.anchor}' ignored because no 'run'`);
+            this.currentActionIndex++;
+            this.play();
+        }
+
         if (!isActive({ isActive: this.currentAction.isActive }, "manual")) {
             this.currentActionIndex++;
             this.play();
@@ -198,7 +205,11 @@ export class TourInteractive {
     getSubActions(step) {
         const actions = [];
         if (!step.run || typeof step.run === "function") {
-            return [];
+            actions.push({
+                event: "warn",
+                anchor: step.trigger,
+            });
+            return actions;
         }
 
         for (const todo of step.run.split("&&")) {
