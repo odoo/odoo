@@ -13,6 +13,12 @@ export class ToolbarPlugin extends Plugin {
 
     setup() {
         this.buttonGroups = this.resources.toolbarGroup.sort((a, b) => a.sequence - b.sequence);
+        this.buttonsDict = Object.assign(
+            {},
+            ...this.buttonGroups
+                .flatMap((g) => g.buttons)
+                .map((button) => ({ [button.id]: button }))
+        );
         this.overlay = this.shared.createOverlay(Toolbar, { position: "top-start" });
         this.state = reactive({
             buttonsActiveState: this.buttonGroups.flatMap((g) =>
@@ -27,6 +33,29 @@ export class ToolbarPlugin extends Plugin {
             namespace: undefined,
         });
         this.updateSelection = null;
+
+        for (const button of Object.values(this.buttonsDict)) {
+            this.resolveButtonInheritance(button.id);
+        }
+    }
+
+    /**
+     * Resolves the inheritance of a button.
+     *
+     * Copies the properties of the parent button to the child button.
+     *
+     * @param {string} buttonId - The id of the button to resolve inheritance for.
+     * @throws {Error} If the inheritance button is not found.
+     */
+    resolveButtonInheritance(buttonId) {
+        const button = this.buttonsDict[buttonId];
+        if (button.inherit) {
+            const parentButton = this.buttonsDict[button.inherit];
+            if (!parentButton) {
+                throw new Error(`Inheritance button ${button.inherit} not found`);
+            }
+            Object.assign(button, { ...parentButton, ...button });
+        }
     }
 
     handleCommand(command, payload) {
