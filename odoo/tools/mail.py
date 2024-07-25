@@ -221,7 +221,7 @@ def html_normalize(src, filter_callback=None):
         # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
         # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
         src = re.sub(r'</?o:.*?>', '', src)
-        doc = html.fromstring(src)
+        doc = html.fromstring(f'<wrap>{src}</wrap>')
     except etree.ParserError as e:
         # HTML comment only string, whitespace only..
         if 'empty' in str(e):
@@ -237,11 +237,7 @@ def html_normalize(src, filter_callback=None):
         doc = filter_callback(doc)
 
     src = html.tostring(doc, encoding='unicode')
-
-    # this is ugly, but lxml/etree tostring want to put everything in a
-    # 'div' that breaks the editor -> remove that
-    if src.startswith('<div>') and src.endswith('</div>'):
-        src = src[5:-6]
+    src = re.sub(r'(^<wrap>|</wrap>$|^<wrap/>$)', '', src.strip())
 
     # html considerations so real html content match database value
     src = src.replace(u'\xa0', u'&nbsp;')
