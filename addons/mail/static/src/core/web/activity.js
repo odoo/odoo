@@ -39,6 +39,7 @@ export class Activity extends Component {
     setup() {
         this.activityService = useService("mail.activity");
         this.threadService = useService("mail.thread");
+        this.storeService = useService("mail.store");
         this.state = useState({ showDetails: false });
         this.popover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCardPopover);
@@ -127,5 +128,12 @@ export class Activity extends Component {
 
     get thread() {
         return this.threadService.getThread(this.props.data.res_model, this.props.data.res_id);
+    }
+
+    /**
+     * @param {MouseEvent} ev
+     */
+    async onClick(ev) {
+        this.storeService.handleClickOnLink(ev, this.thread);
     }
 }
