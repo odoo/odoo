@@ -115,7 +115,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <xpath expr="//page/field[@name='order_line']/form/group/group/div[@name='ordered_qty']/field[@name='product_uom']" position="after">
+                <xpath expr="//page/field[@name='order_line']/form/group/group/div[@name='ordered_qty']/field[@name='product_uom_id']" position="after">
                     <!-- below fields are used in the widget qty_at_date_widget -->
                     <field name="virtual_available_at_date" invisible="1"/>
                     <field name="qty_available_today" invisible="1"/>

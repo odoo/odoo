@@ -28,7 +28,7 @@ class PurchaseReport(models.Model):
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Vendor', readonly=True)
     date_approve = fields.Datetime('Confirmation Date', readonly=True)
-    product_uom = fields.Many2one('uom.uom', 'Reference Unit of Measure', required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Reference Unit of Measure', required=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
     user_id = fields.Many2one('res.users', 'Purchase Representative', readonly=True)
@@ -75,23 +75,23 @@ class PurchaseReport(models.Model):
                     p.product_tmpl_id,
                     t.categ_id as category_id,
                     c.currency_id,
-                    t.uom_id as product_uom,
+                    t.uom_id as product_uom_id,
                     extract(epoch from age(po.date_approve,po.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,po.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr_lines,
                     sum(l.price_total / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * currency_table.rate as price_total,
-                    (sum(l.product_qty * l.price_unit / COALESCE(po.currency_rate, 1.0))/NULLIF(sum(l.product_qty/line_uom.factor*product_uom.factor),0.0))::decimal(16,2) * currency_table.rate as price_average,
+                    (sum(l.product_qty * l.price_unit / COALESCE(po.currency_rate, 1.0))/NULLIF(sum(l.product_qty/line_uom.factor*product_uom_id.factor),0.0))::decimal(16,2) * currency_table.rate as price_average,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id,
-                    sum(p.weight * l.product_qty/line_uom.factor*product_uom.factor) as weight,
-                    sum(p.volume * l.product_qty/line_uom.factor*product_uom.factor) as volume,
+                    sum(p.weight * l.product_qty/line_uom.factor*product_uom_id.factor) as weight,
+                    sum(p.volume * l.product_qty/line_uom.factor*product_uom_id.factor) as volume,
                     sum(l.price_subtotal / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * currency_table.rate as untaxed_total,
-                    sum(l.product_qty / line_uom.factor * product_uom.factor) as qty_ordered,
-                    sum(l.qty_received / line_uom.factor * product_uom.factor) as qty_received,
-                    sum(l.qty_invoiced / line_uom.factor * product_uom.factor) as qty_billed,
+                    sum(l.product_qty / line_uom.factor * product_uom_id.factor) as qty_ordered,
+                    sum(l.qty_received / line_uom.factor * product_uom_id.factor) as qty_received,
+                    sum(l.qty_invoiced / line_uom.factor * product_uom_id.factor) as qty_billed,
                     case when t.purchase_method = 'purchase' 
-                         then sum(l.product_qty / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
-                         else sum(l.qty_received / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
+                         then sum(l.product_qty / line_uom.factor * product_uom_id.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom_id.factor)
+                         else sum(l.qty_received / line_uom.factor * product_uom_id.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom_id.factor)
                     end as qty_to_be_billed
             """,
         )
@@ -106,8 +106,8 @@ class PurchaseReport(models.Model):
                     left join product_product p on (l.product_id=p.id)
                         left join product_template t on (p.product_tmpl_id=t.id)
                 left join res_company C ON C.id = po.company_id
-                left join uom_uom line_uom on (line_uom.id=l.product_uom)
-                left join uom_uom product_uom on (product_uom.id=t.uom_id)
+                left join uom_uom line_uom on (line_uom.id=l.product_uom_id)
+                left join uom_uom product_uom_id on (product_uom_id.id=t.uom_id)
                 left join %(currency_table)s ON currency_table.company_id = po.company_id
             """,
             currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today()),
@@ -133,7 +133,7 @@ class PurchaseReport(models.Model):
                 l.price_unit,
                 po.date_approve,
                 l.date_planned,
-                l.product_uom,
+                l.product_uom_id,
                 po.dest_address_id,
                 po.fiscal_position_id,
                 l.product_id,
@@ -146,7 +146,7 @@ class PurchaseReport(models.Model):
                 t.uom_id,
                 t.purchase_method,
                 line_uom.id,
-                product_uom.factor,
+                product_uom_id.factor,
                 partner.country_id,
                 partner.commercial_partner_id,
                 po.id,

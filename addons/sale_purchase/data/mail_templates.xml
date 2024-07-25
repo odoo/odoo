@@ -18,7 +18,7 @@
                     <t t-set="old_qty" t-value="origin_values.get(sale_line.id, 0.0)"/>
 
                     <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_line.order_id.id"><t t-esc="sale_line.order_id.name"/></a>:
-                    <t t-esc="new_qty"/> <t t-esc="sale_line.product_uom.name"/> of <t t-esc="sale_line.product_id.name"/> ordered instead of <t t-esc="old_qty"/> <t t-esc="sale_line.product_uom.name"/>
+                    <t t-esc="new_qty"/> <t t-esc="sale_line.product_uom_id.name"/> of <t t-esc="sale_line.product_id.name"/> ordered instead of <t t-esc="old_qty"/> <t t-esc="sale_line.product_uom.name"/>
                   </li>
             </ul>
         </div>

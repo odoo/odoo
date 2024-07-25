@@ -109,7 +109,7 @@ class PurchaseOrderLine(models.Model):
                 moves = line.move_ids.filtered(lambda s: s.state not in ('cancel', 'done') and s.product_id == line.product_id)
                 moves.write({'price_unit': line._get_stock_move_price_unit()})
         if 'product_qty' in values:
-            lines = lines.filtered(lambda l: float_compare(previous_product_qty[l.id], l.product_qty, precision_rounding=l.product_uom.rounding) != 0)
+            lines = lines.filtered(lambda l: float_compare(previous_product_qty[l.id], l.product_qty, precision_rounding=l.product_uom_id.rounding) != 0)
             lines.with_context(previous_product_qty=previous_product_uom_qty)._create_or_update_picking()
         return result
 

@@ -187,7 +187,7 @@ class AccountMoveLine(models.Model):
             'tax_id': [x.id for x in taxes],
             'discount': 0.0,
             'product_id': self.product_id.id,
-            'product_uom': self.product_uom_id.id,
+            'product_uom_id': self.product_uom_id.id,
             'product_uom_qty': 0.0,
             'is_expense': True,
         }

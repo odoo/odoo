@@ -174,7 +174,7 @@ class TestCarrierPropagation(TransactionCase):
                 'name': 'Cable Management Box',
                 'product_id': self.super_product.id,
                 'product_uom_qty': 2,
-                'product_uom': self.product_uom_unit.id,
+                'product_uom_id': self.product_uom_unit.id,
                 'price_unit': 750.00,
                 'route_id' : route1.id,
             })],
@@ -197,7 +197,7 @@ class TestCarrierPropagation(TransactionCase):
                 'name': 'Cable Management Box',
                 'product_id': self.super_product.id,
                 'product_uom_qty': 2,
-                'product_uom': self.product_uom_unit.id,
+                'product_uom_id': self.product_uom_unit.id,
                 'price_unit': 750.00,
             })],
         })

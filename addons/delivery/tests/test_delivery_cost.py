@@ -107,7 +107,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
                 Command.create({
                     'product_id': self.product_consultant.id,
                     'product_uom_qty': 24,
-                    'product_uom': self.product_uom_hour.id,
+                    'product_uom_id': self.product_uom_hour.id,
                     'price_unit': 75.00,
                 }),
                 Command.create({
@@ -450,7 +450,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
                 Command.create({
                     'product_id': product_test.id,
                     'product_uom_qty': 10,
-                    'product_uom': self.uom_unit.id,
+                    'product_uom_id': self.uom_unit.id,
                 }),
             ],
         })

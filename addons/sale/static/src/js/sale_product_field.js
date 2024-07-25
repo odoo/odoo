@@ -229,7 +229,7 @@ export class SaleOrderLineProductField extends Many2OneField {
                 }
             ),
             quantity: this.props.record.data.product_uom_qty,
-            productUOMId: this.props.record.data.product_uom[0],
+            productUOMId: this.props.record.data.product_uom_id[0],
             companyId: saleOrderRecord.data.company_id[0],
             pricelistId: saleOrderRecord.data.pricelist_id[0],
             currencyId: this.props.record.data.currency_id[0],

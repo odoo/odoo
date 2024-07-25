@@ -142,7 +142,7 @@ class SaleOrder(models.Model):
     def _reset_has_displayed_warning_upsell_order_lines(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self.order_line:
-            if line.has_displayed_warning_upsell and line.product_uom and float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 0:
+            if line.has_displayed_warning_upsell and line.product_uom_id and float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 0:
                 line.has_displayed_warning_upsell = False
 
     def _create_invoices(self, grouped=False, final=False, date=None):

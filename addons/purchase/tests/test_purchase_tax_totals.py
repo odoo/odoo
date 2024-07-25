@@ -26,7 +26,7 @@ class PurchaseTestTaxTotals(TestTaxTotals):
                 'name': 'test',
                 'product_id': self.po_product.id,
                 'product_qty': 1,
-                'product_uom': self.po_product.uom_po_id.id,
+                'product_uom_id': self.po_product.uom_po_id.id,
                 'price_unit': amount,
                 'taxes_id': [(6, 0, taxes.ids)],
             })
