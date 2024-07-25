@@ -78,7 +78,7 @@ export class SplitBillScreen extends Component {
                 if (line.get_quantity() === this.qtyTracker[line.uuid]) {
                     lineToDel.push(line);
                 } else {
-                    line.update({ qty: line.get_quantity() - this.qtyTracker[line.uuid] });
+                    line.qty = line.get_quantity() - this.qtyTracker[line.uuid];
                 }
             }
         }

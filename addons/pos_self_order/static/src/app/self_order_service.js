@@ -221,9 +221,9 @@ export class SelfOrder extends Reactive {
             });
 
             if (Object.values(customValues).length > 0) {
-                values.custom_attribute_value_ids = Object.values(customValues)
-                    .filter((c) => c.custom_value !== "")
-                    .map((c) => ["create", c]);
+                values.custom_attribute_value_ids = Object.values(customValues).filter(
+                    (c) => c.custom_value !== ""
+                );
             }
         }
 
@@ -238,29 +238,16 @@ export class SelfOrder extends Reactive {
 
             values.price_unit = 0;
             values.combo_id = ["link", product.combo_id];
-            values.combo_line_ids = comboPrices.map((comboLine) => [
-                "create",
-                {
-                    product_id: comboLine.combo_line_id.product_id,
-                    tax_ids: comboLine.combo_line_id.product_id.taxes_id.map((tax) => [
-                        "link",
-                        tax,
-                    ]),
-                    combo_line_id: comboLine.combo_line_id,
-                    price_unit: comboLine.price_unit,
-                    order_id: this.currentOrder,
-                    qty: 1,
-                    attribute_value_ids: comboLine.attribute_value_ids?.map((attr) => [
-                        "link",
-                        attr,
-                    ]),
-                    custom_attribute_value_ids: Object.entries(
-                        comboLine.attribute_custom_values
-                    ).map(([id, cus]) => {
-                        return ["create", cus];
-                    }),
-                },
-            ]);
+            values.combo_line_ids = comboPrices.map((comboLine) => ({
+                product_id: comboLine.combo_line_id.product_id,
+                tax_ids: comboLine.combo_line_id.product_id.taxes_id.map((tax) => ["link", tax]),
+                combo_line_id: comboLine.combo_line_id,
+                price_unit: comboLine.price_unit,
+                order_id: this.currentOrder,
+                qty: 1,
+                attribute_value_ids: comboLine.attribute_value_ids?.map((attr) => ["link", attr]),
+                custom_attribute_value_ids: comboLine.attribute_custom_values,
+            }));
         }
 
         if (values.price_extra > 0) {
@@ -531,20 +518,14 @@ export class SelfOrder extends Reactive {
                 if (line.qty <= changes.qty) {
                     lineToDelete.push(line);
                 } else {
-                    line.update({
+                    Object.assign(line, {
                         qty: changes["qty"],
                         customer_note: changes["customer_note"],
                         attribute_value_ids: changes["attribute_value_ids"]
-                            ? JSON.parse(changes["attribute_value_ids"]).map((a) => [
-                                  "link",
-                                  this.models["product.template.attribute.value"].get(a),
-                              ])
+                            ? JSON.parse(changes["attribute_value_ids"])
                             : [],
                         custom_attribute_value_ids: changes["custom_attribute_value_ids"]
-                            ? JSON.parse(changes["custom_attribute_value_ids"]).map((a) => [
-                                  "link",
-                                  this.models["product.attribute.custom.value"].get(a),
-                              ])
+                            ? JSON.parse(changes["custom_attribute_value_ids"])
                             : [],
                     });
                 }

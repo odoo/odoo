@@ -131,7 +131,6 @@ patch(PaymentScreen.prototype, {
                     // FIXME: Find a better way of updating the id of an existing record.
                     // It would be better if we can do this:
                     // const coupon = this.pos.models["loyalty.card"].get(couponUpdate.old_id);
-                    // coupon.update({ id: couponUpdate.id, points: couponUpdate.points })
 
                     if (couponUpdate.old_id == couponUpdate.id) {
                         // just update the points
@@ -140,7 +139,7 @@ patch(PaymentScreen.prototype, {
                         if (!coupon) {
                             await this.pos.data.read("loyalty.card", [couponUpdate.id]);
                         } else {
-                            coupon.update({ points: couponUpdate.points });
+                            coupon.points = couponUpdate.points;
                         }
                     } else {
                         // create a new coupon and delete the old one
@@ -157,7 +156,7 @@ patch(PaymentScreen.prototype, {
                         // Before deleting the old coupon, update the order lines that use it.
                         for (const line of order.lines) {
                             if (line.coupon_id?.id == couponUpdate.old_id) {
-                                line.update({ coupon_id: coupon });
+                                line.coupon_id = coupon;
                             }
                         }
 

@@ -370,11 +370,7 @@ export class PosOrder extends Base {
     }
 
     set_pricelist(pricelist) {
-        if (pricelist) {
-            this.update({ pricelist_id: pricelist });
-        } else {
-            this.update({ pricelist_id: false });
-        }
+        this.pricelist_id = pricelist;
 
         const lines_to_recompute = this.lines.filter(
             (line) =>
@@ -919,7 +915,7 @@ export class PosOrder extends Base {
     // the partner related to the current order.
     set_partner(partner) {
         this.assert_editable();
-        this.update({ partner_id: partner });
+        this.partner_id = partner;
         this.updatePricelistAndFiscalPosition(partner);
     }
 
@@ -994,7 +990,7 @@ export class PosOrder extends Base {
         }
 
         this.set_pricelist(newPartnerPricelist);
-        this.update({ fiscal_position_id: newPartnerFiscalPosition });
+        this.fiscal_position_id = newPartnerFiscalPosition;
     }
 
     /* ---- Ship later --- */

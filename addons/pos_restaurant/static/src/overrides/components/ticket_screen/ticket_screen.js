@@ -99,10 +99,8 @@ patch(TicketScreen.prototype, {
                         });
 
                         if (state) {
-                            order.update({
-                                isTipped: true,
-                                tipAmount: tipLine[0].price_unit,
-                            });
+                            order.isTipped = true;
+                            order.tipAmount = tipLine[0].price_unit;
                         }
                         resolve();
                     };

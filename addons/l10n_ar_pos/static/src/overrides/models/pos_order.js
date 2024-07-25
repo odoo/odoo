@@ -6,7 +6,7 @@ patch(PosOrder.prototype, {
         super.setup(...arguments);
         if (this.isArgentineanCompany()) {
             if (!this.partner_id) {
-                this.update({ partner_id: this.session._consumidor_final_anonimo_id });
+                this.partner_id = this.session._consumidor_final_anonimo_id;
             }
         }
     },

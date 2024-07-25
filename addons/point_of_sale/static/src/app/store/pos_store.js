@@ -160,6 +160,7 @@ export class PosStore extends Reactive {
         this.currency = this.data.models["res.currency"].getFirst();
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
+        this.createNewOrder();
 
         // Add Payment Interface to Payment Method
         for (const pm of this.models["pos.payment.method"].getAll()) {
@@ -512,7 +513,7 @@ export class PosStore extends Reactive {
             price_unit: 0,
             order_id: this.get_order(),
             qty: 1,
-            tax_ids: product.taxes_id.map((tax) => ["link", tax]),
+            tax_ids: product.taxes_id,
             ...vals,
         };
 
@@ -546,31 +547,21 @@ export class PosStore extends Reactive {
                     );
 
                 Object.assign(values, {
-                    attribute_value_ids: payload.attribute_value_ids
-                        .filter((a) => {
-                            if (productFound) {
-                                const attr =
-                                    this.data.models["product.template.attribute.value"].get(a);
-                                return attr.is_custom;
-                            }
-                            return true;
-                        })
-                        .map((id) => [
-                            "link",
-                            this.data.models["product.template.attribute.value"].get(id),
-                        ]),
+                    attribute_value_ids: payload.attribute_value_ids.filter((a) => {
+                        if (productFound) {
+                            const attr =
+                                this.data.models["product.template.attribute.value"].get(a);
+                            return attr.is_custom;
+                        }
+                        return true;
+                    }),
                     custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
                         ([id, cus]) => {
-                            return [
-                                "create",
-                                {
-                                    custom_product_template_attribute_value_id:
-                                        this.data.models["product.template.attribute.value"].get(
-                                            id
-                                        ),
-                                    custom_value: cus,
-                                },
-                            ];
+                            return {
+                                custom_product_template_attribute_value_id:
+                                    this.data.models["product.template.attribute.value"].get(id),
+                                custom_value: cus,
+                            };
                         }
                     ),
                     price_extra: productFound ? 0 : values.price_extra + payload.price_extra,
@@ -610,36 +601,22 @@ export class PosStore extends Reactive {
                 this.data.models["product.template.attribute.value"].getAllBy("id")
             );
 
-            values.combo_line_ids = comboPrices.map((comboLine) => [
-                "create",
-                {
-                    product_id: comboLine.combo_line_id.product_id,
-                    tax_ids: comboLine.combo_line_id.product_id.taxes_id.map((tax) => [
-                        "link",
-                        tax,
-                    ]),
-                    combo_line_id: comboLine.combo_line_id,
-                    price_unit: comboLine.price_unit,
-                    order_id: order,
-                    qty: 1,
-                    attribute_value_ids: comboLine.attribute_value_ids?.map((attr) => [
-                        "link",
-                        attr,
-                    ]),
-                    custom_attribute_value_ids: Object.entries(
-                        comboLine.attribute_custom_values
-                    ).map(([id, cus]) => {
-                        return [
-                            "create",
-                            {
-                                custom_product_template_attribute_value_id:
-                                    this.data.models["product.template.attribute.value"].get(id),
-                                custom_value: cus,
-                            },
-                        ];
-                    }),
-                },
-            ]);
+            values.combo_line_ids = comboPrices.map((comboLine) => ({
+                product_id: comboLine.combo_line_id.product_id,
+                tax_ids: comboLine.combo_line_id.product_id.taxes_id,
+                combo_line_id: comboLine.combo_line_id,
+                price_unit: comboLine.price_unit,
+                order_id: order,
+                qty: 1,
+                attribute_value_ids: comboLine.attribute_value_ids,
+                custom_attribute_value_ids: Object.entries(comboLine.attribute_custom_values).map(
+                    ([id, cus]) => ({
+                        custom_product_template_attribute_value_id:
+                            this.data.models["product.template.attribute.value"].get(id),
+                        custom_value: cus,
+                    })
+                ),
+            }));
         }
 
         // In the case of a product with tracking enabled, we need to ask the user for the lot/serial number.
@@ -674,7 +651,7 @@ export class PosStore extends Reactive {
                 return;
             } else {
                 const packLotLine = pack_lot_ids.newPackLotLines;
-                values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
+                values.pack_lot_ids = packLotLine;
             }
         }
 
@@ -1067,10 +1044,8 @@ export class PosStore extends Reactive {
     async loadServerOrders(domain) {
         const orders = await this.data.searchRead("pos.order", domain);
         for (const order of orders) {
-            order.update({
-                config_id: this.config,
-                session_id: this.session,
-            });
+            order.config_id = this.config;
+            order.session_id = this.session;
         }
         return orders;
     }
