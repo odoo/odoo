@@ -71,6 +71,7 @@ QUnit.module("Fields", (hooks) => {
                             relation_field: "turtle_trululu",
                         },
                         trululu: { string: "Trululu", type: "many2one", relation: "partner" },
+                        res_trululu: { string: "Res Trululu", type: "many2one", relation: "res.partner" },
                         timmy: { string: "pokemon", type: "many2many", relation: "partner_type" },
                         product_id: { string: "Product", type: "many2one", relation: "product" },
                         date: { string: "Some Date", type: "date" },
@@ -88,6 +89,7 @@ QUnit.module("Fields", (hooks) => {
                             turtles: [2],
                             timmy: [],
                             trululu: 4,
+                            res_trululu: 1,
                             user_id: 17,
                         },
                         {
@@ -200,6 +202,17 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 19,
                             name: "Christine",
+                        },
+                    ],
+                },
+                "res.partner": {
+                    fields: {
+                        name: { string: "Res Partner Name", type: "char" },
+                    },
+                    records: [
+                        {
+                            id: 1,
+                            name: "res partner",
                         },
                     ],
                 },
@@ -1331,16 +1344,24 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form edit="0">
+                    <field name="res_trululu" />
                     <field name="trululu" />
                 </form>`,
         });
 
-        assert.containsOnce(target, "a.o_form_uri", "should display 1 m2o link in form");
+        assert.containsN(target, "a.o_form_uri", 2, "should display 2 m2o links in form");
+        const links = target.querySelectorAll("a.o_form_uri")
         assert.hasAttrValue(
-            target.querySelector("a.o_form_uri"),
+            links[0],
             "href",
-            "#id=4&model=partner",
+            "/odoo/res.partner/1",
             "href should contain id and model"
+        );
+        assert.hasAttrValue(
+            links[1],
+            "href",
+            "/odoo/m-partner/4",
+            "models that do not contain a '.' should be prefixed with 'm-'"
         );
     });
 
