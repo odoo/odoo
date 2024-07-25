@@ -35,7 +35,7 @@ function changeDescriptionContentAndSave(newContent) {
 
 registry.category("web_tour.tours").add("project_task_history_tour", {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [stepUtils.showAppsMenuItem(), {
         content: "Open the project app",
         trigger: ".o_app[data-menu-xmlid='project.menu_main_pm']",

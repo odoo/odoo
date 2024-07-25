@@ -8,7 +8,7 @@ import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('project_tour', {
     sequence: 110,
-    url: "/web",
+    url: "/odoo",
     rainbowManMessage: _t("Congratulations, you are now a master of project management."),
     steps: () => [stepUtils.showAppsMenuItem(), {
     isActive: ["community"],
