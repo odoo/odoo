@@ -339,6 +339,45 @@ test("toolbar correctly show namespace button group and stop showing when namesp
     expect(".btn-group[name='test_group']").toHaveCount(0);
 });
 
+test("toolbar correctly process inheritance buttons chain", async () => {
+    class TestPlugin extends Plugin {
+        static name = "TestPlugin";
+        static resources(p) {
+            return {
+                toolbarGroup: [
+                    {
+                        id: "test_group",
+                        buttons: [
+                            {
+                                id: "test_btn",
+                                name: "Test Button",
+                                icon: "fa-square",
+                            },
+                            {
+                                id: "test_btn2",
+                                inherit: "test_btn",
+                                name: "Test Button 2",
+                            },
+                        ],
+                    },
+                ],
+            };
+        }
+    }
+    await setupEditor("<p>[abc]</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+    });
+    await waitFor(".o-we-toolbar");
+    expect(".btn-group[name='test_group']").toHaveCount(1);
+    expect("button[name='test_btn']").toHaveCount(1);
+    expect("button[name='test_btn']").toHaveClass("fa-square");
+    expect("button[name='test_btn']").toHaveAttribute("title", "Test Button");
+
+    expect("button[name='test_btn2']").toHaveCount(1);
+    expect("button[name='test_btn2']").toHaveClass("fa-square");
+    expect("button[name='test_btn2']").toHaveAttribute("title", "Test Button 2");
+});
+
 test("toolbar does not evaluate isFormatApplied when namespace does not match", async () => {
     class TestPlugin extends Plugin {
         static name = "TestPlugin";
