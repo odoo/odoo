@@ -195,7 +195,11 @@
     <xpath expr="//div[hasclass('o_wevent_index_topbar_filters')]/div" position="before">
         <div class="dropdown d-none d-lg-block">
             <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by Country">
-                <t t-if="current_country" t-out="current_country.name"/>
+                <t t-if="searches['country'] == 'online'">
+                    <t t-set="online_event_text">Online Events</t>
+                    <t t-out="online_event_text"/>
+                </t>
+                <t t-elif="current_country" t-esc="current_country.name"/>
                 <t t-else="">All countries</t>
             </a>
             <div class="dropdown-menu">
