@@ -2431,6 +2431,140 @@ class TestTourBoM(HttpCase):
         url = '/odoo/action-mrp.mrp_bom_form_action'
         self.start_tour(url, 'test_manufacture_from_bom', login='admin', timeout=100)
 
+    def test_bom_document_tour_no_variants(self):
+        # This tour ensures that documents are correctly displayed in BoMs
+        # Remove the variants
+        self.env.user.groups_id -= self.env.ref('product.group_product_variant')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+
+        # create the product and the components
+        self.bom_product_template, self.component_template = self.env['product.template'].create([
+            {'name': 'bom_product'},
+            {'name': 'component'}
+        ])
+        component_product = self.env['product.product'].search([('product_tmpl_id', '=', self.component_template.id)])
+        # doc on the product
+        self.env['product.document'].create({
+            'name': 'doc_compo_bom',
+            'attached_on_mrp': 'bom',
+            'res_id': component_product.id,
+            'res_model': 'product.product',
+        })
+        # doc on the template
+        self.env['product.document'].create({
+            'name': 'doc_compo_bom',
+            'attached_on_mrp': 'bom',
+            'res_id': self.component_template.id,
+            'res_model': 'product.template',
+        })
+
+        # the two lines should give the exact same result
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.bom_product_template.id,
+            'product_uom_id': uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': component_product.id,
+                    'product_qty': 1,
+                }),
+                Command.create({
+                    'product_tmpl_id': self.component_template.id,
+                    'product_qty': 1,
+                }),
+            ]
+        })
+
+        self.start_tour('/odoo/mrp.bom', 'test_mrp_bom_document_no_variant', login='admin')
+
+    def test_bom_document_tour_with_variants(self):
+        # This tour ensures that documents are correctly displayed in BoMs
+        uom_unit = self.env.ref('uom.product_uom_unit')
+
+        # create the product and the components
+        self.bom_product_template, self.component_template = self.env['product.template'].create([
+            {'name': 'bom_product'},
+            {'name': 'component'}
+        ])
+
+        size_attribute = self.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': size_attribute.id,
+            'sequence': 1,
+        } for name in ('M', 'L')])
+
+        odoo_attribute = self.env['product.attribute'].create({'name': 'Odoo', 'sequence': 5})
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': odoo_attribute.id,
+            'sequence': 1,
+        } for name in ('Developper', 'Product Ower', 'Customer')])
+
+        # Create the attribute lines for the product and the component
+        self.env['product.template.attribute.line'].create([
+            {
+                'product_tmpl_id': self.bom_product_template.id,
+                'attribute_id': size_attribute.id,
+                'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+            },
+            {
+                'product_tmpl_id': self.component_template.id,
+                'attribute_id': size_attribute.id,
+                'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+            }
+        ])
+        # Check that two product variant are created to enable auto matching
+        product_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.bom_product_template.id)])
+        components_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.component_template.id)])
+        self.assertEqual(len(product_ids), 2)
+        self.assertEqual(len(components_ids), 2)
+        # doc on the product
+        self.env['product.document'].create({
+            'name': 'doc_compo_bom',
+            'attached_on_mrp': 'bom',
+            'res_id': components_ids[0].id,
+            'res_model': 'product.product',
+        })
+        self.env['product.document'].create({
+            'name': 'doc_compo_bom',
+            'attached_on_mrp': 'bom',
+            'res_id': components_ids[1].id,
+            'res_model': 'product.product',
+        })
+        # doc on the template
+        self.env['product.document'].create({
+            'name': 'doc_compo_bom',
+            'attached_on_mrp': 'bom',
+            'res_id': self.component_template.id,
+            'res_model': 'product.template',
+        })
+
+        # create BoM
+        # preparation for two checks in the tour:
+        #       - the line with product selected will always return the docs of the variant and the template
+        #       - the line with template selected should trigger a method that will set the product variant on the line
+        #           and thus should give us the same result as the previous line
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.bom_product_template.id,
+            'product_uom_id': uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': components_ids[0].id,
+                    'product_qty': 1,
+                }),
+                Command.create({
+                    'product_tmpl_id': self.component_template.id,
+                    'product_qty': 1,
+                }),
+            ]
+        })
+
+        self.start_tour('/odoo/mrp.bom', 'test_mrp_bom_document', login='admin')
+
 
 class TestBoMConfigurator(TestMrpCommon):
 

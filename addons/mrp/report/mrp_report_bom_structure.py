@@ -291,7 +291,7 @@ class ReportBomStructure(models.AbstractModel):
             if not line.child_bom_id:
                 no_bom_lines |= line
                 # Update product_info for all the components before computing closest forecasted.
-                qty_product_uom = line.product_uom_id._compute_quantity(line_quantity, line.product_id.uom_id)
+                qty_product_uom = line.product_uom_id._compute_quantity(line_quantity, line.product_tmpl_id.uom_id)
                 self._update_product_info(line.product_id, bom.id, product_info, warehouse, qty_product_uom, bom=False, parent_bom=bom, parent_product=product)
         components_closest_forecasted = self._get_components_closest_forecasted(no_bom_lines, line_quantities, bom, product_info, product, ignore_stock)
         for component_index, line in enumerate(bom.bom_line_ids):
@@ -300,6 +300,8 @@ class ReportBomStructure(models.AbstractModel):
                 continue
             line_quantity = line_quantities.get(line.id, 0.0)
             line_product = line.get_product_variant(product)
+            if not line_product:
+                continue
             child_bom = line._get_child_bom_by_product(line_product)
             if child_bom:
                 component = self._get_bom_data(child_bom, warehouse, line_product, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
@@ -374,8 +376,8 @@ class ReportBomStructure(models.AbstractModel):
 
         has_attachments = False
         if not self.env.context.get('minimized', False):
-            has_attachments = self.env['product.document'].search_count(['&', ('attached_on_mrp', '=', 'bom'), '|', '&', ('res_model', '=', 'product.product'), ('res_id', '=', bom_line.product_id.id),
-                                                              '&', ('res_model', '=', 'product.template'), ('res_id', '=', bom_line.product_id.product_tmpl_id.id)]) > 0
+            has_attachments = self.env['product.document'].search_count(['&', ('attached_on_mrp', '=', 'bom'), '|', '&', ('res_model', '=', 'product.product'), ('res_id', '=', bom_line_product.id),
+                                                              '&', ('res_model', '=', 'product.template'), ('res_id', '=', bom_line_product.product_tmpl_id.id)]) > 0
 
         return {
             'type': 'component',
@@ -384,7 +386,7 @@ class ReportBomStructure(models.AbstractModel):
             'product': bom_line_product,
             'product_id': bom_line_product.id,
             'product_template_id': bom_line_product.product_tmpl_id.id,
-            'link_id': bom_line_product.id if bom_line_product.product_variant_count > 1 else bom_line.product_id.product_tmpl_id.id,
+            'link_id': bom_line_product.id if bom_line_product.product_variant_count > 1 else bom_line.product_tmpl_id.id,
             'link_model': 'product.product' if bom_line_product.product_variant_count > 1 else 'product.template',
             'name': bom_line_product.display_name,
             'code': '',

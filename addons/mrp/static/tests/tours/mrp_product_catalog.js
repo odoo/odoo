@@ -22,20 +22,7 @@ registry.category("web_tour.tours").add('test_mrp_bom_product_catalog', {
             run: "click",
         },
         {
-            trigger: 'th.o_list_actions_header i.o_optional_columns_dropdown_toggle',
-            run: "click",
-        },
-        {
-            trigger: 'span.o-dropdown-item span:contains("Product Variant")',
-            run: (action) => {
-                const e = $('input[type="checkbox"][name="product_id"]:not(:checked)');
-                if (e.length > 0) {
-                    action.click(e);
-                }
-            },
-        },
-        {
-            trigger: 'div.o_field_one2many:contains("Product Variant")',
+            trigger: 'div.o_field_one2many:contains("Product")',
         },
 ]});
 
