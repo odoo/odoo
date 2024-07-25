@@ -121,7 +121,11 @@
         <li class="nav-item dropdown me-2 my-1">
             <a href="#" role="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-map-marker"/>
-                <t t-if="current_country" t-out="current_country.name"/>
+                <t t-if="searches['country'] == 'online'">
+                    <t t-set="online_event_text">Online Events</t>
+                    <t t-out="online_event_text"/>
+                </t>
+                <t t-elif="current_country" t-esc="current_country.name"/>
                 <t t-else="">All countries</t>
             </a>
             <div class="dropdown-menu">
