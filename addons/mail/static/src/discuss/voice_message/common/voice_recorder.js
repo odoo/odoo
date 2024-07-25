@@ -185,6 +185,12 @@ export class VoiceRecorder extends Component {
         }
     }
 
+    get isrecordButtonDisabled(){
+        const caption = this.props.composer.textInputContent;
+        const isWhatsappChannel = this.props.composer.thread.type=='whatsapp';
+        return caption.length > 0 && isWhatsappChannel && !this.state.recording;
+    }
+
     getMp3() {
         const finalBuffer = this._getEncoderBuffer();
         return new Promise((resolve, reject) => {
