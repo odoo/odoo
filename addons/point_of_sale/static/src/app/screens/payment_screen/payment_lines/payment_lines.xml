@@ -56,7 +56,7 @@
                                     <div class="electronic_status">
                                         Waiting for card
                                     </div>
-                                    <div class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="() => this.props.sendPaymentCancel(line)">
+                                    <div t-if="!this.props.isRefundOrder" class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="() => this.props.sendPaymentCancel(line)">
                                         Cancel
                                     </div>
                                 </t>
@@ -78,7 +78,12 @@
                                 </t>
                                 <t t-elif="line.payment_status == 'done'">
                                     <div class="electronic_status">
-                                        Payment Successful
+                                        <t t-if="!this.props.isRefundOrder">
+                                            Payment Successful
+                                        </t>
+                                        <t t-else="">
+                                            Refund Successful
+                                        </t>
                                     </div>
                                     <t t-if="line.can_be_reversed">
                                         <div class="button send_payment_reversal" title="Reverse Payment" t-on-click="() => this.props.sendPaymentReverse(line)">
@@ -95,6 +100,13 @@
                                     </div>
                                     <div></div>
                                 </t>
+                            </div>
+                        </t>
+                        <t t-if="this.props.isRefundOrder and line.payment_method_id.use_payment_terminal and !line.payment_status">
+                            <div class="button send_refund_request highlight text-bg-primary p-4 text-center"
+                                title="Send Refund Request"
+                                t-on-click="() => this.props.sendPaymentRequest(line)">
+                                Refund
                             </div>
                         </t>
                     </t>
