@@ -6,6 +6,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import OR
 
+bypass_token = object()
 DOMAINS = {
     'account.move': lambda operator, value: [('company_id.check_account_audit_trail', operator, value)],
     'account.account': lambda operator, value: [('company_id.check_account_audit_trail', operator, value)],
@@ -152,6 +153,8 @@ class Message(models.Model):
 
     @api.ondelete(at_uninstall=True)
     def _except_audit_log(self):
+        if self.env.context.get('bypass_audit') is bypass_token:
+            return
         for message in self:
             if message.account_audit_log_activated and not (
                 message.account_audit_log_move_id
