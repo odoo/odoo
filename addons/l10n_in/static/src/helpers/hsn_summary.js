@@ -17,14 +17,17 @@ patch(accountTaxHelpers, {
             }
 
             const price_unit = base_line.price_unit;
+            const discount = base_line.discount;
             const quantity = base_line.quantity;
             const product_values = base_line.product_values;
             const uom = base_line.uom || {};
             const taxes_data = base_line.taxes_data;
 
+            const final_unit_price = price_unit * (1 - discount / 100);
+
             // Compute the taxes.
             const evaluation_context = this.eval_taxes_computation_prepare_context(
-                price_unit,
+                final_unit_price,
                 quantity,
                 product_values,
                 {

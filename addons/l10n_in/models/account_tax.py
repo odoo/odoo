@@ -43,14 +43,17 @@ class AccountTax(models.Model):
                 continue
 
             price_unit = base_line['price_unit']
+            discount = base_line['discount']
             quantity = base_line['quantity']
             product_values = base_line['product_values']
             uom = base_line['uom'] or {}
             taxes_data = base_line['taxes_data']
 
+            final_unit_price = price_unit * (1 - (discount / 100.0))
+
             # Compute the taxes.
             evaluation_context = self.env['account.tax']._eval_taxes_computation_prepare_context(
-                price_unit,
+                final_unit_price,
                 quantity,
                 product_values,
                 rounding_method='round_per_line',
