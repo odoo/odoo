@@ -1344,24 +1344,7 @@ export function isFocusable(target, options) {
  *  isInDOM(document.createElement("div")); // false
  */
 export function isInDOM(target) {
-    target = ensureElement(target);
-    if (!target) {
-        return false;
-    }
-    const frame = getParentFrame(target);
-    if (frame) {
-        return isInDOM(frame);
-    }
-    while (target) {
-        if (target === document) {
-            return true;
-        }
-        target = target.parentNode;
-        if (target?.host) {
-            target = target.host.parentNode;
-        }
-    }
-    return false;
+    return ensureElement(target)?.isConnected;
 }
 
 /**
