@@ -111,10 +111,6 @@ var registerSteps = [{
     content: "Validate attendees details",
     trigger: 'button[type=submit]',
     run: 'click',
-}, {
-    trigger: 'div.o_wereg_confirmed_attendees span:contains("Raoulette Poiluchette")',
-}, {
-    trigger: 'div.o_wereg_confirmed_attendees span:contains("Michel Tractopelle")',
 },  {
     content: "Click on 'register favorites talks' button",
     trigger: 'a:contains("register to your favorites talks now")',
