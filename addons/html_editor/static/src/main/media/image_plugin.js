@@ -202,8 +202,21 @@ export class ImagePlugin extends Plugin {
 
         switch (command) {
             case "SHAPE_ROUNDED":
+            case "SHAPE_CIRCLE": {
+                const selectedImg = this.getSelectedImage();
+                if (!selectedImg) {
+                    return;
+                }
+                const mutuallyExclusiveShapes = {
+                    SHAPE_ROUNDED: "rounded-circle",
+                    SHAPE_CIRCLE: "rounded",
+                };
+                selectedImg.classList.remove(mutuallyExclusiveShapes[command]);
+                selectedImg.classList.toggle(commandToClassNameDict[command]);
+                this.dispatch("ADD_STEP");
+                break;
+            }
             case "SHAPE_SHADOW":
-            case "SHAPE_CIRCLE":
             case "SHAPE_THUMBNAIL": {
                 const selectedImg = this.getSelectedImage();
                 if (!selectedImg) {
