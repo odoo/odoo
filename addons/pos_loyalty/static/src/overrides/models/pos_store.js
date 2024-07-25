@@ -220,6 +220,7 @@ patch(PosStore.prototype, {
                         coupon_id: coupon.id,
                         barcode: pa.barcode,
                         appliedRules: pointsForProgramsCountedRules[program.id],
+                        giftCardId: pa.giftCardId,
                     };
                     if (program && program.program_type === "gift_card") {
                         couponPointChange.product_id =

@@ -7,6 +7,7 @@ import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
+import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
 
 registry.category("web_tour.tours").add("GiftCardProgramTour1", {
     steps: () =>
@@ -172,5 +173,21 @@ registry.category("web_tour.tours").add("test_physical_gift_card_invoiced", {
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyGiftCardNoPoints", {
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            TextInputPopup.inputText("044123456"),
+            Dialog.confirm(),
+            PosLoyalty.orderTotalIs("0.00"),
+            ProductScreen.clickNumpad("Price"),
+            ProductScreen.modeIsActive("Price"),
+            ProductScreen.clickNumpad("5"),
+            PosLoyalty.orderTotalIs("5.00"),
+            PosLoyalty.finalizeOrder("Cash", "5"),
         ].flat(),
 });
