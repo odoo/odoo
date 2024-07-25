@@ -5,7 +5,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers', {
     test: true,
-    url: '/web',
+    url: '/odoo',
     steps: () => [
     stepUtils.showAppsMenuItem(),
     {

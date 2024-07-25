@@ -42,4 +42,4 @@ class TestUi(HttpCase):
         if not loaded_demo_data(self.env):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
-        self.start_tour('/web', 'sale_timesheet_tour', login='admin', timeout=100)
+        self.start_tour('/odoo', 'sale_timesheet_tour', login='admin', timeout=100)
