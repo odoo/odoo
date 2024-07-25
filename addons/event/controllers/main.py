@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http, _
 from odoo.http import Controller, request, route, content_disposition
-from odoo.tools import consteq
+from odoo.tools import consteq, email_split
 
 
 class EventController(Controller):
@@ -75,6 +75,35 @@ class EventController(Controller):
             ('Content-Disposition', content_disposition(f'{report_name}.pdf')),
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
+
+    @route(['/event/<int:event_id>/my_tickets_by_email'], type='json', auth='public', website=True)
+    def event_my_tickets_by_email(self, event_id, registration_ids, tickets_hash, emails):
+        """ Sends registrations tickets to a list of email addresses.
+
+        Throw NotFound if no event_id / tickets_hash / registration_ids or if emails is not a valid email list.
+        This route is used by the website_event_send_email widget.
+
+        :param event: the id of prompted event. Only used to check the ticket hash.
+        :param registration_ids: ids of event.registrations of which tickets are generated
+        :param tickets_hash: string hash used to access the tickets.
+        :param emails: string of comma-separated email addresses to send the tickets to. Format is checked a first
+        time in the widget and a second time here.
+        """
+        emails = email_split(emails)
+        if not event_id or not tickets_hash or not registration_ids or not emails:
+            raise NotFound()
+
+        event = request.env['event.event'].browse(event_id).exists()
+        hash_truth = event and event._get_tickets_access_hash(registration_ids)
+        if not consteq(tickets_hash, hash_truth):
+            raise NotFound()
+        if template := request.env.ref('event.event_subscription', raise_if_not_found=False):
+            template.sudo().with_context(registration_ids=registration_ids).send_mail(
+                registration_ids[0],
+                force_send=True,
+                email_values={'email_to': emails})
+        else:
+            raise NotFound()
 
     @http.route(['/event/init_barcode_interface'], type='json', auth="user")
     def init_barcode_interface(self, event_id):

@@ -56,6 +56,7 @@
             'website_event/static/tests/**/*',
         ],
         'web.assets_frontend': [
+            'mail/static/src/utils/common/format.js',
             'website_event/static/src/js/tours/**/*',
             'website_event/static/src/scss/event_templates_common.scss',
             'website_event/static/src/scss/event_templates_list.scss',
@@ -63,6 +64,7 @@
             'website_event/static/src/js/display_timer_widget.js',
             'website_event/static/src/js/register_toaster_widget.js',
             'website_event/static/src/js/website_event.js',
+            'website_event/static/src/js/website_event_send_email.js',
             'website_event/static/src/js/website_event_ticket_details.js',
         ],
         'website.assets_wysiwyg': [

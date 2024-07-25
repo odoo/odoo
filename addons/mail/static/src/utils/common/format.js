@@ -274,4 +274,22 @@ export function parseEmail(text) {
     return [text, false];
 }
 
+/**
+ * Split the string using the splitChar and find all the valid/invalid emails from it.
+ * It return a object containing the list of all the emails and the invalid emails from it.
+ * Validity is handled by the parseEmail function.
+ *
+ * @param {string} emailStr
+ * @param {string} splitPattern
+ * @return {object}
+ */
+export function extractEmailValidity(emailStr, splitPattern){
+    const emailList = emailStr.split(splitPattern);
+    const invalidEmails = emailList.filter(email => email !== '' && !parseEmail(email.trim())[1]);
+    return {
+        'invalidEmails': invalidEmails,
+        'emailList': emailList,
+    }
+}
+
 export const EMOJI_REGEX = /\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200d/gu;
