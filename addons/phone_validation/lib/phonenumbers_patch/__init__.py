@@ -38,6 +38,9 @@ else:
         # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.32/python/phonenumbers/data/region_CI.py
         phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('CI', _local_load_region)
 
+    # Altered version of https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.36/python/phonenumbers/data/region_FR.py
+    phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('FR', _local_load_region)
+
     if parse_version(phonenumbers.__version__) < parse_version('8.13.32'):
         # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.32/python/phonenumbers/data/region_MA.py
         phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('MA', _local_load_region)
