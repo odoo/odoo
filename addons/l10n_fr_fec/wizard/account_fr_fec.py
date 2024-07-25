@@ -34,8 +34,9 @@ class AccountFrFec(models.TransientModel):
             self.export_type = 'official'
 
     def _get_where_query(self):
-        where_params = {'company_id': self.env.company.id}
-        where_query = "am.company_id = %(company_id)s\n"
+        accessible_branches = self.env.company._accessible_branches()
+        where_params = {'company_ids': tuple(accessible_branches.ids)}
+        where_query = "am.company_id IN %(company_ids)s\n"
         # For official report: only use posted entries
         if self.export_type == "official":
             where_query += "AND am.state = 'posted'\n"
