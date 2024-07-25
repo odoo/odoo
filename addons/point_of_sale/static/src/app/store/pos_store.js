@@ -558,8 +558,9 @@ export class PosStore extends Reactive {
                     custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
                         ([id, cus]) => {
                             return {
-                                custom_product_template_attribute_value_id:
-                                    this.data.models["product.template.attribute.value"].get(id),
+                                custom_product_template_attribute_value_id: this.data.models[
+                                    "product.template.attribute.value"
+                                ].get(parseInt(id)),
                                 custom_value: cus,
                             };
                         }
@@ -954,7 +955,7 @@ export class PosStore extends Reactive {
             });
 
             const modelToAdd = {};
-            const newData = {};
+            const uiStateByModelKey = {};
             for (const [model, records] of Object.entries(data)) {
                 const modelKey = this.data.opts.databaseTable.find((dt) => dt.name === model)?.key;
 
@@ -962,11 +963,28 @@ export class PosStore extends Reactive {
                     modelToAdd[model] = records;
                     continue;
                 }
+                uiStateByModelKey[model] = {};
+                for (const newR of records) {
+                    const found = this.models[model].find(
+                        (record) => record[modelKey] === newR[modelKey] && record.id !== newR.id
+                    );
 
-                Object.assign(
-                    newData,
-                    this.models.replaceDataByKey(modelKey, { [model]: records })
-                );
+                    if (found) {
+                        uiStateByModelKey[model][newR[modelKey]] = found.uiState;
+                        found.delete();
+                    }
+                }
+            }
+
+            const newData = this.models.loadData(data);
+            for (const [model, uiState] of Object.entries(uiStateByModelKey)) {
+                if (!Object.keys(uiState).length) {
+                    continue;
+                }
+
+                for (const [key, value] of Object.entries(uiState)) {
+                    this.models[model].find((record) => record[key] === key)?.setupState(value);
+                }
             }
 
             for (const order of [...orders, ...newData["pos.order"]]) {
@@ -987,7 +1005,6 @@ export class PosStore extends Reactive {
                 }
             }
 
-            this.models.loadData(modelToAdd);
             this.postSyncAllOrders(newData["pos.order"]);
             return newData["pos.order"];
         } catch (error) {

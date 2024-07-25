@@ -304,17 +304,13 @@ export class ProductScreen extends Component {
             return [];
         }
 
-        list = list
-            .filter(
-                (product) =>
-                    ![
-                        this.pos.config.tip_product_id?.id,
-                        ...this.pos.hiddenProductIds,
-                        ...this.pos.session._pos_special_products_ids,
-                    ].includes(product.id) && product.available_in_pos
-            )
-            .slice(0, 100);
+        const specialProducts = new Set([
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.session._pos_special_products_ids,
+            ...this.pos.hiddenProductIds,
+        ]);
 
+        list = list.filter((p) => p.available_in_pos && !specialProducts.has(p.id)).slice(0, 105);
         return this.searchWord !== ""
             ? list
             : list.sort((a, b) => a.display_name.localeCompare(b.display_name));

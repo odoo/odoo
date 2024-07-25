@@ -178,6 +178,11 @@ class PosSession(models.Model):
                     'error': e.args[0]
                 }
 
+            if len(response[model]['fields']) == 0:
+                response[model]['fields'] = list(self.env[model]._fields)
+            elif 'id' not in response[model]['fields']:
+                response[model]['fields'] += ['id']
+
             if not only_data:
                 self._load_pos_data_relations(model, response)
 
