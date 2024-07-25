@@ -26,3 +26,11 @@ test("Can resize an icon", async () => {
     click("button[name='icon_size_1']");
     expect("span.fa-glass.fa-5x").toHaveCount(0);
 });
+
+test("Can spin an icon", async () => {
+    await setupEditor(`<p><span class="fa fa-glass">[]</span></p>`);
+    await waitFor(".o-we-toolbar");
+    expect("span.fa-glass").toHaveCount(1);
+    click("button[name='icon_spin']");
+    expect("span.fa-glass").toHaveClass("fa-spin");
+});
