@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models
 
 
 class View(models.Model):
@@ -9,8 +9,8 @@ class View(models.Model):
     def get_view_info(self):
         _view_info = self._get_view_info()
         return {
-            'list' if type_ == 'tree' else type_: {
-                'display_name': _("List") if type_ == 'tree' else display_name,
+            type_: {
+                'display_name': display_name,
                 'icon': _view_info[type_]['icon'],
                 'multi_record': _view_info[type_].get('multi_record', True),
             }
@@ -21,7 +21,7 @@ class View(models.Model):
 
     def _get_view_info(self):
         return {
-            'tree': {'icon': 'oi oi-view-list'},
+            'list': {'icon': 'oi oi-view-list'},
             'form': {'icon': 'fa fa-address-card', 'multi_record': False},
             'graph': {'icon': 'fa fa-area-chart'},
             'pivot': {'icon': 'oi oi-view-pivot'},

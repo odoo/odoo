@@ -147,11 +147,11 @@ class TestViewGroups(ViewCase):
 
     def test_tree(self):
         view = self.env.ref('test_new_api.view_model_some_access_tree')
-        arch = self.env['test_new_api.model.some_access'].get_views([(view.id, 'tree')])['views']['tree']['arch']
+        arch = self.env['test_new_api.model.some_access'].get_views([(view.id, 'list')])['views']['list']['arch']
         tree = etree.fromstring(arch)
 
-        nodes = tree.xpath("//tree/field[@name='a'][@column_invisible='True'][@readonly='True']")
-        self.assertTrue(nodes, "tree should contains the missing field 'a'")
+        nodes = tree.xpath("//list/field[@name='a'][@column_invisible='True'][@readonly='True']")
+        self.assertTrue(nodes, "list should contains the missing field 'a'")
 
         nodes = tree.xpath("//groupby/field[@name='ab'][@invisible='True'][@readonly='True']")
         self.assertTrue(nodes, "groupby should contains the missing field 'ab'")

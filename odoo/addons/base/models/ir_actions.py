@@ -309,8 +309,8 @@ class IrActionsActWindow(models.Model):
     res_model = fields.Char(string='Destination Model', required=True,
                             help="Model name of the object to open in the view window")
     target = fields.Selection([('current', 'Current Window'), ('new', 'New Window'), ('inline', 'Inline Edit'), ('fullscreen', 'Full Screen'), ('main', 'Main action of Current Window')], default="current", string='Target Window')
-    view_mode = fields.Char(required=True, default='tree,form',
-                            help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)")
+    view_mode = fields.Char(required=True, default='list,form',
+                            help="Comma-separated list of allowed view modes, such as 'form', 'list', 'calendar', etc. (Default: list,form)")
     mobile_view_mode = fields.Char(default="kanban", help="First view mode in mobile and small screen environments (default='kanban'). If it can't be found among available view modes, the same mode as for wider screens is used)")
     usage = fields.Char(string='Action Usage',
                         help="Used to filter menu and home actions from the user form.")
@@ -396,7 +396,7 @@ class IrActionsActWindow(models.Model):
 
 
 VIEW_TYPES = [
-    ('tree', 'Tree'),
+    ('list', 'List'),
     ('form', 'Form'),
     ('graph', 'Graph'),
     ('pivot', 'Pivot'),

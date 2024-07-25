@@ -33,7 +33,7 @@ function computeVariation(value, comparisonValue) {
  * The pivot model keeps an in-memory representation of the pivot table that is
  * displayed on the screen.  The exact layout of this representation is not so
  * simple, because a pivot table is at its core a 2-dimensional object, but
- * with a 'tree' component: some rows/cols can be expanded so we zoom into the
+ * with a 'list' component: some rows/cols can be expanded so we zoom into the
  * structure.
  *
  * However, we need to be able to manipulate the data in a somewhat efficient
