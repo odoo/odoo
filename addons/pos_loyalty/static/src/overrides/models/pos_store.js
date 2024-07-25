@@ -225,12 +225,15 @@ patch(PosStore.prototype, {
         this.partnerId2CouponIds = {};
 
         for (const reward of this.models["loyalty.reward"].getAll()) {
-            reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
+            reward.all_discount_product_ids = new Set(reward.raw.all_discount_product_ids);
         }
 
-        for (const reward of this.models["loyalty.reward"].getAll()) {
-            this.compute_discount_product_ids(reward, this.models["product.product"].getAll());
-        }
+        this.computeDiscountProductIdsForAllRewards(this.models["product.product"].getAll());
+
+        this.models["product.product"].addEventListener(
+            "create",
+            this.computeDiscountProductIdsForAllRewards.bind(this)
+        );
 
         for (const program of this.models["loyalty.program"].getAll()) {
             if (program.date_to) {
@@ -239,6 +242,16 @@ patch(PosStore.prototype, {
             if (program.date_from) {
                 program.date_from = DateTime.fromISO(program.date_from);
             }
+        }
+
+        for (const rule of this.models["loyalty.rule"].getAll()) {
+            rule.validProductIds = new Set(rule.raw.valid_product_ids);
+        }
+    },
+
+    computeDiscountProductIdsForAllRewards(products) {
+        for (const reward of this.models["loyalty.reward"].getAll()) {
+            this.compute_discount_product_ids(reward, products);
         }
     },
 
