@@ -2378,6 +2378,21 @@ var SnippetsMenu = Widget.extend({
                 $style[0].dataset.dropIn = dropInPatch.join(', ');
             }
 
+            // Fix in stable: carousel options are excluded from the background
+            // background options, then specific options exists for those
+            // carousel. The specific options includes the Quotes Carousel
+            // but the Quotes Carousel is not excluded from the default options
+            // and this lead to the options confusing each other enabling each
+            // others widgets and displaying conflicted infos. So exclude
+            // the quotes carousel from the default options.
+            if (
+                exclude &&
+                exclude.includes(", .s_carousel_wrapper") &&
+                !exclude.includes(", .s_quotes_carousel_wrapper")
+            ) {
+                exclude += ", .s_quotes_carousel_wrapper";
+            }
+
             // Fix in stable: we have removed the option for setting the
             // background color for snippets in the footer. However, this should
             // not affect the snippets in the "All pages" popup which is also
