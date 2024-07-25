@@ -368,11 +368,11 @@ class ProjectProject(models.Model):
             'sale_items': self._get_sale_items() if self.allow_billable else {},
         }
 
-    def get_sale_items_data(self, domain=None, offset=0, limit=None, with_action=True):
+    def get_sale_items_data(self, offset=0, limit=None, with_action=True):
         if not self.env.user.has_group('project.group_project_user'):
             return {}
         sols = self.env['sale.order.line'].sudo().search(
-            domain or self._get_sale_items_domain(),
+            self._get_sale_items_domain(),
             offset=offset,
             limit=limit,
         )
@@ -410,7 +410,7 @@ class ProjectProject(models.Model):
         domain = self._get_sale_items_domain()
         return {
             'total': self.env['sale.order.line'].sudo().search_count(domain),
-            'data': self.get_sale_items_data(domain, limit=5, with_action=with_action),
+            'data': self.get_sale_items_data(limit=5, with_action=with_action),
         }
 
     def _show_profitability(self):

@@ -12,7 +12,7 @@ patch(ProjectRightSidePanel.prototype, {
         const saleOrderItems = await this.orm.call(
             'project.project',
             'get_sale_items_data',
-            [this.projectId, undefined, offset, limit],
+            [this.projectId, offset, limit],
             {
                 context: this.context,
             },
