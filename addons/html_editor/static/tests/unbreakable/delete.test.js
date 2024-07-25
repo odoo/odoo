@@ -452,9 +452,9 @@ describe("list", () => {
         test("should not outdent while nested within a list item if the list is unbreakable", async () => {
             // Only one LI.
             await testEditor({
-                contentBefore: '<p>abc</p><ol t="1"><li>[]def</li></ol>',
+                contentBefore: '<p>abc</p><ol class="oe_unbreakable"><li>[]def</li></ol>',
                 stepFunction: deleteBackward,
-                contentAfter: '<p>abc</p><ol t="1"><li>[]def</li></ol>',
+                contentAfter: '<p>abc</p><ol class="oe_unbreakable"><li>[]def</li></ol>',
             });
             // First LI.
             // await testEditor({
