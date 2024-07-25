@@ -392,37 +392,7 @@ export class Message extends Component {
      * @param {MouseEvent} ev
      */
     async onClick(ev) {
-        const model = ev.target.dataset.oeModel;
-        const id = Number(ev.target.dataset.oeId);
-        if (ev.target.closest(".o_channel_redirect")) {
-            ev.preventDefault();
-            const thread = this.store.Thread.insert({ model, id });
-            this.threadService.open(thread);
-            return;
-        }
-        if (ev.target.closest(".o_mail_redirect")) {
-            ev.preventDefault();
-            const partnerId = Number(ev.target.dataset.oeId);
-            if (this.user.partnerId !== partnerId) {
-                this.threadService.openChat({ partnerId });
-            }
-            return;
-        }
-        if (ev.target.tagName === "A") {
-            if (model && id) {
-                ev.preventDefault();
-                await this.env.services.action.doAction({
-                    type: "ir.actions.act_window",
-                    res_model: model,
-                    views: [[false, "form"]],
-                    res_id: id,
-                });
-                if (!this.env.isSmall) {
-                    this.threadService.open(this.props.thread, true, {
-                        autofocus: false
-                    });
-                }
-            }
+        if (this.store.handleClickOnLink(ev, this.props.thread)) {
             return;
         }
         if (
