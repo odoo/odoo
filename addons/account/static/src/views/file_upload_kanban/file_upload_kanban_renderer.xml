@@ -1,0 +1,14 @@
+<templates>
+
+    <t t-name="account.FileUploadKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[@t-ref='root']" position="before">
+            <UploadDropZone
+                visible="dropzoneState.visible"
+                hideZone="() => dropzoneState.visible = false"/>
+        </xpath>
+        <xpath expr="//div[@t-ref='root']" position="attributes">
+            <attribute name="t-on-dragenter.stop.prevent">() => dropzoneState.visible = true</attribute>
+        </xpath>
+    </t>
+
+</templates>
