@@ -27,14 +27,14 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
 
     def test_message_invite(self):
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-            'message_type': 'auto_comment',
+            'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
         }):
             self.event.partner_ids = self.partner
 
     def test_message_invite_allday(self):
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-            'message_type': 'auto_comment',
+            'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
         }):
             self.env['calendar.event'].with_context(mail_create_nolog=True).create([{
@@ -67,7 +67,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         self.event.partner_ids = self.partner
         "Invitation to Presentation of the new Calendar"
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-            'message_type': 'auto_comment',
+            'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
         }):
             self.event.start = fields.Datetime.now() + relativedelta(days=1)
@@ -80,7 +80,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         })
         self.event.partner_ids = self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-            'message_type': 'auto_comment',
+            'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
         }):
             self.event.start_date += relativedelta(days=-1)
@@ -122,7 +122,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
     def test_message_add_and_date_changed(self):
         self.event.partner_ids -= self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-            'message_type': 'auto_comment',
+            'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
         }):
             self.event.write({
@@ -182,13 +182,18 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
 
         with patch.object(fields.Datetime, 'now', lambda: now):
             with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-                'message_type': 'auto_comment',
+                'message_type': 'user_notification',
                 'subtype': 'mail.mt_note',
             }):
                 self.event.user_id = self.user
                 old_messages = self.event.message_ids
                 self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=15))._send_reminder()
-                new_messages = self.event.message_ids - old_messages
+                messages = self.env["mail.message"].search([
+                    ("model", "=", self.event._name),
+                    ("res_id", "=", self.event.id),
+                    ("message_type", "=", "user_notification")
+                ])
+                new_messages = messages - old_messages
                 user_message = new_messages.filtered(lambda x: self.event.user_id.partner_id in x.partner_ids)
                 self.assertTrue(user_message.notification_ids, "Organizer must receive a reminder")
 
