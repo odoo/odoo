@@ -72,7 +72,7 @@ regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_order = re.compile(r'''
     ^
     (\s*
-        (?P<term>((?P<field>[a-z0-9_]+|"[a-z0-9_]+")(\.(?P<property>[a-z0-9_]+))?(:(?P<func>[a-z_]+))?))
+        (?P<term>((?P<field>[a-z0-9_]+|"[a-z0-9_]+")(\.(?P<property>[a-z0-9_]+))?(\->>'(?P<translate>[a-z0-9_]+)')?(:(?P<func>[a-z_]+))?))
         (\s+(?P<direction>desc|asc))?
         (\s+(?P<nulls>nulls\ first|nulls\ last))?
         \s*
