@@ -538,19 +538,6 @@ let dependencyBatch = [];
 let dependencyBatchPromise = null;
 let nextRpcId = 1e9;
 
-// Patch `console.warn` to throw errors instead of log warnings.
-// This is done because warnings make runbot builds fail, and we want to be noticed
-// as soon as possible.
-const originalWarn = console.warn;
-console.warn = function throwInsteadOfWarn(...args) {
-    const message = args.join(" ");
-    if (message.includes("[HOOT]")) {
-        originalWarn(...args);
-    } else {
-        throw new Error(message);
-    }
-};
-
 // Invoke tests after the module loader finished loading.
 setTimeout(runTests);
 
