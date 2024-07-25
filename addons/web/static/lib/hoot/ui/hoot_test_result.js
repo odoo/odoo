@@ -36,7 +36,7 @@ export class HootTestResult extends Component {
     static template = xml`
         <details
             class="${HootTestResult.name} flex flex-col border-b border-gray-300 dark:border-gray-600"
-            t-att-class="className"
+            t-att-class="getClassName()"
             t-att-open="props.open"
         >
             <summary class="px-3 flex items-center justify-between">
@@ -133,7 +133,20 @@ export class HootTestResult extends Component {
     formatTime = formatTime;
     ordinal = ordinal;
 
-    get className() {
+    setup() {
+        subscribeToURLParams("*");
+
+        this.logs = useState(this.props.test.logs);
+        this.results = useState(this.props.test.results);
+        this.state = useState({
+            showCode: false,
+        });
+    }
+
+    getClassName() {
+        if (this.logs.error) {
+            return "bg-fail-900";
+        }
         switch (this.props.test.status) {
             case Test.ABORTED: {
                 return "bg-abort-900";
@@ -146,7 +159,9 @@ export class HootTestResult extends Component {
                 }
             }
             case Test.PASSED: {
-                if (this.props.test.config.todo) {
+                if (this.logs.warn) {
+                    return "bg-abort-900";
+                } else if (this.props.test.config.todo) {
                     return "bg-todo-900";
                 } else {
                     return "bg-pass-900";
@@ -156,15 +171,6 @@ export class HootTestResult extends Component {
                 return "bg-skip-900";
             }
         }
-    }
-
-    setup() {
-        subscribeToURLParams("*");
-
-        this.results = useState(this.props.test.results);
-        this.state = useState({
-            showCode: false,
-        });
     }
 
     /**

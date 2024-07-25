@@ -5,6 +5,7 @@ import { parseRegExp } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
 import { EXCLUDE_PREFIX } from "../core/url";
 import { formatTime, getFuzzyScore, normalize } from "../hoot_utils";
+import { HootLogCounters } from "./hoot_log_counters";
 import { HootJobButtons } from "./hoot_job_buttons";
 import { HootTechnicalValue } from "./hoot_technical_value";
 import { HootTestPath } from "./hoot_test_path";
@@ -44,7 +45,13 @@ const COLORS = {
 
 /** @extends {Component<HootReportingProps, import("../hoot").Environment>} */
 export class HootReporting extends Component {
-    static components = { HootJobButtons, HootTechnicalValue, HootTestPath, HootTestResult };
+    static components = {
+        HootLogCounters,
+        HootJobButtons,
+        HootTechnicalValue,
+        HootTestPath,
+        HootTestResult,
+    };
 
     static props = {};
 
@@ -82,8 +89,9 @@ export class HootReporting extends Component {
                     open="state.openTests.includes(result.test.id)"
                     test="result.test"
                 >
-                    <div class="flex gap-2 overflow-hidden">
+                    <div class="flex items-center gap-2 overflow-hidden">
                         <HootTestPath canCopy="true" showStatus="true" test="result.test" />
+                        <HootLogCounters logs="result.test.logs" />
                     </div>
                     <div class="flex items-center ms-1 gap-2">
                         <small
