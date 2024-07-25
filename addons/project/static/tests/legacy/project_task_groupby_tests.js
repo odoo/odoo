@@ -56,7 +56,7 @@ QUnit.module("Project", (hooks) => {
         });
         await openView({
             res_model: "project.task",
-            views: [[false, "tree"]],
+            views: [[false, "list"]],
             context: { group_by: ["project_id"] },
         });
 
@@ -73,7 +73,7 @@ QUnit.module("Project", (hooks) => {
         });
         await openView({
             res_model: "project.task",
-            views: [[false, "tree"]],
+            views: [[false, "list"]],
             context: { group_by: ["user_ids"] },
         });
 
@@ -91,7 +91,7 @@ QUnit.module("Project", (hooks) => {
         });
         await openView({
             res_model: "project.task",
-            views: [[false, "tree"]],
+            views: [[false, "list"]],
             context: { group_by: ["date_deadline"] },
         });
 

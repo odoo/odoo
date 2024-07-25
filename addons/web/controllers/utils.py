@@ -22,8 +22,8 @@ _logger = logging.getLogger(__name__)
 
 def clean_action(action, env):
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
-    if action_type == 'ir.actions.act_window':
-        action = fix_view_modes(action)
+    if action_type == 'ir.actions.act_window' and not action.get('views'):
+        generate_views(action)
 
     # When returning an action, keep only relevant fields/properties
     readable_fields = env[action['type']]._get_readable_fields()
@@ -101,32 +101,7 @@ def ensure_db(redirect='/web/database/selector', db=None):
         werkzeug.exceptions.abort(request.redirect(request.httprequest.url, 302))
 
 
-def fix_view_modes(action):
-    """ For historical reasons, Odoo has weird dealings in relation to
-    view_mode and the view_type attribute (on window actions):
-
-    * the choice is made by checking ``view_type``, which is either
-      ``form`` for a list view or ``list`` for an actual list view
-
-    This methods simply folds the view_type into view_mode by adding a
-    new view mode ``list`` which is the result of the ``list`` view_mode
-    in conjunction with the ``form`` view_type.
-
-    TODO: this should go into the doc, some kind of "peculiarities" section
-
-    :param dict action: an action descriptor
-    :returns: nothing, the action is modified in place
-    """
-    if not action.get('views'):
-        generate_views(action)
-
-    if action.pop('view_type', 'form') != 'form':
-        return action
-
-    return action
-
-
-# I think generate_views,fix_view_modes should go into js ActionManager
+# I think generate_views should go into js ActionManager
 def generate_views(action):
     """
     While the server generates a sequence called "views" computing dependencies

@@ -27,7 +27,6 @@ _MOVED_TO_MAP = {
     'Export': export,
     'ExportFormat': export,
     'ExportXlsxWriter': export,
-    'fix_view_modes': utils,
     'generate_views': utils,
     'GroupExportXlsxWriter': export,
     'GroupsTreeNode': export,

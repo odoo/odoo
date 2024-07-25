@@ -40,7 +40,7 @@ class ProductMargin(models.TransientModel):
             context.update(date_to=self.to_date)
 
         views = [
-            (tree_view_id, 'tree'),
+            (tree_view_id, 'list'),
             (form_view_id, 'form'),
             (graph_view_id, 'graph')
         ]

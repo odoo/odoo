@@ -18,7 +18,7 @@ class TestPortalTimesheet(TestProjectSharingCommon):
                 Command.create({'partner_id': self.user_portal.partner_id.id}),
             ],
         })
-        for view in ['form', 'tree']:
+        for view in ['form', 'list']:
             # Ensure that uom.uom records are not present in cache
             self.env.invalidate_all()
             # Should not raise any access error
@@ -37,7 +37,7 @@ class TestPortalTimesheet(TestProjectSharingCommon):
         action = self.task_portal.action_view_subtask_timesheet()
         tree_view_id = form_view_id = kanban_view_id = False
         for view_id, view_type in action['views']:
-            if view_type == 'tree':
+            if view_type == 'list':
                 tree_view_id = view_id
             elif view_type == 'form':
                 form_view_id = view_id
@@ -51,7 +51,7 @@ class TestPortalTimesheet(TestProjectSharingCommon):
         if portal_tree_view_id and portal_form_view_id and portal_kanban_view_id:
             # no need to check that if the views are not installed or already removed
             for view_id, view_type in action['views']:
-                if view_type == 'tree':
+                if view_type == 'list':
                     self.assertEqual(view_id, portal_tree_view_id)
                 elif view_type == 'form':
                     self.assertEqual(view_id, portal_form_view_id)
@@ -62,7 +62,7 @@ class TestPortalTimesheet(TestProjectSharingCommon):
 
         action = self.task_portal.with_user(self.user_portal).action_view_subtask_timesheet()
         for view_id, view_type in action['views']:
-            if view_type == 'tree':
+            if view_type == 'list':
                 self.assertEqual(view_id, tree_view_id)
             elif view_type == 'form':
                 self.assertEqual(view_id, form_view_id)

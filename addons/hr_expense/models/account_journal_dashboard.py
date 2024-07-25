@@ -51,6 +51,6 @@ class AccountJournal(models.Model):
             'default_journal_id': self.id,
         }
         action['view_mode'] = 'list,form'
-        action['views'] = [(k,v) for k,v in action['views'] if v in ['list', 'form']]
+        action['views'] = [(k, v) for k, v in action['views'] if v in ['list', 'form']]
         action['domain'] = self._prepare_expense_sheet_data_domain()
         return action
