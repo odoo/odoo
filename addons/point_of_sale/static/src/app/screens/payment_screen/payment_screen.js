@@ -112,6 +112,9 @@ export class PaymentScreen extends Component {
     get currentOrder() {
         return this.pos.models["pos.order"].getBy("uuid", this.props.orderUuid);
     }
+    get isRefundOrder() {
+        return this.currentOrder._isRefundOrder();
+    }
     get paymentLines() {
         return this.currentOrder.payment_ids;
     }
@@ -147,7 +150,7 @@ export class PaymentScreen extends Component {
         }
         if (result) {
             this.numberBuffer.set(result.amount.toString());
-            if (paymentMethod.use_payment_terminal) {
+            if (paymentMethod.use_payment_terminal && !this.isRefundOrder) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
             }
@@ -536,6 +539,10 @@ export class PaymentScreen extends Component {
             return false;
         }
 
+        if (this.currentOrder.isRefundInProcess()) {
+            return false;
+        }
+
         return true;
     }
     async _postPushOrderResolve(order, order_server_ids) {
@@ -567,7 +574,8 @@ export class PaymentScreen extends Component {
             isPaymentSuccessful &&
             currentOrder.isPaid() &&
             floatIsZero(currentOrder.getDue(), currency.decimal_places) &&
-            config.auto_validate_terminal_payment
+            config.auto_validate_terminal_payment &&
+            !currentOrder.isRefundInProcess()
         ) {
             this.validateOrder(false);
         }
