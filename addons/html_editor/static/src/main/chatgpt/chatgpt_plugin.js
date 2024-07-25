@@ -66,6 +66,7 @@ export class ChatGPTPlugin extends Plugin {
         const dialogParams = {
             insert: (content) => {
                 const insertedNodes = this.shared.domInsert(content);
+                this.dispatch("ADD_STEP");
                 // Add a frame around the inserted content to highlight it for 2
                 // seconds.
                 const start = insertedNodes?.length && closestElement(insertedNodes[0]);
