@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, onMounted, useState } from "@odoo/owl";
+import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_scanner";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
@@ -10,13 +10,25 @@ export class EventRegistrationSummaryDialog extends Component {
     static components = { Dialog };
     static props = {
         close: Function,
+        doNextScan: Function,
+        playSound: Function,
         registration: Object,
     };
 
     setup() {
         this.actionService = useService("action");
-        this.notification = useService("notification");
+        this.isBarcodeScannerSupported = isBarcodeScannerSupported();
         this.orm = useService("orm");
+
+        this.registrationStatus = useState({value: this.registration.status});
+
+        onMounted(() => {
+            if (this.props.registration.status === 'already_registered' || this.props.registration.status === 'need_manual_confirmation') {
+                this.props.playSound("notify");
+            } else if (this.props.registration.status === 'not_ongoing_event' || this.props.registration.status === 'canceled_registration') {
+                this.props.playSound("error");
+            }
+        });
     }
 
     get registration() {
@@ -29,8 +41,7 @@ export class EventRegistrationSummaryDialog extends Component {
 
     async onRegistrationConfirm() {
         await this.orm.call("event.registration", "action_set_done", [this.registration.id]);
-        this.notification.add(_t("Registration confirmed"));
-        this.props.close();
+        this.registrationStatus.value = "confirmed_registration";
     }
 
     onRegistrationPrintPdf() {
@@ -50,5 +61,10 @@ export class EventRegistrationSummaryDialog extends Component {
             target: "current",
         });
         this.props.close();
+    }
+
+    async onScanNext() {
+        this.props.close();
+        this.props.doNextScan();
     }
 }

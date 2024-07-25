@@ -11,3 +11,18 @@
         text-decoration: underline;
     }
 }
+
+// Match the record cover style of website_event
+.o_wevent_sale_event {
+    .o_record_cover_container {
+        overflow: hidden;
+        z-index: 0;
+        color: white;
+        .o_record_cover_component {
+            z-index: -1;
+        }
+        &.o_wevent_event_main_cover {
+            min-height: 12rem;
+        }
+    }
+}
