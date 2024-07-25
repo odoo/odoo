@@ -8,6 +8,7 @@ patch(MockPosData.prototype, {
         const data = super.data;
         data.models["loyalty.reward"] = { fields: {}, records: [] };
         data.models["loyalty.program"] = { fields: {}, records: [] };
+        data.models["loyalty.rule"] = { fields: {}, records: [] };
         return data;
     },
 });
