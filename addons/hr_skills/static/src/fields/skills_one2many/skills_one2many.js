@@ -48,8 +48,8 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
             type: "ir.actions.act_window",
             name: _t("Skills Report"),
             res_model: "hr.employee.skill.log",
-            view_mode: "graph,tree",
-            views: [[false, "graph"], [false, "tree"]],
+            view_mode: "graph,list",
+            views: [[false, "graph"], [false, "list"]],
             context: {
                 'fill_temporal': 0,
             },

@@ -37,7 +37,7 @@
         <field name="name">lunch.product.list</field>
         <field name="model">lunch.product</field>
         <field name="arch" type="xml">
-            <list string="Products Tree">
+            <list string="Products List">
                 <field name="currency_id" column_invisible="True"/>
                 <field name="name"/>
                 <field name="category_id"/>
@@ -182,7 +182,7 @@
     </record>
 
     <record id="lunch_product_category_view_tree" model="ir.ui.view">
-        <field name="name">Product category Tree</field>
+        <field name="name">Product category List</field>
         <field name="model">lunch.product.category</field>
         <field name="arch" type="xml">
             <list string="Products List">

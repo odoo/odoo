@@ -2535,7 +2535,7 @@ test("load a tree", async () => {
         type: "ir.actions.act_window",
         target: "current",
         res_model: "partner",
-        views: [[false, "tree"]],
+        views: [[false, "list"]],
     });
     expect(".o_list_view").toHaveCount(1);
 });

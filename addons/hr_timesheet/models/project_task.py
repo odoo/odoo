@@ -165,10 +165,10 @@ class Task(models.Model):
         new_views = []
         for view in action['views']:
             if not is_internal_user:
-                if view[1] == 'tree':
+                if view[1] == 'list':
                     tree_view_id = self.env['ir.model.data']._xmlid_to_res_id('hr_timesheet.hr_timesheet_line_portal_tree')
                     if tree_view_id:
-                        new_views.insert(0, (tree_view_id, 'tree'))
+                        new_views.insert(0, (tree_view_id, 'list'))
                         continue
                 elif view[1] == 'form':
                     form_view_id = self.env['ir.model.data']._xmlid_to_res_id('hr_timesheet.timesheet_view_form_portal_user')
@@ -182,7 +182,7 @@ class Task(models.Model):
                         continue
             if view[1] == 'graph':
                 view = (graph_view_id, 'graph')
-            new_views.insert(0, view) if view[1] == 'tree' else new_views.append(view)
+            new_views.insert(0, view) if view[1] == 'list' else new_views.append(view)
 
         action.update({
             'display_name': _('Timesheets'),
