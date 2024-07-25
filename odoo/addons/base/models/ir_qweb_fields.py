@@ -509,7 +509,7 @@ class MonetaryConverter(models.AbstractModel):
             fields = record._fields.items()
             currency_fields = [k for k, v in fields if v.type == 'many2one' and v.comodel_name == 'res.currency']
             if currency_fields:
-                options['display_currency'] = record[currency_fields[0]]
+                options['display_currency'] = record[currency_fields[0]] or self.env.company.currency_id
         if 'date' not in options:
             options['date'] = record._context.get('date')
         if 'company_id' not in options:
