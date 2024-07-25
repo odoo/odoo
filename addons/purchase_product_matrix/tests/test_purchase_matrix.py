@@ -9,7 +9,7 @@ from odoo.addons.product_matrix.tests.common import TestMatrixCommon
 class TestPurchaseMatrixUi(TestMatrixCommon):
 
     def test_purchase_matrix_ui(self):
-        self.start_tour("/web", 'purchase_matrix_tour', login="admin")
+        self.start_tour("/odoo", 'purchase_matrix_tour', login="admin")
 
         # Ensures some dynamic create variants have been created by the matrix
         # Ensures a PO has been created with exactly x lines ...

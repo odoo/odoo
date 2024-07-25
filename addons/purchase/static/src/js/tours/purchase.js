@@ -8,7 +8,7 @@ import PurchaseAdditionalTourSteps from "@purchase/js/tours/purchase_steps";
 import { queryFirst } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("purchase_tour", {
-    url: "/web",
+    url: "/odoo",
     sequence: 40,
     steps: () => [
         stepUtils.showAppsMenuItem(),
