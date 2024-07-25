@@ -923,7 +923,7 @@ class StockPicking(models.Model):
             if picking.state not in ('confirmed', 'waiting', 'assigned'):
                 picking.show_check_availability = False
                 continue
-            if all(m.picked for m in picking.move_ids):
+            if all(m.picked or m.product_uom_qty == m.quantity for m in picking.move_ids):
                 picking.show_check_availability = False
                 continue
             picking.show_check_availability = any(
