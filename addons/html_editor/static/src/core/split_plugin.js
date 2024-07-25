@@ -29,7 +29,6 @@ export class SplitPlugin extends Plugin {
             // "Unbreakable" is a legacy term that means unsplittable and
             // unmergeable.
             (element) => element.classList.contains("oe_unbreakable"),
-            (element) => element.hasAttribute("t"),
             (element) => ["DIV", "SECTION"].includes(element.tagName),
         ],
         onBeforeInput: p.onBeforeInput.bind(p),

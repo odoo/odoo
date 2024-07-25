@@ -3,6 +3,8 @@ import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { strong } from "../_helpers/tags";
 import { setFontSize } from "../_helpers/user_actions";
+import { Plugin } from "@html_editor/plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 test("should change the font size of a few characters", async () => {
     await testEditor({
@@ -153,10 +155,16 @@ test("should apply font size in unbreakable span with class", async () => {
 });
 
 test("should apply font size in unbreakable span without class", async () => {
+    class AddUnsplittableRulePlugin extends Plugin {
+        static resources = () => ({
+            isUnsplittable: (element) => element.getAttribute("t") === "unbreakable",
+        });
+    }
     await testEditor({
         contentBefore: `<h1><span t="unbreakable">some [text]</span></h1>`,
         stepFunction: setFontSize("18px"),
         contentAfter: `<h1><span t="unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
+        config: { Plugins: [...MAIN_PLUGINS, AddUnsplittableRulePlugin] },
     });
 });
 
