@@ -50,10 +50,16 @@ class TestSanitizer(BaseCase):
             ("lala<p>yop</p>xxx", "<p>lala</p><p>yop</p>xxx"),  # trailing text
             ("Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci",
                 u"<p>Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci</p>"),  # unicode
+            ('<div>a<div>b</div></div>', '<div>a<div>b</div></div>'),
+            ('<div><div>a</div></div>', '<div><div>a</div></div>'),
+            ('<script> alert(1) </script>', ''),
+            ('<head><title>Title of the document</title><head>', ''),
         ]
         for content, expected in cases:
             html = html_sanitize(content)
             self.assertEqual(html, expected, 'html_sanitize is broken')
+            html = html_sanitize(html)
+            self.assertEqual(html, expected, 'html_sanitize is not idempotent')
 
     def test_comment_malformed(self):
         html = '''<!-- malformed-close --!> <img src='x' onerror='alert(1)'></img> --> comment <!-- normal comment --> --> out of context balise --!>'''

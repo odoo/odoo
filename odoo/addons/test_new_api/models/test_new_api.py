@@ -355,6 +355,7 @@ class Test_New_ApiMixed(models.Model):
     lang = fields.Selection(string='Language', selection='_get_lang')
     reference = fields.Reference(string='Related Document',
         selection='_reference_models')
+    comment0 = fields.Html()
     comment1 = fields.Html(sanitize=False)
     comment2 = fields.Html(sanitize_attributes=True, strip_classes=False)
     comment3 = fields.Html(sanitize_attributes=True, strip_classes=True)

@@ -3147,6 +3147,14 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             for index, record in enumerate(records):
                 record.write({'harry': index + 2})
 
+    def test_html_sanitize(self):
+        record = self.env['test_new_api.mixed'].create({})
+        record_value = write_value = "<div>EXTERNAL SUBMISSION - Customer not verified<br>\n<br>\n<p>### TOUR DATA ###</p></div>"
+        record.comment0 = write_value
+        self.assertEqual(record.comment0, record_value)
+        record.invalidate_recordset()
+        self.assertEqual(record.comment0, record_value)
+
 
 class TestX2many(TransactionExpressionCase):
 

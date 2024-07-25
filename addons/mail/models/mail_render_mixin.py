@@ -364,9 +364,10 @@ class MailRenderMixin(models.AbstractModel):
                 value = escape(value or '')
                 return value if tag.lower() == 't' else f"<{tag}>{value}</{tag}>"
 
-            # normalize the HTML (add a parent div to avoid modification of the template
-            # it will be removed by html_normalize)
+            # normalize the HTML (add a parent div to avoid modification of the template)
             template_src = html_normalize(f'<div>{template_src}</div>')
+            if template_src.startswith('<div>') and template_src.endswith('</div>'):
+                template_src = template_src[5:-6]
 
             result[record.id] = Markup(re.sub(
                 r'''<(\w+)[\s|\n]+t-out=[\s|\n]*(\'|\")((\w|\.)+)(\2)[\s|\n]*((\/>)|(>[\s|\n]*([^<>]*?))[\s|\n]*<\/\1>)''',
