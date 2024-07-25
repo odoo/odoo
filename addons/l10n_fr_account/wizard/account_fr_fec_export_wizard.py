@@ -30,7 +30,7 @@ class FecExportWizard(models.TransientModel):
             self.export_type = 'official'
 
     def _get_base_domain(self):
-        domain = [('company_id', '=', self.env.company.id)]
+        domain = [('company_id', 'in', tuple(self.env.company._accessible_branches().ids))]
         # For official report: only use posted entries
         if self.export_type == "official":
             domain.append(('parent_state', '=', 'posted'))
