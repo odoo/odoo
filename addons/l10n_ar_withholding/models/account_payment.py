@@ -6,17 +6,6 @@ class AccountPayment(models.Model):
 
     _inherit = 'account.payment'
 
-    tax_withholding_id = fields.Many2one(
-        'account.tax',
-        string='Withholding Tax',
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-    )
-
-    l10n_ar_withholding_accumulated_payments = fields.Selection(
-        related='tax_withholding_id.l10n_ar_withholding_accumulated_payments',
-    )
-
     def _synchronize_to_moves(self, changed_fields):
         ''' If we change a payment with withholdings, delete all withholding lines as the synchronization mechanism is not
         implemented yet

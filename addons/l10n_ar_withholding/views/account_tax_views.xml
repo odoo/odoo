@@ -6,16 +6,11 @@
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
             <field name="type_tax_use" position="after">
-                <field name="l10n_ar_withholding_payment_type" invisible="type_tax_use != 'none' or country_code != 'AR'"/>
-                <field name="l10n_ar_withholding_sequence_id" context="{'default_name': name}" invisible="l10n_ar_withholding_payment_type != 'supplier'"/>
-            </field>
-            <field name="price_include" position="after">
-                <field name="l10n_ar_withholding_accumulated_payments"/>
-                <field name="l10n_ar_withholding_non_taxable_amount"/>
-            </field>
-            <field name="amount_type" position="after">
-                <field name="l10n_ar_tax_type"/>
-                <field name="l10n_ar_state_id" invisible="l10n_ar_tax_type != 'iibb_withholding'"/>
+                <field name="l10n_ar_withholding_payment_type" invisible="type_tax_use != 'none' or country_code != 'AR'" string="Withholding Type"/>
+                <field name="l10n_ar_tax_type" invisible="not l10n_ar_withholding_payment_type" required="l10n_ar_withholding_payment_type" string="Tax Type"/>
+                <field name="l10n_ar_state_id" invisible="l10n_ar_tax_type != 'iibb_withholding'" required="l10n_ar_tax_type == 'iibb_withholding'" string="Tax Type"/>
+                <field name="l10n_ar_withholding_non_taxable_amount" invisible="not l10n_ar_withholding_payment_type" string="Non-taxable Amount"/>
+                <field name="l10n_ar_withholding_sequence_id" context="{'default_name': name}" invisible="l10n_ar_withholding_payment_type != 'supplier'" string="Sequence"/>
             </field>
         </field>
     </record>

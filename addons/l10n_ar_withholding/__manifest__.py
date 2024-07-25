@@ -19,6 +19,7 @@
         'views/res_partner_view.xml',
         'wizards/account_payment_register_views.xml',
         'security/ir.model.access.csv',
+        'security/security.xml',
     ],
     'installable': True,
     'post_init_hook': '_l10n_ar_withholding_post_init',
