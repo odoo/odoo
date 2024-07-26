@@ -83,6 +83,7 @@ export class Group extends DataPoint {
             });
         } else {
             await this.list.load({ domain: this.groupDomain });
+            this.count = this.list.isGrouped ? this.list.recordCount : this.list.count;
         }
         this.model._updateConfig(this.config, { extraDomain: filter }, { reload: false });
     }
