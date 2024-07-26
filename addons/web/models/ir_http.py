@@ -6,7 +6,7 @@ import json
 import odoo
 from odoo import api, models, fields
 from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
-from odoo.tools import ormcache, ustr, config
+from odoo.tools import ormcache, config
 from odoo.tools.misc import str2bool
 
 
@@ -131,7 +131,7 @@ class Http(models.AbstractModel):
             # with access to the backend ('internal'-type users)
             menus = self.env['ir.ui.menu'].load_menus(request.session.debug)
             ordered_menus = {str(k): v for k, v in menus.items()}
-            menu_json_utf8 = json.dumps(ordered_menus, default=ustr, sort_keys=True).encode()
+            menu_json_utf8 = json.dumps(ordered_menus, sort_keys=True).encode()
             session_info['cache_hashes'].update({
                 "load_menus": hashlib.sha512(menu_json_utf8).hexdigest()[:64], # sha512/256
             })

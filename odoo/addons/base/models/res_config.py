@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import json
 import logging
 import re
-
 from ast import literal_eval
-from lxml import etree
 
 from odoo import api, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
-from odoo.tools import ustr
 
 _logger = logging.getLogger(__name__)
 

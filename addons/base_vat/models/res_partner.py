@@ -9,9 +9,8 @@ from stdnum import luhn
 
 import logging
 
-from odoo import api, models, fields, tools, _
+from odoo import api, models, fields, _
 from odoo.tools import zeep
-from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
 
@@ -116,7 +115,7 @@ class ResPartner(models.Model):
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
-        if not ustr(country_code).encode('utf-8').isalpha():
+        if not country_code.encode().isalpha():
             return False
         check_func_name = 'check_vat_' + country_code
         check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
@@ -403,30 +402,28 @@ class ResPartner(models.Model):
 
     # Mexican VAT verification, contributed by Vauxoo
     # and Panos Christeas <p_christ@hol.gr>
-    __check_vat_mx_re = re.compile(br"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
-                                   br"[ \-_]?" \
-                                   br"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
-                                   br"[ \-_]?" \
-                                   br"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+    __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})"
+                                   r"[ \-_]?"
+                                   r"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])"
+                                   r"[ \-_]?"
+                                   r"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})")
 
     def check_vat_mx(self, vat):
         ''' Mexican VAT verification
 
         Verificar RFC México
         '''
-        # we convert to 8-bit encoding, to help the regex parse only bytes
-        vat = ustr(vat).encode('iso8859-1')
-        m = self.__check_vat_mx_re.match(vat)
+        m = self.__check_vat_mx_re.fullmatch(vat)
         if not m:
             #No valid format
             return False
+        ano = int(m['ano'])
+        if ano > 30:
+            ano = 1900 + ano
+        else:
+            ano = 2000 + ano
         try:
-            ano = int(m.group('ano'))
-            if ano > 30:
-                ano = 1900 + ano
-            else:
-                ano = 2000 + ano
-            datetime.date(ano, int(m.group('mes')), int(m.group('dia')))
+            datetime.date(ano, int(m['mes']), int(m['dia']))
         except ValueError:
             return False
 

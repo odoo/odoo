@@ -51,7 +51,7 @@ class PostgreSQLHandler(logging.Handler):
         with contextlib.suppress(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
             # preclude risks of deadlocks
             cr.execute("SET LOCAL statement_timeout = 1000")
-            msg = tools.ustr(record.msg)
+            msg = str(record.msg)
             if record.args:
                 msg = msg % record.args
             traceback = getattr(record, 'exc_text', '')

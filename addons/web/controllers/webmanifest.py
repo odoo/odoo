@@ -7,7 +7,7 @@ import mimetypes
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import ustr, file_open
+from odoo.tools import file_open
 
 
 class WebManifest(http.Controller):
@@ -62,7 +62,7 @@ class WebManifest(http.Controller):
             'type': 'image/png',
         } for size in icon_sizes]
         manifest['shortcuts'] = self._get_shortcuts()
-        body = json.dumps(manifest, default=ustr)
+        body = json.dumps(manifest)
         response = request.make_response(body, [
             ('Content-Type', 'application/manifest+json'),
         ])

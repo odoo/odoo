@@ -7310,7 +7310,7 @@ def convert_pgerror_unique(model, fields, info, e):
         constraint, table, ufields = cr_tmp.fetchone() or (None, None, None)
     # if the unique constraint is on an expression or on an other table
     if not ufields or model._table != table:
-        return {'message': tools.ustr(e)}
+        return {'message': tools.exception_to_unicode(e)}
 
     # TODO: add stuff from e.diag.message_hint? provides details about the constraint & duplication values but may be localized...
     if len(ufields) == 1:
@@ -7340,11 +7340,11 @@ def convert_pgerror_constraint(model, fields, info, e):
     sql_constraints = dict([(('%s_%s') % (e.diag.table_name, x[0]), x) for x in model._sql_constraints])
     if e.diag.constraint_name in sql_constraints.keys():
         return {'message': "'%s'" % sql_constraints[e.diag.constraint_name][2]}
-    return {'message': tools.ustr(e)}
+    return {'message': tools.exception_to_unicode(e)}
 
 PGERROR_TO_OE = defaultdict(
     # shape of mapped converters
-    lambda: (lambda model, fvg, info, pgerror: {'message': tools.ustr(pgerror)}), {
+    lambda: (lambda model, fvg, info, pgerror: {'message': tools.exception_to_unicode(pgerror)}), {
     '23502': convert_pgerror_not_null,
     '23505': convert_pgerror_unique,
     '23514': convert_pgerror_constraint,

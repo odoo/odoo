@@ -13,7 +13,7 @@ class TestLoadMessages(HttpCaseWithUserDemo):
             "channel_member_ids": [Command.create({"partner_id": partner_admin.id})],
         })
         self.env["mail.message"].create([{
-            "body": n,
+            "body": str(n),
             "model": "discuss.channel",
             "pinned_at": odoo.fields.Datetime.now() if n == 1 else None,
             "res_id": channel_id.id,
