@@ -269,6 +269,10 @@ class WebsiteSale(http.Controller):
         """ Hook to update values used for rendering website_sale.products template """
         return {}
 
+    def _get_additional_extra_shop_values(self, values, **post):
+        """ Hook to update values used for rendering website_sale.products template """
+        return self._get_additional_shop_values(values)
+
     @http.route([
         '/shop',
         '/shop/page/<int:page>',
@@ -452,7 +456,7 @@ class WebsiteSale(http.Controller):
             values['available_max_price'] = tools.float_round(available_max_price, 2)
         if category:
             values['main_object'] = category
-        values.update(self._get_additional_shop_values(values))
+        values.update(self._get_additional_extra_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
     @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
