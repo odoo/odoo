@@ -66,7 +66,7 @@ export class ColorSelector extends Component {
     }
 
     applyColor(color) {
-        const mode = this.props.type === "foreground" ? "color" : "background";
+        const mode = this.props.type === "foreground" ? "color" : "backgroundColor";
         this.props.dispatch("APPLY_COLOR", { color: color || "", mode });
     }
 
@@ -81,7 +81,7 @@ export class ColorSelector extends Component {
 
     onColorPreview(ev) {
         const color = ev.hex ? ev.hex : this.processColorFromEvent(ev);
-        const mode = this.props.type === "foreground" ? "color" : "background";
+        const mode = this.props.type === "foreground" ? "color" : "backgroundColor";
         this.props.dispatch("COLOR_PREVIEW", { color: color || "", mode });
     }
 
@@ -100,7 +100,7 @@ export class ColorSelector extends Component {
     }
 
     getCurrentGradientColor() {
-        const mode = this.props.type === "foreground" ? "color" : "background";
+        const mode = this.props.type === "foreground" ? "color" : "backgroundColor";
         if (isColorGradient(this.selectedColors[mode])) {
             return this.selectedColors[mode];
         }
