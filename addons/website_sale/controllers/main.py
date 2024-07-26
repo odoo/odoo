@@ -1504,7 +1504,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
     def checkout(self, **post):
         order_sudo = request.website.sale_get_order()
-
+        request.session['sale_last_order_id'] = order_sudo.id
         redirection = self.checkout_redirection(order_sudo)
         if redirection:
             return redirection
@@ -1578,7 +1578,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return redirection
 
         order.order_line._compute_tax_id()
-        request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
         extra_step = request.website.viewref('website_sale.extra_info')
         if extra_step.active:
