@@ -4,7 +4,7 @@
 <t t-name="web.Legacy.FavoriteMenu" t-inherit="web.FavoriteMenu" t-inherit-mode="primary" owl="1">
     <xpath expr="//t[@t-set-slot='toggler']" position="inside">
         <Dialog t-if="state.deletedFavorite"
-            title="'Warning'"
+            title.translate="Warning"
             size="'medium'"
             onClosed="() => { state.deletedFavorite = false }"
             >
