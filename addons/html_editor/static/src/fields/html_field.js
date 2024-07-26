@@ -1,10 +1,11 @@
 import {
     COLLABORATION_PLUGINS,
-    MAIN_PLUGINS,
     DYNAMIC_PLACEHOLDER_PLUGINS,
+    MAIN_PLUGINS,
 } from "@html_editor/plugin_sets";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, useRef, useState } from "@odoo/owl";
+import { Component, onWillStart, useRef, useState } from "@odoo/owl";
+import { loadBundle } from "@web/core/assets";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -88,6 +89,12 @@ export class HtmlField extends Component {
             // update Dynamic Placeholder reference model
             if (this.props.dynamicPlaceholder && this.editor) {
                 this.editor.shared.updateDphDefaultModel?.(value);
+            }
+        });
+
+        onWillStart(async () => {
+            if (!window.$) {
+                await loadBundle("html_editor.jquery");
             }
         });
     }
