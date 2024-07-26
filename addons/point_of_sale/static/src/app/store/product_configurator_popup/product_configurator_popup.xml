@@ -120,7 +120,7 @@
     </t>
 
     <t t-name="point_of_sale.ProductConfiguratorPopup">
-        <Dialog title="'Attribute selection'">
+        <Dialog title.translate="Attribute selection">
             <div t-ref="input-area">
                 <div t-foreach="this.props.product.attribute_line_ids" t-as="attributeLine" t-key="attributeLine.id" class="attribute mb-3">
                     <div class="attribute_name mb-2 fw-bolder" t-esc="attributeLine.attribute_id.name"/>

@@ -53,7 +53,7 @@ export class HootButtons extends Component {
                     type="'test'"
                     id="state.failed"
                     class="'bg-btn px-2 py-1 transition-colors animate-slide-left'"
-                    title="'Run failed tests'"
+                    title.translate="Run failed tests"
                 >
                     Run failed
                 </HootLink>
