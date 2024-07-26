@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('event_tour', {
     isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
     content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, {
     isActive: ["community"],
@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('event_tour', {
 {
     trigger: '.o-kanban-button-new',
     content: markup(_t("Let's create your first <b>event</b>.")),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, {
     trigger: '.o_event_form_view div[name="name"] textarea',
@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add('event_tour', {
 ...new EventAdditionalTourSteps()._get_website_event_steps(), {
     trigger: '.o_event_form_view div[name="stage_id"]',
     content: _t("Now that your event is ready, click here to move it to another stage."),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 },
 {
@@ -69,6 +69,6 @@ registry.category("web_tour.tours").add('event_tour', {
 {
     trigger: 'ol.breadcrumb li.breadcrumb-item:first',
     content: markup(_t("Use the <b>breadcrumbs</b> to go back to your kanban overview.")),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: 'click',
 }].filter(Boolean)});

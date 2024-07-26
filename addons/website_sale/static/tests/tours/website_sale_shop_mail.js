@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add('shop_mail', {
         isActive: ["body:not(:has(.modal-footer button[name='action_send_mail']))"],
         trigger: ".modal-footer button[name='document_layout_save']",
         content: "let's continue",
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     },
     {

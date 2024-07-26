@@ -14,12 +14,12 @@ patch(EventAdditionalTourSteps.prototype, {
             ...super._get_website_event_steps(), {
                 trigger: '.o_event_form_view button[title="Unpublished"]',
                 content: markup(_t("Use this <b>shortcut</b> to easily access your event web page.")),
-                position: 'bottom',
+                tooltipPosition: 'bottom',
                 run: "click",
             }, {
                 trigger: '.o_edit_website_container a',
                 content: markup(_t("With the Edit button, you can <b>customize</b> the web page visitors will see when registering.")),
-                position: 'bottom',
+                tooltipPosition: 'bottom',
                 run: "click",
             },
             ...wTourUtils.dragNDrop({
@@ -30,7 +30,7 @@ patch(EventAdditionalTourSteps.prototype, {
             {
                 trigger: 'button[data-action="save"]',
                 content: markup(_t("Don't forget to click <b>save</b> when you're done.")),
-                position: 'bottom',
+                tooltipPosition: 'bottom',
                 run: "click",
             },
             {
@@ -39,7 +39,7 @@ patch(EventAdditionalTourSteps.prototype, {
             {
                 trigger: '.o_menu_systray_item.o_website_publish_container a',
                 content: markup(_t("Looking great! Let's now <b>publish</b> this page so that it becomes <b>visible</b> on your website!")),
-                position: 'bottom',
+                tooltipPosition: 'bottom',
                 run: "click",
             },
             {
@@ -48,7 +48,7 @@ patch(EventAdditionalTourSteps.prototype, {
             {
                 trigger: '.o_website_edit_in_backend > a',
                 content: _t("This shortcut will bring you right back to the event form."),
-                position: 'bottom',
+                tooltipPosition: 'bottom',
                 run: "click",
             }];
     }

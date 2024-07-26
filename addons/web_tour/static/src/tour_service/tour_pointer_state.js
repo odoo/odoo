@@ -106,7 +106,7 @@ export function createPointerState() {
     const pointTo = (anchor, step, isZone) => {
         intersection.setTarget(anchor);
         if (anchor) {
-            let { position, content } = step;
+            let { tooltipPosition, content } = step;
             switch (intersection.targetPosition) {
                 case "unknown": {
                     // Do nothing for unknown target position.
@@ -116,7 +116,14 @@ export function createPointerState() {
                     if (document.body.contains(floatingAnchor)) {
                         floatingAnchor.remove();
                     }
-                    setState({ anchor, content, isZone, onClick: null, position, isVisible: true });
+                    setState({
+                        anchor,
+                        content,
+                        isZone,
+                        onClick: null,
+                        position: tooltipPosition,
+                        isVisible: true,
+                    });
                     break;
                 }
                 default: {
@@ -132,7 +139,7 @@ export function createPointerState() {
                             content,
                             isZone,
                             onClick: null,
-                            position,
+                            position: tooltipPosition,
                             isVisible: true,
                         });
                         return;
@@ -140,11 +147,11 @@ export function createPointerState() {
                     const { x, y, width, height } = scrollParent.getBoundingClientRect();
                     floatingAnchor.style.left = `${x + width / 2}px`;
                     if (intersection.targetPosition === "out-below") {
-                        position = "top";
+                        tooltipPosition = "top";
                         content = _t("Scroll down to reach the next step.");
                         floatingAnchor.style.top = `${y + height - TourPointer.height}px`;
                     } else if (intersection.targetPosition === "out-above") {
-                        position = "bottom";
+                        tooltipPosition = "bottom";
                         content = _t("Scroll up to reach the next step.");
                         floatingAnchor.style.top = `${y + TourPointer.height}px`;
                     }
@@ -155,7 +162,7 @@ export function createPointerState() {
                         anchor: floatingAnchor,
                         content,
                         onClick,
-                        position,
+                        position: tooltipPosition,
                         isZone,
                         isVisible: true,
                     });

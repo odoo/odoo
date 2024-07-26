@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             content: _t(
                 "Let's try the Purchase app to manage the flow from purchase to reception and invoice control."
             ),
-            position: "right",
+            tooltipPosition: "right",
             run: "click",
         },
         {
@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             content: _t(
                 "Let's try the Purchase app to manage the flow from purchase to reception and invoice control."
             ),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         {
             trigger: ".o_list_button_add",
             content: _t("Let's create your first request for quotation."),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         {
             trigger: ".o_form_editable .o_field_many2one[name='partner_id'] input",
             content: _t("Search a vendor name, or create one on the fly."),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "edit Agrolait",
         },
         {
@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         {
             trigger: ".o_field_x2many_list_row_add > a",
             content: _t("Add some products or services to your quotation."),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -72,7 +72,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         {
             trigger: ".o_field_widget[name=product_id], .o_field_widget[name=product_template_id]",
             content: _t("Select a product, or create a new one on the fly."),
-            position: "right",
+            tooltipPosition: "right",
             run: function (actions) {
                 const input = this.anchor.querySelector("input");
                 actions.edit("DESK0001", input || this.anchor);
@@ -99,7 +99,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         {
             trigger: ".o_form_editable input[name='product_qty'] ",
             content: _t("Indicate the product quantity you want to order."),
-            position: "right",
+            tooltipPosition: "right",
             run: "edit 12.0",
         },
         {
@@ -121,7 +121,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         {
             trigger: ".modal-footer button[name='action_send_mail']",
             content: _t("Send the request for quotation to your vendor."),
-            position: "left",
+            tooltipPosition: "left",
             run: "click",
         },
         {
@@ -133,7 +133,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             content: _t(
                 "Once you get the price from the vendor, you can complete the purchase order with the right price."
             ),
-            position: "right",
+            tooltipPosition: "right",
             run: "edit 200.00",
         },
         {

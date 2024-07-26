@@ -14,18 +14,18 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
     content: markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
-    position: 'right',
+    tooltipPosition: 'right',
     run: "click",
 }, {
     isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
     content: markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, {
     trigger: ".o-kanban-button-new",
     content: _t("Create your first Job Position."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -35,7 +35,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: ".o_job_name",
     content: _t("What do you want to recruit today? Choose a job title..."),
-    position: "right",
+    tooltipPosition: "right",
     run: "click",
 }, 
 {
@@ -45,17 +45,17 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: ".o_job_alias",
     content: _t("Choose an application email."),
-    position: "right",
+    tooltipPosition: "right",
     run: "click",
 }, {
     trigger: '.o_create_job',
     content: _t('Let\'s create the position. An email will be setup for applications, and a public job description, if you use the Website app.'),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click .modal:visible .btn.btn-primary",
 }, {
     trigger: ".o_copy_paste_email",
     content: _t("Copy this email address, to paste it in your email composer, to apply."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: ".breadcrumb-item:not(.active):last",
     content: _t("Let’s go back to the dashboard."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: ".oe_kanban_action_button",
     content: markup(_t("<b>Did you apply by sending an email?</b> Check incoming applications.")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: ".oe_kanban_card",
     content: markup(_t("<b>Drag this card</b>, to qualify him for a first interview.")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, 
 {
@@ -95,7 +95,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: ".oe_kanban_card",
     content: markup(_t("<b>Click to view</b> the application.")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -105,7 +105,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: "button:contains(Send message)",
     content: markup(_t("<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -115,7 +115,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: ".o-mail-Chatter .o-mail-Composer button[aria-label='Send']",
     content: _t("Send your email. Followers will get a copy of the communication."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -125,7 +125,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: "button:contains(Log note)",
     content: _t("Or talk about this applicant privately with your colleagues."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -135,7 +135,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: ".o_create_employee",
     content: _t("Let’s create this new employee now."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -145,6 +145,6 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 {
     trigger: ".o_form_button_save",
     content: _t("Save it!"),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }]});

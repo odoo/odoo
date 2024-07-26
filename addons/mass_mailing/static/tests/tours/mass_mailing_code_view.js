@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
         }, {
             trigger: 'input#subject_0',
             content: markup('Pick the <b>email subject</b>.'),
-            position: 'bottom',
+            tooltipPosition: 'bottom',
             run: "edit Test",
         }, {
             trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',

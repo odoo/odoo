@@ -13,7 +13,7 @@ import {
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { Component, useState, xml } from "@odoo/owl";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { click, queryFirst } from "@odoo/hoot-dom";
+import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { session } from "@web/session";
@@ -1183,4 +1183,84 @@ test("Tour started by the URL", async () => {
     await contains("button.bar").click();
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("check tooltip position", async () => {
+    registry.category("web_tour.tours").add("tour_des_tooltip", {
+        sequence: 93,
+        steps: () => [
+            {
+                trigger: ".button0",
+                tooltipPosition: "right",
+                run: "click",
+            },
+            {
+                trigger: ".button1",
+                tooltipPosition: "left",
+                run: "click",
+            },
+            {
+                trigger: ".button2",
+                tooltipPosition: "bottom",
+                run: "click",
+            },
+            {
+                trigger: ".button3",
+                tooltipPosition: "top",
+                run: "click",
+            },
+        ],
+    });
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <div class="p-3"><button class="button0">Button 0</button></div>
+                    <div class="p-3"><button class="button1">Button 1</button></div>
+                    <div class="p-3"><button class="button2">Button 2</button></div>
+                    <div class="p-3"><button class="button3">Button 3</button></div>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    let tooltip;
+    getService("tour_service").startTour("tour_des_tooltip", { mode: "manual" });
+
+    await animationFrame();
+    await advanceTime(100);
+    tooltip = await waitFor(".o_tour_pointer");
+    const button0 = await waitFor(".button0");
+    expect(tooltip.getBoundingClientRect().left).toBeGreaterThan(
+        button0.getBoundingClientRect().right
+    );
+    await contains(".button0").click();
+
+    await animationFrame();
+    await advanceTime(100);
+    tooltip = await waitFor(".o_tour_pointer");
+    const button1 = await waitFor(".button1");
+    expect(tooltip.getBoundingClientRect().right).toBeLessThan(
+        button1.getBoundingClientRect().left
+    );
+    await contains(".button1").click();
+
+    await animationFrame();
+    await advanceTime(100);
+    tooltip = await waitFor(".o_tour_pointer");
+    const button2 = await waitFor(".button2");
+    expect(tooltip.getBoundingClientRect().top).toBeGreaterThan(
+        button2.getBoundingClientRect().bottom
+    );
+    await contains(".button2").click();
+
+    await animationFrame();
+    await advanceTime(100);
+    tooltip = await waitFor(".o_tour_pointer");
+    const button3 = await waitFor(".button3");
+    expect(tooltip.getBoundingClientRect().bottom).toBeLessThan(
+        button3.getBoundingClientRect().top
+    );
 });

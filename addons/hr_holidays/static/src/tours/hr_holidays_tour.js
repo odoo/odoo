@@ -18,13 +18,13 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         {
             trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
             content: _t("Let's discover the Time Off application"),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger: "button.btn-time-off",
             content: _t("Click on any date or on this button to request a time-off"),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -45,7 +45,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             content: _t(
                 "You can select the period you need to take off, from start date to end date"
             ),
-            position: "right",
+            tooltipPosition: "right",
             run: `edit ${leaveDateFrom}`,
         },
         {
@@ -53,35 +53,35 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             content: _t(
                 "You can select the period you need to take off, from start date to end date"
             ),
-            position: "right",
+            tooltipPosition: "right",
             run: `edit ${leaveDateTo}`,
         },
         {
             trigger: 'div[name="name"] textarea',
             content: _t("Add some description for the people that will validate it"),
             run: `edit ${description}`,
-            position: "right",
+            tooltipPosition: "right",
         },
         {
             trigger: `button:contains(${_t("Save")})`,
             content: _t("Submit your request"),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger: 'button[data-menu-xmlid="hr_holidays.menu_hr_holidays_management"]',
             content: _t("Let's go validate it"),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger: 'a[data-menu-xmlid="hr_holidays.menu_open_department_leave_approve"]',
             content: _t("Select Time Off"),
-            position: "right",
+            tooltipPosition: "right",
             run: "click",
         },
         {
-            position: "bottom",
+            tooltipPosition: "bottom",
             content: _t("Select the request you just created"),
             trigger: "table.o_list_table tr.o_data_row:eq(0)",
             run: "click",
@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         {
             trigger: 'button[name="action_approve"]',
             content: _t("Let's approve it"),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {

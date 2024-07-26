@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'button.o_kanban_edit',
     content: 'Click on Edit button to enter to the form view of the task.',
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, {
     trigger: 'div[name="partner_id"] input',
@@ -221,7 +221,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="sale_line_employee_ids"] div[name="sale_line_id"] input',
     content: 'Select the Sales Order Item to link to the timesheets of this employee.',
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "edit S",
 }, {
     trigger: '[name=sale_line_id] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',

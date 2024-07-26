@@ -191,7 +191,7 @@ export class TourInteractive {
      *  anchor: string,
      *  altAnchor: string?,
      *  isActive: string[]?,
-     *  pointerInfo: { position: string?, content: string? },
+     *  pointerInfo: { tooltipPosition: string?, content: string? },
      * }[]}
      */
     getSubActions(step) {
@@ -209,7 +209,7 @@ export class TourInteractive {
             const anchor = m.groups?.arguments || step.trigger;
             const pointerInfo = {
                 content: step.content,
-                position: step.position,
+                tooltipPosition: step.tooltipPosition,
             };
 
             if (action === "drag_and_drop") {

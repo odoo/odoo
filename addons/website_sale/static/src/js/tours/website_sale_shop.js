@@ -17,22 +17,22 @@
     {
         trigger: ".o_menu_systray .o_new_content_container > a",
         content: _t("Let's create your first product."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     }, {
         trigger: "a[data-module-xml-id='base.module_website_sale']",
         content: markup(_t("Select <b>New Product</b> to create it and manage its properties to boost your sales.")),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     }, {
         trigger: ".modal-dialog input[type=text]",
         content: _t("Enter a name for your new product"),
-        position: "left",
+        tooltipPosition: "left",
         run: "edit Test",
     }, {
         trigger: ".modal-footer button.btn-primary",
         content: markup(_t("Click on <em>Save</em> to create the product.")),
-        position: "right",
+        tooltipPosition: "right",
         run: "click",
     },
     {
@@ -42,7 +42,7 @@
     {
         trigger: ":iframe .product_price .oe_currency_value:visible",
         content: _t("Edit the price of this product by clicking on the amount."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "editor 1.99",
         timeout: 30000,
     },
@@ -53,13 +53,13 @@
     {
         trigger: ":iframe #wrap img.product_detail_img",
         content: _t("Double click here to set an image describing your product."),
-        position: "top",
+        tooltipPosition: "top",
         run: "dblclick",
     }, {
         isActive: ["auto"],
         trigger: ".o_select_media_dialog .o_upload_media_button",
         content: _t("Upload a file from your local library."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click .modal-footer .btn-secondary",
     },
     wTourUtils.goBackToBlocks(),
@@ -78,7 +78,7 @@
     }, {
         trigger: "button[data-action=save]",
         content: markup(_t("Once you click on <b>Save</b>, your product is updated.")),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     },
     {
@@ -88,16 +88,16 @@
     {
         trigger: ".o_menu_systray_item.o_website_publish_container a",
         content: _t("Click on this button so your customers can see it."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     }, {
         trigger: "button[data-menu-xmlid='website.menu_reporting']",
         content: _t("Click here to open the reporting menu"),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     }, {
         trigger: "a[data-menu-xmlid='website.menu_website_dashboard'], a[data-menu-xmlid='website.menu_website_analytics']",
         content: _t("Let's now take a look at your eCommerce dashboard to get your eCommerce website ready in no time."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         // Just check during test mode. Otherwise, clicking it will result to random error on loading the Chart.js script.
     }]);
