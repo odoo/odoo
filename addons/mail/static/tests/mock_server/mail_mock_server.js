@@ -193,16 +193,14 @@ async function channel_call_join(request) {
     const rtcSessions = DiscussChannelRtcSession._filter([
         ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
     ]);
-    const store = new mailDataHelpers.Store("discuss.channel", {
-        id: channel_id,
-        rtcSessions: [["ADD", rtcSessions.map((rtcSession) => ({ id: rtcSession.id }))]],
-    });
-    store.add("Rtc", {
-        iceServers: false,
-        selfSession: { id: sessionId },
-    });
-    store.add(rtcSessions.map((rtcSession) => rtcSession.id));
-    return store.get_result();
+    return new mailDataHelpers.Store(DiscussChannel.browse(channel_id), {
+        rtcSessions: mailDataHelpers.Store.many(rtcSessions, "ADD"),
+    })
+        .add("Rtc", {
+            iceServers: false,
+            selfSession: mailDataHelpers.Store.one(DiscussChannelRtcSession.browse(sessionId)),
+        })
+        .get_result();
 }
 
 registerRoute("/mail/rtc/channel/leave_call", channel_call_leave);
@@ -240,9 +238,12 @@ async function channel_call_leave(request) {
         notifications.push([
             channel,
             "mail.record/insert",
-            new mailDataHelpers.Store("discuss.channel", {
-                id: Number(channelId), // JS object keys are strings, but the type from the server is number
-                rtcSessions: [["DELETE", sessions.map((session) => ({ id: session.id }))]],
+            new mailDataHelpers.Store(DiscussChannel.browse(Number(channelId)), {
+                rtcSessions: mailDataHelpers.Store.many(
+                    DiscussChannelRtcSession.browse(sessions.map((session) => session.id)),
+                    "DELETE",
+                    makeKwArgs({ only_id: true })
+                ),
             }).get_result(),
         ]);
     }
@@ -361,8 +362,7 @@ async function discuss_settings_mute(request) {
         BusBus._sendone(
             partner,
             "mail.record/insert",
-            new mailDataHelpers.Store("discuss.channel", {
-                id: member.channel_id,
+            new mailDataHelpers.Store(DiscussChannel.browse(member.channel_id), {
                 mute_until_dt,
             }).get_result()
         );
@@ -541,14 +541,16 @@ async function mail_link_preview_hide(request) {
     const MailMessage = this.env["mail.message"];
 
     const { link_preview_ids } = await parseRequestParams(request);
-    const linkPreviews = MailLinkPreview.search_read([["id", "in", link_preview_ids]]);
-    for (const linkPreview of linkPreviews) {
+    for (const linkPreview of MailLinkPreview.browse(link_preview_ids)) {
         BusBus._sendone(
-            MailMessage._bus_notification_target(linkPreview.message_id[0]),
+            MailMessage._bus_notification_target(linkPreview.message_id),
             "mail.record/insert",
-            new mailDataHelpers.Store("mail.message", {
-                id: linkPreview.message_id[0],
-                linkPreviews: [["DELETE", [{ id: linkPreview.id }]]],
+            new mailDataHelpers.Store(MailMessage.browse(linkPreview.message_id), {
+                linkPreviews: mailDataHelpers.Store.many(
+                    MailLinkPreview.browse(linkPreview.id),
+                    "DELETE",
+                    makeKwArgs({ only_id: true })
+                ),
             }).get_result()
         );
     }
@@ -682,10 +684,9 @@ async function mail_message_update_content(request) {
     BusBus._sendone(
         MailMessage._bus_notification_target(message.id),
         "mail.record/insert",
-        new mailDataHelpers.Store("mail.message", {
+        new mailDataHelpers.Store(MailMessage.browse(message.id), {
             attachments: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
             body: message.body,
-            id: message.id,
             pinned_at: message.pinned_at,
             recipients: mailDataHelpers.Store.many(
                 this.env["res.partner"].browse(message.partner_ids),
@@ -806,6 +807,15 @@ registerRoute("/mail/thread/data", mail_thread_data);
 /** @type {RouteCallback} */
 export async function mail_thread_data(request) {
     const { request_list, thread_model, thread_id } = await parseRequestParams(request);
+    const [thread] = this.env[thread_model].browse(thread_id);
+    if (!thread) {
+        return new mailDataHelpers.Store("mail.thread", {
+            hasReadAccess: false,
+            hasWriteAccess: false,
+            id: thread_id,
+            model: thread_model,
+        }).get_result();
+    }
     return new mailDataHelpers.Store(
         this.env[thread_model].browse(thread_id),
         makeKwArgs({ as_thread: true, request_list })
@@ -987,20 +997,35 @@ class Store {
         let model_name;
         if (data instanceof models.Model) {
             if (values) {
-                throw new Error(`expected empty values with recordset ${data}: ${values}`);
+                if (data.length !== 1) {
+                    throw new Error(`expected single recordset ${data} with values`);
+                }
+                if (Object.keys(kwargs).length) {
+                    throw new Error(
+                        `expected empty kwargs with recordset ${data} values: ${kwargs}`
+                    );
+                }
             }
             const ids = data.map((idOrRecord) =>
                 typeof idOrRecord === "number" ? idOrRecord : idOrRecord.id
             );
             if (as_thread) {
-                MockServer.env["mail.thread"]._thread_to_store.call(
-                    MockServer.env[data._name],
-                    ids,
-                    this,
-                    makeKwArgs(kwargs)
-                );
+                if (values) {
+                    this.add("mail.thread", { id: data[0].id, model: data._name, ...values });
+                } else {
+                    MockServer.env["mail.thread"]._thread_to_store.call(
+                        MockServer.env[data._name],
+                        ids,
+                        this,
+                        makeKwArgs(kwargs)
+                    );
+                }
             } else {
-                MockServer.env[data._name]._to_store(ids, this, makeKwArgs(kwargs));
+                if (values) {
+                    this.add(data._name, { id: ids[0], ...values });
+                } else {
+                    MockServer.env[data._name]._to_store(ids, this, makeKwArgs(kwargs));
+                }
             }
             return this;
         } else if (typeof data === "object") {

@@ -43,9 +43,8 @@ class MailMessage(models.Model):
                 )
                 if chatbot_message.script_step_id:
                     store.add(
-                        "mail.message",
+                        message,
                         {
-                            "id": message.id,
                             "chatbotStep": {
                                 "message": Store.one_id(message),
                                 "scriptStep": Store.one_id(chatbot_message.script_step_id),
@@ -78,9 +77,8 @@ class MailMessage(models.Model):
         super(MailMessage, self - messages_w_author_livechat)._author_to_store(store)
         for message in messages_w_author_livechat:
             store.add(
-                "mail.message",
+                message,
                 {
-                    "id": message.id,
                     "author": Store.one(
                         message.author_id,
                         fields=["is_company", "user_livechat_username", "user", "write_date"],

@@ -22,8 +22,7 @@ export class MailMessage extends mailModels.MailMessage {
         for (const message of messages) {
             const [rating] = this.env["rating.rating"]._filter([["message_id", "=", message.id]]);
             if (rating) {
-                store.add("mail.message", {
-                    id: message.id,
+                store.add(this.browse(message.id), {
                     rating: {
                         id: rating.id,
                         ratingImageUrl: rating.rating_image_url,

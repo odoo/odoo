@@ -19,7 +19,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         super._to_store(...arguments);
         const channels = this.browse(ids);
         for (const channel of channels) {
-            const channelInfo = { id: channel.id };
+            const channelInfo = {};
             channelInfo["anonymous_name"] = channel.anonymous_name;
             // add the last message date
             if (channel.channel_type === "livechat") {
@@ -42,7 +42,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                     }))[0];
                 }
             }
-            store.add("discuss.channel", channelInfo);
+            store.add(this.browse(channel.id), channelInfo);
         }
     }
     /** @param {import("mock_models").DiscussChannel} channel */

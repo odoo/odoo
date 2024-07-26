@@ -26,8 +26,7 @@ export class MailMessage extends mailModels.MailMessage {
             store
         );
         for (const message of messages_w_author_livechat) {
-            store.add("mail.message", {
-                id: message.id,
+            store.add(this.browse(message.id), {
                 author: mailDataHelpers.Store.one(
                     ResPartner.browse(message.author_id),
                     makeKwArgs({

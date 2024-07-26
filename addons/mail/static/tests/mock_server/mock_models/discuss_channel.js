@@ -59,8 +59,7 @@ export class DiscussChannel extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         const [channel] = this.browse(ids);
-        const custom_store = new mailDataHelpers.Store("discuss.channel", {
-            id: channel.id,
+        const custom_store = new mailDataHelpers.Store(this.browse(channel.id), {
             is_pinned: false,
             isLocallyPinned: false,
         });
@@ -86,8 +85,7 @@ export class DiscussChannel extends models.ServerModel {
         );
         // send custom store after message_post to avoid is_pinned reset to True
         BusBus._sendone(partner, "discuss.channel/leave", custom_store.get_result());
-        const store = new mailDataHelpers.Store("discuss.channel", {
-            id: channel.id,
+        const store = new mailDataHelpers.Store(this.browse(channel.id), {
             channelMembers: mailDataHelpers.Store.many(
                 DiscussChannelMember.browse(channelMember.id),
                 "DELETE",
@@ -163,8 +161,7 @@ export class DiscussChannel extends models.ServerModel {
             BusBus._sendone(
                 channel,
                 "mail.record/insert",
-                new mailDataHelpers.Store("discuss.channel", {
-                    id: channel.id,
+                new mailDataHelpers.Store(this.browse(channel.id), {
                     memberCount: DiscussChannelMember.search_count([
                         ["channel_id", "=", channel.id],
                     ]),
@@ -435,7 +432,7 @@ export class DiscussChannel extends models.ServerModel {
                 makeKwArgs({ extra: true })
             );
             res.allow_public_upload = channel.allow_public_upload;
-            store.add("discuss.channel", res);
+            store.add(this.browse(channel.id), res);
         }
     }
 
@@ -522,9 +519,8 @@ export class DiscussChannel extends models.ServerModel {
         BusBus._sendone(
             partner,
             "mail.record/insert",
-            new mailDataHelpers.Store("discuss.channel", {
+            new mailDataHelpers.Store(this.browse(channelId), {
                 custom_channel_name: name,
-                id: channelId,
             }).get_result()
         );
     }
@@ -740,7 +736,7 @@ export class DiscussChannel extends models.ServerModel {
             makeKwArgs({ limit: 100 })
         );
         const memberCount = DiscussChannelMember.search_count([["channel_id", "in", ids]]);
-        return new mailDataHelpers.Store("discuss.channel", { id: ids[0], memberCount })
+        return new mailDataHelpers.Store(this.browse(ids[0]), { memberCount })
             .add(members)
             .get_result();
     }
@@ -821,10 +817,7 @@ export class DiscussChannel extends models.ServerModel {
         BusBus._sendone(
             channel,
             "mail.record/insert",
-            new mailDataHelpers.Store("mail.message", {
-                id: message_id,
-                pinned_at,
-            }).get_result()
+            new mailDataHelpers.Store(MailMessage.browse(message_id), { pinned_at }).get_result()
         );
     }
 
@@ -845,9 +838,8 @@ export class DiscussChannel extends models.ServerModel {
             return BusBus._sendone(
                 channel,
                 "mail.record/insert",
-                new mailDataHelpers.Store("discuss.channel", {
+                new mailDataHelpers.Store(this.browse(firstId), {
                     avatarCacheKey: channel.avatarCacheKey,
-                    id: firstId,
                 }).get_result()
             );
         }
@@ -863,10 +855,7 @@ export class DiscussChannel extends models.ServerModel {
             notifications.push([
                 channel,
                 "mail.record/insert",
-                new mailDataHelpers.Store("discuss.channel", {
-                    id: channel.id,
-                    ...diff,
-                }).get_result(),
+                new mailDataHelpers.Store(this.browse(channel.id), diff).get_result(),
             ]);
         }
         const result = super.write(...arguments);

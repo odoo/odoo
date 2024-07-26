@@ -53,10 +53,7 @@ class MailMainAttachmentMixin(models.AbstractModel):
         super()._thread_to_store(store, request_list=request_list, **kwargs)
         if request_list and "attachments" in request_list:
             store.add(
-                "mail.thread",
-                {
-                    "id": self.id,
-                    "mainAttachment": Store.one(self.message_main_attachment_id, only_id=True),
-                    "model": self._name,
-                },
+                self,
+                {"mainAttachment": Store.one(self.message_main_attachment_id, only_id=True)},
+                as_thread=True,
             )

@@ -120,4 +120,4 @@ class IrAttachment(models.Model):
                 )
             if access_token:
                 data["accessToken"] = attachment.access_token
-            store.add("ir.attachment", data)
+            store.add(attachment, data)

@@ -7,9 +7,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-
-import { MailThread } from "../../mock_server/mock_models/mail_thread";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -26,13 +24,6 @@ test("simplest layout of a followed subtype", async () => {
         res_model: "res.partner",
         res_id: serverState.partnerId,
         subtype_ids: [subtypeId],
-    });
-    patchWithCleanup(MailThread.prototype, {
-        _thread_to_store(ids, store) {
-            // mimic user with write access
-            super._thread_to_store(...arguments);
-            store.add("mail.thread", { hasWriteAccess: true, id: ids[0], model: this._name });
-        },
     });
     await start();
     await openFormView("res.partner", serverState.partnerId);
@@ -59,13 +50,6 @@ test("simplest layout of a not followed subtype", async () => {
         res_model: "res.partner",
         res_id: serverState.partnerId,
     });
-    patchWithCleanup(MailThread.prototype, {
-        _thread_to_store(ids, store) {
-            // mimic user with write access
-            super._thread_to_store(...arguments);
-            store.add("mail.thread", { hasWriteAccess: true, id: ids[0], model: this._name });
-        },
-    });
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
@@ -86,13 +70,6 @@ test("toggle follower subtype checkbox", async () => {
         partner_id: serverState.partnerId,
         res_model: "res.partner",
         res_id: serverState.partnerId,
-    });
-    patchWithCleanup(MailThread.prototype, {
-        _thread_to_store(ids, store) {
-            // mimic user with write access
-            super._thread_to_store(...arguments);
-            store.add("mail.thread", { hasWriteAccess: true, id: ids[0], model: this._name });
-        },
     });
     await start();
     await openFormView("res.partner", serverState.partnerId);

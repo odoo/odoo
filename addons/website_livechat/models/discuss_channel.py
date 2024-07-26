@@ -31,7 +31,6 @@ class DiscussChannel(models.Model):
         super()._to_store(store)
         for channel in self.filtered('livechat_visitor_id'):
             channel_info = {
-                "id": channel.id,
                 "requested_by_operator": channel.create_uid in channel.livechat_operator_id.user_ids
             }
             visitor = channel.livechat_visitor_id
@@ -50,7 +49,7 @@ class DiscussChannel(models.Model):
                 }
             except AccessError:
                 pass
-            store.add("discuss.channel", channel_info)
+            store.add(channel, channel_info)
 
     def _get_visitor_history(self, visitor):
         """

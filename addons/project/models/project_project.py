@@ -1024,12 +1024,9 @@ class Project(models.Model):
         super()._thread_to_store(store, request_list=request_list, **kwargs)
         if request_list and "followers" in request_list:
             store.add(
-                "mail.thread",
-                {
-                    "collaborator_ids": Store.many(self.collaborator_ids.partner_id, only_id=True),
-                    "id": self.id,
-                    "model": "project.project",
-                },
+                self,
+                {"collaborator_ids": Store.many(self.collaborator_ids.partner_id, only_id=True)},
+                as_thread=True,
             )
 
     @api.depends('task_count', 'open_task_count')

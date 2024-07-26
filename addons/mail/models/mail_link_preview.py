@@ -57,9 +57,7 @@ class LinkPreview(models.Model):
             self.env["bus.bus"]._sendone(
                 message._bus_notification_target(),
                 "mail.record/insert",
-                Store(
-                    "mail.message", {"id": message.id, "linkPreviews": Store.many(link_previews)}
-                ).get_result(),
+                Store(message, {"linkPreviews": Store.many(link_previews)}).get_result(),
             )
 
     def _hide_and_notify(self):
@@ -70,11 +68,8 @@ class LinkPreview(models.Model):
                 link_preview.message_id._bus_notification_target(),
                 "mail.record/insert",
                 Store(
-                    "mail.message",
-                    {
-                        "id": link_preview.message_id.id,
-                        "linkPreviews": Store.many(link_preview, "DELETE", only_id=True),
-                    },
+                    link_preview.message_id,
+                    {"linkPreviews": Store.many(link_preview, "DELETE", only_id=True)},
                 ).get_result(),
             )
             for link_preview in self
@@ -90,11 +85,8 @@ class LinkPreview(models.Model):
                 link_preview.message_id._bus_notification_target(),
                 "mail.record/insert",
                 Store(
-                    "mail.message",
-                    {
-                        "id": link_preview.message_id.id,
-                        "linkPreviews": Store.many(link_preview, "DELETE", only_id=True),
-                    },
+                    link_preview.message_id,
+                    {"linkPreviews": Store.many(link_preview, "DELETE", only_id=True)},
                 ).get_result(),
             )
             for link_preview in self
@@ -138,7 +130,7 @@ class LinkPreview(models.Model):
                 load=False,
             )[0]
             data["message"] = Store.one(preview.message_id, only_id=True)
-            store.add("mail.link.preview", data)
+            store.add(preview, data)
 
     @api.autovacuum
     def _gc_mail_link_preview(self):
