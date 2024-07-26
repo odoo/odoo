@@ -29,6 +29,8 @@ import { standardFieldProps } from "../standard_field_props";
  *  warnFuture?: boolean;
  *  showSeconds?: boolean;
  *  showTime?: boolean;
+ *  minPrecision?: string;
+ *  maxPrecision?: string;
  * }} DateTimeFieldProps
  *
  * @typedef {import("@web/core/datetime/datetime_picker").DateTimePickerProps} DateTimePickerProps
@@ -49,6 +51,16 @@ export class DateTimeField extends Component {
         warnFuture: { type: Boolean, optional: true },
         showSeconds: { type: Boolean, optional: true },
         showTime: { type: Boolean, optional: true },
+        minPrecision: {
+            type: String,
+            optional: true,
+            validate: (props) => ["days", "months", "years", "decades"].includes(props),
+        },
+        maxPrecision: {
+            type: String,
+            optional: true,
+            validate: (props) => ["days", "months", "years", "decades"].includes(props),
+        },
     };
     static defaultProps = {
         showSeconds: true,
@@ -104,6 +116,12 @@ export class DateTimeField extends Component {
                 pickerProps.rounding = this.props.rounding;
             } else if (!this.props.showSeconds) {
                 pickerProps.rounding = 0;
+            }
+            if (this.props.maxPrecision) {
+                pickerProps.maxPrecision = this.props.maxPrecision;
+            }
+            if (this.props.minPrecision) {
+                pickerProps.minPrecision = this.props.minPrecision;
             }
             return pickerProps;
         };
@@ -292,6 +310,34 @@ export const dateField = {
             type: "boolean",
             help: _t(`Displays a warning icon if the input dates are in the future.`),
         },
+        {
+            label: _t("Minimal precision"),
+            name: "min_precision",
+            type: "selection",
+            help: _t(
+                `Choose which minimal precision (days, months, ...) you want in the datetime picker.`
+            ),
+            choices: [
+                { label: _t("Days"), value: "days" },
+                { label: _t("Months"), value: "months" },
+                { label: _t("Years"), value: "years" },
+                { label: _t("Decades"), value: "decades" },
+            ],
+        },
+        {
+            label: _t("Maximal precision"),
+            name: "max_precision",
+            type: "selection",
+            help: _t(
+                `Choose which maximal precision (days, months, ...) you want in the datetime picker.`
+            ),
+            choices: [
+                { label: _t("Days"), value: "days" },
+                { label: _t("Months"), value: "months" },
+                { label: _t("Years"), value: "years" },
+                { label: _t("Decades"), value: "decades" },
+            ],
+        },
     ],
     supportedTypes: ["date"],
     extractProps: ({ attrs, options }, dynamicInfo) => ({
@@ -304,6 +350,8 @@ export const dateField = {
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
         warnFuture: exprToBoolean(options.warn_future),
+        minPrecision: options.min_precision,
+        maxPrecision: options.max_precision,
     }),
     fieldDependencies: ({ type, attrs, options }) => {
         const deps = [];
