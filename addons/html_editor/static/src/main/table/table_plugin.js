@@ -507,11 +507,10 @@ export class TablePlugin extends Plugin {
         const selectedTds = [...this.editable.querySelectorAll("td.o_selected_td")].filter(
             (node) => node.isContentEditable
         );
-        if (selectedTds.length && mode === "background") {
+        if (selectedTds.length && mode === "backgroundColor") {
             for (const td of selectedTds) {
                 this.shared.colorElement(td, color, mode);
             }
-            return true;
         }
     }
 }
