@@ -5131,7 +5131,7 @@ class SnippetsMenu extends Component {
         // TODO: Should be the app name, not the snippet name ... Maybe both ?
         const bodyText = _t("Do you want to install %s App?", snippetName);
         const linkText = _t("More info about this app.");
-        const linkUrl = '/web#id=' + encodeURIComponent(moduleID) + '&view_type=form&model=ir.module.module&action=base.open_module_tree';
+        const linkUrl = '/odoo/action-base.open_module_tree/' + encodeURIComponent(moduleID);
         this.dialog.add(ConfirmationDialog, {
             title: _t("Install %s", snippetName),
             body: markup(`${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`),
