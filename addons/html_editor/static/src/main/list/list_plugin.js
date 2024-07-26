@@ -39,7 +39,7 @@ export class ListPlugin extends Plugin {
     static dependencies = ["tabulation", "split", "selection", "delete", "dom"];
     /** @type { (p: ListPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        handle_delete_backward: { callback: p.handleDeleteBackward.bind(p) },
+        handle_delete_backward: { callback: p.handleDeleteBackward.bind(p), sequence: 10 },
         handle_delete_range: { callback: p.handleDeleteRange.bind(p) },
         handle_tab: { callback: p.handleTab.bind(p), sequence: 10 },
         handle_shift_tab: { callback: p.handleShiftTab.bind(p), sequence: 10 },
@@ -652,6 +652,9 @@ export class ListPlugin extends Plugin {
         return true;
     }
 
+    /**
+     * Fully outdent list item if cursor is at its beginning.
+     */
     handleDeleteBackward(range) {
         const { startContainer, startOffset, endContainer, endOffset } = range;
         const closestLIendContainer = closestElement(endContainer, "LI");
@@ -659,13 +662,23 @@ export class ListPlugin extends Plugin {
             return;
         }
         // Detect if cursor is at beginning of LI (or the editable === collapsed range).
-        if (
+        const isCursorAtStartofLI =
             (startContainer === endContainer && startOffset === endOffset) ||
-            closestElement(startContainer, "LI") !== closestLIendContainer
-        ) {
-            this.liToBlocks(closestLIendContainer);
-            return true;
+            closestElement(startContainer, "LI") !== closestLIendContainer;
+        if (!isCursorAtStartofLI) {
+            return;
         }
+        // Check if li or parent list(s) are unsplittable.
+        let element = closestLIendContainer;
+        while (["LI", "UL", "OL"].includes(element.tagName)) {
+            if (this.shared.isUnsplittable(element)) {
+                return;
+            }
+            element = element.parentElement;
+        }
+        // Fully outdent LI.
+        this.liToBlocks(closestLIendContainer);
+        return true;
     }
 
     // Uncheck checklist item left empty after deleting a multi-LI selection.

@@ -30,7 +30,7 @@ export class TabulationPlugin extends Plugin {
     static resources = (p) => ({
         handle_tab: [],
         handle_shift_tab: [],
-        handle_delete_forward: { callback: p.handleDeleteForward.bind(p) },
+        handle_delete_forward: { callback: p.handleDeleteForward.bind(p), sequence: 20 },
         shortcuts: [
             { hotkey: "tab", command: "TAB" },
             { hotkey: "shift+tab", command: "SHIFT_TAB" },
