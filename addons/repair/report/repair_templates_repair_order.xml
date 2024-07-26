@@ -9,32 +9,32 @@
                     <div class="oe_structure"/>
                     <h2>
                         <span>Repair Order #:</span>
-                        <span t-field="o.name">RO123456</span>
+                        <span t-field="o.name" data-oe-demo="RO123456"/>
                     </h2>
                     <div class="oe_structure"/>
                     <div id="informations" class="row mb-3">
                         <div class="col-6">
                             <p t-if="o.partner_id" class="m-0">
                                 <strong>Customer:</strong>
-                                <span t-field="o.partner_id">John Doe</span>
+                                <span t-field="o.partner_id" data-oe-demo="John Doe"/>
                             </p>
                             <p t-if="o.product_id" class="m-0">
                                 <strong>Product:</strong>
-                                <span t-field="o.product_id">Laptop</span>
+                                <span t-field="o.product_id" data-oe-demo="Laptop"/>
                             </p>
                             <p t-if="o.lot_id" class="m-0" groups="stock.group_production_lot">
                                 <strong>Lot/Serial:</strong>
-                                <span t-field="o.lot_id">L12345</span>
+                                <span t-field="o.lot_id" data-oe-demo="L12345"/>
                             </p>
                         </div>
                         <div class="col-6">
                             <p class="m-0">
                                 <strong>Status:</strong>
-                                <span t-field="o.state">Pending</span>
+                                <span t-field="o.state" data-oe-demo="Pending"/>
                             </p>
                             <p t-if="o.user_id" class="m-0">
                                 <strong>Responsible:</strong>
-                                <span t-field="o.user_id">Jane Smith</span>
+                                <span t-field="o.user_id" data-oe-demo="Jane Smith"/>
                             </p>
                         </div>
                     </div>
@@ -50,12 +50,12 @@
                         <tbody>
                             <tr t-foreach="o.move_ids" t-as="line">
                                 <td>
-                                    <p t-if="line.repair_line_type == 'add'"><i>(Add)</i> <span t-field="line.product_id">Product A</span></p>
-                                    <p t-if="line.repair_line_type == 'remove'">(<i>Remove</i>) <span t-field="line.product_id">Product B</span></p>
+                                    <p t-if="line.repair_line_type == 'add'"><i>(Add)</i> <span t-field="line.product_id" data-oe-demo="Product A"/></p>
+                                    <p t-if="line.repair_line_type == 'remove'">(<i>Remove</i>) <span t-field="line.product_id" data-oe-demo="Product B"/></p>
                                 </td>
                                 <td class="text-end">
-                                    <span t-field="line.product_uom_qty">5</span>
-                                    <span groups="uom.group_uom" t-field="line.product_uom.name">Units</span>
+                                    <span t-field="line.product_uom_qty" data-oe-demo="5"/>
+                                    <span groups="uom.group_uom" t-field="line.product_uom.name" data-oe-demo="Units"/>
                                 </td>
                             </tr>
                         </tbody>
@@ -64,7 +64,7 @@
                     <div class="oe_structure"/>
                     <div t-if="o.internal_notes">
                         <h2 class="mb-3 border-bottom border-2 border-dark">Repair Notes</h2>
-                        <span t-field="o.internal_notes">This is a repair note.</span>
+                        <span t-field="o.internal_notes" data-oe-demo="This is a repair note."/>
                     </div>
                     <div class="oe_structure"/>
                 </div>

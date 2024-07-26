@@ -118,22 +118,22 @@
                                 <span t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'width': 200, 'height': 200}">Barcode Demo</span>
                             </div>
                             <div class="col-7 text-start" style="font-size:20px;">
-                                <div class="row">SSCC: <span t-field="o.name">SSCC Demo</span></div>
-                                <div t-if="o.pack_date" class="row">Pack Date: <span t-field="o.pack_date">Pack Date Demo</span></div>
-                                <div t-if="o.package_type_id" class="row" name="datamatrix_pack_type">Package Type: <span t-field="o.package_type_id.name">Package Type Demo</span></div>
+                                <div class="row">SSCC: <span t-field="o.name" data-oe-demo="SSCC Demo"/></div>
+                                <div t-if="o.pack_date" class="row">Pack Date: <span t-field="o.pack_date" data-oe-demo="Pack Date Demo"/></div>
+                                <div t-if="o.package_type_id" class="row" name="datamatrix_pack_type">Package Type: <span t-field="o.package_type_id.name" data-oe-demo="Package Type Demo"/></div>
                             </div>
                         </div>
                     </t>
                     <t t-else="">
                         <div class="row">
                             <div class="text-center col-12">
-                                <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:600px;height:100px;'}">Name Demo</span>
-                                <span t-field="o.name" style="font-size:20px; margin:100px;">Name Demo</span>
+                                <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:600px;height:100px;'}" data-oe-demo="Name Demo"/>
+                                <span t-field="o.name" style="font-size:20px; margin:100px;" data-oe-demo="Name Demo"/>
                             </div>
                         </div>
-                        <div t-if="o.pack_date" class="col-12 text-center" style="font-size:24px; font-weight:bold;">Pack Date: <span t-field="o.pack_date">2023-01-01</span></div>
+                        <div t-if="o.pack_date" class="col-12 text-center" style="font-size:24px; font-weight:bold;">Pack Date: <span t-field="o.pack_date" data-oe-demo="2023-01-01"/></div>
                         <div class="row o_packaging_type" t-if="o.package_type_id">
-                            <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Package Type: </span><span t-field="o.package_type_id.name">Package Type Demo</span></div>
+                            <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Package Type: </span><span t-field="o.package_type_id.name" data-oe-demo="Package Type Demo"/></div>
                         </div>
                     </t>
                     <div class="oe_structure"/>

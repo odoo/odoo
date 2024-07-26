@@ -12,21 +12,21 @@
                             <div class="col-6">
                                 <div class="row">
                                     <div class="col-3 fw-bold"><span>Employee:</span> </div>
-                                    <div class="col-9 text-muted"><span t-field="o.employee_id.name">Marc Demo</span></div>
+                                    <div class="col-9 text-muted"><span t-field="o.employee_id.name" data-oe-demo="Marc Demo"/></div>
                                 </div>
                                 <div class="row" t-if="o.accounting_date">
                                     <div class="col-3 fw-bold"><span>Date:</span></div>
-                                    <div class="col-9 text-muted"><span t-field="o.accounting_date">2023-08-11</span></div>
+                                    <div class="col-9 text-muted"><span t-field="o.accounting_date" data-oe-demo="2023-08-11"/></div>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="row" t-if="o.user_id.name">
                                     <div class="col-3 fw-bold"><span>Manager:</span></div>
-                                    <div class="col-9 text-muted"><span t-field="o.user_id">Mitchell Admin</span></div>
+                                    <div class="col-9 text-muted"><span t-field="o.user_id" data-oe-demo="Mitchell Admin"/></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-3 fw-bold"><span>Paid by:</span></div>
-                                    <div class="col-9 text-muted"><span t-field="o.payment_mode">Credit Card</span></div>
+                                    <div class="col-9 text-muted"><span t-field="o.payment_mode" data-oe-demo="Credit Card"/></div>
                                 </div>
                             </div>
                         </div>
@@ -49,19 +49,19 @@
                                 <tr t-foreach="o.expense_line_ids" t-as="line">
                                     <td class="text-start"><span t-field="line.date"></span></td>
                                     <td t-att-class="'text-start' + (' o_overflow' if len(line.name) > 30 else '')">
-                                        <span t-field="line.name">Flight Ticket</span>
+                                        <span t-field="line.name" data-oe-demo="Flight Ticket"/>
                                     </td>
-                                    <td class="text-end"><span t-field="line.price_unit">$100.00</span></td>
-                                    <td class="text-end"><span t-field="line.quantity">1</span></td>
+                                    <td class="text-end"><span t-field="line.price_unit" data-oe-demo="$100.00"/></td>
+                                    <td class="text-end"><span t-field="line.quantity" data-oe-demo="1"/></td>
                                     <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_ids])"/>
                                     <td t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
                                         <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
                                     </td>
                                     <td t-if="foreign_currencies" class="text-end">
-                                        <span t-field="line.total_amount_currency" t-options='{"widget": "monetary", "display_currency": line.currency_id}'>$120.00</span>
+                                        <span t-field="line.total_amount_currency" t-options='{"widget": "monetary", "display_currency": line.currency_id}' data-oe-demo="$120.00"/>
                                     </td>
                                     <td class="text-end">
-                                        <span t-field="line.total_amount" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>$100.00</span>
+                                        <span t-field="line.total_amount" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}' data-oe-demo="$100.00"/>
                                     </td>
                                 </tr>
                             </tbody>
@@ -74,16 +74,16 @@
                                     <tbody>
                                         <tr>
                                             <td>Untaxed Amount</td>
-                                            <td class="text-end"><span t-field="o.untaxed_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$500.00</span></td>
+                                            <td class="text-end"><span t-field="o.untaxed_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}' data-oe-demo="$500.00"/></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td class="text-end"><span t-field="o.total_tax_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$100.00</span></td>
+                                            <td class="text-end"><span t-field="o.total_tax_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}' data-oe-demo="$100.00"/></td>
                                         </tr>
                                         <tr class="fw-bold">
                                             <td>Total</td>
                                             <td class="text-end">
-                                                <span t-field="o.total_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$600.00</span>
+                                                <span t-field="o.total_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}' data-oe-demo="$600.00"/>
                                             </td>
                                         </tr>
                                     </tbody>

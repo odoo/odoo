@@ -8,11 +8,11 @@
                     <div class="oe_structure"/>
                     <div class="row">
                         <div class="col-7">
-                            <h2><span t-field="o.name">Laptop model X</span></h2>
+                            <h2><span t-field="o.name" data-oe-demo="Laptop model X"/></h2>
                         </div>
                         <div class="col-5">
                             <span class="text-end">
-                                <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:350px;height:60px'}">12345678901</span>
+                                <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:350px;height:60px'}" data-oe-demo="12345678901"/>
                             </span>
                         </div>
                     </div>
@@ -20,23 +20,23 @@
                     <div class="row mt32 mb32">
                         <div class="col-3">
                             <strong>Responsible:</strong><br/>
-                            <span t-field="o.production_id.user_id">Marc Demo</span>
+                            <span t-field="o.production_id.user_id" data-oe-demo="Marc Demo"/>
                         </div>
                         <div class="col-3">
                             <strong>Manufacturing Order:</strong><br/>
-                            <span t-field="o.production_id.name">RAM</span>
+                            <span t-field="o.production_id.name" data-oe-demo="RAM"/>
                         </div>
                     </div>
                     <br/>
                     <div class="row mt32 mb32">
                         <div class="col-3">
                             <strong>Finished Product:</strong><br/>
-                            <span t-field="o.product_id">Laptop</span>
+                            <span t-field="o.product_id" data-oe-demo="Laptop"/>
                         </div>
                         <div class="col-3">
                             <strong>Quantity to Produce:</strong><br/>
-                            <span t-field="o.qty_production">2</span>
-                            <span t-field="o.product_uom_id.name" groups="uom.group_uom">Unit</span>
+                            <span t-field="o.qty_production" data-oe-demo="2"/>
+                            <span t-field="o.product_uom_id.name" groups="uom.group_uom" data-oe-demo="Unit"/>
                         </div>
                     </div>
                     <br/>

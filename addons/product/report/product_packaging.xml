@@ -11,20 +11,20 @@
                             <table class="table table-condensed" style="border-bottom: 0px solid white !important;width: 3in;">
                                 <tr>
                                     <th style="text-align: left;">
-                                        <strong><span t-field="packaging.name">Package Type A</span></strong>
+                                        <strong><span t-field="packaging.name" data-oe-demo="Package Type A"/></strong>
                                     </th>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <strong><span t-field="packaging.product_id.display_name">Eco-friendly Wooden Chair</span></strong>
+                                        <strong><span t-field="packaging.product_id.display_name" data-oe-demo="Eco-friendly Wooden Chair"/></strong>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <div class="o_row">
                                             <strong>Qty: </strong>
-                                            <strong><span t-field="packaging.qty">10</span></strong>
-                                            <strong><span t-field="packaging.product_uom_id" groups="uom.group_uom">Units</span></strong>
+                                            <strong><span t-field="packaging.qty" data-oe-demo="10"/></strong>
+                                            <strong><span t-field="packaging.product_uom_id" groups="uom.group_uom" data-oe-demo="Units"/></strong>
                                         </div>
                                     </td>
                                 </tr>
@@ -32,7 +32,7 @@
                                     <tr>
                                     <td style="text-align: center; vertical-align: middle;" class="col-5">
                                         <div t-field="packaging.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 600, 'height': 150, 'img_style': 'width:100%;height:20%;'}"/>
-                                        <span t-field="packaging.barcode">123456789012</span>
+                                        <span t-field="packaging.barcode" data-oe-demo="123456789012"/>
                                     </td>
                                 </tr>
                               </t>

@@ -28,7 +28,7 @@
                                 <br/>
                                 <h4 t-if="o.expiration_date">
                                     Use this promo code before
-                                    <span t-field="o.expiration_date" t-options='{"format": "yyyy-MM-d"}'>2023-08-20</span>
+                                    <span t-field="o.expiration_date" t-options='{"format": "yyyy-MM-d"}' data-oe-demo="2023-08-20"/>
                                 </h4>
                                 <h2 class="mt-4">
                                     <strong class="bg-light"><span t-out="o.code">DEMO_CODE</span></strong>
@@ -44,7 +44,7 @@
                                 </h4>
                                 <div class="oe_structure"></div>
                                 <br/>
-                                <span t-field="o.code" t-options="{'widget': 'barcode', 'width': 600, 'height': 100}">ABCDE12345</span>
+                                <span t-field="o.code" t-options="{'widget': 'barcode', 'width': 600, 'height': 100}" data-oe-demo="ABCDE12345"/>
                                 <div class="oe_structure"></div>
                                 <br/><br/>
                                 <h4>Thank you,</h4>
@@ -58,7 +58,7 @@
                                 <div>
                                     <div class="text-center d-inline-block">
                                         <span t-field="o.program_id.company_id.partner_id"
-                                            t-options='{"widget": "contact", "fields": ["address", "email"], "no_marker": True}'>John Doe</span>
+                                            t-options='{"widget": "contact", "fields": ["address", "email"], "no_marker": True}' data-oe-demo="John Doe"/>
                                     </div>
                                 </div>
                                 <div class="oe_structure"></div>
@@ -102,13 +102,13 @@
                         <strong>Gift Card Code</strong>
                     </p>
                     <p style="margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9">
-                        <span t-field="o.code">ABCDE12345</span>
+                        <span t-field="o.code" data-oe-demo="ABCDE12345"/>
                     </p>
                 </div>
                 <div class="oe_structure"></div>
                 <div t-if="o.expiration_date" style="padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;">
                     <h3 style="margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center">
-                        Card expires <span t-field="o.expiration_date">2023-12-31</span>
+                        Card expires <span t-field="o.expiration_date" data-oe-demo="2023-12-31"/>
                     </h3>
                 </div>
                 <div class="oe_structure"></div>

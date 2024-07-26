@@ -24,7 +24,7 @@
                 <span t-out="o.company_id.partner_id.name">Demo Company Name</span>
             </div>
             <div class="col-12">
-                <span t-field="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'>Demo Address</span>
+                <span t-field="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}' data-oe-demo="Demo Address"/>
             </div>
         </div>
     </template>
@@ -36,23 +36,23 @@
             background-color: #{color_primary};">
             <div class="o_profile">
                 <img class="img img-fluid rounded-circle o_profile_image" t-attf-src="data:image/png;base64,#{o.image_128}" alt="" t-if="o.image_128"/>
-                <h1 class="o_profile_name mt-2" t-field="o.name">Marc Demo</h1>
-                <h3 class="o_profile_job mb-2" t-field="o.job_id">Software Developer</h3>
+                <h1 class="o_profile_name mt-2" t-field="o.name" data-oe-demo="Marc Demo"/>
+                <h3 class="o_profile_job mb-2" t-field="o.job_id" data-oe-demo="Software Developer"/>
             </div>
             <div class="oe_structure"></div>
             <div class="o_sidebar_section" t-if="show_contact">
                 <ul class="o_social">
                     <li class="email" t-if="o.company_id.email">
                         <i class="fa fa-solid fa-envelope pe-2"/>
-                        <a t-attf-href="mailto: #{o.company_id.email}" t-field="o.company_id.email">demo@email.com</a>
+                        <a t-attf-href="mailto: #{o.company_id.email}" t-field="o.company_id.email" data-oe-demo="demo@email.com"/>
                     </li>
                     <li class="phone" t-if="o.company_id.mobile">
                         <i class="fa fa-solid fa-phone pe-2"/>
-                        <a t-attf-href="tel:#{o.company_id.mobile}" t-field="o.company_id.mobile">+1234567890</a>
+                        <a t-attf-href="tel:#{o.company_id.mobile}" t-field="o.company_id.mobile" data-oe-demo="+1234567890"/>
                     </li>
                     <li class="website" t-if="o.company_id.website">
                         <i class="fa fa-solid fa-globe pe-2"/>
-                        <a t-attf-href="tel:#{o.company_id.website}" t-field="o.company_id.website">www.demo.com</a>
+                        <a t-attf-href="tel:#{o.company_id.website}" t-field="o.company_id.website" data-oe-demo="www.demo.com"/>
                     </li>
                 </ul>
             </div>
@@ -74,7 +74,7 @@
                     <t t-foreach="resume_lines[o][line_type]" t-as="resume_line">
                         <div class="o_main_panel_resume_title ps-5">
                             <div class="o_main_panel_resume_title_job">
-                                <h3 class="o_main_panel_resume_job" t-field="resume_line.name">Software Developer</h3>
+                                <h3 class="o_main_panel_resume_job" t-field="resume_line.name" data-oe-demo="Software Developer"/>
                             </div>
                             <div class="o_main_panel_resume_title_dates">
                                 <t t-set="present">Present</t>
@@ -128,7 +128,7 @@
                     <div class="o_main_panel_skills row ps-5">
                         <t t-foreach="skills_pair" t-as="skill_line">
                             <div class="o_main_panel_skill_line col-6 pe-4" t-if="skill_line.skill_type_id != skill_type_language">
-                                <h3 class="o_main_panel_skill_name" t-field="skill_line.skill_id">Python</h3>
+                                <h3 class="o_main_panel_skill_name" t-field="skill_line.skill_id" data-oe-demo="Python"/>
                                 <div class="progress o_main_panel_skill_progress_bar">
                                     <div
                                         class="o_main_panel_skill_progress_bar_color"

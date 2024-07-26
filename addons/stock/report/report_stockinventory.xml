@@ -32,16 +32,16 @@
                                     </tr>
                                     <tr t-foreach="docs.filtered(lambda quant: quant.location_id.id == location.id)" t-as="line">
                                         <td groups="stock.group_stock_multi_locations"></td>
-                                        <td><span t-field="line.product_id">Laptop</span></td>
-                                        <td groups="stock.group_production_lot"><span t-field="line.lot_id">4</span></td>
-                                        <td groups="stock.group_tracking_lot"><span t-field="line.package_id">98</span></td>
-                                        <td class="text-end"><span t-field="line.available_quantity">2</span> <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span></td>
-                                        <td class="text-end"><span t-field="line.quantity">5</span> <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span></td>
+                                        <td><span t-field="line.product_id" data-oe-demo="Laptop"/></td>
+                                        <td groups="stock.group_production_lot"><span t-field="line.lot_id" data-oe-demo="4"/></td>
+                                        <td groups="stock.group_tracking_lot"><span t-field="line.package_id" data-oe-demo="98"/></td>
+                                        <td class="text-end"><span t-field="line.available_quantity" data-oe-demo="2"/> <span t-field="line.product_uom_id" groups="uom.group_uom" data-oe-demo="Units"/></td>
+                                        <td class="text-end"><span t-field="line.quantity" data-oe-demo="5"/> <span t-field="line.product_uom_id" groups="uom.group_uom" data-oe-demo="Units"/></td>
                                         <td class="text-end">
                                             <!-- If 0, then leave blank so users have space to write a number -->
                                             <t t-if="line.inventory_quantity == 0"><span></span></t>
-                                            <t t-else=""><span t-field="line.inventory_quantity">7</span></t>
-                                            <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span>
+                                            <t t-else=""><span t-field="line.inventory_quantity" data-oe-demo="7"/></t>
+                                            <span t-field="line.product_uom_id" groups="uom.group_uom" data-oe-demo="Units"/>
                                         </td>
                                     </tr>
                                 </t>

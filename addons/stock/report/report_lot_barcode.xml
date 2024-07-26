@@ -30,10 +30,10 @@
                                         <span class="o_label_4x12 lh-1">[<t t-out="o.product_id.default_code"/>]</span>
                                     </div>
                                     <div class="o_label_4x12" t-att-style="'width:22mm' if final_barcode else ''">
-                                        <span class="o_label_4x12 lh-1" t-field="o.product_id.name" >Demo Product</span>
+                                        <span class="o_label_4x12 lh-1" t-field="o.product_id.name" data-oe-demo="Demo Product" />
                                     </div>
                                     <div class="o_label_4x12" name="lot_name" t-att-style="'width:22mm; ' if final_barcode else ''">
-                                        <span class="o_label_4x12 lh-1" name="lot_name" t-field="o.name">Demo Name</span>
+                                        <span class="o_label_4x12 lh-1" name="lot_name" t-field="o.name" data-oe-demo="Demo Name"/>
                                     </div>
                                     <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
                                         <div t-if="final_barcode" t-att-style="'position:absolute; right:.5px; bottom:.5px'">
@@ -41,7 +41,7 @@
                                         </div>
                                     </t>
                                     <t t-else="">
-                                        <span t-field="o.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%; height:35%'}">Customizable Desk</span>
+                                        <span t-field="o.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%; height:35%'}" data-oe-demo="Customizable Desk"/>
                                     </t>
                                 </div>
                             </td>

@@ -37,8 +37,8 @@
                                 </t>
                                 <span t-att-style="certif_style" class="user-name" t-out="certified_name">DEMO_CERTIFIED_NAME</span>
 
-                                <br/> <span>by</span> <span class="certification-company" t-field="user_input.create_uid.company_id.display_name">Odoo</span> <span>for successfully completing</span>
-                                <br/><b><span class="certification-name" t-field="user_input.survey_id.display_name">Functional Training</span></b>
+                                <br/> <span>by</span> <span class="certification-company" t-field="user_input.create_uid.company_id.display_name" data-oe-demo="Odoo"/> <span>for successfully completing</span>
+                                <br/><b><span class="certification-name" t-field="user_input.survey_id.display_name" data-oe-demo="Functional Training"/></b>
                              </p>
                             <div class="oe_structure"/>
                         </div>
@@ -52,7 +52,7 @@
                     <div class="certification-bottom">
                         <div class="oe_structure"/>
                         <div class="certification-date-wrapper">
-                            <span class="certification-date" t-field="user_input.create_date" t-options='{"widget": "date"}'>2023-08-18</span>
+                            <span class="certification-date" t-field="user_input.create_date" t-options='{"widget": "date"}' data-oe-demo="2023-08-18"/>
                             <span>Date</span>
                         </div>
                         <div class="certification-company">

@@ -13,14 +13,14 @@
                     <t t-call="web.external_layout">
                         <div class="page">
                             <div class="d-flex">
-                                <div><h3>Summary: <span t-field="o.name">Batch Name</span></h3></div>
+                                <div><h3>Summary: <span t-field="o.name" data-oe-demo="Batch Name"/></h3></div>
                                 <div class="me-auto">
-                                    <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 150, 'img_style': 'width:300px;height:50px;'}">Batch</span>
+                                    <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 150, 'img_style': 'width:300px;height:50px;'}" data-oe-demo="Batch"/>
                                 </div>
                             </div>
                             <div t-if="o.user_id">
                                 <strong>Responsible:</strong>
-                                <span t-field="o.user_id">John Doe</span>
+                                <span t-field="o.user_id" data-oe-demo="John Doe"/>
                             </div><br/>
                             <div class="oe_structure"></div>
                             <table class="table table-condensed">
@@ -35,26 +35,26 @@
                                 <tbody>
                                     <tr t-foreach="o.picking_ids" t-as="pick">
                                         <td>
-                                            <span t-field="pick.name">Transfer Name</span>
+                                            <span t-field="pick.name" data-oe-demo="Transfer Name"/>
                                         </td>
                                         <td>
-                                            <span t-field="pick.name" t-options="{'widget': 'barcode', 'quiet': 0, 'width': 400, 'height': 100, 'img_style': 'width:200px;height:50px;'}">Transfer</span>
+                                            <span t-field="pick.name" t-options="{'widget': 'barcode', 'quiet': 0, 'width': 400, 'height': 100, 'img_style': 'width:200px;height:50px;'}" data-oe-demo="Transfer"/>
                                         </td>
                                         <td>
-                                            <span t-field="pick.state">Gujarat</span>
+                                            <span t-field="pick.state" data-oe-demo="Gujarat"/>
                                         </td>
                                         <td >
-                                            <span t-field="pick.scheduled_date">2023-08-20</span>
+                                            <span t-field="pick.scheduled_date" data-oe-demo="2023-08-20"/>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <p style="page-break-after: always;"/>
                             <div class="oe_structure"></div>
-                            <h3><span t-field="o.name">Batch Name</span></h3>
+                            <h3><span t-field="o.name" data-oe-demo="Batch Name"/></h3>
                             <div t-if="o.user_id">
                                 <strong>Responsible:</strong>
-                                <span t-field="o.user_id">John Doe</span>
+                                <span t-field="o.user_id" data-oe-demo="John Doe"/>
                             </div><br/>
                             <div class="oe_structure"></div>
                             <table class="table table-condensed">
@@ -90,25 +90,25 @@
                                             </tr>
                                             <tr t-foreach="move_lines" t-as="move_operation">
                                                 <td>
-                                                    <span t-field="move_operation.display_name">Product Name</span>
+                                                    <span t-field="move_operation.display_name" data-oe-demo="Product Name"/>
                                                 </td>
                                                 <td>
                                                     <span t-esc="sum(move_operation.mapped('quantity'))">Quantity Done</span>
-                                                    <span t-field="move_operation.uom_id" groups="move_operation.group_uom">Unit of Measure</span>
+                                                    <span t-field="move_operation.uom_id" groups="move_operation.group_uom" data-oe-demo="Unit of Measure"/>
                                                 </td>
                                                 <td>
                                                     <span t-out="move_operation.picking_id.display_name">Transfer Display Name</span>
                                                 </td>
                                                 <td t-if="has_serial_number" class="text-center h6" width="15%">
-                                                    <span t-if="move_operation.lot_id or move_operation.lot_name" t-field="move_operation.lot_id.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}">Lot Number</span>
+                                                    <span t-if="move_operation.lot_id or move_operation.lot_name" t-field="move_operation.lot_id.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}" data-oe-demo="Lot Number"/>
                                                 </td>
                                                 <td width="15%" class="text-center" t-if="has_barcode">
-                                                    <span t-field="move_operation.product_id.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}">Product Barcode</span>
+                                                    <span t-field="move_operation.product_id.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}" data-oe-demo="Product Barcode"/>
                                                 </td>
                                                 <td t-if="has_package" width="15%">
-                                                    <span t-field="move_operation.package_id">Package ID</span>
+                                                    <span t-field="move_operation.package_id" data-oe-demo="Package ID"/>
                                                     <t t-if="move_operation.result_package_id">
-                                                        <strong>→</strong> <span t-field="move_operation.result_package_id">Result Package ID</span>
+                                                        <strong>→</strong> <span t-field="move_operation.result_package_id" data-oe-demo="Result Package ID"/>
                                                     </t>
                                                 </td>
                                             </tr>
