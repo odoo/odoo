@@ -168,6 +168,11 @@ class StockMove(models.Model):
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
     quantity = fields.Float(
         'Quantity', compute='_compute_quantity', digits='Product Unit of Measure', inverse='_set_quantity', store=True)
+    # Moves analysis
+    fill_rate = fields.Float(
+        'Fill rate (%)', compute='_compute_fill_rate', aggregator='avg', store=True)
+    is_late = fields.Boolean(compute='_compute_is_late', store=True)
+    on_time_delivery_rate = fields.Float('On-Time Delivery Rate (%)', compute='_compute_on_time_delivery', store=True)
     # TODO: delete this field `show_operations`
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
@@ -395,6 +400,30 @@ class StockMove(models.Model):
 
             for move in self:
                 move.quantity = sum_qty[move.id]
+
+    @api.depends('quantity', 'product_uom_qty')
+    def _compute_fill_rate(self):
+        '''This computation works only for `stock_move`. In the reporting, when grouping by other models
+        we need to compute it separately within `read_group`.'''
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for move in self:
+            if not float_is_zero(move.product_uom_qty, precision_digits=precision_digits):
+                move.fill_rate = float_round(move.quantity * 100.00 / move.product_uom_qty, precision_digits=precision_digits)
+
+    @api.depends('picking_id.date_done', 'picking_id.scheduled_date')
+    def _compute_is_late(self):
+        for move in self:
+            if move.picking_id.scheduled_date and move.picking_id.date_done:
+                move.is_late = move.picking_id.date_done > move.picking_id.scheduled_date
+            elif move.picking_id.scheduled_date:
+                move.is_late = fields.Datetime.today() > move.picking_id.scheduled_date
+            else:
+                move.is_late = False
+
+    @api.depends('is_late')
+    def _compute_on_time_delivery(self):
+        for move in self:
+            move.on_time_delivery_rate = 0.0 if move.is_late else 1.0
 
     def _set_quantity(self):
         def _process_decrease(move, quantity):
@@ -2425,3 +2454,43 @@ Please change the quantity done or the rounding precision of your unit of measur
             ),
             'readOnly': False,
         }
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        is_count_set = bool('__count' in fields)
+        is_quantity_set = bool('quantity:sum' in fields)
+        is_demanded_set = bool('product_uom_qty:sum' in fields)
+        is_fill_rate_set = bool('fill_rate:avg' in fields)
+        is_delivery_rate_set = bool('on_time_delivery_rate:sum' in fields)
+
+        should_add_quantity_manually = bool(is_fill_rate_set and not is_quantity_set)
+        should_add_demanded_manually = bool(is_fill_rate_set and not is_demanded_set)
+        should_add_count_manually = bool(is_delivery_rate_set and not is_count_set)
+
+        if should_add_quantity_manually:
+            fields.append('quantity:sum')
+        if should_add_demanded_manually:
+            fields.append('product_uom_qty:sum')
+        if should_add_count_manually:
+            fields.append('__count')
+
+        cells = super().read_group(domain=domain, fields=fields, groupby=groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for cell in cells:
+            if is_delivery_rate_set and not float_is_zero(cell['__count'], precision_digits=precision_digits):
+                cell['on_time_delivery_rate'] = (cell['on_time_delivery_rate'] * 100.0) / cell['__count']
+
+            if is_fill_rate_set and not float_is_zero(cell['product_uom_qty'], precision_digits=precision_digits):
+                cell['fill_rate'] = (cell['quantity'] * 100.0) / cell['product_uom_qty']
+
+            if should_add_demanded_manually:
+                del cell['product_uom_qty']
+
+            if should_add_quantity_manually:
+                del cell['quantity']
+
+            if should_add_count_manually:
+                del cell['__count']
+
+        return cells
