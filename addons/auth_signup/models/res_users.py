@@ -11,7 +11,6 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools.misc import ustr
 from odoo.http import request
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -159,7 +158,7 @@ class ResUsers(models.Model):
                 return template_user.with_context(no_reset_password=True).copy(values)
         except Exception as e:
             # copy may failed if asked login is not available.
-            raise SignupError(ustr(e))
+            raise SignupError(str(e))
 
     def reset_password(self, login):
         """ retrieve the user corresponding to login (login or email),

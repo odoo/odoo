@@ -380,7 +380,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             self.assertEqual(new_shipping, so.partner_shipping_id)
 
             # 4. Logged-in user, new billing use same
-            use_same = self.default_billing_address_values | {'use_same': 1}
+            use_same = self.default_billing_address_values | {'use_same': 'true'}
             self.WebsiteSaleController.shop_address_submit(**use_same)
             new_billing_use_same = self._get_last_address(self.demo_partner)
             msg = "New billing use same should have its type set as 'other'"

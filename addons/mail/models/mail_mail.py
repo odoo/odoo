@@ -6,16 +6,15 @@ import datetime
 import json
 import logging
 import psycopg2
+import pytz
+import re
 import smtplib
 import threading
-import re
-import pytz
-
 from collections import defaultdict
+
 from dateutil.parser import parse
 
-from odoo import _, api, fields, models, modules, registry, SUPERUSER_ID
-from odoo import tools
+from odoo import _, api, fields, models, modules, registry, SUPERUSER_ID, tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 
 _logger = logging.getLogger(__name__)
@@ -627,7 +626,7 @@ class MailMail(models.Model):
                     raise MailDeliveryException(_('Unable to connect to SMTP Server'), exc)
                 else:
                     batch = self.browse(batch_ids)
-                    batch.write({'state': 'exception', 'failure_reason': exc})
+                    batch.write({'state': 'exception', 'failure_reason': tools.exception_to_unicode(exc)})
                     batch._postprocess_sent_message(success_pids=[], failure_type="mail_smtp")
             else:
                 mail_server = self.env['ir.mail_server'].browse(mail_server_id)
@@ -785,7 +784,7 @@ class MailMail(models.Model):
                     error_code = e.args[0]
                     if len(e.args) > 1 and error_code == IrMailServer.NO_VALID_FROM:
                         # log failing email in additional arguments message
-                        failure_reason = tools.ustr(e.args[1])
+                        failure_reason = str(e.args[1])
                     else:
                         failure_reason = error_code
                     if error_code == IrMailServer.NO_VALID_FROM:
@@ -794,7 +793,7 @@ class MailMail(models.Model):
                         failure_type = "mail_from_missing"
                 # generic (unknown) error as fallback
                 if not failure_reason:
-                    failure_reason = tools.ustr(e)
+                    failure_reason = tools.exception_to_unicode(e)
                 if not failure_type:
                     failure_type = "unknown"
 

@@ -100,6 +100,7 @@ __all__ = [
     'ustr',
 ]
 
+
 if TYPE_CHECKING:
     from odoo.addons.base.models.res_lang import LangData
 
@@ -482,15 +483,31 @@ def mod10r(number):
             report = codec[ (int(digit) + report) % 10 ]
     return result + str((10 - report) % 10)
 
-def str2bool(s, default=None):
-    s = ustr(s).lower()
-    y = 'y yes 1 true t on'.split()
-    n = 'n no 0 false f off'.split()
-    if s not in (y + n):
+
+def str2bool(s: str, default: bool | None = None) -> bool:
+    # allow this (for now?) because it's used for get_param
+    if type(s) is bool:
+        return s
+
+    if not isinstance(s, str):
+        warnings.warn(
+            f"Passed a non-str to `str2bool`: {s}",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         if default is None:
             raise ValueError('Use 0/1/yes/no/true/false/on/off')
         return bool(default)
-    return s in y
+
+    s = s.lower()
+    if s in ('y', 'yes', '1', 'true', 't', 'on'):
+        return True
+    if s in ('n', 'no', '0', 'false', 'f', 'off'):
+        return False
+    if default is None:
+        raise ValueError('Use 0/1/yes/no/true/false/on/off')
+    return bool(default)
 
 def human_size(sz):
     """
@@ -663,9 +680,8 @@ def remove_accents(input_str):
     meaning of input_str and work only for some cases"""
     if not input_str:
         return input_str
-    input_str = ustr(input_str)
     nkfd_form = unicodedata.normalize('NFKD', input_str)
-    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
+    return ''.join(c for c in nkfd_form if not unicodedata.combining(c))
 
 class unquote(str):
     """A subclass of str that implements repr() without enclosing quotation marks

@@ -3,6 +3,7 @@
 
 import base64
 import collections
+import itertools
 import logging
 import random
 import re
@@ -18,7 +19,6 @@ from lxml import etree, html
 from lxml.html import clean, defs
 from werkzeug import urls
 
-from odoo.loglevels import ustr
 from odoo.tools import misc
 
 __all__ = [
@@ -206,26 +206,24 @@ def html_normalize(src, filter_callback=None):
         document parameter, to be called during normalization in order to
         filter the output document
     """
-
     if not src:
         return src
 
-    src = ustr(src, errors='replace')
     # html: remove encoding attribute inside tags
-    doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
-    src = doctype.sub(u"", src)
+    src = re.sub(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', "", src, re.IGNORECASE | re.DOTALL)
+
+    src = src.replace('--!>', '-->')
+    src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
+    # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
+    # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
+    src = re.sub(r'</?o:.*?>', '', src)
 
     try:
-        src = src.replace('--!>', '-->')
-        src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
-        # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
-        # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
-        src = re.sub(r'</?o:.*?>', '', src)
         doc = html.fromstring(src)
     except etree.ParserError as e:
         # HTML comment only string, whitespace only..
         if 'empty' in str(e):
-            return u""
+            return ""
         raise
 
     # perform quote detection before cleaning and class removal
@@ -372,11 +370,13 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     ## (c) Fry-IT, www.fry-it.com, 2007
     ## <peter@fry-it.com>
     ## download here: http://www.peterbe.com/plog/html2plaintext
-
-    html = ustr(html or '')
-
-    if not html.strip():
+    if not (html and html.strip()):
         return ''
+
+    if isinstance(html, bytes):
+        html = html.decode(encoding)
+    else:
+        assert isinstance(html, str), f"expected str got {html.__class__.__name__}"
 
     tree = etree.fromstring(html, parser=etree.HTMLParser())
 
@@ -388,25 +388,21 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
         tree = source[0]
 
     url_index = []
-    i = 0
+    linkrefs = itertools.count(1)
     for link in tree.findall('.//a'):
-        url = link.get('href')
-        if url:
-            i += 1
+        if url := link.get('href'):
             link.tag = 'span'
-            link.text = '%s [%s]' % (link.text, i)
+            link.text = f'{link.text} [{next(linkrefs)}]'
             url_index.append(url)
 
     for img in tree.findall('.//img'):
-        src = img.get('src')
-        if src:
-            i += 1
+        if src := img.get('src'):
             img.tag = 'span'
             img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
-            img.text = '%s [%s]' % (img_name.group(0) if img_name else 'Image', i)
+            img.text = '%s [%s]' % (img_name[0] if img_name else 'Image', next(linkrefs))
             url_index.append(src)
 
-    html = ustr(etree.tostring(tree, encoding=encoding))
+    html = etree.tostring(tree, encoding="unicode")
     # \r char is converted into &#13;, must remove it
     html = html.replace('&#13;', '')
 
@@ -430,10 +426,10 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = '\n'.join([x.strip() for x in html.splitlines()])
     html = html.replace('\n' * 2, '\n')
 
-    for i, url in enumerate(url_index):
-        if i == 0:
-            html += '\n\n'
-        html += ustr('[%s] %s\n') % (i + 1, url)
+    if url_index:
+        html += '\n\n'
+        for i, url in enumerate(url_index, start=1):
+            html += f'[{i}] {url}\n'
 
     return html.strip()
 
@@ -451,7 +447,8 @@ def plaintext2html(text, container_tag=None):
         embedded into a ``<div>``
     :rtype: markupsafe.Markup
     """
-    text = misc.html_escape(ustr(text))
+    assert isinstance(text, str)
+    text = misc.html_escape(text)
 
     # 1. replace \n and \r
     text = re.sub(r'(\r\n|\r|\n)', '<br/>', text)
@@ -498,17 +495,16 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
         :param str container_tag: tag to wrap the content into, defaults to `div`.
         :rtype: markupsafe.Markup
     """
-    html = ustr(html)
     if plaintext and preserve:
-        content = u'\n<pre>%s</pre>\n' % misc.html_escape(ustr(content))
+        content = '\n<pre>%s</pre>\n' % misc.html_escape(content)
     elif plaintext:
         content = '\n%s\n' % plaintext2html(content, container_tag)
     else:
         content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', content)
-        content = u'\n%s\n' % ustr(content)
+        content = '\n%s\n' % content
     # Force all tags to lowercase
     html = re.sub(r'(</?)(\w+)([ >])',
-        lambda m: '%s%s%s' % (m.group(1), m.group(2).lower(), m.group(3)), html)
+        lambda m: '%s%s%s' % (m[1], m[2].lower(), m[3]), html)
     insert_location = html.find('</body>')
     if insert_location == -1:
         insert_location = html.find('</html>')

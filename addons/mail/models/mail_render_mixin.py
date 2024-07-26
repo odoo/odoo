@@ -134,10 +134,8 @@ class MailRenderMixin(models.AbstractModel):
         if not html:
             return html
 
-        wrapper = Markup if isinstance(html, Markup) else str
-        html = tools.ustr(html)
-        if isinstance(html, Markup):
-            wrapper = Markup
+        assert isinstance(html, str)
+        Wrapper = html.__class__
 
         def _sub_relative2absolute(match):
             # compute here to do it only if really necessary + cache will ensure it is done only once
@@ -159,7 +157,7 @@ class MailRenderMixin(models.AbstractModel):
                 /(?:[^'")]|(?!&\#34;)|(?!&\#39;))+ # stop at the first closing quote
         )""", re.VERBOSE), _sub_relative2absolute, html)
 
-        return wrapper(html)
+        return Wrapper(html)
 
     @api.model
     def _render_encapsulate(self, layout_xmlid, html, add_context=None, context_record=None):

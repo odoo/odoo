@@ -35,7 +35,7 @@ from odoo.osv import expression
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext, parse_contact_from_email,
     clean_context, split_every, Query, SQL, email_normalize_all,
-    ustr, ormcache, is_list_of,
+    ormcache, is_list_of,
 )
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header, email_normalize, email_split,
@@ -1496,10 +1496,8 @@ class MailThread(models.AbstractModel):
             body = Markup(etree.tostring(root, pretty_print=False, encoding='unicode'))
         return {'body': body, 'attachments': attachments}
 
-    def _message_parse_extract_payload(self, message, message_dict, save_original=False):
+    def _message_parse_extract_payload(self, message: EmailMessage, message_dict: dict, save_original: bool = False):
         """Extract body as HTML and attachments from the mail message
-
-        :param string message: an email.message instance
         """
         attachments = []
         body = ''
@@ -1513,9 +1511,7 @@ class MailThread(models.AbstractModel):
         #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
         #   type="text/html"
         if message.get_content_maintype() == 'text':
-            encoding = message.get_content_charset()
             body = message.get_content()
-            body = ustr(body, encoding, errors='replace')
             if message.get_content_type() == 'text/plain':
                 # text/plain -> <pre/>
                 body = append_content_to_html('', body, preserve=True)
@@ -1525,7 +1521,7 @@ class MailThread(models.AbstractModel):
         else:
             alternative = False
             mixed = False
-            html = ''
+            html = False
             for part in message.walk():
                 if message_dict.get('is_bounce') and body:
                     # bounce email, keep only the first body and ignore
@@ -1565,18 +1561,18 @@ class MailThread(models.AbstractModel):
                     attachments.append(self._Attachment(filename or 'attachment', content, info))
                     continue
                 # 2) text/plain -> <pre/>
-                if part.get_content_type() == 'text/plain' and (not alternative or not body):
-                    body = append_content_to_html(body, ustr(content, encoding, errors='replace'), preserve=True)
+                if part.get_content_type() == 'text/plain' and not (alternative and body):
+                    body = append_content_to_html(body, content, preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
-                    # mutlipart/alternative have one text and a html part, keep only the second
-                    # mixed allows several html parts, append html content
-                    append_content = not alternative or (html and mixed)
-                    html = ustr(content, encoding, errors='replace')
-                    if not append_content:
-                        body = html
+                    # multipart/alternative have one text and a html part, keep only the second
+                    if alternative and not (html and mixed):
+                        body = content
                     else:
-                        body = append_content_to_html(body, html, plaintext=False)
+                        # mixed allows several html parts, append html content
+                        body = append_content_to_html(body, content, plaintext=False)
+                    # TODO: maybe just setting to `True` is enough?
+                    html = html or bool(content)
                     # we only strip_classes here everything else will be done in by html field of mail.message
                     body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
                 # 4) Anything else -> attachment

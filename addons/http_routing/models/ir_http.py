@@ -26,7 +26,7 @@ from odoo.addons.base.models.res_lang import LangData
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, Response
 from odoo.osv import expression
-from odoo.tools import ustr, pycompat
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -78,11 +78,7 @@ class IrHttp(models.AbstractModel):
             Otherwise it will process string by stripping leading and ending spaces,
             converting unicode chars to ascii, lowering all chars and replacing spaces
             and underscore with hyphen "-".
-            :param s: str
-            :param max_length: int
-            :rtype: str
         """
-        value = ustr(value)
         if slugify_lib:
             # There are 2 different libraries only python-slugify is supported
             try:
