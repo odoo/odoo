@@ -134,7 +134,6 @@ class FasterRule(werkzeug.routing.Rule):
 
 
 class IrHttp(models.AbstractModel):
-    _name = 'ir.http'
     _description = "HTTP Routing"
 
     @classmethod

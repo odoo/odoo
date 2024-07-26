@@ -43,7 +43,6 @@ class ConversionNotFound(ValueError):
     pass
 
 class IrFieldsConverter(models.AbstractModel):
-    _name = 'ir.fields.converter'
     _description = 'Fields Converter'
 
     @api.model
