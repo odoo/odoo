@@ -23,10 +23,17 @@ import { Powerbox } from "./powerbox";
  * @property {Command[]} commands
  */
 
-function target(selection) {
-    const node = selection.anchorNode;
+/**
+ * @param {SelectionData} selectionData
+ */
+function target(selectionData) {
+    const node = selectionData.editableSelection.anchorNode;
     const el = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
-    if (selection.inEditable && (el.tagName === "DIV" || el.tagName === "P") && isEmpty(el)) {
+    if (
+        selectionData.documentSelectionIsInEditable &&
+        (el.tagName === "DIV" || el.tagName === "P") &&
+        isEmpty(el)
+    ) {
         return el;
     }
 }

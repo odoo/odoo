@@ -182,7 +182,7 @@ export class LinkPlugin extends Plugin {
             {
                 hotkey: "control+k",
                 category: "shortcut_conflict",
-                isAvailable: () => this.shared.getEditableSelection().inEditable,
+                isAvailable: () => this.shared.getSelectionData().documentSelectionIsInEditable,
             }
         );
         this.ignoredClasses = new Set(this.resources["link_ignore_classes"] || []);
@@ -295,15 +295,15 @@ export class LinkPlugin extends Plugin {
         }
     }
 
-    handleSelectionChange(selection) {
+    handleSelectionChange(selectionData) {
+        const selection = selectionData.editableSelection;
         if (!selection.isCollapsed) {
             this.overlay.close();
-        } else if (!selection.inEditable) {
-            const selection = this.document.getSelection();
+        } else if (!selectionData.documentSelectionIsInEditable) {
             // note that data-prevent-closing-overlay also used in color picker but link popover
             // and color picker don't open at the same time so it's ok to query like this
             const popoverEl = document.querySelector("[data-prevent-closing-overlay=true]");
-            if (popoverEl?.contains(selection.anchorNode)) {
+            if (popoverEl?.contains(selectionData.documentSelection.anchorNode)) {
                 return;
             }
             this.overlay.close();

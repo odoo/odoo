@@ -27,6 +27,7 @@
  * @property { HistoryPlugin['historyResetFromSteps'] } historyResetFromSteps
  * @property { HistoryPlugin['serializeSelection'] } serializeSelection
  * @property { HistoryPlugin['getNodeById'] } getNodeById
+ * @property { SelectionPlugin['getSelectionData'] } getSelectionData
  * @property { SelectionPlugin['getEditableSelection'] } getEditableSelection
  * @property { SelectionPlugin['getSelectedNodes'] } getSelectedNodes
  * @property { SelectionPlugin['getTraversedNodes'] } getTraversedNodes

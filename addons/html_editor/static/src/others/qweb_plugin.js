@@ -60,12 +60,15 @@ export class QWebPlugin extends Plugin {
         }
     }
 
-    onSelectionChange(selection) {
-        const documentSelection = this.document.getSelection();
+    /**
+     * @param { SelectionData } selectionData
+     */
+    onSelectionChange(selectionData) {
+        const selection = selectionData.documentSelection;
         const qwebNode =
-            documentSelection &&
-            documentSelection.anchorNode &&
-            closestElement(documentSelection.anchorNode, "[t-field],[t-esc],[t-out]");
+            selection &&
+            selection.anchorNode &&
+            closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
         if (qwebNode && this.editable.contains(qwebNode)) {
             // select the whole qweb node
             this.shared.setSelection(selection);

@@ -1,13 +1,13 @@
 export function getListMode(pnode) {
-    if (pnode.tagName == "OL") {
+    if (pnode.tagName === "OL") {
         return "OL";
     }
     return pnode.classList.contains("o_checklist") ? "CL" : "UL";
 }
 
 export function createList(document, mode) {
-    const node = document.createElement(mode == "OL" ? "OL" : "UL");
-    if (mode == "CL") {
+    const node = document.createElement(mode === "OL" ? "OL" : "UL");
+    if (mode === "CL") {
         node.classList.add("o_checklist");
     }
     return node;

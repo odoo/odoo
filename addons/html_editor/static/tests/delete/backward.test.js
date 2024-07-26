@@ -1578,6 +1578,12 @@ describe("Selection not collapsed", () => {
         await tick();
         // The Editor corrects it on selection change
         expect(getContent(el)).toBe("<h1>[abc]</h1><p>def</p>");
+        tripleClick(el.querySelector("h1"));
+        // Chrome puts the cursor at the start of next sibling
+        expect(getContent(el)).toBe("<h1>[abc</h1><p>]def</p>");
+        await tick();
+        // The Editor corrects it repeatedly on selection change
+        expect(getContent(el)).toBe("<h1>[abc]</h1><p>def</p>");
         deleteBackward(editor);
         expect(getContent(el)).toBe(
             '<h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1><p>def</p>'

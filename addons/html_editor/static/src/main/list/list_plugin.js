@@ -1,12 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
-import {
-    wrapInlinesInBlocks,
-    removeClass,
-    setTagName,
-    toggleClass,
-    fillEmpty,
-} from "@html_editor/utils/dom";
+import { wrapInlinesInBlocks, removeClass, setTagName, toggleClass } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isEmptyBlock,
@@ -153,23 +147,12 @@ export class ListPlugin extends Plugin {
                 focusNode: selection.focusNode,
                 focusOffset: selection.focusOffset,
             });
-            this.shared.extractContent(this.shared.getEditableSelection());
-            fillEmpty(blockEl);
+            this.dispatch("DELETE_SELECTION");
             if (shouldCreateNumberList) {
-                this.toggleList("OL");
-                // When the anchorNode is a context block and a list is
-                // being created inside it, ensure to navigate to the
-                // deepest node.
-                const [deepsetNode] = getDeepestPosition(
-                    selection.anchorNode,
-                    selection.anchorOffset
-                );
-                const closestOl = closestElement(deepsetNode, "OL");
-                if (stringToConvert.startsWith("A")) {
-                    closestOl.style.listStyle = "upper-alpha";
-                } else if (stringToConvert.startsWith("a")) {
-                    closestOl.style.listStyle = "lower-alpha";
-                }
+                const listStyle = { a: "lower-alpha", A: "upper-alpha", 1: null }[
+                    stringToConvert.substring(0, 1)
+                ];
+                this.toggleList("OL", listStyle);
             } else if (shouldCreateBulletList) {
                 this.toggleList("UL");
             } else if (shouldCreateCheckList) {
@@ -195,11 +178,15 @@ export class ListPlugin extends Plugin {
      *  categories are processed.
      *
      * @param {string} mode - The list mode to toggle (UL, OL, CL).
+     * @param {string} [listStyle] - The list style ( see listStyle css property)
      * @throws {Error} If an invalid list type is provided.
      */
-    toggleList(mode) {
+    toggleList(mode, listStyle) {
         if (!["UL", "OL", "CL"].includes(mode)) {
             throw new Error(`Invalid list type: ${mode}`);
+        }
+        if (mode === "CL" && !!listStyle) {
+            throw new Error(`listStyle is not compatible with "CL" list type`);
         }
 
         // @todo @phoenix: original implementation removed whitespace-only text nodes from traversedNodes.
@@ -240,7 +227,10 @@ export class ListPlugin extends Plugin {
                 this.switchListMode(list, mode);
             }
             for (const block of nonListBlocks) {
-                this.blockToList(block, mode);
+                const list = this.blockToList(block, mode, listStyle);
+                if (listStyle) {
+                    list.style.listStyle = listStyle;
+                }
             }
         } else {
             for (const li of sameModeListItems) {
@@ -301,7 +291,7 @@ export class ListPlugin extends Plugin {
     }
 
     /**
-     * @param {HTMLElement} block element
+     * @param {HTMLElement} element
      * @param {"UL"|"OL"|"CL"} mode
      */
     blockToList(element, mode) {

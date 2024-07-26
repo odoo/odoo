@@ -129,7 +129,7 @@ export class CollaborationPlugin extends Plugin {
             this.externalStepsBuffer.push(...newSteps);
         }
         this.shared.disableObserver();
-        const selection = this.shared.getEditableSelection();
+        const selectionData = this.shared.getSelectionData();
 
         let stepIndex = 0;
         const steps = this.shared.getHistorySteps();
@@ -157,8 +157,8 @@ export class CollaborationPlugin extends Plugin {
         }
 
         this.shared.enableObserver();
-        if (selection.inEditable) {
-            this.shared.rectifySelection(selection);
+        if (selectionData.documentSelectionIsInEditable) {
+            this.shared.rectifySelection(selectionData.editableSelection);
         }
 
         this.resources.onExternalHistorySteps?.forEach((cb) => cb());
