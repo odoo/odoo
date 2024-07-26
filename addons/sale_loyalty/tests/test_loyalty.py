@@ -1005,3 +1005,34 @@ class TestLoyalty(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         rewards = [value.ids for value in order._get_claimable_rewards().values()]
         self.assertTrue(any(loyalty_program_tag.reward_ids[0].id in r for r in rewards))
+
+    def test_discount_reward_claimable_only_once(self):
+        """
+        Check that discount rewards already applied won't be shown in the claimable rewards anymore.
+        """
+        program = self.env['loyalty.program'].create({
+            'name': '10% Discount',
+            'applies_on': 'current',
+            'trigger': 'with_code',
+            'program_type': 'promotion',
+            'rule_ids': [(0, 0, {'mode': 'with_code', 'code': '10PERCENT'})],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+            })],
+        })
+
+        coupon = self.env['loyalty.card'].create({
+            'program_id': program.id, 'points': 20, 'code': 'GIFT_CARD'
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})]
+        })
+
+        self._claim_reward(order, program, coupon)
+        rewards = order._get_claimable_rewards()
+        self.assertFalse(rewards, "No program should be applicable")
