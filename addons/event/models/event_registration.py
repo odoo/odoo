@@ -394,9 +394,9 @@ class EventRegistration(models.Model):
             'id': self.id,
             'name': self.name,
             'partner_id': self.partner_id.id,
-            'ticket_name': self.event_ticket_id.name or _('None'),
+            'ticket_name': self.event_ticket_id.name,
             'event_id': self.event_id.id,
             'event_display_name': self.event_id.display_name,
             'registration_answers': self.registration_answer_ids.filtered('value_answer_id').mapped('display_name'),
-            'company_name': self.event_id.company_id and self.event_id.company_id.name or False,
+            'company_name': self.company_name,
         }

@@ -14,7 +14,7 @@ class WebsiteEventSale(WebsiteSale):
         attendee_per_event_read_group = request.env['event.registration'].sudo()._read_group(
             [('sale_order_id', '=', order.id), ('state', 'in', ['open', 'done'])],
             groupby=['event_id'],
-            aggregates=['id:array_agg'],
+            aggregates=['id:recordset'],
         )
         values['attendee_ids_per_event'] = dict(attendee_per_event_read_group)
         return values

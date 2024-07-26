@@ -31,6 +31,15 @@
         font-size: 2em + ($line-height-base - 1);
     }
 
+    .o_wevent_add_to_ical i {
+        scale: 1.4;
+    }
+
+    .o_wevent_add_to_outlook,
+    .o_wevent_add_to_google_calendar {
+        --btn-padding-x: 0.7rem;
+    }
+
     #o_wevent_event_main_sidebar {
         @include media-breakpoint-up(lg) {
             max-width: 19rem;
@@ -113,4 +122,12 @@
 
 .o_wevent_hide_sponsors .o_wevent_sponsor_wrapper {
     display: none !important;
+}
+
+// Used in wevent and wevent_sale
+.o_event_add_to_calendar_btns a {
+    border: 1px solid #DEE2E6;
+    &:hover {
+        background-color: $gray-200;
+    }
 }
