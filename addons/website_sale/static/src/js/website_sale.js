@@ -171,7 +171,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         );
         let attributeIds = [];
         inputs.forEach((element) => attributeIds.push(element.dataset.attributeValueId));
-        window.location.hash = 'attribute_values=' + attributeIds.join(',');
+        if (attributeIds.length > 0) {
+            window.location.hash = `attribute_values=${attributeIds.join(',')}`;
+        }
     },
     /**
      * Set the checked values active.
