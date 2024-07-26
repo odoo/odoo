@@ -2,6 +2,8 @@ import { test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 test("should apply a color to a slice of text in a span in a font", async () => {
     await testEditor({
@@ -18,13 +20,19 @@ test("should apply a color to the qweb tag", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        contentAfterEdit: `<div>[<p t-esc="'Test'" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-esc="'Test'" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
+});
 
+test("should apply a color to the qweb tag (2)", async () => {
     await testEditor({
         contentBefore: `<div><p t-field="record.display_name" contenteditable="false">[Test]</p></div>`,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: `<div>[<p t-field="record.display_name" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        contentAfterEdit: `<div>[<p t-field="record.display_name" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-field="record.display_name" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 

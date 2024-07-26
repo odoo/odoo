@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { QWebPicker } from "./qweb_picker";
+import { leftPos, rightPos } from "@html_editor/utils/position";
 
 export class QWebPlugin extends Plugin {
     static name = "qweb";
@@ -60,14 +61,12 @@ export class QWebPlugin extends Plugin {
     }
 
     onSelectionChange(selection) {
-        const documentSelection = this.document.getSelection();
-        const qwebNode =
-            documentSelection &&
-            documentSelection.anchorNode &&
-            closestElement(documentSelection.anchorNode, "[t-field],[t-esc],[t-out]");
+        const qwebNode = closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
         if (qwebNode && this.editable.contains(qwebNode)) {
             // select the whole qweb node
-            this.shared.setSelection(selection);
+            const [anchorNode, anchorOffset] = leftPos(qwebNode);
+            const [focusNode, focusOffset] = rightPos(qwebNode);
+            this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
         }
     }
 

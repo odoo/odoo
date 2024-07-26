@@ -3,6 +3,8 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { em, s, span, u } from "../_helpers/tags";
 import { insertText, italic, tripleClick, underline } from "../_helpers/user_actions";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 test("should make a few characters underline", async () => {
     await testEditor({
@@ -40,7 +42,8 @@ test("should make qweb tag underline", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: underline,
-        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="text-decoration-line: underline;">Test</p>]</div>`,
+        contentAfterEdit: `<div>[<p t-esc="'Test'" contenteditable="false" style="text-decoration-line: underline;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
