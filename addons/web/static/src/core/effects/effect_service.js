@@ -34,12 +34,7 @@ const effectRegistry = registry.category("effects");
  */
 function rainbowMan(env, params = {}) {
     let message = params.message;
-    if (message instanceof jQuery) {
-        console.log(
-            "Providing a jQuery element to an effect is deprecated. Note that all event handlers will be lost."
-        );
-        message = message.html();
-    } else if (message instanceof Element) {
+    if (message instanceof Element) {
         console.log(
             "Providing an HTML element to an effect is deprecated. Note that all event handlers will be lost."
         );
