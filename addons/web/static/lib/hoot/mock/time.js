@@ -195,13 +195,8 @@ export async function advanceTime(ms) {
         timeOffset += remaining;
     }
 
-    const beforeAnimationFrame = now();
-
     // Waits for callbacks to execute
     await animationFrame();
-
-    // Reduce the offset by the time of the animation frame
-    timeOffset = $max(timeOffset - (now() - beforeAnimationFrame), 0);
 
     return ms;
 }

@@ -955,14 +955,14 @@ export class Runner {
                     return this.stop();
                 }
             }
-            if (!test.config.multi || test.runCount >= test.config.multi) {
-                this._pushTest(test);
+            this._pushTest(test);
+            if (test.willRunAgain()) {
+                test.run = test.run.bind(test);
+            } else {
                 if (this.debug) {
                     return new Promise(() => {});
                 }
-                if (!test.willRunAgain()) {
-                    test.setRunFn(null);
-                }
+                test.setRunFn(null);
                 job = nextJob(job);
             }
         }

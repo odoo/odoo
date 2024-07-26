@@ -134,6 +134,7 @@ const getCurrentParams = createJobScopedGetter(
     (previous) => ({
         ...previous,
         actions: deepCopy(previous?.actions || {}),
+        embeddedActions: deepCopy(previous?.embeddedActions || []),
         menus: deepCopy(previous?.menus || [DEFAULT_MENU]),
         models: [...(previous?.models || [])], // own instance getters, no need to deep copy
         routes: [...(previous?.routes || [])], // functions, no need to deep copy
@@ -213,6 +214,10 @@ class MockServerBaseEnvironment {
 
     set uid(newUid) {
         serverState.userId = newUid;
+        const user = this.user;
+        if (user) {
+            serverState.partnerId = user.partner_id;
+        }
     }
 
     get user() {
@@ -294,6 +299,7 @@ export class MockServer {
         direction: "ltr",
         grouping: [3, 0],
         time_format: "%H:%M:%S",
+        short_time_format: "%H:%M",
         thousands_sep: ",",
         week_start: 7,
     };
@@ -307,6 +313,8 @@ export class MockServer {
     // Data
     /** @type {Record<string, ActionDefinition>} */
     actions = {};
+    /** @type {Record<string, ActionDefinition>[]} */
+    embeddedActions = [];
     /** @type {MenuDefinition[]} */
     menus = [];
     /** @type {Record<string, Model>} */
@@ -384,6 +392,9 @@ export class MockServer {
     configure(params) {
         if (params.actions) {
             Object.assign(this.actions, params.actions);
+        }
+        if (params.embeddedActions) {
+            this.embeddedActions.push(...params.embeddedActions);
         }
         if (params.lang) {
             serverState.lang = params.lang;
@@ -521,6 +532,11 @@ export class MockServer {
                 errorName: "odoo.addons.web.controllers.action.MissingActionError",
                 message: `The action ${JSON.stringify(id)} does not exist`,
             });
+        }
+        if (action.type === "ir.actions.act_window") {
+            action["embedded_action_ids"] = this.embeddedActions.filter(
+                (el) => el && el.parent_action_id === id
+            );
         }
         return action;
     }
@@ -1043,6 +1059,16 @@ export function defineActions(actions) {
         { actions: Object.fromEntries(actions.map((a) => [a.id || a.xml_id, { ...a }])) },
         "add"
     ).actions;
+}
+
+/**
+ * @param {ActionDefinition[]} actions
+ */
+export function defineEmbeddedActions(actions) {
+    return defineParams(
+        { embeddedActions: Object.fromEntries(actions.map((a) => [a.id || a.xml_id, { ...a }])) },
+        "add"
+    ).embeddedActions;
 }
 
 /**

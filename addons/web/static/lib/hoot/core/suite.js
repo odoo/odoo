@@ -55,12 +55,14 @@ export class Suite extends Job {
      * @type {Job["willRunAgain"]}
      */
     willRunAgain(child) {
-        let count = this.runCount;
-        if (this.currentJobs.at(-1) === child) {
-            count++;
-        }
-        if (count < (this.config.multi || 1)) {
-            return true;
+        if (this.config.multi) {
+            let count = this.runCount;
+            if (this.currentJobs.at(-1) === child) {
+                count++;
+            }
+            if (count < this.config.multi) {
+                return true;
+            }
         }
         return Boolean(this.parent?.willRunAgain(this));
     }
