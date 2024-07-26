@@ -134,7 +134,7 @@ const getCurrentParams = createJobScopedGetter(
     (previous) => ({
         ...previous,
         actions: deepCopy(previous?.actions || {}),
-        embedded_actions: deepCopy(previous?.embedded_actions || []),
+        embeddedActions: deepCopy(previous?.embeddedActions || []),
         menus: deepCopy(previous?.menus || [DEFAULT_MENU]),
         models: [...(previous?.models || [])], // own instance getters, no need to deep copy
         routes: [...(previous?.routes || [])], // functions, no need to deep copy
@@ -214,8 +214,9 @@ class MockServerBaseEnvironment {
 
     set uid(newUid) {
         serverState.userId = newUid;
-        if (this.user) {
-            serverState.partnerId = this.user.partner_id;
+        const user = this.user;
+        if (user) {
+            serverState.partnerId = user.partner_id;
         }
     }
 
@@ -313,7 +314,7 @@ export class MockServer {
     /** @type {Record<string, ActionDefinition>} */
     actions = {};
     /** @type {Record<string, ActionDefinition>[]} */
-    embedded_actions = [];
+    embeddedActions = [];
     /** @type {MenuDefinition[]} */
     menus = [];
     /** @type {Record<string, Model>} */
@@ -392,8 +393,8 @@ export class MockServer {
         if (params.actions) {
             Object.assign(this.actions, params.actions);
         }
-        if (params.embedded_actions) {
-            this.embedded_actions.push(...params.embedded_actions);
+        if (params.embeddedActions) {
+            this.embeddedActions.push(...params.embeddedActions);
         }
         if (params.lang) {
             serverState.lang = params.lang;
@@ -533,7 +534,7 @@ export class MockServer {
             });
         }
         if (action.type === "ir.actions.act_window") {
-            action["embedded_action_ids"] = this.embedded_actions.filter(
+            action["embedded_action_ids"] = this.embeddedActions.filter(
                 (el) => el && el.parent_action_id === id
             );
         }
@@ -1065,9 +1066,9 @@ export function defineActions(actions) {
  */
 export function defineEmbeddedActions(actions) {
     return defineParams(
-        { embedded_actions: Object.fromEntries(actions.map((a) => [a.id || a.xml_id, { ...a }])) },
+        { embeddedActions: Object.fromEntries(actions.map((a) => [a.id || a.xml_id, { ...a }])) },
         "add"
-    ).embedded_actions;
+    ).embeddedActions;
 }
 
 /**
