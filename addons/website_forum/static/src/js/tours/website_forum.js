@@ -7,12 +7,12 @@
         url: '/forum/1',
     }, () => [{
         trigger: ".o_wforum_ask_btn",
-        position: "left",
+        tooltipPosition: "left",
         content: _t("Create a new post in this forum by clicking on the button."),
         run: "click",
     }, {
         trigger: "input[name=post_name]",
-        position: "top",
+        tooltipPosition: "top",
         content: _t("Give your post title."),
         run: "edit Test",
     },
@@ -23,7 +23,7 @@
     {
         trigger: ".note-editable p",
         content: _t("Put your question here."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "editor Test",
     },
     {
@@ -33,7 +33,7 @@
     {
         trigger: ".select2-choices",
         content: _t("Insert tags related to your question."),
-        position: "top",
+        tooltipPosition: "top",
     }, 
     {
         trigger: "input[id=s2id_autogen2]",
@@ -46,7 +46,7 @@
     {
         trigger: "button:contains(/^Post/)",
         content: _t("Click to post your question."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     }, {
         isActive: ["auto"],
@@ -56,13 +56,13 @@
     {
         trigger: "a:contains(\"Reply\").collapsed",
         content: _t("Click to reply."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     },
     {
         trigger: ".note-editable p",
         content: _t("Put your answer here."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "editor Test",
     },
     {
@@ -72,7 +72,7 @@
     {
         trigger: "button:contains(\"Post Answer\")",
         content: _t("Click to post your answer."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     }, {
         isActive: ["auto"],
@@ -81,7 +81,7 @@
     }, {
         trigger: ".o_wforum_validate_toggler[data-karma]:first",
         content: _t("Click here to accept this answer."),
-        position: "right",
+        tooltipPosition: "right",
         run: "click",
     }, {
         isActive: ["auto"],

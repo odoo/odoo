@@ -9,7 +9,7 @@ function addMedia(position = "right") {
     return {
         trigger: `.modal-content footer .btn-primary`,
         content: markup(_t("<b>Add</b> the selected image.")),
-        position: position,
+        tooltipPosition: position,
         run: "click",
     };
 }
@@ -43,7 +43,7 @@ function changeBackground(snippet, position = "bottom") {
         {
             trigger: ".o_we_customize_panel .o_we_bg_success",
         content: markup(_t("<b>Customize</b> any block through this menu. Try to change the background image of this block.")),
-            position: position,
+            tooltipPosition: position,
             run: "click",
         },
     ];
@@ -53,7 +53,7 @@ function changeBackgroundColor(position = "bottom") {
     return {
         trigger: ".o_we_customize_panel .o_we_color_preview",
         content: markup(_t("<b>Customize</b> any block through this menu. Try to change the background color of this block.")),
-        position: position,
+        tooltipPosition: position,
         run: "click",
     };
 }
@@ -63,7 +63,7 @@ function selectColorPalette(position = "left") {
         trigger:
             ".o_we_customize_panel .o_we_so_color_palette we-selection-items, .o_we_customize_panel .o_we_color_preview",
         content: markup(_t(`<b>Select</b> a Color Palette.`)),
-        position: position,
+        tooltipPosition: position,
         run: 'click',
     };
 }
@@ -72,7 +72,7 @@ function changeColumnSize(position = "right") {
     return {
         trigger: `:iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
         content: markup(_t("<b>Slide</b> this button to change the column size.")),
-        position: position,
+        tooltipPosition: position,
         run: "click",
     };
 }
@@ -85,7 +85,7 @@ function changeImage(snippet, position = "bottom") {
         {
             trigger: snippet.id ? `#wrapwrap .${snippet.id} img` : snippet,
         content: markup(_t("<b>Double click on an image</b> to change it with one of your choice.")),
-            position: position,
+            tooltipPosition: position,
             run: "dblclick",
         },
     ];
@@ -102,7 +102,7 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
     return {
         trigger: `${option_block} ${weName}, ${option_block} [title='${weName}']`,
         content: markup(_t("<b>Click</b> on this option to change the %s of the block.", optionTooltipLabel)),
-        position: position,
+        tooltipPosition: position,
         run: "click",
     };
 }
@@ -113,7 +113,7 @@ function selectNested(trigger, optionName, altTrigger = null, optionTooltipLabel
     return {
         trigger: trigger + (altTrigger ? `, ${option_block} ${altTrigger}` : ""),
         content: markup(_t("<b>Select</b> a %s.", optionTooltipLabel)),
-        position: position,
+        tooltipPosition: position,
         run: 'click',
     };
 }
@@ -128,7 +128,7 @@ function changePaddingSize(direction) {
     return {
         trigger: `:iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
         content: markup(_t("<b>Slide</b> this button to change the %s padding", direction)),
-        position: position,
+        tooltipPosition: position,
         run: "click",
     };
 }
@@ -179,7 +179,7 @@ function clickOnEditAndWaitEditMode(position = "bottom") {
     return [{
         content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
         trigger: ".o_menu_systray .o_edit_website_container a",
-        position: position,
+        tooltipPosition: position,
         run: "click",
     }, {
         isActive: ["auto"], // Checking step only for automated tests
@@ -198,12 +198,12 @@ function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
     return [{
         content: markup(_t("<b>Click Edit</b> dropdown")),
         trigger: ".o_edit_website_container button",
-        position: position,
+        tooltipPosition: position,
         run: "click",
     }, {
         content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
         trigger: ".o_edit_website_dropdown_item",
-        position: position,
+        tooltipPosition: position,
         run: "click",
     }, {
         isActive: ["auto"], // Checking step only for automated tests
@@ -227,7 +227,7 @@ function clickOnSnippet(snippet, position = "bottom") {
         {
             trigger: `:iframe ${trigger}`,
         content: markup(_t("<b>Click on a snippet</b> to access its options menu.")),
-            position: position,
+            tooltipPosition: position,
             run: "click",
         },
     ];
@@ -253,7 +253,7 @@ function clickOnSave(position = "bottom", timeout) {
             // of course be solved (or at least prevented in stable). More details
             // in related commit message.
         content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
-            position: position,
+            tooltipPosition: position,
             timeout: timeout,
             run: "click",
         },
@@ -280,7 +280,7 @@ function clickOnText(snippet, element, position = "bottom") {
         {
             trigger: snippet.id ? `:iframe #wrapwrap .${snippet.id} ${element}` : snippet,
         content: markup(_t("<b>Click on a text</b> to start editing it.")),
-            position: position,
+            tooltipPosition: position,
             run: "click",
         },
     ];
@@ -302,7 +302,7 @@ function dragNDrop(snippet, position = "bottom") {
     {
         trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
         content: markup(_t("Drag the <b>%s</b> block and drop it at the bottom of the page.", blockEl)),
-        position: position,
+        tooltipPosition: position,
         // Normally no main snippet can be dropped in the default footer but
         // targeting it allows to force "dropping at the end of the page".
         run: "drag_and_drop :iframe #wrapwrap > footer",
@@ -312,7 +312,7 @@ function dragNDrop(snippet, position = "bottom") {
             content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
             trigger: `:iframe .o_snippet_preview_wrap[data-snippet-id="${snippet.id}"]`,
             noPrepend: true,
-            position: position,
+            tooltipPosition: position,
             run: "click",
         },
         {
@@ -326,7 +326,7 @@ function goBackToBlocks(position = "bottom") {
     return {
         trigger: '.o_we_add_snippet_btn',
         content: _t("Click here to go back to block tab."),
-        position: position,
+        tooltipPosition: position,
         run: "click",
     };
 }
@@ -339,7 +339,7 @@ function goToTheme(position = "bottom") {
         {
             trigger: ".o_we_customize_theme_btn",
             content: _t("Go to the Theme tab"),
-            position: position,
+            tooltipPosition: position,
             run: "click",
         },
     ];
@@ -349,7 +349,7 @@ function selectHeader(position = "bottom") {
     return {
         trigger: `:iframe header#top`,
         content: markup(_t(`<b>Click</b> on this header to configure it.`)),
-        position: position,
+        tooltipPosition: position,
         run: "click",
     };
 }
@@ -358,7 +358,7 @@ function selectSnippetColumn(snippet, index = 0, position = "bottom") {
      return {
         trigger: `:iframe #wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
         content: markup(_t("<b>Click</b> on this column to access its options.")),
-         position: position,
+         tooltipPosition: position,
         run: "click",
      };
 }

@@ -55,7 +55,7 @@ function checkTourStepKeyValues(tourStep) {
         trigger: { type: String },
         isActive: { type: Array, element: String, optional: true },
         content: { type: [String, Object], optional: true }, //allow object for _t && markup
-        position: { type: String, optional: true },
+        tooltipPosition: { type: String, optional: true },
         run: { type: [String, Function], optional: true },
         timeout: { type: Number, optional: true },
         title: { type: String, optional: true },

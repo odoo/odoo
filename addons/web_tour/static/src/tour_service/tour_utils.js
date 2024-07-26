@@ -71,7 +71,7 @@ export const stepUtils = {
         return {
             isActive: ["auto", "community"],
             trigger: ".o_navbar_apps_menu button:enabled",
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         };
     },
@@ -81,7 +81,7 @@ export const stepUtils = {
             isActive: ["enterprise"],
             trigger: ".o_main_navbar .o_menu_toggle",
             content: markup(_t("Click on the <i>Home icon</i> to navigate across apps.")),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         };
     },
@@ -106,7 +106,7 @@ export const stepUtils = {
                 isActive: ["mobile"],
                 trigger: ".o_back_button",
                 content: description,
-                position: "bottom",
+                tooltipPosition: "bottom",
                 run: "click",
             },
         ];
@@ -119,14 +119,14 @@ export const stepUtils = {
                 isActive: ["community"],
                 trigger: `.o_app[data-menu-xmlid="${dataMenuXmlid}"]`,
                 content: description,
-                position: "right",
+                tooltipPosition: "right",
                 run: "click",
             },
             {
                 isActive: ["enterprise"],
                 trigger: `.o_app[data-menu-xmlid="${dataMenuXmlid}"]`,
                 content: description,
-                position: "bottom",
+                tooltipPosition: "bottom",
                 run: "click",
             },
         ].map((step) =>
@@ -158,7 +158,7 @@ export const stepUtils = {
             {
                 trigger: `.o_statusbar_buttons button:enabled:contains('${innerTextButton}'), .dropdown-item button:enabled:contains('${innerTextButton}')`,
                 content: description,
-                position: "bottom",
+                tooltipPosition: "bottom",
                 run: "click",
             }
         );
@@ -175,13 +175,13 @@ export const stepUtils = {
             {
                 isActive: ["mobile"],
                 trigger: `.o_control_panel_navigation .btn .fa-search`,
-                position: "bottom",
+                tooltipPosition: "bottom",
                 run: "click",
             },
             {
                 isActive: ["mobile"],
                 trigger: ".o_searchview_input",
-                position: "bottom",
+                tooltipPosition: "bottom",
                 run: `edit ${valueSearched}`,
             },
             {
@@ -191,13 +191,13 @@ export const stepUtils = {
             {
                 isActive: ["mobile"],
                 trigger: ".o_searchview_input",
-                position: "bottom",
+                tooltipPosition: "bottom",
                 run: "press Enter",
             },
             {
                 isActive: ["mobile"],
                 trigger: `.o_kanban_record:contains('${valueSearched}')`,
-                position: "bottom",
+                tooltipPosition: "bottom",
                 run: "click",
             },
         ].map((step) =>

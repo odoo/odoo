@@ -10,17 +10,17 @@
     }, () => [{
         trigger: "body:not(:has(#o_new_content_menu_choices)) .o_new_content_container > a",
         content: _t("Click here to add new content to your website."),
-        position: 'bottom',
+        tooltipPosition: 'bottom',
         run: "click",
     }, {
         trigger: 'a[data-module-xml-id="base.module_website_blog"]',
         content: _t("Select this menu item to create a new blog post."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     }, {
         trigger: 'div[name="name"] input',
         content: _t("Enter your post's title"),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "edit Test",
     },
     {
@@ -48,7 +48,7 @@
     {
         trigger: ":iframe h1[data-oe-expression=\"blog_post.name\"]",
         content: _t("Edit your title, the subtitle is optional."),
-        position: "top",
+        tooltipPosition: "top",
         run: "editor Test",
     },
     {
@@ -58,29 +58,29 @@
     {
         trigger: "we-button[data-background]:eq(0)",
         content: markup(_t("Set a blog post <b>cover</b>.")),
-        position: "top",
+        tooltipPosition: "top",
         run: "click",
     }, {
         trigger: ".o_select_media_dialog .o_we_search",
         content: _t("Search for an image. (eg: type \"business\")"),
-        position: "top",
+        tooltipPosition: "top",
     },
     {
         trigger: ".o_select_media_dialog .o_existing_attachment_cell:first img",
         content: _t("Choose an image from the library."),
-        position: "top",
+        tooltipPosition: "top",
         run: "click",
     }, {
         trigger: ":iframe #o_wblog_post_content p",
         content: markup(_t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs.")),
-        position: "top",
+        tooltipPosition: "top",
         run: "editor Blog content",
     },
     ...wTourUtils.clickOnSave(),
     {
         trigger: ".o_menu_systray_item.o_mobile_preview > a",
         content: markup(_t("Use this icon to preview your blog post on <b>mobile devices</b>.")),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     },
     {
@@ -90,7 +90,7 @@
     {
         trigger: ".o_menu_systray_item.o_mobile_preview > a",
         content: _t("Once you have reviewed the content on mobile, you can switch back to the normal view by clicking here again"),
-        position: "right",
+        tooltipPosition: "right",
         run: "click",
     },
     {
@@ -99,7 +99,7 @@
     },
     {
         trigger: '.o_menu_systray_item a:contains("Unpublished")',
-        position: "bottom",
+        tooltipPosition: "bottom",
         content: markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
         run: "click",
     }, {

@@ -14,13 +14,13 @@ registry.category("web_tour.tours").add('crm_tour', {
     isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: markup(_t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.')),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, {
     isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: markup(_t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.')),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 },
 {
@@ -30,12 +30,12 @@ registry.category("web_tour.tours").add('crm_tour', {
 {
     trigger: '.o-kanban-button-new',
     content: markup(_t("<b>Create your first opportunity.</b>")),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, {
     trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id'] input",
     content: markup(_t('<b>Write a few letters</b> to look for a company, or create a new one.')),
-    position: "top",
+    tooltipPosition: "top",
     run: "edit Brandon Freeman",
 }, {
     isActive: ["auto"],
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('crm_tour', {
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     content: markup(_t("Now, <b>add your Opportunity</b> to your Pipeline.")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add('crm_tour', {
 {
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-of-type .oe_kanban_content",
     content: markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
-    position: "right",
+    tooltipPosition: "right",
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(2))",
 }, 
 {
@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     // Choose the element that is not going to be moved by the previous step.
     trigger: ".o_opportunity_kanban .o_kanban_group:nth-child(2) .o_kanban_record .o-mail-ActivityButton",
     content: markup(_t("Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep track of everything you have to do!</i>")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 },
 {
@@ -75,18 +75,18 @@ registry.category("web_tour.tours").add('crm_tour', {
 {
     trigger: ".o-mail-ActivityListPopover button:contains(Schedule an activity)",
     content: markup(_t("Let's <b>Schedule an Activity.</b>")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, {
     trigger: '.modal-footer button[name="action_schedule_activities"]',
     content: markup(_t("All set. Let’s <b>Schedule</b> it.")),
-    position: "top",  // dot NOT move to bottom, it would cause a resize flicker, see task-2476595
+    tooltipPosition: "top",  // dot NOT move to bottom, it would cause a resize flicker, see task-2476595
     run: "click .modal-footer button[special=cancel]",
 }, {
     id: "drag_opportunity_to_won_step",
     trigger: ".o_opportunity_kanban .o_kanban_record:last-of-type",
     content: markup(_t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats!")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(3))",
 },
 {
@@ -96,16 +96,16 @@ registry.category("web_tour.tours").add('crm_tour', {
 {
     trigger: ".o_kanban_record",
     content: _t("Let’s have a look at an Opportunity."),
-    position: "right",
+    tooltipPosition: "right",
     run: "click",
 }, {
     trigger: ".o_lead_opportunity_form .o_statusbar_status",
     content: _t("You can make your opportunity advance through your pipeline from here."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, {
     trigger: ".breadcrumb-item:not(.active):first",
     content: _t("Click on the breadcrumb to go back to your Pipeline. Odoo will save all modifications as you navigate."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click .breadcrumb-item:not(.active):last",
 }]});
