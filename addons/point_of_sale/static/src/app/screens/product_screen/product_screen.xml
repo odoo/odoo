@@ -20,7 +20,7 @@
             <div class="rightpane d-flex flex-grow-1 flex-column bg-view w-60 bg-100" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
                 <div t-if="!ui.isSmall" t-ref="category-box" t-att-class="{'d-none': state.scrollDown and ui.isSmall}" class="d-flex flex-column shadow-sm control-top-bar">
                     <div class="category-box flex-grow-1">
-                        <CategorySelector class="'category-selector d-grid p-1 gap-1'" categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
+                        <CategorySelector class="'category-selector d-grid p-1 gap-1 d-flex overflow-auto'" categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
                     </div>
                 </div>
                 <div t-ref="products" class="overflow-y-auto flex-grow-1">
