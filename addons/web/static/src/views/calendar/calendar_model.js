@@ -480,7 +480,9 @@ export class CalendarModel extends Model {
      */
     fetchRecords(data) {
         const { fieldNames, resModel } = this.meta;
-        return this.orm.searchRead(resModel, this.computeDomain(data), fieldNames);
+        return this.orm.searchRead(resModel, this.computeDomain(data), [
+            ...new Set([...fieldNames, ...Object.keys(this.meta.activeFields)]),
+        ]);
     }
     /**
      * @protected
