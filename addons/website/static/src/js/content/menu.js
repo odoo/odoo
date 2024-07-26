@@ -4,6 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import animations from "@website/js/content/snippets.animation";
 export const extraMenuUpdateCallbacks = [];
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import { compensateScrollbar } from "@web/core/utils/scrolling";
 
 // The header height may vary with sections hidden on scroll (see the class
 // `o_header_hide_on_scroll`). To avoid scroll jumps, we cache the value.
@@ -95,7 +96,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @private
      */
     _adaptFixedHeaderPosition() {
-        $(this.el).compensateScrollbar(this.fixedHeader, false, 'right');
+        compensateScrollbar(this.el, this.fixedHeader, false, 'right');
     },
     /**
      * @private

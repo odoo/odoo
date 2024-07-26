@@ -1,3 +1,5 @@
+import { closestScrollableY } from "@web/core/utils/scrolling";
+
 /**
  * DOM Utility helpers
  *
@@ -43,37 +45,6 @@ var dom = {
         }
 
         return $results;
-    },
-
-    // Helper function to determine if an element is scrollable
-    isScrollable(element) {
-        if (!element) {
-            return false;
-        }
-        const overflowY = window.getComputedStyle(element).overflowY;
-        return overflowY === 'auto' || overflowY === 'scroll' ||
-            (overflowY === 'visible' && element === element.ownerDocument.scrollingElement);
-    },
-
-    /**
-     * Finds the closest scrollable element for the given element.
-     *
-     * @param {Element} element - The element to find the closest scrollable element for.
-     * @returns {Element} The closest scrollable element.
-     */
-    closestScrollable(element) {
-        const document = element.ownerDocument || window.document;
-
-        while (element && element !== document.scrollingElement) {
-            if (element instanceof Document) {
-                return null;
-            }
-            if (dom.isScrollable(element)) {
-                return element;
-            }
-            element = element.parentElement;
-        }
-        return element || document.scrollingElement;
     },
 
     /**
@@ -122,8 +93,8 @@ var dom = {
             el = document.querySelector(el);
         }
         const isTopOrBottomHidden = (el.id === 'top' || el.id === 'bottom');
-        const scrollable = isTopOrBottomHidden ? document.scrollingElement : (options.scrollable || dom.closestScrollable(el.parentElement));
-        const scrollDocument = scrollable.ownerDocument;
+        const scrollable = isTopOrBottomHidden ? document.scrollingElement : (options.scrollable || closestScrollableY(el.parentElement));
+        const scrollDocument = scrollable?.ownerDocument;
         const isInOneDocument = isTopOrBottomHidden || scrollDocument === el.ownerDocument;
         const iframe = !isInOneDocument && Array.from(scrollable.querySelectorAll('iframe')).find(node => node.contentDocument.contains(el));
         const topLevelScrollable = scrollDocument.scrollingElement;
