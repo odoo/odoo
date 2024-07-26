@@ -115,6 +115,10 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
         run: "click",
     },
     {
+        content: "Wait the new skill is completely saved. Ensure also the modal is closed before open a new one.",
+        trigger: "body:not(:has(.modal))",
+    },
+    {
         content: "Check if item is added",
         trigger: ".o_data_row td.o_data_cell:contains('Fortunate Son')",
     },
@@ -124,7 +128,11 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
         run: "click",
     },
     {
-        content: "Select a song", // "Music" should be already selected
+        content: "Music should be already selected",
+        trigger: ".modal:contains(select skills) .o_field_widget[name=skill_id] input:value(Fortunate Son)",
+    },
+    {
+        content: "Select a song",
         trigger: ".modal:contains(select skills) .o_field_widget[name='skill_id'] input",
         run: "edit Mary",
     },
@@ -147,6 +155,10 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
         content: "Save new skill",
         trigger: ".modal:contains(select skills) .o_form_button_save:contains(save & close)",
         run: "click",
+    },
+    {
+        content: "Wait the new skill is completely saved",
+        trigger: "body:not(:has(.modal))",
     },
     {
         content: "Check if item is added",
