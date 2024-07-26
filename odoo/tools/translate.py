@@ -931,7 +931,6 @@ def _extract_translatable_qweb_terms(element, callback):
         if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
-                and not ("t-jquery" in el.attrib and "t-operation" not in el.attrib)
                 and not (el.tag == 'attribute' and el.get('name') not in TRANSLATED_ATTRS)
                 and el.get("t-translation", '').strip() != "off"):
 
