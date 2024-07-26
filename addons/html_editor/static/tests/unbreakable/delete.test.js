@@ -457,37 +457,93 @@ describe("list", () => {
                 contentAfter: '<p>abc</p><ol class="oe_unbreakable"><li>[]def</li></ol>',
             });
             // First LI.
-            // await testEditor({
-            //     contentBefore:
-            //         '<ol><li><div><div>[]abc</div></div></li><li>def</li></ol>',
-            //     stepFunction: deleteBackward,
-            //     contentAfter:
-            //         '<ol><li><div><div>[]abc</div></div></li><li>def</li></ol>',
-            // });
-            // // In the middle.
-            // await testEditor({
-            //     contentBefore:
-            //         '<ol><li><div>abc</div></li><li><div><div>[]def</div></div></li><li>ghi</li></ol>',
-            //     stepFunction: deleteBackward,
-            //     contentAfter:
-            //         '<ol><li><div>abc</div></li><li><div><div>[]def</div></div></li><li>ghi</li></ol>',
-            // });
-            // // Last LI.
-            // await testEditor({
-            //     contentBefore:
-            //         '<ol><li>abc</li><li><div><div>[]def</div></div></li></ol>',
-            //     stepFunction: deleteBackward,
-            //     contentAfter:
-            //         '<ol><li>abc</li><li><div><div>[]def</div></div></li></ol>',
-            // });
-            // // With a div before the list:
-            // await testEditor({
-            //     contentBefore:
-            //         '<div>abc</div><ol><li>def</li><li><div><div>[]ghi</div></div></li><li>jkl</li></ol>',
-            //     stepFunction: deleteBackward,
-            //     contentAfter:
-            //         '<div>abc</div><ol><li>def</li><li><div><div>[]ghi</div></div></li><li>jkl</li></ol>',
-            // });
+            await testEditor({
+                contentBefore:
+                    '<ol class="oe_unbreakable"><li><div><div>[]abc</div></div></li><li>def</li></ol>',
+                stepFunction: deleteBackward,
+                contentAfter:
+                    '<ol class="oe_unbreakable"><li><div><div>[]abc</div></div></li><li>def</li></ol>',
+            });
+            // In the middle.
+            await testEditor({
+                contentBefore:
+                    '<ol class="oe_unbreakable"><li><div>abc</div></li><li><div><div>[]def</div></div></li><li>ghi</li></ol>',
+                stepFunction: deleteBackward,
+                contentAfter:
+                    '<ol class="oe_unbreakable"><li><div>abc</div></li><li><div><div>[]def</div></div></li><li>ghi</li></ol>',
+            });
+            // Last LI.
+            await testEditor({
+                contentBefore:
+                    '<ol class="oe_unbreakable"><li>abc</li><li><div><div>[]def</div></div></li></ol>',
+                stepFunction: deleteBackward,
+                contentAfter:
+                    '<ol class="oe_unbreakable"><li>abc</li><li><div><div>[]def</div></div></li></ol>',
+            });
+            // With a div before the list:
+            await testEditor({
+                contentBefore:
+                    '<div>abc</div><ol class="oe_unbreakable"><li>def</li><li><div><div>[]ghi</div></div></li><li>jkl</li></ol>',
+                stepFunction: deleteBackward,
+                contentAfter:
+                    '<div>abc</div><ol class="oe_unbreakable"><li>def</li><li><div><div>[]ghi</div></div></li><li>jkl</li></ol>',
+            });
+        });
+        test("shoud not outdent list item in unsplittable list, but merge with previous LI", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ol class="oe_unbreakable">
+                        <li>abc</li>
+                        <li>[]def</li>
+                    </ol>`),
+                stepFunction: deleteBackward,
+                contentAfter: unformat(`
+                    <ol class="oe_unbreakable">
+                        <li>abc[]def</li>
+                    </ol>`),
+            });
+        });
+        test("shoud not outdent list item in unsplittable list, nor merge it with previous block", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <p>abc</p>
+                    <ol class="oe_unbreakable">
+                        <li>[]abc</li>
+                        <li>def</li>
+                    </ol>`),
+                stepFunction: deleteBackward,
+                contentAfter: unformat(`
+                    <p>abc</p>
+                    <ol class="oe_unbreakable">
+                        <li>[]abc</li>
+                        <li>def</li>
+                    </ol>`),
+            });
+        });
+        test("shoud not outdent list item nested in unsplittable list", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <p>abc</p>
+                    <ol class="oe_unbreakable">
+                        <li class="oe-nested">
+                            <ol>
+                                <li>[]abc</li>
+                                <li>def</li>
+                            </ol>
+                        </li>
+                    </ol>`),
+                stepFunction: deleteBackward,
+                contentAfter: unformat(`
+                    <p>abc</p>
+                    <ol class="oe_unbreakable">
+                        <li class="oe-nested">
+                            <ol>
+                                <li>[]abc</li>
+                                <li>def</li>
+                            </ol>
+                        </li>
+                    </ol>`),
+            });
         });
     });
     describe("selection not collapsed", () => {
