@@ -113,7 +113,7 @@ class TestEventProductConfiguratorUi(AccountTestInvoicingCommon, HttpCase):
             cls.event_product_template.optional_product_ids = [cls.product_product_memorabilia.id,]
 
     def test_event_using_product_configurator(self):
-        self.start_tour("/web", 'event_sale_with_product_configurator_tour', login='salesman')
+        self.start_tour("/odoo", 'event_sale_with_product_configurator_tour', login='salesman')
 
         sale_order = self.env['sale.order'].search([('create_uid', "=", self.salesman.id)])
 
