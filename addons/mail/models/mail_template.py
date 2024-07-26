@@ -195,15 +195,52 @@ class MailTemplate(models.Model):
             if self.env[model]._abstract:
                 raise ValidationError(_('You may not define a template on an abstract model: %s', model))
 
+    def _check_can_be_rendered(self, fnames=None):
+        dynamic_fnames = self._get_dynamic_field_names()
+
+        for template in self:
+            model = template.sudo().model_id.model
+            if not model:
+                return
+            record = template.env[model].search([], limit=1)
+            if not record:
+                return
+
+            fnames = fnames & dynamic_fnames if fnames else dynamic_fnames
+            for fname in fnames:
+                try:
+                    template._render_field(fname, record.ids)
+                except Exception as e:
+                    raise ValidationError(
+                        _("Oops! We couldn't save your template due to an issue with this value: %(template_txt)s. Correct it and try again.",
+                        template_txt=template[fname])
+                    ) from e
+
+    def _get_dynamic_field_names(self):
+        return {
+            'body_html',
+            'email_cc',
+            'email_from',
+            'email_to',
+            'lang',
+            'partner_to',
+            'reply_to',
+            'scheduled_date',
+            'subject',
+        }
+
     @api.model_create_multi
     def create(self, vals_list):
         self._check_abstract_models(vals_list)
-        return super().create(vals_list)\
-            ._fix_attachment_ownership()
+        records = super().create(vals_list)
+        records._check_can_be_rendered(fnames=None)
+        records._fix_attachment_ownership()
+        return records
 
     def write(self, vals):
         self._check_abstract_models([vals])
         super().write(vals)
+        self._check_can_be_rendered(fnames=vals.keys() if {'model', 'model_id'}.isdisjoint(vals.keys()) else None)
         self._fix_attachment_ownership()
         return True
 
