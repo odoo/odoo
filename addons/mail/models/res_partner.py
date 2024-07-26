@@ -248,7 +248,7 @@ class Partner(models.Model):
                     data["isAdmin"] = main_user._is_admin()
                 if "notification_type" in fields:
                     data["notification_preference"] = main_user.notification_type
-            store.add("res.partner", data)
+            store.add(partner, data)
 
     @api.model
     def get_mention_suggestions(self, search, limit=8):

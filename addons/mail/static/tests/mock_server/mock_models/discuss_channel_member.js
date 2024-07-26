@@ -182,7 +182,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 data.message_unread_counter = this._compute_message_unread_counter([member.id]);
                 data.message_unread_counter_bus_id = this.env["bus.bus"].lastBusNotificationId;
             }
-            store.add("discuss.channel.member", data);
+            store.add(this.browse(member.id), data);
         }
     }
 

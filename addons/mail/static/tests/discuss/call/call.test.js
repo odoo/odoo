@@ -176,17 +176,14 @@ test("should display invitations", async () => {
     pyEnv["bus.bus"]._sendone(
         partner,
         "mail.record/insert",
-        new mailDataHelpers.Store("discuss.channel.rtc.session", {
-            id: sessionId,
+        new mailDataHelpers.Store(pyEnv["discuss.channel.rtc.session"].browse(sessionId), {
             channelMember: { id: memberId },
         })
-            .add("discuss.channel.member", {
-                id: memberId,
+            .add(pyEnv["discuss.channel.member"].browse(memberId), {
                 persona: { id: partnerId, type: "partner" },
                 thread: { id: channelId, model: "discuss.channel" },
             })
-            .add("discuss.channel", {
-                id: channelId,
+            .add(pyEnv["discuss.channel"].browse(channelId), {
                 rtcInvitingSession: { id: sessionId },
             })
             .get_result()
@@ -198,8 +195,7 @@ test("should display invitations", async () => {
     pyEnv["bus.bus"]._sendone(
         partner,
         "mail.record/insert",
-        new mailDataHelpers.Store("discuss.channel", {
-            id: channelId,
+        new mailDataHelpers.Store(pyEnv["discuss.channel"].browse(channelId), {
             rtcInvitingSession: false,
         }).get_result()
     );

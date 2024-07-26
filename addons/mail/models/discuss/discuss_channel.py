@@ -282,11 +282,7 @@ class Channel(models.Model):
                     diff[key] = value
             if diff:
                 notifications.append(
-                    (
-                        channel,
-                        "mail.record/insert",
-                        Store("discuss.channel", {"id": channel.id, **diff}).get_result(),
-                    )
+                    (channel, "mail.record/insert", Store(channel, diff).get_result())
                 )
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
@@ -320,7 +316,7 @@ class Channel(models.Model):
                         group,
                         "mail.record/insert",
                         Store(
-                            "discuss.channel", {**channel._channel_basic_info(), "is_pinned": True}
+                            channel, {**channel._channel_basic_info(), "is_pinned": True}
                         ).get_result(),
                     )
                 )
@@ -338,10 +334,7 @@ class Channel(models.Model):
 
     def _action_unfollow(self, partner):
         self.message_unsubscribe(partner.ids)
-        custom_store = Store(
-            "discuss.channel",
-            {"id": self.id, "is_pinned": False, "isLocallyPinned": False},
-        )
+        custom_store = Store(self, {"is_pinned": False, "isLocallyPinned": False})
         member = self.env["discuss.channel.member"].search(
             [("channel_id", "=", self.id), ("partner_id", "=", partner.id)]
         )
@@ -360,10 +353,9 @@ class Channel(models.Model):
             self,
             "mail.record/insert",
             Store(
-                "discuss.channel",
+                self,
                 {
                     "channelMembers": Store.many(member, "DELETE", only_id=True),
-                    "id": self.id,
                     "memberCount": self.member_count,
                 },
             ).get_result(),
@@ -444,10 +436,7 @@ class Channel(models.Model):
                     (
                         channel,
                         "mail.record/insert",
-                        Store(
-                            "discuss.channel",
-                            {"id": channel.id, "memberCount": channel.member_count},
-                        )
+                        Store(channel, {"memberCount": channel.member_count})
                         .add(new_members)
                         .get_result(),
                     )
@@ -461,10 +450,7 @@ class Channel(models.Model):
                     (
                         target,
                         "mail.record/insert",
-                        Store(
-                            "discuss.channel",
-                            {"id": channel.id, "memberCount": channel.member_count},
-                        )
+                        Store(channel, {"memberCount": channel.member_count})
                         .add(existing_members)
                         .get_result(),
                     )
@@ -505,9 +491,7 @@ class Channel(models.Model):
                 (
                     target,
                     "mail.record/insert",
-                    Store(
-                        "discuss.channel", {"id": self.id, "rtcInvitingSession": False}
-                    ).get_result(),
+                    Store(self, {"rtcInvitingSession": False}).get_result(),
                 )
             )
         if members:
@@ -516,9 +500,8 @@ class Channel(models.Model):
                     self,
                     "mail.record/insert",
                     Store(
-                        "discuss.channel",
+                        self,
                         {
-                            "id": self.id,
                             "invitedMembers": Store.many(
                                 members,
                                 "DELETE",
@@ -660,7 +643,7 @@ class Channel(models.Model):
             (
                 (self, "members"),
                 "mail.record/insert",
-                Store("discuss.channel", {"id": self.id, "is_pinned": True}).get_result(),
+                Store(self, {"is_pinned": True}).get_result(),
             ),
             (self, "discuss.channel/new_message", payload),
         ]
@@ -819,13 +802,7 @@ class Channel(models.Model):
         self.env["bus.bus"]._sendone(
             self,
             "mail.record/insert",
-            Store(
-                "mail.message",
-                {
-                    "id": message_id,
-                    "pinned_at": fields.Datetime.to_string(message_to_update.pinned_at),
-                },
-            ).get_result(),
+            Store(message_to_update, {"pinned_at": message_to_update.pinned_at}).get_result(),
         )
         if pinned:
             notification_text = '''
@@ -996,9 +973,9 @@ class Channel(models.Model):
             info["invitedMembers"] = Store.many(
                 invited_members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
             )
-                # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
+            # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
             info["rtcSessions"] = Store.many(channel.sudo().rtc_session_ids, "ADD", extra=True)
-            store.add("discuss.channel", info)
+            store.add(channel, info)
 
     # User methods
     @api.model
@@ -1123,7 +1100,7 @@ class Channel(models.Model):
         self.env["bus.bus"]._sendone(
             member.partner_id,
             "mail.record/insert",
-            Store("discuss.channel", {"custom_channel_name": name, "id": self.id}).get_result(),
+            Store(self, {"custom_channel_name": name}).get_result(),
         )
 
     def channel_rename(self, name):
@@ -1237,11 +1214,7 @@ class Channel(models.Model):
         count = self.env['discuss.channel.member'].search_count(
             domain=[('channel_id', '=', self.id)],
         )
-        return (
-            Store(unknown_members)
-            .add("discuss.channel", {"id": self.id, "memberCount": count})
-            .get_result()
-        )
+        return Store(unknown_members).add(self, {"memberCount": count}).get_result()
 
     # ------------------------------------------------------------
     # COMMANDS

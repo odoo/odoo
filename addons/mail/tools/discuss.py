@@ -66,11 +66,19 @@ class Store:
         - as_thread: whether to call "_thread_to_store" or "_to_store"
         """
         if isinstance(data, models.Model):
-            assert not values, f"expected empty values with recordset {data}: {values}"
+            if values:
+                assert len(data) == 1, f"expected single record {data} with values"
+                assert not kwargs, f"expected empty kwargs with recordset {data} values: {kwargs}"
             if as_thread:
-                data._thread_to_store(self, **kwargs)
+                if values is None:
+                    data._thread_to_store(self, **kwargs)
+                else:
+                    self.add("mail.thread", {"id": data.id, "model": data._name, **values})
             else:
-                data._to_store(self, **kwargs)
+                if values is None:
+                    data._to_store(self, **kwargs)
+                else:
+                    self.add(data._name, {"id": data.id, **values})
             return self
         if isinstance(data, dict):
             assert not values, f"expected empty values with dict {data}: {values}"

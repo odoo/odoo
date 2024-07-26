@@ -30,10 +30,8 @@ export class ResPartner extends mailModels.ResPartner {
             .map(({ available_operator_ids }) => available_operator_ids)
             .flat()
             .map((userId) => ResUsers.browse(userId)[0].partner_id);
-        const partners = ResPartner.browse(ids);
-        for (const partner of partners) {
+        for (const partner of ResPartner.browse(ids)) {
             const data = {
-                id: partner.id,
                 invite_by_self_count: DiscussChannelMember.search_count([
                     ["partner_id", "=", partner.id],
                     ["create_uid", "=", serverState.userId],
@@ -43,7 +41,7 @@ export class ResPartner extends mailModels.ResPartner {
             if (partner.lang) {
                 data.lang_name = ResLang.search_read([["code", "=", partner.lang]])[0].name;
             }
-            store.add("res.partner", data);
+            store.add(this.browse(partner.id), data);
         }
     }
     /**

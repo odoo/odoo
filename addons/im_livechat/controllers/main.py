@@ -187,10 +187,7 @@ class LivechatController(http.Controller):
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
             store.add(channel)
-            store.add(
-                "discuss.channel",
-                {"id": channel.id, "isLoaded": not chatbot_script, "scrollUnread": False},
-            )
+            store.add(channel, {"isLoaded": not chatbot_script, "scrollUnread": False})
             if guest:
                 store.add({"guest_token": guest._format_auth_cookie()})
         request.env["res.users"]._init_store_data(store)

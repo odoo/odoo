@@ -93,7 +93,7 @@ async function get_session(request) {
     const store = new mailDataHelpers.Store();
     ResUsers._init_store_data(store);
     store.add(DiscussChannel.browse(channelId));
-    store.add("discuss.channel", { id: channelId, isLoaded: true, scrollUnread: false });
+    store.add(DiscussChannel.browse(channelId), { isLoaded: true, scrollUnread: false });
     return store.get_result();
 }
 

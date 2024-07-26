@@ -9,6 +9,7 @@ export class ResPartner extends webModels.ResPartner {
     _inherit = ["mail.thread"];
 
     description = fields.Char({ string: "Description" });
+    hasWriteAccess = fields.Boolean({ default: true });
     message_main_attachment_id = fields.Many2one({
         relation: "ir.attachment",
         string: "Main attachment",
@@ -280,7 +281,7 @@ export class ResPartner extends webModels.ResPartner {
                     data.notification_preference = mainUser.notification_type;
                 }
             }
-            store.add("res.partner", data);
+            store.add(this.browse(partner.id), data);
         }
     }
 

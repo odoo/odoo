@@ -49,7 +49,7 @@ export class MailNotification extends models.ServerModel {
                 ResPartner.browse(notification.res_partner_id),
                 makeKwArgs({ fields: ["display_name"] })
             );
-            store.add("mail.notification", data);
+            store.add(this.browse(notification.id), data);
         }
     }
 }

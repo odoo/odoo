@@ -30,8 +30,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
             notifications.push([
                 channel,
                 "mail.record/insert",
-                new mailDataHelpers.Store("discuss.channel", {
-                    id: channel.id,
+                new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
                     rtcSessions: mailDataHelpers.Store.many(
                         this.browse(sessions.map((session) => session.id)),
                         "ADD"
@@ -69,7 +68,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
                     isScreenSharingOn: rtcSession.is_screen_sharing_on,
                 });
             }
-            store.add("discuss.channel.rtc.session", data);
+            store.add(this.browse(rtcSession.id), data);
         }
     }
 

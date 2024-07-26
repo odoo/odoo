@@ -27,9 +27,8 @@ class ChannelMember(models.Model):
         for member in self.filtered(lambda m: m.channel_id.channel_type == "livechat"):
             # sudo: mail.channel - reading livechat channel to check whether current member is a bot is allowed
             store.add(
-                "discuss.channel.member",
+                member,
                 {
-                    "id": member.id,
                     "is_bot": member.partner_id
                     in member.channel_id.sudo().livechat_channel_id.rule_ids.chatbot_script_id.operator_partner_id,
                 },

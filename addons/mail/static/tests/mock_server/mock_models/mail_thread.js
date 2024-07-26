@@ -75,14 +75,16 @@ export class MailThread extends models.ServerModel {
             (f1, f2) => (f1.id < f2.id ? -1 : 1) // sorted from lowest ID to highest ID (i.e. from oldest to youngest)
         );
         followers.length = Math.min(followers.length, limit);
-        store.add("mail.thread", {
-            id: ids[0],
-            model: this._name,
-            [filter_recipients ? "recipients" : "followers"]: mailDataHelpers.Store.many(
-                followers,
-                reset ? "REPLACE" : "ADD"
-            ),
-        });
+        store.add(
+            this.browse(ids[0]),
+            {
+                [filter_recipients ? "recipients" : "followers"]: mailDataHelpers.Store.many(
+                    followers,
+                    reset ? "REPLACE" : "ADD"
+                ),
+            },
+            makeKwArgs({ as_thread: true })
+        );
     }
 
     /** @param {number[]} ids */
@@ -442,8 +444,7 @@ export class MailThread extends models.ServerModel {
                 notifications.push([
                     [channel, "members"],
                     "mail.record/insert",
-                    new mailDataHelpers.Store("discuss.channel", {
-                        id: channel.id,
+                    new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
                         is_pinned: true,
                     }).get_result(),
                 ]);
@@ -606,17 +607,7 @@ export class MailThread extends models.ServerModel {
         const res = { id: thread.id, model: this._name };
         if (request_list) {
             res.hasReadAccess = true;
-            res.hasWriteAccess = true; // mimic user with write access by default
-        }
-        if (!thread) {
-            if (request_list) {
-                res.hasReadAccess = false;
-                res.hasWriteAccess = false;
-            }
-            store.add("mail.thread", res);
-            return;
-        }
-        if (request_list) {
+            res.hasWriteAccess = thread.hasWriteAccess ?? true; // mimic user with write access by default
             res["canPostOnReadonly"] = this._mail_post_access === "read";
         }
         if (this.has_activities) {
@@ -685,6 +676,6 @@ export class MailThread extends models.ServerModel {
                 id,
             ]);
         }
-        store.add("mail.thread", res);
+        store.add(this.env[this._name].browse(id), res, makeKwArgs({ as_thread: true }));
     }
 }
