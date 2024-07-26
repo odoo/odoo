@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add('account_tour', {
     {
         trigger: "div[name=partner_id] .o_input_dropdown",
         content: markup(_t("Write a customer name to <b>create one</b> or <b>see suggestions</b>.")),
-        position: "right",
+        tooltipPosition: "right",
         run: "click",
     }, {
         isActive: ["auto"],
@@ -81,7 +81,7 @@ registry.category("web_tour.tours").add('account_tour', {
     {
         trigger: "div[name=invoice_line_ids] div[name=product_id] input",
         content: _t("Fill in the details of the line."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "edit Test",
     },
     {
@@ -91,7 +91,7 @@ registry.category("web_tour.tours").add('account_tour', {
     {
         trigger: "div[name=invoice_line_ids] div[name=price_unit] input",
         content: _t("Set a price"),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "edit 100",
     },
     ...stepUtils.saveForm(),
@@ -111,7 +111,7 @@ registry.category("web_tour.tours").add('account_tour', {
     {
         trigger: "button[name=action_invoice_sent]:contains(send & print)",
         content: _t("Send the invoice to the customer and check what he'll receive."),
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     },
     {
@@ -137,7 +137,7 @@ registry.category("web_tour.tours").add('account_tour', {
     {
         trigger: '.breadcrumb .o_back_button',
         content: _t('Go back'),
-        position: 'bottom',
+        tooltipPosition: 'bottom',
         run: "click",
     }, 
     {
@@ -156,7 +156,7 @@ registry.category("web_tour.tours").add('account_tour', {
     {
         trigger: ".modal button[name=action_send_and_print]",
         content: _t("Let's send the invoice."),
-        position: "top",
+        tooltipPosition: "top",
         run: "click",
     },
     {
@@ -166,6 +166,6 @@ registry.category("web_tour.tours").add('account_tour', {
     {
         trigger: "button[name=action_register_payment]:contains(register payment):enabled",
         content: _t("The button priority shifted since the invoice has been sent. Let's register the payment now."),
-        position: "bottom",
+        tooltipPosition: "bottom",
     },
 ]});

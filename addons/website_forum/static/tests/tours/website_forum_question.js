@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add('forum_question', {
     {
         trigger: "a:contains(\"Reply\").collapsed",
         content: "Click to reply.",
-        position: "bottom",
+        tooltipPosition: "bottom",
         run: "click",
     },
     {

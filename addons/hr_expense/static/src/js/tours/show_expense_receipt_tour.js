@@ -3,15 +3,15 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
-registry.category("web_tour.tours").add('show_expense_receipt_tour', {
+registry.category("web_tour.tours").add("show_expense_receipt_tour", {
     test: true,
-    url: '/web',
+    url: "/web",
     steps: () => [
-        ...stepUtils.goToAppSteps('hr_expense.menu_hr_expense_root', "Go to the Expenses app"),
+        ...stepUtils.goToAppSteps("hr_expense.menu_hr_expense_root", "Go to the Expenses app"),
         {
             content: "Go to Expense Reports",
             trigger: '.dropdown-item[data-menu-xmlid="hr_expense.menu_hr_expense_report"]',
-            position:'bottom',
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -26,7 +26,8 @@ registry.category("web_tour.tours").add('show_expense_receipt_tour', {
         },
         {
             content: "Check attachment",
-            trigger: ".o_attachment_preview .o-mail-Attachment-imgContainer .img[src*='test_file_2.png']",
+            trigger:
+                ".o_attachment_preview .o-mail-Attachment-imgContainer .img[src*='test_file_2.png']",
             run: "click",
         },
         {
@@ -36,7 +37,8 @@ registry.category("web_tour.tours").add('show_expense_receipt_tour', {
         },
         {
             content: "Check attachment",
-            trigger: ".o_attachment_preview .o-mail-Attachment-imgContainer .img[src*='test_file_3.png']",
+            trigger:
+                ".o_attachment_preview .o-mail-Attachment-imgContainer .img[src*='test_file_3.png']",
             run: "click",
         },
         {
@@ -46,7 +48,8 @@ registry.category("web_tour.tours").add('show_expense_receipt_tour', {
         },
         {
             content: "Check attachment",
-            trigger: ".o_attachment_preview .o-mail-Attachment-imgContainer .img[src*='test_file_1.png']",
+            trigger:
+                ".o_attachment_preview .o-mail-Attachment-imgContainer .img[src*='test_file_1.png']",
             run: "click",
         },
     ],

@@ -13,13 +13,13 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
     content: markup(_t("<b>Wasting time recording your receipts?</b> Let’s try a better way.")),
-    position: 'right',
+    tooltipPosition: 'right',
     run: "click",
 }, {
     isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
     content: markup(_t("<b>Wasting time recording your receipts?</b> Let’s try a better way.")),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 },
 {
@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     isActive: ["desktop"],
     trigger: '.o_list_button_add',
     content: _t("It all begins here - let's go!"),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 },
 {
@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     isActive: ["mobile"],
     trigger: '.o-kanban-button-new',
     content: _t("It all begins here - let's go!"),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 },
 {
@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 {
     trigger: '.o_field_widget[name="product_id"] .o_input_dropdown',
     content: _t("Enter a name then choose a category and configure the amount of your expense."),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 },
 {
@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 {
     trigger: '.o_form_status_indicator_dirty .o_form_button_save',
     content: markup(_t("Ready? You can save it manually or discard modifications from here. You don't <em>need to save</em> - Odoo will save eveyrthing for you when you navigate.")),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, ...stepUtils.statusbarButtonsSteps(_t("Attach Receipt"), _t("Attach a receipt - usually an image or a PDF file.")),
 ...stepUtils.statusbarButtonsSteps(_t("Create Report"), _t("Create a report to submit one or more expenses to your manager.")),
@@ -77,19 +77,19 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     isActive: ["desktop"],
     trigger: '.breadcrumb > li.breadcrumb-item:first',
     content: _t("Let's go back to your expenses."),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, {
     trigger: '.o_expense_container',
     content: _t("The status of all your current expenses is visible from here."),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 },
 {
     isActive: ["mobile"],
     trigger: ".o_mobile_menu_toggle",
     content: _t("Open bugger menu."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 },
 {
@@ -98,19 +98,19 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 {
     trigger: "[data-menu-xmlid='hr_expense.menu_hr_expense_report']",
     content: _t("Let's check out where you can manage all your employees expenses"),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, {
     isActive: ["desktop"],
     trigger: '.o_list_renderer tbody tr[data-id]',
     content: _t('Managers can inspect all expenses from here.'),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, {
     isActive: ["mobile"],
     trigger: '.o_kanban_renderer .oe_kanban_card',
     content: _t('Managers can inspect all expenses from here.'),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 },
 ...stepUtils.statusbarButtonsSteps(_t("Approve"), _t("Managers can approve the report here, then an accountant can post the accounting entries.")),

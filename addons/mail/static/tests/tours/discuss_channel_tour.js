@@ -14,14 +14,14 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                     "<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"
                 )
             ),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
             isActive: ["auto"],
             trigger: ".o-discuss-ChannelSelector input",
             content: markup(_t("<p>Create a channel here.</p>")),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: `edit SomeChannel_${new Date().getTime()}`,
         },
         {
@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
         {
             trigger: ".o-discuss-ChannelSelector-list",
             content: markup(_t("<p>Create a public or private channel.</p>")),
-            position: "right",
+            tooltipPosition: "right",
             run() {
                 document.querySelector(".o-discuss-ChannelSelector-suggestion").click();
             },
@@ -43,25 +43,25 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                     "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
                 )
             ),
-            position: "top",
+            tooltipPosition: "top",
             run: `edit SomeText_${new Date().getTime()}`,
         },
         {
             trigger: ".o-mail-Composer-send:enabled",
             content: _t("Post your message on the thread"),
-            position: "top",
+            tooltipPosition: "top",
             run: "click",
         },
         {
             trigger: ".o-mail-Message",
             content: _t("Click on your message"),
-            position: "top",
+            tooltipPosition: "top",
             run: "click",
         },
         {
             trigger: ".o-mail-Message [title='Expand']",
             content: _t("Expand options"),
-            position: "top",
+            tooltipPosition: "top",
             run: "click",
         },
         {
@@ -69,7 +69,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             content: markup(
                 _t("Messages can be <b>starred</b> to remind you to check back later.")
             ),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             content: _t(
                 "Once a message has been starred, you can come back and review it at any time here."
             ),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -87,7 +87,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                     "<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"
                 )
             ),
-            position: "bottom",
+            tooltipPosition: "bottom",
             run: "click",
         },
         {

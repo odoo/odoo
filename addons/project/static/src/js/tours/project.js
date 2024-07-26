@@ -14,13 +14,13 @@ registry.category("web_tour.tours").add('project_tour', {
     isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     content: markup(_t('Want a better way to <b>manage your projects</b>? <i>It starts here.</i>')),
-    position: 'right',
+    tooltipPosition: 'right',
     run: "click",
 }, {
     isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     content: markup(_t('Want a better way to <b>manage your projects</b>? <i>It starts here.</i>')),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, 
 {
@@ -30,27 +30,27 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: '.o-kanban-button-new',
     content: markup(_t('Let\'s create your first <b>project</b>.')),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, {
     trigger: '.o_project_name input',
     content: markup(_t('Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer, of a product, of a team, of a construction site, etc.</i>')),
-    position: 'right',
+    tooltipPosition: 'right',
     run: "edit Test",
 }, {
     trigger: '.o_open_tasks',
     content: markup(_t('Let\'s create your first <b>project</b>.')),
-    position: 'top',
+    tooltipPosition: 'top',
     run: "click .modal:visible .btn.btn-primary",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_header input",
     content: markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "edit Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     content: markup(_t('Let\'s create your first <b>stage</b>.')),
-    position: 'right',
+    tooltipPosition: 'right',
     run: "click",
 }, 
 {
@@ -60,12 +60,12 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_header input",
     content: markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "edit Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     content: markup(_t('Let\'s create your second <b>stage</b>.')),
-    position: 'right',
+    tooltipPosition: 'right',
     run: "click",
 }, 
 {
@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: '.o-kanban-button-new',
     content: markup(_t("Let's create your first <b>task</b>.")),
-    position: 'bottom',
+    tooltipPosition: 'bottom',
     run: "click",
 }, 
 {
@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: '.o_kanban_quick_create div.o_field_char[name=display_name] input',
     content: markup(_t('Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>')),
-    position: 'right',
+    tooltipPosition: 'right',
     run: "edit Test",
 }, 
 {
@@ -95,7 +95,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     content: _t("Add your task once it is ready."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -105,7 +105,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: ".o_kanban_record .oe_kanban_content",
     content: markup(_t("<b>Drag &amp; drop</b> the card to change your task from stage.")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "drag_and_drop(.o_kanban_group:eq(1))",
 }, 
 {
@@ -115,7 +115,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: ".o_kanban_record:first",
     content: _t("Let's start working on your task."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -125,7 +125,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: ".o-mail-Chatter-topbar button:contains(Send message)",
     content: markup(_t("Use the chatter to <b>send emails</b> and communicate efficiently with your customers. Add new people to the followers' list to make them aware of the main changes about this task.")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -135,7 +135,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: "button:contains(Log note)",
     content: markup(_t("<b>Log notes</b> for internal communications <i>(the people following this task won't be notified of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # <b>mentions</b> to reach an entire team.")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -145,7 +145,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: ".o-mail-Chatter-topbar button:contains(Activities)",
     content: markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -159,7 +159,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: ".modal-dialog .btn-primary",
     content: _t("Schedule your activity once it is ready."),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 },
 
@@ -170,7 +170,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: ".o_field_widget[name='user_ids'] input",
     content: _t("Assign a responsible to your task"),
-    position: "right",
+    tooltipPosition: "right",
     run: "edit Mitch",
 },
 {
@@ -206,7 +206,7 @@ registry.category("web_tour.tours").add('project_tour', {
     isActive: ["auto"],
     trigger: ".o_form_button_save",
     content: markup(_t("You have unsaved changes - no worries! Odoo will automatically save it as you navigate.<br/> You can discard these changes from here or manually save your task.<br/>Let's save it manually.")),
-    position: "bottom",
+    tooltipPosition: "bottom",
     run: "click",
 }, 
 {
@@ -216,7 +216,7 @@ registry.category("web_tour.tours").add('project_tour', {
 {
     trigger: ".o_breadcrumb .o_back_button",
     content: markup(_t("Let's go back to the <b>kanban view</b> to have an overview of your next tasks.")),
-    position: "right",
+    tooltipPosition: "right",
     run: 'click',
 }, {
     isActive: ["auto"],
