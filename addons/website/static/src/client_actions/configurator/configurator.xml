@@ -52,10 +52,9 @@
                 </div>
                 <div t-attf-class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}">
                     <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
-                    <t t-set="industry_placeholder">Clothes, Marketing, ...</t>
                     <label class="o_configurator_industry_wrapper me-2" t-ref="industrySelection">
                         <AutoComplete
-                            placeholder="industry_placeholder"
+                            placeholder.translate="Clothes, Marketing, ..."
                             value="state.selectedIndustry?.label ?? ''"
                             sources="sources"
                             onSelect.bind="_setSelectedIndustry"

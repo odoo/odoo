@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.InstallPWADialog">
-        <Dialog title="'Get the app'">
+        <Dialog title.translate="Get the app">
             <div>Install the application for fast access from your home screen, notifications and more!</div>
             <div t-if="isBrowserSafari" class="p-1">
                 <t t-set="isMobileSafari" t-value="isIOS" />
