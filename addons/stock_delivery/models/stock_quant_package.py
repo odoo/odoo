@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
 from odoo import api, fields, models
 
 
@@ -10,27 +8,9 @@ class StockQuantPackage(models.Model):
 
     @api.depends('quant_ids', 'package_type_id')
     def _compute_weight(self):
-        if self.env.context.get('picking_id'):
-            package_weights = defaultdict(float)
-            res_groups = self.env['stock.move.line']._read_group(
-                [('result_package_id', 'in', self.ids), ('product_id', '!=', False), ('picking_id', '=', self.env.context['picking_id'])],
-                ['result_package_id', 'product_id', 'product_uom_id', 'quantity'],
-                ['__count'],
-            )
-            for result_package, product, product_uom, quantity, count in res_groups:
-                package_weights[result_package.id] += (
-                    count
-                    * product_uom._compute_quantity(quantity, product.uom_id)
-                    * product.weight
-                )
+        packages_weight = self.sudo()._get_weight(self.env.context.get('picking_id'))
         for package in self:
-            weight = package.package_type_id.base_weight or 0.0
-            if self.env.context.get('picking_id'):
-                package.weight = weight + package_weights[package.id]
-            else:
-                for quant in package.quant_ids:
-                    weight += quant.quantity * quant.product_id.weight
-                package.weight = weight
+            package.weight = packages_weight[package]
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
