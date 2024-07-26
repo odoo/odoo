@@ -83,39 +83,24 @@ PaymentForm.include({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (document.querySelector('.o_donation_payment_form')) {
-            const errorFields = {};
-            if (!this.el.querySelector('input[name="email"]').checkValidity()) {
-                errorFields['email'] = _t("Email is invalid");
-            }
             const mandatoryFields = {
                 'name': _t('Name'),
                 'email': _t('Email'),
                 'country_id': _t('Country'),
             };
+
+            let firstInvalidFieldEl;
             for (const id in mandatoryFields) {
                 const fieldEl = this.el.querySelector(`input[name="${id}"],select[name="${id}"]`);
-                fieldEl.classList.remove('is-invalid');
-                Popover.getOrCreateInstance(fieldEl)?.dispose();
-                if (!fieldEl.value.trim()) {
-                    errorFields[id] = _t("Field '%s' is mandatory", mandatoryFields[id]);
+                const isInvalid =
+                    !fieldEl.value.trim() || (id === "email" && !fieldEl.checkValidity());
+                fieldEl.classList.toggle("is-invalid", isInvalid);
+                if (isInvalid && !firstInvalidFieldEl) {
+                    firstInvalidFieldEl = fieldEl;
                 }
             }
-            if (Object.keys(errorFields).length) {
-                for (const id in errorFields) {
-                    const fieldEl = this.el.querySelector(
-                        `input[name="${id}"],select[name="${id}"]`
-                    );
-                    fieldEl.classList.add('is-invalid');
-                    Popover.getOrCreateInstance(fieldEl, {
-                        content: errorFields[id],
-                        placement: 'top',
-                        trigger: 'hover',
-                    });
-                }
-                this._displayErrorDialog(
-                    _t("Payment processing failed"),
-                    _t("Some information is missing to process your payment.")
-                );
+            if (firstInvalidFieldEl) {
+                firstInvalidFieldEl.focus();
                 this._enableButton();
                 return;
             }
