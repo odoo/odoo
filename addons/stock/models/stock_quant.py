@@ -1613,3 +1613,28 @@ class QuantPackage(models.Model):
                 or any(not float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops):
             return False
         return True
+
+    def _get_weight(self, picking_id=False):
+        res = {}
+        if picking_id:
+            package_weights = defaultdict(float)
+            res_groups = self.env['stock.move.line']._read_group(
+                [('result_package_id', 'in', self.ids), ('product_id', '!=', False), ('picking_id', '=', picking_id)],
+                ['result_package_id', 'product_id', 'product_uom_id', 'quantity'],
+                ['__count'],
+            )
+            for result_package, product, product_uom, quantity, count in res_groups:
+                package_weights[result_package.id] += (
+                    count
+                    * product_uom._compute_quantity(quantity, product.uom_id)
+                    * product.weight
+                )
+        for package in self:
+            weight = package.package_type_id.base_weight or 0.0
+            if picking_id:
+                res[package] = weight + package_weights[package.id]
+            else:
+                for quant in package.quant_ids:
+                    weight += quant.quantity * quant.product_id.weight
+                res[package] = weight
+        return res
