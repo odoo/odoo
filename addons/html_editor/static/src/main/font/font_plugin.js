@@ -102,8 +102,8 @@ export class FontPlugin extends Plugin {
             { callback: p.handleSplitBlockPRE.bind(p) },
             { callback: p.handleSplitBlockHeading.bind(p) },
         ],
-        handle_delete_backward: { callback: p.handleDeleteBackward.bind(p) },
-        handle_delete_backward_word: { callback: p.handleDeleteBackward.bind(p) },
+        handle_delete_backward: { callback: p.handleDeleteBackward.bind(p), sequence: 20 },
+        handle_delete_backward_word: { callback: p.handleDeleteBackward.bind(p), sequence: 20 },
         toolbarGroup: [
             {
                 id: "font",

@@ -70,12 +70,18 @@ export class DeletePlugin extends Plugin {
             { hotkey: "control+shift+backspace", command: "DELETE_BACKWARD_LINE" },
             { hotkey: "control+shift+delete", command: "DELETE_FORWARD_LINE" },
         ],
-        handle_delete_backward: [{ callback: p.deleteBackwardUnmergeable.bind(p) }],
-        handle_delete_backward_word: { callback: p.deleteBackwardUnmergeable.bind(p) },
-        handle_delete_backward_line: { callback: p.deleteBackwardUnmergeable.bind(p) },
-        handle_delete_forward: { callback: p.deleteForwardUnmergeable.bind(p) },
-        handle_delete_forward_word: { callback: p.deleteForwardUnmergeable.bind(p) },
-        handle_delete_forward_line: { callback: p.deleteForwardUnmergeable.bind(p) },
+        handle_delete_backward: [{ callback: p.deleteBackwardUnmergeable.bind(p), sequence: 30 }],
+        handle_delete_backward_word: {
+            callback: p.deleteBackwardUnmergeable.bind(p),
+            sequence: 30,
+        },
+        handle_delete_backward_line: {
+            callback: p.deleteBackwardUnmergeable.bind(p),
+            sequence: 30,
+        },
+        handle_delete_forward: { callback: p.deleteForwardUnmergeable.bind(p), sequence: 30 },
+        handle_delete_forward_word: { callback: p.deleteForwardUnmergeable.bind(p), sequence: 30 },
+        handle_delete_forward_line: { callback: p.deleteForwardUnmergeable.bind(p), sequence: 30 },
 
         // @todo @phoenix: move these predicates to different plugins
         isUnremovable: [
@@ -90,6 +96,17 @@ export class DeletePlugin extends Plugin {
     setup() {
         this.findPreviousPosition = this.makeFindPositionFn("backward");
         this.findNextPosition = this.makeFindPositionFn("forward");
+
+        for (const key of [
+            "handle_delete_backward",
+            "handle_delete_backward_word",
+            "handle_delete_backward_line",
+            "handle_delete_forward",
+            "handle_delete_forward_word",
+            "handle_delete_forward_line",
+        ]) {
+            this.resources[key].sort((a, b) => a.sequence - b.sequence);
+        }
     }
 
     handleCommand(command, payload) {

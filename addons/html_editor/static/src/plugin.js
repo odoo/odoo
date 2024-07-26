@@ -52,6 +52,7 @@
  * @property { LinkPlugin['getPathAsUrlCommand'] } getPathAsUrlCommand
  * @property { DomPlugin['domInsert'] } domInsert
  * @property { DomPlugin['copyAttributes'] } copyAttributes
+ * @property { SplitPlugin['isUnsplittable'] } isUnsplittable
  * @property { SplitPlugin['splitBlock'] } splitBlock
  * @property { SplitPlugin['splitElementBlock'] } splitElementBlock
  * @property { SplitPlugin['splitElement'] } splitElement
