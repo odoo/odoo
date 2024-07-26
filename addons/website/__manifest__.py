@@ -104,6 +104,7 @@
         'views/snippets/s_contact_info.xml',
         'views/snippets/s_numbers_boxed.xml',
         'views/snippets/s_cta_box.xml',
+        'views/snippets/s_numbers_framed.xml',
         'views/snippets/s_masonry_block.xml',
         'views/snippets/s_sidegrid.xml',
         'views/snippets/s_media_list.xml',
