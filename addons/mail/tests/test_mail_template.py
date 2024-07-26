@@ -6,7 +6,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tests import Form, HttpCase, tagged, users
-from odoo.tools import convert_file
+from odoo.tools import convert_file, mute_logger
 
 
 @tagged('mail_template')
@@ -32,6 +32,35 @@ class TestMailTemplate(MailCommon):
             'model_id': cls.env.ref('base.model_res_partner').id,
             'use_default_to': False,
         })
+
+    @users('admin')
+    @mute_logger('odoo.addons.mail.models.mail_render_mixin')
+    def test_invalid_template_on_save(self):
+        mail_template = self.env['mail.template'].create({
+                'name': 'Test template',
+                'model_id': self.env['ir.model']._get('res.users').id,
+                'subject': 'Template {{ object.company_id.email }}',
+                'lang': '{{ object.partner_id.lang }}'
+            })
+
+        # Check templates having invalid object references can't be created
+        with self.assertRaises(ValidationError):
+            self.env['mail.template'].create({
+                'name': 'Test template',
+                'model_id': self.env['ir.model']._get('res.users').id,
+                'subject': '{{ object.invalid_field }}',
+                'lang': '{{ object.partner_id.lang }}'
+            })
+
+        # Raises an error while writing an invalid reference
+        with self.assertRaises(ValidationError):
+            mail_template.write({
+                'subject': '{{ object.unknown_field }}',
+           })
+
+            mail_template.write({
+                'subject': '{{ object.is_portal_0() }}',
+            })
 
     @users('employee')
     def test_mail_compose_message_content_from_template(self):
@@ -82,8 +111,8 @@ class TestMailTemplate(MailCommon):
         self.assertFalse(self.user_employee.has_group('mail.group_mail_template_editor'))
         self.assertFalse(self.user_employee.has_group('base.group_sanitize_override'))
 
-        model = self.env['ir.model']._get_id('res.partner')
-        record = self.user_employee.partner_id
+        model = self.env['ir.model']._get_id('res.users')
+        record = self.user_employee
 
         # Group System can create / write / unlink mail template
         mail_template = self.env['mail.template'].with_user(self.user_admin).create({
@@ -301,9 +330,9 @@ class TestMailTemplate(MailCommon):
 
         # cannot write dynamic code on mail_template translation for employee without the group mail_template_editor.
         with self.assertRaises(AccessError):
-            employee_template.with_context(lang='fr_FR').subject = '{{ object.foo }}'
+            employee_template.with_context(lang='fr_FR').subject = '{{ object.id }}'
 
-        employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.foo }}'
+        employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.name }}'
 
     def test_mail_template_parse_partner_to(self):
         for partner_to, expected in [
