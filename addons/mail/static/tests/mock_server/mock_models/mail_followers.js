@@ -44,7 +44,7 @@ export class MailFollowers extends models.ServerModel {
                     makeKwArgs({ as_thread: true, only_id: true })
                 );
             }
-            store.add("mail.followers", data);
+            store.add(this.browse(follower.id), data);
         }
     }
 }

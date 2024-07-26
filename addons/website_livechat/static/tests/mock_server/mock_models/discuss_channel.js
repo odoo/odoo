@@ -24,7 +24,7 @@ export class DiscussChannel extends livechatModels.DiscussChannel {
         const channels = this.browse(ids);
         for (const channel of channels) {
             if (channel.channel_type === "livechat" && channel.livechat_visitor_id) {
-                const channelInfo = { id: channel.id };
+                const channelInfo = {};
                 const [visitor] = WebsiteVisitor.browse(channel.livechat_visitor_id);
                 const [partner] = ResPartner.browse(visitor.partner_id);
                 const [country] = ResCountry.browse(visitor.country_id);
@@ -43,7 +43,7 @@ export class DiscussChannel extends livechatModels.DiscussChannel {
                         ? Website.read(visitor.website_id)[0].name
                         : false,
                 };
-                store.add("discuss.channel", channelInfo);
+                store.add(this.browse(channel.id), channelInfo);
             }
         }
     }

@@ -25,7 +25,7 @@ export class MailLinkPreview extends models.ServerModel {
                 this.env["mail.message"].browse(linkPreview.message_id),
                 makeKwArgs({ only_id: true })
             );
-            store.add("mail.link.preview", data);
+            store.add(this.browse(linkPreview.id), data);
         }
     }
 }

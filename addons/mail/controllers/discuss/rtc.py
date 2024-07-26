@@ -131,19 +131,10 @@ class RtcController(http.Controller):
             channel_member_sudo.channel_id.rtc_session_ids.filtered_domain(domain).write({})  # update write_date
         current_rtc_sessions, outdated_rtc_sessions = channel_member_sudo._rtc_sync_sessions(check_rtc_session_ids)
         return (
-            Store(
-                "discuss.channel",
-                {
-                    "id": member.channel_id.id,
-                    "rtcSessions": Store.many(current_rtc_sessions, "ADD"),
-                },
-            )
+            Store(member.channel_id, {"rtcSessions": Store.many(current_rtc_sessions, "ADD")})
             .add(
-                "discuss.channel",
-                {
-                    "id": member.channel_id.id,
-                    "rtcSessions": Store.many(outdated_rtc_sessions, "DELETE", only_id=True),
-                },
+                member.channel_id,
+                {"rtcSessions": Store.many(outdated_rtc_sessions, "DELETE", only_id=True)},
             )
             .get_result()
         )

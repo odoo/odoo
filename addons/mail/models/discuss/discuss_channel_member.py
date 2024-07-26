@@ -191,9 +191,13 @@ class ChannelMember(models.Model):
         """
         notifications = []
         for member in self:
-            store = Store(member)
-            store.add("discuss.channel.member", {"id": member.id, "isTyping": is_typing})
-            notifications.append([member.channel_id, "mail.record/insert", store.get_result()])
+            notifications.append(
+                [
+                    member.channel_id,
+                    "mail.record/insert",
+                    Store(member).add(member, {"isTyping": is_typing}).get_result(),
+                ]
+            )
         self.env['bus.bus']._sendmany(notifications)
 
     def _notify_mute(self):
@@ -203,10 +207,7 @@ class ChannelMember(models.Model):
                 (
                     member.partner_id,
                     "mail.record/insert",
-                    Store(
-                        "discuss.channel",
-                        {"id": member.channel_id.id, "mute_until_dt": member.mute_until_dt},
-                    ).get_result(),
+                    Store(member.channel_id, {"mute_until_dt": member.mute_until_dt}).get_result(),
                 )
             )
             if member.mute_until_dt and member.mute_until_dt != -1:
@@ -220,8 +221,7 @@ class ChannelMember(models.Model):
             self.partner_id,
             "mail.record/insert",
             Store(
-                "discuss.channel",
-                {"id": self.channel_id.id, "custom_notifications": self.custom_notifications},
+                self.channel_id, {"custom_notifications": self.custom_notifications}
             ).get_result(),
         )
 
@@ -277,7 +277,7 @@ class ChannelMember(models.Model):
                 data["seen_message_id"] = Store.one(member.seen_message_id, only_id=True)
             if "message_unread_counter" in fields:
                 data["message_unread_counter_bus_id"] = bus_last_id
-            store.add("discuss.channel.member", data)
+            store.add(member, data)
 
     def _get_store_partner_fields(self, fields):
         self.ensure_one()
@@ -313,16 +313,10 @@ class ChannelMember(models.Model):
         ice_servers = self.env["mail.ice.server"]._get_ice_servers()
         self._join_sfu(ice_servers)
         if store:
+            store.add(self.channel_id, {"rtcSessions": Store.many(current_rtc_sessions, "ADD")})
             store.add(
-                "discuss.channel",
-                {"id": self.channel_id.id, "rtcSessions": Store.many(current_rtc_sessions, "ADD")},
-            )
-            store.add(
-                "discuss.channel",
-                {
-                    "id": self.channel_id.id,
-                    "rtcSessions": Store.many(outdated_rtc_sessions, "DELETE", only_id=True),
-                },
+                self.channel_id,
+                {"rtcSessions": Store.many(outdated_rtc_sessions, "DELETE", only_id=True)},
             )
             store.add(
                 "Rtc",
@@ -442,13 +436,9 @@ class ChannelMember(models.Model):
                     target,
                     "mail.record/insert",
                     Store(
-                        "discuss.channel",
-                        {
-                            "id": self.channel_id.id,
-                            "rtcInvitingSession": Store.one(member.rtc_inviting_session_id),
-                        },
-                    )
-                    .get_result(),
+                        self.channel_id,
+                        {"rtcInvitingSession": Store.one(member.rtc_inviting_session_id)},
+                    ).get_result(),
                 )
             )
         self.env['bus.bus']._sendmany(invitation_notifications)
@@ -457,9 +447,8 @@ class ChannelMember(models.Model):
                 self.channel_id,
                 "mail.record/insert",
                 Store(
-                    "discuss.channel",
+                    self.channel_id,
                     {
-                        "id": self.channel_id.id,
                         "invitedMembers": Store.many(
                             members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
                         ),
@@ -541,6 +530,6 @@ class ChannelMember(models.Model):
                     "persona": ["name"],
                 },
             )
-            .add("discuss.channel.member", {"id": self.id, "syncUnread": sync})
+            .add(self, {"syncUnread": sync})
             .get_result(),
         )

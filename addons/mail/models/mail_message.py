@@ -875,7 +875,7 @@ class Message(models.Model):
         self.env["bus.bus"]._sendone(
             self._bus_notification_target(),
             "mail.record/insert",
-            Store("mail.message", {"id": self.id, "reactions": [(group_command, group_values)]})
+            Store(self, {"reactions": [(group_command, group_values)]})
             .add(guest or partner, fields=["name", "write_date"])
             .get_result(),
         )
@@ -963,10 +963,7 @@ class Message(models.Model):
                 for follower in followers
             }
         for record in records:
-            thread_data = {
-                "id": record.id,
-                "model": record._name,
-            }
+            thread_data = {}
             if record._name != "discuss.channel":
                 # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
                 thread_data["name"] = record.sudo().display_name
@@ -979,7 +976,7 @@ class Message(models.Model):
                     follower_by_record_and_partner.get((record, self.env.user.partner_id)),
                     fields={"is_active": True, "partner": []},
                 )
-            store.add("mail.thread", thread_data)
+            store.add(record, thread_data, as_thread=True)
         for message in self:
             # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
             data = message._read_format(
@@ -1062,7 +1059,7 @@ class Message(models.Model):
                 vals["starred"] = message.starred
                 vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
             data.update(vals)
-            store.add("mail.message", data)
+            store.add(message, data)
         # sudo: mail.message: access to author is allowed
         self.sudo()._author_to_store(store)
         # Add extras at the end to guarantee order in result. In particular, the parent message
@@ -1075,7 +1072,6 @@ class Message(models.Model):
             data = {
                 "author": False,
                 "email_from": message.email_from,
-                "id": message.id,
             }
             # sudo: mail.message: access to author is allowed
             if guest_author := message.sudo().author_guest_id:
@@ -1085,7 +1081,7 @@ class Message(models.Model):
                 data["author"] = Store.one(
                     author, fields=["name", "is_company", "user", "write_date"]
                 )
-            store.add("mail.message", data)
+            store.add(message, data)
 
     def _extras_to_store(self, store: Store, format_reply):
         pass
@@ -1128,7 +1124,6 @@ class Message(models.Model):
         for message in self:
             message_data = {
                 "author": Store.one(message.author_id, only_id=True),
-                "id": message.id,
                 "date": message.date,
                 "message_type": message.message_type,
                 "body": message.body,
@@ -1141,7 +1136,7 @@ class Message(models.Model):
                     )
                 ),
             }
-            store.add("mail.message", message_data)
+            store.add(message, message_data)
 
     def _notify_message_notification_update(self):
         """Send bus notifications to update status of notifications in the web

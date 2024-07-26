@@ -18,8 +18,7 @@ export class ResPartner extends mailModels.ResPartner {
         }
         for (const partner of this.browse(ids)) {
             if (fields.includes("out_of_office_date_end")) {
-                store.add("res.partner", {
-                    id: partner.id,
+                store.add(this.browse(partner.id), {
                     // Not a real field but ease the testing
                     out_of_office_date_end: partner.out_of_office_date_end,
                 });

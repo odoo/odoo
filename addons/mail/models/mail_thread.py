@@ -4405,15 +4405,14 @@ class MailThread(models.AbstractModel):
         if after:
             domain = expression.AND([domain, [("id", ">", after)]])
         store.add(
-            "mail.thread",
+            self,
             {
-                "id": self.id,
-                "model": self._name,
                 "recipients" if filter_recipients else "followers": Store.many(
                     self.env["mail.followers"].search(domain, limit=limit, order="id ASC"),
                     "ADD" if not reset else "REPLACE",
                 ),
             },
+            as_thread=True,
         )
 
     # ------------------------------------------------------
@@ -4526,7 +4525,6 @@ class MailThread(models.AbstractModel):
         res = {
             "attachments": Store.many(message.attachment_ids.sorted("id")),
             "body": message.body,
-            "id": message.id,
             "pinned_at": message.pinned_at,
             "recipients": Store.many(message.partner_ids, fields=["name", "write_date"]),
             "write_date": message.write_date,
@@ -4538,7 +4536,7 @@ class MailThread(models.AbstractModel):
         self.env["bus.bus"]._sendone(
             message._bus_notification_target(),
             "mail.record/insert",
-            Store("mail.message", res).get_result(),
+            Store(message, res).get_result(),
         )
 
     # ------------------------------------------------------
@@ -4550,19 +4548,14 @@ class MailThread(models.AbstractModel):
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
     def _thread_to_store(self, store: Store, /, *, fields=None, request_list=None):
+        self.ensure_one()
         if fields is None:
             fields = []
-        res = {"id": self.id, "model": self._name}
+        res = {}
         if request_list:
             res["hasReadAccess"] = True
             res["hasWriteAccess"] = False
-        if not self:
-            if request_list:
-                res["hasReadAccess"] = False
-            return res
-        if request_list:
             res["canPostOnReadonly"] = self._mail_post_access == 'read'
-        self.ensure_one()
         try:
             self.check_access_rights("write")
             self.check_access_rule("write")
@@ -4603,7 +4596,7 @@ class MailThread(models.AbstractModel):
             res["modelName"] = self.env["ir.model"]._get(self._name).display_name
         if request_list and "suggestedRecipients" in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()
-        store.add("mail.thread", res)
+        store.add(self, res, as_thread=True)
 
     @api.model
     def get_views(self, views, options=None):

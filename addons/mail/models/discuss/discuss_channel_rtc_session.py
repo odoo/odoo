@@ -47,10 +47,7 @@ class MailRtcSession(models.Model):
                 (
                     channel,
                     "mail.record/insert",
-                    Store(
-                        "discuss.channel",
-                        {"id": channel.id, "rtcSessions": Store.many(rtc_sessions, "ADD")},
-                    ).get_result(),
+                    Store(channel, {"rtcSessions": Store.many(rtc_sessions, "ADD")}).get_result(),
                 )
             )
         self.env["bus.bus"]._sendmany(notifications)
@@ -79,11 +76,7 @@ class MailRtcSession(models.Model):
                     channel,
                     "mail.record/insert",
                     Store(
-                        "discuss.channel",
-                        {
-                            "id": channel.id,
-                            "rtcSessions": Store.many(rtc_sessions, "DELETE", only_id=True),
-                        },
+                        channel, {"rtcSessions": Store.many(rtc_sessions, "DELETE", only_id=True)}
                     ).get_result(),
                 )
             )
@@ -171,7 +164,7 @@ class MailRtcSession(models.Model):
                         "isScreenSharingOn": rtc_session.is_screen_sharing_on,
                     }
                 )
-            store.add("discuss.channel.rtc.session", data)
+            store.add(rtc_session, data)
 
     @api.model
     def _inactive_rtc_session_domain(self):

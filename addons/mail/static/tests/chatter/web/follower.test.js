@@ -10,29 +10,24 @@ import {
     startServer,
     step,
 } from "@mail/../tests/mail_test_helpers";
-import { MailThread } from "@mail/../tests/mock_server/mock_models/mail_thread";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
-import { mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { mockService, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
 
 test("base rendering not editable", async () => {
     const pyEnv = await startServer();
-    const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
+    const [threadId, partnerId] = pyEnv["res.partner"].create([
+        { hasWriteAccess: false },
+        { hasWriteAccess: false },
+    ]);
     pyEnv["mail.followers"].create({
         is_active: true,
         partner_id: partnerId,
         res_id: threadId,
         res_model: "res.partner",
-    });
-    patchWithCleanup(MailThread.prototype, {
-        _thread_to_store(ids, store) {
-            // mimic user without write access
-            super._thread_to_store(...arguments);
-            store.add("mail.thread", { hasWriteAccess: false, id: ids[0], model: this._name });
-        },
     });
     await start();
     await openFormView("res.partner", threadId);

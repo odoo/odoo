@@ -27,12 +27,11 @@ class Partners(models.Model):
         )
         for partner in self:
             store.add(
-                "res.partner",
+                partner,
                 {
                     "invite_by_self_count": invite_by_self_count_by_partner_id.get(partner, 0),
                     "is_available": partner in active_livechat_partners,
                     "lang_name": lang_name_by_code[partner.lang],
-                    "id": partner.id,
                 },
             )
 

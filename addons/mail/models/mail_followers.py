@@ -535,4 +535,4 @@ GROUP BY fol.id%s%s""" % (
                     as_thread=True,
                     only_id=True,
                 )
-            store.add("mail.followers", data)
+            store.add(follower, data)
