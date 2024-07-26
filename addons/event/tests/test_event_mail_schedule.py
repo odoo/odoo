@@ -486,11 +486,15 @@ class TestMailSchedule(EventMailCommon):
     @users('user_eventmanager')
     def test_event_mail_schedule_fail_global_composer_message(self):
         """ Test message logged depending on issue when trying to send communications """
-        cron = self.env.ref("event.event_mail_scheduler").sudo()
-
         # set template write_uid
         user_admin = self.env.ref('base.user_admin')
-        self.template_reminder.with_user(user_admin).write({'name': 'Take Ownership', 'body_html': '<p>Failing <t t-out="object.evnetypo_id"/></p>'})
+        # templates are now protected, but bypass the check to force having a bad
+        # value in DB
+        with patch.object(type(self.template_reminder), '_check_can_be_rendered', return_value=True):
+            self.template_reminder.with_user(user_admin).write({
+                'name': 'Take Ownership',
+                'body_html': '<p>Failing <t t-out="object.evnetypo_id"/></p>',
+            })
 
         before_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "before_event")
         self.assertTrue(before_scheduler)
