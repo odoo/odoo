@@ -15,7 +15,7 @@ import {
     useExternalListener,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
 
 export class ImageCrop extends Component {
     static template = "html_editor.ImageCrop";
@@ -221,20 +221,10 @@ export class ImageCrop extends Component {
         const rect = this.media.getBoundingClientRect();
         const viewportTop = this.document.documentElement.scrollTop || 0;
         const viewportBottom = viewportTop + window.innerHeight;
-        const closestScrollable = (el) => {
-            if (!el) {
-                return null;
-            }
-            if (el.scrollHeight > el.clientHeight) {
-                return el;
-            } else {
-                return closestScrollable(el.parentElement);
-            }
-        };
         // Give priority to the closest scrollable element (e.g. for images in
         // HTML fields, the element to scroll is different from the document's
         // scrolling element).
-        const scrollable = closestScrollable(this.media);
+        const scrollable = closestScrollableY(this.media);
 
         // The image must be in a position that allows access to it and its crop
         // options buttons. Otherwise, the crop widget container can be scrolled

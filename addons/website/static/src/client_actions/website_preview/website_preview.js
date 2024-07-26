@@ -26,6 +26,7 @@ import {
     useState,
     useExternalListener,
 } from "@odoo/owl";
+import { getScrollingElement } from "@web/core/utils/scrolling";
 
 class BlockPreview extends Component {
     static template = "website.BlockPreview";
@@ -272,19 +273,21 @@ export class WebsitePreview extends Component {
 
     addWelcomeMessage() {
         if (this.websiteService.isRestrictedEditor) {
-            const $wrap = $(this.iframe.el.contentDocument.querySelector('#wrapwrap.homepage')).find('#wrap');
-            if ($wrap.length && $wrap.html().trim() === '') {
-                this.$welcomeMessage = $(renderToElement('website.homepage_editor_welcome_message'));
-                this.$welcomeMessage.addClass('o_homepage_editor_welcome_message');
-                this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
-                $wrap.empty().append(this.$welcomeMessage);
+            const wrap = this.iframe.el.contentDocument.querySelector('#wrapwrap.homepage #wrap');
+            if (wrap && !wrap.textContent.trim()) {
+                this.welcomeMessage = renderToElement('website.homepage_editor_welcome_message');
+                this.welcomeMessage.classList.add('o_homepage_editor_welcome_message', 'h-100');
+                while (wrap.firstChild) {
+                    wrap.removeChild(wrap.lastChild);
+                }
+                wrap.append(this.welcomeMessage);
             }
         }
     }
 
     removeWelcomeMessage() {
-        if (this.$welcomeMessage) {
-            this.$welcomeMessage.detach();
+        if (this.welcomeMessage) {
+            this.welcomeMessage.remove();
         }
     }
 
@@ -502,7 +505,7 @@ export class WebsitePreview extends Component {
         if (!this.websiteContext.edition && this.iframe.el.contentDocument.body && this.iframefallback.el) {
             this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
             this.iframefallback.el.classList.remove('d-none');
-            $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+            getScrollingElement(this.iframefallback.el.contentDocument).scrollTop = getScrollingElement(this.iframe.el.contentDocument).scrollTop;
             this._cleanIframeFallback();
         }
     }

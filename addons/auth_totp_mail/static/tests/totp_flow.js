@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { queryFirst } from "@odoo/hoot-dom";
 
 function openAccountSettingsTab() {
     return [{
@@ -25,13 +26,13 @@ function openAccountSettingsTab() {
             // selection get discarded by the action reloading, so here try to
             // see if we're already on the users action through the breadcrumb and
             // just close the menu if so
-            const $crumb = $('.breadcrumb');
-            if ($crumb.text().indexOf('Users') === -1) {
+            const breadcrumb = document.querySelector('.breadcrumb');
+            if (!breadcrumb || !breadcrumb.textContent.includes("Users")) {
                 // on general settings page, click menu
                 helpers.click();
             } else {
                 // else close menu
-                helpers.click($('[data-menu-xmlid="base.menu_users"]'));
+                helpers.click('[data-menu-xmlid="base.menu_users"]');
             }
         }
     }];
@@ -52,9 +53,9 @@ registry.category("web_tour.tours").add('totp_admin_self_invite', {
     content: "check that user cannot invite themselves to use 2FA.",
     trigger: "body",
     run: function () {
-        const inviteBtn = $('button:contains(Invite to use 2FA)')[0];
+        const inviteBtn = queryFirst('button:contains(Invite to use 2FA)');
         if (!inviteBtn) {
-            $('body').addClass('CannotInviteYourself');
+            document.body.classList.add('CannotInviteYourself');
         }
     }
 }, {

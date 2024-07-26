@@ -12,7 +12,7 @@ import {
     markup,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
 
 export class ImageCrop extends Component {
     static template = 'web_editor.ImageCrop';
@@ -265,21 +265,10 @@ export class ImageCrop extends Component {
         const rect = this.media.getBoundingClientRect();
         const viewportTop = this.document.documentElement.scrollTop || 0;
         const viewportBottom = viewportTop + window.innerHeight;
-        const closestScrollable = el => {
-            if (!el) {
-                return null;
-            }
-            if (el.scrollHeight > el.clientHeight) {
-                return $(el);
-            } else {
-                return closestScrollable(el.parentElement);
-            }
-        };
         // Give priority to the closest scrollable element (e.g. for images in
         // HTML fields, the element to scroll is different from the document's
         // scrolling element).
-        const $scrollable = closestScrollable(this.media);
-        const scrollable = $scrollable?.get(0);
+        const scrollable = closestScrollableY(this.media);
 
         // The image must be in a position that allows access to it and its crop
         // options buttons. Otherwise, the crop widget container can be scrolled
@@ -287,7 +276,7 @@ export class ImageCrop extends Component {
         if (rect.top < viewportTop || viewportBottom - rect.bottom < 100) {
             await scrollTo(this.media, {
                 behavior: "smooth",
-                ...(scrollable && { scrollable: scrollable }),
+                ...(scrollable && { scrollable }),
             });
         }
     }

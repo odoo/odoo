@@ -83,6 +83,7 @@ Odoo Web Editor widget.
             'web/static/lib/select2/select2.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
+            'web/static/src/core/utils/scrolling.js',
             'web/static/src/core/registry.js',
             'web/static/src/core/templates.js',
             'web/static/src/core/template_inheritance.js',
