@@ -189,12 +189,12 @@ export class LinkSelectionPlugin extends Plugin {
      * Apply the o_link_in_selection class if the selection is in a single link,
      * remove it otherwise.
      *
-     * @param {EditorSelection} [selection]
+     * @param {SelectionData} [selectionData]
      */
-    resetLinkInSelection(selection = this.shared.getEditableSelection()) {
+    resetLinkInSelection(selectionData = this.shared.getSelectionData()) {
         this.clearLinkInSelectionClass(this.editable);
 
-        const { anchorNode, focusNode } = selection;
+        const { anchorNode, focusNode } = selectionData.editableSelection;
         const [anchorLink, focusLink] = [anchorNode, focusNode].map((node) =>
             closestElement(node, "a")
         );

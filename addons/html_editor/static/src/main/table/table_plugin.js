@@ -423,9 +423,9 @@ export class TablePlugin extends Plugin {
         return true;
     }
 
-    updateSelectionTable(selection) {
+    updateSelectionTable(selectionData) {
         this.deselectTable();
-
+        const selection = selectionData.editableSelection;
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
         const startTable = ancestors(selection.startContainer, this.editable)
