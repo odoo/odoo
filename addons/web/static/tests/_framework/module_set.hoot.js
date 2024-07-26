@@ -32,32 +32,6 @@ const { define, loader } = odoo;
 //-----------------------------------------------------------------------------
 
 /**
- * Used for debugging purposes.
- *
- * @param {Suite} suite
- */
-const logMemory = (suite) => {
-    if (typeof window.gc !== "function") {
-        return;
-    }
-
-    // Cleanup last retained textarea
-    const textarea = document.createElement("textarea");
-    document.body.appendChild(textarea);
-    textarea.value = "aaa";
-    textarea.focus();
-    textarea.remove();
-
-    // Run garbage collection
-    window.gc();
-
-    // Log memory usage
-    console.log(
-        `[MEMINFO] ${suite.fullName} - after gc: ${window.performance.memory.usedJSHeapSize} - tests: ${suite.reporting.tests}`
-    );
-};
-
-/**
  * @param {string[]} entryPoints
  * @param {Set<string>} additionalAddons
  */
@@ -362,7 +336,7 @@ const runTests = async () => {
             const running = await start(suite);
 
             moduleSetLoader.cleanup();
-            logMemory(suite);
+            __gcAndLogMemory(suite.fullName, suite.reporting.tests);
 
             if (!running) {
                 break;
@@ -371,6 +345,52 @@ const runTests = async () => {
     }
 
     await stop();
+    __gcAndLogMemory("tests done");
+};
+
+/**
+ * This method tries to manually run the garbage collector (if exposed) and logs
+ * the current heap size (if available). It is meant to be called right after a
+ * suite's module set has been fully executed.
+ *
+ * This is used for debugging memory leaks, or if the containing process running
+ * unit tests doesn't know how much available memory it actually has.
+ *
+ * To enable this feature, the containing process must simply use the `--expose-gc`
+ * flag.
+ *
+ * @param {string} label
+ * @param {number} [testCount]
+ */
+const __gcAndLogMemory = (label, testCount) => {
+    if (typeof window.gc !== "function") {
+        return;
+    }
+
+    // Cleanup last retained textarea
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    textarea.value = "aaa";
+    textarea.focus();
+    textarea.remove();
+
+    // Run garbage collection
+    window.gc();
+
+    // Log memory usage
+    const logs = [
+        `[MEMINFO] ${label} (after GC)`,
+        "- used:",
+        window.performance.memory.usedJSHeapSize,
+        "- total:",
+        window.performance.memory.totalJSHeapSize,
+        "- limit:",
+        window.performance.memory.jsHeapSizeLimit,
+    ];
+    if (Number.isInteger(testCount)) {
+        logs.push("- tests:", testCount);
+    }
+    console.log(...logs);
 };
 
 /** @extends {ModuleLoader} */
