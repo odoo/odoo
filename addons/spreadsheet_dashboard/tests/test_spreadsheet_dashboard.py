@@ -74,21 +74,21 @@ class TestSpreadsheetDashboard(DashboardTestCommon):
             self.env["res.currency"].get_company_currency_for_spreadsheet()
         )
 
-    def test_publish_dashboard(self):
-        group = self.env["spreadsheet.dashboard.group"].create({
-            "name": "Dashboard group"
-        })
-        dashboard = self.create_dashboard(group)
-        self.assertFalse(group.published_dashboard_ids)
-        dashboard.is_published = True
-        self.assertEqual(group.published_dashboard_ids, dashboard)
-
     def test_unpublish_dashboard(self):
         group = self.env["spreadsheet.dashboard.group"].create({
             "name": "Dashboard group"
         })
         dashboard = self.create_dashboard(group)
-        dashboard.is_published = True
         self.assertEqual(group.published_dashboard_ids, dashboard)
         dashboard.is_published = False
         self.assertFalse(group.published_dashboard_ids)
+
+    def test_publish_dashboard(self):
+        group = self.env["spreadsheet.dashboard.group"].create({
+            "name": "Dashboard group"
+        })
+        dashboard = self.create_dashboard(group)
+        dashboard.is_published = False
+        self.assertFalse(group.published_dashboard_ids)
+        dashboard.is_published = True
+        self.assertEqual(group.published_dashboard_ids, dashboard)
