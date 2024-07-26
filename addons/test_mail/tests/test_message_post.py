@@ -77,7 +77,6 @@ class TestMailNotifyAPI(TestMessagePostCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
         cls.test_lang_records = cls.env['mail.test.lang'].create([
             {
                 'customer_id': False,
