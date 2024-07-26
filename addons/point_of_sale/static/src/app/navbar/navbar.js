@@ -11,7 +11,7 @@ import {
 import { SyncNotification } from "@point_of_sale/app/navbar/sync_notification/sync_notification";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, useState, useExternalListener } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
@@ -48,7 +48,28 @@ export class Navbar extends Component {
         onMounted(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
         });
+        useExternalListener(document, "keydown", this.handleKeydown.bind(this));
     }
+
+    handleKeydown(event) {
+        if (
+            !this.ui.isSmall &&
+            this.inputRef &&
+            document.activeElement !== this.inputRef.el &&
+            !this.pos.get_order()?.get_selected_orderline() &&
+            this.noOpenDialogs() &&
+            event.key.length == 1
+        ) {
+            this.inputRef.el.focus();
+            this.inputRef.el.value = event.key;
+            event.preventDefault();
+        }
+    }
+
+    noOpenDialogs() {
+        return document.querySelectorAll(".modal-dialog, .debug-widget").length === 0;
+    }
+
     onClickScan() {
         if (!this.pos.scanning) {
             this.pos.showScreen("ProductScreen");
