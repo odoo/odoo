@@ -77,4 +77,4 @@ class ProductPackaging(models.Model):
         self.ensure_one()
         if qty_uom:
             qty = qty_uom._compute_quantity(qty, self.product_uom_id)
-        return float_round(qty / self.qty, precision_rounding=self.product_uom_id.rounding)
+        return qty / self.qty

@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
+
 from datetime import datetime, timedelta
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
+from odoo.tools import float_is_zero
 from odoo import Command
 
 
@@ -1426,6 +1430,44 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 line.product_uom_qty = 8
 
         self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)
+
+    def test_packaging_and_sol_qty(self):
+        """
+        Check that product_uom_qty is not too much modified by rounding errors
+        when a package is added.
+        """
+        # Required for `product_packaging_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('product.group_stock_packaging')
+        good_packaging, bad_packaging = self.env['product.packaging'].create([
+            {
+                'name': "Super Packaging",
+                'product_id': self.product_a.id,
+                'qty': 1.0,
+            },
+            {
+                'name': "Super bad Packaging",
+                'product_id': self.product_a.id,
+                'qty': 999.0,
+            }
+        ])
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        original_qty = 1004.0
+        so_form = Form(so)
+        with so_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_uom_qty = original_qty
+        so = so_form.save()
+        with so_form.order_line.edit(0) as line:
+            line.product_packaging_id = good_packaging
+        so = so_form.save()
+        self.assertEqual(float_is_zero(so.order_line.product_uom_qty - original_qty, precision_rounding=0.01), True)
+        with so_form.order_line.edit(0) as line:
+            with self.assertLogs(logger='odoo.tests.form.onchange', level=logging.WARNING):
+                line.product_packaging_id = bad_packaging
+        so = so_form.save()
+        self.assertEqual(float_is_zero(so.order_line.product_uom_qty - original_qty, precision_rounding=0.01), True)
 
     def test_backorder_and_decrease_sol_qty(self):
         """
