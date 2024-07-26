@@ -4019,3 +4019,31 @@ test("save selected date during view switching", async () => {
     await getService("action").switchView("calendar");
     expect(`th .fc-timegrid-axis-cushion:eq(0)`).toHaveText(weekNumber);
 });
+
+test(`check if active fields are fetched in addition to field names in record data(search_read rpc)`, async () => {
+    class CustomWidget extends Component {
+        static template = xml``;
+        static props = ["*"];
+    }
+    registry.category("fields").add("custom_widget", {
+        component: CustomWidget,
+        fieldDependencies: [{ name: "delay", type: "float" }],
+    });
+
+    onRpc("event", "search_read", ({ kwargs }) => {
+        expect.step("event.search_read");
+        expect(kwargs.fields.includes("delay")).toBe(true);
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start">
+                <field name="user_id" widget="custom_widget"/>
+            </calendar>
+        `,
+    });
+
+    expect.verifySteps(["event.search_read"]);
+});
