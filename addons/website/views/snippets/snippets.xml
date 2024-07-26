@@ -90,6 +90,9 @@
                 <t t-snippet="website.s_empowerment" string="Empowerment" group="intro">
                     <keywords>hero, jumbotron, headline, header, introduction, home, content, introduction, overview, spotlight, presentation, welcome, context, description, primary, highlight, lead, CTA, promote, promotion</keywords>
                 </t>
+                <t t-snippet="website.s_split_intro" string="Split Intro" group="intro">
+                    <keywords>content, picture, photo, illustration, media, visual, article, story, combination, network, relationships, interactions, connectivity, collaborations</keywords>
+                </t>
 
                 <!-- Columns group -->
                 <t t-snippet="website.s_three_columns" string="Columns" group="columns">
@@ -993,7 +996,7 @@
     <t t-set="only_bg_image_selector" t-value="base_only_bg_image_selector"/>
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
-    <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable, .s_website_form_cover .row > .o_not_editable'"/>
+    <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable, .s_website_form_cover .row > .o_not_editable, .s_split_intro .row > .o_not_editable'"/>
     <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper, .s_carousel_intro_wrapper'"/>
 
     <t t-call="website.snippet_options_background_options">
