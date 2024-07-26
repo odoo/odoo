@@ -17,6 +17,16 @@ export function closestScrollableX(el) {
     return closestScrollableX(el.parentElement);
 }
 
+function isScrollableY(el) {
+    if (el && el.scrollHeight > el.clientHeight && el.clientHeight > 0) {
+        const overflow = getComputedStyle(el).getPropertyValue("overflow-y");
+        if (/\bauto\b|\bscroll\b/.test(overflow)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
  * Get the closest vertically scrollable for a given element.
  *
@@ -27,11 +37,8 @@ export function closestScrollableY(el) {
     if (!el) {
         return null;
     }
-    if (el.scrollHeight > el.clientHeight && el.clientHeight > 0) {
-        const overflow = getComputedStyle(el).getPropertyValue("overflow-y");
-        if (/\bauto\b|\bscroll\b/.test(overflow)) {
-            return el;
-        }
+    if (isScrollableY(el)) {
+        return el;
     }
     return closestScrollableY(el.parentElement);
 }
@@ -78,7 +85,7 @@ export function scrollTo(element, options = {}) {
                 offset,
             behavior,
         });
-    }  else if (elementTop < scrollTop || isAnchor) {
+    } else if (elementTop < scrollTop || isAnchor) {
         // The scroll place the element at the top of the scrollable
         scrollPromises.push(
             new Promise((resolve) => {
@@ -107,4 +114,60 @@ export function scrollTo(element, options = {}) {
     }
 
     return Promise.all(scrollPromises);
+}
+
+export function compensateScrollbar(
+    el,
+    add = true,
+    isScrollElement = true,
+    cssProperty = "padding-right"
+) {
+    if (!el) {
+        return;
+    }
+    // Compensate scrollbar
+    const scrollableEl = isScrollElement ? el : closestScrollableY(el.parentElement);
+    if (!scrollableEl) {
+        return;
+    }
+    const isRTL = scrollableEl.classList.contains(".o_rtl");
+    if (isRTL) {
+        cssProperty = cssProperty.replace("right", "left");
+    }
+    el.style.removeProperty(cssProperty);
+    if (!add) {
+        return;
+    }
+    const style = window.getComputedStyle(el);
+    // Round up to the nearest integer to be as close as possible to
+    // the correct value in case of browser zoom.
+    const borderLeftWidth = Math.ceil(parseFloat(style.borderLeftWidth.replace("px", "")));
+    const borderRightWidth = Math.ceil(parseFloat(style.borderRightWidth.replace("px", "")));
+    const bordersWidth = borderLeftWidth + borderRightWidth;
+    const newValue =
+        parseInt(style[cssProperty]) +
+        scrollableEl.offsetWidth -
+        scrollableEl.clientWidth -
+        bordersWidth;
+    el.style.setProperty(cssProperty, `${newValue}px`, "important");
+}
+
+export function getScrollingElement(document = window.document) {
+    const baseScrollingElement = document.scrollingElement;
+    if (isScrollableY(baseScrollingElement)) {
+        return baseScrollingElement;
+    }
+    const bodyHeight = window.getComputedStyle(document.body).height;
+    for (const el of document.body.children) {
+        // Search for a body child which is at least as tall as the body
+        // and which has the ability to scroll if enough content in it. If
+        // found, suppose this is the top scrolling element.
+        if (bodyHeight - el.scrollHeight > 1.5) {
+            continue;
+        }
+        if (isScrollableY(el)) {
+            return el;
+        }
+    }
+    return baseScrollingElement;
 }

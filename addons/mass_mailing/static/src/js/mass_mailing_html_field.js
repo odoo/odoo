@@ -13,6 +13,7 @@ import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { onWillStart, reactive, useSubEnv, status } from "@odoo/owl";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export class MassMailingHtmlField extends HtmlField {
     static props = {
@@ -209,7 +210,7 @@ export class MassMailingHtmlField extends HtmlField {
         if ($(window.top.document).find('.o_mass_mailing_form_full_width')[0]) {
             // In full width form mode, ensure the snippets menu's scrollable is
             // in the form view, not in the iframe.
-            this.fieldConfig.$scrollable = this.wysiwyg.$el.closestScrollable();
+            this.fieldConfig.$scrollable = $(closestScrollableY(this.wysiwyg.$el[0]));
             // Ensure said scrollable keeps its scrollbar at all times to
             // prevent the scrollbar from appearing at awkward moments (ie: when
             // previewing an option)
