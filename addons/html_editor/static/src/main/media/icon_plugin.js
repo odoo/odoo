@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class IconPlugin extends Plugin {
     static name = "icon";
-    static dependencies = ["history", "link", "selection"];
+    static dependencies = ["history", "link", "selection", "color"];
 
     static resources(p) {
         return {
@@ -16,6 +16,21 @@ export class IconPlugin extends Plugin {
                 },
             ],
             toolbarGroup: [
+                {
+                    id: "icon_color",
+                    sequence: 1,
+                    namespace: "icon",
+                    buttons: [
+                        {
+                            id: "icon_forecolor",
+                            inherit: "forecolor",
+                        },
+                        {
+                            id: "icon_backcolor",
+                            inherit: "backcolor",
+                        },
+                    ],
+                },
                 {
                     id: "icon_size",
                     sequence: 1,
@@ -85,6 +100,7 @@ export class IconPlugin extends Plugin {
                     ],
                 },
             ],
+            colorApply: p.applyIconColor.bind(p),
         };
     }
 
@@ -104,6 +120,7 @@ export class IconPlugin extends Plugin {
                     if (classString.match(/^fa-[2-5]x$/)) {
                         selectedIcon.classList.remove(classString);
                     }
+                    this.dispatch("ADD_STEP");
                 }
                 if (payload !== "1") {
                     selectedIcon.classList.add(`fa-${payload}x`);
@@ -140,5 +157,14 @@ export class IconPlugin extends Plugin {
             return;
         }
         return selectedIcon.classList.contains("fa-spin");
+    }
+
+    applyIconColor(color, mode) {
+        const selectedIcon = this.getSelectedIcon();
+        if (!selectedIcon) {
+            return;
+        }
+        this.shared.colorElement(selectedIcon, color, mode);
+        return true;
     }
 }
