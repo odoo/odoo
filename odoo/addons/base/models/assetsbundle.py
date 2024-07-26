@@ -5,7 +5,6 @@ from lxml import etree
 from subprocess import Popen, PIPE
 import hashlib
 import io
-import json
 import logging
 import os
 import re
@@ -20,16 +19,14 @@ except ImportError:
     libsass = None
 
 from rjsmin import jsmin as rjsmin
-from markupsafe import Markup
 
 from odoo import release, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools import (func, misc, transpile_javascript,
     is_odoo_module, SourceMapGenerator, profiler, OrderedSet)
-from odoo.tools.json import scriptsafe
+from odoo.tools.json import scriptsafe as json
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
 from odoo.tools.misc import file_open, file_path
-from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
 
@@ -396,7 +393,7 @@ class AssetsBundle(object):
         try:
             blocks = self.xml()
         except XMLAssetError as e:
-            content.append(f'throw new Error({json.dumps(to_text(e))});')
+            content.append(f'throw new Error({json.dumps(str(e))});')
 
         def get_template(element):
             element.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
@@ -801,7 +798,7 @@ class JavascriptAsset(WebAsset):
 
     def generate_error(self, msg):
         msg = super().generate_error(msg)
-        return f'console.error({scriptsafe.dumps(msg)});'
+        return f'console.error({json.dumps(msg)});'
 
     @property
     def bundle_version(self):
@@ -829,7 +826,7 @@ class JavascriptAsset(WebAsset):
         try:
             return super()._fetch_content()
         except AssetError as e:
-            return self.generate_error(json.dumps(to_text(e)))
+            return self.generate_error(str(e))
 
 
     def with_header(self, content=None, minimal=True):
@@ -861,7 +858,7 @@ class XMLAsset(WebAsset):
         try:
             content = super()._fetch_content()
         except AssetError as e:
-            return self.generate_error(json.dumps(to_text(e)))
+            return self.generate_error(str(e))
 
         parser = etree.XMLParser(ns_clean=True, remove_comments=True, resolve_entities=False)
         try:

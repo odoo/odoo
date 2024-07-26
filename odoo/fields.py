@@ -30,7 +30,7 @@ from .models import check_property_field_value_name
 from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
-    OrderedSet, pycompat, sql, SQL, date_utils, unique,
+    OrderedSet, sql, SQL, date_utils, unique,
     image_process, merge_sequences, is_list_of,
     html_normalize, html_sanitize,
     DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT,
@@ -974,7 +974,12 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Convert ``value`` from the ``write`` format to the SQL format. """
         if value is None or value is False:
             return None
-        return pycompat.to_text(value)
+        if isinstance(value, str):
+            return value
+        elif isinstance(value, bytes):
+            return value.decode()
+        else:
+            return str(value)
 
     def convert_to_cache(self, value, record, validate=True):
         """ Convert ``value`` to the cache format; ``value`` may come from an
@@ -2013,7 +2018,8 @@ class Char(_String):
             return None
         # we need to convert the string to a unicode object to be able
         # to evaluate its length (and possibly truncate it) reliably
-        return super().convert_to_column(pycompat.to_text(value)[:self.size], record, values, validate)
+        value = value.decode() if isinstance(value, bytes) else str(value)
+        return super().convert_to_column(value[:self.size], record, values, validate)
 
 
 class Text(_String):

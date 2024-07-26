@@ -224,7 +224,7 @@ class IrHttp(models.AbstractModel):
                               else, such as `'[lang]'` (used for url_return).
         '''
         Lang = request.env['res.lang']
-        location = pycompat.to_text(path_or_uri).strip()
+        location = path_or_uri.strip()
         force_lang = lang_code is not None
         try:
             url = werkzeug.urls.url_parse(location)
@@ -235,7 +235,7 @@ class IrHttp(models.AbstractModel):
         if url and not url.netloc and not url.scheme and (url.path or force_lang):
             location = werkzeug.urls.url_join(request.httprequest.path, location)
             lang_url_codes = [info.url_code for info in Lang._get_frontend().values()]
-            lang_code = pycompat.to_text(lang_code or request.context['lang'])
+            lang_code = lang_code or request.context['lang']
             lang_url_code = Lang._get_data(code=lang_code).url_code
             lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
             if (len(lang_url_codes) > 1 or force_lang) and cls._is_multilang_url(location, lang_url_codes):

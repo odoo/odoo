@@ -3,6 +3,7 @@
 import csv
 import codecs
 import io
+import typing
 import warnings
 
 _reader = codecs.getreader('utf-8')
@@ -23,20 +24,20 @@ def csv_writer(stream, **params):
     return csv.writer(_writer(stream), **params)
 
 
-def to_text(source):
-    """ Generates a text value (an instance of text_type) from an arbitrary
-    source.
+def to_text(source: typing.Any) -> str:
+    """ Generates a text value from an arbitrary source.
 
     * False and None are converted to empty strings
     * text is passed through
     * bytes are decoded as UTF-8
-    * rest is textified via the current version's relevant data model method
+    * rest is textified
     """
+    warnings.warn("Deprecated since Odoo 18.0.", DeprecationWarning, 2)
     if source is None or source is False:
-        return u''
+        return ''
 
     if isinstance(source, bytes):
-        return source.decode('utf-8')
+        return source.decode()
 
     if isinstance(source, str):
         return source
