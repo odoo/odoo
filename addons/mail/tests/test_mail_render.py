@@ -573,9 +573,9 @@ class TestMailRenderSecurity(TestMailRenderCommon):
         """Check that default template values are implicitly allowed for the specific field they define."""
         def patched_mail_template_default_values(model):
             return {
-                'email_cc': '{{ object.user_ids[0].email }}',  # inline
-                'lang': '{{ object.user_ids[0].lang }}',  # inline
-                'body_html': '<p>Hi <t t-out="object.user_ids[0].name"/></p>',  # qweb
+                'email_cc': '{{ object.user_ids and object.user_ids[0].email }}',  # inline
+                'lang': '{{ object.user_ids and object.user_ids[0].lang }}',  # inline
+                'body_html': '<p>Hi <t t-out="object.user_ids and object.user_ids[0].name"/></p>',  # qweb
             }
         template_defaults = patched_mail_template_default_values(self.env['mail.template'])
         partner_model_id = self.env['ir.model']._get_id('res.partner')
