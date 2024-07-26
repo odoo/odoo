@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import pycompat, SQL
+from odoo.tools import SQL
 
 
 class PrivacyLookupWizard(models.TransientModel):
@@ -45,7 +45,7 @@ class PrivacyLookupWizard(models.TransientModel):
 
     def _get_query(self):
         name = self.name.strip()
-        email = "%%%s%%" % pycompat.to_text(self.email.strip())
+        email = f"%{self.email.strip()}%"
         email_normalized = tools.email_normalize(self.email.strip())
 
         # Step 1: Retrieve users/partners liked to email address or name
