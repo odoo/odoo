@@ -48,9 +48,7 @@ class PurchaseOrder(models.Model):
                 no_variant_attribute_values = combination - combination._without_no_variant_attributes()
 
                 # create or find product variant from combination
-                product = product_template._create_product_variant(combination)
-                # TODO replace the check on product_id by a first check on the ptavs and pnavs?
-                # and only create/require variant after no line has been found ???
+                product = product_template._create_product_variant(combination) if cell['qty'] else product_template._get_variant_for_combination(combination)
                 order_lines = self.order_line.filtered(lambda line: (line._origin or line).product_id == product and (line._origin or line).product_no_variant_attribute_value_ids == no_variant_attribute_values)
 
                 # if product variant already exist in order lines

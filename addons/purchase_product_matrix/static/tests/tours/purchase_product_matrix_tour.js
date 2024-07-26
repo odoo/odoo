@@ -30,7 +30,9 @@ tour.register('purchase_matrix_tour', {
     trigger: '.o_product_variant_matrix',
     run: function () {
         // fill the whole matrix with 1's
-        $('.o_matrix_input').val(1);
+        // except 8th and last so one dynamic variant won't be created
+        $('.o_matrix_input').slice(0, 7).val(1);
+        $('.o_matrix_input').slice(8, 15).val(1);
     }
 }, {
     trigger: 'span:contains("Confirm")',
@@ -62,7 +64,7 @@ tour.register('purchase_matrix_tour', {
     trigger: '.o_product_variant_matrix',
     run: function () {
         // update some of the matrix values.
-        $('.o_matrix_input').slice(8, 16).val(4);
+        $('.o_matrix_input').slice(8, 15).val(4);
     } // set the qty to 4 for half of the matrix products.
 }, {
     trigger: 'span:contains("Confirm")',
