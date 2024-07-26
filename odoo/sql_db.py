@@ -7,7 +7,7 @@ The PostgreSQL connector is a connectivity layer between the OpenERP code and
 the database, *not* a database abstraction toolkit. Database abstraction is what
 the ORM does, in fact.
 """
-
+aaa
 import logging
 import os
 import re
