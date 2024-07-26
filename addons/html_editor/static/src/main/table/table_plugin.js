@@ -26,7 +26,7 @@ function isUnremovableTableComponent(element, root) {
  */
 export class TablePlugin extends Plugin {
     static name = "table";
-    static dependencies = ["dom", "history", "selection", "delete", "split"];
+    static dependencies = ["dom", "history", "selection", "delete", "split", "color"];
     /** @type { (p: TablePlugin) => Record<string, any> } */
     static resources = (p) => ({
         handle_tab: { callback: p.handleTab.bind(p), sequence: 20 },
@@ -36,6 +36,7 @@ export class TablePlugin extends Plugin {
         isUnsplittable: (element) =>
             element.tagName === "TABLE" || tableInnerComponents.has(element.tagName),
         onSelectionChange: p.updateSelectionTable.bind(p),
+        colorApply: p.applyTableColor.bind(p),
     });
 
     handleCommand(command, payload) {
@@ -500,5 +501,17 @@ export class TablePlugin extends Plugin {
             didDeselectTable = true;
         }
         return didDeselectTable;
+    }
+
+    applyTableColor(color, mode) {
+        const selectedTds = [...this.editable.querySelectorAll("td.o_selected_td")].filter(
+            (node) => node.isContentEditable
+        );
+        if (selectedTds.length && mode === "background") {
+            for (const td of selectedTds) {
+                this.shared.colorElement(td, color, mode);
+            }
+            return true;
+        }
     }
 }

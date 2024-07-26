@@ -17,6 +17,7 @@ import { reactive } from "@odoo/owl";
 export class ColorPlugin extends Plugin {
     static name = "color";
     static dependencies = ["selection", "split", "history", "format"];
+    static shared = ["colorElement"];
     /** @type { (p: ColorPlugin) => Record<string, any> } */
     static resources = (p) => ({
         toolbarGroup: {
@@ -126,15 +127,11 @@ export class ColorPlugin extends Plugin {
      * @param {string} mode 'color' or 'backgroundColor'
      */
     applyColor(color, mode) {
-        const selectedTds = [...this.editable.querySelectorAll("td.o_selected_td")].filter(
-            (node) => node.isContentEditable
-        );
-        if (selectedTds.length && mode === "backgroundColor") {
-            for (const td of selectedTds) {
-                this.colorElement(td, color, mode);
+        for (const cb of this.resources.colorApply || []) {
+            if (cb(color, mode)) {
+                return;
             }
         }
-
         let selection = this.shared.getEditableSelection();
         let selectionNodes;
         // Get the <font> nodes to color
