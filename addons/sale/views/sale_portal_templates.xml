@@ -159,7 +159,7 @@
                             </div>
 
                             <t t-if="not sale_order.is_expired and sale_order.state in ['draft', 'sent']">
-                                <div t-if="sale_order.amount_undiscounted - sale_order.amount_untaxed &gt; 0.01" class="list-group-item flex-grow-1">
+                                <div t-if="sale_order.amount_undiscounted - sale_order.amount_untaxed &gt; 0.01" class="list-group-item flex-grow-1" name="sale_order_advantage">
                                     <small><b class="text-muted">Your advantage</b></small>
                                     <small>
                                         <b t-field="sale_order.amount_undiscounted"
@@ -194,7 +194,7 @@
                 <div id="quote_content" class="col-12 col-lg-8 col-xxl-9 mt-5 mt-lg-0">
 
                     <!-- modal relative to the actions sign and pay -->
-                    <div role="dialog" class="modal fade" id="modalaccept">
+                    <div role="dialog" class="modal fade" id="modalaccept" name="sale_order_modal_sign_and_pay">
                         <div class="modal-dialog" t-if="sale_order._has_to_be_signed()">
                             <form id="accept" method="POST" t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="js_accept_json modal-content js_website_submit_form">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -217,7 +217,7 @@
                             </form>
                         </div>
 
-                        <div class="modal-dialog" t-if="not sale_order._has_to_be_signed() and sale_order._has_to_be_paid()">
+                        <div class="modal-dialog" t-if="not sale_order._has_to_be_signed() and sale_order._has_to_be_paid()" name="sale_order_modal_validate">
                             <div class="modal-content">
                                 <header class="modal-header">
                                     <h4 class="modal-title">Validate Order</h4>
@@ -349,7 +349,7 @@
                     </div>
 
                     <!-- bottom actions -->
-                    <div t-if="sale_order._has_to_be_signed() or sale_order._has_to_be_paid()" class="d-flex justify-content-center gap-1 d-print-none">
+                    <div t-if="sale_order._has_to_be_signed() or sale_order._has_to_be_paid()" class="d-flex justify-content-center gap-1 d-print-none" name="sale_order_actions">
 
                         <t t-if="sale_order._has_to_be_signed()">
                             <div class="col-sm-auto mt8">
@@ -646,7 +646,7 @@
     </template>
 
     <template id="sale_order_portal_content_totals_table">
-        <table class="table table-sm">
+        <table class="table table-sm" name="sale_order_totals_table">
             <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
             <t t-call="#{sale_order._get_name_tax_totals_view()}"/>
         </table>
