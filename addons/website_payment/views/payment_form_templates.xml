@@ -45,21 +45,27 @@
                 <label class="col-form-label fw-bold" for="name">Name
                     <span class="s_website_form_mark"> *</span>
                 </label>
-                <input t-att-readonly="'1' if 'name' in partner_details and partner_id else None" type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="partner_details.get('name')" />
+                <input t-att-readonly="'1' if 'name' in partner_details and partner_id else None" type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="partner_details.get('name')" required="1"/>
+                <div class="invalid-feedback">
+                    Please provide a name.
+                </div>
             </div>
             <div class="w-100"/>
             <div t-attf-class="mb-3 #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
                 <label class="col-form-label fw-bold" for="email">Email
                     <span class="s_website_form_mark"> *</span>
                 </label>
-                <input t-att-readonly="'1' if 'email' in partner_details and partner_id else None" type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="partner_details.get('email')" />
+                <input t-att-readonly="'1' if 'email' in partner_details and partner_id else None" type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="partner_details.get('email')" required="1"/>
+                <div class="invalid-feedback">
+                    Please enter a valid email address.
+                </div>
             </div>
             <t t-set="country_id" t-value="partner_details.get('country_id')"/>
             <div t-attf-class="mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
                 <label class="col-form-label fw-bold" for="country_id">Country
                     <span class="s_website_form_mark"> *</span>
                 </label>
-                <select t-att-disabled="'1' if country_id and partner_id else None" id="country_id" name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}">
+                <select t-att-disabled="'1' if country_id and partner_id else None" id="country_id" name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}" required="1">
                     <option value="">Country...</option>
                     <t t-foreach="countries" t-as="c">
                         <option t-att-value="c.id" t-att-selected="c.id == (country_id or -1)">
@@ -67,6 +73,9 @@
                         </option>
                     </t>
                 </select>
+                <div class="invalid-feedback">
+                    Please select a country.
+                </div>
             </div>
             <div class="w-100"/>
             <div class="mb-3 col-lg-12 o_donation_payment_form">
