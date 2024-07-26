@@ -87,6 +87,15 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
     /**
      * @override
      */
+    getOptions() {
+        const options = super.getOptions().filter(([, option]) => {
+            return ["mass_mailing", "web_editor"].includes(option.module);
+        });
+        return options;
+    }
+    /**
+     * @override
+     */
     _onClick(ev) {
         super._onClick(...arguments);
         var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;

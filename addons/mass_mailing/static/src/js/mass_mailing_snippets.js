@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import options from "@web_editor/js/editor/snippets.options.legacy";
 import { loadImage } from "@web_editor/js/editor/image_processing";
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
@@ -11,7 +12,12 @@ import {
     transformFontFamilySelector,
 } from "@mass_mailing/js/mass_mailing_design_constants";
 import { isCSSColor, normalizeCSSColor } from "@web/core/utils/colors";
-
+import {
+    SnippetOption,
+    WeButton,
+    WeSelect,
+} from "@web_editor/js/editor/snippets.options";
+import { registerMassMailingOption } from "./snippets.registry";
 
 //--------------------------------------------------------------------------
 // Options
@@ -67,41 +73,35 @@ options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
     }
 });
 
-options.userValueWidgetsRegistry['we-fontfamilypicker'] = SelectUserValueWidget.extend({
-    /**
-     * @override
-     * @see FONT_FAMILIES
-     */
-    start: async function () {
-        const res = await this._super(...arguments);
-        // Populate the `we-select` with the font family buttons
-        for (const fontFamily of FONT_FAMILIES) {
-            const button = document.createElement('we-button');
-            button.style.setProperty('font-family', fontFamily);
-            button.dataset.customizeCssProperty = fontFamily;
-            button.dataset.cssProperty = 'font-family';
-            button.dataset.selectorText = this.el.dataset.selectorText;
-            button.textContent = getFontName(fontFamily);
-            this.menuEl.appendChild(button);
-        };
-        return res;
-    },
-});
+class MassMailingWeFontFamilyPicker extends WeSelect {
+    static isContainer = true;
+    static template = "mass_mailing.MassMailingWeFontFamilyPicker";
+    static components = { WeSelect, WeButton };
 
-options.registry.DesignTab = options.Class.extend({
+    setup() {
+        super.setup();
+        this.fontFamilies = FONT_FAMILIES;
+        this.getFontName = getFontName;
+    }
+}
+// Widget registry is shared - prefixing component name to avoid collision.
+registry.category("snippet_widgets").add("MassMailingWeFontFamilyPicker", MassMailingWeFontFamilyPicker);
+
+
+export class DesignTab extends SnippetOption {
     /**
      * @override
      */
-    init() {
-        this._super(...arguments);
+    constructor() {
+        super(...arguments);
         // Set the target on the whole editable so apply-to looks within it.
         this.setTarget(this.options.wysiwyg.getEditable());
-    },
+    }
     /**
      * @override
      */
-    async start() {
-        const res = await this._super(...arguments);
+    async willStart() {
+        const res = await super.willStart(...arguments);
         const $editable = this.options.wysiwyg.getEditable();
         this.document = $editable[0].ownerDocument;
         this.$layout = $editable.find('.o_layout');
@@ -123,7 +123,7 @@ options.registry.DesignTab = options.Class.extend({
         sheetOwner.textContent = this.styleElement.textContent;
         this.styleSheet = sheetOwner.sheet;
         return res;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -196,7 +196,7 @@ options.registry.DesignTab = options.Class.extend({
             }
         }
         this._commitCss();
-    },
+    }
     /**
      * Option method to change the size of buttons.
      *
@@ -221,7 +221,7 @@ options.registry.DesignTab = options.Class.extend({
             }
         }
         this._commitCss();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -239,12 +239,12 @@ options.registry.DesignTab = options.Class.extend({
         // Flush the rules cache for convert_inline, to make sure they are
         // recomputed to account for the change.
         this.options.wysiwyg._rulesCache = undefined;
-    },
+    }
     /**
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        const res = await this._super(...arguments);
+        const res = await super._computeWidgetState(...arguments);
         if (res === undefined) {
             switch (methodName) {
                 case 'applyButtonSize':
@@ -299,7 +299,7 @@ options.registry.DesignTab = options.Class.extend({
         } else {
             return res;
         }
-    },
+    }
     /**
      * Take a CSS selector and split it into separate selectors, all prefixed
      * with the `CSS_PREFIX`. Return them as an array.
@@ -310,7 +310,7 @@ options.registry.DesignTab = options.Class.extend({
      */
     _getSelectors(selectorText) {
         return selectorText.split(',').map(t => `${t.startsWith(CSS_PREFIX) ? '' : CSS_PREFIX + ' '}${t.trim()}`.trim());;
-    },
+    }
     /**
      * Take a CSS selector and find its matching rule in the mailing's custom
      * stylesheet, if it exists.
@@ -320,5 +320,12 @@ options.registry.DesignTab = options.Class.extend({
      */
     _getRule(selectorText) {
         return [...(this.styleSheet.cssRules || this.styleSheet.rules)].find(rule => rule.selectorText === selectorText);
-    },
+    }
+}
+
+registerMassMailingOption("DesignTab", {
+    Class: DesignTab,
+    template: "mass_mailing.design_tab",
+    selector: "design-options",
+    noCheck: true,
 });

@@ -1,14 +1,18 @@
-/** @odoo-module **/
+import { SelectTemplate } from "@web_editor/js/editor/snippets.options";
+import { registerMassMailingOption } from "@mass_mailing/js/snippets.registry";
 
-import options from "@web_editor/js/editor/snippets.options.legacy";
-
-options.registry.MasonryLayout = options.registry.SelectTemplate.extend({
-    /**
-     * @constructor
-     */
-    init() {
-        this._super(...arguments);
+export class MasonryLayout extends SelectTemplate {
+    constructor() {
+        super(...arguments);
         this.containerSelector = '> .container, > .container-fluid, > .o_container_small';
         this.selectTemplateWidgetName = 'masonry_template_opt';
-    },
+    }
+}
+
+registerMassMailingOption("MassMailingMasonryLayout", {
+    Class: MasonryLayout,
+    template: "mass_mailing.s_masonry_block_options",
+    selector: ".s_masonry_block",
+}, {
+    sequence: 10,
 });

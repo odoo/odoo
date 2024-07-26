@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="mass_mailing.MassMailingWeFontFamilyPicker" t-inherit="web_editor.WeSelect" t-inherit-mode="primary">
+    <xpath expr="//we-selection-items/t" position="replace">
+        <WeButton t-foreach="fontFamilies" t-as="fontFamily" t-key="fontFamily"
+            class="'o_we_user_value_widget'"
+            customizeCssProperty="fontFamily"
+            cssProperty="'font-family'"
+            selectorText="props.selectorText"
+        >
+            <span t-attf-style="font-family: {{fontFamily}};" t-out="getFontName(fontFamily)"/>
+        </WeButton>
+    </xpath>
+</t>
+<t t-name="mass_mailing.design_tab">
+    <!-- BODY WIDTH -->
+    <WeButtonGroup title.translate="Body Width" applyTo="'.o_mail_wrapper'" noPreview="'true'">
+        <WeButton selectClass="'o_mail_small'"
+                  img="'/mass_mailing/static/src/img/snippets_options/content_width_small.svg'"
+                  tooltip.translate="Small"/>
+        <WeButton selectClass="'o_mail_regular'"
+                  img="'/mass_mailing/static/src/img/snippets_options/content_width_normal.svg'"
+                  tooltip.translate="Regular"/>
+        <WeButton selectClass=""
+                  img="'/mass_mailing/static/src/img/snippets_options/content_width_full.svg'"
+                  tooltip.translate="Full"/>
+    </WeButtonGroup>
+    <WeColorpicker title.translate="Mailing Background"
+                   applyTo="'.o_layout, > div:not(.o_layout)'"
+                   selectStyle="'true'"
+                   noTransparency="'true'"
+                   cssProperty="'background-color'"
+                   colorPrefix="'bg-'"/>
+    <WeColorpicker title.translate="Content Background"
+                   applyTo="'.o_mail_wrapper_td > div'"
+                   selectStyle="'true'"
+                   noTransparency="'true'"
+                   cssProperty="'background-color'"
+                   colorPrefix="'bg-'"/>
+    <!-- HEADING 1 -->
+    <WeRow title.translate="Heading 1" class="'o_design_tab_title'">
+        <WeInput customizeCssProperty="''"
+                 cssProperty="'font-size'"
+                 selectorText="'h1'"
+                 unit="'px'"/>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'color'"
+                       selectorText="'h1'"
+                       noTransparency="'true'"
+                       colorPrefix="'text-'"/>
+    </WeRow>
+    <WeRow title.translate="" class="'o_we_sublevel_1 o_short_title'">
+        <MassMailingWeFontFamilyPicker selectorText="'h1'"/>
+        <span>​</span> <!-- Separate the select from the buttons (styling) -->
+        <WeButton tooltip.translate="Bold" class="'fa fa-fw fa-bold'" noPreview="'true'" toggle="'true'"
+                    customizeCssProperty="'bolder'"
+                    selectorText="'h1'"
+                    cssProperty="'font-weight'"/>
+        <WeButton tooltip.translate="Italic" class="'fa fa-fw fa-italic'" noPreview="'true'" toggle="'true'"
+                    customizeCssProperty="'italic'"
+                    selectorText="'h1'"
+                    cssProperty="'font-style'"/>
+        <WeButton tooltip.translate="Underline" class="'fa fa-fw fa-underline'" noPreview="'true'" toggle="'true'"
+                    customizeCssProperty="'underline'"
+                    selectorText="'h1'"
+                    cssProperty="'text-decoration-line'"/>
+    </WeRow>
+    <!-- HEADING 2 -->
+    <WeRow title.translate="Heading 2" class="'o_design_tab_title'">
+        <WeInput customizeCssProperty="''"
+                 cssProperty="'font-size'"
+                 selectorText="'h2'"
+                 unit="'px'"/>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'color'"
+                       selectorText="'h2'"
+                       noTransparency="'true'"
+                       colorPrefix="'text-'"/>
+    </WeRow>
+    <WeRow title.translate="" class="'o_we_sublevel_1 o_short_title'">
+        <MassMailingWeFontFamilyPicker selectorText="'h2'"/>
+        <span>​</span> <!-- Separate the select from the buttons (styling) -->
+        <WeButton tooltip.translate="Bold" class="'fa fa-fw fa-bold'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'bolder'"
+                  selectorText="'h2'"
+                  cssProperty="'font-weight'"/>
+        <WeButton tooltip.translate="Italic" class="'fa fa-fw fa-italic'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'italic'"
+                  selectorText="'h2'"
+                  cssProperty="'font-style'"/>
+        <WeButton tooltip.translate="Underline" class="'fa fa-fw fa-underline'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'underline'"
+                  selectorText="'h2'"
+                  cssProperty="'text-decoration-line'"/>
+    </WeRow>
+    <!-- HEADING 3 -->
+    <WeRow title.translate="Heading 3" class="'o_design_tab_title'">
+        <WeInput customizeCssProperty="''"
+                 cssProperty="'font-size'"
+                 selectorText="'h3'"
+                 unit="'px'"/>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'color'"
+                       selectorText="'h3'"
+                       noTransparency="'true'"
+                       colorPrefix="'text-'"/>
+    </WeRow>
+    <WeRow title.translate="" class="'o_we_sublevel_1 o_short_title'">
+        <MassMailingWeFontFamilyPicker selectorText="'h3'"/>
+        <span>​</span> <!-- Separate the select from the buttons (styling) -->
+        <WeButton tooltip.translate="Bold" class="'fa fa-fw fa-bold'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'bolder'"
+                  selectorText="'h3'"
+                  cssProperty="'font-weight'"/>
+        <WeButton tooltip.translate="Italic" class="'fa fa-fw fa-italic'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'italic'"
+                  selectorText="'h3'"
+                  cssProperty="'font-style'"/>
+        <WeButton tooltip.translate="Underline" class="'fa fa-fw fa-underline'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'underline'"
+                  selectorText="'h3'"
+                  cssProperty="'text-decoration-line'"/>
+    </WeRow>
+    <!-- TEXT -->
+    <WeRow title.translate="Text" class="'o_design_tab_title'">
+        <WeInput customizeCssProperty="''"
+                 cssProperty="'font-size'"
+                 selectorText="'p, p > *, li, li > *'"
+                 unit="'px'"/>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'color'"
+                       selectorText="'p, p > *, li, li > *'"
+                       noTransparency="'true'"
+                       colorPrefix="'text-'"/>
+    </WeRow>
+    <WeRow title.translate="" class="'o_we_sublevel_1 o_short_title'">
+        <MassMailingWeFontFamilyPicker selectorText="'p, p > *, li, li > *'"/>
+        <span>​</span> <!-- Separate the select from the buttons (styling) -->
+        <WeButton tooltip.translate="Bold" class="'fa fa-fw fa-bold'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'bolder'"
+                  selectorText="'p, p > *, li, li > *'"
+                  cssProperty="'font-weight'"/>
+        <WeButton tooltip.translate="Italic" class="'fa fa-fw fa-italic'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'italic'"
+                  selectorText="'p, p > *, li, li > *'"
+                  cssProperty="'font-style'"/>
+        <WeButton tooltip.translate="Underline" class="'fa fa-fw fa-underline'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'underline'"
+                  selectorText="'p, p > *, li, li > *'"
+                  cssProperty="'text-decoration-line'"/>
+    </WeRow>
+    <!-- LINKS -->
+    <WeRow title.translate="Links" class="'o_design_tab_title'">
+        <WeInput customizeCssProperty="''"
+                 cssProperty="'font-size'"
+                 selectorText="'a:not(.btn), a.btn.btn-link'"
+                 unit="'px'"/>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'color'"
+                       selectorText="'a:not(.btn), a.btn.btn-link'"
+                       noTransparency="'true'"
+                       colorPrefix="'text-'"/>
+    </WeRow>
+    <WeRow title.translate="" class="'o_we_sublevel_1 o_short_title'">
+        <MassMailingWeFontFamilyPicker selectorText="'a:not(.btn), a.btn.btn-link'"/>
+        <span></span> <!--Separate the select from the buttons (styling)-->
+        <WeButton tooltip.translate="Bold" class="'fa fa-fw fa-bold'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'bolder'"
+                  selectorText="'a:not(.btn), a.btn.btn-link'"
+                  cssProperty="'font-weight'"/>
+        <WeButton tooltip.translate="Italic" class="'fa fa-fw fa-italic'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'italic'"
+                  selectorText="'a:not(.btn), a.btn.btn-link'"
+                  cssProperty="'font-style'"/>
+        <WeButton tooltip.translate="Underline" class="'fa fa-fw fa-underline'" noPreview="'true'" toggle="'true'"
+                  customizeCssProperty="'underline'"
+                  selectorText="'a:not(.btn), a.btn.btn-link'"
+                  cssProperty="'text-decoration-line'"/>
+    </WeRow>
+    <!-- PRIMARY BUTTONS -->
+    <WeRow title.translate="Primary Buttons" class="'o_design_tab_title'">
+        <WeInput customizeCssProperty="''"
+                 cssProperty="'font-size'"
+                 selectorText="'a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary'"
+                 unit="'px'"/>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'color'"
+                       selectorText="'a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary'"
+                       noTransparency="'true'"
+                       colorPrefix="'text-'"/>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'background-color'"
+                       selectorText="'a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary'"
+                       noTransparency="'true'"
+                       colorPrefix="'bg-'"/>
+    </WeRow>
+    <WeSelect title.translate="Size" class="'o_we_sublevel_1'" selectorText="'a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary'">
+        <WeButton applyButtonSize="'btn-sm'">Small</WeButton>
+        <WeButton applyButtonSize="'btn-md'">Medium</WeButton>
+        <WeButton applyButtonSize="'btn-lg'">Large</WeButton>
+    </WeSelect>
+    <WeRow title.translate="Font Family" class="'o_we_sublevel_1'">
+        <MassMailingWeFontFamilyPicker selectorText="'a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary'"/>
+    </WeRow>
+    <WeRow title.translate="Border" class="'o_we_sublevel_1'">
+        <WeInput customizeCssProperty="''"
+                 cssProperty="'border-width'"
+                 selectorText="'a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary'"
+                 unit="'px'"/>
+        <WeSelect selectorText="'a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary'" cssProperty="'border-style'">
+            <WeButton tooltip.translate="Solid" customizeCssProperty="'solid'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/>
+            </WeButton>
+            <WeButton tooltip.translate="Dashed" customizeCssProperty="'dashed'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/>
+            </WeButton>
+            <WeButton tooltip.translate="Dotted" customizeCssProperty="'dotted'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
+            </WeButton>
+            <WeButton tooltip.translate="Double" customizeCssProperty="'double'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
+            </WeButton>
+        </WeSelect>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'border-color'"
+                       selectorText="'a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary'"
+                       noTransparency="'true'"
+                       colorPrefix="'border-'"/>
+    </WeRow>
+    <!-- SECONDARY BUTTONS -->
+    <WeRow title.translate="Secondary Buttons" class="'o_design_tab_title'">
+        <WeInput customizeCssProperty="''"
+                 cssProperty="'font-size'"
+                 selectorText="'a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary'"
+                 unit="'px'"/>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'color'"
+                       selectorText="'a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary'"
+                       noTransparency="'true'"
+                       colorPrefix="'text-'"/>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'background-color'"
+                       selectorText="'a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary'"
+                       noTransparency="'true'"
+                       colorPrefix="'bg-'"/>
+    </WeRow>
+    <WeSelect title.translate="Size" class="'o_we_sublevel_1'" selectorText="'a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary'">
+        <WeButton applyButtonSize="'btn-sm'">Small</WeButton>
+        <WeButton applyButtonSize="'btn-md'">Medium</WeButton>
+        <WeButton applyButtonSize="'btn-lg'">Large</WeButton>
+    </WeSelect>
+    <WeRow title.translate="Font Family" class="'o_we_sublevel_1'">
+        <MassMailingWeFontFamilyPicker selectorText="'a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary'"/>
+    </WeRow>
+    <WeRow title.translate="Border" class="'o_we_sublevel_1'">
+        <WeInput customizeCssProperty="''"
+                 cssProperty="'border-width'"
+                 selectorText="'a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary'"
+                 unit="'px'"/>
+        <WeSelect selectorText="'a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary'" cssProperty="'border-style'">
+            <WeButton tooltip.translate="Solid" customizeCssProperty="'solid'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/>
+            </WeButton>
+            <WeButton tooltip.translate="Dashed" customizeCssProperty="'dashed'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/>
+            </WeButton>
+            <WeButton tooltip.translate="Dotted" customizeCssProperty="'dotted'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
+            </WeButton>
+            <WeButton tooltip.translate="Double" customizeCssProperty="'double'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
+            </WeButton>
+        </WeSelect>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'border-color'"
+                       selectorText="'a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary'"
+                       noTransparency="'true'"
+                       colorPrefix="'border-'"/>
+    </WeRow>
+    <!-- SEPARATORS -->
+    <WeRow title.translate="Separators" class="'o_design_tab_title'">
+        <WeInput customizeCssProperty="''"
+                 cssProperty="'border-top-width'"
+                 selectorText="'hr'"
+                 unit="'px'"/>
+        <WeSelect selectorText="'hr'" cssProperty="'border-top-style'">
+            <WeButton tooltip.translate="Solid" customizeCssProperty="'solid'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/>
+            </WeButton>
+            <WeButton tooltip.translate="Dashed" customizeCssProperty="'dashed'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/>
+            </WeButton>
+            <WeButton tooltip.translate="Dotted" customizeCssProperty="'dotted'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
+            </WeButton>
+            <WeButton tooltip.translate="Double" customizeCssProperty="'double'">
+                <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
+            </WeButton>
+        </WeSelect>
+        <WeColorpicker customizeCssProperty="''"
+                       cssProperty="'border-top-color'"
+                       selectorText="'hr'"
+                       noTransparency="'true'"
+                       colorPrefix="'border-'"/>
+    </WeRow>
+    <WeSelect title.translate="Width" class="'o_we_sublevel_1'" selectorText="'hr'" cssProperty="'width'">
+        <WeButton customizeCssProperty="'25%'">25%</WeButton>
+        <WeButton customizeCssProperty="'50%'">50%</WeButton>
+        <WeButton customizeCssProperty="'75%'">75%</WeButton>
+        <WeButton customizeCssProperty="'100%'">100%</WeButton>
+    </WeSelect>
+</t>
+</templates>
