@@ -32,28 +32,28 @@
                 <section>
                     <h3>Options</h3>
                     <t t-set="display_discount" t-value="True in [option.discount > 0 for option in sale_order.sale_order_option_ids]"/>
-                    <table class="table table-sm">
+                    <table class="table table-sm" name="sale_order_options_table">
                         <thead>
                             <tr>
-                                <th class="text-start">Product</th>
-                                <th t-if="display_discount" class="text-end">Disc.%
+                                <th class="text-start" name="th_option_product_name">Product</th>
+                                <th t-if="display_discount" class="text-end" name="th_option_discount">Disc.%
                                 </th>
-                                <th class="text-end">Unit Price</th>
-                                <th t-if="sale_order._can_be_edited_on_portal() and report_type == 'html'"></th>
+                                <th class="text-end" name="th_option_unit_price">Unit Price</th>
+                                <th t-if="sale_order._can_be_edited_on_portal() and report_type == 'html'" name="th_option_add_button"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr t-foreach="sale_order.sale_order_option_ids" t-as="option">
                                 <t t-if="not option.is_present">
-                                    <td>
+                                    <td name="td_option_product_name">
                                         <div t-field="option.name"/>
                                     </td>
-                                    <td t-if="display_discount" class="text-end">
+                                    <td t-if="display_discount" class="text-end" name="td_option_discount">
                                         <strong t-if="option.discount" class="text-info">
                                             <t t-out="((option.discount % 1) and '%s' or '%d') % option.discount"/>%
                                         </strong>
                                     </td>
-                                    <td>
+                                    <td name="td_option_unit_price">
                                         <strong class="text-end">
                                             <div t-field="option.price_unit"
                                                 t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'
@@ -64,7 +64,7 @@
                                             </div>
                                         </strong>
                                     </td>
-                                    <td class="text-end" t-if="sale_order._can_be_edited_on_portal() and report_type == 'html'">
+                                    <td class="text-end" t-if="sale_order._can_be_edited_on_portal() and report_type == 'html'" name="td_option_add_button">
                                         <a t-att-data-option-id="option.id" href="#" class="mb8 js_add_optional_products d-print-none" aria-label="Add to cart" title="Add to cart">
                                             <span class="btn btn-secondary">Add to order</span>
                                         </a>
