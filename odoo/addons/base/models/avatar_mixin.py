@@ -19,7 +19,6 @@ def get_hsl_from_seed(seed):
 
 
 class AvatarMixin(models.AbstractModel):
-    _name = 'avatar.mixin'
     _inherit = ['image.mixin']
     _description = "Avatar Mixin"
     _avatar_name_field = "name"
