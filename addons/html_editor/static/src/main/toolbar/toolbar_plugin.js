@@ -77,11 +77,14 @@ export class ToolbarPlugin extends Plugin {
         switch (command) {
             case "CONTENT_UPDATED":
                 if (this.overlay.isOpen) {
-                    const sel = this.shared.getEditableSelection();
-                    if (sel.isCollapsed) {
+                    const selectionData = this.shared.getSelectionData();
+                    if (
+                        !selectionData.documentSelectionIsInEditable ||
+                        selectionData.editableSelection.isCollapsed
+                    ) {
                         this.overlay.close();
                     } else {
-                        this.updateButtonsStates(this.shared.getEditableSelection());
+                        this.updateButtonsStates(selectionData.editableSelection);
                     }
                 }
                 break;
@@ -97,8 +100,8 @@ export class ToolbarPlugin extends Plugin {
         };
     }
 
-    handleSelectionChange(selection) {
-        this.updateToolbarVisibility(selection);
+    handleSelectionChange(selectionData) {
+        this.updateToolbarVisibility(selectionData);
         if (this.overlay.isOpen || this.config.disableFloatingToolbar) {
             const selectedNodes = this.shared.getTraversedNodes();
             let foundNamespace = false;
@@ -112,21 +115,25 @@ export class ToolbarPlugin extends Plugin {
             if (!foundNamespace) {
                 this.state.namespace = undefined;
             }
-            this.updateButtonsStates(selection);
+            this.updateButtonsStates(selectionData.editableSelection);
         }
     }
 
-    updateToolbarVisibility(sel) {
+    updateToolbarVisibility(selectionData) {
         if (this.config.disableFloatingToolbar) {
             return;
         }
         const props = { toolbar: this.getToolbarInfo(), class: "shadow rounded my-2" };
 
-        const inEditable = sel.inEditable;
+        const inEditable =
+            selectionData.documentSelectionIsInEditable &&
+            !selectionData.documentSelectionIsProtected &&
+            !selectionData.documentSelectionIsProtecting;
+        const isCollapsed = selectionData.editableSelection.isCollapsed;
+
         if (this.overlay.isOpen) {
-            if (!inEditable || sel.isCollapsed) {
-                const selection = this.document.getSelection();
-                const preventClosing = selection?.anchorNode?.closest?.(
+            if (!inEditable || isCollapsed) {
+                const preventClosing = selectionData.documentSelection?.anchorNode?.closest?.(
                     "[data-prevent-closing-overlay]"
                 );
                 if (preventClosing?.dataset?.preventClosingOverlay === "true") {
@@ -136,7 +143,7 @@ export class ToolbarPlugin extends Plugin {
             } else {
                 this.overlay.open({ props }); // will update position
             }
-        } else if (inEditable && !sel.isCollapsed) {
+        } else if (inEditable && !isCollapsed) {
             this.overlay.open({ props });
         }
     }

@@ -71,28 +71,28 @@ test("fix selection P in the beggining being a direct child of the editable p be
     expect(getContent(el)).toBe(`<p>a[]</p><div>b</div>`);
 });
 
-describe("inEditable", () => {
-    test("inEditable should be true", async () => {
+describe("documentSelectionIsInEditable", () => {
+    test("documentSelectionIsInEditable should be true", async () => {
         const { editor } = await setupEditor("<p>a[]b</p>");
-        const selection = editor.shared.getEditableSelection();
-        expect(selection.inEditable).toBe(true);
+        const selectionData = editor.shared.getSelectionData();
+        expect(selectionData.documentSelectionIsInEditable).toBe(true);
     });
 
-    test("inEditable should be false when it is set outside the editable", async () => {
+    test("documentSelectionIsInEditable should be false when it is set outside the editable", async () => {
         const { editor } = await setupEditor("<p>ab</p>");
-        const selection = editor.shared.getEditableSelection();
-        expect(selection.inEditable).toBe(false);
+        const selectionData = editor.shared.getSelectionData();
+        expect(selectionData.documentSelectionIsInEditable).toBe(false);
     });
 
-    test("inEditable should be false when it is set outside the editable after retrieving it", async () => {
+    test("documentSelectionIsInEditable should be false when it is set outside the editable after retrieving it", async () => {
         const { editor } = await setupEditor("<p>ab[]</p>");
         const selection = document.getSelection();
-        let editableSelection = editor.shared.getEditableSelection();
-        expect(editableSelection.inEditable).toBe(true);
+        let selectionData = editor.shared.getSelectionData();
+        expect(selectionData.documentSelectionIsInEditable).toBe(true);
         selection.setPosition(document.body);
         // value is updated directly !
-        editableSelection = editor.shared.getEditableSelection();
-        expect(editableSelection.inEditable).toBe(false);
+        selectionData = editor.shared.getSelectionData();
+        expect(selectionData.documentSelectionIsInEditable).toBe(false);
     });
 });
 

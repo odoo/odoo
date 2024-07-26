@@ -4,15 +4,21 @@ import { removeClass } from "@html_editor/utils/dom";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
 function isMutationRecordSavable(record) {
-    if (record.type === "attributes" && record.attributeName === "placeholder") {
-        return false;
-    }
-    return true;
+    return !(record.type === "attributes" && record.attributeName === "placeholder");
 }
 
-function target(selection, editable) {
+/**
+ * @param {SelectionData} selectionData
+ * @param {HTMLElement} editable
+ */
+function target(selectionData, editable) {
     const el = editable.firstChild;
-    if (!selection.inEditable && el && el.tagName === "P" && editable.textContent === "") {
+    if (
+        !selectionData.documentSelectionIsInEditable &&
+        el &&
+        el.tagName === "P" &&
+        editable.textContent === ""
+    ) {
         return el;
     }
 }
@@ -67,7 +73,7 @@ export class HintPlugin extends Plugin {
     updateHints(root = this.editable) {
         this.clearHints(root);
         this.makeEmptyBlockHints(root);
-        this.updateTempHint(this.shared.getEditableSelection());
+        this.updateTempHint(this.shared.getSelectionData());
     }
 
     makeEmptyBlockHints(root) {
@@ -81,14 +87,14 @@ export class HintPlugin extends Plugin {
         }
     }
 
-    updateTempHint(selection) {
+    updateTempHint(selectionData) {
         if (this.tempHint) {
             this.removeHint(this.tempHint);
         }
 
-        if (selection.isCollapsed) {
+        if (selectionData.editableSelection.isCollapsed) {
             for (const hint of this.resources["temp_hints"]) {
-                const target = hint.target(selection, this.editable);
+                const target = hint.target(selectionData, this.editable);
                 // Do not replace an existing empty block hint by a temp hint.
                 if (target && !target.classList.contains("o-we-hint")) {
                     this.makeHint(target, hint.text);
