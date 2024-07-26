@@ -19,11 +19,7 @@ class ListContainerPopover extends Component {
 }
 class ListContainerDialog extends ListContainerPopover {
     static components = { ListContainerPopover, Dialog };
-    static template = xml`
-        <Dialog title="'Choose an order'" footer="false">
-            <ListContainerPopover t-props="props" t-on-click="props.close"/>
-        </Dialog>
-    `;
+    static template = "point_of_sale.ListContainerDialog";
 }
 export class ListContainer extends Component {
     static props = {

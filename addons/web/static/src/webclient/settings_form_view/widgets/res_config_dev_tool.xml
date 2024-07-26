@@ -2,8 +2,7 @@
 <template>
     <div t-name='res_config_dev_tool'>
         <div id="developer_tool">
-            <t t-set="title">Developer Tools</t>
-            <SettingsBlock title="title">
+            <SettingsBlock title.translate="Developer Tools">
                 <Setting addLabel="false">
                         <a t-if="!isDebug" class="d-block" t-on-click="() => this.activateDebug(1)" href="#">Activate the developer mode</a>
                         <a t-if="!isAssets" class="d-block" t-on-click="() => this.activateDebug('assets')" href="#">Activate the developer mode (with assets)</a>
