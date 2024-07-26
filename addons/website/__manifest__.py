@@ -99,6 +99,7 @@
         'views/snippets/s_kickoff.xml',
         'views/snippets/s_discovery.xml',
         'views/snippets/s_striped.xml',
+        'views/snippets/s_intro_pill.xml',
         'views/snippets/s_text_highlight.xml',
         'views/snippets/s_pricelist_cafe.xml',
         'views/snippets/s_progress_bar.xml',
