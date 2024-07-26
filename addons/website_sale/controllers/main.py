@@ -950,6 +950,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         try_skip_step = str2bool(try_skip_step or 'false')
         order_sudo = request.website.sale_get_order()
+        request.session['sale_last_order_id'] = order_sudo.id
 
         if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
@@ -1687,7 +1688,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         order_sudo._recompute_taxes()
         order_sudo._recompute_prices()
-        request.session['sale_last_order_id'] = order_sudo.id
         extra_step = request.website.viewref('website_sale.extra_info')
         if extra_step.active:
             return request.redirect("/shop/extra_info")
