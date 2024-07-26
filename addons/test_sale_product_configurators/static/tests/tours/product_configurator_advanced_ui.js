@@ -7,7 +7,7 @@ import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_util
 let optionVariantImage;
 
 registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour', {
-    url: '/web',
+    url: '/odoo',
     test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',

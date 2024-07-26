@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('configurator_flow', {
     test: true,
-    url: '/web#action=website.action_website_configuration',
+    url: '/odoo/action-website.action_website_configuration',
     steps: () => [
     {
         content: "click on create new website",
