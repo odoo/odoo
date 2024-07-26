@@ -52,6 +52,7 @@
                     <field name="location_dest_id" options="{'no_create': True}"/>
                     <field name="route_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="name" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -109,6 +110,7 @@
                                 <div><field name="delay" class="oe_inline"/> days</div>
                             </group>
                         </group>
+                        <field name="push_domain" invisible="action not in ['push', 'pull_push']" widget="domain" options="{'model': 'stock.move'}"/>
                     </sheet>
                 </form>
             </field>

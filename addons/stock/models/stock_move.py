@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
+from ast import literal_eval
 from collections import defaultdict
 from datetime import timedelta
 from operator import itemgetter
@@ -1002,12 +1002,22 @@ Please change the quantity done or the rounding precision of your unit of measur
             domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
-            if move.location_dest_id.company_id == self.env.company:
-                rule = self.env['procurement.group']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
-            else:
-                procurement_group = self.env['procurement.group'].sudo()
+
+            ProcurementGroup = self.env['procurement.group']
+            if move.location_dest_id.company_id != self.env.company:
+                ProcurementGroup = self.env['procurement.group'].sudo()
                 move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
-                rule = procurement_group._search_rule(move.route_ids, move.product_packaging_id, move.product_id, False, domain)
+                warehouse_id = False
+
+            rule = ProcurementGroup._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
+
+            excluded_rule_ids = []
+            while (rule and rule.push_domain and not move.filtered_domain(literal_eval(rule.push_domain))):
+                excluded_rule_ids.append(rule.id)
+                rule = ProcurementGroup._search_rule(
+                    move.route_ids, move.product_packaging_id, move.product_id, warehouse_id,
+                    expression.AND([[('id', 'not in', excluded_rule_ids)], domain]))
+
             # Make sure it is not returning the return
             if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
                 new_move = rule._run_push(move)
