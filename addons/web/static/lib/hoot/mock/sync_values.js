@@ -38,11 +38,11 @@ export class MockBlob extends Blob {
         setSyncValue(this, blobParts);
     }
 
-    arrayBuffer() {
+    async arrayBuffer() {
         return new TextEncoder().encode(getSyncValue(this));
     }
 
-    text() {
+    async text() {
         return getSyncValue(this).join("");
     }
 }

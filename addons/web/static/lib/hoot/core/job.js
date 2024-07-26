@@ -109,7 +109,7 @@ export class Job {
      * @param {Job} [child]
      */
     willRunAgain(child) {
-        if (this.runCount < (this.config.multi || 1)) {
+        if (this.config.multi && this.runCount < this.config.multi) {
             return true;
         }
         return Boolean(this.parent?.willRunAgain(this));
