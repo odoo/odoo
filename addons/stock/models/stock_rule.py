@@ -102,6 +102,7 @@ class StockRule(models.Model):
         help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     rule_message = fields.Html(compute='_compute_action_message')
+    push_domain = fields.Char('Push Applicability')
 
     def copy_data(self, default=None):
         default = dict(default or {})
