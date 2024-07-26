@@ -619,7 +619,7 @@ class Environment(Mapping):
         :param cr: optional database cursor to change the current cursor
         :type cursor: :class:`~odoo.sql_db.Cursor`
         :param user: optional user/user id to change the current user
-        :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.Users>`
+        :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`
         :param dict context: optional context dictionary to change the current context
         :param bool su: optional boolean to change the superuser mode
         :returns: environment with specified args (new or existing one)
@@ -671,7 +671,7 @@ class Environment(Mapping):
         """Return the current user (as an instance).
 
         :returns: current user - sudoed
-        :rtype: :class:`res.users record<~odoo.addons.base.models.res_users.Users>`"""
+        :rtype: :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`"""
         return self(su=True)['res.users'].browse(self.uid)
 
     @lazy_property

@@ -11,7 +11,6 @@ from odoo.tools import SQL
 
 class IrDefault(models.Model):
     """ User-defined default values for fields. """
-    _name = 'ir.default'
     _description = 'Default Values'
     _rec_name = 'field_id'
     _allow_sudo_commands = False

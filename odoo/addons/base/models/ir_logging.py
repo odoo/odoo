@@ -3,7 +3,6 @@ from odoo import api, fields, models
 
 
 class IrLogging(models.Model):
-    _name = 'ir.logging'
     _description = 'Logging'
     _order = 'id DESC'
     _allow_sudo_commands = False

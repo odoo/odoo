@@ -20,7 +20,6 @@ class ResUsersDeletion(models.Model):
     must deal with other consideration (archiving, blacklist email...).
     """
 
-    _name = 'res.users.deletion'
     _description = 'Users Deletion Request'
     _rec_name = 'user_id'
 

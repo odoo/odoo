@@ -7,7 +7,6 @@ from odoo.tools.safe_eval import safe_eval, datetime
 
 
 class IrFilters(models.Model):
-    _name = 'ir.filters'
     _description = 'Filters'
     _order = 'model_id, name, id desc'
 

@@ -4522,7 +4522,10 @@ class One2many(_RelationalMulti[M]):
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             comodel = model.env[self.comodel_name]
-            invf = comodel._fields[self.inverse_name]
+            try:
+                invf = comodel._fields[self.inverse_name]
+            except KeyError:
+                raise ValueError(f"{self.inverse_name!r} declared in {self!r} does not exist on {comodel._name!r}.")
             if isinstance(invf, (Many2one, Many2oneReference)):
                 # setting one2many fields only invalidates many2one inverses;
                 # integer inverses (res_model/res_id pairs) are not supported

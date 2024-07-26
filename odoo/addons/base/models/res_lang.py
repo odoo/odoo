@@ -47,8 +47,7 @@ class LangDataDict(frozendict):
         return LangData(dict.fromkeys(some_lang, False))
 
 
-class Lang(models.Model):
-    _name = "res.lang"
+class ResLang(models.Model):
     _description = "Languages"
     _order = "active desc,name"
     _allow_sudo_commands = False
@@ -317,7 +316,7 @@ class Lang(models.Model):
         for vals in vals_list:
             if not vals.get('url_code'):
                 vals['url_code'] = vals.get('iso_code') or vals['code']
-        return super(Lang, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, vals):
         lang_codes = self.mapped('code')
@@ -333,7 +332,7 @@ class Lang(models.Model):
             # delete linked ir.default specifying default partner's language
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
-        res = super(Lang, self).write(vals)
+        res = super().write(vals)
 
         if vals.get('active'):
             # If we activate a lang, set it's url_code to the shortest version
@@ -371,7 +370,7 @@ class Lang(models.Model):
 
     def unlink(self):
         self.env.registry.clear_cache()
-        return super(Lang, self).unlink()
+        return super().unlink()
 
     def copy_data(self, default=None):
         default = dict(default or {})
