@@ -8929,6 +8929,7 @@ test('column progressbars: "false" bar is clickable', async () => {
         "web_search_read",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
     ]);
 });
 
@@ -8983,6 +8984,9 @@ test('column progressbars: "false" bar with sum_field', async () => {
         "web_search_read",
         "web_read_group",
         "web_search_read",
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
     ]);
 });
 
@@ -9197,6 +9201,7 @@ test("column progressbars with an active filter are working with load more", asy
         "web_read_group",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
         "web_search_read",
         "web_search_read",
     ]);
@@ -9390,10 +9395,20 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
         "web_read_group", // recomputes aggregates
         "web_search_read",
         'web_read_group domain ["&",["bar","=",true],["foo","=","yop"]]', // perform read_group only on second column (bar=true)
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
+        "web_read_group domain []",
+        'web_read_group domain ["&",["bar","=",true],["foo","=","yop"]]',
         // activate filter
         "web_read_group", // recomputes aggregates
         "web_search_read",
         'web_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]', // perform read_group only on second column (bar=true)
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
+        "web_read_group domain []",
+        'web_read_group domain ["&",["bar","=",true],["foo","=","gnap"]]',
         // activate another filter (switching)
         "web_search_read",
     ]);
@@ -9559,6 +9574,7 @@ test("progress bar subgroup count recompute", async () => {
         "web_search_read",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
     ]);
 });
 
@@ -9651,7 +9667,7 @@ test("progress bar recompute after filter selection", async () => {
 
     expect(getKanbanColumnTooltips()).toEqual(["1 blip", "4 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["1", "4"]);
-    expect.verifySteps(["web_search_read"]);
+    expect.verifySteps(["web_search_read", "read_progress_bar"]);
 
     // Add search domain to something restricting progressbars' values (records still in filtered group)
     await toggleSearchBarMenu();
@@ -9709,6 +9725,9 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
     expect.verifySteps([
         "web_read_group", // recomputes aggregates
         "web_search_read",
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
     ]);
 
     // Add searchdomain to something restricting progressbars' values (records still in filtered group)
@@ -10032,6 +10051,9 @@ test.tags("desktop")("progressbars and active filter with quick_create_view", as
         "web_search_read",
         "web_read_group",
         "web_search_read",
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
         "get_views",
         "onchange",
         "web_save",
@@ -11164,6 +11186,7 @@ test("progressbar filter state is kept unchanged when domain is updated (records
         "web_search_read",
         "web_search_read",
         "read_progress_bar",
+        "read_progress_bar",
         "web_read_group",
         "web_search_read",
         "read_progress_bar",
@@ -11250,6 +11273,7 @@ test("progressbar filter state is kept unchanged when domain is updated (emptyin
         "web_search_read",
         "web_search_read",
         "read_progress_bar",
+        "read_progress_bar",
         "web_read_group",
         "web_search_read",
         "web_search_read",
@@ -11323,6 +11347,7 @@ test.tags("desktop")("filtered column counters when dropping in non-matching rec
         "web_search_read",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
         "web_save",
         "read_progress_bar",
         "/web/dataset/resequence",
@@ -11378,7 +11403,7 @@ test.tags("desktop")("filtered column is reloaded when dragging out its last rec
     expect(queryAllTexts(".o_column_title")).toEqual(["No", "Yes"]);
     expect(".o_kanban_group.o_kanban_group_show .o_kanban_record").toHaveCount(1);
     expect(getKanbanRecordTexts(1)).toEqual(["1yop"]);
-    expect.verifySteps(["web_search_read"]);
+    expect.verifySteps(["web_search_read", "read_progress_bar"]);
 
     // Drag out its only record onto the first column
     await contains(".o_kanban_group.o_kanban_group_show .o_kanban_record").dragAndDrop(
@@ -12146,8 +12171,11 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
         "web_search_read",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
         "web_search_read",
+        "read_progress_bar",
         "web_search_read",
+        "read_progress_bar",
     ]);
 });
 
@@ -12236,10 +12264,13 @@ test("update field on which progress bars are computed", async () => {
         "web_search_read",
         "web_search_read",
         "web_search_read",
+        "read_progress_bar",
         "web_save",
         "read_progress_bar",
         "web_search_read",
+        "read_progress_bar",
         "web_search_read",
+        "read_progress_bar",
     ]);
 });
 
@@ -13297,7 +13328,14 @@ test.tags("desktop")("scroll on group unfold and progressbar click", async () =>
 
     await contains(getKanbanProgressBars(0)[0]).click();
 
-    expect.verifySteps(["web_read_group", "web_search_read", "scrolled"]);
+    expect.verifySteps([
+        "web_read_group",
+        "web_search_read",
+        "read_progress_bar",
+        "web_read_group",
+        "web_read_group",
+        "scrolled",
+    ]);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
 
     await contains(getKanbanColumn(1)).click();
