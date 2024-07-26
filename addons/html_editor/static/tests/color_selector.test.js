@@ -37,7 +37,7 @@ test("can set background color", async () => {
     expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(
-        `<p><font style="background: rgb(107, 173, 222);">[test]</font></p>`
+        `<p><font style="background-color: rgb(107, 173, 222);">[test]</font></p>`
     );
 });
 
