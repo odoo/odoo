@@ -96,6 +96,7 @@
         'views/snippets/s_key_images.xml',
         'views/snippets/s_kickoff.xml',
         'views/snippets/s_discovery.xml',
+        'views/snippets/s_striped.xml',
         'views/snippets/s_text_highlight.xml',
         'views/snippets/s_progress_bar.xml',
         'views/snippets/s_blockquote.xml',
