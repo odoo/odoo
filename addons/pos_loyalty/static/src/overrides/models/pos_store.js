@@ -288,7 +288,7 @@ patch(PosStore.prototype, {
             return _t(
                 "Gift Card: %s\nBalance: %s",
                 code,
-                this.env.utils.formatCurrency(coupon.balance)
+                this.env.utils.formatCurrency(coupon.points)
             );
         }
         return true;
