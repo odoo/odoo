@@ -92,6 +92,7 @@ def check_certificate():
     server = get_odoo_server_url()
 
     if not server:
+        _logger.info('Ignoring the nginx certificate check without a connected database')
         return {"status": CertificateStatus.ERROR,
                 "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
 
