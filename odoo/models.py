@@ -94,12 +94,17 @@ regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')  # For read_group
 regex_read_group_spec = re.compile(r'(\w+)(\.(\w+))?(?::(\w+))?$')  # For _read_group
+regex_camel_case = re.compile(r'(?<=[^_])([A-Z])')
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
 INSERT_BATCH_SIZE = 100
 UPDATE_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
+
+
+def class_name_to_model_name(classname: str) -> str:
+    return regex_camel_case.sub(r'.\1', classname).lower()
 
 def parse_read_group_spec(spec: str) -> tuple:
     """ Return a triplet corresponding to the given groupby/path/aggregate specification. """
@@ -241,12 +246,14 @@ class MetaModel(api.Meta):
                     f"Invalid import of {module}.{name}, it should start with 'odoo.addons'."
                 attrs['_module'] = module.split('.')[2]
 
-            # determine model '_name' and normalize '_inherits'
-            inherit = attrs.get('_inherit', ())
-            if isinstance(inherit, str):
-                inherit = attrs['_inherit'] = [inherit]
-            if '_name' not in attrs:
-                attrs['_name'] = inherit[0] if len(inherit) == 1 else name
+            _inherit = attrs.get('_inherit')
+            if _inherit and isinstance(_inherit, str):
+                # TODO: add an exception: TypeError(f"'_inherit' property of model {name!r} should be a list: {_inherit!r}.")
+                attrs.setdefault('_name', _inherit)
+                attrs['_inherit'] = [_inherit]
+
+            if not attrs.get('_name'):
+                attrs['_name'] = class_name_to_model_name(name)
 
         return super().__new__(meta, name, bases, attrs)
 
@@ -421,32 +428,31 @@ READ_GROUP_DISPLAY_FORMAT = {
 # registry class carries inferred metadata that is shared between all the
 # model's instances for a given registry.
 #
-#       class A1(Model):                      Model
-#           _name = 'a'                       / | \
+#       class A(Model):  # A1                 Model
+#           ...                               / | \
 #                                            A3 A2 A1   <- definition classes
-#       class A2(Model):                      \ | /
-#           _inherit = 'a'                      a       <- registry class: registry['a']
+#       class A(Model):  # A2                 \ | /
+#           _inherit = ['a']                    a       <- registry class: registry['a']
 #                                               |
-#       class A3(Model):                     records    <- model instances, like env['a']
-#           _inherit = 'a'
+#       class A(Model):  # A3                records    <- model instances, like env['a']
+#           _inherit = ['a']
 #
 # Note that when the model inherits from another model, we actually make the
 # registry classes inherit from each other, so that extensions to an inherited
 # model are visible in the registry class of the child model, like in the
 # following example.
 #
-#       class A1(Model):
-#           _name = 'a'                       Model
+#       class A(Model):  # A1
+#           ...                               Model
 #                                            / / \ \
-#       class B1(Model):                    / /   \ \
-#           _name = 'b'                    / A2   A1 \
+#       class B(Model):  # B1               / /   \ \
+#           ...                            / A2   A1 \
 #                                         B2  \   /  B1
-#       class B2(Model):                   \   \ /   /
-#           _name = 'b'                     \   a   /
-#           _inherit = ['a', 'b']            \  |  /
-#                                             \ | /
-#       class A2(Model):                        b
-#           _inherit = 'a'
+#       class B(Model):  # B2              \   \ /   /
+#           _inherit = ['a', 'b']           \   a   /
+#                                            \  |  /
+#       class A(Model):  # A2                 \ | /
+#           _inherit = ['a']                    b
 #
 #
 # THE FIELDS OF A MODEL
@@ -486,7 +492,7 @@ READ_GROUP_DISPLAY_FORMAT = {
 #           bar = ...                       A2     A1
 #                                            bar    foo, bar
 #       class A2(Model):                      \   /
-#           _inherit = 'a'                     \ /
+#           _inherit = ['a']                     \ /
 #           bar = ...                           a
 #                                                bar
 #
@@ -7378,7 +7384,7 @@ class Model(AbstractModel):
 
     Odoo models are created by inheriting from this class::
 
-        class user(Model):
+        class ResUsers(Model):
             ...
 
     The system will later instantiate the class once per database (on

@@ -29,14 +29,13 @@ class ResConfigModuleInstallationMixin(object):
         return result
 
 
-class ResConfigConfigurable(models.TransientModel):
+class ResConfig(models.TransientModel):
     ''' Base classes for new-style configuration items
 
     Configuration items should inherit from this class, implement
     the execute method (and optionally the cancel one) and have
     their view inherit from the related res_config_view_base view.
     '''
-    _name = 'res.config'
     _description = 'Config'
 
     def start(self):
@@ -165,7 +164,6 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         It also invokes all methods with a name that starts with 'get_default_';
         such methods can be defined to provide current values for other fields.
     """
-    _name = 'res.config.settings'
     _description = 'Config Settings'
 
     def _valid_field_parameter(self, field, name):
