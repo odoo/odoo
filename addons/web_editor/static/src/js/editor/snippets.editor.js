@@ -16,6 +16,10 @@ import { batched, debounce, throttleForAnimation } from "@web/core/utils/timing"
 import { uniqueId } from "@web/core/utils/functions";
 import { sortBy, unique } from "@web/core/utils/arrays";
 import { browser } from "@web/core/browser/browser";
+import {
+    CONTENT_ADDITION_OPTION_ID,
+    SNIPPET_ADDITION_OPTION_ID,
+} from "@web_editor/js/editor/snippets.registry";
 import { Toolbar } from "@web_editor/js/editor/toolbar";
 import {
     Component,
@@ -3474,7 +3478,7 @@ class SnippetsMenu extends Component {
         this.templateOptions = [];
         var selectors = [];
         var $styles = $html.find('[data-selector]');
-        const snippetAdditionDropIn = $styles.filter('#so_snippet_addition').data('drop-in');
+        let snippetAdditionDropIn = $styles.filter('#so_snippet_addition').data('drop-in');
         $styles.each(function () {
             var $style = $(this);
             var selector = $style.data('selector');
@@ -3517,10 +3521,12 @@ class SnippetsMenu extends Component {
         $styles.addClass('d-none');
 
         // TODO: @owl-options Rename this property when all options have been converted.
-        this.templateOptions.push(...this.getOptions().map(([optionID, option]) => {
+        const options = this.getOptions();
+        snippetAdditionDropIn = options.find(([optionId]) => optionId === SNIPPET_ADDITION_OPTION_ID)[1].dropIn;
+        this.templateOptions.push(...options.map(([optionID, option]) => {
             const selector = option.selector;
             const exclude = option.exclude || "";
-            const excludeParent = optionID === "so_content_addition" ? snippetAdditionDropIn : "";
+            const excludeParent = optionID === CONTENT_ADDITION_OPTION_ID ? snippetAdditionDropIn : "";
             const target = option.target;
             const noCheck = option.noCheck;
             const optionDef = {

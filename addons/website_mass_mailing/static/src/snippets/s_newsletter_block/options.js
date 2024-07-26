@@ -1,28 +1,50 @@
-/** @odoo-module **/
-
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-import options from "@web_editor/js/editor/snippets.options.legacy";
+import { session } from "@web/session";
+import {
+    SelectTemplate,
+    SnippetOption,
+} from "@web_editor/js/editor/snippets.options";
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
-options.registry.mailing_list_subscribe = options.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
+
+export class NewsletterBlock extends SelectTemplate {
+    constructor() {
+        super(...arguments);
+        this.containerSelector = "> .container, > .container-fluid, > .o_container_small";
+        this.selectTemplateWidgetName = "newsletter_template_opt";
+    }
+}
+
+export class NewsletterMailingList extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.dialog = this.env.services.dialog;
+        this.orm = this.env.services.orm;
+        this.website = this.env.services.website;
+    }
 
     /**
      * @override
      */
-    onBuilt() {
-        this._super(...arguments);
-        if (this.mailingLists.length) {
-            this.$target.attr("data-list-id", this.mailingLists[0][0]);
+    async willStart() {
+        await super.willStart();
+        this.renderContext.recaptcha_public_key = session.recaptcha_public_key;
+    }
+
+    /**
+     * @override
+     */
+    async onBuilt() {
+        await super.onBuilt(...arguments);
+        if (this.renderContext.mailingLists.length) {
+            this.$target.attr("data-list-id", this.renderContext.mailingLists[0][0].toString());
         } else {
-            this.call("dialog", "add", ConfirmationDialog, {
+            this.dialog.add(ConfirmationDialog, {
                 body: _t("No mailing list found, do you want to create a new one? This will save all your changes, are you sure you want to proceed?"),
                 confirm: () => {
-                    this.trigger_up("request_save", {
+                    this.env.requestSave({
                         reload: false,
                         onSuccess: () => {
                             window.location.href =
@@ -31,24 +53,40 @@ options.registry.mailing_list_subscribe = options.Class.extend({
                     });
                 },
                 cancel: () => {
-                    this.trigger_up("remove_snippet", {
+                    this.env.removeSnippet({
                         $snippet: this.$target,
                     });
                 },
             });
         }
-    },
+    }
     /**
      * @override
      */
-    cleanForSave() {
+    async cleanForSave() {
         const previewClasses = ['o_disable_preview', 'o_enable_preview'];
         const toCleanElsSelector = ".js_subscribe_wrap, .js_subscribed_wrap";
         const toCleanEls = this.$target[0].querySelectorAll(toCleanElsSelector);
         toCleanEls.forEach(element => {
             element.classList.remove(...previewClasses);
         });
-    },
+    }
+
+    /**
+     * @override
+     */
+    async _getRenderContext() {
+        const mailingLists = await this.orm.call(
+            "mailing.list",
+            "name_search",
+            ["", [["is_public", "=", true]]],
+            { context: this.options.recordInfo.context }
+        );
+        return {
+            ...super._getRenderContext(),
+            mailingLists,
+        };
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -66,55 +104,11 @@ options.registry.mailing_list_subscribe = options.Class.extend({
         thanksMessageEl.classList.toggle("o_enable_preview", widgetValue);
         toSubscribeEl.classList.toggle("o_enable_preview", !widgetValue);
         toSubscribeEl.classList.toggle("o_disable_preview", widgetValue);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _computeWidgetState(methodName, params) {
-        if (methodName !== 'toggleThanksMessage') {
-            return this._super(...arguments);
-        }
-        const toSubscribeElSelector = ".js_subscribe_wrap.o_disable_preview";
-        return this.$target[0].querySelector(toSubscribeElSelector) ? "true" : "";
-    },
-    /**
-     * @override
-     */
-    async _renderCustomXML(uiFragment) {
-        this.mailingLists = await this.orm.call(
-            "mailing.list",
-            "name_search",
-            ["", [["is_public", "=", true]]],
-            { context: this.options.recordInfo.context }
-        );
-        if (this.mailingLists.length) {
-            const selectEl = uiFragment.querySelector('we-select[data-attribute-name="listId"]');
-            for (const mailingList of this.mailingLists) {
-                const button = document.createElement('we-button');
-                button.dataset.selectDataAttribute = mailingList[0];
-                button.textContent = mailingList[1];
-                selectEl.appendChild(button);
-            }
-        }
-        const checkboxEl = document.createElement('we-checkbox');
-        checkboxEl.setAttribute('string', _t("Display Thanks Message"));
-        checkboxEl.dataset.toggleThanksMessage = 'true';
-        checkboxEl.dataset.noPreview = 'true';
-        checkboxEl.dataset.dependencies = "!form_opt";
-        uiFragment.appendChild(checkboxEl);
-    },
-});
-
-options.registry.recaptchaSubscribe = options.Class.extend({
+    }
     /**
      * Toggle the recaptcha legal terms
      */
-    toggleRecaptchaLegal: function (previewMode, value, params) {
+    toggleRecaptchaLegal(previewMode, value, params) {
         const recaptchaLegalEl = this.$target[0].querySelector('.o_recaptcha_legal_terms');
         if (recaptchaLegalEl) {
             recaptchaLegalEl.remove();
@@ -123,7 +117,7 @@ options.registry.recaptchaSubscribe = options.Class.extend({
             template.content.append(renderToElement("google_recaptcha.recaptcha_legal_terms"));
             this.$target[0].appendChild(template.content.firstElementChild);
         }
-    },
+    }
 
     //----------------------------------------------------------------------
     // Private
@@ -132,11 +126,25 @@ options.registry.recaptchaSubscribe = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         switch (methodName) {
+            case 'toggleThanksMessage':
+                return this.$target[0].querySelector(".js_subscribe_wrap.o_disable_preview") ? "true" : "";
             case 'toggleRecaptchaLegal':
                 return !this.$target[0].querySelector('.o_recaptcha_legal_terms') || '';
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
+}
+
+registerWebsiteOption("NewsletterBlockTemplate", {
+    Class: NewsletterBlock,
+    template: "website_mass_mailing.s_newsletter_block_template_options",
+    selector: ".s_newsletter_block",
+});
+
+registerWebsiteOption("NewsletterBlockMailingList", {
+    Class: NewsletterMailingList,
+    template: "website_mass_mailing.newsletter_mailing_list_options",
+    selector: ".s_newsletter_block",
 });

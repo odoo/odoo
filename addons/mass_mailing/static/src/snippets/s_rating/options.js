@@ -1,18 +1,28 @@
 /** @odoo-module **/
 
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
-import options from "@web_editor/js/editor/snippets.options.legacy";
 
-options.registry.Rating = options.Class.extend({
+import {
+    SnippetOption,
+} from "@web_editor/js/editor/snippets.options";
+import {
+    registerMassMailingOption,
+} from "@mass_mailing/js/snippets.registry";
+
+/**
+ * TODO: @owl-options mass_mailing.s_rating and website.s_rating are exactly
+ *   identical, refactor?
+ */
+export class RatingOption extends SnippetOption {
     /**
      * @override
      */
-    start: function () {
+    willStart() {
         this.iconType = this.$target[0].dataset.icon;
         this.faClassActiveCustomIcons = this.$target[0].dataset.activeCustomIcon || '';
         this.faClassInactiveCustomIcons = this.$target[0].dataset.inactiveCustomIcon || '';
-        return this._super.apply(this, arguments);
-    },
+        return super.willStart(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -23,22 +33,22 @@ options.registry.Rating = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    setIcons: function (previewMode, widgetValue, params) {
+    setIcons(previewMode, widgetValue, params) {
         this.iconType = widgetValue;
         this._renderIcons();
         this.$target[0].dataset.icon = widgetValue;
         delete this.$target[0].dataset.activeCustomIcon;
         delete this.$target[0].dataset.inactiveCustomIcon;
-    },
+    }
     /**
      * Allows to select a font awesome icon with media dialog.
      *
      * @see this.selectClass for parameters
      */
-    customIcon: async function (previewMode, widgetValue, params) {
+    async customIcon(previewMode, widgetValue, params) {
         const media = document.createElement('i');
         media.className = params.customActiveIcon === 'true' ? this.faClassActiveCustomIcons : this.faClassInactiveCustomIcons;
-        this.call("dialog", "add", MediaDialog, {
+        this.env.services.dialog.add(MediaDialog, {
             noImages: true,
             noDocuments: true,
             noVideos: true,
@@ -57,25 +67,25 @@ options.registry.Rating = options.Class.extend({
                 this.iconType = 'custom';
             }
         });
-    },
+    }
     /**
      * Sets the number of active icons.
      *
      * @see this.selectClass for parameters
      */
-    activeIconsNumber: function (previewMode, widgetValue, params) {
+    activeIconsNumber(previewMode, widgetValue, params) {
         this.nbActiveIcons = parseInt(widgetValue);
         this._createIcons();
-    },
+    }
     /**
      * Sets the total number of icons.
      *
      * @see this.selectClass for parameters
      */
-    totalIconsNumber: function (previewMode, widgetValue, params) {
+    totalIconsNumber(previewMode, widgetValue, params) {
         this.nbTotalIcons = Math.max(parseInt(widgetValue), 1);
         this._createIcons();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -84,7 +94,7 @@ options.registry.Rating = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'setIcons': {
                 return this.$target[0].dataset.icon;
@@ -98,14 +108,14 @@ options.registry.Rating = options.Class.extend({
                 return this.nbTotalIcons;
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * Creates the icons.
      *
      * @private
      */
-    _createIcons: function () {
+    _createIcons() {
         const $activeIcons = this.$target.find('.s_rating_active_icons');
         const $inactiveIcons = this.$target.find('.s_rating_inactive_icons');
         this.$target.find('.s_rating_icons i').remove();
@@ -117,13 +127,13 @@ options.registry.Rating = options.Class.extend({
             }
         }
         this._renderIcons();
-    },
+    }
     /**
      * Renders icons with selected fonts.
      *
      * @private
      */
-    _renderIcons: function () {
+    _renderIcons() {
         const icons = {
             'fa-star': 'fa-star-o',
             'fa-thumbs-up': 'fa-thumbs-o-up',
@@ -137,5 +147,11 @@ options.registry.Rating = options.Class.extend({
         const $inactiveIcons = this.$target.find('.s_rating_inactive_icons > i');
         $activeIcons.removeClass().addClass(faClassActiveIcons);
         $inactiveIcons.removeClass().addClass(faClassInactiveIcons);
-    },
+    }
+}
+
+registerMassMailingOption("Rating", {
+    Class: RatingOption,
+    template: "website.s_rating_option",
+    selector: ".s_rating",
 });

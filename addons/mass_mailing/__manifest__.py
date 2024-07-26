@@ -159,7 +159,6 @@
             ('include', 'web_editor.assets_snippets_menu'),
             'mass_mailing/static/src/js/snippets.editor.js',
             'mass_mailing/static/src/js/snippets.registry.js',
-            'mass_mailing/static/src/js/design_tab.xml',
             'mass_mailing/static/src/xml/mass_mailing.editor.xml',
         ],
         'web.assets_frontend': [
@@ -174,6 +173,7 @@
             'mass_mailing/static/src/snippets/s_media_list/options.js',
             'mass_mailing/static/src/snippets/s_showcase/options.js',
             'mass_mailing/static/src/snippets/s_rating/options.js',
+            'mass_mailing/static/src/snippets/s_rating/options.xml',
             'mass_mailing/static/tests/mass_mailing_html_tests.js',
         ],
     },

@@ -24,10 +24,12 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
             'website_mass_mailing/static/src/xml/*.xml',
         ],
         'website.assets_wysiwyg': [
-            'website_mass_mailing/static/src/js/website_mass_mailing.editor.js',
             'website_mass_mailing/static/src/js/mass_mailing_form_editor.js',
             'website_mass_mailing/static/src/scss/website_mass_mailing_edit_mode.scss',
-            'website_mass_mailing/static/src/snippets/s_popup/options.js',
+            'website_mass_mailing/static/src/snippets/s_newsletter_block/options.js',
+            'website_mass_mailing/static/src/snippets/s_newsletter_block/options.xml',
+            'website_mass_mailing/static/src/snippets/s_newsletter_subscribe_form/options.js',
+            'website_mass_mailing/static/src/snippets/s_newsletter_subscribe_popup/options.js',
         ],
         'web.assets_tests': [
             'website_mass_mailing/static/tests/**/*',

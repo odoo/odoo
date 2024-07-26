@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website_mass_mailing.s_newsletter_block_template_options">
+        <xpath expr="//div[1]" position="before">
+            <WeSelect title.translate="Template"
+                      name="'newsletter_template_opt'"
+                      attributeName="'newsletterTemplate'"
+                      attributeDefaultValue="'email'">
+                <WeButton tooltip.translate="Email Subscription"
+                          selectTemplate="'website_mass_mailing.s_newsletter_block_default_template'"
+                          selectDataAttribute="'email'"
+                          name="'email_opt'">
+                    Email Subscription
+                </WeButton>
+                <WeButton tooltip.translate="Form Subscription"
+                          selectTemplate="'website_mass_mailing.s_newsletter_block_form_template'"
+                          selectDataAttribute="'form'"
+                          name="'form_opt'">
+                    Form Subscription
+                </WeButton>
+            </WeSelect>
+        </xpath>
+    </t>
+
+    <t t-name="website_mass_mailing.newsletter_mailing_list_options">
+        <xpath expr="//div[1]" position="before">
+            <WeSelect title.translate="Newsletter" attributeName="'listId'" dependencies="'!form_opt'">
+                <t t-if="renderContext.mailingLists">
+                    <t t-foreach="renderContext.mailingLists" t-as="mailingList" t-key="mailingList[0]">
+                        <WeButton selectDataAttribute="mailingList[0].toString()" t-esc="mailingList[1]"/>
+                    </t>
+                </t>
+            </WeSelect>
+            <WeRow title.translate="Display Thanks Message">
+                <WeCheckbox toggleThanksMessage="'true'" noPreview="'true'" dependencies="'!form_opt'"/>
+            </WeRow>
+            <WeRow title.translate="Show reCaptcha Policy">
+                <WeCheckbox t-if="renderContext.recaptcha_public_key" toggleRecaptchaLegal="''" noPreview="'true'"/>
+            </WeRow>
+        </xpath>
+    </t>
+
+</templates>
