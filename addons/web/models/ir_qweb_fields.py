@@ -86,10 +86,14 @@ class Image(models.AbstractModel):
         itemprop = None
         if options.get('itemprop'):
             itemprop = options['itemprop']
+        mimetype = None
+        if options.get('mimetype'):
+            mimetype = options['mimetype']
 
         atts = OrderedDict()
         atts["src"] = src
         atts["itemprop"] = itemprop
+        atts["mimetype"] = mimetype
         atts["class"] = classes
         atts["style"] = options.get('style')
         atts["width"] = options.get('width')

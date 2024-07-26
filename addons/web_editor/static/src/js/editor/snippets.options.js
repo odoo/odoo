@@ -6516,7 +6516,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @returns {String} The right mimetype used to apply options on image.
      */
     _getImageMimetype(img) {
-        return img.dataset.mimetype;
+        return img.dataset.mimetype || img.getAttribute('mimetype');
     },
     /**
      * @private
