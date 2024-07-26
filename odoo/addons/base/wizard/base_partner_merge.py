@@ -229,6 +229,7 @@ class MergePartnerAutomatic(models.TransientModel):
              WHERE _ip2.res_id = %(destination_id)s
              AND _ip2.fields_id = _ip1.fields_id
              AND _ip2.company_id = _ip1.company_id
+             OR (_ip2.company_id IS NULL AND _ip1.company_id IS NULL)
         )""", params)
 
     def _get_summable_fields(self):
