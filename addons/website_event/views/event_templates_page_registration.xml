@@ -216,14 +216,14 @@
         <div t-attf-class="d-flex align-items-center flex-wrap gap-2 {{'flex-basis-50 flex-basis-md-auto' if event.is_one_day else 'mt-3'}}">
             <small class="text-muted">Add to calendar:</small>
             <div t-attf-class="d-flex align-items-center flex-shrink-0 flex-grow-1 {{'gap-1 gap-md-2' if event.is_one_day else 'gap-2'}}">
-                <a t-att-href="iCal_url" class="btn btn-light" title="Add to iCal">
+                <a t-att-href="iCal_url" class="btn btn-light o_wevent_add_to_ical" title="Add to iCal">
                     <i role="img" class="fa fa-apple"/>
                 </a>
-                <a t-att-href="iCal_url" class="btn btn-light" title="Add to Outlook">
-                    <i role="img" class="fa fa-windows"/>
+                <a t-att-href="iCal_url" class="btn btn-light o_wevent_add_to_outlook" title="Add to Outlook">
+                    <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" loading="lazy"/>
                 </a>
-                <a t-att-href="google_url" class="btn btn-light" title="Add to Google" target="_blank">
-                    <i role="img" class="fa fa-google"/>
+                <a t-att-href="google_url" class="btn btn-light o_wevent_add_to_google_calendar" title="Add to Google" target="_blank">
+                    <img src="/event/static/src/img/google-calendar.svg" alt="Google Agenda" loading="lazy"/>
                 </a>
             </div>
         </div>
@@ -319,56 +319,40 @@
                     <u><a class="h4 text-primary" t-out="event.name" t-att-href="event.website_url" /></u>
                 </div>
             </div>
-            <div t-if="attendees" class="row mb-3">
-                <div class="col-12 mb-2">
-                    <a class="btn btn-primary" title="Download All Tickets" target="_blank"
-                        t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
-                        Download Tickets <i class="ms-1 fa fa-download"/>
-                    </a>
-                </div>
-            </div>
-            <div class="row mb-3 o_wereg_confirmed_attendees">
-                <div class="col-md-4 col-xs-12 mt-3" t-foreach="attendees" t-as="attendee">
-                    <div class="d-flex flex-column">
-                        <span t-if="attendee.name"  class="fw-bold text-truncate">
-                            <t t-out="attendee.name"/>
-                        </span>
-                        <span t-if="attendee.email" class="text-truncate">
-                            <i class="fa fa-envelope me-2"/>
-                            <t t-out="attendee.email"/>
-                        </span>
-                        <span t-if="attendee.phone">
-                            <i class="fa fa-phone me-2"/>
-                            <t t-out="attendee.phone"/>
-                        </span>
-                        <span>
-                            <i class="fa fa-ticket me-2"/>
-                            <t t-if="attendee.event_ticket_id">
-                                <t t-out="attendee.event_ticket_id.name"/> (Ref: <t t-out="attendee.id"/>)
-                            </t>
-                            <t t-else="">Ref: <t t-out="attendee.id"/></t>
-                        </span>
+            <div class="d-flex flex-column justify-content-between flex-lg-row">
+                <div>
+                    <t t-if="attendees" t-call="website_event.registration_ticket_access"/>
+                    <div class="mt-4">
+                        <h5>Don't miss out!</h5>
+                        <small>Add this event to your calendar</small>
+                        <div id="add_to_calendar" class="o_event_add_to_calendar_btns d-flex flex-wrap gap-3 mt-2">
+                            <a role="button" class="o_outlook_calendar btn btn-block bg-white" t-att-href="iCal_url">
+                                <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" loading="lazy"/>
+                                Add to iCal/Outlook
+                            </a>
+                            <a role="button" class="o_google_calendar btn btn-block bg-white" t-att-href="google_url">
+                                <img src="/event/static/src/img/google-calendar.svg" alt="Google Agenda" loading="lazy"/>
+                                Add to Google Agenda
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col">
+                <div class="mt-4 mt-lg-0">
+                    <h5>Event Details</h5>
                     <div class="row">
-                        <div class="col-2 col-md-1">
+                        <div class="col-auto">
                             <b>Start</b>
                         </div>
-                        <div class="col ps-0">
+                        <div class="col-auto ps-0">
                             <span t-out="event.date_begin_located"/>
-                            (<span t-out="event.date_tz"/>)
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-2 col-md-1">
+                        <div class="col-auto">
                             <b>End</b>
                         </div>
-                        <div class="col ps-0">
+                        <div class="col-auto ps-0">
                             <span t-out="event.date_end_located"/>
-                            (<span t-out="event.date_tz"/>)
                         </div>
                     </div>
                     <div class="mt-4">
@@ -385,19 +369,22 @@
                             "fields": ["phone", "mobile", "email"]
                             }'/>
                     </div>
-                    <div id="add_to_calendar" class="mt-4 d-flex flex-column flex-md-row">
-                        <a role="button" class="btn btn-primary" t-att-href="iCal_url">
-                            <i class="fa fa-fw fa-calendar"/> Add to iCal/Outlook
-                        </a>
-                        <a role="button" class="btn btn-primary ms-md-2 mt-2 mt-md-0" t-att-href="google_url" target='_blank'>
-                            <i class="fa fa-fw fa-calendar"/> Add to Google Calendar
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
         <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Lead Generation' t-attf-data-event-params='{"CTA": "Event Registration"}' />
     </t>
+</template>
+
+<template id="registration_ticket_access" name="Registration Ticket Access">
+    <div class="row mb-3 o_wevent_registration_ticket_access">
+        <div class="col-12 mb-2 d-flex flex-column flex-md-row align-items-stretch align-items-md-baseline justify-content-md-start">
+            <a class="btn btn-primary o_wevent_download_ticket_btn" title="Download All Tickets" target="_blank"
+                t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
+                Download Tickets <i class="ms-1 fa fa-download"/>
+            </a>
+        </div>
+    </div>
 </template>
 
 <!-- Button to configure Tickets -->
