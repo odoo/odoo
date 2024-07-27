@@ -225,7 +225,10 @@ const handleConsoleIssues = (test, shouldSuppress) => {
             };
         };
 
-        const originalMethods = { ...globalThis.console };
+        const originalMethods = {
+            error: globalThis.console.error,
+            warn: globalThis.console.warn,
+        };
         $assign(globalThis.console, {
             error: suppressIssueLogger("ERROR", "#9f1239"),
             warn: suppressIssueLogger("WARNING", "#f59e0b"),
@@ -341,8 +344,8 @@ export class Runner {
     suites = new Map();
     /** @type {Suite[]} */
     suiteStack = [];
-    /** @type {Set<Tag>} */
-    tags = new Set();
+    /** @type {Map<string, Tag>} */
+    tags = new Map();
     /** @type {Map<string, Test>} */
     tests = new Map();
     /** @type {string | RegExp} */
@@ -1180,7 +1183,7 @@ export class Runner {
         let skip = false;
         let ignoreSkip = false;
         for (const tag of job.tags) {
-            this.tags.add(tag);
+            this.tags.set(tag.name, tag);
             switch (tag.name) {
                 case Tag.DEBUG:
                     if (typeof this.debug !== "boolean" && this.debug !== job) {
@@ -1226,11 +1229,11 @@ export class Runner {
     /**
      * @param {keyof Runner["config"]} configKey
      * @param {keyof Runner["state"]["includeSpecs"]} specKey
-     * @param {Iterable<string>} valuesIter
+     * @param {Map<string, any>} valuesMap
      */
-    _checkUrlValidity(configKey, specKey, valuesIter) {
+    _checkUrlValidity(configKey, specKey, valuesMap) {
         const values = this.state.includeSpecs[specKey];
-        const availableValues = new Set(valuesIter);
+        const availableValues = new Set(valuesMap.keys());
         for (const [key, incLevel] of Object.entries(values)) {
             if (Math.abs(incLevel) === INCLUDE_LEVEL.url && !availableValues.has(key)) {
                 delete values[key];
@@ -1482,13 +1485,13 @@ export class Runner {
 
         // Cleanup invalid IDs and tags from URL
         if (this.config.suite) {
-            this._checkUrlValidity("suite", "suites", this.suites.keys());
+            this._checkUrlValidity("suite", "suites", this.suites);
         }
         if (this.config.tag) {
             this._checkUrlValidity("tag", "tags", this.tags);
         }
         if (this.config.test) {
-            this._checkUrlValidity("test", "tests", this.tests.keys());
+            this._checkUrlValidity("test", "tests", this.tests);
         }
 
         this._populateState = true;
