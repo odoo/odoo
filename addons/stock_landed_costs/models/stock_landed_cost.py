@@ -127,8 +127,8 @@ class StockLandedCost(models.Model):
             cost_to_add_byproduct = defaultdict(lambda: 0.0)
             cost_to_add_bylot = defaultdict(lambda: 0.0)
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
-                remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
-                linked_layer = line.move_id.stock_valuation_layer_ids
+                remaining_qty = sum(line.move_id._get_stock_valuation_layer_ids().mapped('remaining_qty'))
+                linked_layer = line.move_id._get_stock_valuation_layer_ids()
 
                 # Prorate the value at what's still in stock
                 cost_to_add = (remaining_qty / line.move_id.quantity) * line.additional_landed_cost
@@ -232,7 +232,7 @@ class StockLandedCost(models.Model):
                 'product_id': move.product_id.id,
                 'move_id': move.id,
                 'quantity': qty,
-                'former_cost': sum(move.stock_valuation_layer_ids.mapped('value')),
+                'former_cost': sum(move._get_stock_valuation_layer_ids().mapped('value')),
                 'weight': move.product_id.weight * qty,
                 'volume': move.product_id.volume * qty
             }
