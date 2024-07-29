@@ -4,13 +4,14 @@
 from itertools import groupby
 
 from odoo import api, fields, models
-from odoo.osv import expression
 from odoo.tools import format_amount
-from odoo.tools.sql import column_exists, create_column, create_index
+from odoo.tools.sql import column_exists, create_column
 
 
 class SaleOrderLine(models.Model):
     _inherit = ["sale.order.line"]
+
+    _name_search_services_index = models.Index("(order_id DESC, sequence, id) WHERE is_service IS TRUE")
 
     # used to know if generate a task and/or a project, depending on the product settings
     is_service = fields.Boolean("Is a Service", compute='_compute_is_service', store=True, compute_sudo=True, export_string_translation=False)
@@ -50,14 +51,6 @@ class SaleOrderLine(models.Model):
                 WHERE pp.id = line.product_id
             """)
         return super()._auto_init()
-
-    def init(self):
-        res = super().init()
-        query_domain_sale_line = expression.expression([('is_service', '=', True)], self).query
-        create_index(self._cr, 'sale_order_line_name_search_services_index',
-                     self._table, ('order_id DESC', 'sequence', 'id'),
-                     where=query_domain_sale_line.where_clause)
-        return res
 
     def _additional_name_per_id(self):
         name_per_id = super()._additional_name_per_id() if not self.env.context.get('hide_partner_ref') else {}

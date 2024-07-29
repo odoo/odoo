@@ -19,7 +19,6 @@ from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.osv import expression
 from odoo.tools import (
-    create_index,
     date_utils,
     float_compare,
     float_is_zero,
@@ -30,7 +29,6 @@ from odoo.tools import (
     frozendict,
     get_lang,
     groupby,
-    index_exists,
     OrderedSet,
     SQL,
 )
@@ -694,7 +692,7 @@ class AccountMove(models.Model):
         search='_search_next_payment_date',
     )
 
-    _checked_idx = models.Index("(journal_id) WHERE (checked = FALSE)")
+    _checked_idx = models.Index("(journal_id) WHERE (checked IS NOT TRUE)")
     _payment_idx = models.Index("(journal_id, state, payment_state, move_type, date)")
     _unique_name = models.UniqueIndex(
         "(name, journal_id) WHERE (state = 'posted'AND name != '/')",
@@ -702,7 +700,7 @@ class AccountMove(models.Model):
     )
     _journal_id_company_id_idx = models.Index('(journal_id, company_id, date)')
     # used in <account.journal>._query_has_sequence_holes
-    _made_gaps = models.Index('(journal_id, state, payment_state, move_type, date) WHERE (made_sequence_gap = TRUE)')
+    _made_gaps = models.Index('(journal_id, state, payment_state, move_type, date) WHERE (made_sequence_gap IS TRUE)')
 
     def _auto_init(self):
         super()._auto_init()

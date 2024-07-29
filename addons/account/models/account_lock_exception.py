@@ -1,6 +1,5 @@
 from odoo import _, api, fields, models, Command
 from odoo.osv import expression
-from odoo.tools import create_index
 from odoo.tools.misc import format_datetime
 from odoo.exceptions import UserError, ValidationError
 
@@ -95,15 +94,7 @@ class AccountLock_Exception(models.Model):
         help="The date the Purchase Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
     )
 
-    def init(self):
-        super().init()
-        create_index(
-            self.env.cr,
-            indexname='account_lock_exception_company_id_end_datetime_idx',
-            tablename=self._table,
-            expressions=['company_id', 'user_id', 'end_datetime'],
-            where="active = TRUE"
-        )
+    _company_id_end_datetime_idx = models.Index("(company_id, user_id, end_datetime) WHERE active IS TRUE")
 
     def _compute_display_name(self):
         for record in self:
