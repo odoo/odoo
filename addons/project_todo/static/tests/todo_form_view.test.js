@@ -23,10 +23,12 @@ beforeEach(() => {
             <tree js_class="todo_list">
                 <field name="name" nolabel="1"/>
                 <field name="state" widget="todo_done_checkmark" nolabel="1"/>
+                <field name="date_deadline" widget="remaining_days"/>
             </tree>`,
         form: `
             <form string="To-do" class="o_todo_form_view" js_class="todo_form">
                 <field name="name"/>
+                <field name="date_deadline" widget="remaining_days"/>
             </form>`,
         search: `
             <search/>`,
@@ -88,5 +90,30 @@ test("Check that todo_form view contains the TodoDoneCheckmark and TodoEditableB
 
     expect(".o_todo_done_button").toHaveCount(1, {
         message: "The todo should have the appropriate class TodoDoneCheckmark",
+    });
+});
+
+test("Check that the todo_form view contains the RemainingDays widget", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "To-do",
+        res_model: "project.task",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "list"],
+            [false, "form"],
+        ],
+    });
+
+    // list view should contain deadline (the header and 3 cells)
+    expect('.o_remaining_days_cell').toHaveCount(4, {
+        message: "The list view should contain the deadline",
+    });
+
+    // form view should contain the remaining days widget
+    await contains(queryFirst(".o_data_cell")).click();
+    await animationFrame();
+    expect(".o_field_remaining_days").toHaveCount(1, {
+        message: "The Form of Todo should have deadline field (o_field_remaining_days)",
     });
 });
