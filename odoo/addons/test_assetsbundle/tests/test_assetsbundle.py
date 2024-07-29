@@ -2015,7 +2015,7 @@ class TestErrorManagement(HttpCase):
 
     def test_assets_bundle_css_error_frontend(self):
         whatever = {'website_id': website.search([], limit=1).id} if (website := self.env.get('website')) else {}
-        self.env['ir.qweb']._get_asset_bundle('web.assets_frontend', assets_params=whatever).css() # force pregeneration so that we have the base style
+        self.env['ir.qweb']._get_asset_bundle('web.assets_frontend', assets_params=whatever).css()  # force pregeneration so that we have the base style
         self.env['ir.asset'].create({
             'name': 'Css error',
             'bundle': 'web.assets_frontend',

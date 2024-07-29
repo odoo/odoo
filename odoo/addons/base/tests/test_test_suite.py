@@ -138,6 +138,11 @@ class TestRunnerLoggingCommon(TransactionCase):
 
 
 class TestRunnerLogging(TestRunnerLoggingCommon):
+    def setUp(self):
+        old_level = _logger.level
+        _logger.setLevel(logging.INFO)
+        self.addCleanup(_logger.setLevel, old_level)
+        return super().setUp()
 
     def test_has_add_error(self):
         self.assertTrue(hasattr(self, '_addError'))
