@@ -143,10 +143,11 @@ def filter_fields(data):
                 fields_by_model[model].add(matching["field"])
     else:
         for pivot in data["pivots"].values():
-            model = pivot["model"]
-            field = pivot.get("fieldMatching", {}).get("chain")
-            if field:
-                fields_by_model[model].add(field)
+            if pivot.get("type", "ODOO") == "ODOO":
+                model = pivot["model"]
+                field = pivot.get("fieldMatching", {}).get("chain")
+                if field:
+                    fields_by_model[model].add(field)
         for _list in data["lists"].values():
             model = _list["model"]
             field = _list.get("fieldMatching", {}).get("chain")
@@ -175,9 +176,10 @@ def extract_fields(extract_fn, items):
 
 def fields_in_spreadsheet(data):
     """return all fields, grouped by model, used in the spreadsheet"""
+    odoo_pivots = (pivot for pivot in data.get("pivots", dict()).values() if pivot.get("type", "ODOO") == "ODOO")
     all_fields = chain(
         extract_fields(list_fields, data.get("lists", dict()).values()).items(),
-        extract_fields(pivot_fields, data.get("pivots", dict()).values()).items(),
+        extract_fields(pivot_fields, odoo_pivots).items(),
         extract_fields(chart_fields, odoo_charts(data)).items(),
         extract_fields(odoo_view_fields, odoo_view_links(data)).items(),
         filter_fields(data).items(),
