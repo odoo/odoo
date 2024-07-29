@@ -465,7 +465,7 @@ class ProductProduct(models.Model):
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
-    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id')
+    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'use_partner_name')
     def _compute_display_name(self):
 
         def get_display_name(name, code):
@@ -473,7 +473,7 @@ class ProductProduct(models.Model):
                 return f'[{code}] {name}'
             return name
 
-        partner_id = self._context.get('partner_id')
+        partner_id = self._context.get('partner_id') if self.env.context.get('use_partner_name', True) else self.env['res.partner']
         if partner_id:
             partner_ids = [partner_id, self.env['res.partner'].browse(partner_id).commercial_partner_id.id]
         else:

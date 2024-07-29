@@ -235,7 +235,7 @@
                                         readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
                                         required="not display_type"
                                         width="35%"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
+                                        context="{'partner_id': parent.partner_id, 'quantity': product_qty, 'company_id': parent.company_id, 'use_partner_name': False}"
                                         force_save="1" domain="[('purchase_ok', '=', True)]"/>
                                     <field name="name" widget="section_and_note_text"/>
                                     <field name="date_planned" optional="hide" required="not display_type" force_save="1"/>
