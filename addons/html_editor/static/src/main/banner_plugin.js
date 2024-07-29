@@ -69,7 +69,7 @@ export class BannerPlugin extends Plugin {
             this.document,
             `<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="${title}">${emoji}</i>
-                <div class="w-100 ms-3" contenteditable="true">
+                <div class="w-100 px-3" contenteditable="true">
                     <p><br></p>
                 </div>
             </div`
