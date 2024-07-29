@@ -283,7 +283,7 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             // Check searches
             ProductScreenPartnerList.searchCustomerValueAndClear("John Doe"),
             ProductScreenPartnerList.searchCustomerValueAndClear("1 street of astreet"),
-            ProductScreenPartnerList.searchCustomerValueAndClear("99999"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("26432685463"),
             ProductScreenPartnerList.searchCustomerValueAndClear("Acity"),
             ProductScreenPartnerList.searchCustomerValueAndClear("United States"),
             ProductScreenPartnerList.searchCustomerValueAndClear("1234567890"),
