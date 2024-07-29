@@ -1,4 +1,4 @@
-Israel, 2024-06-28
+Israel, 2024-07-29
 
 Retama Software Solutions agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
