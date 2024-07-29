@@ -23,6 +23,12 @@ export function selectOrder(orderName) {
         },
     ];
 }
+export function selectOrderline(name, qty, price) {
+    return {
+        trigger: `.order-container .orderline:contains(${name}).orderline:contains(${qty}).orderline:contains(${price})`,
+        run: "click",
+    };
+}
 export function doubleClickOrder(orderName) {
     return [
         {
@@ -110,6 +116,9 @@ export function clickControlButton(name) {
 export function confirmRefund() {
     return [
         ProductScreen.clickReview(),
+        {
+            trigger: ".ticket-screen .btn-primary.pay-order-button",
+        },
         {
             trigger: ".ticket-screen .btn-primary.pay-order-button",
             run: "click",

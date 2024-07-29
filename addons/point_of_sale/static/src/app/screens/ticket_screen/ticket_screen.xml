@@ -47,7 +47,7 @@
                     </div>
                     <div class="orders overflow-y-auto flex-grow-1">
                         <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
-                        <t t-if="_filteredOrderList.length !== 0">
+                        <t t-if="_filteredOrderList.length !== 0 and fetchSyncedOrders.status !== 'loading'">
                             <div class="header-row d-flex text-bg-700 fw-bolder" t-att-class="{ 'd-none': ui.isSmall }">
                                 <div class="col wide p-2">Date</div>
                                 <div class="col wide p-2">Receipt Number</div>
@@ -130,8 +130,9 @@
                 <div class="leftpane d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 bg-200" t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'right'">
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
-                    <t t-if="_selectedSyncedOrder?.get_orderlines()?.length" > 
-                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 border-bottom" >
+                    <t t-set="_hasItemsToRefund" t-value="getHasItemsToRefund(_selectedSyncedOrder)" />
+                    <t t-if="_selectedSyncedOrder?.get_orderlines()?.length" >
+                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !_hasItemsToRefund }" class="py-2 px-3 border-bottom" >
                             Select the product(s) to refund and set the quantity
                         </div>
                         <OrderWidget lines="_selectedSyncedOrder.lines" t-slot-scope="scope"
@@ -176,7 +177,7 @@
                                         actionName="constructor.numpadActionName"
                                         actionType="'refund'"
                                         actionToTrigger.bind="onDoRefund"
-                                        isActionButtonHighlighted="getHasItemsToRefund()" />
+                                        isActionButtonHighlighted="_hasItemsToRefund" />
                                     <Numpad buttons="getNumpadButtons()" class="'max-width-325px'"/>
                                 </div>
                             </t>
