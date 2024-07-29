@@ -286,11 +286,11 @@ class TestPosMrp(TestPointOfSaleCommon):
         bom_product_form = Form(self.env['mrp.bom'])
         bom_product_form.product_id = self.kit
         bom_product_form.product_tmpl_id = self.kit.product_tmpl_id
-        bom_product_form.product_qty = 1.0
+        bom_product_form.product_qty = 2.0
         bom_product_form.type = 'phantom'
         with bom_product_form.bom_line_ids.new() as bom_line:
             bom_line.product_id = self.component_a
-            bom_line.product_qty = 1.0
+            bom_line.product_qty = 6.0
             bom_line.product_uom_id = self.env.ref('uom.product_uom_unit')
         self.bom_a = bom_product_form.save()
 
@@ -313,7 +313,7 @@ class TestPosMrp(TestPointOfSaleCommon):
                         'product_id': self.kit.id,
                         'price_subtotal': 2,
                         'price_subtotal_incl': 2,
-                        'qty': 1,
+                        'qty': 2,
                         'tax_ids': []}],
                         ],
                 'name': 'Order 00042-003-0014',
@@ -332,6 +332,6 @@ class TestPosMrp(TestPointOfSaleCommon):
         order = self.env['pos.order'].browse(order[0]['id'])
         accounts = self.kit.product_tmpl_id.get_product_accounts()
         expense_line = order.account_move.line_ids.filtered(lambda l: l.account_id.id == accounts['expense'].id)
-        self.assertEqual(expense_line.filtered(lambda l: l.product_id == self.kit).debit, 1000.0)
+        self.assertEqual(expense_line.filtered(lambda l: l.product_id == self.kit).debit, 6000.0)
         interim_line = order.account_move.line_ids.filtered(lambda l: l.account_id.id == accounts['stock_output'].id)
-        self.assertEqual(interim_line.filtered(lambda l: l.product_id == self.kit).credit, 1000.0)
+        self.assertEqual(interim_line.filtered(lambda l: l.product_id == self.kit).credit, 6000.0)

@@ -7,7 +7,6 @@ import lxml
 import os
 import requests
 import sys
-import tempfile
 import zipfile
 from collections import defaultdict
 from io import BytesIO
@@ -15,11 +14,13 @@ from os.path import join as opj
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
+from odoo.http import request
 from odoo.modules.module import adapt_version, MANIFEST_NAMES
 from odoo.osv.expression import is_leaf
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
 from odoo.tools import file_open, file_open_temporary_directory, ormcache
+from odoo.tools.translate import get_po_paths_env, TranslationImporter
 
 _logger = logging.getLogger(__name__)
 
@@ -61,6 +62,14 @@ class IrModule(models.Model):
                 module.icon_image = attachment.datas
 
     def _import_module(self, module, path, force=False, with_demo=False):
+        # Do not create a bridge module for these neutralizations.
+        # Do not involve specific website during import by resetting
+        # information used by website's get_current_website.
+        self = self.with_context(website_id=None)  # noqa: PLW0642
+        force_website_id = None
+        if request and request.session.get('force_website_id'):
+            force_website_id = request.session.pop('force_website_id')
+
         known_mods = self.search([])
         known_mods_names = {m.name: m for m in known_mods}
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
@@ -143,6 +152,10 @@ class IrModule(models.Model):
                         type='binary',
                         datas=data,
                     )
+                    # Do not create a bridge module for this check.
+                    if 'public' in IrAttachment._fields:
+                        # Static data is public and not website-specific.
+                        values['public'] = True
                     attachment = IrAttachment.sudo().search([('url', '=', url_path), ('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')])
                     if attachment:
                         attachment.write(values)
@@ -194,8 +207,24 @@ class IrModule(models.Model):
             'res_id': asset.id,
         } for asset in created_assets])
 
+        translation_importer = TranslationImporter(self.env.cr, verbose=False)
+        for lang_ in self.env['res.lang'].get_installed():
+            lang = lang_[0]
+            is_lang_imported = False
+            for po_path in get_po_paths_env(module, lang, env=self.env):
+                translation_importer.load_file(po_path, lang)
+                is_lang_imported = True
+            if lang != 'en_US' and not is_lang_imported:
+                _logger.info('module %s: no translation for language %s', module, lang)
+        translation_importer.save(overwrite=True)
+
         mod._update_from_terp(terp)
         _logger.info("Successfully imported module '%s'", module)
+
+        if force_website_id:
+            # Restore neutralized website_id.
+            request.session['force_website_id'] = force_website_id
+
         return True
 
     @api.model
@@ -241,7 +270,8 @@ class IrModule(models.Model):
                     mod_name = filename.split('/')[0]
                     is_data_file = filename in module_data_files[mod_name]
                     is_static = filename.startswith('%s/static' % mod_name)
-                    if is_data_file or is_static:
+                    is_translation = filename.startswith('%s/i18n' % mod_name) and filename.endswith('.po')
+                    if is_data_file or is_static or is_translation:
                         z.extract(file, module_dir)
 
                 dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]

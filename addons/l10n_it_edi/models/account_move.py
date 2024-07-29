@@ -116,7 +116,7 @@ class AccountMove(models.Model):
     def _compute_l10n_it_partner_pa(self):
         for move in self:
             partner = move.commercial_partner_id
-            move.l10n_it_partner_pa = partner and partner._l10n_it_edi_is_public_administration()
+            move.l10n_it_partner_pa = partner and (partner._l10n_it_edi_is_public_administration() or len(partner.l10n_it_pa_index or '') == 7)
 
     @api.depends('move_type', 'line_ids.tax_tag_ids')
     def _compute_l10n_it_edi_is_self_invoice(self):
@@ -251,7 +251,7 @@ class AccountMove(models.Model):
                 gross_price = line['price_subtotal'] / (1 - line['discount'] / 100.0)
                 line['discount_amount_before_dispatching'] = (gross_price - line['price_subtotal']) * inverse_factor
                 line['gross_price_subtotal'] = line['currency'].round(gross_price * inverse_factor)
-                line['price_unit'] = line['currency'].round(gross_price / abs(line['quantity']))
+                line['price_unit'] = gross_price / abs(line['quantity'])
             else:
                 line['gross_price_subtotal'] = line['currency'].round(line['price_unit'] * line['quantity'])
                 line['discount_amount_before_dispatching'] = line['gross_price_subtotal']
@@ -289,7 +289,7 @@ class AccountMove(models.Model):
                 'description': description or 'NO NAME',
                 'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor,
                 'unit_price': line_dict['price_unit'],
-                'discount_amount': line_dict['discount_amount'] - line_dict['discount_amount_before_dispatching'],
+                'discount_amount': ((line_dict['discount_amount'] - line_dict['discount_amount_before_dispatching']) / line.quantity) if line.quantity else 0,
                 'vat_tax': line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0),
                 'downpayment_moves': downpayment_moves,
                 'discount_type': (
@@ -1190,6 +1190,10 @@ class AccountMove(models.Model):
             if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_date and move.l10n_it_origin_document_date > fields.Date.today()):
                 message = _("The Origin Document Date cannot be in the future.")
                 errors['move_future_origin_document_date'] = build_error(message=message, records=moves)
+        if pa_moves := self.filtered(lambda move: len(move.commercial_partner_id.l10n_it_pa_index or '') == 7):
+            if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type and move.l10n_it_cig and move.l10n_it_cup):
+                message = _("CIG/CUP fields of partner(s) are present, please fill out Origin Document Type field in the Electronic Invoicing tab.")
+                errors['move_missing_origin_document_field'] = build_error(message=message, records=moves)
         return errors
 
     def _l10n_it_edi_export_taxes_check(self):

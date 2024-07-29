@@ -1312,7 +1312,9 @@ patch(Order.prototype, {
         let maxDiscount = reward.discount_max_amount || Infinity;
         if (reward.discount_mode === "per_point") {
             // Rewards cannot be partially offered to customers
-            const points = Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
+            const points = (["ewallet", "gift_card"].includes(reward.program_id.program_type)) ?
+                this._getRealCouponPoints(coupon_id) :
+                Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
             maxDiscount = Math.min(
                 maxDiscount,
                 reward.discount * points
@@ -1332,10 +1334,23 @@ patch(Order.prototype, {
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
         if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
+            const taxes_to_apply = discountProduct.taxes_id.map((id) => {
+                return { ...this.pos.taxes_by_id[id], price_include: true };
+            });
+            const tax_res = this.pos.compute_all(
+                taxes_to_apply,
+                -Math.min(maxDiscount, discountable),
+                1,
+                this.pos.currency.rounding
+            );
+            let new_price = tax_res["total_excluded"];
+            new_price += tax_res.taxes
+                .filter((tax) => this.pos.taxes_by_id[tax.id].price_include)
+                .reduce((sum, tax) => (sum += tax.amount), 0);
             return [
                 {
                     product: discountProduct,
-                    price: -Math.min(maxDiscount, discountable),
+                    price: new_price,
                     quantity: 1,
                     reward_id: reward.id,
                     is_reward_line: true,
@@ -1343,7 +1358,7 @@ patch(Order.prototype, {
                     points_cost: pointCost,
                     reward_identifier_code: rewardCode,
                     merge: false,
-                    tax_ids: [],
+                    taxIds: discountProduct.taxes_id,
                 },
             ];
         }

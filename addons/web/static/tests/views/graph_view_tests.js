@@ -69,6 +69,11 @@ export function checkLabels(assert, graph, expectedLabels) {
     assert.deepEqual(labels, expectedLabels);
 }
 
+export function checkYTicks(assert, graph, expectedLabels) {
+    const labels = getChart(graph).scales.y.ticks.map((l) => l.label);
+    assert.deepEqual(labels, expectedLabels);
+}
+
 export function checkLegend(assert, graph, expectedLegendLabels) {
     expectedLegendLabels =
         expectedLegendLabels instanceof Array ? expectedLegendLabels : [expectedLegendLabels];
@@ -1110,6 +1115,56 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("format total in hh:mm when measure is unit_amount", async function (assert) {
+        assert.expect(11);
+        serverData.models["account.analytic.line"] = {
+            fields: {
+                unit_amount: {
+                    string: "Unit Amount",
+                    type: "float",
+                    group_operator: "sum",
+                    store: true,
+                },
+                project_id: {
+                    string: "Project",
+                    type: "many2one",
+                    relation: "project.project",
+                    store: true,
+                    sortable: true,
+                },
+            },
+            records: [{ id: 1, unit_amount: 8, project_id: false }],
+        };
+        const graph = await makeView({
+            serverData,
+            resModel: "account.analytic.line",
+            type: "graph",
+            arch: `
+                    <graph>
+                        <field name="unit_amount"/>
+                        <field name="unit_amount" type="measure" widget="float_time"/>
+                    </graph>`,
+        });
+        const { measure, fieldAttrs } = getGraphModelMetaData(graph);
+        assert.hasClass(target.querySelector(".o_graph_view"), "o_view_controller");
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
+        assert.strictEqual(measure, "unit_amount", `the measure should be "unit_amount"`);
+        checkLegend(assert, graph, "Unit Amount");
+        checkLabels(assert, graph, ["Total"]);
+        assert.strictEqual(
+            fieldAttrs[measure].widget,
+            "float_time",
+            "should be a float_time widget"
+        );
+        checkYTicks(assert, graph, ["00:00", "02:00", "04:00", "06:00", "08:00"]);
+        checkTooltip(
+            assert,
+            graph,
+            { title: "Unit Amount", lines: [{ label: "Total", value: "08:00" }] },
+            0
+        );
+    });
 
     QUnit.test("Stacked button visible in the line chart", async function (assert) {
         const graph = await makeView({

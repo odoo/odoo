@@ -1758,7 +1758,7 @@ class PosSession(models.Model):
                 'fields': [
                     'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
                     'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id', 'point_of_sale_use_ticket_qr_code',
-                    'point_of_sale_ticket_unique_code',
+                    'point_of_sale_ticket_unique_code', 'account_fiscal_country_id',
                 ],
             }
         }
@@ -1772,6 +1772,11 @@ class PosSession(models.Model):
             company['country'] = self.env['res.country'].search_read(**params_country['search_params'])[0]
         else:
             company['country'] = None
+
+        company['account_fiscal_country_id'] = self.env['res.country'].search_read(
+            domain=[('id', '=', company['account_fiscal_country_id'][0])],
+            fields=['code'],
+        )[0]
 
         return company
 
@@ -2189,8 +2194,7 @@ class PosSession(models.Model):
     def get_total_discount(self):
         amount = 0
         for line in self.env['pos.order.line'].search([('order_id', 'in', self._get_closed_orders().ids), ('discount', '>', 0)]):
-            original_price = line.tax_ids.compute_all(line.price_unit, line.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id)['total_included']
-            amount += original_price - line.price_subtotal_incl
+            amount += line._get_discount_amount()
 
         return amount
 

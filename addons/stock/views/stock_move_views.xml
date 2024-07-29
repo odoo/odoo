@@ -30,7 +30,7 @@
             <field name="model">stock.move</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Moves" create="0" default_order="date desc">
+                <tree string="Moves" create="0" default_order="date desc" duplicate ="0">
                     <field name="date" groups="base.group_no_one" decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
                     <field name="reference"/>
                     <field name="picking_type_id" column_invisible="True"/>
@@ -162,6 +162,7 @@
                     <field name="show_quant" invisible="1"/>
                     <field name="show_lots_text" invisible="1"/>
                     <field name="show_lots_m2o" invisible="1"/>
+                    <field name="quantity" invisible="1"/>
                     <group>
                         <group>
                             <field name="product_id" readonly="id or move_line_ids"/>

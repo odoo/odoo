@@ -1226,6 +1226,8 @@ class BaseModel(metaclass=MetaModel):
                     info = data_list[0]['info']
                     messages.append(dict(info, type='error', message=_(u"Unknown database error: '%s'", e)))
                 return
+            except UserError as e:
+                messages.append(dict(data_list[0]['info'], type='error', message=str(e)))
             except Exception:
                 pass
 
@@ -1247,7 +1249,8 @@ class BaseModel(metaclass=MetaModel):
                     errors += 1
                 except UserError as e:
                     info = rec_data['info']
-                    messages.append(dict(info, type='error', message=str(e)))
+                    if dict(info, type='error', message=str(e)) not in messages:
+                        messages.append(dict(info, type='error', message=str(e)))
                     errors += 1
                 except Exception as e:
                     _logger.debug("Error while loading record", exc_info=True)

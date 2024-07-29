@@ -723,6 +723,12 @@ class AccountAccount(models.Model):
 
         return super(AccountAccount, self).write(vals)
 
+    def _load_records_write(self, values):
+        if 'prefix' in values:
+            del values['code_digits']
+            del values['prefix']
+        super()._load_records_write(values)
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_journal_items(self):
         if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
