@@ -28,7 +28,7 @@ class Employee extends models.Model {
                         <div class="o_hierarchy_node_header">
                             <field name="name"/>
                         </div>
-                        <div class="o_hierarchy_node_body">
+                        <div>
                             <field name="parent_id"/>
                         </div>
                     </t>
