@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import _, api, fields, models
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 
@@ -8,7 +8,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     _name = "hr.leave.allocation.generate.multi.wizard"
     _description = 'Generate time off allocations for multiple employees'
 
-    name = fields.Char("Description")
+    name = fields.Char("Description", compute="_compute_name", store=True, readonly=False)
     duration = fields.Float(string="Allocation")
     holiday_status_id = fields.Many2one(
         "hr.leave.type", string="Time Off Type", required=True,
@@ -36,6 +36,23 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     date_from = fields.Date('Start Date', default=fields.Date.context_today, required=True)
     date_to = fields.Date('End Date')
+    notes = fields.Text('Reasons')
+
+    @api.depends('holiday_status_id', 'duration')
+    def _compute_name(self):
+        for allocation_multi in self:
+            allocation_multi.name = allocation_multi._get_title()
+
+    def _get_title(self):
+        self.ensure_one()
+        if not self.holiday_status_id:
+            return _("Allocation Request")
+        return _(
+            '%(name)s (%(duration)s %(request_unit)s(s))',
+            name=self.holiday_status_id.name,
+            duration=self.duration,
+            request_unit=self.request_unit
+        )
 
     def _get_employees_from_allocation_mode(self):
         self.ensure_one()
@@ -65,6 +82,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
             'date_from': self.date_from,
             'date_to': self.date_to,
             'accrual_plan_id': self.accrual_plan_id.id,
+            'notes': self.notes
         } for employee in employees]
 
     def action_generate_allocations(self):
