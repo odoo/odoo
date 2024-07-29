@@ -3,8 +3,8 @@
     height: auto !important;
     z-index: $o-mail-ChatBubble-zindex;
     border: none !important;
-    background-color: transparent;
-    padding: 0;
+    padding: 0 map-get($spacers, 2);
+    background-color: transparent !important;
 
     &:hover {
         .o-mail-ChatBubble-close {
@@ -13,6 +13,10 @@
         .o-mail-ChatBubble-counter {
             display: none;
         }
+    }
+
+    &:hover, &.o-active {
+        filter: brightness(1.1);
     }
 
     &.o-bouncing {
@@ -35,21 +39,29 @@
 }
 
 .o-mail-ChatBubble-close {
-    right: 2px;
-    top: 2px;
+    right: 3px;
+    top: -3px;
     z-index: 6;
     font-size: 11px;
     display: none;
+    padding: map-get($spacers, 1) / 2;
+    border: $border-width solid mix($o-gray-300, $o-gray-400);
+
+    &:not(:hover) {
+        color: $text-muted;
+    }
 
     &:hover {
         background-color: $o-gray-300 !important;
+        border-color: $o-gray-500;
     }
 }
 
 .o-mail-ChatBubble-counter {
     padding: 3px 6px;
     z-index: 7;
-    right: -2px;
+    top: -3px;
+    right: 3px;
     display: inline-flex;
 }
 
@@ -57,10 +69,12 @@
     max-width: 225px;
     right: $o-mail-ChatHub-bubblesWidth;
     z-index: $o-mail-ChatBubble-zindex - 1;
-
+    border-color: var(--ChatBubble-previewBorderColor, mix($o-gray-300, $o-gray-400)) !important;
+    
     & + .popover-arrow {
         // puts arrow above preview border
         &::before {
+            border-left-color: var(--ChatBubble-previewBorderColor, mix($o-gray-300, $o-gray-400)) !important;
             right: 1px !important;
         }
         &::after {
@@ -72,8 +86,9 @@
 
 .o-mail-ChatBubble-status {
     z-index: 6;
-    bottom: 2px;
-    right: -3px;
+    bottom: -2px;
+    right: 2px;
+    background-color: transparent;
 }
 
 @keyframes o-mail-ChatBubble-bouncing { 
