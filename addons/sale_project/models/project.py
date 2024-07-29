@@ -7,18 +7,44 @@ from collections import defaultdict
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
+<<<<<<< saas-17.1
 from odoo.tools import Query, SQL
 
+||||||| 6995d65437ba6b2cd0df7503d589260bedcce67d
+from odoo.tools import Query, SQL, OrderedSet
+
+=======
+from odoo.tools import Query, SQL, OrderedSet
+from odoo.tools.misc import unquote
+>>>>>>> afee723ab574d5dd285edca215c41738437c63a9
 
 
 class Project(models.Model):
     _inherit = 'project.project'
 
+    def _domain_sale_line_id(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            [
+                ('is_service', '=', True),
+                ('is_expense', '=', False),
+                ('state', '=', 'sale'),
+                ('order_partner_id', '=?', unquote("partner_id")),
+            ],
+        ])
+        return str(domain)
+
     allow_billable = fields.Boolean("Billable")
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
         compute="_compute_sale_line_id", store=True, readonly=False, index='btree_not_null',
+<<<<<<< saas-17.1
         domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'), ('order_partner_id', '=?', partner_id), ('is_downpayment', '=', False)]",
+||||||| 6995d65437ba6b2cd0df7503d589260bedcce67d
+        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'), ('order_partner_id', '=?', partner_id)]",
+=======
+        domain=_domain_sale_line_id,
+>>>>>>> afee723ab574d5dd285edca215c41738437c63a9
         help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
             " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
             "It can be modified on each task and timesheet entry individually if necessary.")
@@ -772,16 +798,37 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
+    def _domain_sale_line_id(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            [
+                '|', ('order_partner_id.commercial_partner_id', 'parent_of', unquote('partner_id if partner_id else []')),
+                    ('order_partner_id', '=?', unquote('partner_id')),
+                ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'),
+            ],
+        ])
+        return str(domain)
+
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', store=True, help="Sales order to which the task is linked.", group_expand="_group_expand_sales_order")
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item',
         copy=True, tracking=True, index='btree_not_null', recursive=True,
         compute='_compute_sale_line', store=True, readonly=False,
+<<<<<<< saas-17.1
         domain="""[
             '|', ('order_partner_id.commercial_partner_id.id', 'parent_of', partner_id if partner_id else []),
                  ('order_partner_id', '=?', partner_id),
             ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'), ('is_downpayment', '=', False),
         ]""",
+||||||| 6995d65437ba6b2cd0df7503d589260bedcce67d
+        domain="""[
+            '|', ('order_partner_id.commercial_partner_id.id', 'parent_of', partner_id if partner_id else []),
+                 ('order_partner_id', '=?', partner_id),
+            ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'),
+        ]""",
+=======
+        domain=_domain_sale_line_id,
+>>>>>>> afee723ab574d5dd285edca215c41738437c63a9
         help="Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
              "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
              "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually.")
