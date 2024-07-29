@@ -183,11 +183,18 @@ ul.o_checklist {
         }
     }
 }
-ul.o_checklist[dir="rtl"] > li:not(.oe-nested)::before {
+/*rtl:begin:ignore*/
+ul.o_checklist[dir="rtl"] li:not(.oe-nested)::before {
     left: auto;
     right: - $o-checklist-margin-left;
     text-align: right;
 }
+ul.o_checklist[dir="ltr"] li:not(.oe-nested)::before {
+    right: auto;
+    left: - $o-checklist-margin-left;
+    text-align: left;
+}
+/*rtl:end:ignore*/
 ol > li.o_indent, ul > li.o_indent {
     margin-left: 0;
     list-style: none;
