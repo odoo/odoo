@@ -449,9 +449,15 @@ class HrEmployeePrivate(models.Model):
         if self.resource_calendar_id and not self.tz:
             self.tz = self.resource_calendar_id.tz
 
+    def _remove_work_contact_id(self, user):
+        """ Remove work_contact_id for previous employee if the user is assigned to a new employee """
+        partner_employee_ids = user.partner_id.employee_ids.filtered(
+            lambda e: e.user_id != user if e.user_id else e.id != self._origin.id)
+        partner_employee_ids.work_contact_id = None
+
     def _sync_user(self, user, employee_has_image=False):
         vals = dict(
-            work_contact_id=user.partner_id.id,
+            work_contact_id=user.partner_id.id if user else self._origin.user_partner_id.id,
             user_id=user.id,
         )
         if not employee_has_image:
@@ -480,6 +486,7 @@ class HrEmployeePrivate(models.Model):
                 user = self.env['res.users'].browse(vals['user_id'])
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
                 vals['name'] = vals.get('name', user.name)
+                self._remove_work_contact_id(user)
         employees = super().create(vals_list)
         # Sudo in case HR officer doesn't have the Contact Creation group
         employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
@@ -519,10 +526,11 @@ class HrEmployeePrivate(models.Model):
             self.message_unsubscribe(self.work_contact_id.ids)
             if vals['work_contact_id']:
                 self._message_subscribe([vals['work_contact_id']])
-        if 'user_id' in vals:
+        if vals.get('user_id'):
             # Update the profile pictures with user, except if provided
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
                                         (bool(all(emp.image_1920 for emp in self)))))
+            self._remove_work_contact_id(self.env['res.users'].browse(vals['user_id']))
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
         res = super(HrEmployeePrivate, self).write(vals)
