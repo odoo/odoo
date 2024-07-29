@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         trigger: '.oe_login_form',
         run: function () {
             var orderId = browser.localStorage.getItem(orderIdKey);
-            var url = "/web#action=sale.action_orders&view_type=form&id=" + orderId;
+            var url = "/odoo/action-sale.action_orders/" + orderId;
             var loginForm = document.querySelector('.oe_login_form');
             loginForm.querySelector('input[name="login"]').value = "admin";
             loginForm.querySelector('input[name="password"]').value = "admin";
