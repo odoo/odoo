@@ -37,6 +37,7 @@ import {
     onError,
     onMounted,
     onRendered,
+    onWillUnmount,
     status,
     useEffect,
     useExternalListener,
@@ -191,7 +192,14 @@ export class FormController extends Component {
         };
         this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
 
+        const duplicateShortcutListener = (ev) => {
+            if (ev.ctrlKey && ev.key === 'i') {
+                this.duplicateRecord();
+            }
+        }
+
         onMounted(() => {
+            document.addEventListener("keydown", duplicateShortcutListener);
             effect(
                 (model) => {
                     if (status(this) === "mounted") {
@@ -201,6 +209,10 @@ export class FormController extends Component {
                 [this.model]
             );
         });
+
+        onWillUnmount(() => {
+            document.removeEventListener("keydown", duplicateShortcutListener);
+        })
 
         onError((error) => {
             const suggestedCompany = error.cause?.data?.context?.suggested_company;

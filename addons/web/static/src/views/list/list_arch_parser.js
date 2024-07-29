@@ -172,6 +172,7 @@ export class ListArchParser {
                             type: "create",
                             context: childNode.getAttribute("context"),
                             string: childNode.getAttribute("string"),
+                            dataHotkey: childNode.getAttribute("data-hotkey") || false,
                         });
                     }
                 }

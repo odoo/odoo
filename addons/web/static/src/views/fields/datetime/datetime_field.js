@@ -49,6 +49,7 @@ export class DateTimeField extends Component {
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
         warnFuture: { type: Boolean, optional: true },
+        dataHotkey: { type: [String, Boolean], optional: true },
         showSeconds: { type: Boolean, optional: true },
         showTime: { type: Boolean, optional: true },
         minPrecision: {
@@ -355,6 +356,7 @@ export const dateField = {
         minDate: options.min_date,
         alwaysRange: exprToBoolean(options.always_range),
         placeholder: attrs.placeholder,
+        dataHotkey: attrs["data-hotkey"],
         required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
