@@ -3,6 +3,7 @@ import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import {
     cleanTrailingBR,
+    fillEmpty,
     fillShrunkPhrasingParent,
     makeContentsInline,
     removeClass,
@@ -160,6 +161,15 @@ export class DomPlugin extends Plugin {
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.
             selection.anchorNode !== this.editable;
+
+        // Empty block must contain a br element to allow cursor placement.
+        if (
+            container.lastElementChild &&
+            isBlock(container.lastElementChild) &&
+            !container.lastElementChild.hasChildNodes()
+        ) {
+            fillEmpty(container.lastElementChild);
+        }
 
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
