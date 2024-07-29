@@ -782,7 +782,7 @@ class ResPartner(models.Model):
         return is_valid_vat(vat) or is_valid_stnr(vat)
 
     def check_vat_il(self, vat):
-        check_func = stdnum.util.get_cc_module('il', 'hp').is_valid if self.is_company else stdnum.util.get_cc_module('il', 'idnr').is_valid
+        check_func = stdnum.util.get_cc_module('il', 'idnr').is_valid
         return check_func(vat)
 
     def format_vat_sm(self, vat):
