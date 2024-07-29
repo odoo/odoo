@@ -3,6 +3,8 @@
 from freezegun import freeze_time
 from unittest.mock import patch
 
+import odoo
+
 from odoo import Command
 from odoo.addons.test_http.utils import (
     TEST_IP,
@@ -42,7 +44,7 @@ class TestDevice(TestHttpBase):
                 'X-Forwarded-Proto': 'https'
             }
         with freeze_time(time), \
-            patch.dict('odoo.tools.config.options', {'proxy_mode': bool(ip)}):
+            patch.dict(odoo.tools.config.options, {'proxy_mode': bool(ip)}):
             res = self.url_open(url=endpoint, headers=headers)
         return res
 
