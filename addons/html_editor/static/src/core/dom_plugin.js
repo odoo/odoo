@@ -155,6 +155,7 @@ export class DomPlugin extends Plugin {
         const shouldUnwrap = (node) =>
             [...paragraphRelatedElements, "LI"].includes(node.nodeName) &&
             block.textContent !== "" &&
+            node.textContent !== "" &&
             [node.nodeName, "DIV"].includes(block.nodeName) &&
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.

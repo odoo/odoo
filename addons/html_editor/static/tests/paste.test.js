@@ -816,6 +816,13 @@ describe("Unwrapping html element", () => {
             },
             contentAfter: "<h3>abc[]</h3><p><br></p>",
         });
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<p>abc</p><p><br></p><p><br></p>");
+            },
+            contentAfter: "<p>abc</p><p><br></p><p>[]<br></p>",
+        });
     });
     test("should not unwrap a node when pasting in between different node", async () => {
         await testEditor({
@@ -962,6 +969,15 @@ describe("Unwrapping html element", () => {
             },
             contentAfter:
                 '<h1><font style="background-color: rgb(255, 0, 0);">mnabc</font></h1><h1>def</h1><h1>ghi[]</h1>',
+        });
+    });
+    test("should not unwrap empty block nodes even when pasting on same node", async () => {
+        await testEditor({
+            contentBefore: "<p>a[]</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<p><br></p><p><br></p><p><br></p>");
+            },
+            contentAfter: "<p>a</p><p><br></p><p><br></p><p>[]<br></p>",
         });
     });
 });
