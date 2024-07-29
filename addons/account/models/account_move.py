@@ -4315,12 +4315,15 @@ class AccountMove(models.Model):
             not self.env.context.get('disable_abnormal_invoice_detection', True)
             and other_moves.filtered(lambda m: m.abnormal_amount_warning or m.abnormal_date_warning)
         ):
+            wizard = self.env['validate.account.move'].create({
+                'move_ids': [Command.set(other_moves.ids)],
+            })
             return {
                 'name': _("Confirm Entries"),
                 'type': 'ir.actions.act_window',
                 'res_model': 'validate.account.move',
+                'res_id': wizard.id,
                 'view_mode': 'form',
-                'context': {'default_move_ids': other_moves.ids},
                 'target': 'new',
             }
         if other_moves:
