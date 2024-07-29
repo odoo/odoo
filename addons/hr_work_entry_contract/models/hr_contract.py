@@ -227,6 +227,8 @@ class HrContract(models.Model):
                     ('state', 'draft'),
                 ] + contract._get_more_vals_attendance_interval(interval))]
 
+            if not contract._include_leaves():
+                continue
             for interval in real_leaves:
                 # Could happen when a leave is configured on the interface on a day for which the
                 # employee is not supposed to work, i.e. no attendance_ids on the calendar.
@@ -249,6 +251,10 @@ class HrContract(models.Model):
                     ('contract_id', contract.id),
                 ] + contract._get_more_vals_leave_interval(interval, interval_leaves))]
         return contract_vals
+
+    def _include_leaves(self):
+        self.ensure_one()
+        return True
 
     def _get_work_entries_values(self, date_start, date_stop):
         """
