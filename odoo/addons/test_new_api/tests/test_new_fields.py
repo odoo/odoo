@@ -597,6 +597,18 @@ class TestFields(TransactionCaseWithUserDemo):
         self.registry.setup_models(self.cr)
         self.assertEqual(self.registry.field_depends[Model.full_name], ('name1', 'name2'))
 
+    def test_12_wrong_field_assign_in_compute_method(self):
+        """ Test non-computed field assignment in another field's compute method. """
+        # Check the stored computed fields with wrong assignment
+        with self.assertWarnsRegex(UserWarning, "modified during the computation of other fields"):
+            record = self.env['test_new_api.wrong_field_assign_in_compute_method'].create({'key': 'foo'})
+            record.flush_recordset()
+        # Check the non-stored computed field with wrong assignment
+        with self.assertWarnsRegex(UserWarning, "modified during the computation of other fields"):
+            record.lower_key
+        # Check the non-stored computed field with correct assignment
+        record.key_length
+
     def test_13_inverse(self):
         """ test inverse computation of fields """
         Category = self.env['test_new_api.category']

@@ -2179,3 +2179,37 @@ class SharedComputeMethod(models.Model):
                 record.start = 0
             if not record.end:
                 record.end = 10
+
+
+class WrongFieldAssignInComputeMethod(models.Model):
+    _name = 'test_new_api.wrong_field_assign_in_compute_method'
+    _description = 'Test wrong field assignment in another field compute method.'
+
+    key = fields.Char(required=True)
+    name = fields.Char(compute='_compute_name', store=True)
+    description = fields.Char()
+    key_length = fields.Integer(compute='_compute_key_length')
+
+    lower_key = fields.Char(compute='_compute_lower_key')
+    upper_key = fields.Char()
+
+    @api.depends('key')
+    def _compute_name(self):
+        for record in self:
+            record.name = "** %s **" % record.key
+            # Wrong assignment of a non-computed field in a stored field compute method
+            record.description = "key: %s" % record.key
+            # Wrong assignment of a computed field in a stored field compute method
+            record.key_length = len(record.key)
+
+    @api.depends('key')
+    def _compute_key_length(self):
+        for record in self:
+            record.key_length = len(record.key)
+
+    @api.depends('key')
+    def _compute_lower_key(self):
+        for record in self:
+            record.lower_key = record.key and record.key.lower()
+            # Wrong assignment of a non-computed field in a non-stored compute method
+            record.upper_key = record.key and record.key.upper()

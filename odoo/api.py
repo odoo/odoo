@@ -521,6 +521,7 @@ class Environment(Mapping):
 
         self._cache_key = {}                    # memo {field: cache_key}
         self._protected = transaction.protected
+        self._computing = transaction.computing
 
         transaction.envs.add(self)
         return self
@@ -810,6 +811,42 @@ class Environment(Mapping):
         if not ids:
             del self.transaction.tocompute[field]
 
+    def fields_computing(self):
+        """ Return the fields that are currently being computed. """
+        return set(self._computing)
+
+    def is_computing(self, field=None, record=None) -> bool:
+        """ Whether fields are actively being currently computed
+
+        If ``field`` is given, return whether ``field`` is currently being computed on any record.
+        If ``record`` is given, return whether any field is currently being computed on ``record``.
+        If both are given, return whether ``field`` is currently being computed on ``record``.
+        If neither are given, return whether any field is currently being computed on any record.
+        """
+        if field is None and record is None:
+            return bool(self._computing)
+        elif record is None:
+            return bool(self._computing.get(field, ()))
+        elif field is None:
+            return any(record.id in self._computing[field] for field in self._computing)
+        else:
+            return record.id in self._computing.get(field, ())
+
+    @contextmanager
+    def computing(self, fields, records):
+        """ Mark ``fields`` as actively being computed on ``records``.
+
+        It will also protect them against invalidation or recomputation. See :meth:`~.protecting`.
+        """
+        self._computing.pushmap()
+        for field in fields:
+            self._computing[field] = frozenset(records._ids)
+        try:
+            with self.protecting(fields, records):
+                yield
+        finally:
+            self._computing.popmap()
+
     def cache_key(self, field):
         """ Return the cache key of the given ``field``. """
         try:
@@ -895,6 +932,8 @@ class Transaction:
         self.protected = StackMap()
         # pending computations {field: ids}
         self.tocompute = defaultdict(OrderedSet)
+        # current computations {field: ids}
+        self.computing = StackMap()
 
     def flush(self):
         """ Flush pending computations and updates in the transaction. """

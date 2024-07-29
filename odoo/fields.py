@@ -1362,6 +1362,13 @@ class Field(MetaField('DummyField', (object,), {})):
             protected_records = records.__class__(records.env, tuple(protected_ids), records._prefetch_ids)
             self.write(protected_records, value)
 
+        if records.env.is_computing():
+            for record in records:
+                if not record.env.is_computing(self, record):
+                    warnings.warn(
+                        f"{self} modified during the computation of other fields: {records.env.fields_computing()}"
+                    )
+
         if new_ids:
             # new records: no business logic
             new_records = records.__class__(records.env, tuple(new_ids), records._prefetch_ids)
@@ -1446,7 +1453,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 env.remove_to_compute(field, records)
 
         try:
-            with records.env.protecting(fields, records):
+            with records.env.computing(fields, records):
                 records._compute_field_value(self)
         except Exception:
             for field in fields:
