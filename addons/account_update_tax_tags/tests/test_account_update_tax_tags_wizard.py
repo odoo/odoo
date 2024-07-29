@@ -182,12 +182,12 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
 
         invoice_line, tax_line, counterpart_line = self._get_amls_by_type(move)
         self.assertEqual(
-            invoice_line.tax_tag_ids.mapped('name'),
+            invoice_line.tax_tag_ids.sorted('name').mapped('name'),
             ['invoice_base_tag', 'invoice_base_tag_2'],
             'Base lines tags should not have changed.'
         )
         self.assertEqual(
-            tax_line.tax_tag_ids.mapped('name'),
+            tax_line.tax_tag_ids.sorted('name').mapped('name'),
             ['invoice_tax_tag_changed', 'invoice_tax_tag_changed_2'],
             'Tax lines tags should have changed.'
         )
@@ -342,8 +342,8 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
 
         # Check that lines are set as expected before update.
         invoice_line, tax_lines, counterpart_line = self._get_amls_by_type(move)
-        self.assertEqual(invoice_line.tax_tag_ids.mapped('name'), ['invoice_base_tag_child_1', 'invoice_base_tag_child_2'])
-        self.assertEqual(tax_lines.tax_tag_ids.mapped('name'), ['invoice_tax_tag_child_1', 'invoice_tax_tag_child_2'])
+        self.assertEqual(invoice_line.tax_tag_ids.sorted('name').mapped('name'), ['invoice_base_tag_child_1', 'invoice_base_tag_child_2'])
+        self.assertEqual(tax_lines.tax_tag_ids.sorted('name').mapped('name'), ['invoice_tax_tag_child_1', 'invoice_tax_tag_child_2'])
         self.assertFalse(counterpart_line.tax_tag_ids)
 
         self._change_tax_tag(tax_child_1, 'invoice_base_tag_1_changed', invoice=True, base=True)
@@ -353,8 +353,8 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
         self.wizard.update_amls_tax_tags()
 
         invoice_line, tax_lines, counterpart_line = self._get_amls_by_type(move)
-        self.assertEqual(invoice_line.tax_tag_ids.mapped('name'), ['invoice_base_tag_1_changed', 'invoice_base_tag_2_changed'])
-        self.assertEqual(tax_lines.tax_tag_ids.mapped('name'), ['invoice_tax_tag_1_changed', 'invoice_tax_tag_2_changed'])
+        self.assertEqual(invoice_line.tax_tag_ids.sorted('name').mapped('name'), ['invoice_base_tag_1_changed', 'invoice_base_tag_2_changed'])
+        self.assertEqual(tax_lines.tax_tag_ids.sorted('name').mapped('name'), ['invoice_tax_tag_1_changed', 'invoice_tax_tag_2_changed'])
         self.assertFalse(counterpart_line.tax_tag_ids)
 
     def test_update_with_caba_taxes(self):
@@ -366,7 +366,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
         })._create_payments()
-        partial_rec = invoice.mapped('line_ids.matched_credit_ids')
+        partial_rec = invoice.line_ids.matched_credit_ids
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
 
         self._change_tax_tag(tax, 'invoice_base_tag_changed', invoice=True, base=True)
@@ -393,7 +393,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
         })._create_payments()
-        partial_rec = invoice.mapped('line_ids.matched_credit_ids')
+        partial_rec = invoice.line_ids.matched_credit_ids
 
         self._change_tax_tag(tax, 'invoice_base_tag_changed', invoice=True, base=True)
         self._change_tax_tag(tax, 'invoice_tax_tag_changed', invoice=True, base=False)
