@@ -2371,7 +2371,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         """ test search on many2one ordered by id """
         with self.assertQueries(['''
             SELECT "test_new_api_message"."id" FROM "test_new_api_message"
-            WHERE ("test_new_api_message"."active" = %s)
+            WHERE ("test_new_api_message"."active" IS TRUE)
             ORDER BY  "test_new_api_message"."discussion"
         ''']):
             self.env['test_new_api.message'].search([], order='discussion')
@@ -2402,6 +2402,37 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             self._search(Model, [('parent_id', 'child_of', 'Parent')]),
             active_parent + child_of_active + child_of_inactive,
         )
+
+    def test_53_boolean_query(self):
+        Model = self.env['test_new_api.model_active_field']
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_model_active_field"."id"
+            FROM "test_new_api_model_active_field"
+            WHERE ("test_new_api_model_active_field"."active" IS TRUE)
+            ORDER BY "test_new_api_model_active_field"."id"
+        """, """
+            SELECT "test_new_api_model_active_field"."id"
+            FROM "test_new_api_model_active_field"
+            WHERE ("test_new_api_model_active_field"."active" IS NOT TRUE)
+            ORDER BY "test_new_api_model_active_field"."id"
+        """]):
+            Model.search([('active', '=', True)])
+            Model.search([('active', '=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_model_active_field"."id"
+            FROM "test_new_api_model_active_field"
+            WHERE TRUE
+            ORDER BY "test_new_api_model_active_field"."id"
+        """, """
+            SELECT "test_new_api_model_active_field"."id"
+            FROM "test_new_api_model_active_field"
+            WHERE FALSE
+            ORDER BY "test_new_api_model_active_field"."id"
+        """]):
+            Model.search([('active', 'in', [True, False])])
+            Model.search([('active', 'not in', [True, False])])
 
     def test_60_one2many_domain(self):
         """ test the cache consistency of a one2many field with a domain """

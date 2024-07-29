@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import format_date, formatLang
-from odoo.tools import create_index
 from odoo.tools import SQL
 
 
@@ -198,22 +195,8 @@ class AccountPayment(models.Model):
         'CHECK(amount >= 0.0)',
         'The payment amount cannot be negative.',
     )
-
-    def init(self):
-        super().init()
-        create_index(
-            self.env.cr,
-            indexname='account_payment_journal_id_company_id_idx',
-            tablename='account_payment',
-            expressions=['journal_id', 'company_id']
-        )
-        create_index(
-            self.env.cr,
-            indexname='account_payment_unmatched_idx',
-            tablename='account_payment',
-            expressions=['journal_id', 'company_id'],
-            where="NOT is_matched OR is_matched IS NULL"
-        )
+    _journal_id_company_id_idx = models.Index("(journal_id, company_id)")
+    _unmatched_idx = models.Index("(journal_id, company_id) WHERE is_matched IS NOT TRUE")
 
     # -------------------------------------------------------------------------
     # HELPERS

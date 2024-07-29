@@ -7,8 +7,7 @@ import re
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
-from odoo.tools import frozendict, format_date, float_compare, format_list, Query
-from odoo.tools.sql import create_index, SQL
+from odoo.tools import frozendict, float_compare, format_list, Query, SQL
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -433,6 +432,17 @@ class AccountMoveLine(models.Model):
         "CHECK(display_type NOT IN ('line_section', 'line_note') OR (amount_currency = 0 AND debit = 0 AND credit = 0 AND account_id IS NULL))",
         'Forbidden balance or account on non-accountable line',
     )
+
+    # change index on partner_id to a multi-column index on (partner_id, ref), the new index will behave in the
+    # same way when we search on partner_id, with the addition of being optimal when having a query that will
+    # search on partner_id and ref at the same time (which is the case when we open the bank reconciliation widget)
+    _partner_id_ref_idx = models.Index("(partner_id, ref)")
+    _date_name_id_idx = models.Index("(date desc, move_name desc, id)")
+    # Match exactly how the ORM converts domains to ensure the query planner uses it
+    _unreconciled_index = models.Index("(account_id, partner_id) WHERE reconciled IS NOT TRUE AND parent_state = 'posted'")
+    _journal_id_neg_amnt_residual_idx = models.Index("(journal_id) WHERE amount_residual < 0 AND parent_state = 'posted'")
+    # covers the standard index on account_id
+    _account_id_date_idx = models.Index("(account_id, date)")
 
     @api.model
     def get_views(self, views, options=None):
@@ -1358,28 +1368,6 @@ class AccountMoveLine(models.Model):
             order_cumulated_balance=order,
         )
         return super(AccountMoveLine, contextualized).search_fetch(domain, field_names, offset, limit, order)
-
-    def init(self):
-        """ change index on partner_id to a multi-column index on (partner_id, ref), the new index will behave in the
-            same way when we search on partner_id, with the addition of being optimal when having a query that will
-            search on partner_id and ref at the same time (which is the case when we open the bank reconciliation widget)
-        """
-        create_index(self._cr, 'account_move_line_partner_id_ref_idx', 'account_move_line', ["partner_id", "ref"])
-        create_index(self._cr, 'account_move_line_date_name_id_idx', 'account_move_line', ["date desc", "move_name desc", "id"])
-        # Match exactly how the ORM converts domains to ensure the query planner uses it
-        create_index(self._cr, 'account_move_line__unreconciled_index', 'account_move_line', ['account_id', 'partner_id'],
-                     where="(reconciled IS NULL OR reconciled = false OR reconciled IS NOT true) AND parent_state = 'posted'")
-        create_index(self.env.cr,
-                     indexname='account_move_line_journal_id_neg_amnt_residual_idx',
-                     tablename='account_move_line',
-                     expressions=['journal_id'],
-                     where="amount_residual < 0 AND parent_state = 'posted'")
-        # covers the standard index on account_id
-        create_index(self.env.cr,
-                     indexname='account_move_line_account_id_date_idx',
-                     tablename='account_move_line',
-                     expressions=['account_id', 'date'])
-        super().init()
 
     def default_get(self, fields_list):
         defaults = super().default_get(fields_list)

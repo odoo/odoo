@@ -3,7 +3,7 @@ from odoo.exceptions import UserError, ValidationError
 
 from xmlrpc.client import MAXINT
 
-from odoo.tools import create_index, SQL
+from odoo.tools import SQL
 
 
 class AccountBankStatementLine(models.Model):
@@ -144,28 +144,9 @@ class AccountBankStatementLine(models.Model):
     # Technical field to store details about the bank statement line
     transaction_details = fields.Json(readonly=True)
 
-    def init(self):
-        super().init()
-        create_index(  # used for default filters
-            self.env.cr,
-            indexname='account_bank_statement_line_unreconciled_idx',
-            tablename='account_bank_statement_line',
-            expressions=['journal_id', 'company_id', 'internal_index'],
-            where='NOT is_reconciled OR is_reconciled IS NULL',
-        )
-        create_index(  # used for the dashboard
-            self.env.cr,
-            indexname='account_bank_statement_line_orphan_idx',
-            tablename='account_bank_statement_line',
-            expressions=['journal_id', 'company_id', 'internal_index'],
-            where='statement_id IS NULL',
-        )
-        create_index(  # used in other cases
-            self.env.cr,
-            indexname='account_bank_statement_line_main_idx',
-            tablename='account_bank_statement_line',
-            expressions=['journal_id', 'company_id', 'internal_index'],
-        )
+    _unreconciled_idx = models.Index("(journal_id, company_id, internal_index) WHERE is_reconciled IS NOT TRUE")
+    _orphan_idx = models.Index("(journal_id, company_id, internal_index) WHERE statement_id IS NULL")
+    _main_idx = models.Index("(journal_id, company_id, internal_index)")
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
