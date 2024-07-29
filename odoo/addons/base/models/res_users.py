@@ -2348,7 +2348,7 @@ class ResUsersApikeys(models.Model):
         raise AccessError(_("You can not remove API keys unless they're yours or you are a system user"))
 
     def _check_credentials(self, *, scope, key):
-        assert scope, "scope is required"
+        assert scope and key, "scope and key required"
         index = key[:INDEX_SIZE]
         self.env.cr.execute('''
             SELECT user_id, key
@@ -2363,7 +2363,7 @@ class ResUsersApikeys(models.Model):
         '''.format(self._table),
         [index, scope])
         for user_id, current_key in self.env.cr.fetchall():
-            if KEY_CRYPT_CONTEXT.verify(key, current_key):
+            if key and KEY_CRYPT_CONTEXT.verify(key, current_key):
                 return user_id
 
     def _check_expiration_date(self, date):

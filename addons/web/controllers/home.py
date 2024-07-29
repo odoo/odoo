@@ -117,7 +117,7 @@ class Home(http.Controller):
 
         if request.httprequest.method == 'POST':
             try:
-                credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS}
+                credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS and value}
                 credential.setdefault('type', 'password')
                 auth_info = request.session.authenticate(request.db, credential)
                 request.params['login_success'] = True
