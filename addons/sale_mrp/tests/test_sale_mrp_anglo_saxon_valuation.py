@@ -107,9 +107,9 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
         self.assertEqual(stock_out_aml.debit, 0)
-        self.assertAlmostEqual(stock_out_aml.credit, 1.53, "Should not include the value of consumable component")
+        self.assertAlmostEqual(stock_out_aml.credit, 1.53, msg="Should not include the value of consumable component")
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
-        self.assertAlmostEqual(cogs_aml.debit, 1.53, "Should not include the value of consumable component")
+        self.assertAlmostEqual(cogs_aml.debit, 1.53, msg="Should not include the value of consumable component")
         self.assertEqual(cogs_aml.credit, 0)
 
     def test_sale_mrp_anglo_saxon_variant(self):
@@ -530,3 +530,106 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
             {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 30},
             {'account_id': self.company_data['default_account_expense'].id,     'debit': 30,    'credit': 0},
         ])
+
+    def test_anglo_saxo_kit_subkits(self):
+        """Check invoice COGS aml after selling and delivering a product
+        with Kit BoM producing 2 times the product and having
+        2 products with Kit BoM as components"""
+
+        # ----------------------------------------------
+        # BoM of Main kit:
+        #   - BoM Type: Kit
+        #   - Quantity: 4
+        #   - Components:
+        #     * 1 x Subkit A
+        #     * 1 x Subkit B
+        #
+        # BoM of Subkit A:
+        #   - BoM Type: Kit
+        #   - Quantity: 1
+        #   - Components:
+        #     * 2 x Component A (Cost: $10, Storable)
+        #
+        # BoM of Subkit B:
+        #   - BoM Type: Kit
+        #   - Quantity: 1
+        #   - Components:
+        #     * 2 x Component B (Cost: $6, Storable)
+        # ----------------------------------------------
+
+        self.component_a = self._create_product('Component A', 'product', 10.00)
+        self.component_b = self._create_product('Component B', 'product', 6.00)
+        self.subkit_a = self._create_product('Subkit A', 'product', 0.00)
+        self.subkit_b = self._create_product('Subkit B', 'product', 0.00)
+        self.main_kit = self._create_product('Main kit', 'product', 0.00)
+
+        self.main_kit.write({
+            'property_account_expense_id': self.company_data['default_account_expense'].id,
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
+        })
+
+        # Create BoM for Main kit
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_id = self.main_kit
+        bom_product_form.product_tmpl_id = self.main_kit.product_tmpl_id
+        bom_product_form.product_qty = 4.0
+        bom_product_form.type = 'phantom'
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.subkit_a
+            bom_line.product_qty = 1.0
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.subkit_b
+            bom_line.product_qty = 1.0
+        self.bom_main = bom_product_form.save()
+
+        # Create BoM for Subkit A
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_id = self.subkit_a
+        bom_product_form.product_tmpl_id = self.subkit_a.product_tmpl_id
+        bom_product_form.product_qty = 1.0
+        bom_product_form.type = 'phantom'
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.component_a
+            bom_line.product_qty = 2.0
+        self.bom_sub_b = bom_product_form.save()
+
+        # Create BoM for Subkit B
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_id = self.subkit_b
+        bom_product_form.product_tmpl_id = self.subkit_b.product_tmpl_id
+        bom_product_form.product_qty = 1.0
+        bom_product_form.type = 'phantom'
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.component_b
+            bom_line.product_qty = 2.0
+        self.bom_sub_b = bom_product_form.save()
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.main_kit.name,
+                    'product_id': self.main_kit.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.main_kit.uom_id.id,
+                    'price_unit': 1,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+        for move in so.picking_ids.move_ids:
+            move.quantity_done = move.product_qty
+        so.picking_ids.button_validate()
+
+        invoice = so.with_context(default_journal_id=self.company_data['default_journal_sale'].id)._create_invoices()
+        invoice.action_post()
+
+        # Check the resulting accounting entries
+        amls = invoice.line_ids
+        self.assertEqual(len(amls), 4)
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
+        self.assertEqual(stock_out_aml.debit, 0)
+        self.assertAlmostEqual(stock_out_aml.credit, 8.00, msg="Should include include the components from all subkits, with the price adapted for 1 Main kit")
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
+        self.assertAlmostEqual(cogs_aml.debit, 8.00, msg="Should include include the components from all subkits, with the price adapted for 1 Main kit")
+        self.assertEqual(cogs_aml.credit, 0)
