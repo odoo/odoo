@@ -26,7 +26,7 @@ test("apply 'Signature' command", async () => {
 
     press("enter");
     await tick();
-    expect(getContent(el)).toBe("<p>ab</p><h1>Hello</h1><p>[]cd</p>");
+    expect(getContent(el)).toBe("<p>ab</p><h1>Hello[]</h1><p>cd</p>");
 });
 
 test("undo a 'Signature' command", async () => {
@@ -35,7 +35,7 @@ test("undo a 'Signature' command", async () => {
     insertText(editor, "/signature");
     press("enter");
     await tick();
-    expect(getContent(el)).toBe("<p>abtest</p><h1>Hello</h1><p>[]cd</p>");
+    expect(getContent(el)).toBe("<p>abtest</p><h1>Hello[]</h1><p>cd</p>");
 
     undo(editor);
     expect(getContent(el)).toBe("<p>abtest[]cd</p>");
