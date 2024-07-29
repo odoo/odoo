@@ -2,7 +2,7 @@
 
 from odoo import SUPERUSER_ID, _, api, fields, models, tools
 from odoo.exceptions import ValidationError
-from odoo.tools import format_datetime, formatLang
+from odoo.tools import format_amount, format_datetime, formatLang
 
 
 class PricelistItem(models.Model):
@@ -147,19 +147,18 @@ class PricelistItem(models.Model):
     # functional fields used for usability purposes
     name = fields.Char(
         string="Name",
-        compute='_compute_name_and_price',
+        compute='_compute_name',
         help="Explicit rule name for this pricelist line.")
     price = fields.Char(
         string="Price",
-        compute='_compute_name_and_price',
+        compute='_compute_price_label',
         help="Explicit rule name for this pricelist line.")
     rule_tip = fields.Char(compute='_compute_rule_tip')
 
     #=== COMPUTE METHODS ===#
 
-    @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
-        'pricelist_id', 'percent_price', 'price_discount', 'price_surcharge')
-    def _compute_name_and_price(self):
+    @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id')
+    def _compute_name(self):
         for item in self:
             if item.categ_id and item.applied_on == '2_product_category':
                 item.name = _("Category: %s", item.categ_id.display_name)
@@ -172,27 +171,63 @@ class PricelistItem(models.Model):
             else:
                 item.name = _("All Products")
 
+    @api.depends(
+        'compute_price', 'fixed_price', 'pricelist_id', 'percent_price', 'price_discount',
+        'price_surcharge', 'base', 'base_pricelist_id',
+    )
+    def _compute_price_label(self):
+        for item in self:
             if item.compute_price == 'fixed':
                 item.price = formatLang(
                     item.env, item.fixed_price, dp="Product Price", currency_obj=item.currency_id)
             elif item.compute_price == 'percentage':
                 percentage = self._get_integer(item.percent_price)
-                item.price = _("%s %% discount", percentage)
-            else:
-                discount_type, percentage = self._get_displayed_discount(item)
-                if not (surcharge := item.price_surcharge):
+                if item.base_pricelist_id:
                     item.price = _(
-                        "%(percentage)s %% %(discount_type)s",
+                        "%(percentage)s %% discount on %(pricelist)s",
                         percentage=percentage,
-                        discount_type=discount_type,
+                        pricelist=item.base_pricelist_id.display_name
                     )
                 else:
                     item.price = _(
-                        "%(percentage)s %% %(discount_type)s and %(price)s surcharge",
-                        percentage=percentage,
-                        price=surcharge,
-                        discount_type=discount_type,
+                        "%(percentage)s %% discount on sales price",
+                        percentage=percentage
                     )
+            else:
+                base_str = ""
+                if item.base == 'pricelist' and item.base_pricelist_id:
+                    base_str = item.base_pricelist_id.display_name
+                elif item.base == 'standard_price':
+                    base_str = _("product cost")
+                else:
+                    base_str = _("sales price")
+
+                extra_fee_str = ""
+                if item.price_surcharge > 0:
+                    extra_fee_str = _(
+                        "+ %(amount)s extra fee",
+                        amount=format_amount(
+                            item.env,
+                            abs(item.price_surcharge),
+                            currency=item.currency_id,
+                        ),
+                    )
+                elif item.price_surcharge < 0:
+                    extra_fee_str = _(
+                        "- %(amount)s rebate",
+                        amount=format_amount(
+                            item.env,
+                            abs(item.price_surcharge),
+                            currency=item.currency_id,
+                        ),
+                    )
+                discount_type, percentage = self._get_displayed_discount(item)
+                item.price = _("%(percentage)s %% %(discount_type)s on %(base)s %(extra)s",
+                    percentage=percentage,
+                    discount_type=discount_type,
+                    base=base_str,
+                    extra=extra_fee_str,
+                )
 
     @api.depends_context('lang')
     @api.depends('compute_price', 'price_discount', 'price_surcharge', 'base', 'price_round')
