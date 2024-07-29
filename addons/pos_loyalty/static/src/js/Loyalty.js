@@ -683,7 +683,8 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                         program_id: program.id,
                         coupon_id: coupon.id,
                         barcode: pa.barcode,
-                        appliedRules: pointsForProgramsCountedRules[program.id]
+                        appliedRules: pointsForProgramsCountedRules[program.id],
+                        giftCardId: pa.giftCardId
                     };
                 }
             }
