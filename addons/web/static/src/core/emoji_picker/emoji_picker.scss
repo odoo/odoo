@@ -3,8 +3,27 @@
     height: 350px;
 }
 
+.o-EmojiPicker-searchInner {
+    input::placeholder {
+        opacity: 75%;
+    }
+
+    &:has(input:focus, input:active) {
+        input::placeholder {
+            opacity: 100%;
+        }
+
+        border-color: rgba($o-action, 0.65) !important;
+    
+        i {
+            color: $o-action;
+        }
+    }
+}
+
 .o-EmojiPicker {
-    --o-emoji-picker-active: #{$gray-200};
+    --o-emoji-picker-active: #{mix(#fff, $o-action, 90%)};
+
     .o-active {
         background-color: var(--o-emoji-picker-active) !important;
     }
@@ -20,7 +39,18 @@
 
     .o-EmojiPicker-navbar {
         .o-Emoji {
-            filter: grayscale(1);
+            border: 0px solid;
+            border-bottom-width: 2px;
+            border-color: transparent;
+
+            span {
+                filter: grayscale(1) contrast(1.2);
+            }
+
+            &.o-active {
+                background-color: mix($white, $o-action, 85%) !important;
+                border-bottom-color: mix($white, $o-action, 35%);
+            }
         }
     }
 

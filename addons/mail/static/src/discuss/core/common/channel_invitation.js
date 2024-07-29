@@ -41,6 +41,13 @@ export class ChannelInvitation extends Component {
         });
     }
 
+    get narrowResultText() {
+        return _t("%(partial)s results out of %(total)s. Narrow search for more.", {
+            partial: this.state.selectablePartners.length,
+            total: this.state.searchResultCount,
+        });
+    }
+
     async fetchPartnersToInvite() {
         const results = await this.sequential(() =>
             this.orm.call("res.partner", "search_for_channel_invite", [

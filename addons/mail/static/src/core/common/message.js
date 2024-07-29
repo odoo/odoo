@@ -195,13 +195,13 @@ export class Message extends Component {
                 this.props.thread,
                 this.props.message
             ),
-            "o-squashed": this.props.squashed,
-            "mt-1": !this.props.squashed && this.props.thread && !this.env.messageCard,
-            "px-2": this.props.isInChatWindow,
+            "o-squashed pb-1": this.props.squashed,
+            "py-1": !this.props.squashed && this.props.thread && !this.env.messageCard,
             "opacity-50": this.props.messageToReplyTo?.isNotSelected(
                 this.props.thread,
                 this.props.message
             ),
+            "o-important": this.message.isHighlightedFromMention,
         };
     }
 
@@ -244,7 +244,7 @@ export class Message extends Component {
     }
 
     get quickActionCount() {
-        return this.env.inChatter ? 2 : 3;
+        return this.env.inChatter ? 2 : this.env.inChatWindow ? 1 : 3;
     }
 
     get showSeenIndicator() {
@@ -462,7 +462,17 @@ export class Message extends Component {
     }
 
     /** @param {HTMLElement} bodyEl */
-    prepareMessageBody(bodyEl) {}
+    prepareMessageBody(bodyEl) {
+        if (this.store.self.type !== "partner") {
+            return;
+        }
+        const selfMentionEls = bodyEl.querySelectorAll(
+            `.o_mail_redirect[data-oe-model='res.partner'][data-oe-id='${this.store.self.id}']`
+        );
+        for (const selfMentionEl of selfMentionEls) {
+            selfMentionEl.classList.add("o-selfMention");
+        }
+    }
 
     enterEditMode() {
         const message = toRaw(this.props.message);
@@ -484,7 +494,10 @@ export class Message extends Component {
     }
 
     getAvatarContainerAttClass() {
-        return { "opacity-50": this.message.isPending };
+        return {
+            "opacity-50": this.message.isPending,
+            "o-small": this.env.inChatWindow || this.ui.isSmall,
+        };
     }
 
     exitEditMode() {

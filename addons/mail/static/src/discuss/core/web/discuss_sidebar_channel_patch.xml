@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebarChannel" t-inherit-mode="extension">
+        <xpath expr="//*[@name='leave']" position="before">
+            <button t-if="props.thread.channel_type === 'channel'" class="btn btn-secondary p-0 bg-inherit" t-on-click.stop="() => this.openSettings()" title="Channel settings">
+                <i t-attf-class="fa fa-fw fa-cog" role="img"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

@@ -37,18 +37,6 @@ const DiscussCategoriesPatch = {
             });
         }
     },
-    /** @param {import("models").Thread} thread */
-    openSettings(thread) {
-        if (thread.channel_type === "channel") {
-            this.actionService.doAction({
-                type: "ir.actions.act_window",
-                res_model: "discuss.channel",
-                res_id: thread.id,
-                views: [[false, "form"]],
-                target: "current",
-            });
-        }
-    },
     stopEditing() {
         this.state.editing = false;
     },

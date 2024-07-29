@@ -18,19 +18,21 @@
 
 <t t-name="mail.MessagingMenu.content">
     <div t-if="!(ui.isSmall and env.inDiscussApp and store.discuss.activeTab === 'main')" t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu`">
-        <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'text-uppercase border-start-0 border-end-0': ui.isSmall, 'bg-view border-bottom': !ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
+        <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'border-start-0 border-end-0 gap-1 pb-1': ui.isSmall, 'o-mail-inspectorBg': !ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
             <t t-if="!ui.isSmall">
                 <MessagingMenuQuickSearch t-if="state.searchOpen" onClose.bind="toggleSearch"/>
                 <t t-else="">
-                    <button class="btn btn-link py-1 rounded-0" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
-                    <button class="btn btn-link py-1 rounded-0" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
-                    <button class="btn btn-link py-1 rounded-0" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
-                    <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
+                    <div class="d-flex gap-1">
+                        <button class="o-mail-MessagingMenu-tab btn btn-link px-2 py-1 rounded-0" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
+                        <button class="o-mail-MessagingMenu-tab btn btn-link px-2 py-1 rounded-0" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
+                        <button class="o-mail-MessagingMenu-tab btn btn-link px-2 py-1 rounded-0" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
+                    </div>
+                    <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="o-mail-MessagingMenu-search btn btn-light py-1 rounded-0 opacity-75 opacity-100-hover" type="button" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
                     <button t-if="store.channels.status === 'fetching'" class="btn btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
                 </t>
             </t>
         </div>
-        <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="d-flex flex-column overflow-auto flex-grow-1 list-group list-group-flush" t-ref="notification-list">
+        <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto flex-grow-1 list-group list-group-flush" t-ref="notification-list">
             <div t-if="store.channels.status !== 'fetching' and !hasPreviews" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No conversation yet...
             </div>
@@ -54,7 +56,7 @@
                         <a t-if="ui.isSmall" class="btn fa fa-cloud-download" />
                         <t t-else="">
                             <a class="btn btn-primary">Install</a>
-                            <span t-if="!hasTouch()" t-on-click.stop="() => this.installPrompt.decline()" class="text-dark bg-transparent fa fa-close opacity-50 opacity-100-hover" title="Dismiss"></span>
+                            <span t-if="!hasTouch()" t-on-click.stop="() => this.installPrompt.decline()" class="text-dark bg-transparent oi oi-close opacity-50 opacity-100-hover" title="Dismiss"></span>
                         </t>
                     </t>
                 </NotificationItem>
@@ -122,7 +124,7 @@
         </div>
     </div>
     <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex border-top bg-view shadow-lg w-100 btn-group">
-        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2 mx-0" t-att-class="{
+        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2 mx-0 border-0" t-att-class="{
             'text-primary fw-bolder o-active': store.discuss.activeTab === tab.id,
             'border-end': !tab_last,
         }" t-on-click="() => this.onClickNavTab(tab.id)">

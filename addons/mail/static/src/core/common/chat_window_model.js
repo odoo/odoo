@@ -35,7 +35,7 @@ export class ChatWindow extends Record {
     hubAsFolded = Record.one("ChatHub");
 
     get displayName() {
-        return this.thread?.displayName ?? _t("New message");
+        return this.thread?.displayName ?? _t("New Message");
     }
 
     get isOpen() {

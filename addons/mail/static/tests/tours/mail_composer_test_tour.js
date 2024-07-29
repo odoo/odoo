@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Add one file in composer",
-            trigger: ".o-mail-Composer button[aria-label='Attach files']",
+            trigger: ".o-mail-Composer button[aria-label='Attach Files']",
             async run() {
                 await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
                     await createFile({

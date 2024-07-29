@@ -9,7 +9,7 @@
                 'mw-0': !state.recording,
                 'text-danger': state.limitWarning,
             }" style="font-variant-numeric: tabular-nums;"><span class="d-flex text-truncate" t-esc="state.elapsed"/></div>
-            <button t-att-disabled="state.isActionPending or props.composer.voiceAttachment" class="border-0 btn rounded-pill p-1" t-att-title="title" t-on-click="onClick"><i t-att-class="!state.recording ? 'fa fa-fw fa-microphone' : 'fa fa-fw fa-circle text-danger o-mail-VoiceRecorder-dot'"/></button>
+            <button t-att-disabled="state.isActionPending or props.composer.voiceAttachment" class="border-0 btn rounded-pill p-1 mx-1" t-on-click="onClick"><i t-att-class="{ 'fa fa-fw fa-circle text-danger o-mail-VoiceRecorder-dot': state.recording, 'fa fa-fw fa-microphone': !state.recording, 'fa-lg': ui.isSmall }"/><span class="ms-1 small" t-esc="title"/></button>
         </div>
     </t>
 

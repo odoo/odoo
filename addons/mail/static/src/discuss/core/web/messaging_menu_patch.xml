@@ -10,20 +10,20 @@
                     <ChannelSelector category="category" autofocus="true"/>
                 </div>
             </t>
-            <button t-if="!ui.isSmall and !store.discuss.isActive" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link px-2 py-1'" t-on-click.stop="onClickNewMessage">
-                New Message
+            <button t-if="!ui.isSmall and !store.discuss.isActive" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'o-mail-MessagingMenu-newMessage btn btn-light px-2 py-0 rounded-0 opacity-75 opacity-100-hover'" t-on-click.stop="onClickNewMessage">
+                <i class="fa fa-fw fa-pencil pe-1"/><span class="small">New Message</span>
             </button>
             <t t-if="ui.isSmall">
                 <t t-if="store.discuss.activeTab !== 'main' or !env.inDiscussApp">
-                    <button name="startMeetingButton" t-if="!state.adding" class="w-50 m-1 me-0 btn btn-primary" t-on-click.stop="onClickStartMeeting">
-                        Start a meeting
+                    <button name="startMeetingButton" t-if="!state.adding" class="w-50 m-1 me-0 btn btn-primary d-flex align-items-center justify-content-center gap-1" t-on-click.stop="onClickStartMeeting">
+                        <i class="fa fa-fw fa-users pe-1"/><span>Start a meeting</span>
                     </button>
-                    <button t-if="displayStartConversation" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
-                        Start a conversation
+                    <button t-if="displayStartConversation" t-att-class="ui.isSmall ? 'w-50 btn btn-secondary m-1 d-flex align-items-center justify-content-center gap-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
+                        <i class="fa fa-fw fa-pencil pe-1"/><span>Start a conversation</span>
                     </button>
                 </t>
-                <button t-if="store.discuss.activeTab === 'channel' and !state.adding" class="w-50 p-2 btn btn-secondary m-1" t-on-click.stop="() => this.state.adding = 'channel'">
-                    New Channel
+                <button t-if="store.discuss.activeTab === 'channel' and !state.adding" class="w-50 btn btn-secondary m-1 d-flex align-items-center justify-content-center gap-1" t-on-click.stop="() => this.state.adding = 'channel'">
+                    <i class="fa fa-fw fa-hashtag pe-1"/><span>New channel</span>
                 </button>
             </t>
         </xpath>

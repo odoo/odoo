@@ -180,15 +180,15 @@ test("chat window: basic rendering", async () => {
     });
     await click("[title='Open Actions Menu']");
     await contains(".o-mail-ChatWindow-command", { count: 13 });
-    await contains("[title='Search Messages']");
-    await contains("[title='Notification Settings']");
-    await contains("[title='Rename']");
-    await contains("[title='Pinned Messages']");
-    await contains("[title='Show Attachments']");
-    await contains("[title='Add Users']");
-    await contains("[title='Show Member List']");
-    await contains("[title='Show Call Settings']");
-    await contains("[title='Open in Discuss']");
+    await contains("[aria-label='Search Messages']");
+    await contains("[aria-label='Notification Settings']");
+    await contains("[aria-label='Rename']");
+    await contains("[aria-label='Pinned Messages']");
+    await contains("[aria-label='Show Attachments']");
+    await contains("[aria-label='Add Users']");
+    await contains("[aria-label='Show Member List']");
+    await contains("[aria-label='Show Call Settings']");
+    await contains("[aria-label='Open in Discuss']");
 });
 
 test.skip("Fold state of chat window is sync among browser tabs", async () => {
@@ -786,20 +786,20 @@ test("folded chat window should hide member-list and settings buttons", async ()
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await click("[title='Open Actions Menu']");
-    await contains("[title='Show Member List']");
-    await contains("[title='Show Call Settings']");
+    await contains("[aria-label='Show Member List']");
+    await contains("[aria-label='Show Call Settings']");
     await click(".o-mail-ChatWindow-header"); // click away to close the more menu
-    await contains("[title='Show Member List']", { count: 0 });
+    await contains("[aria-label='Show Member List']", { count: 0 });
     // Fold chat window
     await click(".o-mail-ChatWindow-command[title='Fold']");
     await contains("[title='Open Actions Menu']", { count: 0 });
-    await contains("[title='Show Member List']", { count: 0 });
-    await contains("[title='Show Call Settings']", { count: 0 });
+    await contains("[aria-label='Show Member List']", { count: 0 });
+    await contains("[aria-label='Show Call Settings']", { count: 0 });
     // Unfold chat window
     await click(".o-mail-ChatBubble");
     await click("[title='Open Actions Menu']");
-    await contains("[title='Show Member List']");
-    await contains("[title='Show Call Settings']");
+    await contains("[aria-label='Show Member List']");
+    await contains("[aria-label='Show Call Settings']");
 });
 
 test("Chat window in mobile are not foldable", async () => {
@@ -844,7 +844,7 @@ test("chat window of channels should not have 'Open in Discuss' (mobile)", async
     await contains(".o-mail-ChatWindow");
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await contains("[title='Open in Discuss']", { count: 0 });
+    await contains("[aria-label='Open in Discuss']", { count: 0 });
 });
 
 test("Open chat window of new inviter", async () => {

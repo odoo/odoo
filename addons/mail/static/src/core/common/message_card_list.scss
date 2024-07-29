@@ -1,9 +1,28 @@
-.o-mail-MessageCardList .card-body:hover .o-mail-MessageCard-jump {
-    opacity: 100 !important;
+.o-mail-MessageCardList .card-body:hover {
+    .o-mail-MessageCardList-close {
+        opacity: 75%;
+    }
+
+    .o-mail-MessageCard-jump {
+        opacity: 100% !important;
+    }
+}
+
+.o-mail-MessageCardList-close {
+    opacity: 25%;
+
+    &:hover {
+        background-color: $o-gray-300;
+        opacity: 100% !important;
+    }
 }
 
 .o-mail-MessageCard-jump {
     color: white;
+    
+    &:hover {
+        filter: brightness(95%);
+    }
 }
 
 .o_touch_device .o-mail-MessageCard-jump.btn {

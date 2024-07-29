@@ -2,16 +2,19 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Composer">
+    <t t-if="props.composer.exists()">
     <t t-set="compact" t-value="props.mode === 'compact'"/>
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
     <div t-ref="composer">
-        <div class="o-mail-Composer d-grid flex-shrink-0 pt-0"
+        <div class="o-mail-Composer d-grid flex-shrink-0"
                 t-att-class="{
+                    'pt-0': extended or props.composer.message or env.inChatWindow,
+                    'pt-1': !(extended or props.composer.message or env.inChatWindow),
                     'pb-2': extended and !props.composer.message,
                     'o-extended': extended,
                     'o-isUiSmall': ui.isSmall,
-                    'p-3': normal,
+                    'p-3 pb-2': normal,
                     'o-hasSelfAvatar': !env.inChatWindow and thread,
                 }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact and props.sidebar">
@@ -29,18 +32,32 @@
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1"
                 t-att-class="{ 'flex-column' : extended }"
             >
-                <div class="d-flex bg-view flex-grow-1"
+                <div class="o-mail-Composer-coreMainInner d-flex flex-grow-1 border border-secondary o-fuse rounded-3"
                     t-att-class="{
-                        'o-mail-Composer-compactContainer border-top': compact and !props.composer.message,
-                        'border': props.composer.message,
-                        'border rounded-3' : normal,
-                        'border rounded-3 align-self-stretch flex-column' : extended,
+                        'my-1': compact,
+                        'mx-1': compact and !props.composer.message,
+                        'align-self-stretch flex-column' : extended,
+                        'o-focused': props.composer.isFocused,
                     }"
                 >
+                    <div t-if="env.inChatWindow" class="o-mail-Composer-actions o-left d-flex align-items-baseline" t-att-class="{ 'o-focused': props.composer.isFocused, 'o-mobile': ui.isSmall }">
+                        <Dropdown position="'top-start'" menuClass="'o-mail-Composer-moreActions rounded-3 px-0 py-1'">
+                            <button class="btn p-1"><i class="fa fa-fw fa-plus-circle" t-att-class="{ 'fa-lg': ui.isSmall }"/></button>
+                            <t t-set-slot="content" name="dropdown-actions">
+                                <t t-call="mail.Composer.attachFiles"/>
+                            </t>
+                        </Dropdown>
+                    </div>
                     <div class="position-relative flex-grow-1">
-                        <textarea class="o-mail-Composer-input form-control bg-view px-3 border-0 rounded-3 shadow-none overflow-auto"
+                        <textarea class="o-mail-Composer-input form-control shadow-none overflow-auto rounded-3 border-0"
+                            t-att-class="{
+                                'px-3': extended,
+                                'o-normal': normal,
+                                'px-1': env.inChatWindow and !ui.isSmall,
+                                'o-focused': env.inChatWindow and props.composer.isFocused,
+                            }"
                             t-ref="textarea"
-                            style="height:40px;"
+                            t-att-style="ui.isSmall ? 'height:60px;' : (env.inChatWindow ? 'height:26px;' : 'height:40px;')"
                             t-on-keydown="onKeydown"
                             t-on-focusin="onFocusin"
                             t-on-focusout="() => this.props.composer.isFocused = false"
@@ -56,27 +73,24 @@
                              the textarea properly without flicker.
                         -->
                         <textarea
-                            class="o-mail-Composer-fake position-absolute"
+                            class="o-mail-Composer-fake position-absolute border-0"
+                            t-att-class="{ 'px-3': extended, 'o-normal': normal, 'px-1': env.inChatWindow and !ui.isSmall }"
                             t-model="props.composer.text"
                             t-ref="fakeTextarea"
                             disabled="1"
                         />
                     </div>
-                    <div class="o-mail-Composer-actions d-flex bg-view rounded"
+                    <div class="o-mail-Composer-actions o-right d-flex rounded"
                         t-att-class="{
                             'ms-1': compact and ui.isSmall,
-                            'mx-1': compact and !ui.isSmall,
                             'ms-3': normal,
                             'mx-3 border-top p-1': extended,
+                            'o-focused': props.composer.isFocused,
                         }"
                     >
-                        <div class="d-flex flex-grow-1 align-items-baseline mt-1" t-ref="main-actions">
-                            <button class="btn border-0 p-1 rounded-pill" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.EMOJI}" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-smile-o"/></button>
-                            <FileUploader t-if="allowUpload" multiUpload="true" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
-                                <t t-set-slot="toggler">
-                                    <button t-att-disabled="!state.active" class="o-mail-Composer-attachFiles btn border-0 rounded-pill p-1" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"><i class="fa fa-fw fa-paperclip"/></button>
-                                </t>
-                            </FileUploader>
+                        <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline" t-att-class="{ 'o-mobile': ui.isSmall }" t-ref="main-actions">
+                            <button class="btn p-1" t-att-class="emojiButtonAttClass" aria-label="Emojis" title="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-smile-o" t-att-class="{ 'fa-lg': ui.isSmall }"/></button>
+                            <t t-if="!env.inChatWindow" t-call="mail.Composer.attachFiles"/>
                             <t t-if="extended and ui.isSmall and props.composer.message" t-call="mail.Composer.sendButton"/>
                             <t t-if="!extended" t-call="mail.Composer.fullComposer"/>
                             <t t-if="!extended" t-call="mail.Composer.sendButton"/>
@@ -89,35 +103,47 @@
                     <span t-if="!isSendButtonDisabled and !props.composer.message" t-out="SEND_KEYBIND_TO_SEND"/>
                 </div>
             </div>
-            <div class="o-mail-Composer-footer overflow-auto">
+            <div class="o-mail-Composer-footer overflow-auto smaller" t-att-class="{ 'border-top': compact and props.composer.attachments.length > 0 }">
                 <AttachmentList
                     t-if="allowUpload and props.composer.attachments.length > 0"
                     attachments="props.composer.attachments"
                     unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"
-                    imagesHeight="50"/>
+                    imagesHeight="75"/>
                 <Picker t-props="picker"/>
             </div>
         </div>
         <span t-if="props.composer.message" class="text-muted" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
     </div>
     <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
+    </t>
+</t>
+
+<t t-name="mail.Composer.attachFiles">
+    <FileUploader t-if="allowUpload" multiUpload="true" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
+        <t t-set-slot="toggler">
+            <button t-if="env.inChatWindow" t-att-disabled="!state.active" class="o-mail-Composer-attachFiles btn p-1 mx-1" aria-label="Attach Files" type="button" t-on-click="onClickAddAttachment"><i class="fa fa-fw fa-paperclip" t-att-class="{ 'fa-lg': ui.isSmall }"/><span class="small ms-1">Attach Files</span></button>
+            <button t-else="" t-att-disabled="!state.active" class="o-mail-Composer-attachFiles btn p-1" title="Attach Files" aria-label="Attach Files" type="button" t-on-click="onClickAddAttachment"><i class="fa fa-fw fa-paperclip" t-att-class="{ 'fa-lg': ui.isSmall }"/></button>
+        </t>
+    </FileUploader>
 </t>
 
 <t t-name="mail.Composer.sendButton">
+    <t t-set="sendTitle">Send</t>
     <button class="o-mail-Composer-send btn"
-        t-att-class="{'btn-primary': extended, 'p-1 rounded-pill': !extended, 'btn-link': !extended, 'border-start-0 me-2': env.inDiscussApp}"
+        t-att-class="{'btn-primary o-extended': extended, 'p-1': !extended, 'btn-link': !extended, 'border-start-0': env.inDiscussApp, 'me-1': ui.isSmall, 'o-disabled': isSendButtonDisabled}"
         t-on-click="sendMessage"
         t-att-disabled="isSendButtonDisabled"
+        t-att-title="thread and thread.model !== 'discuss.channel' ? '' : sendTitle"
         t-att-aria-label="SEND_TEXT"
     >
         <t t-if="thread and thread.model !== 'discuss.channel'" t-out="SEND_TEXT"/>
-        <t t-else=""><i class="fa fa-fw fa-paper-plane-o"/></t>
+        <t t-else=""><i class="fa fa-fw fa-paper-plane-o" t-att-class="{ 'fa-lg': ui.isSmall }"/></t>
     </button>
 </t>
 
 <t t-name="mail.Composer.fullComposer">
-    <button t-if="props.showFullComposer and thread and thread.model !== 'discuss.channel'" class="o-mail-Composer-fullComposer btn p-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer" data-hotkey="shift+c">
-        <i class="fa fa-fw fa-expand"/>
+    <button t-if="props.showFullComposer and thread and thread.model !== 'discuss.channel'" class="o-mail-Composer-fullComposer btn p-1" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer" data-hotkey="shift+c">
+        <i class="fa fa-fw fa-expand" t-att-class="{ 'fa-lg': ui.isSmall }"/>
     </button>
 </t>
 

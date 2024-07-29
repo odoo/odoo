@@ -3,9 +3,24 @@
 }
 .o-mail-Thread-newMessage {
     transition: opacity 0.5s;
+    user-select: none;
+
+    hr {
+        border-top-width: 2px;
+        opacity: 80%;
+    }
 
     span {
-        font-size: 0.8rem;
+        padding-top: map-get($spacers, 1) / 2;
+        padding-bottom: map-get($spacers, 1) / 2;
+        font-size: 0.65rem;
+        clip-path: polygon(-2% 52%, 25% 0%, 100% 0%, 100% 100%, 25% 100%);
+        opacity: 90%;
+
+        &.o-small {
+            font-size: 0.5rem;
+            clip-path: polygon(-4% 50%, 25% 0%, 100% 0%, 100% 100%, 25% 100%);
+        }
     }
 }
 
@@ -31,5 +46,19 @@
 }
 
 .o-mail-Thread-bannerHover:hover {
-    filter: brightness(98%);
+    filter: brightness(95%);
+}
+
+.o-mail-Thread-jumpToPresent {
+    --border-opacity: 0.75;
+
+    bottom: 10px;
+    right: 10px;
+    z-index: $o-mail-NavigableList-zIndex - 1;
+    color: darken($o-action, 5%) !important;
+    border-color: rgba(darken($o-action, 5%), 0.75) !important;
+
+    &:hover {
+        filter: brightness(90%);
+    }
 }

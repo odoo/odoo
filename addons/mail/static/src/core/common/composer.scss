@@ -11,8 +11,8 @@
     }
 
     .o-mail-Composer-sidebarMain {
-        padding-top: 0.1875rem; // avatar centered with composer text input: 36px (avatar) + 2*3px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
-        width: 48px;
+        // padding-top: 0.09375rem; // avatar centered with composer text input: 32px (avatar) + 2*1.5px (this value) = 25px ($input-height) + 7px (padding-top) + 2px (border)
+        width: 40px;
     }
 
     .o-mail-Composer-coreHeader {
@@ -32,17 +32,80 @@
     }
 }
 
-.o-mail-Composer-actions button {
-    opacity: 75%;
-    &:hover {
-        background-color: $gray-200;
-        opacity: 100%;
+.o-mail-Composer-actions {
+
+    &.o-left {
+        margin-top: 1px;
+        margin-left: 1px;
+    }
+
+    &.o-right {
+        margin-top: 1px;
+        margin-right: 1px;
+    }
+
+    &.o-mobile {
+        margin-top: 2px;
+        margin-right: 0px;
+    }
+
+    &:not(.o-focused) button {
+        color: $text-muted;
+    }
+
+    button {
+        &:hover {
+            background-color: $gray-200;
+            border-color: $gray-500 !important;
+            i {
+                filter: contrast(2);
+            }
+            &.o-mail-Composer-send:not(.o-extended) {
+                background-color: $o-action !important;
+                border-color: darken($o-action, 5%) !important;
+            }
+        }
+    }
+}
+
+.o-mail-Composer-mainActions {
+    gap: 1px;
+}
+
+.o-mail-Composer-moreActions button {
+    background-color: $gray-200;
+}
+
+.o-mail-Composer-coreMainInner {
+    --border-opacity: 0.75;
+
+    &.o-fuse {
+        background-color: $o-gray-100 !important;
+    }
+
+    &.o-fuse.o-focused {
+        background-color: $o-view-background-color !important;
+    }
+
+    &.o-focused {
+        border-color: rgba($o-action, 0.25) !important;
     }
 }
 
 .o-mail-Composer-input {
-    padding-top: 10px; // carefully crafted to have the text in the middle in chat window
-    padding-bottom: 10px;
+    padding-top: 7px; // carefully crafted to have the text in the middle
+    padding-bottom: 6px;
+
+    &.o-normal {
+        padding-left: (map-get($spacers, 3) + map-get($spacers, 2)) / 2 !important;
+        padding-right: (map-get($spacers, 3) + map-get($spacers, 2)) / 2 !important;
+    }
+
+    &.o-focused {
+        border-color: rgba($o-action, 0.5) !important;
+        background-color: $o-view-background-color;
+    }
+
     max-height: 100px;
     resize: none;
     line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
@@ -52,26 +115,36 @@
     }
 
     &::placeholder {
+        opacity: 75%;
         @include text-truncate();
+        user-select: none;
     }
 }
 
 .o-mail-Composer-avatar {
-    --Avatar-size: #{$o-mail-Avatar-size};
+    --Avatar-size: 34px;
 }
 
 .o-mail-Composer-fake {
     height: 0;
     top: -10000px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
-}
 
-.o-mail-Composer-compactContainer {
-    box-shadow: 0px -3px 25px 3px rgba(50, 50, 50, 0.1);
+    padding-top: 7px;
+    padding-bottom: 6px;
+
+    &.o-normal {
+        padding-left: (map-get($spacers, 3) + map-get($spacers, 2)) / 2 !important;
+        padding-right: (map-get($spacers, 3) + map-get($spacers, 2)) / 2 !important;
+    }
+
+    line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
 }
 
 .o-mail-Composer-input {
     font-family: "text-emoji", $font-family-base;
+}
+
+.o-mail-Composer-send:not(.o-extended):not(.o-disabled) {
+    background-color: lighten($o-action, 5%);
+    color: white;    
 }

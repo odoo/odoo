@@ -1,8 +1,19 @@
 .o-mail-DiscussSidebar-item {
     &:hover {
-        background-color: mix($o-gray-200, $o-gray-300);
+        background-color: mix($o-mail-inspectorBg, $o-action, 77.5%);
+        border-color: mix($o-mail-inspectorBg, $o-action, 70%);
     }
     &.o-active {
-        background-color: $o-gray-300;
+        background-color: mix($o-mail-inspectorBg, $o-action, 70%);
+        border-top-color: mix($o-mail-inspectorBg, $o-action, 65%);
+        border-bottom-color: mix($o-mail-inspectorBg, $o-action, 65%);
+        border-left-color: darken($o-action, 10%);
+        &::before {
+            border-left-color: darken($o-action, 10%);
+        }
+    }
+
+    &:not(:hover):not(.o-active):not(.o-unread) .o-mail-DiscussSidebar-itemName {
+        color: $text-muted;
     }
 }

@@ -25,7 +25,7 @@ test("base rendering", async () => {
     await contains("button", { text: "Send message" });
     await contains("button", { text: "Log note" });
     await contains("button", { text: "Activities" });
-    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach Files']");
     await contains(".o-mail-Followers");
 });
 
@@ -112,8 +112,8 @@ test("attachment counter without attachments", async () => {
     const partnerId = pyEnv["res.partner"].create({});
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("button[aria-label='Attach files']");
-    await contains("button[aria-label='Attach files']", { count: 0, text: "0" });
+    await contains("button[aria-label='Attach Files']");
+    await contains("button[aria-label='Attach Files']", { count: 0, text: "0" });
 });
 
 test("attachment counter with attachments", async () => {
@@ -135,7 +135,7 @@ test("attachment counter with attachments", async () => {
     ]);
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("button[aria-label='Attach files']", { text: "2" });
+    await contains("button[aria-label='Attach Files']", { text: "2" });
 });
 
 test("attachment counter while loading attachments", async () => {
@@ -144,10 +144,10 @@ test("attachment counter while loading attachments", async () => {
     onRpc("/mail/thread/data", async () => await new Deferred()); // simulate long loading
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach Files']");
     await advanceTime(DELAY_FOR_SPINNER);
-    await contains("button[aria-label='Attach files'] .fa-spin");
-    await contains("button[aria-label='Attach files']", { count: 0, text: "0" });
+    await contains("button[aria-label='Attach Files'] .fa-spin");
+    await contains("button[aria-label='Attach Files']", { count: 0, text: "0" });
 });
 
 test("attachment counter transition when attachments become loaded", async () => {
@@ -157,11 +157,11 @@ test("attachment counter transition when attachments become loaded", async () =>
     onRpcBefore("/mail/thread/data", async () => await deferred);
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach Files']");
     await advanceTime(DELAY_FOR_SPINNER);
-    await contains("button[aria-label='Attach files'] .fa-spin");
+    await contains("button[aria-label='Attach Files'] .fa-spin");
     deferred.resolve();
-    await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
+    await contains("button[aria-label='Attach Files'] .fa-spin", { count: 0 });
 });
 
 test("attachment icon open directly the file uploader if there is no attachment yet", async () => {
@@ -186,10 +186,10 @@ test("attachment icon open the attachment box when there is at least 1 attachmen
     ]);
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach Files']");
     await contains(".o-mail-AttachmentBox", { count: 0 });
     await contains(".o-mail-Chatter-fileUploader", { count: 0 });
-    await click("button[aria-label='Attach files']");
+    await click("button[aria-label='Attach Files']");
     await contains(".o-mail-AttachmentBox");
     await contains(".o-mail-Chatter-fileUploader");
 });
@@ -202,11 +202,11 @@ test("composer state conserved when clicking on another topbar button", async ()
     await contains(".o-mail-Chatter-topbar");
     await contains("button", { text: "Send message" });
     await contains("button", { text: "Log note" });
-    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach Files']");
     await click("button", { text: "Log note" });
     await contains("button.active", { text: "Log note" });
     await contains("button:not(.active)", { text: "Send message" });
-    await click(".o-mail-Chatter-topbar button[aria-label='Attach files']");
+    await click(".o-mail-Chatter-topbar button[aria-label='Attach Files']");
     await contains("button.active", { text: "Log note" });
     await contains("button:not(.active)", { text: "Send message" });
 });

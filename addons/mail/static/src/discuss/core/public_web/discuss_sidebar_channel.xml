@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarChannel">
+        <div class="o-mail-DiscussSidebarChannel o-mail-DiscussSidebar-item d-flex rounded-0 align-items-center pe-2 cursor-pointer position-relative"
+             t-att-class="{
+                'bg-inherit': props.thread.notEq(store.discuss.thread),
+                'o-active': props.thread.eq(store.discuss.thread),
+                'o-unread': isUnread,
+                'opacity-50': props.thread.mute_until_dt,
+                }"
+             t-on-click="(ev) => this.openThread(ev)"
+             t-ref="root"
+        >
+            <t t-if="isUnread and store.theme === 'light'" t-set="unreadIndicatorTitle">Unread messages</t>
+            <t t-else="" t-set="unreadIndicatorTitle"></t>
+            <i class="flex-grow-0 flex-shrink-0 fa fa-circle fa-fw me-2 text-dark-subtle" t-att-title="unreadIndicatorTitle ?? ''" t-att-class="(isUnread and store.theme === 'light') ? 'opacity-100' : (isUnread ? ' opacity-50' : 'opacity-0')" style="font-size: 0.3rem;"/>
+            <button class="o-mail-DiscussSidebar-itemMain btn border-0 rounded-0 text-reset overflow-hidden d-flex align-items-center px-0 py-2 bg-inherit">
+                <div class="o-mail-DiscussSidebar-itemAvatar bg-inherit position-relative d-flex flex-shrink-0" style="width:26px;height:26px">
+                    <img class="w-100 h-100 rounded" t-att-src="props.thread.avatarUrl" alt="Thread Image"/>
+                    <ThreadIcon t-if="props.thread.channel_type === 'chat' or (props.thread.channel_type === 'channel' and !thread.authorizedGroupFullName)" thread="props.thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
+                </div>
+                <span class="o-mail-DiscussSidebar-itemName mx-2 text-truncate" t-att-class="{ 'fw-bolder': isUnread, 'o-discuss-itemName-discrete': !isUnread and props.thread.notEq(store.discuss.thread) }">
+                    <t t-esc="props.thread.displayName"/>
+                </span>
+            </button>
+            <div class="flex-grow-1"/>
+            <div class="o-mail-DiscussSidebarChannel-commands d-none ms-1" t-att-class="{ 'me-1': props.thread.importantCounter === 0 }">
+                <div class="d-flex align-items-center" name="commands">
+                    <button t-if="props.thread.canLeave" class="btn btn-secondary p-0 bg-inherit o-red" name="leave" t-on-click.stop="() => this.leaveChannel()" title="Leave this channel">
+                        <i t-attf-class="oi oi-close fa-fw" role="img"/>
+                    </button>
+                    <button t-if="props.thread.canUnpin" class="btn btn-secondary p-0 bg-inherit o-red" t-on-click.stop="() => props.thread.unpin()" title="Unpin Conversation">
+                        <i t-attf-class="oi oi-close fa-fw" role="img"/>
+                    </button>
+                </div>
+            </div>
+            <t t-foreach="channelIndicators" t-as="indicator" t-key="indicator_index" t-component="indicator" t-props="{ thread: props.thread }"/>
+            <div t-if="props.thread.importantCounter > 0">
+                <span t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge mx-1 {{props.thread.mute_until_dt ? 'o-muted' : ''}}" t-esc="props.thread.importantCounter"/>
+            </div>
+        </div>
+    </t>
+</templates>

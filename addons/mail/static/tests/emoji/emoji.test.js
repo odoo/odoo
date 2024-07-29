@@ -96,13 +96,13 @@ test("recent category (basic)", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await contains(".o-EmojiPicker-navbar [title='Frequently used']", { count: 0 });
+    await contains(".o-EmojiPicker-navbar [title='Frequently Used']", { count: 0 });
     await click(".o-EmojiPicker-content .o-Emoji", { text: "😀" });
     await click("button[aria-label='Emojis']");
-    await contains(".o-EmojiPicker-navbar [title='Frequently used']");
+    await contains(".o-EmojiPicker-navbar [title='Frequently Used']");
     await contains(".o-Emoji", {
         text: "😀",
-        after: ["span", { textContent: "Frequently used" }],
+        after: ["span", { textContent: "Frequently Used" }],
         before: ["span", { textContent: "Smileys & Emotion" }],
     });
 });
@@ -121,12 +121,12 @@ test("emoji usage amount orders frequent emojis", async () => {
     await click("button[aria-label='Emojis']");
     await contains(".o-Emoji", {
         text: "👽",
-        after: ["span", { textContent: "Frequently used" }],
+        after: ["span", { textContent: "Frequently Used" }],
         before: [
             ".o-Emoji",
             {
                 text: "😀",
-                after: ["span", { textContent: "Frequently used" }],
+                after: ["span", { textContent: "Frequently Used" }],
                 before: ["span", { textContent: "Smileys & Emotion" }],
             },
         ],
@@ -149,7 +149,7 @@ test("selecting an emoji while holding down the Shift key prevents the emoji pic
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await click(".o-EmojiPicker-content .o-Emoji", { shiftKey: true, text: "👺" });
-    await contains(".o-EmojiPicker-navbar [title='Frequently used']");
+    await contains(".o-EmojiPicker-navbar [title='Frequently Used']");
     await contains(".o-EmojiPicker");
     await contains(".o-mail-Composer-input", { value: "👺" });
 });

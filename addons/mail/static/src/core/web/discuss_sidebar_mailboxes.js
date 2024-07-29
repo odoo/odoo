@@ -1,10 +1,9 @@
-import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
 
 import { Component, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { markEventHandled } from "@web/core/utils/misc";
+import { DiscussSidebarMailbox } from "./discuss_sidebar_mailbox";
 
 /**
  * @typedef {Object} Props
@@ -13,20 +12,11 @@ import { markEventHandled } from "@web/core/utils/misc";
 export class DiscussSidebarMailboxes extends Component {
     static template = "mail.DiscussSidebarMailboxes";
     static props = {};
-    static components = { ThreadIcon };
+    static components = { DiscussSidebarMailbox };
 
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     * @param {import("models").Thread} thread
-     */
-    openThread(ev, thread) {
-        markEventHandled(ev, "sidebar.openThread");
-        thread.setAsDiscussThread();
     }
 }
 
