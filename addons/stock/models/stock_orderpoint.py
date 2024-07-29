@@ -100,6 +100,12 @@ class StockWarehouseOrderpoint(models.Model):
         ('product_location_check', 'unique (product_id, location_id, company_id)', 'A replenishment rule already exists for this product on this location.'),
     ]
 
+    @api.model
+    def _forecast_dependencies(self):
+        # Defines a list of harcoded dependencies that are common to ``_compute_qty`` and ``_compute_qty_to_order``
+        # Meant to be overriden by inheriting models
+        return ['product_id', 'location_id']
+
     @api.depends('warehouse_id')
     def _compute_allowed_location_ids(self):
         loc_domain = [('usage', 'in', ('internal', 'view'))]
@@ -249,8 +255,8 @@ class StockWarehouseOrderpoint(models.Model):
         self.trigger = 'auto'
         return self.action_replenish()
 
-    @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state',
-                 'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty')
+    @api.depends(lambda self: self._forecast_dependencies() + ['product_id.stock_move_ids', 'product_id.stock_move_ids.state',
+                'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty'])
     def _compute_qty(self):
         orderpoints_contexts = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         for orderpoint in self:
@@ -270,7 +276,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
-    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'visibility_days', 'product_id', 'location_id')
+    @api.depends(lambda self: self._forecast_dependencies() + ['qty_multiple', 'product_min_qty', 'product_max_qty', 'visibility_days'])
     def _compute_qty_to_order(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:

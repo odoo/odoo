@@ -48,6 +48,10 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             orderpoint.show_bom = orderpoint.route_id.id in manufacture_route
 
+    @api.model
+    def _forecast_dependencies(self):
+        return super()._forecast_dependencies() + ['product_id.produce_delay']
+
     def _compute_visibility_days(self):
         res = super()._compute_visibility_days()
         for orderpoint in self:

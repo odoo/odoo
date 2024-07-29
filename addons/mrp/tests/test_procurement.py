@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import timedelta
+from datetime import timedelta, datetime
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
@@ -786,3 +786,54 @@ class TestProcurement(TestMrpCommon):
         ]
         self.assertRecordValues(mo.move_raw_ids, expected_vals)
         self.assertRecordValues(mo.picking_ids.move_ids, expected_vals)
+
+    def test_update_produce_delay(self):
+        """ Test that modifying the manufactured product's `produce_delay`
+            updates the qty_forecast """
+
+        fini, compo = self.env['product.product'].create([{
+            'name': 'finished',
+            'type': 'product',
+            'route_ids': [Command.link(self.ref('mrp.route_warehouse0_manufacture'))],
+        },
+        {
+            'name': 'compo',
+            'type': 'consu',
+        }])
+
+        bom = self.env['mrp.bom'].create({
+            'product_id': fini.id,
+            'product_tmpl_id': fini.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo.id, 'product_qty': 1.0})
+            ],
+        })
+
+        rr = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'test rr',
+            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+            'product_id': fini.id,
+            'route_id': self.ref('mrp.route_warehouse0_manufacture'),
+            'product_min_qty': 5,
+            'product_max_qty': 15,
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = fini
+        mo_form.bom_id = bom
+        mo_form.product_qty = 10
+        mo_form.date_planned_start = datetime.now() + timedelta(days=7)
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        self.assertEqual(rr.qty_forecast, 0)
+        self.assertEqual(rr.qty_to_order, 15)
+
+        rr.invalidate_recordset()  # needed to force recompute of qty_forecast, becasue `product_id.produce_delay` is an indirect dependency
+        fini.produce_delay += 10
+
+        self.assertEqual(rr.qty_forecast, 10)
+        self.assertEqual(rr.qty_to_order, 0)
