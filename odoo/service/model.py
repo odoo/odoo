@@ -6,7 +6,7 @@ import time
 from collections.abc import Mapping, Sequence
 from functools import partial
 
-from psycopg2 import IntegrityError, OperationalError, errorcodes
+from psycopg2 import IntegrityError, OperationalError, errorcodes, errors
 
 import odoo
 from odoo.exceptions import UserError, ValidationError
@@ -20,6 +20,7 @@ from ..tools import lazy
 _logger = logging.getLogger(__name__)
 
 PG_CONCURRENCY_ERRORS_TO_RETRY = (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED)
+PG_CONCURRENCY_EXCEPTIONS_TO_RETRY = (errors.LockNotAvailable, errors.SerializationFailure, errors.DeadlockDetected)
 MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 
 
@@ -81,30 +82,31 @@ def _as_validation_error(env, exc):
             field = model._fields.get(exc.diag.column_name) or field
             break
 
-    if exc.pgcode == errorcodes.NOT_NULL_VIOLATION:
-        return ValidationError(_(
-            "The operation cannot be completed:\n"
-            "- Create/update: a mandatory field is not set.\n"
-            "- Delete: another model requires the record being deleted."
-            " If possible, archive it instead.\n\n"
-            "Model: %(model_name)s (%(model_tech_name)s)\n"
-            "Field: %(field_name)s (%(field_tech_name)s)\n",
-            model_name=model._description,
-            model_tech_name=model._name,
-            field_name=field.string,
-            field_tech_name=field.name,
-        ))
+    match exc:
+        case errors.NotNullViolation():
+            return ValidationError(_(
+                "The operation cannot be completed:\n"
+                "- Create/update: a mandatory field is not set.\n"
+                "- Delete: another model requires the record being deleted."
+                " If possible, archive it instead.\n\n"
+                "Model: %(model_name)s (%(model_tech_name)s)\n"
+                "Field: %(field_name)s (%(field_tech_name)s)\n",
+                model_name=model._description,
+                model_tech_name=model._name,
+                field_name=field.string,
+                field_tech_name=field.name,
+            ))
 
-    if exc.pgcode == errorcodes.FOREIGN_KEY_VIOLATION:
-        return ValidationError(_(
-            "The operation cannot be completed: another model requires "
-            "the record being deleted. If possible, archive it instead.\n\n"
-            "Model: %(model_name)s (%(model_tech_name)s)\n"
-            "Constraint: %(constraint)s\n",
-            model_name=model._description,
-            model_tech_name=model._name,
-            constraint=exc.diag.constraint_name,
-        ))
+        case errors.ForeignKeyViolation():
+            return ValidationError(_(
+                "The operation cannot be completed: another model requires "
+                "the record being deleted. If possible, archive it instead.\n\n"
+                "Model: %(model_name)s (%(model_tech_name)s)\n"
+                "Constraint: %(constraint)s\n",
+                model_name=model._description,
+                model_tech_name=model._name,
+                constraint=exc.diag.constraint_name,
+            ))
 
     if exc.diag.constraint_name in env.registry._sql_constraints:
         return ValidationError(_(
@@ -151,7 +153,7 @@ def retrying(func, env):
                             raise RuntimeError(f"Cannot retry request on input file {filename!r} after serialization failure") from exc
                 if isinstance(exc, IntegrityError):
                     raise _as_validation_error(env, exc) from exc
-                if exc.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
+                if not isinstance(exc, PG_CONCURRENCY_EXCEPTIONS_TO_RETRY):
                     raise
                 if not tryleft:
                     _logger.info("%s, maximum number of tries reached!", errorcodes.lookup(exc.pgcode))

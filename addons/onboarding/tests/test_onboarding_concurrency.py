@@ -4,7 +4,7 @@
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-from psycopg2 import IntegrityError
+import psycopg2.errors
 
 import odoo
 from odoo.tests.common import get_db_name, tagged, BaseCase
@@ -44,8 +44,6 @@ class TestOnboardingConcurrency(BaseCase):
         barrier = threading.Barrier(2)
 
         def run():
-            raised_unique_violation = False
-
             with self.registry.cursor() as cr:
                 env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
                 onboarding = env['onboarding.onboarding'].search([
@@ -58,11 +56,10 @@ class TestOnboardingConcurrency(BaseCase):
                 barrier.wait(timeout=2)
                 try:
                     onboarding._create_progress()
-                except IntegrityError as e:
-                    if e.pgcode == "23505":  # UniqueViolation
-                        raised_unique_violation = True
+                except psycopg2.errors.UniqueViolation:
+                    return True
 
-            return raised_unique_violation
+            return False
 
         with ThreadPoolExecutor(max_workers=2) as executor:
             future_1 = executor.submit(run)

@@ -18,7 +18,7 @@ import re
 import sys
 from pathlib import Path
 
-from psycopg2 import ProgrammingError, errorcodes
+from psycopg2.errors import InsufficientPrivilege
 
 import odoo
 
@@ -150,15 +150,12 @@ def main(args):
             try:
                 odoo.service.db._create_empty_database(db_name)
                 config['init']['base'] = True
-            except ProgrammingError as err:
-                if err.pgcode == errorcodes.INSUFFICIENT_PRIVILEGE:
-                    # We use an INFO loglevel on purpose in order to avoid
-                    # reporting unnecessary warnings on build environment
-                    # using restricted database access.
-                    _logger.info("Could not determine if database %s exists, "
-                                 "skipping auto-creation: %s", db_name, err)
-                else:
-                    raise err
+            except InsufficientPrivilege as err:
+                # We use an INFO loglevel on purpose in order to avoid
+                # reporting unnecessary warnings on build environment
+                # using restricted database access.
+                _logger.info("Could not determine if database %s exists, "
+                             "skipping auto-creation: %s", db_name, err)
             except odoo.service.db.DatabaseExists:
                 pass
 
