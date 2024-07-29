@@ -150,6 +150,17 @@ describe("collapsed selection", () => {
         });
     });
 
+    test('should insert an "empty" block', async () => {
+        await testEditor({
+            contentBefore: "<p>abcd[]</p>",
+            stepFunction: async (editor) => {
+                editor.shared.domInsert(parseHTML(editor.document, "<p>efgh</p><p></p>"));
+                editor.dispatch("ADD_STEP");
+            },
+            contentAfter: "<p>abcdefgh</p><p>[]<br></p>",
+        });
+    });
+
     test("never unwrap tables in breakable paragrap", async () => {
         // P elements' content can only be "phrasing" content
         // Adding a table within p is not possible
