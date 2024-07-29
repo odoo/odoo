@@ -23,8 +23,6 @@ Allows users to send documents by post
     'assets': {
         'web.assets_backend': [
             'snailmail/static/src/**/*',
-            ('remove', 'snailmail/static/src/js/**/*'),
-            ('remove', 'snailmail/static/src/scss/**/*'),
         ],
         'snailmail.report_assets_snailmail': [
             ('include', 'web._assets_helpers'),
@@ -32,8 +30,6 @@ Allows users to send documents by post
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
-            'snailmail/static/src/scss/**/*',
-            'snailmail/static/src/js/**/*',
         ],
         'web.assets_unit_tests': [
             'snailmail/static/tests/**/*',
