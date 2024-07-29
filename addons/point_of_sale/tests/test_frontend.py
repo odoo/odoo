@@ -1402,7 +1402,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             "city": "Acity",
             "state_id": self.env.ref("base.state_us_30").id,  # Ohio
             "country_id": self.env.ref("base.us").id,
-            "zip": "99999",
+            "zip": "26432685463",
             "phone": "1234567890",
             "mobile": "0987654321",
             "email": "john@doe.com"
