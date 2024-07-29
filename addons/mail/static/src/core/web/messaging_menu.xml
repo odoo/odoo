@@ -18,7 +18,7 @@
 
 <t t-name="mail.MessagingMenu.content">
     <div t-if="!(ui.isSmall and env.inDiscussApp and store.discuss.activeTab === 'main')" t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu`">
-        <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'text-uppercase border-start-0 border-end-0': ui.isSmall, 'bg-view border-bottom': !ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
+        <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'bg-view border-bottom': !ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
             <t t-if="!ui.isSmall">
                 <MessagingMenuQuickSearch t-if="state.searchOpen" onClose.bind="toggleSearch"/>
                 <t t-else="">
