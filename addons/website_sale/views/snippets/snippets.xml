@@ -330,6 +330,14 @@
                          data-reload="/"/>
         </div>
     </xpath>
+    <xpath expr="//div[@data-js='MegaMenuLayout']/we-select" position="inside">
+        <t t-set="_label">Ecommerce Categories</t>
+        <we-button t-att-data-select-label="_label"
+                   data-select-template="website_sale.s_mega_menu_ecommerce_categories"
+                   data-img="/website_sale/static/src/img/snippets_thumbs/s_mega_menu_ecommerce_categories.svg"
+                   title="The menu has been generated based on the current eCommerce categories but will not be dynamically updated if they change"
+                   t-out="_label"/>
+    </xpath>
 </template>
 
 <template id="snippets_options_web_editor" inherit_id="web_editor.snippet_options" name="e-commerce base snippet options">

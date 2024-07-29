@@ -4115,10 +4115,12 @@ options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
      * @returns {string} xmlid of the current template.
      */
     _getCurrentTemplateXMLID: function () {
-        const templateDefiningClass = this.containerEl.querySelector('section')
-            .classList.value.split(' ').filter(cl => cl.startsWith('s_mega_menu'))[0];
-        return `website.${templateDefiningClass}`;
-    },
+        const sectionEl = this.containerEl.querySelector('section');
+        const dataTemplateId = sectionEl.getAttribute('data-template-id');
+        const templateDefiningClass = sectionEl.classList.value
+            .split(' ').filter(cl => cl.startsWith('s_mega_menu'))[0];
+        return dataTemplateId || `website.${templateDefiningClass}`;
+    }
 });
 
 /**

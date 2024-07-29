@@ -59,6 +59,7 @@
         'views/snippets/s_dynamic_snippet_products.xml',
         'views/snippets/s_dynamic_snippet_products_preview_data.xml',
         'views/snippets/s_popup.xml',
+        'views/snippets/s_mega_menu_ecommerce_categories.xml',
     ],
     'demo': [
         'data/demo.xml',
