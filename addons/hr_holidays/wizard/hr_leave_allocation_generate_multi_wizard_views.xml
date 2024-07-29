@@ -6,7 +6,7 @@
             <form string="Generate time off allocations for multiple employees">
                 <div id="title" class="oe_title">
                     <h2>
-                        <field name="name" class="w-100" placeholder="e.g. Time Off type (From validity start to validity end / no limit)"/>
+                        <field name="name" class="w-100" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" required="1"/>
                     </h2>
                 </div>
                 <group>
@@ -44,6 +44,7 @@
                         </div>
                     </group>
                 </group>
+                <field name="notes" placeholder="Add a reason..." nolabel="1"/>
                 <footer>
                     <button name="action_generate_allocations" type="object" class="btn-primary" string="Create Allocations" accesskey="c"/>
                     <button special="cancel" string="Discard" close="1" accesskey="j" />
