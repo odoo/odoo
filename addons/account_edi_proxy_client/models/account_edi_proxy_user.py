@@ -1,20 +1,20 @@
-from odoo import api, models, fields, _
-from odoo.exceptions import UserError
-from odoo.tools import index_exists
-from .account_edi_proxy_auth import OdooEdiProxyAuth
+import base64
+import logging
 
+import psycopg2.errors
+import requests
+import uuid
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.fernet import Fernet
-from psycopg2 import OperationalError
-import requests
-import uuid
-import base64
-import logging
 
+from odoo import models, fields, _
+from odoo.exceptions import UserError
+from odoo.tools import index_exists
+from .account_edi_proxy_auth import OdooEdiProxyAuth
 
 _logger = logging.getLogger(__name__)
 
@@ -214,10 +214,8 @@ class AccountEdiProxyClientUser(models.Model):
         try:
             with self.env.cr.savepoint(flush=False):
                 self.env.cr.execute('SELECT * FROM account_edi_proxy_client_user WHERE id IN %s FOR UPDATE NOWAIT', [tuple(self.ids)])
-        except OperationalError as e:
-            if e.pgcode == '55P03':
-                return
-            raise e
+        except psycopg2.errors.LockNotAvailable:
+            return
         response = self._make_request(self._get_server_url() + '/iap/account_edi/1/renew_token')
         if 'error' in response:
             # can happen if the database was duplicated and the refresh_token was refreshed by the other database.

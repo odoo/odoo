@@ -4,7 +4,7 @@ import logging
 
 import werkzeug
 from psycopg2.errorcodes import SERIALIZATION_FAILURE
-from psycopg2 import OperationalError
+from psycopg2.errors import SerializationFailure
 
 from odoo import http
 from odoo.exceptions import AccessError, UserError
@@ -22,10 +22,6 @@ WSGI_SAFE_KEYS = {'PATH_INFO', 'QUERY_STRING', 'RAW_URI', 'SCRIPT_NAME', 'wsgi.u
 
 # Force serialization errors. Patched in some tests.
 should_fail = None
-
-
-class SerializationFailureError(OperationalError):
-    pgcode = SERIALIZATION_FAILURE
 
 
 class TestHttp(http.Controller):
@@ -227,7 +223,9 @@ class TestHttp(http.Controller):
         data = ufile.read()
         if should_fail:
             should_fail = False  # Fail once
-            raise SerializationFailureError()
+            sf = SerializationFailure()
+            sf.__setstate__({'pgcode': SERIALIZATION_FAILURE})
+            raise sf
 
         return data.decode()
 

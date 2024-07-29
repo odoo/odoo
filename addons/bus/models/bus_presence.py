@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from psycopg2 import OperationalError
-
 from odoo import api, fields, models
 from odoo import tools
-from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
+from odoo.service.model import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 
 UPDATE_PRESENCE_DELAY = 60
 DISCONNECTION_TIMER = UPDATE_PRESENCE_DELAY + 5
@@ -45,11 +43,9 @@ class BusPresence(models.Model):
                 self._update_presence(inactivity_period=inactivity_period, identity_field=identity_field, identity_value=identity_value)
                 # commit on success
                 self.env.cr.commit()
-        except OperationalError as e:
-            if e.pgcode in PG_CONCURRENCY_ERRORS_TO_RETRY:
-                # ignore concurrency error
-                return self.env.cr.rollback()
-            raise
+        except PG_CONCURRENCY_EXCEPTIONS_TO_RETRY:
+            # ignore concurrency error
+            return self.env.cr.rollback()
 
     @api.model
     def _update_presence(self, inactivity_period, identity_field, identity_value):
