@@ -2,23 +2,33 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
+from odoo.tools.misc import unquote
 
 
 class ProjectProductEmployeeMap(models.Model):
     _name = 'project.sale.line.employee.map'
     _description = 'Project Sales line, employee mapping'
 
+    def _domain_sale_line_id(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            [
+                ('is_service', '=', True),
+                ('is_expense', '=', False),
+                ('state', 'in', ['sale', 'done']),
+                ('order_partner_id', '=?', unquote('partner_id')),
+                '|', ('company_id', '=', False), ('company_id', '=', unquote('company_id')),
+            ],
+        ])
+        return str(domain)
+
     project_id = fields.Many2one('project.project', "Project", required=True)
     employee_id = fields.Many2one('hr.employee', "Employee", required=True)
     sale_line_id = fields.Many2one(
         'sale.order.line', "Sales Order Item",
         compute="_compute_sale_line_id", store=True, readonly=False,
-        domain="""[
-            ('is_service', '=', True),
-            ('is_expense', '=', False),
-            ('state', 'in', ['sale', 'done']),
-            ('order_partner_id', '=?', partner_id),
-            '|', ('company_id', '=', False), ('company_id', '=', company_id)]""")
+        domain=_domain_sale_line_id)
     company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id')
     partner_id = fields.Many2one(related='project_id.partner_id')
     price_unit = fields.Float("Unit Price", compute='_compute_price_unit', store=True, readonly=True)
