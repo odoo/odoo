@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.tools.misc import unquote
 
 TIMESHEET_INVOICE_TYPES = [
     ('billable_time', 'Billed on Timesheets'),
@@ -21,18 +22,25 @@ TIMESHEET_INVOICE_TYPES = [
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
+    def _domain_so_line(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            [
+                ('qty_delivered_method', 'in', ['analytic', 'timesheet']),
+                ('is_service', '=', True),
+                ('is_expense', '=', False),
+                ('state', '=', 'sale'),
+                ('order_partner_id.commercial_partner_id', '=', unquote('commercial_partner_id')),
+            ],
+        ])
+        return str(domain)
+
     timesheet_invoice_type = fields.Selection(TIMESHEET_INVOICE_TYPES, string="Billable Type",
             compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet", index='btree_not_null')
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False,
-        domain="""[
-            ('qty_delivered_method', 'in', ['analytic', 'timesheet']),
-            ('order_partner_id.commercial_partner_id', '=', commercial_partner_id),
-            ('is_service', '=', True),
-            ('is_expense', '=', False),
-            ('state', '=', 'sale')
-        ]""",
+        domain=_domain_so_line,
         help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.")
     # we needed to store it only in order to be able to groupby in the portal
     order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=True, index=True)
