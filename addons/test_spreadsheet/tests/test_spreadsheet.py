@@ -10,3 +10,31 @@ class ValidateSpreadsheetMixinData(TransactionCase):
         spreadsheet_form.spreadsheet_binary_data = base64.b64encode(json.dumps({'key': 'value'}).encode('utf-8'))
         with self.assertRaises(ValidationError, msg='Invalid JSON Data'):
             spreadsheet_form.spreadsheet_binary_data = base64.b64encode('invalid json'.encode('utf-8'))
+
+    def test_spreadsheet_pivot(self):
+        data = {
+            'sheets': [{'id': 'sheet1'}],
+            'pivots': {
+                '1': {
+                    'dataSet': {
+                        'zone': {
+                            'left': 6,
+                            'right': 6,
+                            'top': 5,
+                            'bottom': 5
+                        },
+                        'sheetId': 'sheet1'
+                    },
+                    'columns': [],
+                    'rows': [],
+                    'measures': [],
+                    'name': 'New pivot',
+                    'type': 'SPREADSHEET',
+                    'formulaId': '1'
+                }
+            }
+        }
+        spreadsheet = self.env['spreadsheet.test'].create({
+            'spreadsheet_data': json.dumps(data)
+        })
+        self.assertTrue(spreadsheet.exists())
