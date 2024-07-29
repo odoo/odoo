@@ -131,11 +131,6 @@ class AccountJournal(models.Model):
         readonly=False, store=True,
         help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal",
     )
-    payment_sequence = fields.Boolean(
-        string='Dedicated Payment Sequence',
-        compute='_compute_payment_sequence', readonly=False, store=True, precompute=True,
-        help="Check this box if you don't want to share the same sequence on payments and bank transactions posted on this journal",
-    )
     sequence_override_regex = fields.Text(help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"\
                                           "This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"\
                                           "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"\
@@ -562,11 +557,6 @@ class AccountJournal(models.Model):
         for journal in self:
             journal.refund_sequence = journal.type in ('sale', 'purchase')
 
-    @api.depends('type')
-    def _compute_payment_sequence(self):
-        for journal in self:
-            journal.payment_sequence = journal.type in ('bank', 'cash')
-
     def unlink(self):
         bank_accounts = self.env['res.partner.bank'].browse()
         for bank_account in self.mapped('bank_account_id'):
@@ -969,6 +959,17 @@ class AccountJournal(models.Model):
         company_currency = self.company_id.currency_id
         journal_currency = self.currency_id if self.currency_id and self.currency_id != company_currency else False
         return amount_currency if journal_currency else balance, nb_lines
+
+    def _has_dedicated_payment_sequence(self):
+        self.ensure_one()
+
+        return (
+            self.type in ['cash', 'bank']
+            and (
+                any(self.outbound_payment_method_line_ids.mapped('payment_sequence'))
+                or any(self.inbound_payment_method_line_ids.mapped('payment_sequence'))
+            )
+        )
 
     def _get_journal_inbound_outstanding_payment_accounts(self):
         """

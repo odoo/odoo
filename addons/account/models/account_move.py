@@ -789,7 +789,7 @@ class AccountMove(models.Model):
                 ('type', '=', journal_type),
             ])
 
-    @api.depends('posted_before', 'state', 'journal_id', 'date', 'move_type', 'payment_id')
+    @api.depends('posted_before', 'state', 'journal_id', 'date', 'move_type', 'payment_id.payment_method_line_id')
     def _compute_name(self):
         self = self.sorted(lambda m: (m.date, m.ref or '', m._origin.id))
 
@@ -817,7 +817,6 @@ class AccountMove(models.Model):
 
         self.filtered(lambda m: not m.name and not move.quick_edit_mode).name = '/'
         self._inverse_name()
-
 
     @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
@@ -3032,16 +3031,27 @@ class AccountMove(models.Model):
         param = {'journal_id': self.journal_id.id}
         is_payment = self.payment_id or self.env.context.get('is_payment')
 
+        domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False))]
+        if self.journal_id.refund_sequence:
+            refund_types = ('out_refund', 'in_refund')
+            domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
+        if self.journal_id._has_dedicated_payment_sequence():
+            if is_payment:
+                domain += [('payment_id', '!=', False)]
+                if self.payment_id.payment_method_line_id.payment_sequence:
+                    domain += [('payment_id.payment_method_line_id', '=', self.payment_id.payment_method_line_id.id)]
+                else:
+                    domain += [('payment_id.payment_method_line_id.payment_sequence', '=', False)]
+            else:
+                domain += [('payment_id', '=', False)]
+
+        reference_move = self.env['account.move']
+
         if not relaxed:
-            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False))]
-            if self.journal_id.refund_sequence:
-                refund_types = ('out_refund', 'in_refund')
-                domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
-            if self.journal_id.payment_sequence:
-                domain += [('payment_id', '!=' if is_payment else '=', False)]
-            reference_move_name = self.sudo().search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
-            if not reference_move_name:
-                reference_move_name = self.sudo().search(domain, order='date asc', limit=1).name
+            reference_move = self.sudo().search(domain + [('date', '<=', self.date)], order='date desc', limit=1)
+            if not reference_move:
+                reference_move = self.sudo().search(domain, order='date asc', limit=1)
+            reference_move_name = reference_move.name
             sequence_number_reset = self._deduce_sequence_number_reset(reference_move_name)
             date_start, date_end = self._get_sequence_date_range(sequence_number_reset)
             where_string += """ AND date BETWEEN %(date_start)s AND %(date_end)s"""
@@ -3060,9 +3070,15 @@ class AccountMove(models.Model):
                 where_string += " AND move_type IN ('out_refund', 'in_refund') "
             else:
                 where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
-        elif self.journal_id.payment_sequence:
+        elif self.journal_id._has_dedicated_payment_sequence():
+            last_similar_payment_move = (
+                reference_move
+                or self.sudo().search(domain + [('date', '<=', self.date)], order='date desc', limit=1)
+                or self.sudo().search(domain, order='date asc', limit=1)
+            )
             if is_payment:
-                where_string += " AND payment_id IS NOT NULL "
+                where_string += " AND payment_id = %(last_similar_payment)s "
+                param['last_similar_payment'] = last_similar_payment_move.payment_id.id or -1
             else:
                 where_string += " AND payment_id IS NULL "
 
@@ -3077,8 +3093,11 @@ class AccountMove(models.Model):
             starting_sequence = "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
-        if self.journal_id.payment_sequence and self.payment_id or self.env.context.get('is_payment'):
-            starting_sequence = "P" + starting_sequence
+        if self.payment_id or self.env.context.get('is_payment'):
+            if self.payment_id.payment_method_line_id.payment_sequence:
+                starting_sequence = "P%02d" % (self.payment_id.payment_method_line_id.id) + starting_sequence
+            else:
+                starting_sequence = "P" + starting_sequence
         return starting_sequence
 
     def _get_sequence_date_range(self, reset):
