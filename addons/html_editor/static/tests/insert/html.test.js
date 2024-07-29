@@ -479,7 +479,7 @@ describe("not collapsed selection", () => {
                 );
                 editor.dispatch("ADD_STEP");
             },
-            contentAfter: '<p><a href="#">link</a></p><p><a href="#">link</a>[]<br></p>',
+            contentAfter: '<p><a href="#">link</a></p><p><a href="#">link</a>[]</p>',
         });
     });
 });

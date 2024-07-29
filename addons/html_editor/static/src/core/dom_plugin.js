@@ -14,14 +14,15 @@ import {
     areSimilarElements,
     getDeepestPosition,
     isEditorTab,
+    isEmptyBlock,
     isProtecting,
     isSelfClosingElement,
     isShrunkBlock,
     paragraphRelatedElements,
 } from "../utils/dom_info";
-import { closestElement, descendants } from "../utils/dom_traversal";
+import { closestElement, descendants, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
-import { DIRECTIONS, childNodeIndex, rightPos } from "../utils/position";
+import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 export class DomPlugin extends Plugin {
@@ -149,37 +150,42 @@ export class DomPlugin extends Plugin {
         }
 
         startNode = startNode || this.shared.getEditableSelection().anchorNode;
-        // If the selection anchorNode is the editable itself, the content
-        // should not be unwrapped.
-        if (selection.anchorNode !== this.editable) {
-            // In case the html inserted is all contained in a single root <p> or <li>
-            // tag, we take the all content of the <p> or <li> and avoid inserting the
-            // <p> or <li>. The same is true for a <pre> inside a <pre>.
-            if (
-                container.childElementCount === 1 &&
-                (container.firstChild.nodeName === "P" ||
-                    container.firstChild.nodeName === "LI" ||
-                    (container.firstChild.nodeName === "PRE" && closestElement(startNode, "pre")))
-            ) {
-                const p = container.firstElementChild;
-                container.replaceChildren(...p.childNodes);
-            } else if (container.childElementCount > 1) {
-                // Grab the content of the first child block and isolate it.
-                if (
-                    isBlock(container.firstChild) &&
-                    !["TABLE", "UL", "OL"].includes(container.firstChild.nodeName)
-                ) {
-                    containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
-                    container.firstElementChild.remove();
-                }
-                // Grab the content of the last child block and isolate it.
-                if (
-                    isBlock(container.lastChild) &&
-                    !["TABLE", "UL", "OL"].includes(container.lastChild.nodeName)
-                ) {
-                    containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
-                    container.lastElementChild.remove();
-                }
+        const block = closestBlock(selection.anchorNode);
+
+        const shouldUnwrap = (node) =>
+            [...paragraphRelatedElements, "LI"].includes(node.nodeName) &&
+            block.textContent !== "" &&
+            [node.nodeName, "DIV"].includes(block.nodeName) &&
+            // If the selection anchorNode is the editable itself, the content
+            // should not be unwrapped.
+            selection.anchorNode !== this.editable;
+
+        // In case the html inserted is all contained in a single root <p> or <li>
+        // tag, we take the all content of the <p> or <li> and avoid inserting the
+        // <p> or <li>.
+        if (
+            container.childElementCount === 1 &&
+            (["P", "LI"].includes(container.firstChild.nodeName) ||
+                shouldUnwrap(container.firstChild)) &&
+            selection.anchorNode !== this.editable
+        ) {
+            const p = container.firstElementChild;
+            container.replaceChildren(...p.childNodes);
+        } else if (container.childElementCount > 1) {
+            const isSelectionAtStart =
+                firstLeaf(block) === selection.anchorNode && selection.anchorOffset === 0;
+            const isSelectionAtEnd =
+                lastLeaf(block) === selection.focusNode &&
+                selection.focusOffset === nodeSize(selection.focusNode);
+            // Grab the content of the first child block and isolate it.
+            if (shouldUnwrap(container.firstChild) && !isSelectionAtStart) {
+                containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
+                container.firstElementChild.remove();
+            }
+            // Grab the content of the last child block and isolate it.
+            if (shouldUnwrap(container.lastChild) && !isSelectionAtEnd) {
+                containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
+                container.lastElementChild.remove();
             }
         }
 
@@ -277,8 +283,13 @@ export class DomPlugin extends Plugin {
                         );
                         currentNode = insertBefore ? right : left;
                         const otherNode = insertBefore ? left : right;
-                        if (isBlock(otherNode)) {
+                        if (
+                            this.shared.isUnsplittable(nodeToInsert) &&
+                            container.childNodes.length === 1
+                        ) {
                             fillShrunkPhrasingParent(otherNode);
+                        } else if (isEmptyBlock(otherNode)) {
+                            otherNode.remove();
                         }
                         if (otherNode.nodeType === Node.ELEMENT_NODE) {
                             cleanTrailingBR(otherNode);
@@ -320,7 +331,10 @@ export class DomPlugin extends Plugin {
             currentNode = previousNode;
         }
         currentNode = lastChildNode || currentNode;
-        let lastPosition = rightPos(currentNode);
+        let lastPosition = [...paragraphRelatedElements, "LI"].includes(currentNode.nodeName)
+            ? rightPos(lastLeaf(currentNode))
+            : rightPos(currentNode);
+
         if (!this.config.allowInlineAtRoot && this.isEditionBoundary(lastPosition[0])) {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);

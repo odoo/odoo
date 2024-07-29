@@ -118,7 +118,7 @@ describe("Html Paste cleaning - whitelist", () => {
                     `<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-ddad60c5-7fff-0a8f-fdd5-c1107201fe26"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test1</span></p><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test2</span></p></b>`
                 );
             },
-            contentAfter: "<p>test1</p><p>test2[]<br></p>",
+            contentAfter: "<p>test1</p><p>test2[]</p>",
         });
     });
 
@@ -132,7 +132,7 @@ describe("Html Paste cleaning - whitelist", () => {
                 );
             },
             contentAfter:
-                "<ul><li><p>Google</p></li><li><p>Test</p></li><li><p>test2</p></li></ul><p>[]<br></p>",
+                "<ul><li><p>Google</p></li><li><p>Test</p></li><li><p>test2[]</p></li></ul>",
         });
     });
 
@@ -146,7 +146,7 @@ describe("Html Paste cleaning - whitelist", () => {
                 );
             },
             contentAfter:
-                "<ul><li><h1>Google</h1></li><li><h1>Test</h1></li><li><h1>test2</h1></li></ul><p>[]<br></p>",
+                "<ul><li><h1>Google</h1></li><li><h1>Test</h1></li><li><h1>test2[]</h1></li></ul>",
         });
     });
 });
@@ -629,7 +629,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h1>abc<br>def<br>ghi<br>jkl</h1>");
                 },
-                contentAfter: "<p>abc</p><h1>def</h1><h1>ghi</h1><p>jkl[]</p>",
+                contentAfter: "<h1>abc</h1><h1>def</h1><h1>ghi</h1><h1>jkl[]</h1>",
             });
         });
 
@@ -639,7 +639,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h2>abc<br>def<br>ghi<br>jkl</h2>");
                 },
-                contentAfter: "<p>abc</p><h2>def</h2><h2>ghi</h2><p>jkl[]</p>",
+                contentAfter: "<h2>abc</h2><h2>def</h2><h2>ghi</h2><h2>jkl[]</h2>",
             });
         });
 
@@ -649,7 +649,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h3>abc<br>def<br>ghi<br>jkl</h3>");
                 },
-                contentAfter: "<p>abc</p><h3>def</h3><h3>ghi</h3><p>jkl[]</p>",
+                contentAfter: "<h3>abc</h3><h3>def</h3><h3>ghi</h3><h3>jkl[]</h3>",
             });
         });
 
@@ -659,7 +659,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h4>abc<br>def<br>ghi<br>jkl</h4>");
                 },
-                contentAfter: "<p>abc</p><h4>def</h4><h4>ghi</h4><p>jkl[]</p>",
+                contentAfter: "<h4>abc</h4><h4>def</h4><h4>ghi</h4><h4>jkl[]</h4>",
             });
         });
 
@@ -669,7 +669,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h5>abc<br>def<br>ghi<br>jkl</h5>");
                 },
-                contentAfter: "<p>abc</p><h5>def</h5><h5>ghi</h5><p>jkl[]</p>",
+                contentAfter: "<h5>abc</h5><h5>def</h5><h5>ghi</h5><h5>jkl[]</h5>",
             });
         });
 
@@ -679,7 +679,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<h6>abc<br>def<br>ghi<br>jkl</h6>");
                 },
-                contentAfter: "<p>abc</p><h6>def</h6><h6>ghi</h6><p>jkl[]</p>",
+                contentAfter: "<h6>abc</h6><h6>def</h6><h6>ghi</h6><h6>jkl[]</h6>",
             });
         });
 
@@ -724,7 +724,7 @@ describe("Simple html elements containing <br>", () => {
                     );
                 },
                 contentAfter:
-                    "<p>abc</p><p>def</p><h1>ghi</h1><h1>jkl</h1><h2><br></h2><h3>mno</h3><p>pqr[]</p>",
+                    "<p>abc</p><p>def</p><h1>ghi</h1><h1>jkl</h1><h2><br></h2><h3>mno</h3><h3>pqr[]</h3>",
             });
         });
 
@@ -734,7 +734,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<div>abc<br>def</div>");
                 },
-                contentAfter: "<p>abc</p><p>def[]<br></p>",
+                contentAfter: "<p>abc</p><p>def[]</p>",
             });
         });
     });
@@ -746,7 +746,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<ul><li>abc<br>def</li></ul>");
                 },
-                contentAfter: "<ul><li>abc<br>def</li></ul><p>[]<br></p>",
+                contentAfter: "<ul><li>abc<br>def[]</li></ul>",
             });
         });
 
@@ -756,7 +756,7 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<blockquote>abc<br>def</blockquote>");
                 },
-                contentAfter: "<blockquote>abc<br>def</blockquote><p>[]<br></p>",
+                contentAfter: "<blockquote>abc<br>def[]</blockquote>",
             });
         });
 
@@ -766,8 +766,202 @@ describe("Simple html elements containing <br>", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<pre>abc<br>def</pre>");
                 },
-                contentAfter: "<pre>abc<br>def</pre><p>[]<br></p>",
+                contentAfter: "<pre>abc<br>def[]</pre>",
             });
+        });
+    });
+});
+
+describe("Unwrapping html element", () => {
+    test("should not unwrap a node when pasting on empty node", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1>");
+            },
+            contentAfter: "<h1>abc[]</h1>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h2>abc</h2>");
+            },
+            contentAfter: "<h2>abc[]</h2>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h3>abc</h3>");
+            },
+            contentAfter: "<h3>abc[]</h3>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2>");
+            },
+            contentAfter: "<h1>abc</h1><h2>def[]</h2>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<h1>abc</h1><h2>def</h2><h3>ghi[]</h3>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]<br></p><p><br></p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h3>abc</h3>");
+            },
+            contentAfter: "<h3>abc[]</h3><p><br></p>",
+        });
+    });
+    test("should not unwrap a node when pasting in between different node", async () => {
+        await testEditor({
+            contentBefore: "<p>mn[]op</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1>");
+            },
+            contentAfter: "<p>mn</p><h1>abc[]</h1><p>op</p>",
+        });
+        await testEditor({
+            contentBefore: "<p>mn[]op</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2>");
+            },
+            contentAfter: "<p>mn</p><h1>abc</h1><h2>def[]</h2><p>op</p>",
+        });
+        await testEditor({
+            contentBefore: "<p>mn[]op</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<p>mn</p><h1>abc</h1><h2>def</h2><h3>ghi[]</h3><p>op</p>",
+        });
+    });
+    test("should unwrap a node when pasting in between same node", async () => {
+        await testEditor({
+            contentBefore: "<h1>mn[]op</h1>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1>");
+            },
+            contentAfter: "<h1>mnabc[]op</h1>",
+        });
+        await testEditor({
+            contentBefore: "<h1>mn[]op</h1>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2>");
+            },
+            contentAfter: "<h1>mnabc</h1><h2>def[]</h2><h1>op</h1>",
+        });
+        await testEditor({
+            contentBefore: "<h2>mn[]op</h2>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2>");
+            },
+            contentAfter: "<h2>mn</h2><h1>abc</h1><h2>def[]op</h2>",
+        });
+        await testEditor({
+            contentBefore: "<h1>mn[]op</h1>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h1>def</h1><h1>ghi</h1>");
+            },
+            contentAfter: "<h1>mnabc</h1><h1>def</h1><h1>ghi[]op</h1>",
+        });
+    });
+    test("should not unwrap a node when pasting at start of different node", async () => {
+        await testEditor({
+            contentBefore: "<p>[]mn</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1>");
+            },
+            contentAfter: "<h1>abc[]</h1><p>mn</p>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]mn</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2>");
+            },
+            contentAfter: "<h1>abc</h1><h2>def[]</h2><p>mn</p>",
+        });
+        await testEditor({
+            contentBefore: "<p>[]mn</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<h1>abc</h1><h2>def</h2><h3>ghi[]</h3><p>mn</p>",
+        });
+    });
+    test("should unwrap a node when pasting at start of same node", async () => {
+        await testEditor({
+            contentBefore: "<h1>[]mn</h1>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1>");
+            },
+            contentAfter: "<h1>abc[]mn</h1>",
+        });
+        await testEditor({
+            contentBefore: "<h1>[]mn</h1>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h2>abc</h2><h1>def</h1>");
+            },
+            contentAfter: "<h2>abc</h2><h1>def[]mn</h1>",
+        });
+        await testEditor({
+            contentBefore: '<h1><font style="background-color: rgb(255, 0, 0);">[]mn</font></h1>',
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h1>def</h1><h1>ghi</h1>");
+            },
+            contentAfter:
+                '<h1>abc</h1><h1>def</h1><h1><font style="background-color: rgb(255, 0, 0);">ghi[]mn</font></h1>',
+        });
+    });
+    test("should not unwrap a node when pasting at end of different node", async () => {
+        await testEditor({
+            contentBefore: "<p>mn[]</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1>");
+            },
+            contentAfter: "<p>mn</p><h1>abc[]</h1>",
+        });
+        await testEditor({
+            contentBefore: "<p>mn[]</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2>");
+            },
+            contentAfter: "<p>mn</p><h1>abc</h1><h2>def[]</h2>",
+        });
+        await testEditor({
+            contentBefore: "<p>mn[]</p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+            },
+            contentAfter: "<p>mn</p><h1>abc</h1><h2>def</h2><h3>ghi[]</h3>",
+        });
+    });
+    test("should unwrap a node when pasting at end of same node", async () => {
+        await testEditor({
+            contentBefore: "<h1>mn[]</h1>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1>");
+            },
+            contentAfter: "<h1>mnabc[]</h1>",
+        });
+        await testEditor({
+            contentBefore: "<h1>mn[]</h1>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h2>def</h2>");
+            },
+            contentAfter: "<h1>mnabc</h1><h2>def[]</h2>",
+        });
+        await testEditor({
+            contentBefore: '<h1><font style="background-color: rgb(255, 0, 0);">mn[]</font></h1>',
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<h1>abc</h1><h1>def</h1><h1>ghi</h1>");
+            },
+            contentAfter:
+                '<h1><font style="background-color: rgb(255, 0, 0);">mnabc</font></h1><h1>def</h1><h1>ghi[]</h1>',
         });
     });
 });
@@ -2651,7 +2845,7 @@ describe("Paste HTML tables", () => {
     
 
     
-[]<br></p>`,
+[]</p>`,
         });
     });
 
@@ -2763,7 +2957,7 @@ describe("Paste HTML tables", () => {
             </tr>
         </tbody>
     </table><p>
-[]<br></p>`,
+[]</p>`,
         });
     });
 
@@ -2895,7 +3089,7 @@ describe("Paste HTML tables", () => {
     </tbody></table><p>
 
 
-[]<br></p>`,
+[]</p>`,
         });
     });
 });
