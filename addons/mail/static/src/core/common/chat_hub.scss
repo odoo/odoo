@@ -8,7 +8,10 @@
 }
 
 .o-mail-ChatHub-bubbleBtn {
-    padding: map-get($spacers, 1);
+    padding: 0;
+    border: none !important;
+    border-radius: 50%;
+    box-shadow: $box-shadow-sm;
 }
 
 .o-mail-ChatHub-hiddenAvatar {
@@ -16,28 +19,30 @@
     height: 28px;
 }
 
-.o-mail-ChatHub-hiddenBtn {
+.o-mail-ChatHub-hiddenBtnIcon {
     color: #FFFFFF!important;
-    background-color: #875A7B !important;
+    background-color: $primary !important;
     width: $o-mail-ChatBubble-sizeBig !important;
     height: $o-mail-ChatBubble-sizeBig !important;
-
-    &.o-active {
-        filter: drop-shadow(0px 0px 15px #{$gray-300});
-    }
 }
 
 .o-mail-ChatHub-hiddenBtnCounter {
     padding: 4px 8px;
     z-index: $o-mail-NavigableList-zIndex - 1;
-    right: 4px;
+    top: -4px;
+    right: -4px;
 }
 
 .o-mail-ChatHub-hiddenClose {
     margin-left: auto;
-    border: none;
     background-color: transparent;
     opacity: 25%;
+    padding: map-get($spacers, 1) / 2;
+    border: $border-width solid transparent;
+
+    &:hover {
+        border-color: var(--ChatHub-menuBorderColor, mix($o-gray-300, $o-gray-400));
+    }
 }
 
 .o-mail-ChatHub-hiddenCounter {
@@ -62,6 +67,10 @@
     }
 }
 
+.o-mail-ChatHub-hiddenMenu {
+    border-color: var(--ChatHub-menuBorderColor, mix($o-gray-300, $o-gray-400)) !important;
+}
+
 .o-mail-ChatHub-option {
     &:hover, &.o-active {
         background-color: $o-gray-300;
@@ -73,7 +82,7 @@
     font-size: 15px;
     width: 30px !important;
     height: 30px !important;
-    margin-bottom: 10px !important;
+    border: $border-width solid var(--ChatHub-menuBorderColor, mix($o-gray-300, $o-gray-400)) !important;
 
     &:hover, &.show {
         background-color: $o-gray-300 !important;
@@ -81,5 +90,5 @@
 }
 
 .o-mail-ChatHub-optionsMenu {
-    border-radius: 10px;
+    border-color: var(--ChatHub-menuBorderColor, mix($o-gray-300, $o-gray-400)) !important;
 }
