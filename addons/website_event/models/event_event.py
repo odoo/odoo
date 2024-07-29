@@ -63,7 +63,7 @@ class Event(models.Model):
         readonly=False, store=True)
     location_menu_ids = fields.One2many(
         "website.event.menu", "event_id", string="Location Menus",
-        domain=[("menu_type", "=", "location_menu")])
+        domain=[("menu_type", "=", "location")])
     register_menu = fields.Boolean(
         "Register Menu", compute="_compute_website_menu_data",
         readonly=False, store=True)
