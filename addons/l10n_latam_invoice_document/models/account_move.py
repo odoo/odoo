@@ -193,7 +193,7 @@ class AccountMove(models.Model):
     @api.depends_context('internal_type')
     def _compute_l10n_latam_document_type(self):
         internal_type = self._context.get('internal_type', False)
-        for rec in self.filtered(lambda x: x.state == 'draft'):
+        for rec in self.filtered(lambda x: x.state == 'draft' and not x.l10n_latam_document_number):
             document_types = rec.l10n_latam_available_document_type_ids._origin
             document_types = internal_type and document_types.filtered(lambda x: x.internal_type == internal_type) or document_types
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
