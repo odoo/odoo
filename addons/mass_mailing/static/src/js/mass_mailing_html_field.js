@@ -51,8 +51,8 @@ export class MassMailingHtmlField extends HtmlField {
         this.dialog = useService('dialog');
 
         useRecordObserver((record) => {
-            if (record.data.mailing_model_id && this.wysiwyg) {
-                this._hideIrrelevantTemplates(record);
+            if ("mailing_model_id" in record.data) {
+                this._onModelChange(record);
             }
         });
     }
@@ -202,6 +202,10 @@ export class MassMailingHtmlField extends HtmlField {
         this.wysiwyg.$iframeBody.addClass('o_mass_mailing_iframe');
 
         this.onIframeUpdated();
+    }
+
+    _onModelChange(record) {
+        this._hideIrrelevantTemplates(record);
     }
 
     async _onSnippetsLoaded() {
@@ -447,6 +451,9 @@ export class MassMailingHtmlField extends HtmlField {
      * @private
      */
     _hideIrrelevantTemplates(record) {
+        if (!this.wysiwyg) {
+            return;
+        }
         const iframeContent = this.wysiwyg.$iframe.contents();
 
         const mailing_model_id = record.data.mailing_model_id[0];

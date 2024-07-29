@@ -3,7 +3,7 @@ from lxml import html
 from odoo import exceptions
 from odoo.tools import mute_logger
 from odoo.tests.common import users
-from odoo.tests import Form, HttpCase, tagged
+from odoo.tests import Form, HttpCase, tagged, warmup
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.marketing_card.controllers.marketing_card import SOCIAL_NETWORK_USER_AGENTS
 
@@ -41,6 +41,39 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         self.assertListEqual(cards.mapped('image'), [False] * 2)
         self.assertListEqual(cards.mapped('share_status'), [False] * 2)
         self.assertEqual(set(cards.mapped('res_id')), set(self.concert_performances.ids))
+
+    @users('marketing_card_user')
+    @warmup
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_campaign_send_mailing(self):
+        self.campaign = self.campaign.with_user(self.env.user)
+        self.env.user.sudo().groups_id += self.env.ref('mass_mailing.group_mass_mailing_user')
+        partners = self.env['res.partner'].sudo().create([{'name': f'Part{n}', 'email': f'partn{n}@test.lan'} for n in range(20)])
+        performances = self.env['card.test.event.performance'].create([
+            {
+                'name': f"Perf{n}",
+                'event_id': self.events[0].id,
+                'partner_id': partner.id,
+            } for n, partner in enumerate(partners)
+        ])
+        with self.mock_image_renderer(), self.mock_mail_gateway(), self.assertQueryCount(243):
+            mailing = self.env['mailing.mailing'].create({
+                'name': 'Test Marketing Card Mailing',
+                'body_html': f'<a href="/cards/{self.campaign.id}/preview"><img src="/web/image/card.campaign/{self.campaign.id}/image_preview"/></a>',
+                'mailing_domain': repr([('partner_id.email', 'like', 'partn')]),
+                'mailing_model_id': self.env['ir.model']._get_id(performances._name),
+                'subject': 'The show is about to start!',
+            })
+            mailing.action_send_mail()
+
+        self.assertFalse(self._wkhtmltoimage_bodies)
+        self.assertEqual(self.env['card.card'].search_count([('campaign_id', '=', self.campaign.id)]), 20)
+        self.assertEqual(len(self._mails), 20)
+        for sent_mail in self._mails:
+            record_id = int(sent_mail['object_id'].split('-')[0])
+            preview_url = f"{self.campaign.get_base_url()}/cards/{self.campaign.id}/{record_id}/{self.campaign._generate_card_hash_token(record_id)}/preview"
+            image_url = f"{self.campaign.get_base_url()}/cards/{self.campaign.id}/{record_id}/{self.campaign._generate_card_hash_token(record_id)}/card.jpg"
+            self.assertIn(f'<a href="{preview_url}"><img src="{image_url}"/></a>', sent_mail['body'])
 
 
 class TestMarketingCardRender(MarketingCardCommon):
