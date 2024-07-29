@@ -207,7 +207,7 @@
         <p t-if="search_key">We could not find any exhibitor matching your search for: <strong t-out="search_key"/>.</p>
         <p t-else="">We could not find any exhibitor at this moment.</p>
         <div class="o_not_editable my-3" groups="event.group_event_user">
-            <a class="btn o_wevent_cta" target="_blank" t-att-href="'/web?#action=website_event_exhibitor.event_sponsor_action_from_event&amp;active_id=%s' % event.id">
+            <a class="btn o_wevent_cta" target="_blank" t-att-href="'/odoo/%s/action-website_event_exhibitor.event_sponsor_action_from_event' % event.id">
                 <span class="fa fa-plus me-1"/> Add Exhibitors
             </a>
         </div>

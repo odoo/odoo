@@ -52,7 +52,7 @@
             <div t-if="not meeting_rooms" class="m-auto text-center text-muted">
                 <h3 class="mt8">No Room Open</h3>
                 <div groups="event.group_event_user">
-                    <a target="_blank" t-att-href="'/web?#action=website_event_meet.action_meeting_room_from_event&amp;active_id=%s' % event.id">
+                    <a target="_blank" t-att-href="'/odoo/%s/action-website_event_meet.action_meeting_room_from_event' % event.id">
                         <p>Create one to get conversations going</p>
                     </a>
                 </div>
