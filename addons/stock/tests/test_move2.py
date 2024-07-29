@@ -2729,8 +2729,8 @@ class TestRoutes(TestStockCommon):
 
     def test_pick_ship_1(self):
         """ Enable the pick ship route, force a procurement group on the
-        pick. When a second move is added, make sure the `partner_id` and
-        `origin` fields are erased.
+        pick. When a second move is added, make sure the `partner_id` field is erased
+        `origin` field is recomputed.
         """
         self._enable_pick_ship()
 
@@ -2783,10 +2783,10 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(picking_pick.partner_id.id, procurement_group1.partner_id.id)
         self.assertEqual(picking_pick.origin, move1.group_id.name)
 
-        # second out move, the "pick" picking should have lost its partner and origin
+        # second out move, the "pick" picking should have lost its partner and rebuild its origin
         move2._action_confirm()
         self.assertEqual(picking_pick.partner_id.id, False)
-        self.assertEqual(picking_pick.origin, False)
+        self.assertEqual(picking_pick.origin, procurement_group0.name)
 
     def test_replenish_pick_ship_1(self):
         """ Creates 2 warehouses and make a replenish using one warehouse

@@ -1217,13 +1217,13 @@ Please change the quantity done or the rounding precision of your unit of measur
             picking = moves[0]._search_picking_for_assignation()
             if picking:
                 # If a picking is found, we'll append `move` to its move list and thus its
-                # `partner_id` and `ref` field will refer to multiple records. In this
-                # case, we chose to wipe them.
+                # `partner_id` will refer to multiple records. In this
+                # case, we chose to wipe it. The origin will be updated.
                 vals = {}
                 if any(picking.partner_id.id != m.partner_id.id for m in moves):
                     vals['partner_id'] = False
                 if any(picking.origin != m.origin for m in moves):
-                    vals['origin'] = False
+                    vals['origin'] = moves._get_new_picking_values().get('origin')
                 if vals:
                     picking.write(vals)
             else:
