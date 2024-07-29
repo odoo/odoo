@@ -1,0 +1,9 @@
+.o-mail-ChatBubble-preview {
+    border-color: $o-gray-600 !important;
+    & + .popover-arrow {
+        // puts arrow above preview border
+        &::before {
+            border-left-color: $o-gray-600 !important;
+        }
+    }
+}
