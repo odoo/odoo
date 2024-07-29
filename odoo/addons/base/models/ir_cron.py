@@ -4,6 +4,7 @@ import threading
 import time
 import os
 import psycopg2
+import psycopg2.errors
 import pytz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -154,13 +155,11 @@ class ir_cron(models.Model):
             _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
         except BadModuleState:
             _logger.warning('Skipping database %s because of modules to install/upgrade/remove.', db_name)
+        except psycopg2.errors.UndefinedTable:
+            # The table ir_cron does not exist; this is probably not an OpenERP database.
+            _logger.warning('Tried to poll an undefined table on database %s.', db_name)
         except psycopg2.ProgrammingError as e:
-            if e.pgcode == '42P01':
-                # Class 42 — Syntax Error or Access Rule Violation; 42P01: undefined_table
-                # The table ir_cron does not exist; this is probably not an OpenERP database.
-                _logger.warning('Tried to poll an undefined table on database %s.', db_name)
-            else:
-                raise
+            raise
         except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
         finally:

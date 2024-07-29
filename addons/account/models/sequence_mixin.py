@@ -8,7 +8,7 @@ from odoo.tools import frozendict, mute_logger, date_utils
 
 import re
 from collections import defaultdict
-from psycopg2 import sql, DatabaseError
+from psycopg2 import sql, errors as pgerrors
 
 
 class SequenceMixin(models.AbstractModel):
@@ -311,11 +311,8 @@ class SequenceMixin(models.AbstractModel):
                     self[self._sequence_field] = sequence
                     self.flush_recordset([self._sequence_field])
                     break
-            except DatabaseError as e:
-                # 23P01 ExclusionViolation
-                # 23505 UniqueViolation
-                if e.pgcode not in ('23P01', '23505'):
-                    raise e
+            except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
+                pass
         self._compute_split_sequence()
         self.flush_recordset(['sequence_prefix', 'sequence_number'])
 

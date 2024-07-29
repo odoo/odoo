@@ -6,7 +6,7 @@ import time
 import re
 import logging
 
-from psycopg2 import sql, DatabaseError
+from psycopg2 import sql, errors as pgerrors
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
@@ -762,11 +762,7 @@ class ResPartner(models.Model):
                     """).format(field=sql.Identifier(field))
                     self.env.cr.execute(query, {'partner_ids': tuple(self.ids), 'n': n})
                     self.invalidate_recordset([field])
-            except DatabaseError as e:
-                # 55P03 LockNotAvailable
-                # 40001 SerializationFailure
-                if e.pgcode not in ('55P03', '40001'):
-                    raise e
+            except (pgerrors.LockNotAvailable, pgerrors.SerializationFailure):
                 _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
 
     @api.model
