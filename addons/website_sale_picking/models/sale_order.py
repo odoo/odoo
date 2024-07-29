@@ -5,6 +5,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     def _check_carrier_quotation(self, force_carrier_id=None, keep_carrier=False):
+        self = self.with_context(website_sale_picking_on_site=True)
         carrier_before = self.carrier_id
         res = super()._check_carrier_quotation(
             force_carrier_id=force_carrier_id,
