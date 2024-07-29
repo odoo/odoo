@@ -110,7 +110,7 @@ class PosPaymentMethod(models.Model):
 
         MerchantTrns = data_webhook.get('MerchantTrns')
         if not MerchantTrns:
-            self._send_notification(
+            return self._send_notification(
                 {'error': _(
                     "Your transaction with Viva Wallet failed. Please try again later."
                     )}
