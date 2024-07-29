@@ -9,16 +9,16 @@
             </t>
         </t>
         <div t-if="isShown" class="o-mail-ChatHub-bubbles position-fixed end-0 d-flex flex-column align-content-start justify-content-end align-items-center" t-att-class="{ 'bottom-0': !store.chatHub.compact or compactPosition.top === 'auto' }" t-ref="bubbles" t-att-style="store.chatHub.compact ? `top: ${ compactPosition.top }; left: ${ compactPosition.left };` : ''">
-            <div class="d-flex flex-column align-content-start justify-content-end align-items-center">
+            <div class="d-flex flex-column align-content-start justify-content-end align-items-center gap-1">
                 <t t-if="store.chatHub.compact">
                     <t t-call="mail.ChatHub.compactButton"/>
                 </t>
                 <t t-else="">
-                    <Dropdown t-if="chatHub.actuallyFolded.length gt 1" state="options" position="'top-end'" menuClass="'o-mail-ChatHub-optionsMenu d-flex flex-column bg-view shadow m-0 p-0 mb-1'">
-                        <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn ms-1 rounded-circle shadow fa fa-ellipsis-h bg-view mt-1 border" t-att-class="{ 'opacity-0': !chatHub.actuallyFolded.length or !bubblesHover.isHover and !options.isOpen }" aria-label="Chat Hub Options"/>
+                    <Dropdown t-if="chatHub.actuallyFolded.length gt 1" state="options" position="'top-end'" menuClass="'o-mail-ChatHub-optionsMenu o-mail-ChatHub-menu d-flex flex-column bg-view shadow-sm m-0 p-0 mb-1'">
+                        <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn fa fa-ellipsis-h bg-view mt-1" t-att-class="{ 'opacity-0': !chatHub.actuallyFolded.length or !bubblesHover.isHover and !options.isOpen, 'o-active': bubblesHover.isHover or options.isOpen }" aria-label="Chat Hub Options"/>
                         <t t-set-slot="content">
-                            <button class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0" t-on-click="() => chatHub.closeAll()"><i class="oi fa-fw oi-close"></i>Close all conversations</button>
-                            <button class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0" t-on-click="() => chatHub.compact = true"><i class="fa fa-fw fa-eye-slash"></i>Hide all conversations</button>
+                            <button class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal" t-on-click="() => chatHub.closeAll()"><i class="oi fa-fw oi-close"></i>Close all conversations</button>
+                            <button class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal" t-on-click="() => chatHub.compact = true"><i class="fa fa-fw fa-eye-slash"></i>Hide all conversations</button>
                         </t>
                     </Dropdown>
                     <t t-foreach="chatHub.actuallyFolded" t-as="cw" t-key="cw.localId">
@@ -33,26 +33,26 @@
 
 <t t-name="mail.ChatHub.compactButton">
     <!-- In dropdown to keep same layout as other items-->
-    <Dropdown>
-        <div class="o-mail-ChatHub-bubbleBtn o-mail-ChatHub-compact o-mail-ChatBubble justify-content-center ms-1 border-0" t-ref="compact">
-            <div t-if="compactCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge">
+    <Dropdown manual="true">
+        <div class="o-mail-ChatHub-bubbleBtn o-mail-ChatHub-compact o-mail-ChatBubble justify-content-center" t-ref="compact">
+            <div t-if="compactCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow">
                 <t t-out="compactCounter"/>
             </div>
-            <button class="o-mail-ChatHub-bubbleBtn btn border-0 fs-2" t-on-click="expand">
-                <i class="o-mail-ChatHub-hiddenBtn d-flex justify-content-center align-items-center btn rounded-circle shadow fa fa-commenting"/>
+            <button class="o-mail-ChatHub-bubbleBtn btn fs-2" t-on-click="expand">
+                <i class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fa fa-commenting"/>
             </button>
         </div>
     </Dropdown>
 </t>
 
 <t t-name="mail.ChatHub.hiddenButton">
-    <Dropdown t-if="chatHub.actuallyHidden.length > 0" state="more" position="'left-middle'" menuClass="'bg-view shadow p-0 m-0 rounded-3'" manual="true">
-        <div class="o-mail-ChatHub-bubbleBtn o-mail-ChatBubble justify-content-center border-0" t-on-click="() => store.chatHub.compact = true" t-ref="more-button">
-            <div t-if="hiddenCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge">
+    <Dropdown t-if="chatHub.actuallyHidden.length > 0" state="more" position="'left-middle'" menuClass="'o-mail-ChatHub-hiddenMenu o-mail-ChatHub-menu bg-view shadow-sm p-0 m-0'" manual="true">
+        <div class="o-mail-ChatBubble o-mail-ChatHub-hiddenBtn justify-content-center" t-att-class="{ 'o-active': more.isOpen }" t-on-click="() => store.chatHub.compact = true" t-ref="more-button">
+            <div t-if="hiddenCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow">
                 <t t-out="hiddenCounter"/>
             </div>
-            <button class="o-mail-ChatHub-bubbleBtn ms-1 btn outline-0 border-0">
-                <i class="o-mail-ChatHub-hiddenBtn d-flex justify-content-center align-items-center btn rounded-circle shadow fs-2" t-att-class="{ 'o-active': more.isOpen }">+<t t-esc="chatHub.actuallyHidden.length"/></i>
+            <button class="o-mail-ChatHub-bubbleBtn btn outline-0">
+                <i class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fs-2" t-att-class="{ 'o-active': more.isOpen }">+<t t-esc="chatHub.actuallyHidden.length"/></i>
             </button>
         </div>
         <t t-set-slot="content">
@@ -64,8 +64,8 @@
                         <div t-if="cw.thread?.importantCounter > 0" class="o-mail-ChatHub-hiddenCounter badge rounded-pill fw-bold o-discuss-badge" style="padding: 3px 6px">
                             <t t-out="cw.thread?.importantCounter"/>
                         </div>
-                        <button class="o-mail-ChatHub-hiddenClose o-mail-ChatBubble-close d-flex align-items-center rounded-circle p-0" t-on-click.stop="() => cw.close()">
-                            <i class="oi fa-fw oi-close"/>
+                        <button class="o-mail-ChatHub-hiddenClose o-mail-ChatBubble-close d-flex align-items-center rounded" t-on-click.stop="() => cw.close()">
+                            <i class="oi oi-close"/>
                         </button>
                     </li>
                 </t>
