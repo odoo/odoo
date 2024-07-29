@@ -1431,3 +1431,6 @@ class SaleOrderLine(models.Model):
                 lambda line: line.virtual_id == self.linked_virtual_id
             ).ensure_one()
         ) or self.env['sale.order.line']
+
+    def _sellable_lines_domain(self):
+        return [('is_downpayment', '=', False)]
