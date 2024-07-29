@@ -52,6 +52,7 @@ class Task(models.Model):
         ! Set the task a high priority\n
         Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !""",
     )
+    recorded_hours = fields.Float(compute='_compute_recorded_hours', store=True)
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
@@ -84,6 +85,17 @@ class Task(models.Model):
         """ Overridden in sale_timesheet """
         for task in self:
             task.analytic_account_active = task._get_task_analytic_account_id().active
+
+    @api.depends('timesheet_ids.unit_amount')
+    def _compute_recorded_hours(self):
+        if not any(self._ids):
+            for task in self:
+                task.recorded_hours = sum(task.timesheet_ids.mapped('unit_amount'))
+            return
+        timesheet_read_group = self.env['account.analytic.line']._read_group([('task_id', 'in', self.ids)], ['task_id'], ['unit_amount:sum'])
+        timesheets_per_task = {task.id: amount for task, amount in timesheet_read_group}
+        for task in self:
+            task.recorded_hours = timesheets_per_task.get(task.id, 0.0)
 
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
