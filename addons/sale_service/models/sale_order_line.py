@@ -24,12 +24,12 @@ class SaleOrderLine(models.Model):
         :param kwargs: boolean kwargs of the form 'check_<leaf_field>=False'
         :return: a valid domain
         """
-        return [
-            ('is_service', '=', True),
-            ('is_expense', '=', False) if kwargs.get("check_is_expense", True) else expression.TRUE_LEAF,
-            ('is_downpayment', '=', False) if kwargs.get("check_is_downpayment", True) else expression.TRUE_LEAF,
-            ('state', '=', 'sale') if kwargs.get("check_state", True) else expression.TRUE_LEAF,
-        ]
+        domain = [('is_service', '=', True)]
+        if kwargs.get("check_is_expense", True):
+            domain.append(('is_expense', '=', False))
+        if kwargs.get("check_state", True):
+            domain.append(('state', '=', 'sale'))
+        return domain
 
     def _domain_sale_line_service_str(self, domain='', op='&', **kwargs):
         """
@@ -41,6 +41,7 @@ class SaleOrderLine(models.Model):
         :param kwargs: refer to :ref:`_domain_sale_line_service`
         :return: str version of the combined services sale.order.line domain.
         """
+        # TODO: XBO: deprecated method to remove in master
         if not domain:
             return str(self._domain_sale_line_service(**kwargs))
         if op not in ('&', '|'):

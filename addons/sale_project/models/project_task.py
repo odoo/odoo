@@ -4,19 +4,30 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import SQL
+from odoo.tools.misc import unquote
 
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
+
+    def _domain_sale_line_id(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            self.env['sale.order.line']._domain_sale_line_service(),
+            [
+                '|',
+                ('order_partner_id.commercial_partner_id.id', 'parent_of', unquote('partner_id if partner_id else []')),
+                ('order_partner_id', '=?', unquote('partner_id')),
+            ],
+        ])
+        return str(domain)
 
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', store=True, help="Sales order to which the task is linked.", group_expand="_group_expand_sales_order")
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item',
         copy=True, tracking=True, index='btree_not_null', recursive=True,
         compute='_compute_sale_line', store=True, readonly=False,
-        domain=lambda self: self.env['sale.order.line']._domain_sale_line_service_str(
-            "['|', ('order_partner_id.commercial_partner_id.id', 'parent_of', partner_id if partner_id else []), ('order_partner_id', '=?', partner_id)]"
-        ),
+        domain=_domain_sale_line_id,
         help="Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
              "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
              "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually.")
