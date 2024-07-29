@@ -198,6 +198,16 @@
                             </record>
                         </field>
                     </record>
+                    <record id="account_tax_report_line_section_b_triangular" model="account.report.line">
+                        <field name="name">Category B = triangular - (EU sales excluding VAT)</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_section_b_triangular_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">R-D-MR</field>
+                            </record>
+                        </field>
+                    </record>
                     <record id="account_tax_report_line_section_c" model="account.report.line">
                         <field name="name">Category C - Value of other goods and services (whatever the country)</field>
                         <field name="expression_ids">
