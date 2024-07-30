@@ -1425,7 +1425,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             'origin': origin,
             'company_id': self.mapped('company_id').id,
             'user_id': False,
-            'move_type': self.mapped('group_id').move_type or 'direct',
+            'group_id': self.mapped('group_id').id,
             'partner_id': partner,
             'picking_type_id': self.mapped('picking_type_id').id,
             'location_id': self.mapped('location_id').id,

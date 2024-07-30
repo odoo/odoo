@@ -150,6 +150,10 @@ class PickingType(models.Model):
         compute_sudo=True, string='Show Operation in Overview'
     )
     kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
+    move_type = fields.Selection([
+        ('direct', 'As soon as possible'), ('one', 'When all products are ready')],
+        'Shipping Policy', default='direct', required=True,
+        help="It specifies goods to be transferred partially or all at once")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -581,7 +585,7 @@ class Picking(models.Model):
 
     move_type = fields.Selection([
         ('direct', 'As soon as possible'), ('one', 'When all products are ready')], 'Shipping Policy',
-        default='direct', required=True,
+        compute='_compute_move_type', store=True, required=True, readonly=False, precompute=True,
         help="It specifies goods to be deliver partially or all at once")
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -721,6 +725,12 @@ class Picking(models.Model):
     def _compute_has_tracking(self):
         for picking in self:
             picking.has_tracking = any(m.has_tracking != 'none' for m in picking.move_ids)
+
+    @api.depends('picking_type_id')
+    def _compute_move_type(self):
+        for record in self:
+            if not record.group_id.move_type:
+                record.move_type = record.picking_type_id.move_type
 
     @api.depends('date_deadline', 'scheduled_date')
     def _compute_has_deadline_issue(self):
@@ -1074,6 +1084,10 @@ class Picking(models.Model):
                 if picking_type.sequence_id:
                     vals['name'] = picking_type.sequence_id.next_by_id()
 
+            if 'move_type' not in vals and vals.get('group_id'):
+                procurement_group = self.env['procurement.group'].browse(vals.get('group_id'))
+                if procurement_group.move_type:
+                    vals['move_type'] = procurement_group.move_type
             # make sure to write `schedule_date` *after* the `stock.move` creation in
             # order to get a determinist execution of `_set_scheduled_date`
             scheduled_dates.append(vals.pop('scheduled_date', False))

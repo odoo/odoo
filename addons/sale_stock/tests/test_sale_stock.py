@@ -1999,3 +1999,16 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         ship02.move_ids.write({'quantity': 7, 'picked': True})
         ship02.button_validate()
         self.assertEqual(so.delivery_status, 'full')
+
+    def test_so_delivery_ignores_shipping_policy_from_picking_type(self):
+        picking_type_out = self.company_data['default_warehouse'].out_type_id
+        picking_type_out.move_type = "direct"
+
+        so = self._get_new_sale_order()
+        # Ignore picking_type_out, use the value from SO
+        so.picking_policy = "one"
+        so.action_confirm()
+
+        self.assertEqual(so.procurement_group_id.move_type, "one")
+        self.assertEqual(so.picking_ids[0].picking_type_id, picking_type_out)
+        self.assertEqual(so.picking_ids[0].move_type, "one")
