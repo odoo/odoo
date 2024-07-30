@@ -165,6 +165,12 @@ export class Many2OneField extends Component {
     get relation() {
         return this.props.relation || this.props.record.fields[this.props.name].relation;
     }
+    get urlRelation() {
+        if (!this.relation.includes(".")) {
+            return "m-" + this.relation;
+        }
+        return this.relation
+    }
     get string() {
         return this.props.string || this.props.record.fields[this.props.name].string || "";
     }
