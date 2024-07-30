@@ -12,6 +12,7 @@ import {
     ZERO,
     BACKSPACE,
 } from "@point_of_sale/app/generic_components/numpad/numpad";
+import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 
 patch(Navbar.prototype, {
     async onClickBackButton() {
@@ -29,7 +30,8 @@ patch(Navbar.prototype, {
             if (
                 (this.pos.mainScreen.component === ProductScreen &&
                     this.pos.mobile_pane == "right") ||
-                this.pos.mainScreen.component === TipScreen
+                this.pos.mainScreen.component === TipScreen ||
+                this.pos.mainScreen.component === ActionScreen
             ) {
                 this.pos.showScreen("FloorScreen", { floor: this.floor });
             } else {
