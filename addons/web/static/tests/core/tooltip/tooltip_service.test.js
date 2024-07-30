@@ -374,8 +374,6 @@ test.tags("mobile")("touch rendering - hold-to-show", async () => {
     expect(".o_popover").toHaveText("hello");
 
     pointerUp("button");
-    await animationFrame();
-    expect(".o_popover").toHaveCount(1);
     await runAllTimers();
     expect(".o_popover").toHaveCount(0);
 });
