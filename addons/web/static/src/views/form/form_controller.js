@@ -303,11 +303,13 @@ export class FormController extends Component {
             );
         }
 
-        useExternalListener(document, "visibilitychange", () => {
-            if (document.visibilityState === "hidden") {
-                this.model.root.save();
-            }
-        });
+        if (!this.env.inDialog) {
+            useExternalListener(document, "visibilitychange", () => {
+                if (document.visibilityState === "hidden") {
+                    this.model.root.save();
+                }
+            });
+        }
     }
 
     get cogMenuProps() {
