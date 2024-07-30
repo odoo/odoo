@@ -220,7 +220,7 @@
                 <field name="personal_stage_type_ids" string="Stage"/>
                 <filter name="open_tasks" string="Open" domain="[('is_closed', '=', False)]"/>
                 <filter name="closed_tasks" string="Closed" domain="[('is_closed', '=', True)]"/>
-                <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update"/>
+                <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update" invisible="1"/>
                 <separator/>
                 <filter name="active_false" string="Archived" domain="[('active', '=', False)]"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
