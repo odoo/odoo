@@ -551,7 +551,7 @@ test("sidebar: basic channel rendering", async () => {
         ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
     );
     await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Leave this channel']"
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Leave Channel']"
     );
 });
 
@@ -1776,7 +1776,7 @@ test("sidebar: cannot unpin channel group_based_subscription: mandatorily pinned
     await start();
     await openDiscuss();
     await contains("button", { text: "General" });
-    await contains("[title='Leave this channel']", { count: 0 });
+    await contains("[title='Leave Channel']", { count: 0 });
 });
 
 test("restore thread scroll position", async () => {

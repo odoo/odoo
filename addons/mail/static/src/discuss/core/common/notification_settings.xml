@@ -8,7 +8,7 @@
                     <button class="btn w-100 d-flex p-1 opacity-75 opacity-100-hover" t-on-click="()=>this.setMute(false)">
                         <div class="d-flex flex-column flex-grow-1 px-2 py-1 w-100 rounded">
                             <span class="fs-6 fw-bold text-wrap text-start text-break">Unmute Channel</span>
-                            <span class="fw-normal o-smaller" t-out="store.settings.getMuteUntilText(props.thread.mute_until_dt)"/>
+                            <span class="fw-normal smaller" t-out="store.settings.getMuteUntilText(props.thread.mute_until_dt)"/>
                         </div>
                     </button>
                 </t>
@@ -43,7 +43,7 @@
                         <div class="d-flex flex-grow-1 align-items-center p-2 rounded">
                             <div class="d-flex flex-column align-items-start">
                                 <span class="fs-6 fw-normal text-wrap text-start text-break">Use Default</span>
-                                <span class="fw-bolder o-smaller"><t t-out="store.settings.NOTIFICATIONS.find((n) => n.label === store.settings.channel_notifications).name"/></span>
+                                <span class="fw-bolder smaller"><t t-out="store.settings.NOTIFICATIONS.find((n) => n.label === store.settings.channel_notifications).name"/></span>
                             </div>
                             <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
                             <input class="form-check-input" type="radio" t-att-checked="!props.thread.custom_notifications"/>

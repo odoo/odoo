@@ -13,6 +13,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
 import {
     Command,
@@ -21,6 +22,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
@@ -209,20 +211,20 @@ test("sidebar quick search at 20 or more pinned channels", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { count: 20 });
-    await contains(".o-mail-DiscussSidebar input[placeholder='Quick search...']");
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "1");
+    await contains(".o-mail-DiscussSidebar input[placeholder='Quick search…']");
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "1");
     await contains(".o-mail-DiscussSidebarChannel", { count: 11 });
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "12", {
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "12", {
         replace: true,
     });
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel", { text: "channel12" });
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "123", {
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "123", {
         replace: true,
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     // search should work in case-insensitive
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "C", {
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "C", {
         replace: true,
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 20 });
@@ -252,7 +254,7 @@ test("sidebar quick search takes DM custom name into account", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
     // search
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "Marc");
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "Marc");
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
 });
@@ -316,7 +318,7 @@ test("sidebar: open channel and leave it", async () => {
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
     await assertSteps([]);
-    await click("[title='Leave this channel']", {
+    await click("[title='Leave Channel']", {
         parent: [".o-mail-DiscussSidebarChannel.o-active", { text: "General" }],
     });
     await click("button", { text: "Leave Conversation" });
@@ -1173,7 +1175,7 @@ test("Can leave channel", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await click("[title='Leave this channel']");
+    await click("[title='Leave Channel']");
     await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
 });
@@ -1237,7 +1239,7 @@ test("Unpinning channel closes its chat window", async () => {
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow", { text: "Sales" });
     await openDiscuss();
-    await click("[title='Leave this channel']", {
+    await click("[title='Leave Channel']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Sales" }],
     });
     await openFormView("discuss.channel");
@@ -1289,4 +1291,36 @@ test("sidebar: show loading on initial opening", async () => {
         { count: 0 }
     );
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
+});
+
+test("Can make sidebar smaller", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebar");
+    const normalWidth = queryFirst(".o-mail-DiscussSidebar").getBoundingClientRect().width;
+    await click("[aria-label='Make panel smaller']");
+    await contains(".o-mail-DiscussSidebar.o-compact");
+    const compactWidth = queryFirst(".o-mail-DiscussSidebar").getBoundingClientRect().width;
+    expect(normalWidth).toBeGreaterThan(compactWidth);
+    expect(normalWidth).toBeGreaterThan(compactWidth / 2, {
+        message: "compact mode is at least twice smaller than nomal mode",
+    });
+});
+
+test("Sidebar compact is locally persistent (saved in local storage)", async () => {
+    browser.localStorage.setItem("mail.user_setting.discuss_sidebar_compact", true);
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebar.o-compact");
+    await click("[aria-label='Make panel bigger']");
+    await contains(".o-mail-DiscussSidebar:not(.o-compact)");
+    expect(browser.localStorage.getItem("mail.user_setting.discuss_sidebar_compact")).toBe(null);
+    await click("[aria-label='Make panel smaller']");
+    await contains(".o-mail-DiscussSidebar.o-compact");
+    expect(browser.localStorage.getItem("mail.user_setting.discuss_sidebar_compact")).toBe("true");
 });

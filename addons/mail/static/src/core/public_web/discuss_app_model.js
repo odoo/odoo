@@ -1,4 +1,6 @@
 import { Record } from "@mail/core/common/record";
+import { onChange } from "@mail/utils/common/misc";
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 
 export class DiscussApp extends Record {
@@ -8,6 +10,7 @@ export class DiscussApp extends Record {
         Object.assign(res, {
             channels: {
                 extraClass: "o-mail-DiscussSidebarCategory-channel",
+                icon: "fa fa-hashtag",
                 id: "channels",
                 name: _t("Channels"),
                 canView: true,
@@ -19,6 +22,7 @@ export class DiscussApp extends Record {
             },
             chats: {
                 extraClass: "o-mail-DiscussSidebarCategory-chat",
+                icon: "fa fa-users",
                 id: "chats",
                 name: _t("Direct messages"),
                 canView: false,
@@ -28,6 +32,19 @@ export class DiscussApp extends Record {
                 addTitle: _t("Start a conversation"),
                 addHotkey: "d",
             },
+        });
+        const isDiscussSidebarCompact =
+            browser.localStorage.getItem("mail.user_setting.discuss_sidebar_compact") === "true";
+        res.isSidebarCompact = isDiscussSidebarCompact;
+        onChange(res, "isSidebarCompact", () => {
+            if (res.isSidebarCompact) {
+                browser.localStorage.setItem(
+                    "mail.user_setting.discuss_sidebar_compact",
+                    res.isSidebarCompact.toString()
+                );
+            } else {
+                browser.localStorage.removeItem("mail.user_setting.discuss_sidebar_compact");
+            }
         });
         return res;
     }
@@ -44,6 +61,7 @@ export class DiscussApp extends Record {
     activeTab = "main";
     searchTerm = "";
     isActive = false;
+    isSidebarCompact = false;
     allCategories = Record.many("DiscussAppCategory", {
         inverse: "app",
         sort: (c1, c2) =>
