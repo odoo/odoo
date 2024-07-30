@@ -157,12 +157,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/public/lazyloader.js',
         ],
         'web.assets_frontend': [
-            # TODO the 'assets_frontend' bundle now includes 'assets_common'
-            # files directly. That work was however a good opportunity to start
-            # removing the files that are not needed anymore in frontend layouts
-            # but it was not done: all common files were simply put in this
-            # bundle. We'll have to optimize that.
-
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
 

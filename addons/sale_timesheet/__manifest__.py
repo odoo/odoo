@@ -40,9 +40,6 @@ have real delivered quantities in sales orders.
     'auto_install': True,
     'uninstall_hook': 'uninstall_hook',
     'assets': {
-        'web.assets_frontend': [
-            'sale_timesheet/static/src/scss/sale_timesheet_portal.scss',
-        ],
         'web.assets_backend': [
             'sale_timesheet/static/src/components/**/*',
         ],
