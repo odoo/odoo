@@ -303,9 +303,6 @@
             <filter name="last_stage_update" position="after">
                 <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
             </filter>
-            <xpath expr="//search/filter[@name='inactive']" position='attributes'>
-                <attribute name='invisible'>1</attribute>
-            </xpath>
         </field>
     </record>
 
