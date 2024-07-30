@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="account.request_document_page" name="Request Document Page">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <article class="card mb-4 shadow-sm">
+                            <t t-if="not document.attachment_id">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="card-title">Upload Your Document</h5>
+                                </div>
+                                <div class="card-body">
+                                    <h5>Please upload the requested document: <t t-out="document.name"/></h5>
+                                    <form enctype="multipart/form-data" t-attf-action="/account/upload_document/#{token}" method="POST">
+                                        <input name="requestFile" class="o_request_upload form-control" type="file" onchange="form.submit()"/>
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    </form>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="card-title">Document Uploaded Successfully</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="fs-5">
+                                        Requested Document: <em t-out="document.name"/> has been uploaded successfully as <em t-out="document.attachment_id.name"/>
+                                    </div>
+                                </div>
+                            </t>
+                            <div class="card-footer text-muted">
+                                Requested on <time t-field="document.write_date" t-options="{'format':'MMM d, yyyy'}"/><t t-if="document.attachment_id">, Uploaded on <time t-field="document.attachment_id.write_date" t-options="{'format':'MMM d, yyyy'}"/></t>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="email_request_document_account_move">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0 8px; border-collapse:separate;">
+                <tr>
+                    <td valign="middle">
+                        <span style="font-size: 10px;">
+                            Document Request: <br/>
+                            <t t-if="requested_document.name">
+                                <span style="font-size: 20px; font-weight: bold;" t-out="requested_document.name or ''" />
+                            </t>
+                        </span><br/>
+                    </td>
+                    <td valign="middle" align="right" t-if="not requested_document.create_uid.company_id.uses_default_logo">
+                        <img t-attf-src="/logo.png?company={{ requested_document.create_uid.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="requested_document.create_uid.company_id.name"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                        <hr width="100%" style="background-color:rgb(204,204,204); border:medium none; clear:both; display:block; font-size:0px; min-height:1px; line-height:0; margin: 16px 0;"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0 8px; border-collapse:separate;">
+                <tr>
+                    <td valign="top" style="font-size: 13px;">
+                        <div>
+                            <t t-out="request_message" />
+                            <br/><br/>
+                            <center>
+                                <div style="margin: 16px 0;">
+                                    <a t-att-href="requested_document.full_url"
+                                        style="background-color: #875A7B; padding: 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                        Upload the requested document
+                                    </a>
+                                </div>
+                            </center><br/>
+                            Please provide us with the missing document.
+                            <t t-if="user and user.signature">
+                                <br/>
+                                <t t-out="user.signature or ''" />
+                                <br/>
+                            </t>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;">
+                        <hr width="100%" style="background-color:rgb(204,204,204); border:medium none; clear:both; display:block; font-size:0px; min-height:1px; line-height:0; margin: 16px 0;"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0 8px; border-collapse:separate;">
+                <tr>
+                    <td valign="middle" align="left">
+                        <t t-out="requested_document.create_uid.company_id.name or ''" />
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="left" style="opacity: 0.7;">
+                        <t t-out="requested_document.create_uid.company_id.phone or ''" />
+                        <t t-if="requested_document.create_uid.company_id.email">
+                            | <a t-attf-href="'mailto:%s' % {{ requested_document.create_uid.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="requested_document.create_uid.company_id.email or ''" />
+                        </t>
+                        <t t-if="requested_document.create_uid.company_id.website">
+                            | <a t-attf-href="'%s' % {{ requested_document.create_uid.company_id.website }}" style="text-decoration:none; color: #454748;" t-out="requested_document.create_uid.company_id.website or ''" />
+                        </t>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+    </template>
+</odoo>

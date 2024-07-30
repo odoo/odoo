@@ -22,6 +22,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/digest_data.xml',
         'views/account_report.xml',
         'data/mail_template_data.xml',
+        'data/mail_activity_type_data.xml',
         'data/onboarding_data.xml',
         'data/account_tour.xml',
         'views/account_payment_view.xml',
@@ -31,6 +32,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_move_reversal_view.xml',
         'wizard/account_resequence_views.xml',
         'wizard/account_payment_register_views.xml',
+        'wizard/mail_activity_schedule_views.xml',
         'views/account_move_views.xml',
         'wizard/setup_wizards_view.xml',
         'views/account_account_views.xml',
@@ -83,6 +85,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_lock_exception_views.xml',
         'views/report_templates.xml',
         'wizard/account_merge_wizard_views.xml',
+        'views/request_document_template_view.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
