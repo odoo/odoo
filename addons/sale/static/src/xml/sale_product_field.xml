@@ -2,20 +2,13 @@
 
 <templates xml:space="preserve">
 
-    <t t-name="sale.SaleProductField" t-inherit="web.Many2OneField" t-inherit-mode="primary">
-        <!-- Make the product label clickable (to open its form view) when the user cannot
-            access it through the external button (because the product/line is readonly) -->
-        <xpath expr="//t[@t-if='!props.canOpen']" position="attributes">
-            <attribute name="t-if">
-                !isProductClickable
-            </attribute>
-        </xpath>
+    <t t-name="sale.SaleProductField" t-inherit="account.ProductLabelSectionAndNoteField" t-inherit-mode="primary">
         <!-- Show configuration button for custom lines/products -->
-        <xpath expr="//t[@t-if='hasExternalButton']" position="before">
+        <xpath expr="//button[@t-if='hasExternalButton']" position="before">
             <t t-if="hasConfigurationButton">
                 <button
                     type="button"
-                    t-att-class="configurationButtonIcon"
+                    class="btn btn-secondary fa fa-pencil px-2"
                     tabindex="-1"
                     draggable="false"
                     t-att-aria-label="configurationButtonHelp"

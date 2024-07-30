@@ -192,6 +192,18 @@ function assertFooterButtonsDisabled() {
     };
 }
 
+function saveConfigurator() {
+    return [
+        {
+            trigger: '.modal button:contains(Confirm)',
+            run: 'click',
+        }, {
+            content: "Wait until the modal is closed",
+            trigger: 'body:not(:has(.modal))',
+        }
+    ]
+}
+
 export default {
     productSelector,
     optionalProductSelector,
@@ -210,4 +222,5 @@ export default {
     assertOptionalProductPriceInfo,
     assertProductNameContains,
     assertFooterButtonsDisabled,
+    saveConfigurator,
 };

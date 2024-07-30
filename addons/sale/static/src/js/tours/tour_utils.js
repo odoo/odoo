@@ -1,5 +1,17 @@
 /** @odoo-module **/
 
+function createNewSalesOrder() {
+    return [
+        {
+            trigger: '.o_sale_order',
+        }, {
+            content: "Create new order",
+            trigger: '.o_list_button_add',
+            run: 'click',
+        },
+    ]
+}
+
 function selectCustomer(customerName) {
     return [
         {
@@ -8,13 +20,13 @@ function selectCustomer(customerName) {
             run: `edit ${customerName}`,
         },
         {
-            trigger: `ul.ui-autocomplete a:contains("${customerName}")`,
+            trigger: `ul.ui-autocomplete > li > a:contains("${customerName}")`,
             run: 'click',
         },
     ];
 }
 
-function addProduct(productName) {
+function addProduct(productName, rowNumber=1) {
     return [
         {
             content: `Add product ${productName}`,
@@ -22,7 +34,11 @@ function addProduct(productName) {
             run: 'click',
         },
         {
-            trigger: 'div[name="product_template_id"] input',
+            content: 'wait for new row to be created',
+            trigger: `.o_data_row:nth-child(${rowNumber})`,
+        },
+        {
+            trigger: 'div[name="product_template_id"] input',  // TODO VFE o_selected_row
             run: `edit ${productName}`,
         },
         {
@@ -32,22 +48,53 @@ function addProduct(productName) {
     ];
 }
 
-function saveForm() {
+function clickSomewhereElse() {
     return [
+        // TODO find a way for onchange to finish first ?
         {
-            content: "Save the form",
-            trigger: '.o_form_button_save',
+            content: 'click somewhere else to exit cell focus',
+            trigger: 'a[name=order_lines]',  // click on notebook tab to stop the sol edit mode.
             run: 'click',
         },
         {
-            content: "Wait for the save to complete",
-            trigger: '.o_form_saved',
-        },
-    ];
+            content: 'check that the soline is not focused anymore',
+            trigger: 'table.o_section_and_note_list_view:not(:has(.o_selected_row))',
+        }
+    ]
+}
+
+function checkSOLDescriptionContains(productName, text) {
+    // currently must be called after exiting the edit mode on the SOL
+    // TODO in the future: handle edit mode and look directly into the textarea value
+    if (!text) {
+        return {
+            trigger: `span:contains("${productName}") ~ div:empty:not(:visible)`,
+        }
+    }
+    return {
+        trigger: `span:contains("${productName}") ~ div:contains("${text}"):not(:visible)`,
+    }
+}
+
+function editLineMatching(productName, text) {
+    let base_step = checkSOLDescriptionContains(productName, text);
+    base_step['run'] = 'click';
+    return base_step;
+}
+
+function editConfiguration() {
+    return {
+        trigger: '[name=product_template_id] button.fa-pencil',
+        run: 'click',
+    }
 }
 
 export default {
+    createNewSalesOrder,
     selectCustomer,
     addProduct,
-    saveForm,
+    checkSOLDescriptionContains,
+    editLineMatching,
+    editConfiguration,
+    clickSomewhereElse,
 };
