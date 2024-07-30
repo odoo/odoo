@@ -11,7 +11,6 @@
                 <field name="description"/>
                 <field name="status"/>
                 <filter string="My Updates" name="my_updates" domain="[('user_id', '=', uid)]"/>
-                <filter string="Followed Updates" name="followed_updates" domain="[('message_is_follower', '=', True)]"/>
                 <separator/>
                 <filter string="On Track" name="on_track" domain="[('status', '=', 'on_track')]"/>
                 <filter string="At Risk" name="at_risk" domain="[('status', '=', 'at_risk')]"/>
