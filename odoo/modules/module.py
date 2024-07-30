@@ -6,9 +6,9 @@ import collections.abc
 import copy
 import functools
 import importlib
+import importlib.metadata
 import logging
 import os
-import pkg_resources
 import re
 import sys
 import traceback
@@ -453,10 +453,23 @@ def adapt_version(version):
 current_test = False
 
 
+# regex borrowed from `packaging.utils``
+_REQ_NAME_PARSE_RE = re.compile(r"^[A-Z0-9._-]+", re.IGNORECASE)
+
+
+def _get_name_from_requirement(pydep):
+    mo = _REQ_NAME_PARSE_RE.match(pydep)
+    if not mo:
+        msg = f"{pydep} is an invalid external dependency specification."
+        raise Exception(msg)
+    return mo.group(0)
+
+
 def check_python_external_dependency(pydep):
+    req_name = _get_name_from_requirement(pydep)
     try:
-        pkg_resources.get_distribution(pydep)
-    except pkg_resources.DistributionNotFound as e:
+        importlib.metadata.version(req_name)
+    except importlib.metadata.PackageNotFoundError as e:
         try:
             importlib.import_module(pydep)
             _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
@@ -464,12 +477,6 @@ def check_python_external_dependency(pydep):
             # backward compatibility attempt failed
             _logger.warning("DistributionNotFound: %s", e)
             raise Exception('Python library not installed: %s' % (pydep,))
-    except pkg_resources.VersionConflict as e:
-        _logger.warning("VersionConflict: %s", e)
-        raise Exception('Python library version conflict: %s' % (pydep,))
-    except Exception as e:
-        _logger.warning("get_distribution(%s) failed: %s", pydep, e)
-        raise Exception('Error finding python library %s' % (pydep,))
 
 
 def check_manifest_dependencies(manifest):
