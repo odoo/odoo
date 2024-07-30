@@ -8,6 +8,7 @@ import logging
 import os
 import re
 import threading
+import unicodedata
 
 import werkzeug
 import werkzeug.exceptions
@@ -19,16 +20,33 @@ try:
 except ImportError:
     from werkzeug.routing.converters import NumberConverter  # moved in werkzeug 2.2.2
 
+# optional python-slugify import (https://github.com/un33k/python-slugify)
+try:
+    import slugify as slugify_lib
+except ImportError:
+    slugify_lib = None
+
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied
-from odoo.http import request, Response, ROUTING_KEYS, Stream
+from odoo.http import request, Response, ROUTING_KEYS
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.tools.misc import get_lang, submap
 from odoo.tools.translate import code_translations
 
 _logger = logging.getLogger(__name__)
+
+# see also mimetypes module: https://docs.python.org/3/library/mimetypes.html and odoo.tools.mimetypes
+EXTENSION_TO_WEB_MIMETYPES = {
+    '.css': 'text/css',
+    '.less': 'text/less',
+    '.scss': 'text/scss',
+    '.js': 'text/javascript',
+    '.xml': 'text/xml',
+    '.csv': 'text/csv',
+    '.html': 'text/html',
+}
 
 
 class RequestUID(object):
@@ -117,6 +135,40 @@ class FasterRule(werkzeug.routing.Rule):
 class IrHttp(models.AbstractModel):
     _name = 'ir.http'
     _description = "HTTP Routing"
+
+    @classmethod
+    def _slugify_one(cls, value: str, max_length: int = 0) -> str:
+        """ Transform a string to a slug that can be used in a url path.
+            This method will first try to do the job with python-slugify if present.
+            Otherwise it will process string by stripping leading and ending spaces,
+            converting unicode chars to ascii, lowering all chars and replacing spaces
+            and underscore with hyphen "-".
+        """
+        if slugify_lib:
+            # There are 2 different libraries only python-slugify is supported
+            try:
+                return slugify_lib.slugify(value, max_length=max_length)
+            except TypeError:
+                pass
+        uni = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+        slug_str = re.sub(r'[\W_]+', '-', uni).strip('-').lower()
+        return slug_str[:max_length] if max_length > 0 else slug_str
+
+    @classmethod
+    def _slugify(cls, value: str, max_length: int = 0, path: bool = False) -> str:
+        if not path:
+            return cls._slugify_one(value, max_length=max_length)
+        else:
+            res = []
+            for u in value.split('/'):
+                s = cls._slugify_one(u, max_length=max_length)
+                if s:
+                    res.append(s)
+            # check if supported extension
+            path_no_ext, ext = os.path.splitext(value)
+            if ext in EXTENSION_TO_WEB_MIMETYPES:
+                res[-1] = cls._slugify_one(path_no_ext) + ext
+            return '/'.join(res)
 
     @classmethod
     def _slug(cls, value: models.BaseModel | tuple[int, str]) -> str:
