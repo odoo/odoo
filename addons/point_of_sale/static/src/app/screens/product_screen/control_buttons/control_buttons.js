@@ -116,8 +116,11 @@ export class ControlButtons extends Component {
             },
         });
     }
-    get internalNoteLabel() {
-        return _t("Internal Note");
+    internalNoteLabel(order) {
+        if (order) {
+            return _t("General Note");
+        }
+        return this.pos.config.module_pos_restaurant ? _t("Kitchen Note") : _t("Internal Note");
     }
 
     get buttonClass() {

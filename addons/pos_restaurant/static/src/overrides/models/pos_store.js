@@ -3,6 +3,7 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -57,9 +58,10 @@ patch(PosStore.prototype, {
         await this.data.read("pos.order", [...orderToLoad]);
     },
     get categoryCount() {
-        const orderChange = this.getOrderChanges().orderlines;
+        const orderChanges = this.getOrderChanges();
+        const linesChanges = orderChanges.orderlines;
 
-        const categories = Object.values(orderChange).reduce((acc, curr) => {
+        const categories = Object.values(linesChanges).reduce((acc, curr) => {
             const categories =
                 this.models["product.product"].get(curr.product_id)?.pos_categ_ids || [];
 
@@ -76,7 +78,11 @@ patch(PosStore.prototype, {
 
             return acc;
         }, {});
-        return Object.values(categories);
+
+        return [
+            ...Object.values(categories),
+            ...("generalNote" in orderChanges ? [{ count: 1, name: _t("General Note") }] : []),
+        ];
     },
     createNewOrder() {
         const order = super.createNewOrder(...arguments);

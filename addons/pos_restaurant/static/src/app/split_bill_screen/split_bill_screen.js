@@ -57,8 +57,9 @@ export class SplitBillScreen extends Component {
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
         this.pos.selectedTable = null;
         const newOrder = this.pos.createNewOrder();
-        const originalOrderName = originalOrder.getOrderName();
-        newOrder.note = `${newOrder.tracking_number} Split from ${originalOrderName}`;
+        const originalOrderName = originalOrder.getFloatingOrderName();
+        newOrder.floating_order_name = `${newOrder.tracking_number} Split from ${originalOrderName}`;
+        newOrder.general_note = originalOrder.general_note || "";
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         newOrder.originalSplittedOrder = originalOrder;
 

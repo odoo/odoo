@@ -10,9 +10,9 @@
                 <div class="position-absolute bottom-0 mb-4 d-none d-lg-flex align-items-center ps-3 pe-2 py-1 rounded-3 text-bg-dark small">Powered by <OdooLogo style="'width: 3rem;'" monochrome="true"/></div>
             </div>
             <div class="o_customer_display_main d-flex flex-column flex-grow-1 overflow-auto">
-                <OrderWidget t-if="!order.finalized" lines="order.lines" t-slot-scope="scope" class="'gap-0 p-0 pb-3 bg-view'" style="'scroll-snap-type: y mandatory;'">
+                <OrderWidget t-if="!order.finalized" lines="order.lines" t-slot-scope="scope" class="'gap-0 p-0 mx-2 pb-3 bg-view'" style="'scroll-snap-type: y mandatory;'" generalNote="order.generalNote or ''">
                     <Orderline line="scope.line" class="{
-                            'o_customer_display_orderline mx-2 bg-white fs-3 rounded-0': true,
+                            'o_customer_display_orderline bg-white fs-3 rounded-0': true,
                         }"
                     />
                     <t t-set-slot="emptyCart">

@@ -182,6 +182,7 @@
                                 <field name="country_code" invisible="1"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="pricelist_id" groups="product.group_product_pricelist" readonly="state != 'draft'"/>
+                                <field name="floating_order_name" invisible="not floating_order_name"/>
                             </group>
                             <group string="Contact Info">
                                 <group class="w-75">
@@ -198,8 +199,8 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Notes" name="notes">
-                        <field name="note"/>
+                    <page string="General Notes" name="notes">
+                        <field name="general_note" readonly="1"/>
                     </page>
                 </notebook>
             </sheet>

@@ -5,7 +5,7 @@
         <SelectPartnerButton partner="partner" t-if="!props.showRemainingButtons"/>
         <t t-if="!props.showRemainingButtons || (ui.isSmall and props.showRemainingButtons)">
             <OrderlineNoteButton
-                label="internalNoteLabel"
+                label="internalNoteLabel()"
                 getter="(orderline) => orderline.getNote()"
                 class="buttonClass"
                 setter="(orderline, note) => orderline.setNote(note)" />
@@ -16,6 +16,7 @@
         <!-- All these buttons will only be displayed in a dialog -->
         <t t-if="props.showRemainingButtons">
             <div class="control-buttons control-buttons-modal d-grid gap-2 mt-2">
+                <OrderlineNoteButton class="buttonClass" label="internalNoteLabel(this.pos.get_order())"/>
                 <OrderlineNoteButton class="buttonClass" icon="'fa fa-sticky-note'"/>
                 <button class="o_pricelist_button btn btn-secondary btn-lg py-5" t-on-click="() => this.clickPricelist()">
                     <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />

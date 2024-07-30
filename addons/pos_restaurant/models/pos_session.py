@@ -18,9 +18,12 @@ class PosSession(models.Model):
     def _set_last_order_preparation_change(self, order_ids):
         for order_id in order_ids:
             order = self.env['pos.order'].browse(order_id)
-            last_order_preparation_change = {}
+            last_order_preparation_change = {
+                'lines': {},
+                'generalNote': '',
+            }
             for orderline in order['lines']:
-                last_order_preparation_change[orderline.uuid + " - "] = {
+                last_order_preparation_change['lines'][orderline.uuid + " - "] = {
                     "uuid": orderline.uuid,
                     "name": orderline.full_product_name,
                     "note": "",
