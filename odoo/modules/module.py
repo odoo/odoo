@@ -6,14 +6,16 @@ import collections.abc
 import copy
 import functools
 import importlib
+import importlib.metadata
 import logging
 import os
-import pkg_resources
 import re
 import sys
 import traceback
 import warnings
 from os.path import join as opj, normpath
+
+from packaging.requirements import InvalidRequirement, Requirement
 
 import odoo
 import odoo.tools as tools
@@ -456,21 +458,23 @@ current_test = False
 
 def check_python_external_dependency(pydep):
     try:
-        pkg_resources.get_distribution(pydep)
-    except pkg_resources.DistributionNotFound as e:
-        try:
-            importlib.import_module(pydep)
-            _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
-        except ImportError:
-            # backward compatibility attempt failed
-            _logger.warning("DistributionNotFound: %s", e)
-            raise Exception('Python library not installed: %s' % (pydep,))
-    except pkg_resources.VersionConflict as e:
-        _logger.warning("VersionConflict: %s", e)
-        raise Exception('Python library version conflict: %s' % (pydep,))
-    except Exception as e:
-        _logger.warning("get_distribution(%s) failed: %s", pydep, e)
-        raise Exception('Error finding python library %s' % (pydep,))
+        requirement = Requirement(pydep)
+    except InvalidRequirement as e:
+        msg = f"{pydep} is an invalid external dependency specification: {e}"
+        raise Exception(msg) from e
+    if requirement.marker and not requirement.marker.evaluate():
+        _logger.debug(
+            "Ignored external dependency %s because environment markers do not match",
+            pydep
+        )
+    try:
+        version = importlib.metadata.version(requirement.name)
+    except importlib.metadata.PackageNotFoundError as e:
+        msg = f"External dependency {pydep} not installed: {e}"
+        raise Exception(msg) from e
+    if requirement.specifier and not requirement.specifier.contains(version):
+        msg = f"External dependency version mismatch: {pydep} (installed: {version})"
+        raise Exception(msg)
 
 
 def check_manifest_dependencies(manifest):
