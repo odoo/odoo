@@ -637,16 +637,6 @@ class ResPartner(models.Model):
 
         return check_digit == checksum_digit
 
-    def check_vat_xi(self, vat):
-        """ Temporary Nothern Ireland VAT validation following Brexit
-        As of January 1st 2021, companies in Northern Ireland have a
-        new VAT number starting with XI
-        TODO: remove when stdnum is updated to 1.16 in supported distro"""
-        check_func = getattr(stdnum.util.get_cc_module('gb', 'vat'), 'is_valid', None)
-        if not check_func:
-            return len(vat) == 9
-        return check_func(vat)
-
     def check_vat_in(self, vat):
         #reference from https://www.gstzen.in/a/format-of-a-gst-number-gstin.html
         if vat and len(vat) == 15:
