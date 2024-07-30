@@ -1760,3 +1760,43 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, -1.0)
         self.assertEqual(sale_order.order_line.qty_to_invoice, -1.0)
+
+    def test_delivery_status(self):
+        """
+            Tests the delivery status of a sales order.
+            If nothing was done: pending
+            If some pickings were completed but nothing was actually delivery to the customer yet: started
+            If not everything was delivered: partial
+            If everything was delivered: full
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'name': 'sol_p1',
+                    'product_id': self.env['product.product'].create({'name': 'p1'}).id,
+                    'product_uom_qty': 10,
+                    'product_uom': self.env.ref('uom.product_uom_unit').id,
+                }),
+            ],
+        })
+        so.action_confirm()
+        self.assertEqual(so.delivery_status, 'pending')
+
+        pick01, ship01 = so.picking_ids
+
+        pick01.move_line_ids.qty_done = 10
+        pick01._action_done()
+        self.assertEqual(so.delivery_status, 'started')
+
+        ship01.move_line_ids[0].qty_done = 3
+        ship01._action_done()
+        self.assertEqual(so.delivery_status, 'partial')
+
+        ship02 = ship01.backorder_ids
+        ship02.move_line_ids[0].qty_done = 7
+        ship02._action_done()
+        self.assertEqual(so.delivery_status, 'full')
