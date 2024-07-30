@@ -15,8 +15,7 @@ class TestStockPickingTour(HttpCase):
         return super().setUp()
 
     def _get_picking_url(self, picking_id):
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_incoming")
-        return '/web#action=%s&id=%s&model=stock.picking&view_type=form' % (action['id'], picking_id)
+        return '/odoo/action-stock.action_picking_tree_incoming/%s' % (picking_id)
 
     def test_detailed_op_no_save_1(self):
         """validate a receipt with some move without any save except the last one"""
@@ -98,7 +97,7 @@ class TestStockPickingTour(HttpCase):
         ])
 
         menu = self.env.ref('stock.menu_action_inventory_tree')
-        url = '/web#menu_id=%s&model=stock.quant&view_type=list' % (menu['id'])
+        url = '/odoo/stock.quant?menu_id=%s' % (menu['id'])
 
         # We need a bigger window, so the "Apply All" button is immediately visible
         self.browser_size = '1920,1080'

@@ -63,10 +63,9 @@ class ProductReplenish(models.TransientModel):
 
     def _get_replenishment_order_notification_link(self, order_line):
         if order_line._name == 'purchase.order.line':
-            action = self.env.ref('purchase.action_rfq_form')
             return [{
                 'label': order_line.order_id.display_name,
-                'url': f'/web#action={action.id}&id={order_line.order_id.id}&model=purchase.order',
+                'url': f'/odoo/action-purchase.action_rfq_form/{order_line.order_id.id}',
             }]
         return super()._get_replenishment_order_notification_link(order_line)
 
