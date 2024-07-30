@@ -835,6 +835,84 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'transparency': 'opaque',
         })
 
+    @patch_api
+    def test_manually_sync_google_event_create_new(self):
+        """
+        Synchronize a new event with Google Calendar using the 'action_synchronize_google_events'
+        function. Ensure that Google Insert was called only once when inserting the event.
+        """
+        # Create a local event in Calendar, not synchronized with Google.
+        record = self.env['calendar.event'].create({
+            'google_id': False,
+            'name': "Event",
+            'allday': True,
+            'start': datetime(2020, 1, 15),
+            'stop': datetime(2020, 1, 15),
+            'need_sync': False
+        })
+
+        # Start an active synchronization with Google Calendar. Ensure that the record was not synchronized.
+        self.env.user.google_synchronization_stopped = False
+        self.env.user.sudo().google_calendar_token = 'token'
+        self.env.user.sudo().unpause_google_synchronization()
+        self.assertFalse(record.google_id, 'Record must not have a google_id before it is inserted.')
+
+        # Synchronize the event and ensure that the insertion was called in the API.
+        record.action_synchronize_google_events()
+        self.call_post_commit_hooks()
+        self.assertGoogleEventInserted({
+            'id': False,
+            'start': {'date': '2020-01-15', 'dateTime': None},
+            'end': {'date': '2020-01-16', 'dateTime': None},
+            'summary': 'Event',
+            'description': '',
+            'location': '',
+            'guestsCanModify': True,
+            'reminders': {'useDefault': False, 'overrides': []},
+            'organizer': {'email': 'odoobot@example.com', 'self': True},
+            'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
+            'transparency': 'opaque',
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: record.id}}
+        })
+
+    @patch_api
+    def test_manually_sync_google_event_update_synchronized_event(self):
+        """
+        Update a new event in Google Calendar using the 'action_synchronize_google_events'
+        function. Ensure that Google Patch was called only once when updating the event.
+        """
+        # Stop the synchronization and create a synchronized event mock.
+        self.env.user.sudo().google_calendar_token = 'token'
+        self.env.user.google_synchronization_stopped = True
+        record_two = self.env['calendar.event'].create({
+            'google_id': "synchronized-event-id",
+            'name': "Synchronized",
+            'allday': True,
+            'start': datetime(2020, 1, 15),
+            'stop': datetime(2020, 1, 15),
+            'need_sync': False
+        })
+        record_two.write({'name': 'updated-title', 'need_sync': False})
+
+        # Activate synchronization and call the event synchronization function.
+        # Ensure that the event's new updated title got patched in Google side.
+        self.env.user.google_synchronization_stopped = False
+        record_two.action_synchronize_google_events()
+        self.assertGoogleEventPatched("synchronized-event-id", {
+            'id': "synchronized-event-id",
+            'start': {'date': '2020-01-15', 'dateTime': None},
+            'end': {'date': '2020-01-16', 'dateTime': None},
+            'summary': 'updated-title',
+            'description': '',
+            'location': '',
+            'guestsCanModify': True,
+            'reminders': {'overrides': [], 'useDefault': False},
+            'organizer': {'email': 'odoobot@example.com', 'self': True},
+            'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
+            'transparency': 'opaque',
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: record_two.id}}
+        })
+
 
 @tagged('odoo2google')
 class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):

@@ -505,6 +505,43 @@ class TestCreateEvents(TestCommon):
         self.assertFalse(undefined_privacy_odoo_event.privacy, "Event with undefined privacy must have False value in privacy field.")
         self.assertFalse(default_privacy_odoo_event.privacy, "Event with custom privacy must have False value in privacy field.")
 
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_manually_sync_outlook_event_create_new(self, mock_insert, mock_get_events):
+        """
+        Synchronize a local event from Odoo to Microsoft Calendar using the 'action_synchronize_microsoft_events'
+        function. The local event must be inserted in Microsoft Calendar after its execution, calling insert only once.
+        """
+        # Create a local event in Calendar (not synchronized with Outlook).
+        self.organizer_user.with_user(self.organizer_user).sudo().stop_microsoft_synchronization()
+        simple_event_values_updated = self.simple_event_values
+        event = self.env["calendar.event"].with_user(self.organizer_user).create(simple_event_values_updated)
+
+        # Ensure that insert was not called and prepare mock for the synchronization restart.
+        mock_insert.assert_not_called()
+        mock_get_events.return_value = ([], None)
+
+        # Start an active synchronization with Outlook Calendar. Ensure that the record was not synchronized.
+        self.organizer_user.with_user(self.organizer_user).sudo().restart_microsoft_synchronization()
+        self.assertTrue(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
+        mock_insert.assert_not_called()
+
+        # Prepare mock for event synchronization.
+        event_id = "123"
+        event_iCalUId = "456"
+        mock_insert.return_value = (event_id, event_iCalUId)
+        mock_get_events.return_value = ([], None)
+
+        # Synchronize the event using the action function.
+        event.action_synchronize_microsoft_events()
+        self.call_post_commit_hooks()
+        event.invalidate_recordset()
+
+        # Ensure that the event got synchronized with Microsoft (through mock), Insert must be called only once.
+        self.assertEqual(event.microsoft_id, "123")
+        self.assertEqual(event.ms_universal_event_id, "456")
+        mock_insert.assert_called_once()
+
 
 class TestSyncOdoo2MicrosoftMail(TestCommon, MailCommon):
     @classmethod
