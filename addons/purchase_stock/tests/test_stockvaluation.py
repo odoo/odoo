@@ -116,7 +116,7 @@ class TestStockValuation(TransactionCase):
         purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
         last_po_id = False
         if purchase_order_id and model_name:
-            last_po_id = self.env[model_name[0]].browse(int(purchase_order_id[0]))
+            last_po_id = self.env[model_name].browse(int(purchase_order_id))
 
         order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
         self.assertEqual(order_line.product_qty,
