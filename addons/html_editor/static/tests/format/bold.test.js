@@ -215,7 +215,7 @@ test("should type in bold", async () => {
     bold(editor);
     expect(getContent(el)).toBe(`<p>ab${strong("xy")}${span("[]\u200B", "first")}cd</p>`);
     typeChar(editor, "z");
-    expect(getContent(el)).toBe(`<p>ab${strong("xy")}${span("z[]")}cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab${strong("xy")}z[]cd</p>`);
 });
 
 const styleContentBold = `.boldClass { font-weight: bold; }`;
