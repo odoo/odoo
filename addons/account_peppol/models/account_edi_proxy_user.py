@@ -6,8 +6,10 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.exceptions import UserError
+from odoo.tools import split_every
 
 _logger = logging.getLogger(__name__)
+BATCH_SIZE = 50
 
 
 class AccountEdiProxyClientUser(models.Model):
@@ -166,7 +168,6 @@ class AccountEdiProxyClientUser(models.Model):
             }
         }
         for edi_user in self:
-            proxy_acks = []
             params['domain']['receiver_identifier'] = edi_user.edi_identification
             try:
                 # request all messages that haven't been acknowledged
@@ -186,39 +187,39 @@ class AccountEdiProxyClientUser(models.Model):
             if not message_uuids:
                 continue
 
-            # retrieve attachments for filtered messages
-            all_messages = edi_user._make_request(
-                f"{edi_user._get_server_url()}/api/peppol/1/get_document",
-                {'message_uuids': message_uuids},
-            )
-
-            for uuid, content in all_messages.items():
-                enc_key = content["enc_key"]
-                document_content = content["document"]
-                filename = content["filename"] or f'peppol_document_{uuid}'  # default to peppol_document_{uuid}, which should not usually happen
-                partner_endpoint = content["accounting_supplier_party"]
-                decoded_document = edi_user._decrypt_data(document_content, enc_key)
-
-                attachment = self.env["ir.attachment"].create(
-                    {
-                        "name": f"{filename}.xml",
-                        "raw": decoded_document,
-                        "type": "binary",
-                        "mimetype": "application/xml",
-                    }
+            for uuids in split_every(BATCH_SIZE, message_uuids):
+                proxy_acks = []
+                # retrieve attachments for filtered messages
+                all_messages = edi_user._make_request(
+                    f"{edi_user._get_server_url()}/api/peppol/1/get_document",
+                    {'message_uuids': uuids},
                 )
 
-                if edi_user._peppol_import_invoice(attachment, partner_endpoint, content["state"], uuid):
-                    # Only acknowledge when we saved the document somewhere
-                    proxy_acks.append(uuid)
+                for uuid, content in all_messages.items():
+                    enc_key = content["enc_key"]
+                    document_content = content["document"]
+                    filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+                    partner_endpoint = content["accounting_supplier_party"]
+                    decoded_document = edi_user._decrypt_data(document_content, enc_key)
+                    attachment = self.env["ir.attachment"].create(
+                        {
+                            "name": f"{filename}.xml",
+                            "raw": decoded_document,
+                            "type": "binary",
+                            "mimetype": "application/xml",
+                        }
+                    )
+                    if edi_user._peppol_import_invoice(attachment, partner_endpoint, content["state"], uuid):
+                        # Only acknowledge when we saved the document somewhere
+                        proxy_acks.append(uuid)
 
-            if not tools.config['test_enable']:
-                self.env.cr.commit()
-            if proxy_acks:
-                edi_user._make_request(
-                    f"{edi_user._get_server_url()}/api/peppol/1/ack",
-                    {'message_uuids': proxy_acks},
-                )
+                if not tools.config['test_enable']:
+                    self.env.cr.commit()
+                if proxy_acks:
+                    edi_user._make_request(
+                        f"{edi_user._get_server_url()}/api/peppol/1/ack",
+                        {'message_uuids': proxy_acks},
+                    )
 
     def _peppol_get_message_status(self):
         for edi_user in self:
@@ -230,38 +231,38 @@ class AccountEdiProxyClientUser(models.Model):
                 continue
 
             message_uuids = {move.peppol_message_uuid: move for move in edi_user_moves}
-            messages_to_process = edi_user._make_request(
-                f"{edi_user._get_server_url()}/api/peppol/1/get_document",
-                {'message_uuids': list(message_uuids.keys())},
-            )
+            for uuids in split_every(BATCH_SIZE, message_uuids.keys()):
+                messages_to_process = edi_user._make_request(
+                    f"{edi_user._get_server_url()}/api/peppol/1/get_document",
+                    {'message_uuids': uuids},
+                )
 
-            for uuid, content in messages_to_process.items():
-                if uuid == 'error':
-                    # this rare edge case can happen if the participant is not active on the proxy side
-                    # in this case we can't get information about the invoices
-                    edi_user_moves.peppol_move_state = 'error'
-                    log_message = _("Peppol error: %s", content['message'])
-                    edi_user_moves._message_log_batch(bodies=dict((move.id, log_message) for move in edi_user_moves))
-                    continue
+                for uuid, content in messages_to_process.items():
+                    if uuid == 'error':
+                        # this rare edge case can happen if the participant is not active on the proxy side
+                        # in this case we can't get information about the invoices
+                        edi_user_moves.peppol_move_state = 'error'
+                        log_message = _("Peppol error: %s", content['message'])
+                        edi_user_moves._message_log_batch(bodies={move.id: log_message for move in edi_user_moves})
+                        break
 
-                move = message_uuids[uuid]
-                if content.get('error'):
-                    # "Peppol request not ready" error:
-                    # thrown when the IAP is still processing the message
-                    if content['error'].get('code') == 702:
+                    move = message_uuids[uuid]
+                    if content.get('error'):
+                        # "Peppol request not ready" error:
+                        # thrown when the IAP is still processing the message
+                        if content['error'].get('code') == 702:
+                            continue
+
+                        move.peppol_move_state = 'error'
+                        move._message_log(body=_("Peppol error: %s", content['error']['message']))
                         continue
 
-                    move.peppol_move_state = 'error'
-                    move._message_log(body=_("Peppol error: %s", content['error']['message']))
-                    continue
+                    move.peppol_move_state = content['state']
+                    move._message_log(body=_('Peppol status update: %s', content['state']))
 
-                move.peppol_move_state = content['state']
-                move._message_log(body=_('Peppol status update: %s', content['state']))
-
-            if message_uuids:
                 edi_user._make_request(
                     f"{edi_user._get_server_url()}/api/peppol/1/ack",
-                    {'message_uuids': list(message_uuids.keys())},
+                    {'message_uuids': uuids},
                 )
 
     def _peppol_get_participant_status(self):
