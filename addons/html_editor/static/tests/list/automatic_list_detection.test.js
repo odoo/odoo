@@ -143,6 +143,34 @@ test("should convert a bullet list into a numbered list", async () => {
     expect(getContent(el)).toBe(`<ol><li placeholder="List" class="o-we-hint">[]<br></li></ol>`);
 });
 
+test("typing '[] ' should create checklist and restore the original text when undo", async () => {
+    const { el, editor } = await setupEditor("<p>[]</p>");
+    insertText(editor, "[] ");
+    expect(getContent(el)).toBe(
+        `<ul class="o_checklist"><li placeholder="List" class="o-we-hint">[]<br></li></ul>`
+    );
+
+    editor.dispatch("HISTORY_UNDO");
+    expect(getContent(el)).toBe(`<p>\[\] []</p>`);
+});
+
+test("Typing '[] ' at the start of existing text should create a checklist and restore the original text when undo", async () => {
+    const { el, editor } = await setupEditor("<p>[]abc</p>");
+    insertText(editor, "[] ");
+    expect(getContent(el)).toBe(`<ul class="o_checklist"><li>[]abc</li></ul>`);
+
+    editor.dispatch("HISTORY_UNDO");
+    expect(getContent(el)).toBe(`<p>\[\] []abc</p>`);
+});
+
+test("should convert a checklist into a numbered list", async () => {
+    const { el, editor } = await setupEditor("<p>[]</p>");
+    insertText(editor, "[] ");
+    insertText(editor, "/numberedlist");
+    press("Enter");
+    expect(getContent(el)).toBe(`<ol><li placeholder="List" class="o-we-hint">[]<br></li></ol>`);
+});
+
 test("List should not be created when typing '1. ' at the end the text", async () => {
     const { el, editor } = await setupEditor("<p>abc[]</p>");
     insertText(editor, "1. ");

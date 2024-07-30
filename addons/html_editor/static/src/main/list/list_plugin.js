@@ -144,8 +144,9 @@ export class ListPlugin extends Plugin {
         const stringToConvert = blockEl.textContent.substring(0, selection.anchorOffset);
         const shouldCreateNumberList = /^(?:[1aA])[.)]\s$/.test(stringToConvert);
         const shouldCreateBulletList = /^[-*]\s$/.test(stringToConvert);
+        const shouldCreateCheckList = /^\[\]\s$/.test(stringToConvert);
         if (
-            (shouldCreateNumberList || shouldCreateBulletList) &&
+            (shouldCreateNumberList || shouldCreateBulletList || shouldCreateCheckList) &&
             !closestElement(selection.anchorNode, "li")
         ) {
             this.shared.setSelection({
@@ -173,6 +174,8 @@ export class ListPlugin extends Plugin {
                 }
             } else if (shouldCreateBulletList) {
                 this.toggleList("UL");
+            } else if (shouldCreateCheckList) {
+                this.toggleList("CL");
             }
             this.dispatch("ADD_STEP");
         }
