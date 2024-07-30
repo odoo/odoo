@@ -114,7 +114,7 @@ according to the enabled options.
                             <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')" t-att-class="opt_blog_cards_design and 'card-body pt-0'">
                                 <t t-call="website_blog.post_teaser"/>
                             </div>
-                            <div t-if="opt_blog_cards_design" t-attf-class="opt_blog_cards_design and 'card-body pt-0 pb-2'}">
+                            <div t-if="opt_blog_cards_design" t-att-class="opt_blog_cards_design and 'card-body pt-0 pb-2'">
                                 <t t-call="website_blog.post_info"></t>
                             </div>
                             <div t-else="" class="mt-3">
