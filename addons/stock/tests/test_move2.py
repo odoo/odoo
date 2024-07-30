@@ -2745,7 +2745,7 @@ class TestRoutes(TestStockCommon):
 
         last_picking_id = False
         if picking_id and model_name:
-            last_picking_id = self.env[model_name[0]].browse(int(picking_id[0]))
+            last_picking_id = self.env[model_name].browse(int(picking_id))
         self.assertTrue(last_picking_id, 'Picking not found')
         move_line = last_picking_id.move_ids.search([('product_id', '=', self.product1.id)])
         self.assertTrue(move_line,'The product is not in the picking')

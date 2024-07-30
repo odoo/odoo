@@ -193,7 +193,6 @@ class Orderpoint(models.Model):
             domain = AND([domain, [('write_date', '>=', self.env.context.get('written_after'))]])
         order = self.env['purchase.order.line'].search(domain, limit=1).order_id
         if order:
-            action = self.env.ref('purchase.action_rfq_form')
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
@@ -202,7 +201,7 @@ class Orderpoint(models.Model):
                     'message': '%s',
                     'links': [{
                         'label': order.display_name,
-                        'url': f'/web#action={action.id}&id={order.id}&model=purchase.order',
+                        'url': f'/odoo/action-purchase.action_rfq_form/{order.id}',
                     }],
                     'sticky': False,
                     'next': {'type': 'ir.actions.act_window_close'},

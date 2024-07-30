@@ -54,7 +54,7 @@ class TestReplenishWizard(TestStockCommon):
 
         last_po_id = False
         if purchase_order_id and model_name:
-            last_po_id = self.env[model_name[0]].browse(int(purchase_order_id[0]))
+            last_po_id = self.env[model_name].browse(int(purchase_order_id))
         self.assertTrue(last_po_id, 'Purchase Order not found')
         order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
         self.assertTrue(order_line, 'The product is not in the Purchase Order')
@@ -107,7 +107,7 @@ class TestReplenishWizard(TestStockCommon):
 
         last_po_id = False
         if purchase_order_id and model_name:
-            last_po_id = self.env[model_name[0]].browse(int(purchase_order_id[0]))
+            last_po_id = self.env[model_name].browse(int(purchase_order_id))
         self.assertEqual(last_po_id.partner_id, vendor1)
         self.assertEqual(last_po_id.order_line.price_unit, 100)
 
@@ -166,7 +166,7 @@ class TestReplenishWizard(TestStockCommon):
 
         last_po_id = False
         if purchase_order_id and model_name:
-            last_po_id = self.env[model_name[0]].browse(int(purchase_order_id[0]))
+            last_po_id = self.env[model_name].browse(int(purchase_order_id))
         self.assertEqual(last_po_id.partner_id, vendor1)
         self.assertEqual(last_po_id.order_line.price_unit, 100)
 
@@ -215,7 +215,7 @@ class TestReplenishWizard(TestStockCommon):
 
         last_po_id = False
         if purchase_order_id and model_name:
-            last_po_id = self.env[model_name[0]].browse(int(purchase_order_id[0]))
+            last_po_id = self.env[model_name].browse(int(purchase_order_id))
 
         self.assertEqual(last_po_id.partner_id, vendor2)
 
@@ -268,7 +268,7 @@ class TestReplenishWizard(TestStockCommon):
 
         last_po_id = False
         if purchase_order_id and model_name:
-            last_po_id = self.env[model_name[0]].browse(int(purchase_order_id[0]))
+            last_po_id = self.env[model_name].browse(int(purchase_order_id))
 
         self.assertEqual(last_po_id.partner_id, vendor1)
         self.assertEqual(last_po_id.order_line.price_unit, 60)
@@ -306,7 +306,7 @@ class TestReplenishWizard(TestStockCommon):
 
         last_po_id = False
         if purchase_order_id and model_name:
-            last_po_id = self.env[model_name[0]].browse(int(purchase_order_id[0]))
+            last_po_id = self.env[model_name].browse(int(purchase_order_id))
         self.assertEqual(last_po_id.partner_id, self.vendor)
         self.assertEqual(last_po_id.order_line.price_unit, 110)
         self.assertEqual(last_po_id.order_line.discount, 20.0)

@@ -7,7 +7,7 @@ from odoo.tests import HttpCase, tagged
 class TestStockReportTour(HttpCase):
 
     def _get_report_url(self):
-        return '/web#&model=product.template&action=stock.product_template_action_product'
+        return '/odoo/action-stock.product_template_action_product'
 
     def test_stock_route_diagram_report(self):
         """ Open the route diagram report."""
