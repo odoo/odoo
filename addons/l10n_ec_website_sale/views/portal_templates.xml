@@ -24,15 +24,15 @@
 
     </template>
 
-    <template id="portal_my_details_fields" name="portal_my_details_fields" inherit_id="portal.portal_my_details_fields">
-        <xpath expr="//input[@name='vat']/.." position="before">
+    <template id="portal_my_details_fields" name="portal_my_details_fields" inherit_id="portal.portal_my_details">
+        <xpath expr="//input[@name='company_name']/.." position="after">
             <t t-if="res_company.country_code == 'EC'">
                 <div class="clearfix"/>
                 <t t-call="l10n_ec_website_sale.partner_info"/>
             </t>
         </xpath>
 
-        <label for="vat" position="replace">
+        <label for="o_vat" position="replace">
             <t t-if="res_company.country_id.code != 'EC'">$0</t>
             <t t-else="">
                 <label class="col-form-label label-optional" for="vat">

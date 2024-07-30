@@ -154,7 +154,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
         ) as rate_shipment_mock:
             # Change a shipping address of the order in the checkout.
             shipping_partner2 = shipping_partner.copy()
-            self.WebsiteSaleController.shop_update_address(
+            self.WebsiteSaleController.portal_update_address(
                 partner_id=shipping_partner2.id, address_type='delivery'
             )
             self.assertGreaterEqual(
@@ -476,8 +476,8 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
         so = self._create_so(partner_id=user_partner.id)
         self.assertNotEqual(so.partner_shipping_id, shipping)
         self.assertNotEqual(so.partner_invoice_id, invoicing)
-        self.assertFalse(colleague._can_be_edited_by_current_customer(so, 'billing'))
-        self.assertFalse(colleague._can_be_edited_by_current_customer(so, 'delivery'))
+        self.assertFalse(colleague._can_be_edited_by_current_customer('billing', order_sudo=so))
+        self.assertFalse(colleague._can_be_edited_by_current_customer('delivery', order_sudo=so))
 
         env = api.Environment(self.env.cr, user.id, {})
         # change also website env for `sale_get_order` to not change order partner_id
@@ -486,57 +486,57 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             # Invalid addresses unaccessible to current customer
             with self.assertRaises(Forbidden):
                 # cannot use contact type addresses
-                self.WebsiteSaleController.shop_update_address(partner_id=colleague.id)
+                self.WebsiteSaleController.portal_update_address(partner_id=colleague.id)
             with self.assertRaises(Forbidden):
                 # unrelated partner
-                self.WebsiteSaleController.shop_update_address(partner_id=self.env.user.partner_id.id)
+                self.WebsiteSaleController.portal_update_address(partner_id=self.env.user.partner_id.id)
 
             # Good addresses
-            self.WebsiteSaleController.shop_update_address(
+            self.WebsiteSaleController.portal_update_address(
                 partner_id=colleague_shipping.id, address_type='delivery')
             self.assertEqual(so.partner_shipping_id, colleague_shipping)
-            self.WebsiteSaleController.shop_update_address(
+            self.WebsiteSaleController.portal_update_address(
                 partner_id=shipping.id, address_type='delivery',
             )
             self.assertEqual(so.partner_shipping_id, shipping)
 
-            self.WebsiteSaleController.shop_update_address(
+            self.WebsiteSaleController.portal_update_address(
                 partner_id=invoicing.id, address_type='billing',
             )
             self.assertEqual(so.partner_shipping_id, shipping)
             self.assertEqual(so.partner_invoice_id, invoicing)
 
             # Using invalid addresses --> change and the customer is forced to update the address
-            self.WebsiteSaleController.shop_update_address(
+            self.WebsiteSaleController.portal_update_address(
                 partner_id=bad_invoicing.id, address_type='billing')
             self.assertEqual(so.partner_invoice_id, bad_invoicing)
             redirection = self.WebsiteSaleController._check_addresses(so)
             self.assertTrue(redirection is not None)
-            self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_invoicing.id}&address_type=billing')
+            self.assertEqual(redirection.location, f'/portal/address?partner_id={bad_invoicing.id}&address_type=billing')
 
             # reset to valid one
-            self.WebsiteSaleController.shop_update_address(
+            self.WebsiteSaleController.portal_update_address(
                 partner_id=invoicing.id, address_type='billing',
             )
 
-            self.WebsiteSaleController.shop_update_address(
+            self.WebsiteSaleController.portal_update_address(
                 partner_id=bad_shipping.id, address_type='delivery')
             self.assertEqual(so.partner_shipping_id, bad_shipping)
             redirection = self.WebsiteSaleController._check_addresses(so)
             self.assertTrue(redirection is not None)
-            self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_shipping.id}&address_type=delivery')
+            self.assertEqual(redirection.location, f'/portal/address?partner_id={bad_shipping.id}&address_type=delivery')
 
             # reset to valid one
-            self.WebsiteSaleController.shop_update_address(
+            self.WebsiteSaleController.portal_update_address(
                 partner_id=shipping.id, address_type='delivery',
             )
 
             # Using commercial partner address
-            self.WebsiteSaleController.shop_update_address(
+            self.WebsiteSaleController.portal_update_address(
                 partner_id=partner_company.id, address_type='billing',
             )
             self.assertEqual(so.partner_invoice_id, partner_company)
-            self.WebsiteSaleController.shop_update_address(
+            self.WebsiteSaleController.portal_update_address(
                 partner_id=partner_company.id, address_type='delivery',
             )
             self.assertEqual(so.partner_shipping_id, partner_company)

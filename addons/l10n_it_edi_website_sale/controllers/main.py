@@ -14,19 +14,20 @@ class L10nITWebsiteSale(WebsiteSale):
             address_values, *args, **kwargs
         )
 
-        if address_values.get('l10n_it_codice_fiscale'):
-            partner_dummy = request.env['res.partner'].new({
-                'l10n_it_codice_fiscale': address_values.get('l10n_it_codice_fiscale')
-            })
-            try:
-                partner_dummy.validate_codice_fiscale()
-            except UserError as e:
-                invalid_fields.add('l10n_it_codice_fiscale')
-                error_messages.append(e.name)
+        if not kwargs.get('portal_address'):
+            if address_values.get('l10n_it_codice_fiscale'):
+                partner_dummy = request.env['res.partner'].new({
+                    'l10n_it_codice_fiscale': address_values.get('l10n_it_codice_fiscale')
+                })
+                try:
+                    partner_dummy.validate_codice_fiscale()
+                except UserError as e:
+                    invalid_fields.add('l10n_it_codice_fiscale')
+                    error_messages.append(e.name)
 
-        pa_index = address_values.get('l10n_it_pa_index')
-        if pa_index and (len(pa_index) < 6 or len(pa_index) > 7):
-            invalid_fields.add('l10n_it_pa_index')
-            error_messages.append(_("Destination Code (SDI) must have between 6 and 7 characters"))
+            pa_index = address_values.get('l10n_it_pa_index')
+            if pa_index and (len(pa_index) < 6 or len(pa_index) > 7):
+                invalid_fields.add('l10n_it_pa_index')
+                error_messages.append(_("Destination Code (SDI) must have between 6 and 7 characters"))
 
         return invalid_fields, missing_fields, error_messages

@@ -2284,12 +2284,12 @@
             >
                 <!-- We don't allow public users to have multiple delivery addresses. -->
                 <t t-if="is_invoice">
-                    <t t-set="new_address_href" t-valuef="/shop/address?address_type=billing"/>
+                    <t t-set="new_address_href" t-valuef="/portal/address?address_type=billing"/>
                 </t>
                 <t t-else="">
                     <t
                         t-set="new_address_href"
-                        t-valuef="/shop/address?address_type=delivery&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
+                        t-valuef="/portal/address?address_type=delivery&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
                     />
                 </t>
                 <a
@@ -2316,8 +2316,8 @@
         >
             <div class="card-body d-flex flex-column align-items-start">
                 <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
-                <t t-if="contact._can_be_edited_by_current_customer(website_sale_order, address_type)">
-                    <t t-set="new_address_href" t-value="'/shop/address?address_type=' + address_type"/>
+                <t t-if="contact._can_be_edited_by_current_customer(address_type, order_sudo=website_sale_order)">
+                    <t t-set="new_address_href" t-value="'/portal/address?address_type=' + address_type"/>
                     <a
                         t-att-href="new_address_href + '&amp;partner_id=' + str(contact.id)"
                         class="js_edit_address btn btn-link p-0 mt-auto"
@@ -2336,7 +2336,7 @@
         <t t-set="no_footer" t-value="1"/>
         <t t-call="website.layout">
             <div id="wrap">
-                <div class="oe_website_sale o_wsale_address_fill container py-2">
+                <div class="oe_website_sale o_portal_address_fill container py-2">
                     <div class="row">
                         <div class="col-12">
                             <t t-call="website_sale.wizard_checkout"/>
@@ -2367,7 +2367,7 @@
                                         You are editing your <b>delivery and billing</b> addresses
                                         at the same time!<br/>
                                         If you want to modify your billing address, create a
-                                        <a href="/shop/address?address_type=billing">new address</a>.
+                                        <a href="/portal/address?address_type=billing">new address</a>.
                                     </p>
                                 </div>
                                 <div id="errors"/> <!-- for js -->
@@ -2514,7 +2514,7 @@
                                         <div class="w-100"/>
                                         <div id="div_country" class="col-lg-6 mb-2">
                                             <label class="col-form-label" for="o_country_id">Country</label>
-                                            <select id="o_country_id" name="country_id" class="form-select">
+                                            <select id="o_country_id" name="country_id" class="form-select" t-att-disabled="not has_invoice">
                                                 <option value="">Country...</option>
                                                 <t t-foreach="countries" t-as="c">
                                                     <option t-att-value="c.id" t-att-selected="c.id == country.id" t-att-code="c.code">
@@ -2526,7 +2526,7 @@
                                         <div id="div_state" class="col-lg-6 mb-2"
                                              t-att-style="not country_states and 'display: none'">
                                             <label class="col-form-label" for="o_state_id">State / Province</label>
-                                            <select id="o_state_id" name="state_id" class="form-select">
+                                            <select id="o_state_id" name="state_id" class="form-select" t-att-disabled="not has_invoice">
                                                 <option value="">State / Province...</option>
                                                 <t t-foreach="country_states" t-as="s">
                                                     <option t-att-value="s.id" t-att-selected="s.id == state_id">

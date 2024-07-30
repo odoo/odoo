@@ -30,9 +30,9 @@ class L10nPEWebsiteSale(WebsiteSale):
             mandatory_fields.remove('city')
         return mandatory_fields
 
-    def _prepare_address_form_values(self, order_sudo, partner_sudo, address_type, **kwargs):
+    def _prepare_address_form_values(self, partner_sudo, address_type, **kwargs):
         rendering_values = super()._prepare_address_form_values(
-            order_sudo, partner_sudo, address_type=address_type, **kwargs
+            partner_sudo, address_type=address_type, **kwargs
         )
         if request.website.sudo().company_id.country_id.code != 'PE':
             return rendering_values

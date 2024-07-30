@@ -95,7 +95,7 @@
                             <div class="row o_portal_details">
                                 <div class="col-lg-12">
                                     <div class="row">
-                                        <t t-call="portal.portal_my_details_fields" />
+                                        <t t-call="portal.portal_my_details"/>
                                         <t t-if="partner_required_fields">
                                             <t t-set="required_fields" t-value="partner_required_fields"/>
                                             <t t-set="field_prefix" t-value="'partner_'"/>

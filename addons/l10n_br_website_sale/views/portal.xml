@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- FIXME JCO should be in the base loca module, it's portal content, not eCommerce -->
-    <template id="portal_my_details_fields" inherit_id="portal.portal_my_details_fields">
+    <template id="portal_my_details_fields" inherit_id="portal.portal_my_details">
         <xpath expr="//input[@name='vat']/.." position="before">
             <t t-if="res_company.country_id.code == 'BR'">
                 <div class="mb-1 col-xl-6"/> <!-- Empty div to put the vat and identification type on the same line -->

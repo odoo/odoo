@@ -49,10 +49,15 @@ class ResPartner(models.Model):
                 ),
             }}
 
-    def _can_be_edited_by_current_customer(self, sale_order, address_type):
+    def _can_be_edited_by_current_customer(self, address_type, **kwargs):
         self.ensure_one()
-        children_partner_ids = self.env['res.partner']._search([
-            ('id', 'child_of', sale_order.partner_id.commercial_partner_id.id),
-            ('type', 'in', ('invoice', 'delivery', 'other')),
-        ])
-        return self == sale_order.partner_id or self.id in children_partner_ids
+        if sale_order := kwargs.get('order_sudo'):
+            children_partner_ids = self.env['res.partner']._search([
+                ('id', 'child_of', sale_order.partner_id.commercial_partner_id.id),
+                ('type', 'in', ('invoice', 'delivery', 'other')),
+            ])
+            if self == sale_order.partner_id or self.id in children_partner_ids:
+                if address_type == 'billing' or (address_type == 'delivery' and self.type == 'delivery'):
+                    # Billing addresses and delivery addresses are editable.
+                    return True
+        return super()._can_be_edited_by_current_customer(address_type, order_sudo=sale_order)
