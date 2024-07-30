@@ -35,6 +35,17 @@ import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
 
+class ResPartner extends models.Model {
+    name = fields.Char({ string: "Res Partner Name" });
+
+    _records = [
+        {
+            id: 1,
+            name: "res partner",
+        },
+    ];
+}
+
 class Partner extends models.Model {
     name = fields.Char({ string: "Displayed name" });
     foo = fields.Char({ default: "My little Foo Value" });
@@ -51,6 +62,7 @@ class Partner extends models.Model {
         relation_field: "turtle_trululu",
     });
     trululu = fields.Many2one({ string: "Trululu", relation: "partner" });
+    res_trululu = fields.Many2one({ string: "Res Trululu", relation: "res.partner" });
     timmy = fields.Many2many({ string: "pokemon", relation: "partner.type" });
     product_id = fields.Many2one({ string: "Product", relation: "product" });
     date = fields.Date({ string: "Some Date" });
@@ -68,6 +80,7 @@ class Partner extends models.Model {
             turtles: [2],
             timmy: [],
             trululu: 4,
+            res_trululu: 1,
             user_id: 1,
         },
         {
@@ -179,7 +192,7 @@ class Users extends models.Model {
     ];
 }
 
-defineModels([Partner, Product, PartnerType, Turtle, Users]);
+defineModels([ResPartner, Partner, Product, PartnerType, Turtle, Users]);
 
 test("many2ones in form views", async () => {
     expect.assertions(2);
@@ -1065,12 +1078,14 @@ test("many2one in non edit mode (with value)", async () => {
         resId: 1,
         arch: `
             <form edit="0">
+                <field name="res_trululu" />
                 <field name="trululu" />
             </form>`,
     });
 
-    expect("a.o_form_uri").toHaveCount(1);
-    expect("a.o_form_uri").toHaveAttribute("href", "#id=4&model=partner");
+    expect("a.o_form_uri").toHaveCount(2);
+    expect("div[name=res_trululu] a.o_form_uri").toHaveAttribute("href", "/odoo/res.partner/1");
+    expect("div[name=trululu] a.o_form_uri").toHaveAttribute("href", "/odoo/m-partner/4");
 });
 
 test("many2one in non edit mode (without value)", async () => {
