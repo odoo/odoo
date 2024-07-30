@@ -32,8 +32,6 @@
                     </filter>
                     <separator/>
                     <filter string="Show Sub-tasks" name="show_subtasks" context="{'show_subtasks': True}" invisible="'my_tasks' in context"/>
-                    <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone"/>
@@ -114,11 +112,11 @@
                 <filter name="my_tasks" position="before">
                     <field string="Properties" name="task_properties"/>
                 </filter>
-                <filter name="inactive" position="before">
+                <filter name="show_subtasks" position="after">
+                    <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
-                </filter>
-                <filter name="inactive" position="after">
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
