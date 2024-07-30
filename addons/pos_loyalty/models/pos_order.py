@@ -52,6 +52,26 @@ class PosOrder(models.Model):
             'payload': {},
         }
 
+    def add_loyalty_history_lines(self, coupon_data, coupon_updates):
+        id_mapping = {item['old_id']: int(item['id']) for item in coupon_updates}
+        history_lines_create_vals = []
+        for coupon in coupon_data:
+            if int(coupon['card_id']) not in id_mapping:
+                continue
+            card_id = id_mapping[int(coupon['card_id'])]
+            issued = coupon['won']
+            cost = coupon['spent']
+            if (issued or cost) and card_id > 0:
+                history_lines_create_vals.append({
+                    'card_id': card_id,
+                    'order_model': self._name,
+                    'order_id': self.id,
+                    'description': _('Onsite %s', self.display_name),
+                    'used': cost,
+                    'issued': issued,
+                })
+        self.env['loyalty.history'].create(history_lines_create_vals)
+
     def confirm_coupon_programs(self, coupon_data):
         """
         This is called after the order is created.

@@ -12,3 +12,4 @@ from . import test_program_without_code_operations
 from . import test_sale_invoicing
 from . import test_unlink_reward
 from . import test_sale_auto_invoice
+from . import test_loyalty_history

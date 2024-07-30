@@ -30,6 +30,11 @@
             <xpath expr="//list//field[@name='tax_id']" position="attributes">
                 <attribute name="readonly" add="is_reward_line" separator=" or "/>
             </xpath>
+            <group name="note_group" position="after">
+                <group class="d-flex flex-row-reverse oe_subtotal_footer border-0">
+                    <field name="loyalty_data" widget="loyalty_data_field" nolabel="1" readonly="1"/>
+                </group>
+            </group>
         </field>
     </record>
 

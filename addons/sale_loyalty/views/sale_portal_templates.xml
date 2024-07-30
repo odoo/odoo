@@ -47,6 +47,31 @@
         </div>
     </template>
 
+    <template id="sale_order_portal_loyalty_content">
+        <t t-set="loyalty_data" t-value="sale_order.loyalty_data"/>
+        <div class="col-xs-5 col-md-6 col-lg-5" t-if="loyalty_data">
+            <table class="table table-sm">
+                <tr>
+                    <td><strong>Loyalty Card</strong></td>
+                </tr>
+                <tr t-if="loyalty_data['issued']">
+                    <td>Issued</td>
+                    <td class="text-end">
+                        +<span t-out="loyalty_data['issued']"/>
+                        <span class="d-none d-md-inline" t-out="loyalty_data['point_name']"/>
+                    </td>
+                </tr>
+                <tr t-if="loyalty_data['cost']">
+                    <td>Used</td>
+                    <td class="text-end">
+                        -<span t-out="loyalty_data['cost']"/>
+                        <span class="d-none d-md-inline" t-out="loyalty_data['point_name']"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </template>
+
     <template id="sale_order_portal_content_inherit"
               name="Gift Card Products Portal"
               inherit_id="sale.sale_order_portal_content">
@@ -59,6 +84,9 @@
                 <t t-set="order" t-value="sale_order"/>
                 <t t-set="hide_intro" t-value="1"/>
             </t>
+        </xpath>
+        <xpath expr="//div[@id='total']/*" position="after">
+            <t t-call="sale_loyalty.sale_order_portal_loyalty_content" />
         </xpath>
     </template>
 

@@ -25,12 +25,17 @@
     'installable': True,
     'auto_install': True,
     'assets': {
+        'web.assets_frontend': [
+            'pos_loyalty/static/src/portal/*',
+        ],
         'point_of_sale._assets_pos': [
             'pos_loyalty/static/src/**/*',
+            ('remove', 'pos_loyalty/static/src/portal/*'),
         ],
         'web.assets_tests': [
             'pos_loyalty/static/tests/tours/**/*',
         ],
     },
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }

@@ -32,6 +32,10 @@
                             </span>
                             <field name="valid_until"/>
                         </group>
+                        <group class="d-flex flex-column">
+                            <div class="border-bottom w-100 fw-bold">Description</div>
+                            <field name="description" nolabel="1" placeholder="Example: Gift for customer" required="True"/>
+                        </group>
                     </group>
                     <div class="alert alert-warning text-center" invisible="customer_ids or mode == 'anonymous'" role="alert">
                         <field name="confirmation_message"/>

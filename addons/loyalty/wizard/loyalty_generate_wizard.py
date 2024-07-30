@@ -28,6 +28,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
     valid_until = fields.Date()
     will_send_mail = fields.Boolean(compute='_compute_will_send_mail')
     confirmation_message = fields.Char(compute='_compute_confirmation_message')
+    description = fields.Text(string="Description")
 
     def _get_partners(self):
         self.ensure_one()
@@ -83,5 +84,12 @@ class LoyaltyGenerateWizard(models.TransientModel):
             customers = wizard._get_partners() or range(wizard.coupon_qty)
             for partner in customers:
                 coupon_create_vals.append(wizard._get_coupon_values(partner))
-        self.env['loyalty.card'].create(coupon_create_vals)
+        coupons = self.env['loyalty.card'].create(coupon_create_vals)
+        self.env['loyalty.history'].create([
+            {
+                'description': self.description or _("Gift For Customer"),
+                'card_id': coupon.id,
+                'issued': self.points_granted,
+            } for coupon in coupons
+        ])
         return True
