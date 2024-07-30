@@ -183,6 +183,35 @@ export class Store extends BaseStore {
         return tab === "chat" ? ["chat", "group"] : [tab];
     }
 
+    handleClickOnLink(ev, thread) {
+        const model = ev.target.dataset.oeModel;
+        const id = Number(ev.target.dataset.oeId);
+        if (ev.target.closest(".o_channel_redirect") && model && id) {
+            ev.preventDefault();
+            const thread = this.Thread.insert({ model, id });
+            this.env.services["mail.thread"].open(thread);
+            return true;
+        } else if (ev.target.closest(".o_mail_redirect") && id) {
+            ev.preventDefault();
+            this.env.services["mail.thread"].openChat({ partnerId: id });
+            return true;
+        } else if (ev.target.tagName === "A" && model && id) {
+            ev.preventDefault();
+            Promise.resolve(this.env.services.action.doAction({
+                type: "ir.actions.act_window",
+                res_model: model,
+                views: [[false, "form"]],
+                res_id: id,
+            })).then(() => {
+                if (!this.env.isSmall) {
+                    this.env.services["mail.thread"].open(thread, true, { autofocus: false });
+                }
+            });
+            return true;
+        }
+        return false;
+    }
+
     setup() {
         super.setup();
         this.updateBusSubscription = debounce(
