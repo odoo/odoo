@@ -64,6 +64,7 @@ const renderService = {
         };
         const whenMounted = async ({ el, container, callback }) => {
             container ||= document.querySelector(".render-container");
+            container.innerHTML = "";
             return await applyWhenMounted({ el, container, callback });
         };
         return { toHtml, toCanvas, toJpeg, whenMounted };
