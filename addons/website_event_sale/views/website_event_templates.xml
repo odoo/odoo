@@ -34,7 +34,7 @@
             <span itemprop="price" class="d-none" t-out="ticket.price"/>
             <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
         </t>
-        <span t-else="" class="badge text-bg-success rounded-pill p-2 px-3">Free</span>
+        <span t-else="" class="badge text-bg-success p-2 px-3">Free</span>
     </xpath>
     <xpath expr="//div[hasclass('o_wevent_price_range')]" position="inside">
         <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" t-set="all_prices" t-value="event.event_ticket_ids.mapped('price_reduce')"/>

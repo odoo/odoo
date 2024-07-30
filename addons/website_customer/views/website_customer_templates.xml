@@ -107,7 +107,7 @@
                                 <div class="o_wc_offcanvas_tags accordion-collapse collapse">
                                     <div class="accordion-body">
                                         <div class="d-flex flex-wrap align-items-center gap-1 mb-4" t-if="len(tags)">
-                                            <a class="badge text-bg-light" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
+                                            <a class="badge text-bg-info" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
                                                 <span class="fa fa-1x fa-tags"/> All </a>
                                             <t t-foreach="tags" t-as="o_tag">
                                                 <a t-attf-class="badge text-bg-#{o_tag.classname}" t-out="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
@@ -239,7 +239,7 @@
 <template id="opt_tag_list" inherit_id="website_customer.index" name="Filter on Tags" priority="40">
     <xpath expr="//div[hasclass('o_wcrm_filters_top')]" position="after">
         <div class="d-flex align-items-center gap-2 my-4" t-if="len(tags)">
-            <a class="badge text-bg-light" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
+            <a class="badge text-bg-info" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
                 <span class="fa fa-1x fa-tags"/> All
             </a>
             <t t-foreach="tags" t-as="o_tag">

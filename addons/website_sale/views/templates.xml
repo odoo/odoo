@@ -17,7 +17,7 @@
                 <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
                     <div t-attf-class="#{_icon_wrap_class}">
                         <i t-if="_icon" class="fa fa-shopping-cart fa-stack"/>
-                        <sup t-attf-class="my_cart_quantity badge text-bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                        <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
                     </div>
                     <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
                 </a>
@@ -1434,7 +1434,7 @@
                             <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="form-check-label fw-normal">
                                 <span t-out="combination_info['display_name']"/>
                                 <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>
-                                <span t-attf-class="badge rounded-pill text-bg-{{navClass}} border" t-if="diff_price != 0">
+                                <span t-attf-class="badge text-bg-{{navClass}} border" t-if="diff_price != 0">
                                     <span class="sign_badge_price_extra" t-out="diff_price > 0 and '+' or '-'"/>
                                     <span t-out="abs(combination_info['price'] - template_combination_info['price'])"
                                           t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"

@@ -131,8 +131,8 @@
                                 <t t-if="tracks">
                                     <t t-foreach="tracks" t-as="track">
                                         <t t-set="_classes"
-                                            t-value="'o_event_color_light text-center %s %s %s' % (
-                                                'o_event_color_%s' % (track.color or 0),
+                                            t-value="'text-center %s %s %s' % (
+                                                'o_color_%s' % (track.color or 0),
                                                 'event_track h-100' if track else '',
                                                 'o_location_size_%d' % len(locations),
                                             )"/>
@@ -197,7 +197,7 @@
             <div>
                 <t t-foreach="track.tag_ids" t-as="tag">
                     <span t-if="tag.color" t-att-title="tag.name"
-                        t-attf-class="me-1 mt-1 badge o_badge_clickable #{'o_badge_color_'+str(tag.color)}" t-out="tag.name"
+                        t-attf-class="me-1 mt-1 badge o_badge_clickable #{'o_color_'+str(tag.color)}" t-out="tag.name"
                         t-attf-onclick="
                         var value = '#{tag.name}' ;
                         var target = $('#event_track_search');

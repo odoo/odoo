@@ -268,7 +268,7 @@
                 <div t-attf-class="collapse {{ '' if tracks_info['default_collapsed'] else 'show' }}"
                     t-attf-id="collapse_session_list_{{ tracks_info_index }}">
                     <div t-foreach="tracks" t-as="track"
-                        t-att-class="'o_wesession_list_item o_event_color_light p-3 o_event_color_%d' % (track.color)">
+                        t-att-class="'o_wesession_list_item p-3 o_color_%d' % (track.color)">
                         <div class="row g-0">
                             <div class="col-12 d-flex justify-content-between">
                                 <!-- Hour: Live > Remaining > Hour: desktop only -->
@@ -464,23 +464,23 @@
             slug(event),
             keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
         )"
-        t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_badge o_badge_clickable o_badge_color_0')"
+        t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_badge o_badge_clickable o_color_0')"
         t-out="tag.name"/>
     <span t-else=""
         t-att-data-post="'/event/%s/track?%s'% (
             slug(event),
             keep_query('*', tags=str(tag.ids), prevent_redirect=True)
         )"
-        t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none o_badge o_badge_clickable o_badge_color_%s' % (tag.color)"
+        t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none o_badge o_badge_clickable o_color_%s' % (tag.color)"
         t-out="tag.name"/>
 </template>
 
 <template id="track_tag_badge_info" name="Track: Tag Badge Info">
     <span t-if="search_tags"
-        t-att-class="'badge %s' % ('text-bg-primary' if tag in search_tags else 'o_badge_color_0')"
+        t-att-class="'badge %s' % ('text-bg-primary' if tag in search_tags else 'o_color_0')"
         t-out="tag.name"/>
     <span t-else=""
-        t-att-class="'badge rounded-pill o_badge_color_%s' % (tag.color)"
+        t-att-class="'badge rounded-pill o_color_%s' % (tag.color)"
         t-out="tag.name"/>
 </template>
 

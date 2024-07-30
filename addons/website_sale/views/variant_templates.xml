@@ -137,7 +137,7 @@
     </template>
     <template id="badge_extra_price" name="Badge Extra Price">
         <t t-set="price_extra" t-value="ptav._get_extra_price(combination_info)"/>
-        <span t-if="price_extra" class="badge rounded-pill text-bg-light border">
+        <span t-if="price_extra" class="badge text-bg-info border">
             <!--
                 price_extra is displayed as catalog price instead of
                 price after pricelist because it is impossible to

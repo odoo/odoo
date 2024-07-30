@@ -85,7 +85,7 @@
                     <div class="d-flex flex-wrap gap-1">
                         <t t-foreach="track.tag_ids" t-as="tag">
                             <span t-if="tag.color"
-                                t-att-class="'badge o_badge_color_%s' % (tag.color)"
+                                t-att-class="'badge o_color_%s' % (tag.color)"
                                 t-out="tag.name"/>
                         </t>
                     </div>
@@ -233,14 +233,14 @@
             <small t-if="track_other.is_track_live and not track_other.is_track_done"
                 class="badge text-bg-danger">Live</small>
             <small t-elif="track_other.is_track_done"
-                class="badge text-bg-light">Done</small>
+                class="badge text-bg-info">Done</small>
             <small t-elif="track_other.is_track_today and track_other.track_start_remaining"
-                class="badge text-bg-secondary">
+                class="badge text-bg-info">
                 <span t-out="track_other.track_start_remaining"
                     t-options="{'widget': 'duration', 'digital': False, 'add_direction': True,
                                 'unit': 'second', 'round': 'minute', 'format': 'narrow'}"/>
             </small>
-            <div t-elif="track_other.date" class="badge text-bg-light">
+            <div t-elif="track_other.date" class="badge text-bg-info">
                 <span t-out="track_other.date" t-options="{'widget': 'datetime', 'tz_name': track_other.event_id.date_tz, 'format': 'MMM. dd'}"/>
             </div>
         </div>

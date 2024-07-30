@@ -64,7 +64,7 @@
                                 <span t-field="slide.channel_id.name"/>
                             </a>
                             <div t-if="not is_public_user">
-                                <span t-attf-class="o_wslides_channel_completion_completed badge rounded-pill text-bg-success #{'d-none' if not slide.channel_id.completed else ''}">
+                                <span t-attf-class="o_wslides_channel_completion_completed badge text-bg-success #{'d-none' if not slide.channel_id.completed else ''}">
                                     <i class="fa fa-check"/> Completed
                                 </span>
                                 <div t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if slide.channel_id.completed else 'd-flex'} w-100 align-items-center">

@@ -607,7 +607,7 @@
                 <span class="badge text-bg-danger fw-normal" t-if="not user['website_published']">Unpublished</span>
                 <strong class="text-muted" t-esc="user['rank']"/>
                 <div class="h3 my-2" t-if="user['karma_gain']">
-                    <span t-attf-class="badge rounded-pill #{ 'text-bg-success' if user['karma_gain'] > 0 else 'text-bg-warning'}">
+                    <span t-attf-class="badge #{ 'text-bg-success' if user['karma_gain'] > 0 else 'text-bg-warning'}">
                         <t t-if="user['karma_gain'] > 0">+ </t><t t-esc="user['karma_gain']"/> XP
                     </span>
                 </div>
@@ -632,7 +632,7 @@
         </td>
         <td class="align-middle text-nowrap">
             <t t-if="user['karma_gain']">
-                <span t-attf-class="badge rounded-pill d-inline #{ 'text-bg-success' if user['karma_gain'] > 0 else 'text-bg-warning'}">
+                <span t-attf-class="badge d-inline #{ 'text-bg-success' if user['karma_gain'] > 0 else 'text-bg-warning'}">
                     <t t-if="user['karma_gain'] > 0">+ </t><t t-esc="user['karma_gain']"/> XP
                 </span>
                 <span class="text-muted ps-2 pe-3">

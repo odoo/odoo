@@ -39,7 +39,7 @@
                             </div>
                             <div t-attf-class="o_wslides_channel_completion_completed col-12 col-sm-3 #{'d-none' if not slide.channel_id.completed else ''}">
                                 <h2>
-                                    <small><span class="badge rounded-pill text-bg-success fw-normal"><i class="fa fa-check"/> Completed</span></small>
+                                    <small><span class="badge text-bg-success fw-normal"><i class="fa fa-check"/> Completed</span></small>
                                 </h2>
                             </div>
                         </div>
@@ -167,7 +167,7 @@
                             <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
                                 <span t-esc="aside_slide.name"/>
                                 <span class="align-items-end" t-if="aside_slide.question_ids">
-                                    <span t-att-class="'badge rounded-pill %s' % ('text-bg-success' if channel_progress[aside_slide.id].get('completed') else 'text-bg-light text-600')">
+                                    <span t-att-class="'badge rounded-pill %s' % ('text-bg-success' if channel_progress[aside_slide.id].get('completed') else 'text-bg-info')">
                                         <t t-esc="channel_progress[aside_slide.id].get('quiz_karma_won') if channel_progress[aside_slide.id].get('completed') else channel_progress[aside_slide.id].get('quiz_karma_gain')"/> xp
                                     </span>
                                 </span>

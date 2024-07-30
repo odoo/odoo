@@ -378,7 +378,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     if (countFlaggedPosts) {
                         countFlaggedPosts.classList.remove('bg-light');
                         countFlaggedPosts.classList.remove('d-none');
-                        countFlaggedPosts.classList.add('bg-danger');
+                        countFlaggedPosts.classList.add('text-bg-danger');
                         countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
                     }
                     $(elem).nextAll('.flag_validator').removeClass('d-none');

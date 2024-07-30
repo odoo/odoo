@@ -153,7 +153,7 @@ var certificationCompletionSteps = [{
     run: "click",
 }, {
     content: 'eLearning: course should be completed',
-    trigger: '.o_wslides_course_card:contains("DIY Furniture") .rounded-pill:contains("Completed")',
+    trigger: '.o_wslides_course_card:contains("DIY Furniture") .badge:contains("Completed")',
 }];
 
 var profileSteps = [{

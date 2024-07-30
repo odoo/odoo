@@ -82,7 +82,7 @@
                                     <div t-if="assignees" class="flex-nowrap ps-3">
                                         <img class="rounded o_portal_contact_img me-2" t-attf-src="#{image_data_uri(assignees[:1].avatar_1024)}" alt="User" style="width: 20px; height: 20px;"/>
                                         <span t-att-title="'\n'.join(assignees.mapped('name'))">
-                                            <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill text-bg-light"> +<span t-out="len(assignees) - 1"/></span>
+                                            <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill bg-light"> +<span t-out="len(assignees) - 1"/></span>
                                         </span>
                                     </div>
                                 </td>

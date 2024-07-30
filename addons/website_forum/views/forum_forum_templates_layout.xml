@@ -45,7 +45,7 @@
                     <h3 t-attf-class="col-lg-10 my-0" t-out="question.name"/>
                     <div class="col d-flex justify-content-end align-items-center">
                         <i t-if="question.state == 'close'" class="fa fa-lock ms-2 fs-4" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
-                        <span t-elif="not question.active" class="badge bg-danger">
+                        <span t-elif="not question.active" class="badge text-bg-danger">
                             <t t-if="question.state!='offensive'">Deleted</t>
                             <t t-if="question.state=='offensive'">Offensive</t>
                             <t t-if="question.state=='offensive' and question.closed_reason_id">

@@ -40,7 +40,7 @@
                 t-value="'/forum/' + slug(question_tag.forum_id) + '/tag/' + slug(question_tag) + '/questions?' + keep_query( 'search', 'sorting', 'my', 'create_uid', filters='tag')"/>
 
             <a t-att-href="click_action"
-                t-attf-class="badge position-relative z-1 #{ 'text-bg-primary' if tag and tag.name == question_tag.name else 'text-bg-secondary' } fw-normal o_tag o_tag_color_#{question_tag.color}"
+                t-attf-class="badge position-relative z-1 fw-normal o_tag o_color_#{question_tag.color}"
                 t-field="question_tag.name"/>
         </t>
     </div>
@@ -165,7 +165,7 @@
     <div t-if="question.tag_ids" class="o_wforum_index_entry_tags ms-0">
         <a  t-foreach="question.tag_ids" t-as="question_tag"
             t-attf-href="/forum/#{slug(question_tag.forum_id)}/tag/#{slug(question_tag)}/questions?#{keep_query(filters='tag')}"
-            t-attf-class="badge text-bg-secondary #{'ms-1' if not question_tag_first else ''} fw-normal o_tag o_tag_color_#{question_tag.color}"
+            t-attf-class="badge #{'ms-1' if not question_tag_first else ''} fw-normal o_tag o_color_#{question_tag.color}"
             t-field="question_tag.name"/>
     </div>
     <div class="ms-auto d-flex">
@@ -326,7 +326,7 @@
                     <span class="o_wforum_relative_datetime ms-2 opacity-75 small text-muted">
                     </span>
                     <t t-if="answer">
-                        <span t-if="_question_creator == _answer_creator" class="badge ms-2 border border-dark rounded-pill text-reset">
+                        <span t-if="_question_creator == _answer_creator" class="badge ms-2 border border-dark text-reset">
                             Author
                         </span>
                         <span t-if="question.forum_id.mode == 'questions'" t-attf-class="o_wforum_answer_correct_badge badge #{ 'd-inline' if answer.is_correct else 'd-none' } ms-auto border border-success rounded-pill text-success">
@@ -559,7 +559,7 @@
                             <t t-set="show_name" t-value="True"/>
                         </span>
                         <span class="ms-2 mb-2 small text-muted"><small class="o_wforum_relative_datetime"/></span>
-                        <span t-if="_question_creator == _comment_author" class="badge ms-2 border border-dark rounded-pill text-reset">
+                        <span t-if="_question_creator == _comment_author" class="badge ms-2 border border-dark text-reset">
                             Author
                         </span>
                     </header>

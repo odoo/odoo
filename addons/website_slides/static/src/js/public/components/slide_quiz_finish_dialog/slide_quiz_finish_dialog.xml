@@ -20,7 +20,7 @@
                     <div class="pb-3">
                         <h4 class="pb-2 d-flex fade" t-att-class="state.animateKarmaGain ? 'show in': ''">
                             <t t-if="props.quiz.quizKarmaWon > 0">
-                                You gained <span class="badge rounded-pill text-bg-success text-white fw-bold ms-2 me-1"><t t-out="props.quiz.quizKarmaWon"/> XP</span>!
+                                You gained <span class="badge text-bg-success text-white fw-bold ms-2 me-1"><t t-out="props.quiz.quizKarmaWon"/> XP</span>!
                             </t>
                             <t t-else="">You did it!</t>
                         </h4>
