@@ -32,38 +32,40 @@
     </t>
 
     <t t-name="mail.DiscussSidebarChannel">
-        <div class="o-mail-DiscussSidebarChannel o-mail-DiscussSidebar-item d-flex rounded-2 align-items-center mx-2 cursor-pointer"
-             t-att-class="{
-                    'bg-inherit': thread.notEq(store.discuss.thread),
-                    'o-active': thread.eq(store.discuss.thread),
-                    'o-unread': thread.selfMember?.message_unread_counter > 0 and !thread.mute_until_dt,
-                    'opacity-50': thread.mute_until_dt,
-                    }"
-             t-on-click="(ev) => this.openThread(ev, thread)"
-        >
-            <button class="o-mail-DiscussSidebarChannel-itemMain btn border-0 rounded-0 text-reset overflow-hidden d-flex align-items-center px-0 py-2">
-                <div class="bg-inherit position-relative d-flex ms-3 flex-shrink-0" style="width:26px;height:26px">
-                    <img class="w-100 h-100 rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
-                    <ThreadIcon t-if="thread.channel_type === 'chat' or (thread.channel_type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
+        <div class="o-mail-DiscussSidebarChannel-item d-flex flex-column">
+            <div class="o-mail-DiscussSidebarChannel o-mail-DiscussSidebar-item d-flex rounded-2 align-items-center mx-2 cursor-pointer"
+                t-att-class="{
+                        'bg-inherit': thread.notEq(store.discuss.thread),
+                        'o-active': thread.eq(store.discuss.thread),
+                        'o-unread': thread.selfMember?.message_unread_counter > 0 and !thread.mute_until_dt,
+                        'opacity-50': thread.mute_until_dt,
+                        }"
+                t-on-click="(ev) => this.openThread(ev, thread)"
+            >
+                <button class="o-mail-DiscussSidebarChannel-itemMain btn border-0 rounded-0 text-reset overflow-hidden d-flex align-items-center px-0 py-2">
+                    <div class="bg-inherit position-relative d-flex ms-3 flex-shrink-0" style="width:26px;height:26px">
+                        <img class="w-100 h-100 rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
+                        <ThreadIcon t-if="thread.channel_type === 'chat' or (thread.channel_type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
+                    </div>
+                    <span class="mx-2 text-truncate" t-att-class="thread.selfMember?.message_unread_counter > 0 and !thread.mute_until_dt ? 'o-item-unread fw-bolder' : 'text-muted'">
+                        <t t-esc="thread.displayName"/>
+                    </span>
+                </button>
+                <div class="flex-grow-1"/>
+                <div class="o-mail-DiscussSidebarChannel-commands d-none ms-1 me-2">
+                    <div class="btn-group btn-group-sm">
+                        <button t-if="thread.canLeave" class="btn btn-secondary" t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel">
+                            <i t-attf-class="fa fa-times" role="img"/>
+                        </button>
+                        <button t-if="thread.canUnpin" class="btn btn-secondary" t-on-click.stop="() => thread.unpin()" title="Unpin Conversation">
+                            <i t-attf-class="fa fa-times" role="img"/>
+                        </button>
+                    </div>
                 </div>
-                <span class="mx-2 text-truncate" t-att-class="thread.selfMember?.message_unread_counter > 0 and !thread.mute_until_dt ? 'o-item-unread fw-bolder' : 'text-muted'">
-                    <t t-esc="thread.displayName"/>
-                </span>
-            </button>
-            <div class="flex-grow-1"/>
-            <div class="o-mail-DiscussSidebarChannel-commands d-none ms-1 me-2">
-                <div class="btn-group btn-group-sm">
-                    <button t-if="thread.canLeave" class="btn btn-secondary" t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel">
-                        <i t-attf-class="fa fa-times" role="img"/>
-                    </button>
-                    <button t-if="thread.canUnpin" class="btn btn-secondary" t-on-click.stop="() => thread.unpin()" title="Unpin Conversation">
-                        <i t-attf-class="fa fa-times" role="img"/>
-                    </button>
+                <t t-foreach="channelIndicators" t-as="indicator" t-key="indicator_index" t-component="indicator" t-props="{ thread }"/>
+                <div t-if="thread.importantCounter > 0">
+                    <span t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge ms-1 me-2 fw-bold {{thread.mute_until_dt ? 'o-muted' : ''}}" t-esc="thread.importantCounter"/>
                 </div>
-            </div>
-            <t t-foreach="channelIndicators" t-as="indicator" t-key="indicator_index" t-component="indicator" t-props="{ thread }"/>
-            <div t-if="thread.importantCounter > 0">
-                <span t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge ms-1 me-2 fw-bold {{thread.mute_until_dt ? 'o-muted' : ''}}" t-esc="thread.importantCounter"/>
             </div>
         </div>
     </t>
