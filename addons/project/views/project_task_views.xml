@@ -27,7 +27,7 @@
                     <separator/>
                     <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                     <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
-                    <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update"/>
+                    <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update" invisible="1"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
