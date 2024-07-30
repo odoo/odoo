@@ -29,7 +29,7 @@
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note }">
                             <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author" t-att-class="getAuthorAttClass()">
-                                <strong class="me-1 text-truncate" t-esc="authorName"/>
+                                <strong class="me-1" t-esc="authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
                             <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75 o-smaller" t-att-title="message.datetimeShort">
