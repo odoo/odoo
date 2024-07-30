@@ -80,6 +80,11 @@ class SaleOrder(models.Model):
             else:
                 order.is_abandoned_cart = False
 
+    def _compute_require_signature(self):
+        website_orders = self.filtered('website_id')
+        website_orders.require_signature = False
+        super(SaleOrder, self - website_orders)._compute_require_signature()
+
     def _compute_payment_term_id(self):
         super()._compute_payment_term_id()
         website_orders = self.filtered(
