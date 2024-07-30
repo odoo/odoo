@@ -847,13 +847,18 @@ class StockMoveLine(models.Model):
             return aggregated_move_lines
         pickings = (self.picking_id | backorders)
         for empty_move in pickings.move_ids:
-            if not (empty_move.state == "cancel" and empty_move.product_uom_qty
-                    and float_is_zero(empty_move.quantity_done, precision_rounding=empty_move.product_uom.rounding)):
+            to_bypass = False
+            if not (empty_move.product_uom_qty and float_is_zero(empty_move.quantity_done, precision_rounding=empty_move.product_uom.rounding)):
                 continue
+            if empty_move.state != "cancel":
+                if empty_move.state != "confirmed" or empty_move.move_line_ids:
+                    continue
+                else:
+                    to_bypass = True
             aggregated_properties = self._get_aggregated_properties(move=empty_move)
             line_key = aggregated_properties['line_key']
 
-            if line_key not in aggregated_move_lines:
+            if line_key not in aggregated_move_lines and not to_bypass:
                 qty_ordered = empty_move.product_uom_qty
                 aggregated_move_lines[line_key] = {
                     **aggregated_properties,
@@ -861,9 +866,8 @@ class StockMoveLine(models.Model):
                     'qty_ordered': qty_ordered,
                     'product': empty_move.product_id,
                 }
-            else:
+            elif line_key in aggregated_move_lines:
                 aggregated_move_lines[line_key]['qty_ordered'] += empty_move.product_uom_qty
-
         return aggregated_move_lines
 
     def _compute_sale_price(self):
