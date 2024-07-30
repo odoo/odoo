@@ -164,7 +164,7 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "body:has(.o_form_saved)",
     },
     {
-        trigger: "button[name=action_register_payment]:contains(register payment):enabled",
+        trigger: "button[name=action_register_payment]:contains(pay):enabled",
         content: _t("The button priority shifted since the invoice has been sent. Let's register the payment now."),
         tooltipPosition: "bottom",
     },

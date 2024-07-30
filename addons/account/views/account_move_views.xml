@@ -381,7 +381,7 @@
             <field name="arch" type="xml">
                 <tree string="Payment Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1" default_order="payment_date asc, id asc">
                     <header>
-                        <button name="action_payment_items_register_payment" type="object" string="Register Payment" groups="account.group_account_user"/>
+                        <button name="action_payment_items_register_payment" type="object" string="Pay" groups="account.group_account_user"/>
                     </header>
                     <field name="move_id" column_invisible="True"/>
                     <field name="invoice_date" string="Bill Date"/>
@@ -503,7 +503,7 @@
                       expand="context.get('expand', False)"
                       sample="1">
                     <header>
-                        <button name="action_register_payment" type="object" string="Register Payment"
+                        <button name="action_register_payment" type="object" string="Pay"
                             groups="account.group_account_user"
                             invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund','in_receipt')"/>
                     </header>
@@ -715,14 +715,14 @@
                                 type="object" class="oe_highlight"
                                 invisible="state != 'posted' or payment_state not in ('not_paid', 'partial') or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') or invoice_has_outstanding"
                                 context="{'dont_redirect_to_payments': True, 'display_account_trust': True}"
-                                string="Register Payment" data-hotkey="g"
+                                string="Pay" data-hotkey="g"
                                 groups="account.group_account_invoice"/>
                         <!-- Register Payment (only invoices / receipts, with outstanding payments) -->
                         <button name="action_register_payment" id="account_invoice_payment_secondary_btn"
                                 type="object"
                                 invisible="state != 'posted' or payment_state not in ('not_paid', 'partial') or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') or not invoice_has_outstanding"
                                 context="{'dont_redirect_to_payments': True, 'display_account_trust': True}"
-                                string="Register Payment" data-hotkey="g"
+                                string="Pay" data-hotkey="g"
                                 groups="account.group_account_invoice"/>
                         <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview" data-hotkey="o"
