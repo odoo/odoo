@@ -951,3 +951,46 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'sale_line_id': sale_order.order_line.id,
         })
         self.assertEqual(task3.sale_order_id, sale_order, "Task matches SO's partner_id")
+
+    def test_project_template_company(self):
+        """
+        When exactly one project is created on SO confirmation, and a project template is being used,
+        the company of the created project should be the same as on the template.
+        """
+        product_with_project_template = self.env['product.product'].create({
+            'name': 'product with template',
+            'list_price': 1,
+            'type': 'service',
+            'service_tracking': 'project_only',
+            'project_template_id': self.project_template.id,
+        })
+
+        # SOs with one created project
+        for company_id in (False, self.company.id):
+            self.project_template.company_id = company_id
+
+            sale_order = self.env['sale.order'].create({'partner_id': self.partner.id})
+            self.env['sale.order.line'].create({
+                'product_id': product_with_project_template.id,
+                'order_id': sale_order.id,
+            })
+            sale_order.action_confirm()
+            self.assertEqual(self.project_template.company_id, sale_order.project_ids[0].company_id, "The created project should have the same company as the template")
+
+        # SO with two created projects
+        self.project_template.company_id = False
+        other_product = self.env['product.product'].create({
+            'name': 'other product',
+            'list_price': 1,
+            'type': 'service',
+            'service_tracking': 'task_in_project',
+        })
+
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner.id})
+        self.env['sale.order.line'].create([{
+            'product_id': product.id,
+            'order_id': sale_order.id,
+        } for product in (other_product, product_with_project_template)])
+        sale_order.action_confirm()
+        for project in sale_order:
+            self.assertEqual(project.company_id, sale_order.company_id, "The company of the created project should be unchanged (and therefore the company of the SO)")
