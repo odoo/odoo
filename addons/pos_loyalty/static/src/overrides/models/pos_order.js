@@ -3,7 +3,10 @@ import { patch } from "@web/core/utils/patch";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "./pos_store";
-import { compute_price_force_price_include } from "@point_of_sale/app/models/utils/tax_utils";
+import {
+    compute_price_force_price_include,
+    getTaxesAfterFiscalPosition,
+} from "@point_of_sale/app/models/utils/tax_utils";
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -1156,6 +1159,66 @@ patch(PosOrder.prototype, {
                 },
             ];
         }
+
+        if (
+            rewardAppliesTo === "order" &&
+            ["per_point", "per_order"].includes(reward.discount_mode)
+        ) {
+            const rewardLineValues = [
+                {
+                    product_id: discountProduct,
+                    price_unit: -Math.min(maxDiscount, discountable),
+                    qty: 1,
+                    reward_id: reward,
+                    is_reward_line: true,
+                    coupon_id: coupon_id,
+                    points_cost: pointCost,
+                    reward_identifier_code: rewardCode,
+                    tax_ids: [],
+                },
+            ];
+
+            let rewardTaxes = reward.tax_ids;
+            if (rewardTaxes.length > 0) {
+                if (this.fiscal_position_id) {
+                    rewardTaxes = getTaxesAfterFiscalPosition(
+                        rewardTaxes,
+                        this.fiscal_position_id,
+                        this.models
+                    );
+                }
+
+                // Check for any order line where its taxes exactly match rewardTaxes
+                const matchingLines = this.get_orderlines().filter(
+                    (line) =>
+                        !line.is_delivery &&
+                        line.tax_ids.length === rewardTaxes.length &&
+                        line.tax_ids.every((tax_id) => rewardTaxes.includes(tax_id))
+                );
+
+                if (matchingLines.length == 0) {
+                    return _t("No product is compatible with this promotion.");
+                }
+
+                const untaxedAmount = matchingLines.reduce(
+                    (sum, line) => sum + line.get_price_without_tax(),
+                    0
+                );
+                // Discount amount should not exceed total untaxed amount of the matching lines
+                rewardLineValues[0].price_unit = Math.max(
+                    -untaxedAmount,
+                    rewardLineValues[0].price_unit
+                );
+
+                rewardLineValues[0].tax_ids = rewardTaxes;
+            }
+            // Discount amount should not exceed the untaxed amount on the order
+            if (Math.abs(rewardLineValues[0].price_unit) > this.amount_untaxed) {
+                rewardLineValues[0].price_unit = -this.amount_untaxed;
+            }
+            return rewardLineValues;
+        }
+
         const discountFactor = discountable ? Math.min(1, maxDiscount / discountable) : 1;
         const result = Object.entries(discountablePerTax).reduce((lst, entry) => {
             // Ignore 0 price lines

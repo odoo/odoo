@@ -24,6 +24,12 @@ class SaleOrderDiscount(models.TransientModel):
         ],
         default='sol_discount',
     )
+    tax_ids = fields.Many2many(
+        string="Taxes",
+        help="Taxes to add on the discount line.",
+        comodel_name='account.tax',
+        domain="[('type_tax_use', '=', 'sale'), ('company_id', '=', company_id)]",
+    )
 
     # CONSTRAINT METHODS #
 
@@ -84,7 +90,7 @@ class SaleOrderDiscount(models.TransientModel):
                 self._prepare_discount_line_values(
                     product=discount_product,
                     amount=self.discount_amount,
-                    taxes=self.env['account.tax'],
+                    taxes=self.tax_ids,
                 )
             ]
         else: # so_discount

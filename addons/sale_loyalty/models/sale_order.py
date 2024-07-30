@@ -455,74 +455,78 @@ class SaleOrder(models.Model):
         self.ensure_one()
         assert reward.reward_type == 'discount'
 
-        # Figure out which lines are concerned by the discount
-        # cheapest_line = self.env['sale.order.line']
+        reward_applies_on = reward.discount_applicability
+        reward_product = reward.discount_line_product_id
+        reward_program = reward.program_id
+        reward_currency = reward.currency_id
+        sequence = max(
+            self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'),
+            default=10
+        ) + 1
+        base_reward_line_values = {
+            'product_id': reward_product.id,
+            'product_uom_qty': 1.0,
+            'product_uom': reward_product.uom_id.id,
+            'tax_id': [Command.clear()],
+            'name': reward.description,
+            'reward_id': reward.id,
+            'coupon_id': coupon.id,
+            'sequence': sequence,
+            'reward_identifier_code': _generate_random_reward_code(),
+        }
+
         discountable = 0
         discountable_per_tax = defaultdict(int)
-        reward_applies_on = reward.discount_applicability
-        sequence = max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=10) + 1
         if reward_applies_on == 'order':
             discountable, discountable_per_tax = self._discountable_order(reward)
         elif reward_applies_on == 'specific':
             discountable, discountable_per_tax = self._discountable_specific(reward)
         elif reward_applies_on == 'cheapest':
             discountable, discountable_per_tax = self._discountable_cheapest(reward)
+
         if not discountable:
-            if not reward.program_id.is_payment_program and any(line.reward_id.program_id.is_payment_program for line in self.order_line):
+            if not reward_program.is_payment_program and any(line.reward_id.program_id.is_payment_program for line in self.order_line):
                 return [{
+                    **base_reward_line_values,
                     'name': _("TEMPORARY DISCOUNT LINE"),
-                    'product_id': reward.discount_line_product_id.id,
                     'price_unit': 0,
                     'product_uom_qty': 0,
-                    'product_uom': reward.discount_line_product_id.uom_id.id,
-                    'reward_id': reward.id,
-                    'coupon_id': coupon.id,
                     'points_cost': 0,
-                    'reward_identifier_code': _generate_random_reward_code(),
-                    'sequence': sequence,
-                    'tax_id': [(Command.CLEAR, 0, 0)]
                 }]
             raise UserError(_('There is nothing to discount'))
-        max_discount = reward.currency_id._convert(reward.discount_max_amount, self.currency_id, self.company_id, fields.Date.today()) or float('inf')
+
+        max_discount = reward_currency._convert(reward.discount_max_amount, self.currency_id, self.company_id, fields.Date.today()) or float('inf')
         # discount should never surpass the order's current total amount
         max_discount = min(self.amount_total, max_discount)
         if reward.discount_mode == 'per_point':
             points = self._get_real_points_for_coupon(coupon)
-            if not reward.program_id.is_payment_program:
+            if not reward_program.is_payment_program:
                 # Rewards cannot be partially offered to customers
                 points = points // reward.required_points * reward.required_points
             max_discount = min(max_discount,
-                reward.currency_id._convert(reward.discount * points,
+                reward_currency._convert(reward.discount * points,
                     self.currency_id, self.company_id, fields.Date.today()))
         elif reward.discount_mode == 'per_order':
             max_discount = min(max_discount,
-                reward.currency_id._convert(reward.discount, self.currency_id, self.company_id, fields.Date.today()))
+                reward_currency._convert(reward.discount, self.currency_id, self.company_id, fields.Date.today()))
         elif reward.discount_mode == 'percent':
             max_discount = min(max_discount, discountable * (reward.discount / 100))
+
         # Discount per taxes
-        reward_code = _generate_random_reward_code()
         point_cost = reward.required_points if not reward.clear_wallet else self._get_real_points_for_coupon(coupon)
         if reward.discount_mode == 'per_point' and not reward.clear_wallet:
             # Calculate the actual point cost if the cost is per point
-            converted_discount = self.currency_id._convert(min(max_discount, discountable), reward.currency_id, self.company_id, fields.Date.today())
+            converted_discount = self.currency_id._convert(min(max_discount, discountable), reward_currency, self.company_id, fields.Date.today())
             point_cost = converted_discount / reward.discount
-        # Gift cards and eWallets are considered gift cards and should not have any taxes
-        if reward.program_id.is_payment_program:
-            reward_product = reward.discount_line_product_id
+
+        if reward_program.is_payment_program:  # Gift card / eWallet
             reward_line_values = {
-                'name': reward.description,
-                'product_id': reward_product.id,
+                **base_reward_line_values,
                 'price_unit': -min(max_discount, discountable),
-                'product_uom_qty': 1.0,
-                'product_uom': reward_product.uom_id.id,
-                'reward_id': reward.id,
-                'coupon_id': coupon.id,
                 'points_cost': point_cost,
-                'reward_identifier_code': reward_code,
-                'sequence': sequence,
-                'tax_id': [Command.clear()],
             }
-            if reward.program_id.program_type == 'gift_card':
+
+            if reward_program.program_type == 'gift_card':
                 # For gift cards, the SOL should consider the discount product taxes
                 taxes_to_apply = reward_product.taxes_id._filter_taxes_by_company(self.company_id)
                 if taxes_to_apply:
@@ -547,6 +551,42 @@ class SaleOrder(models.Model):
                         'tax_id': [Command.set(mapped_taxes.ids)],
                     })
             return [reward_line_values]
+
+        if reward_applies_on == 'order' and reward.discount_mode in ['per_point', 'per_order']:
+            reward_line_values = {
+                **base_reward_line_values,
+                'price_unit': -min(max_discount, discountable),
+                'points_cost': point_cost,
+            }
+
+            reward_taxes = reward.tax_ids._filter_taxes_by_company(self.company_id)
+            if reward_taxes:
+                mapped_taxes = self.fiscal_position_id.map_tax(reward_taxes)
+
+                # Check for any order line where its taxes exactly match reward_taxes
+                matching_lines = [
+                    line for line in self.order_line
+                    if not line.is_delivery and set(line.tax_id) == set(mapped_taxes)
+                ]
+
+                if not matching_lines:
+                    raise ValidationError(_("No product is compatible with this promotion."))
+
+                untaxed_amount = sum(line.price_subtotal for line in matching_lines)
+                # Discount amount should not exceed total untaxed amount of the matching lines
+                reward_line_values['price_unit'] = max(
+                    -untaxed_amount,
+                    reward_line_values['price_unit']
+                )
+
+                reward_line_values['tax_id'] = [Command.set(mapped_taxes.ids)]
+
+            # Discount amount should not exceed the untaxed amount on the order
+            if abs(reward_line_values['price_unit']) > self.amount_untaxed:
+                reward_line_values['price_unit'] = -self.amount_untaxed
+
+            return [reward_line_values]
+
         discount_factor = min(1, (max_discount / discountable)) if discountable else 1
         reward_dict = {}
         for tax, price in discountable_per_tax.items():
@@ -560,20 +600,14 @@ class SaleOrder(models.Model):
                     taxes=", ".join(mapped_taxes.mapped('name')),
                 )
             reward_dict[tax] = {
+                **base_reward_line_values,
                 'name': _(
                     'Discount: %(desc)s%(tax_str)s',
                     desc=reward.description,
                     tax_str=tax_desc,
                 ),
-                'product_id': reward.discount_line_product_id.id,
                 'price_unit': -(price * discount_factor),
-                'product_uom_qty': 1.0,
-                'product_uom': reward.discount_line_product_id.uom_id.id,
-                'reward_id': reward.id,
-                'coupon_id': coupon.id,
                 'points_cost': 0,
-                'reward_identifier_code': reward_code,
-                'sequence': sequence,
                 'tax_id': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes]
             }
         # We only assign the point cost to one line to avoid counting the cost multiple times

@@ -5,7 +5,7 @@
     'summary': "Use discounts, gift card, eWallets and loyalty programs in different sales channels",
     'category': 'Sales',
     'version': '1.0',
-    'depends': ['product', 'portal'],
+    'depends': ['product', 'portal', 'account'],
     'data': [
         'security/ir.model.access.csv',
         'security/loyalty_security.xml',
