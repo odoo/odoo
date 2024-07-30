@@ -11,13 +11,29 @@
                             <field name="code" readonly="1"/>
                             <field name="expiration_date"/>
                             <field name="partner_id"/>
-                            <label string="Balance" for="points"/>
-                            <span class="d-inline-block">
-                                <field name="points" class="w-auto oe_inline me-1"/>
-                                <field name="point_name" no_label="1" class="d-inline"/>
-                            </span>
+                            <label string="Balance" for="points_display"/>
+                            <button
+                                name="action_loyalty_update_balance"
+                                class="p-0 text-info fw-normal"
+                                type="object"
+                            >
+                                <field name="points_display" nolabel="1"/>
+                            </button>
                         </group>
                     </group>
+                    <notebook invisible="not id">
+                        <page string="History Lines">
+                            <field name="history_ids">
+                                <list>
+                                    <field name="description"/>
+                                    <field name="order_id"/>
+                                    <field name="create_date" string="Date"/>
+                                    <field name="issued"/>
+                                    <field name="used"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>

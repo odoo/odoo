@@ -170,6 +170,22 @@ patch(PaymentScreen.prototype, {
                     }
                 }
             }
+            const loyaltyPoints = await this.currentOrder.getLoyaltyPoints().map((item) => ({
+                order_id: this.currentOrder.id,
+                card_id: item.couponId,
+                spent: item.points.spent,
+                won: item.points.won,
+                total: item.points.total,
+            }));
+            const couponUpdates = payload.coupon_updates.map((item) => ({
+                id: item.id,
+                old_id: item.old_id,
+            }));
+            this.pos.data.call("pos.order", "add_loyalty_history_lines", [
+                [this.currentOrder.id],
+                loyaltyPoints,
+                couponUpdates,
+            ]);
             // Update the usage count since it is checked based on local data
             if (payload.program_updates) {
                 for (const programUpdate of payload.program_updates) {

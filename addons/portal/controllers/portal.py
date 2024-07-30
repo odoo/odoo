@@ -173,6 +173,7 @@ class CustomerPortal(Controller):
     @route(['/my', '/my/home'], type='http', auth="user", website=True)
     def home(self, **kw):
         values = self._prepare_portal_layout_values()
+        values.update(self._prepare_home_portal_values([]))
         return request.render("portal.portal_my_home", values)
 
     @route(['/my/account'], type='http', auth='user', website=True)
