@@ -179,7 +179,8 @@ class HrExpense(models.Model):
         comodel_name='account.account',
         string="Account",
         compute='_compute_account_id', precompute=True, store=True, readonly=False,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card')), ('company_id', '=', company_id)]",
+        check_company=True,
+        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
         help="An expense account is expected",
     )
     tax_ids = fields.Many2many(
