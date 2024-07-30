@@ -237,13 +237,8 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         allowance_charge_vals = vals['vals']['allowance_charge_vals']
         allowance_total_amount = sum(a['amount'] for a in allowance_charge_vals if a['charge_indicator'] == 'false')
         if downpayment_vals:
-            # - BR-KSA-80: To calculate prepaid, we need to sum up the amounts of standard lines (neither a down-payments, nor a discount)
-            #   then we add the total amount of the down-payment.
-            # - BR-CO-16: To calculate payable amount, we substract the calculated prepaid amount from the total tax inclusive amount of the invoice
-            regular_line_vals = invoice._prepare_edi_tax_details(
-                filter_invl_to_apply=lambda line: (line.price_subtotal > 0 and not line._get_downpayment_lines())
-            )
-            prepaid_amount = abs(regular_line_vals['base_amount_currency'] + regular_line_vals['tax_amount_currency']) + downpayment_vals['total_amount']
+            # - BR-KSA-80: To calculate payable amount, we deduct prepaid amount from total tax inclusive amount
+            prepaid_amount = downpayment_vals['total_amount']
             payable_amount = tax_inclusive_amount - prepaid_amount
         return {
             'line_extension_amount': line_extension_amount - allowance_total_amount,
@@ -405,6 +400,11 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             line_vals['price_vals']['price_amount'] = 0
             line_vals['tax_total_vals'][0]['tax_amount'] = 0
             line_vals['prepayment_vals'] = self._l10n_sa_get_line_prepayment_vals(line, taxes_vals)
+        else:
+            # - BR-KSA-80: only down-payment lines should have a tax subtotal breakdown, as that is
+            # used during computation of prepaid amount as ZATCA sums up tax amount/taxable amount of all lines
+            # irrespective of whether they are down-payment lines.
+            line_vals['tax_total_vals'][0].pop('tax_subtotal_vals', None)
         line_vals['tax_total_vals'][0]['total_amount_sa'] = total_amount_sa
         line_vals['line_quantity'] = abs(line_vals['line_quantity'])
         line_vals['line_extension_amount'] = extension_amount
