@@ -105,6 +105,7 @@
                                     <field invisible="code not in ['incoming', 'outgoing', 'internal']" name="return_picking_type_id" string="Returns Type"/>
                                     <field name="default_location_return_id" invisible="code not in ['incoming', 'outgoing', 'internal']" groups="stock.group_stock_multi_locations"/>
                                     <field name="create_backorder"/>
+                                    <field name="shipping_policy" invisible="code != 'internal'"/>
                                 </group>
                             </group>
                             <group name="second">

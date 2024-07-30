@@ -150,6 +150,10 @@ class PickingType(models.Model):
         compute_sudo=True, string='Show Operation in Overview'
     )
     kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
+    shipping_policy = fields.Selection([
+        ('direct', 'As soon as possible'), ('one', 'All at once')],
+        'Shipping Policy', default='direct', required=True,
+        help="It specifies goods to be transferred partially or all at once")
 
     @api.model_create_multi
     def create(self, vals_list):
