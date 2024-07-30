@@ -431,7 +431,7 @@
                             <span t-field="opp.probability" />%
                         </td>
                         <td>
-                            <span class="badge text-bg-info rounded-pill" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
+                            <span class="badge text-bg-info" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
                         </td>
                     </tr>
                 </tbody>
@@ -635,7 +635,7 @@
                                 <t t-if="opportunity.company_currency" t-out="opportunity.expected_revenue"
                                     t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
                                 <t t-else="" t-out="opportunity.expected_revenue"/> at  </span>
-                            <span class="badge text-bg-info rounded-pill"><span t-field="opportunity.probability"/>%</span>
+                            <span class="badge text-bg-info"><span t-field="opportunity.probability"/>%</span>
                         </h5>
                         <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil me-1"/>Edit</button>
                     </div>

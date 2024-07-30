@@ -152,9 +152,9 @@
                             t-out="question.name"/>
                     </div>
                     <div class="col-lg-3 d-lg-flex align-items-baseline">
-                        <span t-if="not question.active and question.state=='offensive'" class="badge bg-warning text-wrap flex-grow-1">Offensive</span>
-                        <span t-if="not question.active and question.state=='offensive' and question.closed_reason_id" class="badge bg-warning text-wrap flex-grow-1" t-out="question.closed_reason_id.name.capitalize()"/>
-                        <span t-if="question.closed_reason_id" class="badge bg-danger text-wrap flex-grow-1" t-out="question.closed_reason_id.name.capitalize()"/>
+                        <span t-if="not question.active and question.state=='offensive'" class="badge text-bg-warning text-wrap flex-grow-1">Offensive</span>
+                        <span t-if="not question.active and question.state=='offensive' and question.closed_reason_id" class="badge text-bg-warning text-wrap flex-grow-1" t-out="question.closed_reason_id.name.capitalize()"/>
+                        <span t-if="question.closed_reason_id" class="badge text-bg-danger text-wrap flex-grow-1" t-out="question.closed_reason_id.name.capitalize()"/>
                     </div>
                 </div>
             </div>
