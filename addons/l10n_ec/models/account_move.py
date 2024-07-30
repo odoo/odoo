@@ -190,3 +190,18 @@ class AccountMove(models.Model):
                 """
                 param["l10n_latam_document_type_id"] = tuple(document_types.ids)
         return where_string, param
+
+    def _skip_format_document_number(self):
+        """
+        If a Credit Note is created from a Vendor Bill and the partner_id != "EC",
+        we want to allow the user to allocate any number without following the EC format.
+        """
+        self.ensure_one()
+        if self.country_code == 'EC':
+            return (
+                    self.l10n_latam_document_type_id.internal_type in ('credit_note', 'debit_note')
+                    and self.partner_id.country_code != "EC"
+                    and self.move_type == 'in_refund'
+                    and self.journal_id.type == 'purchase'
+            )
+        super()._skip_format_document_number()
