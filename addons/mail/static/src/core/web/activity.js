@@ -27,6 +27,7 @@ export class Activity extends Component {
     setup() {
         this.activityService = useService("mail.activity");
         this.threadService = useService("mail.thread");
+        this.storeService = useService("mail.store");
         this.state = useState({ showDetails: false });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCardPopover);
@@ -110,5 +111,12 @@ export class Activity extends Component {
             model: this.props.activity.res_model,
             id: this.props.activity.res_id,
         });
+    }
+
+    /**
+     * @param {MouseEvent} ev
+     */
+    async onClick(ev) {
+        this.storeService.handleClickOnLink(ev, this.thread);
     }
 }
