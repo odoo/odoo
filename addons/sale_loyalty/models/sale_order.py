@@ -28,6 +28,8 @@ class SaleOrder(models.Model):
         comodel_name='sale.order.coupon.points', inverse_name='order_id', copy=False)
     reward_amount = fields.Float(compute='_compute_reward_total')
 
+    loyalty_data = fields.Json(compute='_compute_loyalty_data')
+
     @api.depends('order_line')
     def _compute_reward_total(self):
         for order in self:
@@ -41,6 +43,66 @@ class SaleOrder(models.Model):
                     # Free product are 'regular' product lines with a price_unit of 0
                     reward_amount -= line.product_id.lst_price * line.product_uom_qty
             order.reward_amount = reward_amount
+
+    def _compute_loyalty_data(self):
+        self.loyalty_data = {}
+
+        confirmed_so = self.filtered(lambda order: order.state == 'sale' and bool(order.id))
+        if not confirmed_so:
+            return
+
+        loyalty_history_data = self.env['loyalty.history'].sudo()._read_group(
+            domain=[
+                ('order_id', 'in', confirmed_so.ids),
+            ],
+            groupby=['order_id'],
+            aggregates=['issued:sum', 'used:sum'],
+        )
+        loyalty_history_data_per_order = {
+            order_id: {
+                'total_issued': issued,
+                'total_cost': cost,
+            }
+            for order_id, issued, cost in loyalty_history_data
+        }
+        for order in confirmed_so:
+            if order.id not in loyalty_history_data_per_order:
+                continue
+            coupons = order.coupon_point_ids.coupon_id
+            coupon_point_name = (len(coupons) == 1 and coupons.point_name) or _("Points")
+            order.loyalty_data = {
+                'point_name': coupon_point_name,
+                'issued': loyalty_history_data_per_order[order.id]['total_issued'],
+                'cost': loyalty_history_data_per_order[order.id]['total_cost'],
+            }
+
+    def _add_loyalty_history_lines(self):
+        self.ensure_one()
+        points_per_coupon = defaultdict(dict)
+        for coupon_point in self.coupon_point_ids:
+            points_per_coupon[coupon_point.coupon_id]['issued'] = coupon_point.points
+        for line in self.order_line:
+            if not line.coupon_id:
+                continue
+            points_per_coupon[line.coupon_id]['cost'] = line.points_cost
+
+        create_values = []
+        base_values = {
+            'order_id': self.id,
+            'order_model': self._name,
+            'description': _("Order %s", self.display_name),
+        }
+        for coupon, point_dict in points_per_coupon.items():
+            cost = point_dict.get('cost', 0.0)
+            issued = point_dict.get('issued', 0.0)
+            create_values.append({
+                **base_values,
+                'card_id': coupon.id,
+                'used': cost,
+                'issued': issued,
+            })
+
+        self.env['loyalty.history'].create(create_values)
 
     def _get_no_effect_on_threshold_lines(self):
         """Return the lines that have no effect on the minimum amount to reach."""
@@ -60,6 +122,7 @@ class SaleOrder(models.Model):
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
                 raise ValidationError(_('One or more rewards on the sale order is invalid. Please check them.'))
             order._update_programs_and_rewards()
+            order._add_loyalty_history_lines()
 
         # Remove any coupon from 'current' program that don't claim any reward.
         # This is to avoid ghost coupons that are lost forever.
@@ -78,6 +141,14 @@ class SaleOrder(models.Model):
     def _action_cancel(self):
         previously_confirmed = self.filtered(lambda s: s.state == 'sale')
         res = super()._action_cancel()
+
+        order_history_lines = self.env['loyalty.history'].search([
+            ('order_model', '=', self._name),
+            ('order_id', 'in', previously_confirmed.ids),
+        ])
+        if order_history_lines:
+            order_history_lines.sudo().unlink()
+
         # Add/remove the points to our coupons
         for coupon, changes in previously_confirmed.filtered(
             lambda s: s.state != 'sale'
@@ -636,6 +707,17 @@ class SaleOrder(models.Model):
                     'points': points,
                 }) for coupon, points in coupon_points.items()]
             })
+
+    def _update_loyalty_history(self, coupon_id, points):
+        self.ensure_one()
+        order_coupon_history = self.env['loyalty.history'].search([
+            ('card_id', '=', coupon_id.id),
+            ('order_model', '=', self._name),
+            ('order_id', '=', self.id),
+        ], limit=1)
+        order_coupon_history.update({
+            'used': order_coupon_history.used + points,
+        })
 
     def _remove_program_from_points(self, programs):
         self.coupon_point_ids.filtered(lambda p: p.coupon_id.program_id in programs).sudo().unlink()

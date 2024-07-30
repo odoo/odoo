@@ -834,7 +834,7 @@
                 <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>
             </div>
             <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="fa fa-pencil"/> Edit information</a>
-            <div class="o_my_contact mt-5" t-if="sales_user">
+            <div name="portal_contact" class="o_my_contact mt-5" t-if="sales_user">
                 <t t-call="portal.portal_contact"/>
             </div>
         </div>
