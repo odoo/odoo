@@ -51,6 +51,13 @@ commandProviderRegistry.add("debug", {
             if (options.searchValue.toLowerCase() === debugKey) {
                 result.push({
                     action() {
+                        router.pushState({ debug: "1" }, { reload: true });
+                    },
+                    category: "debug",
+                    name: `${_t("Activate debug mode")} (${debugKey})`,
+                });
+                result.push({
+                    action() {
                         router.pushState({ debug: "assets" }, { reload: true });
                     },
                     category: "debug",
