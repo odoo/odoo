@@ -156,8 +156,8 @@
         ],
         'mass_mailing.assets_snippets_menu': [
             ('include', 'web_editor.assets_snippets_menu'),
-            'mass_mailing/static/src/js/snippets.editor.js',
-            'mass_mailing/static/src/xml/mass_mailing.editor.xml',
+            'mass_mailing/static/src/fields/mass_mailing_html_field/mass_mailing_snippet_menu.js',
+            'mass_mailing/static/src/fields/mass_mailing_html_field/mass_mailing_snippet_menu.xml'
         ],
         'web.assets_frontend': [
             'mass_mailing/static/src/js/tours/**/*',
