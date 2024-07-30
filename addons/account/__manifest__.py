@@ -120,7 +120,6 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/js/account_portal.js',
             'account/static/src/components/tests_shared_js_python/*',
             'account/static/src/helpers/*.js',
-            'account/static/src/core/utils/*.js',
         ],
         'web.assets_tests': [
             'account/static/tests/tours/**/*',
