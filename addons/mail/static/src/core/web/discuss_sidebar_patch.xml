@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebar" t-inherit-mode="extension">
+        <xpath expr="//*[@name='compact-btn']" position="before">
+            <Dropdown t-if="store.discuss.isSidebarCompact" state="meetingFloating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border-0 p-2 m-0 min-w-0'" manual="true">
+                <t t-call="mail.DiscussSidebar.startMeetingButton"/>
+                <t t-set-slot="content">
+                    <div t-ref="meeting-floating">
+                        <span class="fst-italic user-select-none" t-esc="startMeetingText"/>
+                    </div>
+                </t>
+            </Dropdown>
+            <t t-else="" t-call="mail.DiscussSidebar.startMeetingButton"/>
+        </xpath>
+    </t>
+
+    <t t-name="mail.DiscussSidebar.startMeetingButton">
+        <button class="btn btn-primary rounded d-flex align-items-center gap-1 mx-5" t-att-class="{ 'py-2': store.discuss.isSidebarCompact }" t-on-click="store.startMeeting" data-hotkey="m" t-ref="meeting-btn"><i class="fa fa-fw fa-users"/><span t-if="!store.discuss.isSidebarCompact" t-esc="startMeetingText"/></button>
+    </t>
+</templates>

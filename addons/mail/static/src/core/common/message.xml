@@ -21,7 +21,7 @@
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75 o-smaller mt-2">
+                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75 smaller mt-2">
                                 <t t-esc="message.dateSimple"/>
                             </small>
                         </t>
@@ -32,7 +32,7 @@
                                 <strong class="me-1" t-esc="authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
-                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75 o-smaller" t-att-title="message.datetimeShort">
+                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75 smaller" t-att-title="message.datetimeShort">
                                 <t t-if="shouldDisplayAuthorName">- </t>
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
                                 <RelativeTime t-else="" datetime="message.datetime"/>

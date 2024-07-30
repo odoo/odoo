@@ -70,6 +70,6 @@ test("bus subscription is refreshed when channel is left", async () => {
     await assertSteps(["subscribe - []"]);
     await openDiscuss();
     await assertSteps([]);
-    await click("[title='Leave this channel']");
+    await click("[title='Leave Channel']");
     await assertSteps(["subscribe - []"]);
 });

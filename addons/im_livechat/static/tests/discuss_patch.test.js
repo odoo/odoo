@@ -56,7 +56,7 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item", {
+    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
         text: "Visitor (Belgium)",
     });
 });
@@ -112,13 +112,10 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
-    await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel-item)", { text: "Visitor 12" });
-    await click(
-        ":nth-child(2 of .o-mail-DiscussSidebarChannel-item) .o-mail-DiscussSidebarChannel",
-        { text: "Visitor 11" }
-    );
+    await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel)", { text: "Visitor 12" });
+    await click(":nth-child(2 of .o-mail-DiscussSidebarChannel)", { text: "Visitor 11" });
     await insertText(".o-mail-Composer-input", "Blabla");
     await click(".o-mail-Composer-send:enabled");
-    await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel-item)", { text: "Visitor 11" });
-    await contains(":nth-child(2 of .o-mail-DiscussSidebarChannel-item)", { text: "Visitor 12" });
+    await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel)", { text: "Visitor 11" });
+    await contains(":nth-child(2 of .o-mail-DiscussSidebarChannel)", { text: "Visitor 12" });
 });

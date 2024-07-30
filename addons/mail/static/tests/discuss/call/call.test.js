@@ -368,3 +368,17 @@ test("Systray icon keeps track of earlier actions", async () => {
     // stack: ["share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
 });
+
+test("show call participants in discuss sidebar", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-mail-DiscussSidebar", {
+        contains: [
+            ".o-mail-DiscussSidebarChannel:contains('General') ~ .o-mail-DiscussSidebarCallParticipants:contains(Mitchell Admin)",
+        ],
+    });
+});

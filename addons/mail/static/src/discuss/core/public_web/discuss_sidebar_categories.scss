@@ -5,6 +5,10 @@
     }
 }
 
+.o-mail-DiscussSidebar-floatingMenu {
+    max-width: 250px !important;
+}
+
 .o-mail-DiscussSidebar-item {
     &:hover .o-mail-DiscussSidebarChannel-commands {
         display: flex !important;
@@ -12,6 +16,18 @@
             border-color: transparent;
             background-color: transparent;
         }
+    }
+}
+
+.o-mail-DiscussSidebar-item {
+    line-height: 2.15; // so that same height as actions, so folding doesn't resize
+}
+
+.o-mail-DiscussSidebarCategory-toggler {
+    line-height: 2.15; // so that same height as actions, so folding doesn't resize
+
+    &.o-compact {
+        font-size: .65rem;
     }
 }
 
@@ -23,4 +39,41 @@
     font-size: xx-small;
     width: 13px;
     height: 13px;
+}
+
+.o-mail-DiscussSidebarCategory-foldIndicatorCompact {
+    left: 6px;
+}
+
+.o-mail-DiscussSidebarChannel-indicatorCompact {
+    top: 3px;
+    left: 3px;
+}
+
+.o-mail-DiscussSidebarChannel-unreadIndicator {
+    font-size: 0.35rem;
+    left: 6px;
+
+    &.o-compact {
+        left: 1px;
+    }
+}
+
+.o-mail-DiscussSidebarCategories-quickSearchBtn {
+    padding-top: map-get($spacers, 1) + map-get($spacers, 2); // so that button is square like other items
+    padding-bottom: map-get($spacers, 1) + map-get($spacers, 2); // so that button is square like other items
+
+    &.o-active {
+        background-color: rgba($o-action, .75);
+        color: #fff;
+    }
+}
+
+.o-mail-DiscussSidebarQuickSearchInput {
+    outline: 1px solid rgba($border-color, 1);
+    outline-offset: -1px;
+
+    &.o-active {
+        outline-color: $o-action;
+    }
 }

@@ -11,6 +11,7 @@ patch(DiscussApp.prototype, {
             compute() {
                 return {
                     extraClass: "o-mail-DiscussSidebarCategory-livechat",
+                    icon: "fa fa-comments",
                     hideWhenEmpty: true,
                     id: `im_livechat.category_default`,
                     name: _t("Livechat"),

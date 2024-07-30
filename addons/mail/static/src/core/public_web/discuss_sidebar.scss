@@ -1,10 +1,30 @@
 .o-mail-DiscussSidebar {
-    width: $o-mail-Discuss-inspector;
     box-shadow: 1px 0px 6px -3px rgba(50, 50, 50, 0.15);
+    width: 60px;
+
+    &:not(.o-compact) {
+        width: $o-mail-Discuss-inspector;
+    }
+}
+
+.o-mail-DiscussSidebar-compactBtn {
+    color: $o-action !important;
+
+    &:hover {
+        border-color: rgba($o-action, .75);
+    }
+
+    &:not(.o-compact) {
+        right: map-get($spacers, 2);
+    }
 }
 
 .o-mail-DiscussSidebar-badge {
     padding: 3px 6px;
+
+    &.o-compact {
+        right: -2px;
+    }
 }
 
 .o-mail-DiscussSidebar-item {

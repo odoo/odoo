@@ -1,7 +1,8 @@
-$o-discuss-talkingColor: mix($white, darken($o-enterprise-action-color, 5%), 35%);
+// $o-discuss-talkingColor: mix($white, darken($o-enterprise-action-color, 5%), 35%);
+$o-discuss-talkingColor: lighten($success, 5%);
 
 .o-mail-discussSidebarBgColor {
-    background-color: mix($white, $o-gray-100);
+    background-color: $white;
 }
 
 .o-mail-brighter {
@@ -42,10 +43,6 @@ $o-discuss-talkingColor: mix($white, darken($o-enterprise-action-color, 5%), 35%
 
 .o-min-width-0 {
     min-width: 0;
-}
-
-.o-smaller {
-    font-size: smaller;
 }
 
 .o-hover-text-underline:hover {

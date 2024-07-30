@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.DiscussSidebarCategory" t-inherit-mode="extension">
+    <t t-inherit="mail.DiscussSidebarCategory.main" t-inherit-mode="extension">
         <xpath expr="//*[@name='header']" position="after">
-            <div t-if="state.editing === category.id" class="p-2" t-ref="selector">
-                <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true" close.bind="stopEditing" />
-            </div>
-        </xpath>
-        <xpath expr="//*[@name='toggler']" position="after">
-            <div class="d-flex me-3" t-ref="actions">
-                <div class="btn-group btn-group-sm">
-                    <button t-if="category.canView" class="btn btn-light" t-on-click="() => this.openCategory(category)" title="View or join channels">
-                        <i class="fa fa-cog" role="img"/>
-                    </button>
-                    <button t-if="category.canAdd and category.open" class="o-mail-DiscussSidebarCategory-add btn btn-light" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" t-att-data-hotkey="category.addHotkey">
-                        <i class="fa fa-plus" role="img"/>
-                    </button>
-                </div>
+            <div t-if="state.editing and !store.discuss.isSidebarCompact" class="p-2" t-ref="selector">
+                <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true" close.bind="stopEditing" class="'p-1'"/>
             </div>
         </xpath>
     </t>
-    <t t-inherit="mail.DiscussSidebarChannel" t-inherit-mode="extension">
-        <xpath expr="//button[@title='Leave this channel']" position="before">
-            <button t-if="thread.channel_type === 'channel'" class="btn btn-secondary" t-on-click.stop="() => this.openSettings(thread)" title="Channel settings">
-                <i t-attf-class="fa fa-cog" role="img"/>
-            </button>
+    <t t-inherit="mail.DiscussSidebarCategory.actions" t-inherit-mode="extension">
+        <xpath expr="//*[@name='action-group']" position="replace">
+            <t t-if="state.editing and store.discuss.isSidebarCompact">
+                <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true" close.bind="stopEditing" class="'p-0'"/>
+            </t>
+            <t t-else="">
+                <t>$0</t>
+            </t>
         </xpath>
     </t>
 </templates>

@@ -28,6 +28,7 @@ const StorePatch = {
             },
         });
         this.allActiveRtcSessions = Record.many("RtcSession");
+        this.nextTalkingTime = 1;
     },
     onStarted() {
         super.onStarted(...arguments);

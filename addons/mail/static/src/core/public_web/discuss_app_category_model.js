@@ -36,6 +36,8 @@ export class DiscussAppCategory extends Record {
     /** @type {string} */
     extraClass;
     /** @string */
+    icon;
+    /** @string */
     id;
     /** @type {string} */
     name;

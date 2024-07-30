@@ -7,7 +7,7 @@
                 <div t-if="state.adding" class="w-100 p-1 bg-light" t-ref="selector">
                     <t t-if="state.adding === 'chat'" t-set="category" t-value="store.discuss.chats"/>
                     <t t-if="state.adding === 'channel'" t-set="category" t-value="store.discuss.channels"/>
-                    <ChannelSelector category="category" autofocus="true"/>
+                    <ChannelSelector category="category" autofocus="true" class="'p-1'"/>
                 </div>
             </t>
             <button t-if="!ui.isSmall and !store.discuss.isActive" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link px-2 py-1'" t-on-click.stop="onClickNewMessage">

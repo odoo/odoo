@@ -41,7 +41,40 @@ export class RtcSession extends Record {
     dataChannel;
     audioError;
     videoError;
-    isTalking;
+    isTalking = Record.attr(false, {
+        /** @this {import("models").RtcSession} */
+        onUpdate() {
+            if (this.isTalking && !this.isMute) {
+                this.talkingTime = this.store.nextTalkingTime++;
+            }
+        },
+    });
+    isActuallyTalking = Record.attr(false, {
+        /** @this {import("models").RtcSession} */
+        compute() {
+            return this.isTalking && !this.isMute;
+        },
+    });
+    isVideoStreaming = Record.attr(false, {
+        /** @this {import("models").RtcSession} */
+        compute() {
+            return this.isScreenSharingOn || this.isCameraOn;
+        },
+    });
+    shortStatus = Record.attr(undefined, {
+        compute() {
+            if (this.isScreenSharingOn) {
+                return "live";
+            }
+            if (this.isDeaf) {
+                return "deafen";
+            }
+            if (this.isMute) {
+                return "mute";
+            }
+        },
+    });
+    talkingTime = 0;
     localVolume;
     /** @type {RTCPeerConnection} */
     peerConnection;

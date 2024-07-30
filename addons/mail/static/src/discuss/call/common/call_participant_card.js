@@ -106,7 +106,7 @@ export class CallParticipantCard extends Component {
     }
 
     get isTalking() {
-        return Boolean(this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute);
+        return Boolean(this.rtcSession && this.rtcSession.isActuallyTalking);
     }
 
     get hasRaisingHand() {
