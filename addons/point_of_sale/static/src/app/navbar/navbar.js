@@ -22,6 +22,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deduceUrl } from "@point_of_sale/utils";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { user } from "@web/core/user";
+import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -74,7 +75,7 @@ export class Navbar extends Component {
             }
         } else if (
             this.pos.mobile_pane == "left" ||
-            this.pos.mainScreen.component === PaymentScreen
+            [PaymentScreen, ActionScreen].includes(this.pos.mainScreen.component)
         ) {
             this.pos.mobile_pane = "right";
             this.pos.showScreen("ProductScreen");
