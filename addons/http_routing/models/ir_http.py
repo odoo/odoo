@@ -1,21 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import os
 import re
 import traceback
-import unicodedata
 import typing
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.urls
 from werkzeug.exceptions import HTTPException, NotFound
-
-# optional python-slugify import (https://github.com/un33k/python-slugify)
-try:
-    import slugify as slugify_lib
-except ImportError:
-    slugify_lib = None
 
 import odoo
 from odoo import api, models, exceptions, tools, http
@@ -26,21 +18,8 @@ from odoo.addons.base.models.res_lang import LangData
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, Response
 from odoo.osv import expression
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
-
-
-# see also mimetypes module: https://docs.python.org/3/library/mimetypes.html and odoo.tools.mimetypes
-EXTENSION_TO_WEB_MIMETYPES = {
-    '.css': 'text/css',
-    '.less': 'text/less',
-    '.scss': 'text/scss',
-    '.js': 'text/javascript',
-    '.xml': 'text/xml',
-    '.csv': 'text/csv',
-    '.html': 'text/html',
-}
 
 # NOTE: the second pattern is used for the ModelConverter, do not use nor flags nor groups
 _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|\/|#|\?)')
@@ -70,40 +49,6 @@ class IrHttp(models.AbstractModel):
     # ------------------------------------------------------------
     # Slug tools
     # ------------------------------------------------------------
-
-    @classmethod
-    def _slugify_one(cls, value: str, max_length: int = 0) -> str:
-        """ Transform a string to a slug that can be used in a url path.
-            This method will first try to do the job with python-slugify if present.
-            Otherwise it will process string by stripping leading and ending spaces,
-            converting unicode chars to ascii, lowering all chars and replacing spaces
-            and underscore with hyphen "-".
-        """
-        if slugify_lib:
-            # There are 2 different libraries only python-slugify is supported
-            try:
-                return slugify_lib.slugify(value, max_length=max_length)
-            except TypeError:
-                pass
-        uni = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
-        slug_str = re.sub(r'[\W_]+', '-', uni).strip('-').lower()
-        return slug_str[:max_length] if max_length > 0 else slug_str
-
-    @classmethod
-    def _slugify(cls, value: str, max_length: int = 0, path: bool = False) -> str:
-        if not path:
-            return cls._slugify_one(value, max_length=max_length)
-        else:
-            res = []
-            for u in value.split('/'):
-                s = cls._slugify_one(u, max_length=max_length)
-                if s:
-                    res.append(s)
-            # check if supported extension
-            path_no_ext, ext = os.path.splitext(value)
-            if ext in EXTENSION_TO_WEB_MIMETYPES:
-                res[-1] = cls._slugify_one(path_no_ext) + ext
-            return '/'.join(res)
 
     @classmethod
     def _slug(cls, value: models.BaseModel | tuple[int, str]) -> str:
