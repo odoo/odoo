@@ -44,6 +44,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 // When the buffer is updated, trigger this event.
                 // Note that the component listens to it.
                 triggerAtInput: 'update-selected-paymentline',
+                useWithBarcode: true,
             };
             // Check if pos has a cash payment method
             const hasCashPaymentMethod = this.payment_methods_from_config.some(
