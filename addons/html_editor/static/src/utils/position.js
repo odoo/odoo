@@ -30,6 +30,13 @@ export function boundariesOut(node) {
 }
 /**
  * @param {Node} node
+ * @returns {[HTMLElement, number, HTMLElement, number]}
+ */
+export function boundariesIn(node) {
+    return [node, 0, node, nodeSize(node)];
+}
+/**
+ * @param {Node} node
  * @returns {[Node, number]}
  */
 export function startPos(node) {

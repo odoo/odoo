@@ -202,22 +202,21 @@ describe("endPos", () => {
 });
 
 describe("boundariesIn", () => {
-    // TODO: @phoenix wait to really need it in the code base.
-    test.todo("should return the inside bounds of a lonely text node", () => {
+    test("should return the inside bounds of a lonely text node", () => {
         const [p] = insertTestHtml("<p>a</p>");
         const a = p.firstChild;
         const result = boundariesIn(a);
         expect(result).toEqual([a, 0, a, 1]);
     });
 
-    test.todo("should return the inside bounds of an inline element", () => {
+    test("should return the inside bounds of an inline element", () => {
         const [p] = insertTestHtml("<p><b>a</b></p>");
         const b = p.childNodes[0];
         const result = boundariesIn(b);
         expect(result).toEqual([b, 0, b, 1]);
     });
 
-    test.todo("should return the inside bounds of an inline element with whitespace", () => {
+    test("should return the inside bounds of an inline element with whitespace", () => {
         const [p] = insertTestHtml(
             `<p>
                 <b>a</b>
@@ -228,7 +227,7 @@ describe("boundariesIn", () => {
         expect(result).toEqual([b, 0, b, 1]);
     });
 
-    test.todo("should return the inside bounds of sibling-rich inline element", () => {
+    test("should return the inside bounds of sibling-rich inline element", () => {
         const [p] = insertTestHtml(
             `<p>
                 abc<b>def</b>ghi<i>jkl</i><span><u>mno</u></span>pqr
