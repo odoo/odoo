@@ -86,6 +86,12 @@ class LoyaltyReward(models.Model):
     discount_line_product_id = fields.Many2one('product.product', copy=False, ondelete='restrict',
         help="Product used in the sales order to apply the discount. Each reward has its own product for reporting purpose")
     is_global_discount = fields.Boolean(compute='_compute_is_global_discount')
+    tax_ids = fields.Many2many(
+        string="Taxes",
+        help="Taxes to add on the discount line.",
+        comodel_name='account.tax',
+        domain="[('type_tax_use', '=', 'sale'), ('company_id', '=', company_id)]",
+    )
 
     # Product rewards
     reward_product_id = fields.Many2one(
