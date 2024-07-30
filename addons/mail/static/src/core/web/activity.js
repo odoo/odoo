@@ -9,6 +9,7 @@ import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 /**
@@ -25,6 +26,7 @@ export class Activity extends Component {
 
     setup() {
         super.setup();
+        this.storeService = useService("mail.store");
         this.state = useState({ showDetails: false });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCardPopover);
@@ -107,5 +109,12 @@ export class Activity extends Component {
             model: this.props.activity.res_model,
             id: this.props.activity.res_id,
         });
+    }
+
+    /**
+     * @param {MouseEvent} ev
+     */
+    async onClick(ev) {
+        this.storeService.handleClickOnLink(ev, this.thread);
     }
 }
