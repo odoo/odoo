@@ -16,6 +16,7 @@ import { PropertyDefinition } from "./property_definition";
 import { PropertyValue } from "./property_value";
 
 import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export class PropertiesField extends Component {
     static template = "web.PropertiesField";
@@ -46,7 +47,13 @@ export class PropertiesField extends Component {
         });
         this.propertiesRef = useRef("properties");
 
-        this._saveInitialPropertiesValues();
+        let actualResId;
+        useRecordObserver((record) => {
+            if (actualResId !== record.resId) {
+                actualResId = record.resId;
+                this._saveInitialPropertiesValues();
+            }
+        });
 
         const field = this.props.record.fields[this.props.name];
         this.definitionRecordField = field.definition_record;
