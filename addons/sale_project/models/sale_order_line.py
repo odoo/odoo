@@ -196,7 +196,7 @@ class SaleOrderLine(models.Model):
     def _timesheet_create_project(self):
         """ Generate project for the given so line, and link it.
             :param project: record of project.project in which the task should be created
-            :return task: record of the created task
+            :return: record of the created project
         """
         self.ensure_one()
         values = self._timesheet_create_project_prepare_values()
