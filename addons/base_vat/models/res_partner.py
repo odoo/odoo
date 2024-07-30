@@ -674,15 +674,6 @@ class ResPartner(models.Model):
             return len(vat) == 11 and vat.isdigit()
         return check_func(vat)
 
-    def check_vat_nz(self, vat):
-        '''
-        The New Zealand equivalent of a VAT number is an IRD number (GST number is another name for this).
-        IRD/GST numbers must legally must be displayed on all tax invoices.
-        https://arthurdejong.org/python-stdnum/doc/1.13/stdnum.nz.ird#module-stdnum.nz.ird
-        '''
-        check_func = stdnum.util.get_cc_module('nz', 'ird').is_valid
-        return check_func(vat)
-
     def check_vat_t(self, vat):
         if self.country_id.code == 'JP':
             return self.simple_vat_check('jp', vat)
