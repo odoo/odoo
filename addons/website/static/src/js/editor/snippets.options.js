@@ -44,6 +44,7 @@ import { Component, markup, onMounted, onWillUnmount, useEffect, useRef, useStat
 import {
     BackgroundToggler,
     Box,
+    ButtonUserValue,
     CarouselHandler,
     GridColumns,
     ImageTools,
@@ -4460,34 +4461,16 @@ registerWebsiteOption("ImageToolsAnimate", {
  * </span>`
  * To correctly adapt each highlight unit when the text content is changed.
  */
-options.registry.TextHighlight = options.Class.extend({
-    custom_events: Object.assign({}, options.Class.prototype.custom_events, {
-        "user_value_widget_opening": "_onWidgetOpening",
-    }),
+class TextHighlight extends SnippetOption {
     /**
      * @override
      */
-    async start() {
-        await this._super(...arguments);
-        this.leftPanelEl = this.$overlay.data("$optionsSection")[0];
+    constructor() {
+        super(...arguments);
         // Reduce overlay opacity for more highlight visibility on small text.
         this.$overlay[0].style.opacity = "0.25";
         this.$overlay[0].querySelector(".o_handles").classList.add("pe-none");
-    },
-    /**
-     * Move "Text Effect" options to the editor's toolbar.
-     *
-     * @override
-     */
-    onFocus() {
-        this.options.wysiwyg.toolbarEl.append(this.$el[0]);
-    },
-    /**
-     * @override
-     */
-    onBlur() {
-        this.leftPanelEl.appendChild(this.el);
-    },
+    }
     /**
     * @override
     */
@@ -4498,8 +4481,8 @@ options.registry.TextHighlight = options.Class.extend({
             this._autoAdaptHighlights();
             this._requestUserValueWidgets("text_highlight_opt")[0]?.enable();
         }
-        this._super(...arguments);
-    },
+        super.notify(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -4513,7 +4496,7 @@ options.registry.TextHighlight = options.Class.extend({
     async setTextHighlight(previewMode, widgetValue, params) {
         return widgetValue ? this._addTextHighlight(widgetValue)
             : removeTextHighlight(this.$target[0]);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -4541,7 +4524,7 @@ options.registry.TextHighlight = options.Class.extend({
         } else {
             this._autoAdaptHighlights();
         }
-    },
+    }
     /**
      * Used to set the highlight effect DOM structure on the targeted text
      * content.
@@ -4549,38 +4532,81 @@ options.registry.TextHighlight = options.Class.extend({
      * @private
      */
     _autoAdaptHighlights() {
-        this.trigger_up("snippet_edition_request", { exec: async () =>
+        this.env.snippetEditionRequest(async () =>
             await this._refreshPublicWidgets($(this.options.wysiwyg.odooEditor.editable))
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * To draw highlight SVGs for `<we-select/>` preview, we need to open the
-     * widget (we need correct size values from `getBoundingClientRect()`).
-     * This code will build the highlight preview the first time we open the
-     * `<we-select/>`.
-     *
-     * @private
-     */
-    _onWidgetOpening(ev) {
-        const target = ev.target;
-        // Only when there is no highlight SVGs.
-        if (target.getName() === "text_highlight_opt" && !target.el.querySelector("svg")) {
-            const weToggler = target.el.querySelector("we-toggler");
-            weToggler.classList.add("active");
-            [...target.el.querySelectorAll("we-button[data-set-text-highlight] div")].forEach(weBtnEl => {
-                weBtnEl.textContent = "Text";
-                // Get the text highlight linked to each `<we-button/>`
-                // and apply it to its text content.
-                weBtnEl.append(drawTextHighlightSVG(weBtnEl, weBtnEl.parentElement.dataset.setTextHighlight));
-            });
-        }
-    },
+        );
+    }
+}
+registerWebsiteOption("TextHighlight", {
+    Class: TextHighlight,
+    template: "website.TextHighlight",
+    selector: ".o_text_highlight",
+    textSelector: ".o_text_highlight",
 });
+
+class TextHighlightBtnUserValue extends ButtonUserValue {
+    constructor() {
+        super(...arguments);
+        this._state.textContentRef = undefined;
+    }
+    /**
+     * @type {import("@web/core/utils/hooks").Ref}
+     */
+    set textContentRef(value) {
+        this._state.textContentRef = value;
+    }
+    /**
+     * Mounts the SVG on the <WeTextHighlightBtn>.
+     * This has to be done here in the UserValue because it depends on the
+     * parent WeTextHighlightSelect opening - which has access to its subValues
+     * but not to its children components.
+     */
+    mountSvg() {
+        // Only when there is no highlight SVGs.
+        if (
+            this._state.textContentRef.el
+            && this._state.textContentRef.el.querySelector("div")
+            && !this._state.textContentRef.el.querySelector("svg")
+        ) {
+            // Get the text highlight linked to the button and apply it to its
+            // text content.
+            const el = this._state.textContentRef.el.querySelector("div");
+            el.append(drawTextHighlightSVG(el, this._data.setTextHighlight));
+        }
+    }
+}
+class WeTextHighlightBtn extends WeButton {
+    static template = "website.WeTextHighlightBtn";
+    static StateModel = TextHighlightBtnUserValue;
+    setup() {
+        super.setup();
+        this.state.textContentRef = this.textContentRef;
+    }
+}
+registry.category("snippet_widgets").add("WeTextHighlightBtn", WeTextHighlightBtn);
+
+class WeTextHighlightSelect extends WeSelect {
+    setup() {
+        super.setup();
+        useEffect(
+            (opened) => {
+                // To draw highlight SVGs for `<we-select/>` previews, we need
+                // the component to be opened (we need the correct size values
+                // from `getBoundingClientRect()`). This code will build the
+                // highlight preview the first time we open the `<we-select/>`.
+                if (opened) {
+                    for (const userValue of Object.values(this.state._subValues)) {
+                        if (userValue instanceof TextHighlightBtnUserValue) {
+                            userValue.mountSvg();
+                        }
+                    }
+                }
+            },
+            () => [this.state.opened]
+        );
+    }
+}
+registry.category("snippet_widgets").add("WeTextHighlightSelect", WeTextHighlightSelect);
 
 /**
  * Replaces current target with the specified template layout

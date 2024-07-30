@@ -1402,4 +1402,46 @@
                 reload="'/'"/>
 </t>
 
+<t t-name="website.WeTextHighlightBtn" t-inherit="web_editor.WeButton" t-inherit-mode="primary">
+    <xpath expr="//t[@t-slot='default']" position="inside">Text</xpath>
+</t>
+
+<!-- Text highlight effects -->
+<t t-name="website.TextHighlight">
+    <!-- Text highlight style -->
+    <WeTextHighlightSelect title.translate="Highlight" name="'text_highlight_opt'" class="'o_we_select_grid'">
+        <div class="grid gap-0">
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_underline'" setTextHighlight="'underline'" selectLabel.translate="Underline"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_freehand_1'" setTextHighlight="'freehand_1'" selectLabel.translate="Freehand 1"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_freehand_2 o_text_highlight_fill'" setTextHighlight="'freehand_2'" selectLabel.translate="Freehand 2"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_freehand_3 o_text_highlight_fill'" setTextHighlight="'freehand_3'" selectLabel.translate="Freehand 3"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_double'" setTextHighlight="'double'" selectLabel.translate="Double"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_wavy'" setTextHighlight="'wavy'" selectLabel.translate="Wavy"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_circle_1'" setTextHighlight="'circle_1'" selectLabel.translate="Circle 1"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_circle_2 o_text_highlight_fill'" setTextHighlight="'circle_2'" selectLabel.translate="Circle 2"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_circle_3 o_text_highlight_fill'" setTextHighlight="'circle_3'" selectLabel.translate="Circle 3"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_over_underline'" setTextHighlight="'over_underline'" selectLabel.translate="Over And Underline"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_scribble_1'" setTextHighlight="'scribble_1'" selectLabel.translate="Scribble 1"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_scribble_2 o_text_highlight_fill'" setTextHighlight="'scribble_2'" selectLabel.translate="Scribble 2"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_scribble_3 o_text_highlight_fill'" setTextHighlight="'scribble_3'" selectLabel.translate="Scribble 3"/>
+            <WeTextHighlightBtn class="'g-col-4 text-black-50'" selectClass="'o_text_highlight_scribble_4 o_text_highlight_fill'" setTextHighlight="'scribble_4'" selectLabel.translate="Scribble 4"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_jagged'" setTextHighlight="'jagged'" selectLabel.translate="Jagged"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_cross'" setTextHighlight="'cross'" selectLabel.translate="Cross"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_diagonal'" setTextHighlight="'diagonal'" selectLabel.translate="Diagonal"/>
+            <WeTextHighlightBtn class="'g-col-4'" selectClass="'o_text_highlight_strikethrough'" setTextHighlight="'strikethrough'" selectLabel.translate="Strikethrough"/>
+            <WeTextHighlightBtn class="'g-col-4 text-black-50'" selectClass="'o_text_highlight_bold o_text_highlight_fill'" setTextHighlight="'bold'" selectLabel.translate="Bold"/>
+            <WeTextHighlightBtn class="'g-col-4 text-black-50'" selectClass="'o_text_highlight_bold_1 o_text_highlight_fill'" setTextHighlight="'bold_1'" selectLabel.translate="Bold 1"/>
+            <WeTextHighlightBtn class="'g-col-4 text-black-50'" selectClass="'o_text_highlight_bold_2 o_text_highlight_fill'" setTextHighlight="'bold_2'" selectLabel.translate="Bold 2"/>
+        </div>
+    </WeTextHighlightSelect>
+    <!-- Text highlight color -->
+    <WeColorpicker title.translate="Color" class="'o_we_sublevel_1'"
+                   dependencies="'text_highlight_opt'"
+                   cssProperty="'--text-highlight-color'" selectStyle="''"/>
+    <!-- Text highlight thickness -->
+    <WeInput title.translate="Thickness" class="'o_we_sublevel_1 o_we_small_input'"
+             dependencies="'text_highlight_opt'"
+             cssProperty="'--text-highlight-width'" selectStyle="''" unit="'px'"/>
+</t>
+
 </templates>

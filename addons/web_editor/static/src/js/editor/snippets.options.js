@@ -1041,7 +1041,7 @@ export class UserValueComponent extends Component {
 }
 
 
-class ButtonUserValue extends UserValue {
+export class ButtonUserValue extends UserValue {
     /**
      * @override
      */
