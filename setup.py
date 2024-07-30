@@ -41,6 +41,7 @@ setup(
         'num2words',
         'ofxparse',
         'openpyxl',
+        'packaging',
         'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'polib',
