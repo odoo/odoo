@@ -85,9 +85,12 @@ test("Do not show channel when visitor is typing", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
-        count: 0,
-    });
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel",
+        {
+            count: 0,
+        }
+    );
     // simulate livechat visitor typing
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     await withGuest(guestId, () =>
@@ -98,9 +101,12 @@ test("Do not show channel when visitor is typing", async () => {
     );
     // weak test, no guaranteed that we waited long enough for the livechat to potentially appear
     await tick();
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
-        count: 0,
-    });
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel",
+        {
+            count: 0,
+        }
+    );
 });
 
 test("Smiley face avatar for livechat item linked to a guest", async () => {
@@ -119,7 +125,7 @@ test("Smiley face avatar for livechat item linked to a guest", async () => {
     await openDiscuss();
     const guest = pyEnv["mail.guest"].search_read([["id", "=", guestId]])[0];
     await contains(
-        `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
+        `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel img[data-src='${url(
             `/web/image/mail.guest/${guestId}/avatar_128?unique=${
                 deserializeDateTime(guest.write_date).ts
             }`
@@ -142,7 +148,7 @@ test("Partner profile picture for livechat item linked to a partner", async () =
     await openDiscuss(channelId);
     const partner = pyEnv["res.partner"].search_read([["id", "=", partnerId]])[0];
     await contains(
-        `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
+        `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel img[data-src='${url(
             `/web/image/res.partner/${partnerId}/avatar_128?unique=${
                 deserializeDateTime(partner.write_date).ts
             }`
@@ -233,7 +239,9 @@ test("Close manually by clicking the title", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel"
+    );
     // fold the livechat category
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
@@ -260,12 +268,17 @@ test("Open manually by clicking the title", async () => {
     // first, close the live chat category
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
     await contains(".o-mail-DiscussSidebarCategory-livechat");
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
-        count: 0,
-    });
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel",
+        {
+            count: 0,
+        }
+    );
     // open the livechat category
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel"
+    );
 });
 
 test("Category item should be invisible if the category is closed", async () => {
@@ -282,11 +295,16 @@ test("Category item should be invisible if the category is closed", async () => 
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel"
+    );
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
-        count: 0,
-    });
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel",
+        {
+            count: 0,
+        }
+    );
 });
 
 test("Active category item should be visible even if the category is closed", async () => {
@@ -307,13 +325,19 @@ test("Active category item should be visible even if the category is closed", as
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
-    await click(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
     await contains(
-        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel.o-active"
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel"
+    );
+    await click(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel"
+    );
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel.o-active"
     );
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel"
+    );
 });
 
 test("Clicking on unpin button unpins the channel", async () => {
@@ -383,7 +407,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await openDiscuss(channelId);
     await contains(
-        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel.o-active",
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-item .o-mail-DiscussSidebarChannel.o-active",
         { text: "Jane" }
     );
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });

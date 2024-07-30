@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCallParticipants">
+        <div t-if="participants.length>0" class="o-mail-DiscussSidebarCallParticipants d-flex flex-column gap-1 my-1 ps-4 pe-2">
+            <t t-foreach="participants" t-as="session" t-key="session.id">
+                <t t-set="channelMember" t-value="session.channelMember"/>
+                <div class="d-flex text-reset overflow-hidden align-items-center ms-3 me-2">
+                    <div class="bg-inherit position-relative d-flex ms-3 flex-shrink-0" style="width:28px;height:28px">
+                        <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle" t-att-src="channelMember.persona.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar"/>
+                    </div>
+                    <span class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bolder small user-select-none" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
+                        <t t-esc="channelMember.persona.nameOrDisplayName"/>
+                    </span>
+                    <div class="flex-grow-1"/>
+                    <div class="o-mail-DiscussSidebarCallParticipants-status ms-1">
+                        <span t-if="session.isMute" class="p-1 fa fa-microphone-slash"/>
+                        <span t-if="session.isDeaf" class="p-1 fa fa-deaf"/>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

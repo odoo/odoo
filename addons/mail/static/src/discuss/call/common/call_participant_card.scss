@@ -3,10 +3,10 @@
     aspect-ratio: 16/9;
 
     &.o-isTalking {
-        box-shadow: inset 0 0 0 map-get($spacers, 1) darken($o-enterprise-action-color, 5%);
+        box-shadow: inset 0 0 0 map-get($spacers, 1) var(--discuss-talkingColor, $o-discuss-talkingColor);
 
         &.o-inset {
-            box-shadow: inset 0 0 0 map-get($spacers, 1)/2 darken($o-enterprise-action-color, 5%);
+            box-shadow: inset 0 0 0 map-get($spacers, 1)/2 var(--discuss-talkingColor, $o-discuss-talkingColor);
         }
     }
 
@@ -39,10 +39,11 @@
     max-height: #{"min(100%, 100px)"}; // interpolated as not supported by Sass
     max-width: #{"min(100%, 100px)"};
     aspect-ratio: 1;
-    border: solid $gray-500;
+    border: none;
 
     &.o-isTalking {
-        border: solid darken($o-enterprise-action-color, 5%);
+        outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline-offset: -4px;
     }
 
     &.o-isInvitation:not(:hover) {
