@@ -228,7 +228,7 @@ class PurchaseOrder(models.Model):
 
     def _get_destination_location(self):
         self.ensure_one()
-        if self.dest_address_id:
+        if self.dest_address_id and self.picking_type_id.code == "dropship":
             return self.dest_address_id.property_stock_customer.id
         return self.picking_type_id.default_location_dest_id.id
 
