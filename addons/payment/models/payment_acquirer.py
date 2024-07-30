@@ -198,6 +198,18 @@ class PaymentAcquirer(models.Model):
             pay_method_line.journal_id = self.journal_id
         elif allow_create:
             default_payment_method_id = self._get_default_payment_method_id()
+
+            pay_method_line = self.env['account.payment.method.line'].search(
+                [
+                    ('payment_acquirer_id', '=', self.id),
+                    ('payment_method_id', '=', default_payment_method_id),
+                    ('journal_id', '=', self.journal_id.id),
+                ],
+                limit=1,
+            )
+            if pay_method_line:
+                return
+
             create_values = {
                 'name': self.name,
                 'payment_method_id': default_payment_method_id,
