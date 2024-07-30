@@ -32,7 +32,6 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
@@ -406,37 +405,7 @@ export class Message extends Component {
      * @param {MouseEvent} ev
      */
     async onClick(ev) {
-        const model = ev.target.dataset.oeModel;
-        const id = Number(ev.target.dataset.oeId);
-        if (ev.target.closest(".o_channel_redirect")) {
-            ev.preventDefault();
-            const thread = this.store.Thread.insert({ model, id });
-            this.threadService.open(thread);
-            return;
-        }
-        if (ev.target.closest(".o_mail_redirect")) {
-            ev.preventDefault();
-            const partnerId = Number(ev.target.dataset.oeId);
-            if (user.partnerId !== partnerId) {
-                this.threadService.openChat({ partnerId });
-            }
-            return;
-        }
-        if (ev.target.tagName === "A") {
-            if (model && id) {
-                ev.preventDefault();
-                await this.env.services.action.doAction({
-                    type: "ir.actions.act_window",
-                    res_model: model,
-                    views: [[false, "form"]],
-                    res_id: id,
-                });
-                if (!this.env.isSmall) {
-                    this.threadService.open(this.props.thread, true, {
-                        autofocus: false
-                    });
-                }
-            }
+        if (this.store.handleClickOnLink(ev, this.props.thread)) {
             return;
         }
         if (
