@@ -183,11 +183,11 @@ def check_company_domain_parent_of(self, companies):
     if not companies:
         return [('company_id', '=', False)]
 
-    return ['|', ('company_id', '=', False), ('company_id', 'in', [
+    return [('company_id', 'in', [
         int(parent)
         for rec in self.env['res.company'].sudo().browse(companies)
         for parent in rec.parent_path.split('/')[:-1]
-    ])]
+    ] + [False])]
 
 
 class MetaModel(api.Meta):
@@ -4154,7 +4154,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if not companies:
             return [('company_id', '=', False)]
-        return ['|', ('company_id', '=', False), ('company_id', 'in', to_company_ids(companies))]
+        return [('company_id', 'in', to_company_ids(companies) + [False])]
 
     def _check_company(self, fnames=None):
         """ Check the companies of the values of the given field names.
