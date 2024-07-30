@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    self_order_online_payment_method_id = fields.Many2one('pos.payment.method', string='Self Online Payment', help="The online payment method to use when a customer pays a self-order online.", domain=[('is_online_payment', '=', True)], store=True, readonly=False)
+    self_order_online_payment_method_id = fields.Many2one('pos.payment.method', string='Self Online Payment', help="The online payment method to use when a customer pays a self-order online.", domain=[('payment_method_type', '=', 'online')], store=True, readonly=False)
 
     @api.constrains('self_order_online_payment_method_id')
     def _check_self_order_online_payment_method_id(self):

@@ -8,7 +8,7 @@ patch(OrderWidget.prototype, {
         const type = this.selfOrder.config.self_ordering_mode;
         const mode = this.selfOrder.config.self_ordering_pay_after;
         const isOnlinePayment = this.selfOrder.models["pos.payment.method"].find(
-            (p) => p.is_online_payment
+            (p) => p.payment_method_type === "online"
         );
         const order = this.selfOrder.currentOrder;
         const takeAway = order.takeaway;

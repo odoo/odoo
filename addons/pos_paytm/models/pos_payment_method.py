@@ -8,8 +8,7 @@ import requests
 import secrets
 import string
 
-from odoo.exceptions import UserError
-from odoo import fields, models, api, _
+from odoo import api, fields, models, _
 from datetime import datetime
 from dateutil import tz
 
@@ -29,8 +28,19 @@ class PosPaymentMethod(models.Model):
     paytm_merchant_key = fields.Char(string="PayTM Merchant API Key", help="Merchant/AES key \n ex: B1o6Ivjy8L1@abc9")
     paytm_test_mode = fields.Boolean(string="PayTM Test Mode", default=False, help="Turn it on when in Test Mode")
 
-    def _get_payment_terminal_selection(self):
-        return super()._get_payment_terminal_selection() + [('paytm', 'PayTM')]
+    @api.onchange('use_payment_terminal')
+    def _onchange_use_payment_terminal(self):
+        super()._onchange_use_payment_terminal()
+        if self.use_payment_terminal == 'paytm' and not self.paytm_merchant_key:
+            existing_payment_method = self.search([('use_payment_terminal', '=', 'paytm'), ('paytm_merchant_key', '!=', False)], limit=1)
+            if existing_payment_method:
+                self.update({
+                    'channel_id': existing_payment_method.channel_id,
+                    'accept_payment': existing_payment_method.accept_payment,
+                    'allowed_payment_modes': existing_payment_method.allowed_payment_modes,
+                    'paytm_mid': existing_payment_method.paytm_mid,
+                    'paytm_merchant_key': existing_payment_method.paytm_merchant_key,
+                })
 
     def _paytm_make_request(self, url, payload=None):
         """ Make a request to PayTM API.
@@ -159,9 +169,3 @@ class PosPaymentMethod(models.Model):
             'channelId' : self.channel_id,
             'checksum' : paytm_signature,
         }
-
-    @api.constrains('use_payment_terminal')
-    def _check_paytm_terminal(self):
-        for record in self:
-            if record.use_payment_terminal == 'paytm' and record.company_id.currency_id.name != 'INR':
-                raise UserError(_('This Payment Terminal is only valid for INR Currency'))

@@ -8,20 +8,13 @@ from odoo.exceptions import ValidationError
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
-    is_online_payment = fields.Boolean(string="Online Payment", help="Use this payment method for online payments (payments made on a web page with online payment providers)", default=False)
     online_payment_provider_ids = fields.Many2many('payment.provider', string="Allowed Providers", domain="[('is_published', '=', True), ('state', 'in', ['enabled', 'test'])]")
     has_an_online_payment_provider = fields.Boolean(compute='_compute_has_an_online_payment_provider', readonly=True)
     type = fields.Selection(selection_add=[('online', 'Online')])
 
-    @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
-        params += ['is_online_payment']
-        return params
-
-    @api.depends('is_online_payment')
+    @api.depends('payment_method_type')
     def _compute_type(self):
-        opm = self.filtered('is_online_payment')
+        opm = self.filtered(lambda pm: pm.payment_method_type == 'online')
         if opm:
             opm.type = 'online'
 
@@ -42,10 +35,10 @@ class PosPaymentMethod(models.Model):
             raise ValidationError(_("All payment providers configured for an online payment method must use the same currency as the Sales Journal, or the company currency if that is not set, of the POS config."))
         return valid_providers
 
-    @api.depends('is_online_payment', 'online_payment_provider_ids')
+    @api.depends('payment_method_type', 'online_payment_provider_ids')
     def _compute_has_an_online_payment_provider(self):
         for pm in self:
-            if pm.is_online_payment:
+            if pm.payment_method_type == 'online':
                 pm.has_an_online_payment_provider = bool(pm._get_online_payment_providers())
             else:
                 pm.has_an_online_payment_provider = False
@@ -56,17 +49,17 @@ class PosPaymentMethod(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('is_online_payment', False):
+            if vals.get('payment_method_type') == 'online':
                 self._force_online_payment_values(vals)
         return super().create(vals_list)
 
     def write(self, vals):
-        if 'is_online_payment' in vals:
-            if vals['is_online_payment']:
+        if 'payment_method_type' in vals:
+            if vals['payment_method_type'] == 'online':
                 self._force_online_payment_values(vals)
             return super().write(vals)
 
-        opm = self.filtered('is_online_payment')
+        opm = self.filtered(lambda pm: pm.payment_method_type == 'online')
         not_opm = self - opm
 
         res = True
@@ -89,15 +82,9 @@ class PosPaymentMethod(models.Model):
             for name in disabled_fields_name:
                 if name in vals:
                     vals[name] = False
-            if 'payment_method_type' in vals:
-                vals['payment_method_type'] = 'none'
         else:
             for name in disabled_fields_name:
                 vals[name] = False
-            vals['payment_method_type'] = 'none'
-
-    def _get_payment_terminal_selection(self):
-        return super(PosPaymentMethod, self)._get_payment_terminal_selection() if not self.is_online_payment else []
 
     @api.depends('type')
     def _compute_hide_use_payment_terminal(self):
@@ -113,13 +100,13 @@ class PosPaymentMethod(models.Model):
             If there is not, create a new one for the company and return it without adding the pos.config to it.
         """
         # Parameters are ids instead of a pos.config record because this method can be called from a web controller or internally
-        payment_method_id = self.env['pos.payment.method'].search([('is_online_payment', '=', True), ('company_id', '=', company_id), ('config_ids', 'in', pos_config_id)], limit=1).exists()
+        payment_method_id = self.env['pos.payment.method'].search([('payment_method_type', '=', 'online'), ('company_id', '=', company_id), ('config_ids', 'in', pos_config_id)], limit=1).exists()
         if not payment_method_id:
-            payment_method_id = self.env['pos.payment.method'].search([('is_online_payment', '=', True), ('company_id', '=', company_id)], limit=1).exists()
+            payment_method_id = self.env['pos.payment.method'].search([('payment_method_type', '=', 'online'), ('company_id', '=', company_id)], limit=1).exists()
             if not payment_method_id:
                 payment_method_id = self.env['pos.payment.method'].create({
                     'name': _('Online Payment'),
-                    'is_online_payment': True,
+                    'payment_method_type': 'online',
                     'company_id': company_id,
                 })
                 if not payment_method_id:

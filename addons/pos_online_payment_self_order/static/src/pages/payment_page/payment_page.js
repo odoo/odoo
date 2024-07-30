@@ -8,7 +8,7 @@ patch(PaymentPage.prototype, {
         const pm = this.selectedPaymentMethod;
         const device = this.selfOrder.config.self_ordering_mode;
 
-        if (!pm || !pm.is_online_payment) {
+        if (!pm || pm.payment_method_type !== "online") {
             return super.startPayment(...arguments);
         } else {
             order = await this.selfOrder.sendDraftOrderToServer();
@@ -23,7 +23,7 @@ patch(PaymentPage.prototype, {
     },
     get selectedPaymentIsOnline() {
         const paymentMethods = this.selectedPaymentMethod;
-        return paymentMethods && paymentMethods.is_online_payment;
+        return paymentMethods && paymentMethods.payment_method_type === "online";
     },
     generateQrcodeImg(url) {
         const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();

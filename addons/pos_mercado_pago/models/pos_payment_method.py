@@ -1,6 +1,6 @@
 import logging
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 
 from .mercado_pago_pos_request import MercadoPagoPosRequest
@@ -24,8 +24,16 @@ class PosPaymentMethod(models.Model):
         help="Enter your Point Smart terminal serial number written on the back of your terminal (after the S/N:)")
     mp_id_point_smart_complet = fields.Char()
 
-    def _get_payment_terminal_selection(self):
-        return super()._get_payment_terminal_selection() + [('mercado_pago', 'Mercado Pago')]
+    @api.onchange('use_payment_terminal')
+    def _onchange_use_payment_terminal(self):
+        super()._onchange_use_payment_terminal()
+        if self.use_payment_terminal == 'mercado_pago' and not self.mp_webhook_secret_key:
+            existing_payment_method = self.search([('use_payment_terminal', '=', 'mercado_pago'), ('mp_webhook_secret_key', '!=', False)], limit=1)
+            if existing_payment_method:
+                self.update({
+                    'mp_webhook_secret_key': existing_payment_method.mp_webhook_secret_key,
+                    'mp_bearer_token': existing_payment_method.mp_bearer_token
+                })
 
     def _check_special_access(self):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
@@ -111,18 +119,15 @@ class PosPaymentMethod(models.Model):
             raise UserError(_("Please verify your production user token as it was rejected"))
 
     def write(self, vals):
-        records = super().write(vals)
-
-        if 'mp_id_point_smart' in vals or 'mp_bearer_token' in vals:
-            self.mp_id_point_smart_complet = self._find_terminal(self.mp_bearer_token, self.mp_id_point_smart)
-
-        return records
+        res = super().write(vals)
+        for record in self:
+            if record.use_payment_terminal == 'mercado_pago' and 'mp_id_point_smart' in vals or 'mp_bearer_token' in vals:
+                record.mp_id_point_smart_complet = record._find_terminal(record.mp_bearer_token, record.mp_id_point_smart)
+        return res
 
     def create(self, vals):
         records = super().create(vals)
-
         for record in records:
-            if record.mp_bearer_token:
+            if record.use_payment_terminal == 'mercado_pago' and record.mp_bearer_token:
                 record.mp_id_point_smart_complet = record._find_terminal(record.mp_bearer_token, record.mp_id_point_smart)
-
         return records

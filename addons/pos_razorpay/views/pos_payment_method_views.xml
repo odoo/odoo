@@ -5,12 +5,12 @@
         <field name="model">pos.payment.method</field>
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='use_payment_terminal']" position="after">
-                <field name="razorpay_username" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                <field name="razorpay_tid" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                <field name="razorpay_api_key" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                <field name="razorpay_test_mode" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                <field name="razorpay_allowed_payment_modes" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
+            <xpath expr="//div[hasclass('payment_terminal_div')]" position="after">
+                <field name="razorpay_username" invisible="hide_use_payment_terminal or use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
+                <field name="razorpay_tid" invisible="hide_use_payment_terminal or use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
+                <field name="razorpay_api_key" invisible="hide_use_payment_terminal or use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
+                <field name="razorpay_test_mode" invisible="hide_use_payment_terminal or use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
+                <field name="razorpay_allowed_payment_modes" invisible="hide_use_payment_terminal or use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
             </xpath>
         </field>
     </record>

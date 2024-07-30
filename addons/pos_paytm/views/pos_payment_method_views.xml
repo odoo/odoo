@@ -5,14 +5,14 @@
         <field name="model">pos.payment.method</field>
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='use_payment_terminal']" position="after">
-                <field name="paytm_mid" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
-                <field name="paytm_tid" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
-                <field name="paytm_merchant_key" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
-                <field name="channel_id" groups="base.group_no_one" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
-                <field name="accept_payment" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
-                <field name="allowed_payment_modes" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
-                <field name="paytm_test_mode" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+            <xpath expr="//div[hasclass('payment_terminal_div')]" position="after">
+                <field name="paytm_mid" invisible="hide_use_payment_terminal or use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="paytm_tid" invisible="hide_use_payment_terminal or use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="paytm_merchant_key" invisible="hide_use_payment_terminal or use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="channel_id" groups="base.group_no_one" invisible="hide_use_payment_terminal or use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="accept_payment" invisible="hide_use_payment_terminal or use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="allowed_payment_modes" invisible="hide_use_payment_terminal or use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="paytm_test_mode" invisible="hide_use_payment_terminal or use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
             </xpath>
         </field>
     </record>

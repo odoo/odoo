@@ -8,7 +8,10 @@ import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
-        if (paymentMethod.is_online_payment && typeof this.currentOrder.id === "string") {
+        if (
+            paymentMethod.payment_method_type === "online" &&
+            typeof this.currentOrder.id === "string"
+        ) {
             this.currentOrder.date_order = luxon.DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
             this.pos.addPendingOrder([this.currentOrder.id]);
             await this.pos.syncAllOrders();
@@ -17,7 +20,9 @@ patch(PaymentScreen.prototype, {
     },
     getRemainingOnlinePaymentLines() {
         return this.paymentLines.filter(
-            (line) => line.payment_method_id.is_online_payment && line.getPaymentStatus() !== "done"
+            (line) =>
+                line.payment_method_id.payment_method_type === "online" &&
+                line.getPaymentStatus() !== "done"
         );
     },
     checkRemainingOnlinePaymentLines(unpaidAmount) {
@@ -58,7 +63,7 @@ patch(PaymentScreen.prototype, {
             return false;
         }
 
-        if (!this.payment_methods_from_config.some((pm) => pm.is_online_payment)) {
+        if (!this.payment_methods_from_config.some((pm) => pm.payment_method_type === "online")) {
             return true;
         }
 

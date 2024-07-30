@@ -9,7 +9,7 @@ class PosPaymentMethod(models.Model):
     def _load_pos_self_data_domain(self, data):
         if data['pos.config']['data'][0]['self_ordering_mode'] == 'kiosk':
             domain = super()._load_pos_self_data_domain(data)
-            domain = expression.OR([[('is_online_payment', '=', True)], domain])
+            domain = expression.OR([[('payment_method_type', '=', 'online')], domain])
             return domain
         else:
-            return [('is_online_payment', '=', True)]
+            return [('payment_method_type', '=', 'online')]

@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="px-3 py-4 d-flex gap-1 justify-content-center">
-            <button class="btn btn-primary btn-lg" t-if="state.selection || selectedPaymentMethod.is_online_payment || this.selfOrder.paymentError" t-on-click="() => this.router.back()">Back</button>
+            <button class="btn btn-primary btn-lg" t-if="state.selection || selectedPaymentMethod.payment_method_type == 'online' || this.selfOrder.paymentError" t-on-click="() => this.router.back()">Back</button>
             <button class="btn btn-info btn-lg" t-if="!state.selection and selfOrder.paymentError" t-on-click="startPayment">Retry</button>
         </div>
     </t>

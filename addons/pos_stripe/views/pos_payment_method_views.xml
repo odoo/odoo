@@ -5,10 +5,10 @@
         <field name="model">pos.payment.method</field>
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+            <xpath expr="//div[hasclass('payment_terminal_div')]" position="after">
                 <!-- Stripe -->
-                <field name="stripe_serial_number" invisible="use_payment_terminal != 'stripe'" required="use_payment_terminal == 'stripe'"/>
-                <div colspan="2" class="mt16" invisible="use_payment_terminal != 'stripe'" required="use_payment_terminal == 'stripe'">
+                <field name="stripe_serial_number" invisible="hide_use_payment_terminal or use_payment_terminal != 'stripe'" required="use_payment_terminal == 'stripe'"/>
+                <div colspan="2" class="mt16" invisible="hide_use_payment_terminal or use_payment_terminal != 'stripe'" required="use_payment_terminal == 'stripe'">
                     <button name="action_stripe_key" type="object" icon="oi-arrow-right" string="Don't forget to complete Stripe connect before using this payment method." class="btn-link"/>
                 </div>
             </xpath>
