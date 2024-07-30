@@ -125,11 +125,11 @@ You could use this simplified accounting in case you work with an (external) acc
         ],
         'web.assets_frontend': [
             'account/static/src/interactions/**/*',
-            'account/static/src/components/tests_shared_js_python/*',
+            'account/static/src/js/account_portal.js',
             'account/static/src/helpers/*.js',
-            'account/static/src/core/utils/*.js',
         ],
         'web.assets_tests': [
+            'account/static/src/components/tests_shared_js_python/*',
             'account/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
