@@ -441,7 +441,12 @@
             <field name="act_window_id" ref="stock_move_action"/>
         </record>
 
-
+        <record id="stock_move_line_action_view_tree" model="ir.actions.act_window">
+            <field name="name">Detailed Operations</field>
+            <field name="res_model">stock.move.line</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_stock_move_line_detailed_operation_tree"/>
+        </record>
         <!--
             Receipt Picking (By Stock Move)
             From stock_partial_move_view
