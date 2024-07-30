@@ -436,10 +436,10 @@ class ProcurementGroup(models.Model):
         'Reference',
         default=lambda self: self.env['ir.sequence'].next_by_code('procurement.group') or '',
         required=True)
-    move_type = fields.Selection([
-        ('direct', 'Partial'),
-        ('one', 'All at once')], string='Delivery Type', default='direct',
-        required=True)
+    move_type = fields.Selection(
+        [('direct', 'Partial'), ('one', 'All at once')],
+        string='Delivery Type'
+    )
     stock_move_ids = fields.One2many('stock.move', 'group_id', string="Related Stock Moves")
 
     @api.model

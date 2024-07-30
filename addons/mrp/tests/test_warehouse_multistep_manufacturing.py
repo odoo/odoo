@@ -787,3 +787,19 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             else:
                 self.assertEqual(len(picking.move_ids_without_package), 2, "Should have 2 moves for: Comp1 and Comp2")
                 self.assertEqual([move.product_id for move in picking.move_ids_without_package.sorted('product_id')], [comp1, comp2])
+
+    def test_pick_components_uses_shipping_policy_from_picking_type(self):
+        self.warehouse.manufacture_steps = "pbm"
+        pick_components_type = self.warehouse.pbm_type_id
+
+        for move_type in ["direct", "one"]:
+            pick_components_type.move_type = move_type
+
+            mo = self.env["mrp.production"].create({
+                "bom_id": self.bom.id,
+                "location_src_id": self.warehouse.pbm_loc_id.id,
+            })
+            mo.action_confirm()
+
+            self.assertEqual(mo.picking_ids[0].picking_type_id, pick_components_type)
+            self.assertEqual(mo.picking_ids[0].move_type, move_type)

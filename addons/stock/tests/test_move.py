@@ -6851,3 +6851,15 @@ class StockMove(TransactionCase):
         })
         receipt.action_confirm()
         self.assertNotEqual(old_reference, receipt.move_ids.reference)
+
+    def test_internal_picking_uses_shipping_policy_from_picking_type(self):
+        picking_type_internal = self.env.ref('stock.picking_type_internal')
+
+        for move_type in ["direct", "one"]:
+            picking_type_internal.move_type = move_type
+
+            picking = self.env['stock.picking'].create({
+                'picking_type_id': picking_type_internal.id,
+            })
+
+            self.assertEqual(picking.move_type, move_type)
