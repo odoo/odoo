@@ -30,7 +30,7 @@ describe("collapsed selection", () => {
             stepFunction: async (editor) => {
                 insertText(editor, "x");
             },
-            contentAfter: "<p>ab<span>x[]</span>cd</p>",
+            contentAfter: "<p>abx[]cd</p>",
         });
     });
 
@@ -40,7 +40,7 @@ describe("collapsed selection", () => {
             stepFunction: async (editor) => {
                 insertText(editor, "x");
             },
-            contentAfter: "<p>ab<span>x[]</span>cd</p>",
+            contentAfter: "<p>abx[]cd</p>",
         });
     });
 });

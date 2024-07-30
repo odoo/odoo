@@ -1,8 +1,8 @@
 import { Plugin } from "../plugin";
 import { prepareUpdate } from "../utils/dom_state";
 import { boundariesOut, leftPos, rightPos } from "../utils/position";
-import { descendants } from "../utils/dom_traversal";
-import { cleanTextNode } from "@html_editor/utils/dom";
+import { descendants, selectElements } from "../utils/dom_traversal";
+import { cleanTextNode, unwrapContents } from "@html_editor/utils/dom";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -27,21 +27,23 @@ export class ZwsPlugin extends Plugin {
     }
 
     normalize(element) {
-        if (!element) {
-            return;
-        }
-        let elementToClean = [...element.querySelectorAll("[data-oe-zws-empty-inline]")];
-
-        if (element.getAttribute("data-oe-zws-empty-inline") !== null) {
-            elementToClean.push(element);
-        }
-        elementToClean = elementToClean.filter((el) => {
-            return !allWhitespaceRegex.test(el.textContent);
-        });
-        for (const el of elementToClean) {
-            this.cleanElement(el);
+        for (const el of selectElements(element, "[data-oe-zws-empty-inline]")) {
+            if (!allWhitespaceRegex.test(el.textContent)) {
+                // The element has some meaningful text. Remove the ZWS in it.
+                delete el.dataset.oeZwsEmptyInline;
+                this.cleanZWS(el);
+                if (
+                    el.tagName === "SPAN" &&
+                    el.getAttributeNames().length === 0 &&
+                    el.classList.length === 0
+                ) {
+                    // Useless span, unwrap it.
+                    unwrapContents(el);
+                }
+            }
         }
     }
+
     clean(root) {
         for (const el of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
             this.cleanElement(el);
