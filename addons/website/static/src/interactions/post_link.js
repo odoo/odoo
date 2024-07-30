@@ -21,7 +21,7 @@ export class PostLink extends Interaction {
                 data[key.slice(5)] = value;
             }
         }
-        sendRequest(this.el.dataset.post || this.el.href, data);
+        sendRequest(this.el.dataset.post || this.el.href || this.el.value, data);
     }
 }
 
