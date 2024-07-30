@@ -210,3 +210,49 @@ class TestLoyalty(TransactionCase):
         loyalty_program.action_archive()
         # Make sure that the main product didn't get archived
         self.assertTrue(product.active)
+
+    def test_merge_loyalty_cards(self):
+        """Test merging nominative loyalty cards from source partners to a destination partner
+        when partners are merged.
+        """
+        program = self.env['loyalty.program'].create({
+            'name': 'Test Program',
+            'is_nominative': True,
+            'applies_on': 'both',
+        })
+
+        partner_1, partner_2, dest_partner = self.env['res.partner'].create([
+            {'name': 'Source Partner 1'},
+            {'name': 'Source Partner 2'},
+            {'name': 'Destination Partner'},
+        ])
+        self.env['loyalty.card'].create([
+            {
+                'partner_id': partner_1.id,
+                'program_id': program.id,
+                'points': 10
+            }, {
+                'partner_id': partner_2.id,
+                'program_id': program.id,
+                'points': 20
+            }, {
+                'partner_id': dest_partner.id,
+                'program_id': program.id,
+                'points': 30
+            }
+        ])
+
+        self.env['base.partner.merge.automatic.wizard']._merge(
+            [partner_1.id, partner_2.id, dest_partner.id], dest_partner
+        )
+
+        dest_partner_loyalty_cards = self.env['loyalty.card'].search([
+            ('partner_id', '=', dest_partner.id),
+            ('program_id', '=', program.id),
+        ])
+
+        self.assertEqual(len(dest_partner_loyalty_cards), 1)
+        self.assertEqual(dest_partner_loyalty_cards.points, 60)
+        self.assertFalse(self.env['loyalty.card'].search([
+            ('partner_id', 'in', [partner_1.id, partner_2.id]),
+        ]))

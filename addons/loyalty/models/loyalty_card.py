@@ -40,6 +40,7 @@ class LoyaltyCard(models.Model):
     expiration_date = fields.Date()
 
     use_count = fields.Integer(compute='_compute_use_count')
+    active = fields.Boolean(default=True)
 
     _sql_constraints = [
         ('card_code_unique', 'UNIQUE(code)', 'A coupon/loyalty card must have a unique code.')
