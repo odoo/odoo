@@ -25,6 +25,7 @@ class MailMainAttachmentMixin(models.AbstractModel):
         if attachment_ids and not self.message_main_attachment_id:
             # we filter out attachment with 'xml' and 'octet' types
             attachments = self.env['ir.attachment'].browse(attachment_ids).filtered(lambda r: not r.mimetype.endswith('xml')
+                                                                                              and not r.mimetype.endswith('application/pkcs7-mime')
                                                                                               and not r.mimetype.endswith('application/octet-stream'))
 
             # Assign one of the attachments as the main according to the following priority: pdf, image, other types.

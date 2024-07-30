@@ -58,7 +58,9 @@ class IrAttachment(models.Model):
 
         if force or not related_record.message_main_attachment_id:
             with contextlib.suppress(AccessError):
-                related_record.message_main_attachment_id = self
+                not_allowed_mimetypes = ["application/xml", "application/pkcs7-mime"]
+                if self.mimetype not in not_allowed_mimetypes:
+                    related_record.message_main_attachment_id = self
 
     def _delete_and_notify(self, message=None):
         if message:
