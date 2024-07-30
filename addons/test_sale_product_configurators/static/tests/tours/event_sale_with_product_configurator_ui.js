@@ -3,47 +3,19 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_utils";
+import tourUtils from "@sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("event_sale_with_product_configurator_tour", {
     url: "/odoo",
     test: true,
     steps: () => [
-        stepUtils.showAppsMenuItem(),
-        {
-            trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-            run: "click",
-        },
-        {
-            trigger: ".o_sale_order",
-        },
-        {
-            trigger: ".o_list_button_add",
-            run: "click",
-        },
-        {
-            trigger: ".o_required_modifier[name=partner_id] input",
-            run: "edit Tajine Saucisse",
-        },
-        {
-            isActive: ["auto"],
-            trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
-            run: "click",
-        },
-        {
-            trigger: 'a:contains("Add a product")',
-            run: "click",
-        },
-        {
-            trigger: 'div[name="product_template_id"] input',
-            run: "edit event (",
-        },
-        {
-            trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
-            run: "click",
-        },
+        ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
+        ...tourUtils.createNewSalesOrder(),
+        ...tourUtils.selectCustomer("Tajine Saucisse"),
+        ...tourUtils.addProduct("Registration Event (TEST variants)"),
         {
             trigger:
-                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Memorabilia")) button:has(i.fa-plus)',
+            'tr:has(div[name="o_sale_product_configurator_name"]:contains("Memorabilia")) button:has(i.fa-plus)',
             run: "click",
         },
         {
@@ -81,29 +53,15 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
         {
             trigger: 'td[name="price_subtotal"]:contains("16.50")', // wait for the optional product line
         },
+        ...tourUtils.addProduct("Registration Event (TEST variants)"),
         {
-            trigger: 'a:contains("Add a product")',
-            run: "click",
-        },
-        {
-            trigger: ".o_data_row:nth-child(3)", // wait for the new row to be created
-        },
-        {
-            trigger: 'div[name="product_template_id"] input',
-            run: "edit event (",
-        },
-        {
-            trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
+            trigger:
+            'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) label:contains("Adult")',
             run: "click",
         },
         {
             trigger:
-                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) label:contains("Adult")',
-            run: "click",
-        },
-        {
-            trigger:
-                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) .o_sale_product_configurator_qty input',
+            'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) .o_sale_product_configurator_qty input',
             run: "edit 5 && click body",
         },
         configuratorTourUtils.assertPriceTotal("150.00"),
@@ -142,24 +100,10 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
         {
             trigger: 'td[name="price_subtotal"]:contains("150.00")', // wait for the adult tickets line
         },
-        {
-            trigger: 'a:contains("Add a product")',
-            run: "click",
-        },
-        {
-            trigger: ".o_data_row:nth-child(4)", // wait for the new row to be created
-        },
-        {
-            trigger: 'div[name="product_template_id"] input',
-            run: "edit event (",
-        },
-        {
-            trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
-            run: "click",
-        },
+        ...tourUtils.addProduct("Registration Event (TEST variants)"),
         {
             trigger:
-                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) label:contains("VIP")',
+            'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) label:contains("VIP")',
             run: "click",
         },
         configuratorTourUtils.assertPriceTotal(60.0),

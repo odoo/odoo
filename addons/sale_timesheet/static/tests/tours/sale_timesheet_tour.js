@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import tourUtils from "@sale/js/tours/tour_utils";
 
 import { markup } from "@odoo/owl";
 import { queryText } from "@odoo/hoot-dom";
@@ -9,41 +10,22 @@ import { queryText } from "@odoo/hoot-dom";
 registry.category("web_tour.tours").add('sale_timesheet_tour', {
     test: true,
     url: '/odoo',
-    steps: () => [...stepUtils.goToAppSteps("sale.sale_menu_root", 'Go to the Sales App'),
+    steps: () => [
+        ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
+        ...tourUtils.createNewSalesOrder(),
+        ...tourUtils.selectCustomer("Brandon Freeman"),
+        ...tourUtils.addProduct("Service Product (Prepaid Hours)"),
 {
-    trigger: 'button.o_list_button_add',
-    content: 'Click on CREATE button to create a quotation with service products.',
-    run: "click",
-}, {
-    trigger: 'div[name="partner_id"] input',
-    content: 'Add the customer for this quotation (e.g. Brandon Freeman)',
-    run: "edit Brandon Freeman",
-}, {
-    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
-    content: 'Select the first item on the autocomplete dropdown',
-    run: "click",
-},
-{
-    trigger: 'td.o_field_x2many_list_row_add > a:first-child',
-    content: 'Click on "Add a product" to add a new product. We will add a service product.',
-    run: "click",
-}, {
-    trigger: '.o_field_html[name="product_id"], .o_field_widget[name="product_template_id"] input',
-    content: markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
-    run: "edit Service Product (Prepaid Hours)",
-}, {
-    trigger: 'ul.ui-autocomplete a:contains(Service Product (Prepaid Hours))',
-    content: 'Select the prepaid service product in the autocomplete dropdown',
-    run: "click",
-}, {
     trigger: 'div[name="product_uom_qty"] input',
     content: "Add 10 hours as ordered quantity for this product.",
-    run: "edit 10 && press Tab",
-}, {
-    trigger: '.o_field_widget[name=price_subtotal]:contains(2,500.00)',
-}, {
-    trigger: 'div[name="name"] textarea:value(Service Product)',
-}, {
+    run: "edit 10",
+},
+...tourUtils.clickSomewhereElse(),
+{
+    trigger: '.o_field_cell[name=price_subtotal]:contains(2,500.00)',
+},
+tourUtils.checkSOLDescriptionContains("Service Product (Prepaid Hours)", ""),
+{
     trigger: "button[name=action_confirm]:enabled",
     content: 'Click on Confirm button to create a sale order with this quotation.',
     run: "click",

@@ -2,35 +2,16 @@
 
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import tourUtils from "@sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("event_configurator_tour", {
     url: "/odoo",
     test: true,
     steps: () => [
-        stepUtils.showAppsMenuItem(),
-        {
-            trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-            run: "click",
-        },
-        {
-            trigger: ".o_sale_order",
-        },
-        {
-            trigger: ".o_list_button_add",
-            run: "click",
-        },
-        {
-            trigger: "a:contains(Add a product)",
-            run: "click",
-        },
-        {
-            trigger: 'div[name="product_id"] input, div[name="product_template_id"] input',
-            run: "edit Event Registration",
-        },
-        {
-            trigger: "ul.ui-autocomplete a:contains(Event Registration)",
-            run: "click",
-        },
+        ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
+        ...tourUtils.createNewSalesOrder(),
+        ...tourUtils.selectCustomer("Azure"),
+        ...tourUtils.addProduct("Event Registration"),
         {
             trigger: 'div[name="event_id"] input',
             run: "click",
@@ -55,36 +36,9 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
             content: "Wait the modal is closed",
             trigger: "body:not(:has(.modal))",
         },
-        {
-            content: "click somewhere else to exit cell focus",
-            trigger: "label:contains(Untaxed Amount)",
-            run: "click",
-        },
-        {
-            trigger: "td[name='name'] span:contains(VIP)",
-        },
-        {
-            trigger: "ul.nav a:contains(Order Lines)",
-            run: "click",
-        },
-        {
-            content: "search the partner",
-            trigger: 'div[name="partner_id"] input',
-            run: "edit Azure",
-        },
-        {
-            content: "select the partner",
-            trigger: "ul.ui-autocomplete > li > a:contains(Azure)",
-            run: "click",
-        },
-        {
-            trigger: "td:contains(Event)",
-            run: "click",
-        },
-        {
-            trigger: "button.fa-pencil",
-            run: "click",
-        },
+        ...tourUtils.clickSomewhereElse(),
+        tourUtils.editLineMatching("Event Registration", "VIP"),
+        tourUtils.editConfiguration(),
         {
             trigger: 'div[name="event_ticket_id"] input',
             run: "click",
@@ -101,14 +55,8 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
             content: "Wait the modal is closed",
             trigger: "body:not(:has(.modal))",
         },
-        {
-            content: "click somewhere else to exit cell focus",
-            trigger: "label:contains(Untaxed Amount)",
-            run: "click",
-        },
-        {
-            trigger: "td[name='name'] span:contains(Standard)",
-        },
+        ...tourUtils.clickSomewhereElse(),
+        tourUtils.checkSOLDescriptionContains("Event Registration", "Standard"),
         ...stepUtils.saveForm(),
     ],
 });
