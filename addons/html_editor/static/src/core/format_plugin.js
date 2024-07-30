@@ -179,6 +179,7 @@ export class FormatPlugin extends Plugin {
         }
     }
 
+    // @todo phoenix: refactor this method.
     _formatSelection(formatName, { applyStyle, formatProps } = {}) {
         // note: does it work if selection is in opposite direction?
         const selection = this.shared.splitSelection();
