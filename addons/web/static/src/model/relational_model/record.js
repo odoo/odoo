@@ -988,7 +988,7 @@ export class Record extends DataPoint {
         if (!this._checkValidity({ displayNotification: true })) {
             return false;
         }
-        if (this.model._urgentSave && this.model.useSendBeaconToSaveUrgently) {
+        if (this.model._urgentSave && this.model.useSendBeaconToSaveUrgently && !this.model.env.inDialog) {
             // We are trying to save urgently because the user is closing the page. To
             // ensure that the save succeeds, we can't do a classic rpc, as these requests
             // can be cancelled (payload too heavy, network too slow, computer too fast...).

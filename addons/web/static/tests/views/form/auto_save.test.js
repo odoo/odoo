@@ -11,6 +11,7 @@ import {
     makeServerError,
     models,
     mountView,
+    mountViewInDialog,
     mountWithCleanup,
     onRpc,
 } from "../../web_test_helpers";
@@ -852,4 +853,35 @@ test(`error on save when create button clicked`, async () => {
     expect.verifySteps(["save"]);
     await animationFrame();
     expect(`.o_error_dialog`).toHaveCount(1);
+});
+
+test(`doesn't autosave when in dialog (visibility change)`, async () => {
+    onRpc("web_save", () => {
+        expect.step("should not call web_save");
+    });
+    await mountViewInDialog({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="name"/></form>`,
+        resId: 1,
+    });
+    expect('.o_field_widget[name="name"] input').toHaveValue("Xavier Lancer");
+    await fieldInput("name").edit("Mathiew Brown");
+    await hideTab();
+    expect.verifySteps([]);
+});
+
+test(`doesn't autosave when in dialog (beacon)`, async () => {
+    mockSendBeacon(() => expect.step("sendBeacon"));
+    await mountViewInDialog({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="name"/></form>`,
+        resId: 1,
+    });
+    expect('.o_field_widget[name="name"] input').toHaveValue("Xavier Lancer");
+    await fieldInput("name").edit("Mathiew Brown");
+    unload();
+    await animationFrame();
+    expect.verifySteps([]);
 });
