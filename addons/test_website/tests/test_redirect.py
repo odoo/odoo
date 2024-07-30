@@ -252,3 +252,48 @@ class TestRedirect(HttpCase):
         resp = self.url_open(url_rec1)
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(resp.url.endswith(url_rec1))
+
+    def test_redirect_with_qs(self):
+        self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect with qs',
+            'redirect_type': '301',
+            'url_from': '/foo?bar=1',
+            'url_to': '/new-page-01',
+        })
+        self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect with qs',
+            'redirect_type': '301',
+            'url_from': '/foo?bar=2',
+            'url_to': '/new-page-10?qux=2',
+        })
+        self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect without qs',
+            'redirect_type': '301',
+            'url_from': '/foo',
+            'url_to': '/new-page-11',
+        })
+
+        # should match qs first
+        resp = self.url_open("/foo?bar=1", allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp.headers.get('Location'), self.base_url() + "/new-page-01?bar=1")
+
+        # should match qs first
+        resp = self.url_open("/foo?bar=2", allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp.headers.get('Location'), self.base_url() + "/new-page-10?qux=2&bar=2")
+
+        # should match no qs
+        resp = self.url_open("/foo?bar=3", allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp.headers.get('Location'), self.base_url() + "/new-page-11?bar=3")
+
+        resp = self.url_open("/foo", allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp.headers.get('Location'), self.base_url() + "/new-page-11")
+
+        # we dont support wrong get order
+        # purpose is to support simple case like content.asp?id=xx
+        resp = self.url_open("/foo?oups=1&bar=2", allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp.headers.get('Location'), self.base_url() + "/new-page-11?oups=1&bar=2")
