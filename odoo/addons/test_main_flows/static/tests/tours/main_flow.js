@@ -730,12 +730,6 @@ stepUtils.autoExpandMoreButtons(),
     isActive: ["desktop"],
     trigger: ".ui-menu-item > a:contains('the_flow.product')",
     run: "click",
-}, {
-    isActive: ["desktop"],
-    trigger: "td[name='product_id'][data-tooltip*='the_flow.product'], td[name='product_template_id'][data-tooltip*='the_flow.product']",
-}, {
-    isActive: ["desktop"],
-    trigger: "td[name='product_uom'][data-tooltip='Units']",
 },
 {
     isActive: ["mobile"],
@@ -790,12 +784,6 @@ stepUtils.autoExpandMoreButtons(),
     isActive: ["desktop"],
     trigger: ".ui-menu-item > a:contains('the_flow.service')",
     run: "click",
-}, {
-    isActive: ["desktop"],
-    trigger: "td[name='product_id'][data-tooltip*='the_flow.service'], td[name='product_template_id'][data-tooltip*='the_flow.service']",
-}, {
-    isActive: ["desktop"],
-    trigger: "td[name='product_uom'][data-tooltip='Hours']",
 }, {
     isActive: ["desktop"],
     content: "click somewhere else to exit cell focus",

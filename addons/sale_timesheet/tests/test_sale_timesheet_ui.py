@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 @tagged('-at_install', 'post_install')
-class TestUi(HttpCase):
+class TestSaleTimesheetUi(HttpCase):
 
     @classmethod
     def setUpClass(cls):

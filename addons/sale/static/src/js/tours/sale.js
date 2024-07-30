@@ -88,10 +88,6 @@ registry.category("web_tour.tours").add("sale_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
-        },
-        {
-            isActive: ["auto"],
             trigger: ".oi-arrow-right", // Wait for product creation
         },
         {

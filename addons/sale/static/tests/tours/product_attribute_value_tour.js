@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 const openProductAttribute = (product_attribute) => [
-    ...stepUtils.goToAppSteps("sale.sale_menu_root", 'Go to the Sales App'),
+    ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
     {
         content: 'Open configuration menu',
         trigger: '.o-dropdown[data-menu-xmlid="sale.menu_sale_config"]',

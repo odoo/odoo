@@ -378,7 +378,7 @@
                     <page string="Order Lines" name="order_lines">
                         <field
                             name="order_line"
-                            widget="section_and_note_one2many"
+                            widget="sol_o2m"
                             mode="tree,kanban"
                             readonly="state == 'cancel' or locked">
                             <form>
@@ -516,7 +516,6 @@
                                         'uom':product_uom,
                                         'company_id': parent.company_id,
                                         'default_lst_price': price_unit,
-                                        'default_description_sale': name
                                     }"
                                     options="{
                                         'no_open': True,
@@ -535,11 +534,11 @@
                                         'uom':product_uom,
                                         'company_id': parent.company_id,
                                         'default_list_price': price_unit,
-                                        'default_description_sale': name
                                     }"
                                     options="{
                                         'no_open': True,
                                     }"
+                                    optional="show"
                                     domain="[('sale_ok', '=', True)]"
                                     widget="sol_product_many2one"
                                     placeholder="Type to find a product..."/>
