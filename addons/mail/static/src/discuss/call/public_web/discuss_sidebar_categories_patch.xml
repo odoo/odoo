@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussSidebarChannel" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o-mail-DiscussSidebar-item')]" position="after">
+        <xpath expr="//*[@name='root']" position="after">
             <DiscussSidebarCallParticipants thread="thread"/>
         </xpath>
     </t>

@@ -1,4 +1,8 @@
+import { useHover } from "@mail/utils/common/hooks";
 import { Component, useState } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { _t } from "@web/core/l10n/translation";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -12,11 +16,22 @@ export const discussSidebarItemsRegistry = registry.category("mail.discuss_sideb
 export class DiscussSidebar extends Component {
     static template = "mail.DiscussSidebar";
     static props = {};
-    static components = {};
+    static components = { Dropdown };
 
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
+        this.compactHover = useHover(["compact-btn", "compact-floating*"], () => {
+            this.compactFloating.isOpen = this.compactHover.isHover;
+        });
+        this.compactFloating = useDropdownState();
+    }
+
+    get compactBtnText() {
+        if (this.store.discuss.isSidebarCompact) {
+            return _t("Make panel bigger");
+        }
+        return _t("Make panel smaller");
     }
 
     get discussSidebarItems() {
