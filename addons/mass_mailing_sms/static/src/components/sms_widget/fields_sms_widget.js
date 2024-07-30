@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
@@ -41,11 +41,11 @@ patch(SmsWidget.prototype, {
     get nbrCharExplanation() {
         if (this.optOutEnabled) {
             return this.noticeLinksReplaced
-                ? _lt(" (including link trackers and opt-out link) ")
-                : _lt(" (including opt-out link) ");
+                ? _t(" (including link trackers and opt-out link)")
+                : _t(" (including opt-out link)");
         }
         return this.noticeLinksReplaced
-            ? _lt(" (including link trackers) ")
+            ? _t(" (including link trackers)")
             : super.nbrCharExplanation; // Also default when no linkReplacementsPlaceholders
     },
     /**
