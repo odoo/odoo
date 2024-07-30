@@ -6,7 +6,7 @@ from collections import OrderedDict
 from decimal import ROUND_HALF_UP, Decimal
 from math import floor
 
-from odoo import MIN_PY_VERSION
+from odoo.release import MIN_PY_VERSION
 
 # The following section of the code is used to monkey patch
 # the Arabic class of num2words package as there are some problems
