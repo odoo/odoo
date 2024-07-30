@@ -58,18 +58,18 @@ patch(ControlButtons.prototype, {
         this.currentOrder.takeaway = isTakeAway;
         this.currentOrder.update({ fiscal_position_id: isTakeAway ? takeawayFp : defaultFp });
     },
-    editOrderNote(order) {
+    editFloatingOrderName(order) {
         this.dialog.add(TextInputPopup, {
-            title: _t("Edit order note"),
+            title: _t("Edit Order Name"),
             placeholder: _t("18:45 John 4P"),
-            startingValue: order.note || "",
+            startingValue: order.floating_order_name || "",
             getPayload: async (newName) => {
                 if (typeof order.id == "number") {
                     this.pos.data.write("pos.order", [order.id], {
-                        note: newName,
+                        floating_order_name: newName,
                     });
                 } else {
-                    order.note = newName;
+                    order.floating_order_name = newName;
                 }
             },
         });

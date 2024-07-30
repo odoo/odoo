@@ -18,8 +18,12 @@ patch(ActionpadWidget.prototype, {
         return this.pos.get_order();
     },
     get hasChangesToPrint() {
-        const hasChange = this.pos.getOrderChanges();
-        return hasChange.count;
+        let hasChange = this.pos.getOrderChanges();
+        hasChange =
+            hasChange.generalNote == ""
+                ? true // for the case when removed all general note
+                : hasChange.count || hasChange.generalNote;
+        return hasChange;
     },
     get swapButtonClasses() {
         return {

@@ -25,27 +25,14 @@ export class OrderlineNoteButton extends Component {
         this.pos = usePos();
         this.dialog = useService("dialog");
     }
-    async onClick() {
+    onClick() {
+        return this.props.label == _t("General Note") ? this.addGeneralNote() : this.addLineNotes();
+    }
+    async addLineNotes() {
         const selectedOrderline = this.pos.get_order().get_selected_orderline();
         const selectedNote = this.props.getter(selectedOrderline);
-        const notes = this.pos.models["pos.note"].getAll();
-        let buttons;
-        if (this._isInternalNote()) {
-            buttons = notes.map((note) => ({
-                label: note.name,
-                isSelected: selectedNote.split("\n").includes(note.name), // Check if the note is already selected
-            }));
-        } else {
-            buttons = [];
-        }
-
         const oldNote = selectedOrderline.getNote();
-        const payload = await makeAwaitable(this.dialog, TextInputPopup, {
-            title: _t("Add %s", this.props.label),
-            buttons,
-            rows: 4,
-            startingValue: this.props.getter(selectedOrderline),
-        });
+        const payload = await this.openTextInput(selectedNote);
 
         var quantity_with_note = 0;
         const changes = this.pos.getOrderChanges();
@@ -69,7 +56,32 @@ export class OrderlineNoteButton extends Component {
 
         return { confirmed: typeof payload === "string", inputNote: payload, oldNote };
     }
+    async addGeneralNote() {
+        const selectedOrder = this.pos.get_order();
+        const selectedNote = selectedOrder.general_note || "";
+        const payload = await this.openTextInput(selectedNote);
+        selectedOrder.general_note = payload;
+        return { confirmed: typeof payload === "string", inputNote: payload };
+    }
+    async openTextInput(selectedNote) {
+        let buttons = [];
+        if (this._isInternalNote() || this.props.label == _t("General Note")) {
+            buttons = this.pos.models["pos.note"].getAll().map((note) => ({
+                label: note.name,
+                isSelected: selectedNote.split("\n").includes(note.name), // Check if the note is already selected
+            }));
+        }
+        return await makeAwaitable(this.dialog, TextInputPopup, {
+            title: _t("Add %s", this.props.label),
+            buttons,
+            rows: 4,
+            startingValue: selectedNote,
+        });
+    }
     _isInternalNote() {
+        if (this.pos.config.module_pos_restaurant) {
+            return this.props.label == _t("Kitchen Note");
+        }
         return this.props.label == _t("Internal Note");
     }
 }

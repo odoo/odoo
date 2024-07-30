@@ -22,45 +22,6 @@ class PosConfig(models.Model):
         help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.',
     )
 
-    def get_tables_order_count_and_printing_changes(self):
-        self.ensure_one()
-        floors = self.env['restaurant.floor'].search([('pos_config_ids', '=', self.id)])
-        tables = self.env['restaurant.table'].search([('floor_id', 'in', floors.ids)])
-        domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
-
-        order_stats = self.env['pos.order']._read_group(domain, ['table_id'], ['__count'])
-        linked_orderlines = self.env['pos.order.line'].search([('order_id.state', '=', 'draft'), ('order_id.table_id', 'in', tables.ids)])
-        orders_map = {table.id: count for table, count in order_stats}
-        changes_map = defaultdict(lambda: 0)
-        skip_changes_map = defaultdict(lambda: 0)
-
-        for line in linked_orderlines:
-            # For the moment, as this feature is not compatible with pos_self_order,
-            # we ignore last_order_preparation_change when it is set to false.
-            # In future, pos_self_order will send the various changes to the order.
-            if not line.order_id.last_order_preparation_change:
-                line.order_id.last_order_preparation_change = '{}'
-
-            last_order_preparation_change = json.loads(line.order_id.last_order_preparation_change)
-            prep_change = {}
-            for line_uuid in last_order_preparation_change:
-                prep_change[last_order_preparation_change[line_uuid]['uuid']] = last_order_preparation_change[line_uuid]
-            quantity_changed = 0
-            if line.uuid in prep_change:
-                quantity_changed = line.qty - prep_change[line.uuid]['quantity']
-            else:
-                quantity_changed = line.qty
-
-            if line.skip_change:
-                skip_changes_map[line.order_id.table_id.id] += quantity_changed
-            else:
-                changes_map[line.order_id.table_id.id] += quantity_changed
-
-        result = []
-        for table in tables:
-            result.append({'id': table.id, 'orders': orders_map.get(table.id, 0), 'changes': changes_map.get(table.id, 0), 'skip_changes': skip_changes_map.get(table.id, 0)})
-        return result
-
     def _get_forbidden_change_fields(self):
         forbidden_keys = super(PosConfig, self)._get_forbidden_change_fields()
         forbidden_keys.append('floor_ids')

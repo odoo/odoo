@@ -26,8 +26,8 @@
                 <button class="btn btn-secondary btn-lg py-5" t-on-click="clickTransferOrder">
                     <i class="oi oi-arrow-right me-1" />Transfer / Merge
                 </button>
-                <button class="btn btn-secondary btn-lg py-5" t-on-click="() => this.editOrderNote(this.pos.get_order())">
-                    <i class="fa fa-pencil-square-o me-1" />Edit Order Note
+                <button t-if="!pos.get_order()?.table_id" class="btn btn-secondary btn-lg py-5" t-on-click="() => this.editFloatingOrderName(this.pos.get_order())">
+                    <i class="fa fa-pencil-square-o me-1" />Edit Order Name
                 </button>
             </t>
         </xpath>
