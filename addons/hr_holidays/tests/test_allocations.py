@@ -136,7 +136,7 @@ class TestAllocations(TestHrHolidaysCommon):
         num_of_allocations = self.env['hr.leave.allocation'].search_count([('employee_id', '=', self.employee.id), ('multi_employee', '=', False)])
         self.assertEqual(num_of_allocations, 1)
 
-    def test_allocation_request(self):
+    def test_allocation_request_day(self):
         self.leave_type.write({
             'name': 'Custom Time Off Test',
             'allocation_validation_type': 'officer'
@@ -153,7 +153,68 @@ class TestAllocations(TestHrHolidaysCommon):
             allocation.number_of_days_display = 10
             employee_allocation = allocation.save()
 
-        self.assertEqual(employee_allocation.private_name, "Custom Time Off Test allocation request (10.0 day)")
+        self.assertEqual(employee_allocation.private_name, "Custom Time Off Test (10.0 day(s))")
+
+    def test_allocation_request_half_days(self):
+        self.leave_type.write({
+            'name': 'Custom Time Off Test',
+            'allocation_validation_type': 'officer'
+        })
+
+        employee_allocation = self.env['hr.leave.allocation'].create({
+            'holiday_type': 'employee',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type.id,
+            'allocation_type': 'regular',
+            'type_request_unit': 'half_day',
+        })
+
+        with Form(employee_allocation.with_context(is_employee_allocation=True), 'hr_holidays.hr_leave_allocation_view_form_dashboard') as allocation:
+            allocation.number_of_days_display = 10
+            employee_allocation = allocation.save()
+
+        self.assertEqual(employee_allocation.private_name, "Custom Time Off Test (10.0 day(s))")
+
+    def change_allocation_type_day(self):
+        self.leave_type.write({
+            'name': 'Custom Time Off Test',
+            'allocation_validation_type': 'officer'
+        })
+
+        employee_allocation = self.env['hr.leave.allocation'].create({
+            'holiday_type': 'employee',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type.id,
+            'allocation_type': 'regular',
+        })
+
+        with Form(employee_allocation.with_context(is_employee_allocation=True), 'hr_holidays.hr_leave_allocation_view_form_dashboard') as allocation:
+            allocation.allocation_type = 'extra'
+            allocation.allocation_type = 'regular'
+            employee_allocation = allocation.save()
+
+        self.assertEqual(employee_allocation.number_of_days, 1.0)
+
+    def change_allocation_type_hours(self):
+        self.leave_type.write({
+            'name': 'Custom Time Off Test',
+            'allocation_validation_type': 'officer'
+        })
+
+        employee_allocation = self.env['hr.leave.allocation'].create({
+            'holiday_type': 'employee',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type.id,
+            'allocation_type': 'regular',
+            'type_request_unit': 'hour',
+        })
+
+        with Form(employee_allocation.with_context(is_employee_allocation=True), 'hr_holidays.hr_leave_allocation_view_form_dashboard') as allocation:
+            allocation.allocation_type = 'extra'
+            allocation.allocation_type = 'regular'
+            employee_allocation = allocation.save()
+
+        self.assertEqual(employee_allocation.number_of_days, 1.0)
 
     def test_allowed_change_allocation(self):
         allocation = self.env['hr.leave.allocation'].create({
