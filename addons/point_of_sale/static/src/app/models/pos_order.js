@@ -30,7 +30,11 @@ export class PosOrder extends Base {
         this.uuid = vals.uuid ? vals.uuid : uuidv4();
         this.last_order_preparation_change = vals.last_order_preparation_change
             ? JSON.parse(vals.last_order_preparation_change)
-            : {};
+            : {
+                  lines: {},
+                  generalNote: "",
+              };
+        this.general_note = vals.general_note || "";
         this.tracking_number =
             vals.tracking_number && !isNaN(parseInt(vals.tracking_number))
                 ? vals.tracking_number
@@ -84,10 +88,6 @@ export class PosOrder extends Base {
         return this.state !== "draft";
     }
 
-    getOrderName() {
-        return this.getFloatingOrderName() || "";
-    }
-
     getEmailItems() {
         return [_t("the receipt")].concat(this.is_to_invoice() ? [_t("the invoice")] : []);
     }
@@ -110,6 +110,7 @@ export class PosOrder extends Base {
             tax_details: this.get_tax_details(),
             change: this.amount_return,
             name: this.name,
+            generalNote: this.general_note || "",
             invoice_id: null, //TODO
             cashier: this.employee_id?.name || this.user_id?.name,
             date: formatDateTime(parseUTCString(this.date_order)),
@@ -127,6 +128,7 @@ export class PosOrder extends Base {
                 ...headerData,
                 trackingNumber: this.tracking_number,
             },
+            screenName: "ReceiptScreen",
         };
     }
     canPay() {
@@ -234,11 +236,11 @@ export class PosOrder extends Base {
             if (!line.skip_change) {
                 orderlineIdx.push(line.preparationKey);
 
-                if (this.last_order_preparation_change[line.preparationKey]) {
-                    this.last_order_preparation_change[line.preparationKey]["quantity"] =
+                if (this.last_order_preparation_change.lines[line.preparationKey]) {
+                    this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
                         line.get_quantity();
                 } else {
-                    this.last_order_preparation_change[line.preparationKey] = {
+                    this.last_order_preparation_change.lines[line.preparationKey] = {
                         attribute_value_ids: line.attribute_value_ids.map((a) =>
                             a.serialize({ orm: true })
                         ),
@@ -255,11 +257,12 @@ export class PosOrder extends Base {
 
         // Checks whether an orderline has been deleted from the order since it
         // was last sent to the preparation tools. If so we delete it to the changes.
-        for (const [key, change] of Object.entries(this.last_order_preparation_change)) {
+        for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
             if (!this.models["pos.order.line"].getBy("uuid", change.uuid)) {
-                delete this.last_order_preparation_change[key];
+                delete this.last_order_preparation_change.lines[key];
             }
         }
+        this.last_order_preparation_change.generalNote = this.general_note;
     }
 
     hasSkippedChanges() {
@@ -452,6 +455,9 @@ export class PosOrder extends Base {
             if (this.assert_editable()) {
                 lineToRemove.delete();
             }
+        }
+        if (!this.lines.length) {
+            this.general_note = ""; // reset general note on empty order
         }
         this.select_orderline(this.get_last_orderline());
         return true;
@@ -1063,10 +1069,11 @@ export class PosOrder extends Base {
                 amount: formatCurrency(pl.get_amount()),
             })),
             change: this.get_change() && formatCurrency(this.get_change()),
+            generalNote: this.general_note || "",
         };
     }
     getFloatingOrderName() {
-        return this.note || this.tracking_number.toString() || "";
+        return this.floating_order_name || this.tracking_number.toString() || "";
     }
 
     sortBySequenceAndCategory(a, b) {

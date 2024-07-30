@@ -205,13 +205,13 @@ export function clickInternalNoteButton() {
         },
         {
             isActive: ["mobile"],
-            trigger: controlButtonTrigger("Internal Note"),
+            trigger: controlButtonTrigger("Kitchen Note"),
             run: "click",
         },
         {
             isActive: ["desktop"],
             content: "click Internal Note button",
-            trigger: controlButtonTrigger("Internal Note"),
+            trigger: controlButtonTrigger("Kitchen Note"),
             run: "click",
         },
     ];

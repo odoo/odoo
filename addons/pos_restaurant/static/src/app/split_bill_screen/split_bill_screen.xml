@@ -15,7 +15,7 @@
 
                 <div class="main d-flex flex-column flex-lg-row flex-grow-1 gap-2 p-2 overflow-hidden">
                     <div class="flex-grow-1 w-100 w-lg-50 me-0 me-lg-2 rounded-3 bg-view overflow-auto">
-                        <OrderWidget lines="orderlines" t-slot-scope="scope">
+                        <OrderWidget lines="orderlines" t-slot-scope="scope" generalNote="currentOrder.general_note or ''">
                             <t t-set="line" t-value="scope.line" />
                             <Orderline line="getLineData(line)"
                                 t-on-click="() => this.onClickLine(line)"

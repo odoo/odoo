@@ -6,11 +6,13 @@ export const changesToOrder = (
 ) => {
     const toAdd = [];
     const toRemove = [];
-    const changes = !cancelled
-        ? Object.values(getOrderChanges(order, skipped, orderPreparationCategories).orderlines)
-        : Object.values(order.last_order_preparation_change);
 
-    for (const lineChange of changes) {
+    const orderChanges = getOrderChanges(order, skipped, orderPreparationCategories);
+    const linesChanges = !cancelled
+        ? Object.values(orderChanges.orderlines)
+        : Object.values(order.last_order_preparation_change.lines);
+
+    for (const lineChange of linesChanges) {
         if (lineChange["quantity"] > 0 && !cancelled) {
             toAdd.push(lineChange);
         } else {
@@ -19,7 +21,7 @@ export const changesToOrder = (
         }
     }
 
-    return { new: toAdd, cancelled: toRemove };
+    return { new: toAdd, cancelled: toRemove, generalNote: orderChanges.generalNote };
 };
 
 /**
@@ -30,7 +32,7 @@ export const changesToOrder = (
  */
 export const getOrderChanges = (order, skipped = false, orderPreparationCategories) => {
     const prepaCategoryIds = orderPreparationCategories;
-    const oldChanges = order.last_order_preparation_change;
+    const oldChanges = order.last_order_preparation_change.lines;
     const changes = {};
     let changesCount = 0;
     let changeAbsCount = 0;
@@ -82,7 +84,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     }
     // Checks whether an orderline has been deleted from the order since it
     // was last sent to the preparation tools. If so we add this to the changes.
-    for (const [lineKey, lineResume] of Object.entries(order.last_order_preparation_change)) {
+    for (const [lineKey, lineResume] of Object.entries(order.last_order_preparation_change.lines)) {
         if (!order.models["pos.order.line"].getBy("uuid", lineResume["uuid"])) {
             if (!changes[lineKey]) {
                 changes[lineKey] = {
@@ -101,10 +103,17 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
         }
     }
 
-    return {
+    const result = {
         nbrOfSkipped: skipCount,
         nbrOfChanges: changeAbsCount,
         orderlines: changes,
         count: changesCount,
     };
+
+    // if `generalNote` key is present, then there is a change in the generalNote
+    const lastGeneralNote = order.last_order_preparation_change.generalNote;
+    if (lastGeneralNote !== order.general_note) {
+        result.generalNote = order.general_note;
+    }
+    return result;
 };
