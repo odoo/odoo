@@ -1150,7 +1150,7 @@ class AccountPayment(models.Model):
         self.move_id.button_cancel()
 
     def button_request_cancel(self):
-        self.move_id.button_request_cancel()
+        return self.move_id.button_request_cancel()
 
     def action_draft(self):
         ''' posted -> draft '''
