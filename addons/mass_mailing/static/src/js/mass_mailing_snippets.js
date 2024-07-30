@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import options from "@web_editor/js/editor/snippets.options.legacy";
 import { loadImage } from "@web_editor/js/editor/image_processing";
+import { registerSnippetAdditionSelector } from "@web_editor/js/editor/snippets.registry";
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 import weUtils from "@web_editor/js/common/utils";
 import {
@@ -22,6 +23,8 @@ import { registerMassMailingOption } from "./snippets.registry";
 //--------------------------------------------------------------------------
 // Options
 //--------------------------------------------------------------------------
+
+registerSnippetAdditionSelector(".o_mail_snippet_general");
 
 // Adding compatibility for the outlook compliance of mailings.
 // Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42

@@ -74,7 +74,9 @@ const contentAdditionSelectors = [
     ".s_add_to_cart",
     ".s_online_appointment",
     ".o_snippet_drop_in_only",
-    ".s_image"
+    ".s_image",
+    ".s_cta_badge",
+    ".s_accordion",
 ];
 registerOption(CONTENT_ADDITION_OPTION_ID, {
     _selector: contentAdditionSelectors.join(", "),

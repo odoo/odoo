@@ -174,6 +174,8 @@ registerWebsiteOption("SnippetPopup", {
     selector: ".s_popup",
     exclude: "#website_cookies_bar",
     target: ".modal",
+    // TODO: Should this be a snippet addition selector? (see
+    //  registerSnippetAdditionSelector)
     dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
 });
 
