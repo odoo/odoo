@@ -55,7 +55,7 @@
                             <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                                 <t t-out="category.name"/>
                                 <span t-if="len(searched_category_tags)" t-out="len(searched_category_tags)"
-                                    class="badge rounded-pill text-bg-primary ms-1"/>
+                                    class="badge bg-primary ms-1"/>
                             </a>
                             <div class="dropdown-menu">
                                 <span t-att-data-post="'/event?%s' % keep_query('*', tags=str((search_tags - searched_category_tags).ids), prevent_redirect=True)"
@@ -136,7 +136,7 @@
 <template id="searched_tags" name="Searched tags">
     <div class="d-lg-none d-flex align-items-center flex-wrap gap-2 mt-2">
         <t t-foreach="search_tags" t-as="tag">
-            <span t-attf-class="d-inline-flex align-items-baseline rounded border ps-2 #{'o_badge_color_%s' % tag.color if tag.color else ''}">
+            <span t-attf-class="o_filter_tag d-inline-flex align-items-baseline rounded ps-2 #{'o_color_%s' % tag.color if tag.color else ''}">
                 <t t-out="tag.display_name"/>
                 <span t-att-data-post="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids), prevent_redirect=True)"
                     class="post_link cursor-pointer btn border-0 py-1 px-2 text-reset opacity-75-hover">
@@ -161,7 +161,7 @@
                         <t t-set="is_active" t-value="searches.get('date') == date[0]"/>
                         <a t-att-href="keep('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
                             <t t-out="date[1]"/>
-                            <span t-if="date[3]" t-out="date[3]" t-attf-class="badge rounded-pill ms-3 #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
+                            <span t-if="date[3]" t-out="date[3]" t-attf-class="badge ms-3 text-bg-primary"/>
                         </a>
                     </t>
                 </t>
@@ -191,7 +191,7 @@
                                         <input class="form-check-input pe-none" type="radio" t-attf-name="#{date[1]}" t-att-checked="is_active"/>
                                         <label class="form-check-label" t-attf-for="#{date[1]}" t-out="date[1]"/>
                                     </div>
-                                    <span t-if="date[3]" t-out="date[3]" class="badge rounded-pill text-bg-light"/>
+                                    <span t-if="date[3]" t-out="date[3]" class="badge text-bg-primary"/>
                                 </a>
                             </li>
                         </t>
@@ -216,14 +216,14 @@
                         <t t-set="is_active" t-value="searches.get('country') == str(country['country_id'] and country['country_id'][0])"/>
                         <a t-att-href="keep('/event', country=country['country_id'][0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}" t-att-title="country['country_id'][1]">
                             <t t-out="country['country_id'][1]"/>
-                            <span t-out="country['country_id_count']" t-attf-class="badge rounded-pill ms-3 #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
+                            <span t-out="country['country_id_count']" t-attf-class="badge ms-3 text-bg-primary"/>
                         </a>
                     </t>
                     <t t-else="">
                         <t t-set="is_active" t-value="searches.get('country') == 'online'"/>
                         <a t-att-href="keep('/event', country='online')" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}" title="Online Events">
                             <span>Online Events</span>
-                            <span t-out="country['country_id_count']" t-attf-class="badge rounded-pill ms-3 #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
+                            <span t-out="country['country_id_count']" t-attf-class="badge ms-3 text-bg-primary"/>
                         </a>
                     </t>
                 </t>
@@ -253,7 +253,7 @@
                                         <input class="form-check-input pe-none" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="is_active"/>
                                         <label class="form-check-label" t-attf-for="#{country['country_id'][1]}" t-out="country['country_id'][1]"/>
                                     </div>
-                                    <span t-out="country['country_id_count']" class="badge rounded-pill text-bg-light ms-auto"/>
+                                    <span t-out="country['country_id_count']" class="badge text-bg-primary ms-auto"/>
                                 </a>
                             </t>
                             <t t-else="">
@@ -263,7 +263,7 @@
                                         <input class="form-check-input pe-none" type="radio" name="Online Events" t-att-checked="is_active"/>
                                         <label class="form-check-label" for="Online Events">Online Events</label>
                                     </div>
-                                    <span t-out="country['country_id_count']" class="badge rounded-pill text-bg-light ms-auto"/>
+                                    <span t-out="country['country_id_count']" class="badge rounded-pill text-bg-primary ms-auto"/>
                                 </a>
                             </t>
                         </li>
@@ -356,7 +356,7 @@
                             <div class="d-flex flex-wrap gap-1 small">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
                                     <span t-if="tag.color"
-                                        t-attf-class="badge rounded-pill #{'o_badge_color_%s' % tag.color if tag.color else 'text-bg-light'}">
+                                        t-attf-class="badge #{'o_color_%s' % tag.color if tag.color else 'text-bg-light'}">
                                         <t t-out="tag.name"/>
                                     </span>
                                 </t>

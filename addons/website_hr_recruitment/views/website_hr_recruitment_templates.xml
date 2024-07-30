@@ -58,7 +58,7 @@
                                         <div class="card-body p-4">
                                             <div class="mt0 d-flex justify-content-between align-items-center">
                                                 <h3 t-field="job.name"/>
-                                                <span t-if="not job.website_published" class="badge bg-danger mb8">unpublished</span>
+                                                <span t-if="not job.website_published" class="badge text-bg-danger mb8">unpublished</span>
                                             </div>
                                             <h5 t-if="job.no_of_recruitment >= 1" class="text-reset">
                                                 <span t-field="job.no_of_recruitment"/> open positions
@@ -721,7 +721,7 @@
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
         <t t-set="non_country_params" t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}"/>
         <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
-            <button type="button" class="btn btn-outline-primary dropdown-toggle w-100" data-bs-toggle="dropdown" id="countriesDropdown">
+            <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="countriesDropdown">
                 <i class="fa fa-map-marker"/>
                 <t t-if="country_id" t-out="country_id.name"/>
                 <t t-elif="is_remote">Remote</t>
@@ -731,21 +731,21 @@
                 <a t-attf-href="/jobs?all_countries=1#{non_country_params}"
                     t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if country_id or is_remote else ' active'}">
                     All Countries
-                    <span t-attf-class="badge rounded-pill#{' bg-primary' if country_id or is_remote else ' bg-light text-primary'} ms-2" t-out="count_per_country.get('all', '0')"/>
+                    <span t-attf-class="badge text-bg-primary ms-2" t-out="count_per_country.get('all', '0')"/>
                 </a>
                 <t t-foreach="countries" t-as="country">
                     <t t-if="country">
                         <a t-attf-href="/jobs?country_id=#{country.id}#{non_country_params}"
                             t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if country_id and country_id.id == country.id else ''}">
                             <t t-out="country.name"/>
-                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if country_id and country_id.id == country.id else ' bg-primary'} ms-2" t-out="count_per_country.get(country, '0')"/>
+                            <span t-attf-class="badge #{' bg-light text-primary' if country_id and country_id.id == country.id else ' text-bg-primary'} ms-2" t-out="count_per_country.get(country, '0')"/>
                         </a>
                     </t>
                     <t t-else="">
                         <a t-attf-href="/jobs?is_remote=1#{current_department_param}#{current_employment_type_param}"
                             t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_remote else ''}">
                             Remote
-                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if is_remote else ' bg-primary'} ms-2" t-out="count_per_country.get(None, '0')"/>
+                            <span t-attf-class="badge #{' bg-light text-primary' if is_remote else ' text-bg-primary'} ms-2" t-out="count_per_country.get(None, '0')"/>
                         </a>
                     </t>
                 </t>
@@ -759,7 +759,7 @@
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
         <t t-set="non_department_params" t-valuef="#{current_country_param}#{current_office_param}#{current_employment_type_param}"/>
         <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
-            <button type="button" class="btn btn-outline-primary dropdown-toggle w-100" data-bs-toggle="dropdown" id="departmentsDropdown">
+            <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="departmentsDropdown">
                 <i class="fa fa-sitemap"/>
                 <t t-if="department_id" t-out="department_id.name"/>
                 <t t-elif="is_other_department">Others</t>
@@ -769,21 +769,21 @@
                 <a t-attf-href="/jobs?all_departments=1#{non_department_params}"
                     t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if department_id or is_other_department else ' active'}">
                     All Departments
-                    <span t-attf-class="badge rounded-pill#{' bg-primary' if department_id or is_other_department else ' bg-light text-primary'} ms-2" t-out="count_per_department.get('all', '0')"/>
+                    <span t-attf-class="badge text-bg-primary ms-2" t-out="count_per_department.get('all', '0')"/>
                 </a>
                 <t t-foreach="departments" t-as="department">
                     <t t-if="department">
                         <a t-attf-href="/jobs?department_id=#{department.id}#{non_department_params}"
                             t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if department_id and department_id.id == department.id else ''}">
                             <t t-out="department.name"/>
-                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if department_id and department_id.id == department.id else ' bg-primary'} ms-2" t-out="count_per_department.get(department, '0')"/>
+                            <span t-attf-class="badge #{' text-bg-primary' if department_id and department_id.id == department.id else ' text-bg-primary'} ms-2" t-out="count_per_department.get(department, '0')"/>
                         </a>
                     </t>
                     <t t-else="">
                         <a t-attf-href="/jobs?is_other_department=1#{non_department_params}"
                             t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if is_other_department else ''}">
                             Others
-                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if is_other_department else ' bg-primary'} ms-2" t-out="count_per_department.get(None, '0')"/>
+                            <span t-attf-class="badge #{' text-bg-primary' if is_other_department else ' text-bg-primary'} ms-2" t-out="count_per_department.get(None, '0')"/>
                         </a>
                     </t>
                 </t>
@@ -797,7 +797,7 @@
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
         <t t-set="non_location_params" t-valuef="#{current_department_param}#{current_employment_type_param}"/>
         <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
-            <button type="button" class="btn btn-outline-primary dropdown-toggle w-100" data-bs-toggle="dropdown" id="officesDropdown">
+            <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="officesDropdown">
                 <i class="fa fa-building"/>
                 <t t-if="office_id">
                     <span t-if="len(office_id.contact_address) &lt;= 5" class="fst-italic">No address specified</span>
@@ -810,7 +810,7 @@
                 <a t-attf-href="/jobs?#{'all_countries=1' if is_remote else current_country_path}#{non_location_params}"
                     t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if office_id or is_remote else ' active'}">
                     All Offices
-                    <span t-attf-class="badge rounded-pill#{' bg-primary' if office_id or is_remote else ' bg-light text-primary'} ms-2" t-out="count_per_office.get('all', '0')"/>
+                    <span t-attf-class="badge text-bg-primary ms-2" t-out="count_per_office.get('all', '0')"/>
                 </a>
                 <t t-foreach="offices" t-as="thisoffice">
                     <t t-if="thisoffice">
@@ -820,14 +820,14 @@
                             <t t-else="">
                                 <t t-out="thisoffice.city"/><t t-if="thisoffice.country_id">, <t t-out="thisoffice.country_id.name"/></t>
                             </t>
-                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if office_id and office_id.id == thisoffice.id else ' bg-primary'} ms-2" t-out="count_per_office.get(thisoffice, '0')"/>
+                            <span t-attf-class="badge #{' text-bg-primary' if office_id and office_id.id == thisoffice.id else ' text-bg-primary'} ms-2" t-out="count_per_office.get(thisoffice, '0')"/>
                         </a>
                     </t>
                     <t t-else="">
                         <a t-attf-href="/jobs?is_remote=1#{non_location_params}"
                             t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_remote else ''}">
                             Remote
-                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if is_remote else ' bg-primary'} ms-2" t-out="count_per_office.get(None, '0')"/>
+                            <span t-attf-class="badge #{' text-bg-primary' if is_remote else ' text-bg-primary'} ms-2" t-out="count_per_office.get(None, '0')"/>
                         </a>
                     </t>
                 </t>
@@ -841,7 +841,7 @@
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
         <t t-set="non_employment_type_params" t-valuef="#{current_country_param}#{current_department_param}#{current_office_param}"/>
         <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
-            <button type="button" class="btn btn-outline-primary dropdown-toggle w-100" data-bs-toggle="dropdown" id="officesDropdown">
+            <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="officesDropdown">
                 <i class="fa fa-suitcase"/>
                 <t t-if="contract_type_id and 'name' in contract_type_id" t-out="contract_type_id.name"/>
                 <t t-elif="is_untyped">Unspecified type</t>
@@ -851,14 +851,14 @@
                 <a t-attf-href="/jobs?all_employment_types=1#{non_employment_type_params}"
                     t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if contract_type_id or is_untyped else ' active'}">
                     All Types
-                    <span t-attf-class="badge rounded-pill#{' bg-primary' if contract_type_id else ' bg-light text-primary'} ms-2" t-out="count_per_employment_type.get('all', '0')"/>
+                    <span t-attf-class="badge text-bg-primary ms-2" t-out="count_per_employment_type.get('all', '0')"/>
                 </a>
                 <t t-foreach="employment_types" t-as="employment_type">
                     <t t-if="employment_type">
                         <a t-attf-href="/jobs?contract_type_id=#{employment_type.id}#{non_employment_type_params}"
                             t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if contract_type_id and contract_type_id == employment_type.id else ''}">
                             <t t-out="employment_type.name"/>
-                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if contract_type_id and contract_type_id == employment_type.id else ' bg-primary'} ms-2" t-out="count_per_employment_type.get(employment_type, '0')"/>
+                            <span t-attf-class="badge #{' text-bg-primary' if contract_type_id and contract_type_id == employment_type.id else ' text-bg-primary'} ms-2" t-out="count_per_employment_type.get(employment_type, '0')"/>
                         </a>
                     </t>
                 </t>
@@ -866,7 +866,7 @@
                     <a t-attf-href="/jobs?is_untyped=1#{non_employment_type_params}"
                         t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_untyped else ''}">
                         Unspecified type
-                        <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if is_remote else ' bg-primary'} ms-2" t-out="count_per_employment_type.get(None, '0')"/>
+                        <span t-attf-class="badge #{' text-bg-primary' if is_remote else ' text-bg-primary'} ms-2" t-out="count_per_employment_type.get(None, '0')"/>
                     </a>
                 </t>
             </div>

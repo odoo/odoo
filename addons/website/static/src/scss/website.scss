@@ -606,6 +606,73 @@ font[class*='bg-'] {
     }
 }
 
+// Badges
+.badge, .o_filter_tag {
+    background: var(--background-color, var(--bg-light)) !important;
+    color: var(--color, var(--color-light)) !important;
+    border: $border-width solid var(--bg-solid) !important;
+
+    // Similarly to list-group-item-x and alert-* classes, override text-bg-*
+    // classes behavior when used on badges.
+    @each $-color, $-value in $theme-colors {
+        &.text-bg-#{$-color} {
+            --bg-light: #{tint-color($-value, 90%)};
+            --color-light: #{increase-contrast($-value, tint-color($-value, 90%))};
+            --bg-solid: #{$-value};
+            --bg-solid-contrast: #{color-contrast($-value, $min-contrast-ratio: 3)};
+        }
+
+        // Restore old badge design (needed as an exit door for some contexts)
+        //(e.g cart_quantity, dropdown toggle.badge)
+        &.bg-#{$-color} {
+            --bg-light: #{$-value};
+            --color-light: #{color-contrast($-value, $min-contrast-ratio: 3)};
+            --bg-solid: var(--bg-light);
+            --bg-solid-contrast: var(--color-light);
+        }
+    }
+
+    @at-root a.badge:hover, a:not(.dropdown-item):hover > .badge, .o_badge_clickable.badge:hover {
+        --background-color: var(--bg-solid);
+        --color: var(--bg-solid-contrast);
+
+        text-decoration: none;
+    }
+
+    .btn {
+        --btn-color: var(--color, var(--color-light));
+    }
+}
+
+@for $-size from 1 through length($o-colors) {
+    .o_color_#{$-size - 1} {
+       // Compute background-color and text-color values for different uses,
+       // allowing to apply the value from colorfield on desired UI elements.
+       // this set of variables covers all the possible scenarios.
+
+        $-color: nth($o-colors, $-size);
+
+        $-is-website-palette-dark: color-contrast($body-color) == $color-contrast-dark;
+        $-bg-lightness-adjusted: if($-is-website-palette-dark, -40%, 0%);
+
+        $-bg-solid: $-color;
+        $-bg-solid-contrast: color-contrast($-bg-solid, $min-contrast-ratio: 3);
+
+        $-bg-light: if($-is-website-palette-dark, adjust-color($-color, $lightness: $-bg-lightness-adjusted, $saturation: 5%), tint-color($-bg-solid, 90%));
+        $-color-light: increase-contrast($-bg-solid, $-bg-light);
+
+        $-bg-light-contrast: color-contrast($-bg-light, $min-contrast-ratio: 3);
+
+        // Print CSS variables.
+        --bg-solid: #{$-bg-solid};
+        --bg-solid-contrast: #{$-bg-solid-contrast};
+
+        --bg-light: #{$-bg-light};
+        --color-light: #{$-color-light};
+
+        --bg-light-contrast: #{$-bg-light-contrast};
+    }
+}
 
 // Background Images
 .oe_img_bg {
