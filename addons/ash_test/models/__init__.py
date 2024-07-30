@@ -1,1 +1,2 @@
-from . import models
+from . import product_template
+from . import stock_picking
