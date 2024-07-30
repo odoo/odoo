@@ -14871,4 +14871,33 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["web_save"]);
         }
     );
+
+    QUnit.test("onchange should be triggered if the value of a field is set to its default value", async function (assert) {
+        let edited = false;
+        serverData.models.partner.onchanges = {
+            qux(record) {
+                if (edited) {
+                    record.display_name = "new value";
+                }
+            }
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form>
+                <field name="display_name" required="1"/>
+                <field name="qux"/>
+            </form>`,
+        });
+
+        edited = true;
+        await editInput(target, "[name='qux'] input", 0);
+
+        assert.strictEqual(
+            target.querySelector("[name='display_name'] input").value,
+            "new value"
+        );
+    });
 });
