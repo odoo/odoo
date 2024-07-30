@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_repr, float_round, float_compare
+from odoo.tools import clean_context, float_is_zero, float_repr, float_round, float_compare
 from odoo.exceptions import ValidationError
 from collections import defaultdict
 from datetime import datetime
@@ -63,7 +63,7 @@ class ProductTemplate(models.Model):
             raise UserError(_("The action leads to the creation of a journal entry, for which you don't have the access rights."))
         # Create the account moves.
         if move_vals_list:
-            account_moves = self.env['account.move'].sudo().create(move_vals_list)
+            account_moves = self.env['account.move'].sudo().with_context(clean_context(self._context)).create(move_vals_list)
             account_moves._post()
         return res
 
@@ -317,7 +317,7 @@ class ProductProduct(models.Model):
             }
             am_vals_list.append(move_vals)
 
-        account_moves = self.env['account.move'].sudo().create(am_vals_list)
+        account_moves = self.env['account.move'].sudo().with_context(clean_context(self._context)).create(am_vals_list)
         if account_moves:
             account_moves._post()
 
@@ -544,7 +544,7 @@ class ProductProduct(models.Model):
                 'move_type': 'entry',
             })
             vacuum_pairs_to_reconcile.append((vacuum_svl, svl_to_vacuum))
-        new_account_moves = AccountMove.create(account_move_vals)
+        new_account_moves = AccountMove.with_context(clean_context(self._context)).create(account_move_vals)
         new_account_moves._post()
         for new_account_move, (vacuum_svl, svl_to_vacuum) in zip(new_account_moves, vacuum_pairs_to_reconcile):
             account = svls_accounts[svl_to_vacuum.id]['stock_output']
@@ -924,7 +924,7 @@ class ProductCategory(models.Model):
             raise UserError(_("The action leads to the creation of a journal entry, for which you don't have the access rights."))
         # Create the account moves.
         if move_vals_list:
-            account_moves = self.env['account.move'].sudo().create(move_vals_list)
+            account_moves = self.env['account.move'].sudo().with_context(clean_context(self._context)).create(move_vals_list)
             account_moves._post()
         return res
 
