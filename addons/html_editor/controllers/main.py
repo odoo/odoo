@@ -1,5 +1,6 @@
 import contextlib
 import re
+import logging
 import uuid
 from base64 import b64decode
 from datetime import datetime
@@ -7,6 +8,8 @@ import werkzeug.exceptions
 import werkzeug.urls
 import requests
 from os.path import join as opj
+import random
+import math
 
 from odoo import _, http, tools, SUPERUSER_ID
 from odoo.addons.html_editor.tools import get_video_url_data
@@ -15,9 +18,12 @@ from odoo.http import request
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.addons.iap.tools import iap_tools
+from odoo.addons.mail.tools import jwt, discuss
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
+
+logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 
@@ -528,9 +534,68 @@ class HTML_Editor(http.Controller):
         except AccessError:
             raise AccessError(_("Oops, it looks like our AI is unreachable!"))
 
-    @http.route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='json', auth="user")
-    def get_ice_servers(self):
-        return request.env['mail.ice.server']._get_ice_servers()
+    @http.route("/html_editor/get_collab_infos", type='json', auth="user")
+    def get_collab_infos(self, model_name, field_name, res_id, peer_id):
+        document = request.env[model_name].browse([res_id])
+        document.check_access_rights('read')
+        document.check_field_access_rights('read', [field_name])
+        document.check_access_rule('read')
+        document.check_access_rights('write')
+        document.check_field_access_rights('write', [field_name])
+        document.check_access_rule('write')
+
+        result = {
+            'ice_servers': request.env['mail.ice.server']._get_ice_servers(),
+        }
+
+        sfu_server_url = discuss.get_sfu_url(request.env)
+        if not sfu_server_url:
+            return result
+        channel_id = f"editor_collaboration:{model_name}:{field_name}:{int(res_id)}"
+        key = discuss.get_sfu_key(request.env)
+
+        if not key:
+            return result
+
+        json_web_token = jwt.sign(
+            # issuer
+            {"iss": f"{document.get_base_url()}:{channel_id}"},
+
+            key=key,
+            ttl=30,
+            algorithm=jwt.Algorithm.HS256,
+        )
+
+        response = None
+        try:
+            response = requests.get(
+                sfu_server_url + "/v1/channel?webRTC=false",
+                headers={"Authorization": "jwt " + json_web_token},
+                timeout=3,
+            )
+            response.raise_for_status()
+        except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            logger.warning("Failed to obtain a channel from the SFU server, user will stay in p2p")
+
+        if response and response.ok:
+            response_dict = response.json()
+
+            channel_uuid = response_dict["uuid"]
+            server_url = response_dict["url"]
+
+            session_id = f"{math.floor(random.random() * math.pow(2, 52))}:{peer_id}"
+            claims = {
+                "sfu_channel_uuid": channel_uuid,
+                "session_id": session_id,
+            }
+            json_web_token = jwt.sign(claims, key=key, ttl=60 * 60 * 8, algorithm=jwt.Algorithm.HS256)  # 8 hours
+
+            result['sfu_config'] = {
+                'url': server_url,
+                'json_web_token': json_web_token,
+            }
+
+        return result
 
     @http.route(["/web_editor/bus_broadcast", "/html_editor/bus_broadcast"], type="json", auth="user")
     def bus_broadcast(self, model_name, field_name, res_id, bus_data):

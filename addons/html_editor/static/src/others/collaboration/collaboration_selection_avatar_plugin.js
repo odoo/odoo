@@ -23,7 +23,7 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
     static dependencies = ["history", "position", "local-overlay", "collaboration_odoo"];
     /** @type { (p: CollaborationSelectionAvatarPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        handleCollaborationNotification: p.handleCollaborationNotification.bind(p),
+        handleCollaborationNotification: { remove_peer: p.handleRemovePeer.bind(p) },
         getCollaborationPeerMetadata: () => ({ avatarUrl: p.avatarUrl }),
         onExternalHistorySteps: p.refreshSelection.bind(p),
         layoutGeometryChange: p.refreshSelection.bind(p),
@@ -42,12 +42,9 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
             browser.location.origin
         }/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(user.userId)}`;
     }
-    handleCollaborationNotification({ notificationName, notificationPayload }) {
-        switch (notificationName) {
-            case "ptp_remove":
-                this.selectionInfos.delete(notificationPayload);
-                this.refreshSelection();
-        }
+    handleRemovePeer(fromPeerId) {
+        this.selectionInfos.delete(fromPeerId);
+        this.refreshSelection();
     }
 
     /**

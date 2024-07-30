@@ -33,15 +33,15 @@ import { setupEditor } from "./editor";
  * @property { number } focusOffset
  */
 
-function historyMissingParentSteps(peerInfos, peerInfo, { step, fromStepId }) {
-    const missingSteps = peerInfos[step.peerId].collaborationPlugin.historyGetMissingSteps({
+function historyMissingParentSteps(peerInfos, peerInfo, { step, fromStepId, originPeerId }) {
+    const missingSteps = peerInfos[originPeerId].collaborationPlugin.historyGetMissingSteps({
         fromStepId,
         toStepId: step.id,
     });
     if (missingSteps === -1 || !missingSteps.length) {
-        throw new Error("Impossible to get the missing steps.");
+        return false;
     }
-    peerInfo.collaborationPlugin.onExternalHistorySteps(missingSteps.concat([step]));
+    peerInfo.collaborationPlugin.onExternalHistorySteps(missingSteps.concat([step]), originPeerId);
 }
 
 /**
@@ -80,13 +80,15 @@ export const setupMultiEditor = async (spec) => {
                     CollaborationPlugin,
                     class TestHistoryAdapterPlugin extends Plugin {
                         static name = "test-history-adapter";
+                        static resources = () => ({
+                            onExternalMissingParentStep: (params) =>
+                                historyMissingParentSteps(peerInfos, peerInfo, params),
+                        });
+
                         handleCommand(commandId, payload) {
                             switch (commandId) {
                                 case "COLLABORATION_STEP_ADDED":
                                     peerInfo.steps.push(payload);
-                                    break;
-                                case "HISTORY_MISSING_PARENT_STEP":
-                                    historyMissingParentSteps(peerInfos, peerInfo, payload);
                                     break;
                             }
                         }

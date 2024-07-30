@@ -190,7 +190,7 @@ export class HistoryPlugin extends Plugin {
         this.dispatch("HISTORY_RESET_FROM_STEPS");
     }
     makeSnapshotStep() {
-        return {
+        return this.processHistoryStep({
             selection: {
                 anchorNode: undefined,
                 anchorOffset: undefined,
@@ -205,7 +205,7 @@ export class HistoryPlugin extends Plugin {
             })),
             id: this.steps[this.steps.length - 1]?.id || this.generateId(),
             previousStepId: undefined,
-        };
+        });
     }
 
     getHistorySteps() {

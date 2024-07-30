@@ -264,20 +264,20 @@ describe("steps whith no parent in history", () => {
             contentBefore: "<p><x>a[c1}{c1]</x><y>b[c2}{c2]</y><z>c[c3}{c3]</z></p>",
             afterCreate: (peerInfos) => {
                 insert(peerInfos.c1.editor, "d");
-                peerInfos.c2.collaborationPlugin.onExternalHistorySteps([
-                    peerInfos.c1.historyPlugin.steps[1],
-                ]);
+                peerInfos.c2.collaborationPlugin.onExternalHistorySteps(
+                    [peerInfos.c1.historyPlugin.steps[1]],
+                    "c1"
+                );
                 insert(peerInfos.c2.editor, "e");
-                peerInfos.c1.collaborationPlugin.onExternalHistorySteps([
-                    peerInfos.c2.historyPlugin.steps[2],
-                ]);
-                peerInfos.c3.collaborationPlugin.onExternalHistorySteps([
-                    peerInfos.c2.historyPlugin.steps[2],
-                ]);
-                // receive step 1 after step 2
-                peerInfos.c3.collaborationPlugin.onExternalHistorySteps([
-                    peerInfos.c1.historyPlugin.steps[1],
-                ]);
+                peerInfos.c1.collaborationPlugin.onExternalHistorySteps(
+                    [peerInfos.c2.historyPlugin.steps[2]],
+                    "c2"
+                );
+                // The step 1 will be retreived through `HISTORY_MISSING_PARENT_STEP`
+                peerInfos.c3.collaborationPlugin.onExternalHistorySteps(
+                    [peerInfos.c2.historyPlugin.steps[2]],
+                    "c2"
+                );
                 validateSameHistory(peerInfos);
             },
             contentAfter: "<p><x>ad[c1}{c1]</x><y>be[c2}{c2]</y><z>c[c3}{c3]</z></p>",
@@ -289,9 +289,10 @@ describe("steps whith no parent in history", () => {
             contentBefore: "<p><i>a[c1}{c1]</i><b>b[c2}{c2]</b></p>",
             afterCreate: (peerInfos) => {
                 insert(peerInfos.c1.editor, "c");
-                peerInfos.c2.collaborationPlugin.onExternalHistorySteps([
-                    peerInfos.c1.historyPlugin.steps[1],
-                ]);
+                peerInfos.c2.collaborationPlugin.onExternalHistorySteps(
+                    [peerInfos.c1.historyPlugin.steps[1]],
+                    "c1"
+                );
 
                 // Peer 3 connect firt to peer 1 that made a snapshot.
 
@@ -305,21 +306,25 @@ describe("steps whith no parent in history", () => {
                 // In the meantime peer 2 send the step to peer 1
                 insert(peerInfos.c2.editor, "d");
                 insert(peerInfos.c2.editor, "e");
-                peerInfos.c1.collaborationPlugin.onExternalHistorySteps([
-                    peerInfos.c2.historyPlugin.steps[2],
-                ]);
-                peerInfos.c1.collaborationPlugin.onExternalHistorySteps([
-                    peerInfos.c2.historyPlugin.steps[3],
-                ]);
+                peerInfos.c1.collaborationPlugin.onExternalHistorySteps(
+                    [peerInfos.c2.historyPlugin.steps[2]],
+                    "c2"
+                );
+                peerInfos.c1.collaborationPlugin.onExternalHistorySteps(
+                    [peerInfos.c2.historyPlugin.steps[3]],
+                    "c2"
+                );
 
                 // Now peer 2 is connected to peer 3 and peer 2 make a new step.
                 insert(peerInfos.c2.editor, "f");
-                peerInfos.c1.collaborationPlugin.onExternalHistorySteps([
-                    peerInfos.c2.historyPlugin.steps[4],
-                ]);
-                peerInfos.c3.collaborationPlugin.onExternalHistorySteps([
-                    peerInfos.c2.historyPlugin.steps[4],
-                ]);
+                peerInfos.c1.collaborationPlugin.onExternalHistorySteps(
+                    [peerInfos.c2.historyPlugin.steps[4]],
+                    "c2"
+                );
+                peerInfos.c3.collaborationPlugin.onExternalHistorySteps(
+                    [peerInfos.c2.historyPlugin.steps[4]],
+                    "c2"
+                );
             },
             contentAfter: "<p><i>ac[c1}{c1]</i><b>bdef[c2}{c2]</b></p>",
         });

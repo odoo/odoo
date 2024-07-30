@@ -39,13 +39,13 @@ export class CollaborationPlugin extends Plugin {
                 break;
             }
             case "HISTORY_RESET": {
-                this.onHistoryReset();
+                this.resetSnapshots();
                 break;
             }
         }
     }
 
-    externalStepsBuffer = [];
+    externalStepsBuffers = [];
     /** @type { CollaborationPluginConfig['peerId'] } */
     peerId = null;
 
@@ -68,7 +68,7 @@ export class CollaborationPlugin extends Plugin {
     onHistoryClean() {
         this.branchStepIds = [];
     }
-    onHistoryReset() {
+    resetSnapshots() {
         const firstStep = this.shared.getHistorySteps()[0];
         this.snapshots = [{ step: firstStep }];
     }
@@ -124,9 +124,9 @@ export class CollaborationPlugin extends Plugin {
      *
      * @param {Object} newSteps External steps to be applied
      */
-    onExternalHistorySteps(newSteps) {
+    onExternalHistorySteps(newSteps, originPeerId) {
         if (this.postProcessExternalStepsPromise) {
-            this.externalStepsBuffer.push(...newSteps);
+            this.externalStepsBuffers.push([newSteps, originPeerId]);
         }
         this.shared.disableObserver();
         const selection = this.shared.getEditableSelection();
@@ -134,9 +134,13 @@ export class CollaborationPlugin extends Plugin {
         let stepIndex = 0;
         const steps = this.shared.getHistorySteps();
         for (const newStep of newSteps) {
-            // todo: add a test that no 2 HISTORY_MISSING_PARENT_STEP are
-            // called for the same stack.
             const insertIndex = this.getInsertStepIndex(steps, newStep);
+            if (insertIndex === "missingSteps") {
+                if (insertIndex === "missingSteps") {
+                    this.requestMissingSteps(steps, newStep, originPeerId);
+                    return;
+                }
+            }
             if (typeof insertIndex === "undefined") {
                 continue;
             }
@@ -148,10 +152,14 @@ export class CollaborationPlugin extends Plugin {
                 this.postProcessExternalStepsPromise = this.postProcessExternalStepsPromise.then(
                     () => {
                         this.postProcessExternalStepsPromise = undefined;
-                        this.onExternalHistorySteps(this.externalStepsBuffer);
+                        const buffers = this.externalStepsBuffers;
+                        this.externalStepsBuffers = [];
+                        for (const [steps, originId] of buffers) {
+                            this.onExternalHistorySteps(steps, originId);
+                        }
                     }
                 );
-                this.externalStepsBuffer = newSteps.slice(stepIndex);
+                this.externalStepsBuffers.push([newSteps.slice(stepIndex), originPeerId]);
                 break;
             }
         }
@@ -162,12 +170,21 @@ export class CollaborationPlugin extends Plugin {
         }
 
         this.resources.onExternalHistorySteps?.forEach((cb) => cb());
-
-        // todo: ensure that if the selection was not in the editable before the
-        // reset, it remains where it was after applying the snapshot.
-
-        // todo: send a signal for the html_field to inform that the
-        // field is probably dirty
+    }
+    requestMissingSteps(steps, newStep, originPeerId) {
+        const historySteps = steps;
+        let index = historySteps.length - 1;
+        // Get the last known step of the peer.
+        while (index !== 0) {
+            if (historySteps[index].peerId === originPeerId) {
+                break;
+            }
+            index--;
+        }
+        const fromStepId = historySteps[index].id;
+        for (const cb of this.resources.onExternalMissingParentStep || []) {
+            cb({ step: newStep, fromStepId, originPeerId });
+        }
     }
 
     /**
@@ -192,23 +209,7 @@ export class CollaborationPlugin extends Plugin {
         // - the previousStepId is in another history (in case two totally
         //   differents `steps` (but it should not arise)).
         if (index < 0) {
-            const historySteps = steps;
-            let index = historySteps.length - 1;
-            // Get the last known step that we are sure the missing step
-            // peer has. It could either be a step that has the same
-            // peerId or the first step.
-            while (index !== 0) {
-                if (historySteps[index].peerId === newStep.peerId) {
-                    break;
-                }
-                index--;
-            }
-            const fromStepId = historySteps[index].id;
-            this.dispatch("HISTORY_MISSING_PARENT_STEP", {
-                step: newStep,
-                fromStepId: fromStepId,
-            });
-            return;
+            return "missingSteps";
         }
 
         let concurentSteps = [];
@@ -289,8 +290,6 @@ export class CollaborationPlugin extends Plugin {
         // this._handleCommandHint();
         // @todo @phoenix: make the multiselection
         // this.multiselectionRefresh();
-        // @todo @phoenix: check it is still relevant
-        // this.dispatchEvent(new Event("resetFromSteps"));
     }
     postProcessExternalSteps() {
         const postProcessExternalSteps = this.resources["post_process_external_steps"]

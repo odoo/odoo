@@ -15691,6 +15691,8 @@ const SERVER_REQUEST = {
 };
 
 const SERVER_MESSAGE = {
+    /** Signals that the server wants to send a message to all the other members of that channel */
+    BROADCAST: "BROADCAST",
     /** Signals the clients that one of the session in their channel has left. */
     SESSION_LEAVE: "SESSION_LEAVE",
     /**  Signals the clients that the info (talking, mute,...) of one of the session in their channel has changed. */
@@ -15707,6 +15709,8 @@ const CLIENT_REQUEST = {
 };
 
 const CLIENT_MESSAGE = {
+    /** Signals that the client wants to send a message to all the other members of that channel */
+    BROADCAST: "BROADCAST",
     /** Signals that the client wants to change how it consumes a track (like pausing or ending the download) */
     CONSUMPTION_CHANGE: "CONSUMPTION_CHANGE",
     /** Signals that the info (talking, mute,...) of this client has changed. */
@@ -15745,7 +15749,7 @@ const DEFAULT_PRODUCER_OPTIONS = {
  */
 
 /**
- * @typedef {'audio' | 'camera' | 'video' } streamType
+ * @typedef {'audio' | 'camera' | 'screen' } streamType
  */
 
 const SFU_CLIENT_STATE = Object.freeze({
@@ -15859,6 +15863,19 @@ class SfuClient extends EventTarget {
      */
     get state() {
         return this._state;
+    }
+
+    /**
+     * @param message any JSON serializable object
+     */
+    broadcast(message) {
+        this._bus.send(
+            {
+                name: CLIENT_MESSAGE.BROADCAST,
+                payload: message,
+            },
+            { batch: true }
+        );
     }
 
     /**
@@ -16215,7 +16232,7 @@ class SfuClient extends EventTarget {
     /**
      * dispatches an event, intended for the client
      *
-     * @param { "disconnect" | "info_change" | "track" | "error"} name
+     * @param { "disconnect" | "info_change" | "track" | "error" | "broadcast"} name
      * @param [payload]
      * @fires SfuClient#update
      */
@@ -16264,6 +16281,9 @@ class SfuClient extends EventTarget {
      */
     async _handleMessage({ name, payload }) {
         switch (name) {
+            case SERVER_MESSAGE.BROADCAST:
+                this._updateClient("broadcast", payload);
+                break;
             case SERVER_MESSAGE.SESSION_LEAVE:
                 {
                     const { sessionId } = payload;
@@ -16337,7 +16357,7 @@ export { SFU_CLIENT_STATE, SfuClient };
 
 
 export const __info__ = {
-    date: '2024-05-08T07:22:00.423Z',
-    hash: '0f4f216',
+    date: '2024-07-17T06:49:32.246Z',
+    hash: '563d3d7',
     url: 'https://github.com/odoo/sfu',
 };
