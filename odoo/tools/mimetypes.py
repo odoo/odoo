@@ -227,3 +227,14 @@ def get_extension(filename):
 
     # Unknown extension.
     return ''
+
+def fix_filename_extension(filename, mimetype):
+    if mimetypes.guess_type(filename)[0] == mimetype:
+        return filename
+
+    if extension := mimetypes.guess_extension(mimetype):
+        _logger.warning("File %r has an invalid extension for mimetype %r, adding %r", filename, mimetype, extension)
+        return filename + extension
+
+    _logger.warning("File %r has an unknown extension for mimetype %r", filename, mimetype)
+    return filename
