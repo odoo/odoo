@@ -18,7 +18,14 @@ import {
     unload,
     waitFor,
 } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    Deferred,
+    mockDate,
+    mockTimeZone,
+    runAllTimers,
+    tick,
+} from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -1013,6 +1020,31 @@ test(`list view: action button executes action on click with domain selected: co
 
     await contains(`button[name="x"]`).click();
     expect.verifySteps(["search", "doActionButton", "execute_action"]);
+});
+
+test(`list view: press "hotkey" to execute header button action`, async () => {
+    mockService("action", {
+        doActionButton(params) {
+            const { name } = params;
+            expect.step(`execute_action: ${name}`);
+        },
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree>
+                <header>
+                    <button name="toDo" type="object" string="toDo" display="always" data-hotkey="a"/>
+                </header>
+                <field name="foo"/>
+            </tree>
+        `,
+    });
+    press(["alt", "a"]);
+    await tick();
+    expect.verifySteps(["execute_action: toDo"]);
 });
 
 test(`column names (noLabel, label, string and default)`, async () => {
