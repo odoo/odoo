@@ -197,7 +197,7 @@ class TranslationToolsTestCase(BaseCase):
         source = """<t t-name="stuff">
                         <ul class="nav navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link oe_menu_leaf" href="/web#menu_id=42&amp;action=54">
+                                <a class="nav-link oe_menu_leaf" href="/odoo/action-54?menu_id=42">
                                     <span class="oe_menu_text">Blah</span>
                                 </a>
                             </li>
