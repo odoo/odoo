@@ -123,7 +123,7 @@ class PosOrder(models.Model):
         """
         order = order['data']
         pos_session = self.env['pos.session'].browse(order['pos_session_id'])
-        if pos_session.state == 'closing_control' or pos_session.state == 'closed':
+        if not pos_session.exists() or pos_session.state == 'closing_control' or pos_session.state == 'closed':
             order['pos_session_id'] = self._get_valid_session(order).id
 
         pos_order = False
