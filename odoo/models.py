@@ -3130,7 +3130,9 @@ class BaseModel(metaclass=MetaModel):
         # We don't forbid reading inactive/non-existing languages,
         langs = set(langs or [l[0] for l in self.env['res.lang'].get_installed()])
         val_en = self.with_context(lang='en_US')[field_name]
-        if not callable(field.translate):
+        if not field.translate:
+            translations = []
+        elif field.translate is True:
             translations = [{
                 'lang': lang,
                 'source': val_en,
