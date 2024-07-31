@@ -317,8 +317,12 @@ class AccountJournal(models.Model):
         method_information_mapping = results['method_information_mapping']
         providers_per_code = results['providers_per_code']
 
-        # Compute the candidates for each journal.
-        for journal in self:
+        journal_bank_cash = self.filtered(lambda j: j.type in ('bank', 'cash'))
+        journal_other = self - journal_bank_cash
+        journal_other.available_payment_method_ids = False
+
+        # Compute the candidates for each bank/cash journal.
+        for journal in journal_bank_cash:
             commands = [Command.clear()]
             company = journal.company_id
 
@@ -334,12 +338,11 @@ class AccountJournal(models.Model):
                             protected_provider_ids.add(line.payment_provider_id.id)
 
             for pay_method in pay_methods:
-                values = method_information_mapping[pay_method.id]
-
-                # Get the domain of the journals on which the current method is usable.
-                method_domain = pay_method._get_payment_method_domain(pay_method.code)
-                if not journal.filtered_domain(method_domain):
+                # Check the partial domain of the payment method to make sure the type matches the current journal
+                if not journal._is_payment_method_available(pay_method.code, complete_domain=False):
                     continue
+
+                values = method_information_mapping[pay_method.id]
 
                 if values['mode'] == 'unique':
                     # 'unique' are linked to a single journal per company.
@@ -1007,10 +1010,15 @@ class AccountJournal(models.Model):
         else:
             return self.outbound_payment_method_line_ids
 
-    def _is_payment_method_available(self, payment_method_code):
+    def _is_payment_method_available(self, payment_method_code, complete_domain=True):
         """ Check if the payment method is available on this journal. """
         self.ensure_one()
-        return self.filtered_domain(self.env['account.payment.method']._get_payment_method_domain(payment_method_code))
+        method_domain = self.env['account.payment.method']._get_payment_method_domain(
+            code=payment_method_code,
+            with_country=complete_domain,
+            with_currency=complete_domain,
+        )
+        return self.filtered_domain(method_domain)
 
     def _process_reference_for_sale_order(self, order_reference):
         '''
