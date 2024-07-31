@@ -30,7 +30,7 @@ class EventRegistration(models.Model):
 
     # event
     event_id = fields.Many2one(
-        'event.event', string='Event', required=True)
+        'event.event', string='Event', required=True, tracking=7)
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Ticket Type', ondelete='restrict')
     active = fields.Boolean(default=True)

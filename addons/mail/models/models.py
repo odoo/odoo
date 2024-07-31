@@ -145,16 +145,36 @@ class BaseModel(models.AbstractModel):
         for col_name, _sequence in fields_track_info:
             if col_name not in initial_values:
                 continue
-            initial_value, new_value = initial_values[col_name], self[col_name]
+            initial_value = initial_values[col_name]
+            new_value = (  # the properties checks are done on read
+                field.convert_to_read(self[col_name], self)
+                if (field := self._fields[col_name]).type == 'properties'
+                else self[col_name]
+            )
             if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
                 continue
 
             updated.add(col_name)
+
+            if self._fields[col_name].type == "properties":
+                definition_record_field = self._fields[col_name].definition_record
+                if (definition_record_field not in tracked_fields
+                    or self[definition_record_field] == initial_values[definition_record_field]):
+                    # track the change only if the parent changed
+                    continue
+
+                tracking_value_ids.extend(
+                    [0, 0, self.env['mail.tracking.value']._create_tracking_values_property(
+                        property_, col_name, tracked_fields[col_name], self,
+                    )]
+                    for property_ in initial_value[::-1]
+                    if property_['type'] != 'separator' and property_.get('value')
+                )
+                continue
+
             tracking_value_ids.append(
                 [0, 0, self.env['mail.tracking.value']._create_tracking_values(
-                    initial_value, new_value,
-                    col_name, tracked_fields[col_name],
-                    self
+                    initial_value, new_value, col_name, tracked_fields[col_name], self
                 )])
 
         return updated, tracking_value_ids
@@ -177,13 +197,18 @@ class BaseModel(models.AbstractModel):
         """ Find tracking sequence of a given field, given their name. Current
         parameter 'tracking' should be an integer, but attributes with True
         are still supported; old naming 'track_sequence' also. """
-        sequence = getattr(
-            self._fields[fname], 'tracking',
-            getattr(self._fields[fname], 'track_sequence', 100)
-        )
-        if sequence is True:
-            sequence = 100
-        return sequence
+        def get_field_sequence(fname):
+            return getattr(
+                self._fields[fname], 'tracking',
+                getattr(self._fields[fname], 'track_sequence', True)
+            )
+
+        sequence = get_field_sequence(fname)
+        if self._fields[fname].type == 'properties' and sequence is True:
+            # default properties sequence is after the definition record
+            parent_sequence = get_field_sequence(self._fields[fname].definition_record)
+            return (100 if parent_sequence is True else parent_sequence) + 0.5
+        return 100 if sequence is True else sequence
 
     def _message_get_default_recipients(self):
         """ Generic implementation for finding default recipient to mail on

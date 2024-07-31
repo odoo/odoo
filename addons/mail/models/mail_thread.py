@@ -423,7 +423,7 @@ class MailThread(models.AbstractModel):
 
     def _compute_field_value(self, field):
         if not self._context.get('tracking_disable') and not self._context.get('mail_notrack'):
-            self._track_prepare(f.name for f in self.pool.field_computed[field] if f.store)
+            self._track_prepare([f.name for f in self.pool.field_computed[field] if f.store])
 
         return super()._compute_field_value(field)
 
@@ -487,12 +487,13 @@ class MailThread(models.AbstractModel):
     # TRACKING / LOG
     # ------------------------------------------------------
 
-    def _track_prepare(self, fields_iter):
-        """ Prepare the tracking of ``fields_iter`` for ``self``.
+    def _track_prepare(self, fnames):
+        """ Prepare the tracking of ``fields`` for ``self``.
 
-        :param iter fields_iter: iterable of fields names to potentially track
+        :param list fnames: fields names to potentially track
         """
-        fnames = self._track_get_fields().intersection(fields_iter)
+        fnames = self._track_get_fields().intersection(fnames)
+
         if not fnames:
             return
         self.env.cr.precommit.add(self._track_finalize)
@@ -503,7 +504,12 @@ class MailThread(models.AbstractModel):
             values = initial_values.setdefault(record.id, {})
             if values is not None:
                 for fname in fnames:
-                    values.setdefault(fname, record[fname])
+                    value = (  # the properties checks are done on read
+                        field.convert_to_read(record[fname], record)
+                        if (field := record._fields[fname]).type == 'properties'
+                        else record[fname]
+                    )
+                    values.setdefault(fname, value)
 
     def _track_discard(self):
         """ Prevent any tracking of fields on ``self``. """
@@ -578,6 +584,11 @@ class MailThread(models.AbstractModel):
             name
             for name, field in self._fields.items()
             if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
+        }
+        # track the properties changes if the parent changed
+        model_fields |= {
+            fname for fname, f in self._fields.items()
+            if f.type == "properties" and f.definition_record in model_fields
         }
 
         return model_fields and set(self.fields_get(model_fields, attributes=()))

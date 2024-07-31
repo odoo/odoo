@@ -45,7 +45,7 @@ class StockLot(models.Model):
         'product.product', 'Product', index=True,
         domain=("[('tracking', '!=', 'none'), ('is_storable', '=', True)] +"
             " ([('product_tmpl_id', '=', context['default_product_tmpl_id'])] if context.get('default_product_tmpl_id') else [])"),
-        required=True, check_company=True)
+        required=True, check_company=True, tracking=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True)

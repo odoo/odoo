@@ -10,6 +10,6 @@ class MailTestProperties(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char('Name')
-    parent_id = fields.Many2one('mail.test.properties', string='Parent')
+    parent_id = fields.Many2one('mail.test.properties', string='Parent', tracking=True)
     properties = fields.Properties('Properties', definition='parent_id.definition_properties')
     definition_properties = fields.PropertiesDefinition('Definitions')

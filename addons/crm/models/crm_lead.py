@@ -113,7 +113,7 @@ class Lead(models.Model):
         'res.company', compute='_compute_user_company_ids',
         help='UX: Limit to lead company or all if no company')
     team_id = fields.Many2one(
-        'crm.team', string='Sales Team', check_company=True, index=True, tracking=True,
+        'crm.team', string='Sales Team', check_company=True, index=True, tracking=90,
         compute='_compute_team_id', ondelete="set null", readonly=False, store=True, precompute=True)
     lead_properties = fields.Properties(
         'Properties', definition='team_id.lead_properties_definition',

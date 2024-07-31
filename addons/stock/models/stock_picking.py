@@ -621,7 +621,7 @@ class Picking(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True, readonly=True, index=True,
-        default=_default_picking_type_id)
+        default=_default_picking_type_id, tracking=True)
     picking_type_code = fields.Selection(
         related='picking_type_id.code',
         readonly=True)
