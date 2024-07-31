@@ -4734,6 +4734,20 @@ class SnippetsMenu extends Component {
             // This is async but using the main editor mutex, currently locked.
             this._updateInvisibleDOM();
 
+            // Updating options upon changing preview mode to avoid ghost overlay
+            const enabledInvisibleOverrideEl =
+                this.options.wysiwyg.lastElement &&
+                this.options.wysiwyg.lastElement.closest(
+                    ".o_snippet_mobile_invisible, .o_snippet_desktop_invisible"
+                );
+            const needDeactivate = enabledInvisibleOverrideEl && enabledInvisibleOverrideEl.dataset.invisible === "1";
+
+            if (needDeactivate) {
+                return new Promise((resolve) => {
+                    this._activateSnippet(false);
+                    resolve();
+                });
+            }
             return this._snippetOptionUpdate();
         }, false);
     }
