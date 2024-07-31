@@ -33,6 +33,7 @@ export class BomOverviewControlPanel extends Component {
         changeBomQuantity: Function,
         changeDisplay: Function,
         precision: Number,
+        allFolded: Boolean,
     };
     static defaultProps = {
         variants: {},
@@ -58,8 +59,8 @@ export class BomOverviewControlPanel extends Component {
         }
     }
 
-    clickUnfold() {
-        this.env.overviewBus.trigger("unfold-all");
+    clickTogglefold() {
+        this.env.overviewBus.trigger("toggle-fold-all");
     }
 
     getDomain() {
