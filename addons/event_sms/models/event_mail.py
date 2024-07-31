@@ -75,13 +75,9 @@ class EventMailScheduler(models.Model):
 class EventMailRegistration(models.Model):
     _inherit = 'event.mail.registration'
 
-    def execute(self):
-        now = fields.Datetime.now()
-        todo = self.filtered(lambda reg_mail:
-            not reg_mail.mail_sent and \
-            reg_mail.registration_id.state in ['open', 'done'] and \
-            (reg_mail.scheduled_date and reg_mail.scheduled_date <= now) and \
-            reg_mail.scheduler_id.notification_type == 'sms'
+    def _execute_on_registrations(self):
+        todo = self.filtered(
+            lambda r: r.scheduler_id.notification_type == "sms"
         )
         for reg_mail in todo:
             reg_mail.registration_id._message_sms_schedule_mass(
@@ -90,4 +86,4 @@ class EventMailRegistration(models.Model):
             )
         todo.write({'mail_sent': True})
 
-        return super(EventMailRegistration, self).execute()
+        return super(EventMailRegistration, self - todo)._execute_on_registrations()

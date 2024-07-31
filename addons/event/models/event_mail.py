@@ -296,13 +296,23 @@ class EventMailRegistration(models.Model):
     scheduled_date = fields.Datetime('Scheduled Time', compute='_compute_scheduled_date', store=True)
     mail_sent = fields.Boolean('Mail Sent')
 
+    @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
+    def _compute_scheduled_date(self):
+        for mail in self:
+            if mail.registration_id:
+                mail.scheduled_date = mail.registration_id.create_date.replace(microsecond=0) + _INTERVALS[mail.scheduler_id.interval_unit](mail.scheduler_id.interval_nbr)
+            else:
+                mail.scheduled_date = False
+
     def execute(self):
-        now = fields.Datetime.now()
-        todo = self.filtered(lambda reg_mail:
-            not reg_mail.mail_sent and \
-            reg_mail.registration_id.state in ['open', 'done'] and \
-            (reg_mail.scheduled_date and reg_mail.scheduled_date <= now) and \
-            reg_mail.scheduler_id.notification_type == 'mail'
+        self.filtered_domain(self._get_skip_domain())._execute_on_registrations()
+
+    def _execute_on_registrations(self):
+        """ Private mail registration execution. We consider input is already
+        filtered at this point, allowing to let caller do optimizations when
+        managing batches of registrations. """
+        todo = self.filtered(
+            lambda r: r.scheduler_id.notification_type == "mail"
         )
         done = self.browse()
         for reg_mail in todo:
@@ -334,11 +344,14 @@ class EventMailRegistration(models.Model):
             template.send_mail(reg_mail.registration_id.id, email_values=email_values)
             done |= reg_mail
         done.write({'mail_sent': True})
+        return done
 
-    @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
-    def _compute_scheduled_date(self):
-        for mail in self:
-            if mail.registration_id:
-                mail.scheduled_date = mail.registration_id.create_date.replace(microsecond=0) + _INTERVALS[mail.scheduler_id.interval_unit](mail.scheduler_id.interval_nbr)
-            else:
-                mail.scheduled_date = False
+    def _get_skip_domain(self):
+        """ Domain of mail registrations ot skip: not already done, linked to
+        a valid registration, and scheduled in the past. """
+        return [
+            ("mail_sent", "=", False),
+            ("registration_id.state", "in", ("open", "done")),
+            ("scheduled_date", "!=", False),
+            ("scheduled_date", "<=", fields.Datetime.now()),
+        ]
