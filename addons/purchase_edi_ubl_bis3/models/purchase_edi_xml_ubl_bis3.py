@@ -72,12 +72,11 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
             vals['party_tax_scheme_vals'] = self._get_partner_party_tax_scheme_vals(partner.commercial_partner_id)
         return vals
 
-    def _get_delivery_party_vals(self, order):
-        partner = order.dest_address_id or order.partner_id
+    def _get_delivery_party_vals(self, delivery):
         return {
-            'party_name': partner.display_name,
-            'postal_address_vals': self._get_partner_address_vals(partner),
-            'contact_vals': self._get_partner_contact_vals(partner),
+            'party_name': delivery.display_name,
+            'postal_address_vals': self._get_partner_address_vals(delivery),
+            'contact_vals': self._get_partner_contact_vals(delivery),
         }
 
     def _get_payment_terms_vals(self, payment_term):
@@ -193,6 +192,12 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
 
         supplier = order.partner_id
         customer = order.company_id.partner_id.commercial_partner_id
+        customer_delivery_address = customer.child_ids.filtered(lambda child: child.type == 'delivery')
+        delivery = (
+            order.dest_address_id
+            or (customer_delivery_address and customer_delivery_address[0])
+            or customer
+        )
 
         vals = {
             'builder': self,
@@ -208,7 +213,7 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
                 'note': html2plaintext(order.notes) if order.notes else False,
                 'order_reference': order.partner_ref or order.name,
                 'document_currency_code': order.currency_id.name.upper(),
-                'delivery_party_vals': self._get_delivery_party_vals(order),
+                'delivery_party_vals': self._get_delivery_party_vals(delivery),
                 'supplier_party_vals': self._get_partner_party_vals(supplier, role='supplier'),
                 'customer_party_vals': self._get_partner_party_vals(customer, role='customer'),
                 'payment_terms_vals': self._get_payment_terms_vals(order.payment_term_id),
