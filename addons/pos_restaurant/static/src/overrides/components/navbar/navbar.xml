@@ -19,19 +19,7 @@
                     class="table-name text-white fw-bolder px-3 my-2 me-1 py-1 d-flex align-items-center" 
                     t-on-click="() => this.switchTable()"/>
                 <button t-else="" class="btn btn-secondary mx-2" t-on-click="() => this.switchTable()">Go to...</button>
-                <t t-if="!pos.orderToTransferUuid">
-                    <button t-if="!pos.selectedOrderUuid" class="btn btn-primary mx-2" t-on-click="newFloatingOrder">
-                        <i class="fa fa-plus-circle" aria-hidden="true"/>
-                    </button>
-                    <ListContainer t-if="!pos.selectedOrderUuid and !pos.selectedTable" items="getFloatingOrders()" t-slot-scope="scope">
-                        <t t-set="order" t-value="scope.item"/>
-                        <button t-esc="order.getFloatingOrderName()" class="btn btn-secondary tab" t-on-click="() => this.selectFloatingOrder(order)"/>
-                    </ListContainer>
-                    <button t-if="pos.get_order() and !pos.get_order()?.table_id" class="btn btn-secondary ms-2" t-on-click="() => this.editOrderNote(this.pos.get_order())">
-                        <i class="fa fa-pencil-square-o me-1" aria-hidden="true" /><t t-if="!ui.isSmall" t-esc="pos.get_order().getFloatingOrderName()"/>
-                    </button>
-                </t>
-                <div class="d-flex align-items-center" t-else="">
+                <div class="d-flex align-items-center" t-if="pos.orderToTransferUuid">
                     <strong class="ms-2">
                         Select table to transfer order
                     </strong>
