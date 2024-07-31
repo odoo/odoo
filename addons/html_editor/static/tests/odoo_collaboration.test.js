@@ -1074,3 +1074,56 @@ describe("Destroy odoo collaboration plugin", () => {
         expect(peers.p1.plugins.collaboration._snapshotInterval).toBe(false);
     });
 });
+
+describe("History steps Ids", () => {
+    test("should clear history step ids from the DOM at start up", async () => {
+        const pool = await createPeers(["p1"]);
+        const peers = pool.peers;
+        const editor = peers.p1.editor;
+        await peers.p1.focus();
+        expect(getContent(editor.editable)).toBe("<p>a[]</p>");
+        editor.destroy();
+    });
+
+    test("should clear history step ids when resetting from server", async () => {
+        const pool = await createPeers(["p1", "p2"]);
+        const peers = pool.peers;
+
+        await peers.p1.focus();
+        insertEditorText(peers.p1.editor, "b");
+        await peers.p1.writeToServer();
+
+        expect(peers.p2.plugins.collaboration_odoo.isDocumentStale).toBe(true, {
+            message: "p2 should have a stale document",
+        });
+
+        await peers.p2.focus();
+        await peers.p1.openDataChannel(peers.p2);
+        // This timeout is necessary for the selection to be set
+        await new Promise((resolve) => setTimeout(resolve));
+
+        expect(peers.p2.plugins.collaboration_odoo.isDocumentStale).toBe(false, {
+            message: "p2 should not have a stale document",
+        });
+        expect(getContent(peers.p2.editor.editable)).toBe(`<p>[]ab</p>`, {
+            message:
+                "p2 should have the same document as p1, without the history steps id attribute",
+        });
+    });
+
+    test("should not add history step ids to a split block's children", async () => {
+        const pool = await createPeers(["p1"]);
+        const peers = pool.peers;
+        const editor = peers.p1.editor;
+        await peers.p1.focus();
+        editor.dispatch("SPLIT_BLOCK");
+        expect(getContent(editor.editable)).toBe(
+            `<p>a</p><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+        );
+        editor.dispatch("SPLIT_BLOCK");
+        expect(getContent(editor.editable)).toBe(
+            `<p>a</p><p><br></p><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+        );
+        editor.destroy();
+    });
+});

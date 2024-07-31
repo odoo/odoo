@@ -83,6 +83,8 @@ export class CollaborationOdooPlugin extends Plugin {
             // Wait until editor is focused to join the peer to peer network.
             this.editable.addEventListener("focus", this.joinPeerToPeer);
         }
+
+        this.removeHistoryIds(this.editable);
     }
     destroy() {
         this.collaborationStopBus && this.collaborationStopBus();
@@ -105,8 +107,7 @@ export class CollaborationOdooPlugin extends Plugin {
             case "STEP_ADDED":
                 this.ptp?.notifyAllPeers("oe_history_step", payload.step, { transport: "rtc" });
                 break;
-            case "CLEAN":
-                // TODO @phoenix: evaluate if this should be cleanforsave instead
+            case "CLEAN_FOR_SAVE":
                 this.attachHistoryIds(payload.root);
                 break;
             case "HISTORY_RESET":
@@ -596,6 +597,7 @@ export class CollaborationOdooPlugin extends Plugin {
         content = content || "<p><br></p>";
         // content here is trusted
         this.editable.innerHTML = content;
+        this.removeHistoryIds(this.editable);
         this.dispatch("NORMALIZE", { node: this.editable });
         this.shared.reset(content);
 
@@ -777,12 +779,12 @@ export class CollaborationOdooPlugin extends Plugin {
         );
         return record;
     }
-    attachHistoryIds(editable) {
-        // clean existig 'data-last-history-steps' attributes
+    removeHistoryIds(editable) {
         editable
             .querySelectorAll("[data-last-history-steps]")
             .forEach((el) => el.removeAttribute("data-last-history-steps"));
-
+    }
+    attachHistoryIds(editable) {
         const historyIds = this.shared.getBranchIds().join(",");
         const firstChild = editable.children[0];
         if (firstChild) {
