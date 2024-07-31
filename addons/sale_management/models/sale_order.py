@@ -90,7 +90,7 @@ class SaleOrder(models.Model):
         self.sale_order_option_ids._update_price_and_discount()
         return res
 
-    @api.onchange('sale_order_template_id')
+    @api.onchange('sale_order_template_id', 'partner_id')
     def onchange_sale_order_template_id(self):
 
         if not self.sale_order_template_id:
