@@ -29,13 +29,17 @@
                                 <div class="content-group">
                                     <div class="mt16">
                                         <div>
-                                            <label for="chart_template" string="Package" class="col-2 o_light_label"/>
+                                            <label for="chart_template" string="Package" class="col-3 o_light_label"/>
                                             <field name="chart_template" readonly="has_accounting_entries" required="chart_template"/>
+                                        </div>
+                                        <div invisible="not chart_template or not has_child_chart_of_accounts">
+                                            <label for="child_chart_template" string="Child Package" class="col-3 o_light_label"/>
+                                            <field name="child_chart_template"/>
                                         </div>
                                         <div class="mt16">
                                             <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh"
                                                     title="Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. This action is irreversible."
-                                                    invisible="not has_accounting_entries or not chart_template"/>
+                                                    invisible="not has_accounting_entries or not chart_template or (child_chart_template and child_chart_template != chart_template)"/>
                                         </div>
                                     </div>
                                 </div>
