@@ -5,7 +5,6 @@
     'summary': 'Extend stock picking to log discrepancies',
     'depends': ['stock'],
     'data': [
-        'security/ir.model.access.csv',
     ],
     'installable': True,
     'application': False,

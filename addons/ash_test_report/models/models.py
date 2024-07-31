@@ -36,7 +36,7 @@ class StockPicking(models.Model):
 
     def create_discrepancy_file(self, discrepancies):
         # Define the directory
-        directory = '/home/ubuntu/wms/outputfiles/kids/grn/'  # Update this path
+        directory = 'home/ubuntu/wms/outputfiles/kids/grn/'  # Update this path
         if not os.path.exists(directory):
             os.makedirs(directory)
 
