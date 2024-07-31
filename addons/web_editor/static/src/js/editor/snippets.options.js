@@ -9332,25 +9332,30 @@ registerOption("container_width", {
  * Allows to replace a text value with the name of a database record.
  * @todo replace this mechanism with real backend m2o field ?
  */
-legacyRegistry.many2one = SnippetOptionWidget.extend({
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
-
+export class Many2oneOption extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.orm = this.env.services.orm;
+    }
     /**
      * @override
      */
     async willStart() {
+        await super.willStart(...arguments);
         const {oeMany2oneModel, oeMany2oneId} = this.$target[0].dataset;
         this.fields = ['name', 'display_name'];
-        return Promise.all([
-            this._super(...arguments),
+        
+        const [{name: modelName}] = await this.orm.searchRead("ir.model", [['model', '=', oeMany2oneModel]], ['name']);
+        this.renderContext.model = oeMany2oneModel;
+        this.renderContext.fields = JSON.stringify(this.fields);
+        this.renderContext.modelName = modelName;
+
+        return Promise.resolve([
             this.orm.read(oeMany2oneModel, [parseInt(oeMany2oneId)], this.fields).then(([initialRecord]) => {
                 this.initialRecord = initialRecord;
             }),
         ]);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -9390,7 +9395,7 @@ legacyRegistry.many2one = SnippetOptionWidget.extend({
             this.$prevContents = this.$target.contents();
             this.prevRecordName = record.name;
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9403,22 +9408,8 @@ legacyRegistry.many2one = SnippetOptionWidget.extend({
         if (methodName === 'changeRecord') {
             return this.$target[0].dataset.oeMany2oneId;
         }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    async _renderCustomXML(uiFragment) {
-        const many2oneWidget = document.createElement('we-many2one');
-        many2oneWidget.dataset.changeRecord = '';
-
-        const model = this.$target[0].dataset.oeMany2oneModel;
-        const [{name: modelName}] = await this.orm.searchRead("ir.model", [['model', '=', model]], ['name']);
-        many2oneWidget.setAttribute('String', modelName);
-        many2oneWidget.dataset.model = model;
-        many2oneWidget.dataset.fields = JSON.stringify(this.fields);
-        uiFragment.appendChild(many2oneWidget);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @private
      */
@@ -9453,8 +9444,15 @@ legacyRegistry.many2one = SnippetOptionWidget.extend({
                     node.textContent = defaultText;
                 }
             }));
-    },
+    }
+}
+registerOption("Many2oneOption", {
+    Class: Many2oneOption,
+    template: "web_editor.many2one",
+    selector: "[data-oe-many2one-model]:not([data-oe-readonly])",
+    noCheck: true,
 });
+
 /**
  * Allows to display a warning message on outdated snippets.
  */
