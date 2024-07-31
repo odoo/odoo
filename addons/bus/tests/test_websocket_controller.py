@@ -74,6 +74,7 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.env["bus.presence"]._update_presence(
             inactivity_period=0, identity_field="user_id", identity_value=self.user_demo.id
         )
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.env["bus.bus"].search([]).unlink()
         self.make_jsonrpc_request("/websocket/on_closed", {}, headers=headers)
         message = self.make_jsonrpc_request(
