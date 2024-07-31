@@ -904,7 +904,7 @@ test(`Form and subview with _view_ref contexts`, async () => {
         kanban: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <field name="color"/>
                     </t>
                 </templates>
@@ -969,7 +969,7 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
         kanban: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <field name="name"/>
                     </t>
                 </templates>
@@ -983,7 +983,7 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
         kanban: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <field name="name"/>
                     </t>
                 </templates>
@@ -6966,8 +6966,8 @@ test(`non inline subview and create=0 in action context`, async () => {
     Product._views = {
         kanban: `
             <kanban>
-                <templates><t t-name="kanban-box">
-                    <div><field name="name"/></div>
+                <templates><t t-name="kanban-card">
+                    <field name="name"/>
                 </t></templates>
             </kanban>
         `,
@@ -9493,10 +9493,8 @@ test.tags("desktop")(`discard after a failed save (and close notifications)`, as
         kanban: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" />
                     </t>
                 </templates>
             </kanban>
@@ -9540,7 +9538,7 @@ test(`one2many create record dialog shouldn't have a 'remove' button`, async () 
                 <field name="child_ids">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-box">
+                            <t t-name="kanban-card">
                                 <field name="foo"/>
                             </t>
                         </templates>
@@ -10329,8 +10327,8 @@ test.tags("desktop")(`empty x2manys when coming form a list with sample data`, a
                 <field name="child_ids">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div><field name="name"/></div>
+                            <t t-name="kanban-card">
+                                <field name="name"/>
                             </t>
                         </templates>
                     </kanban>

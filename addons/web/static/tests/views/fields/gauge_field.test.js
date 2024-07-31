@@ -20,10 +20,8 @@ test("GaugeField in kanban view", async () => {
         <kanban>
             <field name="another_int_field"/>
             <templates>
-                <t t-name="kanban-box">
-                    <div>
-                        <field name="int_field" widget="gauge" options="{'max_field': 'another_int_field'}"/>
-                    </div>
+                <t t-name="kanban-card">
+                    <field name="int_field" widget="gauge" options="{'max_field': 'another_int_field'}"/>
                 </t>
             </templates>
         </kanban>`,

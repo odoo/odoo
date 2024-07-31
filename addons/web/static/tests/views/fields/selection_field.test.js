@@ -315,10 +315,8 @@ test("SelectionField in kanban view", async () => {
         arch: /* xml */ `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="color" widget="selection" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="color" widget="selection" />
                     </t>
                 </templates>
             </kanban>`,
@@ -348,10 +346,8 @@ test("SelectionField - auto save record in kanban view", async () => {
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="color" widget="selection" />
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="color" widget="selection" />
                         </t>
                     </templates>
                 </kanban>`,
@@ -370,10 +366,8 @@ test("SelectionField don't open form view on click in kanban view", async functi
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="color" widget="selection" />
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="color" widget="selection" />
                         </t>
                     </templates>
                 </kanban>`,
@@ -405,10 +399,8 @@ test("SelectionField is disabled if field readonly", async () => {
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="color" widget="selection" />
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="color" widget="selection" />
                         </t>
                     </templates>
                 </kanban>
@@ -428,10 +420,8 @@ test("SelectionField is disabled with a readonly attribute", async () => {
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="color" widget="selection" readonly="1" />
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="color" widget="selection" readonly="1" />
                         </t>
                     </templates>
                 </kanban>
@@ -455,12 +445,9 @@ test("SelectionField in kanban view with handle widget", async () => {
         resModel: "partner",
         arch: /* xml */ `
                 <kanban>
-                    <field name="int_field" widget="handle"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="color" widget="selection"/>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="color" widget="selection"/>
                         </t>
                     </templates>
                 </kanban>`,

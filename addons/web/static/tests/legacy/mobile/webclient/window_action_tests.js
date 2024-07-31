@@ -31,10 +31,8 @@ QUnit.module("ActionManager", (hooks) => {
                 "project,false,kanban": `
                 <kanban>
                     <templates>
-                        <t t-name='kanban-box'>
-                            <div class='oe_kanban_card'>
-                                <field name='foo' />
-                            </div>
+                        <t t-name='kanban-card'>
+                            <field name='foo' />
                         </t>
                     </templates>
                 </kanban>

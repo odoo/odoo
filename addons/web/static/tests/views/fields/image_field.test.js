@@ -542,14 +542,9 @@ test("ImageField in subviews is loaded correctly", async () => {
                 <field name="document" widget="image" options="{'size': [90, 90]}" />
                 <field name="timmy" widget="many2many" mode="kanban">
                     <kanban>
-                        <field name="name" />
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <span>
-                                        <t t-esc="record.name.value" />
-                                    </span>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="name" />
                             </t>
                         </templates>
                     </kanban>
