@@ -2,7 +2,6 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import tagged, new_test_user
-from odoo.tools.mail import html2plaintext
 
 
 @tagged('post_install', '-at_install')
@@ -21,6 +20,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
     @classmethod
     def create_move(cls):
         return cls.env['account.move'].create({
+            'date': '2021-04-01',
             'line_ids': [
                 Command.create({
                     'balance': 100,
@@ -43,10 +43,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
     def assertTrail(self, trail, expected):
         self.assertEqual(len(trail), len(expected))
         for message, expected in zip(trail, expected[::-1]):
-            self.assertRegex(
-                html2plaintext(message.account_audit_log_preview),
-                expected
-            )
+            self.assertIn(expected, message.account_audit_log_preview)
 
     def test_can_unlink_draft(self):
         self.move.unlink()
@@ -84,15 +81,15 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.action_post()
-        messages.append(r"Updated Draft Posted \(Status\)")
+        messages.append("Updated\nDraft ⇨ Posted (Status)")
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.button_draft()
-        messages.append(r"Updated Posted Draft \(Status\)")
+        messages.append("Updated\nPosted ⇨ Draft (Status)")
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.name = "nawak"
-        messages.append(r"Updated MISC/\d+/\d+/0001 nawak \(Number\)")
+        messages.append("Updated\nMISC/2021/04/0001 ⇨ nawak (Number)")
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.line_ids = [
@@ -104,26 +101,26 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             })
         ]
         messages.extend([
-            r"updated 100.0 300.0",
-            r"updated -100.0 -200.0",
-            r"created  400000 Product Sales \(Account\)\n0.0 -100.0 \(Balance\)",
+            "updated\n100.0 ⇨ 300.0",
+            "updated\n-100.0 ⇨ -200.0",
+            "created\n ⇨ 400000 Product Sales (Account)\n0.0 ⇨ -100.0 (Balance)",
         ])
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.line_ids[0].tax_ids = self.env.company.account_purchase_tax_id
         messages.extend([
-            r"updated  15% \(Taxes\)",
-            r"created  131000 Tax Paid \(Account\)\n0.0 45.0 \(Balance\)\nFalse 15% \(Label\)",
-            r"created  101402 Bank Suspense Account \(Account\)\n0.0 -45.0 \(Balance\)\nFalse Automatic Balancing Line \(Label\)",
+            "updated\n ⇨ 15% (Taxes)",
+            "created\n ⇨ 131000 Tax Paid (Account)\n0.0 ⇨ 45.0 (Balance)\nFalse ⇨ 15% (Label)",
+            "created\n ⇨ 101402 Bank Suspense Account (Account)\n0.0 ⇨ -45.0 (Balance)\nFalse ⇨ Automatic Balancing Line (Label)",
         ])
         self.assertTrail(self.get_trail(self.move), messages)
         self.move.with_context(dynamic_unlink=True).line_ids.unlink()
         messages.extend([
-            r"deleted 400000 Product Sales  \(Account\)\n300.0 0.0 \(Balance\)\n15%  \(Taxes\)",
-            r"deleted 400000 Product Sales  \(Account\)\n-200.0 0.0 \(Balance\)",
-            r"deleted 400000 Product Sales  \(Account\)\n-100.0 0.0 \(Balance\)",
-            r"deleted 131000 Tax Paid  \(Account\)\n45.0 0.0 \(Balance\)\n15% False \(Label\)",
-            r"deleted 101402 Bank Suspense Account  \(Account\)\n-45.0 0.0 \(Balance\)\nAutomatic Balancing Line False \(Label\)",
+            "deleted\n400000 Product Sales ⇨  (Account)\n300.0 ⇨ 0.0 (Balance)\n15% ⇨  (Taxes)",
+            "deleted\n400000 Product Sales ⇨  (Account)\n-200.0 ⇨ 0.0 (Balance)",
+            "deleted\n400000 Product Sales ⇨  (Account)\n-100.0 ⇨ 0.0 (Balance)",
+            "deleted\n131000 Tax Paid ⇨  (Account)\n45.0 ⇨ 0.0 (Balance)\n15% ⇨ False (Label)",
+            "deleted\n101402 Bank Suspense Account ⇨  (Account)\n-45.0 ⇨ 0.0 (Balance)\nAutomatic Balancing Line ⇨ False (Label)",
         ])
         self.assertTrail(self.get_trail(self.move), messages)
 
