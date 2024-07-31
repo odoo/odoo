@@ -240,54 +240,6 @@
 
 <!-- Mass Mailing Snippet Options -->
 <template id="snippet_options" inherit_id="web_editor.snippet_options" primary="True">
-    <!-- =================================================================== -->
-    <!-- Modify generic snippet options                                      -->
-    <!-- =================================================================== -->
-
-    <xpath expr="//t[@t-set='no_animations']" position="attributes">
-        <attribute name="t-value">True</attribute>
-    </xpath>
-
-    <!-- Image styles -->
-    <!-- TODO review to only modify what's really necessary and potentially -->
-    <!-- make the changes in web_editor directly so that website can benefit -->
-    <!-- from it. -->
-    <xpath expr="//div[hasclass('o_we_image_options')]" position="replace">
-        <div data-selector="span.fa, i.fa, img">
-            <we-select id="o_we_image_alignment_option" string="Alignment" data-state-to-first-class="true">
-                <we-button data-select-class="float-start" title="Align Left">Left</we-button>
-                <we-button data-select-class="" title="Align Center">Center</we-button>
-                <we-button data-select-class="float-end" title="Align Right">Right</we-button>
-            </we-select>
-
-<!--            TODO: @owl-options - Uncomment and adapt -->
-<!--            <t t-call="mass_mailing.snippet_options_border_line_widgets">-->
-<!--                <t t-set="label">Border</t>-->
-<!--                <t t-set="with_bs_class" t-value="True"></t>-->
-<!--            </t>-->
-
-            <we-input string="Round Corners"
-            data-select-style="0" data-css-property="border-radius"
-            data-unit="px" data-extra-class="rounded"
-            t-att-data-variable="radius_variable"/>
-
-            <we-row string="Padding &#x2194;">
-                <we-input data-select-style="" data-unit="px" data-css-property="padding-left"/>
-                <we-input data-select-style="" data-unit="px" data-css-property="padding-right"/>
-            </we-row>
-            <we-row string="Padding &#x2195;">
-                <we-input data-select-style="" data-unit="px" data-css-property="padding-top"/>
-                <we-input data-select-style="" data-unit="px" data-css-property="padding-bottom"/>
-            </we-row>
-        </div>
-    </xpath>
-
-    <!-- Transform is _very_ badly supported in mail clients -->
-    <xpath expr="//we-button[@data-name='image_transform_opt']" position="replace" />
-
-    <xpath expr="//div[@data-js='ImageTools']" position="attributes">
-        <attribute name="data-js">MassMailingImageTools</attribute>
-    </xpath>
 
     <!-- =================================================================== -->
     <!-- Adding mass_mailing specific snippet options                        -->

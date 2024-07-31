@@ -59,4 +59,47 @@
              variable="radius_variable || ''"/>
 </t>
 
+<!-- =================================================================== -->
+<!-- Modify generic snippet options                                      -->
+<!-- =================================================================== -->
+
+<t t-name="mass_mailing.ImageTools" t-inherit="web_editor.ImageTools" t-inherit-mode="primary">
+    <xpath expr="//t[@t-set='no_animations']" position="attributes">
+        <attribute name="t-value">true</attribute>
+    </xpath>
+
+    <!-- Transform is _very_ badly supported in mail clients -->
+    <xpath expr="//WeButton[@name=&quot;'image_transform_opt'&quot;]" position="replace" />
+</t>
+
+<!-- Image styles -->
+<t t-name="mass_mailing.IconTools">
+    <!-- TODO review to only modify what's really necessary and potentially -->
+    <!-- make the changes in web_editor directly so that website can benefit -->
+    <!-- from it. -->
+    <WeSelect title.translate="Alignment" stateToFirstClass="'true'">
+        <WeButton selectClass="'float-start'" tooltip.translate="Align Left">Left</WeButton>
+        <WeButton selectClass="''" tooltip.translate="Align Center">Center</WeButton>
+        <WeButton selectClass="'float-end'" tooltip.translate="Align Right">Right</WeButton>
+    </WeSelect>
+
+    <t t-call="mass_mailing.snippet_options_border_line_widgets">
+        <t t-set="label">Border</t>
+        <t t-set="with_bs_class" t-value="true"/>
+    </t>
+
+    <WeInput title.translate="Round Corners"
+             selectStyle="'0'" cssProperty="'border-radius'" unit="'px'" extraClass="'rounded'"
+             variable="radius_variable"/>
+
+    <WeRow title.translate="Padding &#x2194;">
+        <WeInput selectStyle="''" unit="'px'" cssProperty="'padding-left'"/>
+        <WeInput selectStyle="''" unit="'px'" cssProperty="'padding-right'"/>
+    </WeRow>
+    <WeRow title.translate="Padding &#x2195;">
+        <WeInput selectStyle="''" unit="'px'" cssProperty="'padding-top'"/>
+        <WeInput selectStyle="''" unit="'px'" cssProperty="'padding-bottom'"/>
+    </WeRow>
+</t>
+
 </templates>

@@ -6,3 +6,9 @@ export function registerMassMailingOption(name, def, options) {
     }
     return registerOption(name, def, options);
 }
+
+registerMassMailingOption("MassMailingIconTools", {
+    template: "mass_mailing.IconTools",
+    selector: "span.fa, i.fa, img",
+    exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
+});
