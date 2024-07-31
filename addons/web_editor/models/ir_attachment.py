@@ -46,7 +46,7 @@ class IrAttachment(models.Model):
                     # Local URL
                     attachment.image_src = attachment.url
                 else:
-                    name = url_quote(attachment.name)
+                    name = url_quote(attachment.name, unsafe="$!'()*+,;")
                     attachment.image_src = '/web/image/%s-redirect/%s' % (attachment.id, name)
             else:
                 # Adding unique in URLs for cache-control
@@ -57,7 +57,7 @@ class IrAttachment(models.Model):
                     separator = '&' if '?' in attachment.url else '?'
                     attachment.image_src = '%s%sunique=%s' % (attachment.url, separator, unique)
                 else:
-                    name = url_quote(attachment.name)
+                    name = url_quote(attachment.name, unsafe="$!'()*+,;")
                     attachment.image_src = '/web/image/%s-%s/%s' % (attachment.id, unique, name)
 
     @api.depends('datas')
