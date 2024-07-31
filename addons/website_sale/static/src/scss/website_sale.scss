@@ -643,16 +643,19 @@ a.no-decoration {
     background-color: $o-enterprise-action-color;
 }
 
-.o_carousel_product_remove {
-    position: absolute;
-    display: none;
-    cursor: pointer;
-    right: 5%;
-    top: 5%;
-}
+// Keep for compatibility
+.s_dynamic_snippet_products:not([data-vcss]) {
+    .o_carousel_product_remove {
+        position: absolute;
+        display: none;
+        cursor: pointer;
+        right: 5%;
+        top: 5%;
+    }
 
-.o_carousel_product_remove:hover {
-    display: block;
+    .o_carousel_product_remove:hover {
+        display: block;
+    }
 }
 
 // customer reviews

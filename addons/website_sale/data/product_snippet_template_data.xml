@@ -3,48 +3,55 @@
 
         <!-- Templates for Dynamic Snippet -->
         <template id="dynamic_filter_template_product_product_add_to_cart" name="Classic Card">
-            <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_add_to_cart.svg">
+            <t t-foreach="records" t-as="data"
+                data-arrow-position="top"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_add_to_cart.svg"
+            >
                 <t t-set="record" t-value="data['_record']"/>
                 <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
                 <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
-                <div class="o_carousel_product_card card h-100 w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
-                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']"
+                <div class="o_carousel_product_card card h-100 w-100 opacity-trigger-hover">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase z-2 bg-o-color-1">Sample</div>
+                    <a class="o_carousel_product_img_link m-2 mb-0 rounded overflow-hidden transition-base o_dynamic_product_hovered" t-att-href="record.website_url">
+                        <img class="card-img-top o_img_ratio_1x1 h-auto object-fit-cover transition-base" loading="lazy" t-att-src="data['image_512']"
                             t-att-alt="record.display_name"/>
                     </a>
-                    <i t-if="data.get('_latest_viewed')"
-                        class="fa fa-trash o_carousel_product_remove js_remove"
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute end-0 top-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover js_remove"
                         t-att-data-product-id="product_id"
                         t-att-data-product-template-id="product_template_id"
-                        t-att-data-product-selected="record.is_product_variant"/>
-                    <div class="o_carousel_product_card_body card-body d-flex flex-wrap">
-                        <a t-att-href="record.website_url" class="text-decoration-none d-block w-100">
-                            <div class="h6 card-title mb-0" t-field="record.display_name"/>
-                        </a>
-                        <div class="mt-2">
+                        t-att-data-product-selected="record.is_product_variant">
+                        <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <div class="card-body d-flex flex-column p-2">
+                        <p class="card-title">
+                            <a t-att-href="record.website_url" class="text-reset" t-field="record.display_name"/>
+                        </p>
+                        <div class="mt-auto pt-2">
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                                <t t-set="rating_style_compressed" t-value="true"/>
                                 <t t-set="rating_avg" t-value="record.rating_avg"/>
                                 <t t-set="rating_count" t-value="record.rating_count"/>
                             </t>
                         </div>
-                        <div class="w-100 d-flex flex-wrap flex-md-column flex-lg-row align-items-center align-self-end justify-content-between mt-3">
-                            <div class="py-2">
-                                <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
-                            </div>
-                            <div class="o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
-                                <button
-                                    type="button"
-                                    role="button"
-                                    class="btn btn-primary js_add_cart ms-auto"
-                                    title="Add to Cart"
-                                    t-att-data-product-id="product_id"
-                                    t-att-data-product-template-id="product_template_id"
-                                    t-att-data-product-selected="record.is_product_variant"
-                                >
-                                    <i class="fa fa-fw fa-shopping-cart"/>
-                                </button>
-                            </div>
+                        <div class="d-flex flex-wrap flex-md-column flex-lg-row align-items-lg-center justify-content-between w-100">
+                            <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                                <t t-set="preventZeroClasses" t-value="'btn d-block d-md-none d-lg-block w-100 border mt-auto opacity-50'"/>
+                            </t>
+                            <button
+                                t-if="record._website_show_quick_add()"
+                                type="button"
+                                role="button"
+                                class="btn btn-primary w-md-100 w-lg-auto mt-md-2 mt-lg-auto js_add_cart"
+                                title="Add to Cart"
+                                t-att-data-product-id="product_id"
+                                t-att-data-product-template-id="product_template_id"
+                                t-att-data-product-selected="record.is_product_variant"
+                            >
+                                <i class="fa fa-fw fa-shopping-cart" role="img"/>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -52,29 +59,54 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_view_detail" name="Classic Card - Detailed">
-            <t t-foreach="records" t-as="data" data-number-of-elements="3" data-thumb="/website_sale/static/src/img/snippets_options/product_view_detail.svg">
-                <t t-set="record" t-value="data['_record']" data-arrow-position="bottom"/>
-                <div class="o_carousel_product_card card h-100 w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
-                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+            <t t-foreach="records" t-as="data"
+                data-number-of-elements="3"
+                data-arrow-position="top"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_view_detail.svg"
+            >
+                <t t-set="record" t-value="data['_record']"/>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card card w-100 opacity-trigger-hover" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase z-1 bg-o-color-1">Sample</div>
+                    <a class="o_carousel_product_img_link border-bottom overflow-hidden o_dynamic_product_hovered" t-att-href="record.website_url">
+                        <img class="card-img-top h-100 object-fit-cover transition-base o_img_ratio_4x3" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
-                    <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
-                        <div class="card-title h5" t-field="record.display_name"/>
-                        <div class="card-text flex-grow-1 text-muted h6" t-field="record.description_sale"/>
-                        <div class="mt-2">
-                            <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
-                                <t t-set="rating_avg" t-value="record.rating_avg"/>
-                                <t t-set="rating_count" t-value="record.rating_count"/>
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute end-0 top-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant"
+                    >
+                        <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <div class="card-body d-flex flex-column gap-2">
+                        <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                            <t t-set="rating_avg" t-value="record.rating_avg"/>
+                            <t t-set="rating_count" t-value="record.rating_count"/>
+                        </t>
+                        <p class="card-title mb-0">
+                            <a t-att-href="record.website_url" class="text-reset" t-field="record.display_name"/>
+                        </p>
+                        <div class="d-flex flex-wrap flex-md-column flex-lg-row justify-content-between align-items-center align-items-md-start align-items-lg-center gap-2 mt-auto">
+                            <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                                <t t-set="priceClasses" t-value="'fs-4 fw-bold'"/>
+                                <t t-set="preventZeroClasses" t-value="'py-2 fs-6 opacity-50'"/>
                             </t>
-                        </div>
-                        <div class="d-flex justify-content-between flex-wrap flex-md-column flex-lg-row align-items-center align-self-end w-100 mt-2 pt-3 border-top">
-                            <div class="pb-2">
-                                <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
-                            </div>
-                            <a class="btn btn-primary" t-att-href="record.website_url">
-                                View product
-                            </a>
+                            <button
+                                t-if="record._website_show_quick_add()"
+                                type="button"
+                                role="button"
+                                class="btn btn-primary w-md-100 w-lg-auto js_add_cart"
+                                title="Add to Cart"
+                                t-att-data-product-id="product_id"
+                                t-att-data-product-template-id="product_template_id"
+                                t-att-data-product-selected="record.is_product_variant"
+                            >
+                                Add <i class="fa fa-fw fa-shopping-cart" role="img"/>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -82,113 +114,385 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_mini_image" name="Image only">
-            <t t-foreach="records" t-as="data" data-number-of-elements="4" data-number-of-elements-sm="1" data-thumb="/website_sale/static/src/img/snippets_options/product_image_only.svg">
+            <t t-foreach="records" t-as="data"
+                data-number-of-elements="4"
+                data-arrow-position="top"
+                data-number-of-elements-sm="1"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_image_only.svg"
+            >
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="card h-100 border-0 w-100 rounded-0 bg-transparent" t-att-data-url="record.website_url">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
-                        <img class="card-img-top h-auto o_img_product_square o_img_product_cover rounded" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card o_dynamic_product_hovered card h-100 w-100 border-0 rounded-4 overflow-hidden text-reset opacity-trigger-hover" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase z-2 bg-o-color-1">Sample</div>
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute top-0 end-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover z-2 js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant"
+                    >
+                        <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <a class="o_carousel_product_img_link stretched-link o_dynamic_product_hovered" t-att-href="record.website_url">
+                        <img class="card-img-top h-auto object-fit-cover transition-base o_img_ratio_1x1" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
+                    <div class="position-absolute top-0 d-none d-lg-flex flex-column align-items-center justify-content-center gap-2 w-100 h-100 p-3 bg-black-75 opacity-0 opacity-100-hover z-1 transition-base pe-none o_cc o_cc5">
+                        <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                            <t t-set="priceClasses" t-value="'fs-3 fw-bold'"/>
+                            <t t-set="preventZeroClasses" t-value="'text-muted fst-italic'"/>
+                            <t t-set="wrapPriceClasses" t-value="'d-flex flex-column-reverse align-items-center'"/>
+                            <t t-set="discountClasses" t-value="'badge bg-danger'"/>
+                        </t>
+                        <p class="card-title mb-0 text-center" t-field="record.display_name"/>
+                        <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                            <t t-set="rating_avg" t-value="record.rating_avg"/>
+                            <t t-set="rating_count" t-value="record.rating_count"/>
+                        </t>
+                    </div>
                 </div>
             </t>
         </template>
 
         <template id="dynamic_filter_template_product_product_mini_price" name="Image with price">
-            <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_image_with_price.svg">
+            <t t-foreach="records" t-as="data"
+                data-arrow-position="top"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_image_with_price.svg"
+            >
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered" t-att-data-url="record.website_url">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
-                        <img class="card-img-top h-auto o_img_product_square o_img_product_cover rounded" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card card gap-2 h-100 w-100 border-0 bg-transparent text-reset opacity-trigger-hover o_dynamic_product_hovered">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase z-2 bg-o-color-1">Sample</div>
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute top-0 end-0 m-3 rounded-circle p-0 z-2 js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant"
+                    >
+                        <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <a class="o_carousel_product_img_link position-relative rounded-4 overflow-hidden" t-att-href="record.website_url">
+                        <img class="card-img-top h-auto object-fit-cover transition-base o_img_ratio_1x1" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                        <div class="position-absolute top-0 d-none d-lg-flex flex-column align-items-center justify-content-center gap-2 w-100 h-100 p-3 bg-black-75 opacity-0 opacity-100-hover z-1 transition-base pe-none o_cc o_cc5">
+                            <h5 class="card-title mb-0 text-center" t-field="record.display_name"/>
+                        </div>
                     </a>
-                    <div class="o_carousel_product_card_body mt-2 d-flex justify-content-between">
+                    <div class="d-flex flex-md-column-reverse flex-lg-row justify-content-center align-items-center gap-lg-3">
+                        <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                            <t t-set="priceClasses" t-value="'fs-5 fw-bold'"/>
+                            <t t-set="priceWrapClasses" t-value="'d-flex mt-1 text-center text-lg-start'"/>
+                            <t t-set="preventZeroClasses" t-value="'d-block d-md-none d-lg-block opacity-50'"/>
+                        </t>
                         <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                            <t t-set="customClass" t-value="'flex-shrink-0 ms-auto ms-md-0 ms-lg-auto'"/>
                             <t t-set="rating_style_compressed" t-value="true"/>
                             <t t-set="rating_avg" t-value="record.rating_avg"/>
                             <t t-set="rating_count" t-value="record.rating_count"/>
                         </t>
-                        <div class="ms-auto">
-                            <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
-                        </div>
                     </div>
                 </div>
             </t>
         </template>
 
         <template id="dynamic_filter_template_product_product_mini_name" name="Image with name">
-            <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_image_with_name.svg">
+            <t t-foreach="records" t-as="data"
+                data-arrow-position="top"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_image_with_name.svg"
+            >
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered" t-att-data-url="record.website_url">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <a class="o_carousel_product_img_link overflow-hidden" t-att-href="record.website_url">
-                        <img class="card-img-top h-auto o_img_product_square o_img_product_cover rounded" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card card gap-2 h-100 w-100 border-0 bg-transparent text-reset text-center opacity-trigger-hover o_dynamic_product_hovered" t-att-data-url="record.website_url">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase z-2 bg-o-color-1">Sample</div>
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute top-0 end-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover z-2 js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant"
+                    >
+                        <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <a class="o_carousel_product_img_link stretched-link position-relative rounded-4 overflow-hidden o_dynamic_product_hovered" t-att-href="record.website_url">
+                        <img class="card-img-top h-auto object-fit-cover transition-base o_img_ratio_1x1" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                        <div class="position-absolute top-0 d-none d-lg-flex flex-column align-items-center justify-content-center gap-2 w-100 h-100 p-3 bg-black-75 opacity-0 opacity-100-hover z-1 transition-base pe-none o_cc o_cc5">
+                            <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                                <t t-set="priceClasses" t-value="'fs-3 fw-bold'"/>
+                                <t t-set="preventZeroClasses" t-value="'opacity-50'"/>
+                                <t t-set="wrapPriceClasses" t-value="'d-flex flex-column align-items-center'"/>
+                                <t t-set="discountClasses" t-value="'badge rounded-pill bg-danger'"/>
+                            </t>
+                        </div>
                     </a>
-                    <div class="h6 text-center mt-2 p-2" t-field="record.display_name"/>
-                    <div class="text-center">
-                        <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
-                            <t t-set="rating_avg" t-value="record.rating_avg"/>
-                            <t t-set="rating_count" t-value="record.rating_count"/>
-                        </t>
-                    </div>
+                    <p class="card-title" t-field="record.display_name"/>
+                    <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                        <t t-set="rating_avg" t-value="record.rating_avg"/>
+                        <t t-set="rating_count" t-value="record.rating_count"/>
+                    </t>
                 </div>
             </t>
         </template>
 
         <template id="dynamic_filter_template_product_product_centered" name="Centered Product">
-            <t t-foreach="records" t-as="data" data-arrow-position="bottom" data-thumb="/website_sale/static/src/img/snippets_options/product_centered.svg">
+            <t t-foreach="records" t-as="data"
+                data-arrow-position="top"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_centered.svg"
+            >
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card card w-100 border-0 rounded-0 bg-transparent opacity-trigger-hover" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase bg-o-color-1">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
-                    <a class="o_carousel_product_img_link position-absolute mx-auto" t-att-href="record.website_url">
-                        <img class="card-img-top" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute end-0 top-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover z-1 js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant">
+                            <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <a class="o_carousel_product_img_link" t-att-href="record.website_url">
+                        <img class="w-100 rounded-4 object-fit-cover o_img_ratio_1x1" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
-                    <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
-                        <div class="card-title h5 text-center" t-field="record.display_name"/>
-                        <div class="text-center">
-                            <div class="h5">
-                                <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
-                            </div>
-                            <div class="h6 mb-0">
-                                <t t-if="is_view_active('website_sale.product_comment')">
-                                    <t t-call="portal_rating.rating_widget_stars_static">
-                                        <t t-set="rating_avg" t-value="record.rating_avg"/>
-                                        <t t-set="rating_count" t-value="record.rating_count"/>
-                                    </t>
-                                </t>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="o_carousel_product_card_footer d-flex align-items-center justify-content-center pb-4">
-                        <a class="btn btn-primary d-block" t-att-href="record.website_url">
-                            View Product
-                        </a>
+                    <div class="d-flex flex-column gap-2 h-100 mx-3 mx-md-0 mx-lg-3 mt-n5 mt-md-n2 mt-lg-n5 rounded-4 p-3 o_cc o_cc5">
+                        <t t-if="is_view_active('website_sale.product_comment')">
+                            <t t-call="portal_rating.rating_widget_stars_static">
+                                <t t-set="rating_avg" t-value="record.rating_avg"/>
+                                <t t-set="rating_count" t-value="record.rating_count"/>
+                                <t t-set="rating_style_compressed" t-value="true"/>
+                                <t t-set="customClass" t-value="'flex-shrink-0'"/>
+                            </t>
+                        </t>
+                        <p class="card-title"><a t-att-href="record.website_url" t-field="record.display_name"/></p>
+                        <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                            <t t-set="wrapPriceClasses" t-value="'mt-auto'"/>
+                            <t t-set="preventZeroClasses" t-value="'btn d-block d-md-none d-lg-block border mt-auto text-reset opacity-50'"/>
+                        </t>
+                        <button
+                            t-if="record._website_show_quick_add()"
+                            type="button"
+                            role="button"
+                            class="btn btn-primary w-100 text-center js_add_cart"
+                            title="Add to Cart"
+                            t-att-data-product-id="product_id"
+                            t-att-data-product-template-id="product_template_id"
+                            t-att-data-product-selected="record.is_product_variant"
+                        >
+                            <i class="fa fa-fw fa-shopping-cart d-none d-md-inline d-lg-none" role="img"/>
+                            <span class="d-inline d-md-none d-lg-inline">Add to Cart</span>
+                        </button>
                     </div>
                 </div>
             </t>
         </template>
 
         <template id="dynamic_filter_template_product_product_borderless_1" name="Borderless Product n°1">
-            <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_1.svg">
+            <t t-foreach="records" t-as="data"
+                data-arrow-position="top"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_1.svg"
+            >
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card bg-transparent w-100 card border-0">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card card gap-3 w-100 border-0 bg-transparent text-reset opacity-trigger-hover">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase z-1 bg-o-color-1">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
-                    <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" t-att-href="record.website_url">
-                        <div class="overflow-hidden rounded">
-                            <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']"
-                            t-att-alt="record.display_name"/>
-                        </div>
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute end-0 top-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover z-1 js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant">
+                            <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <a class="o_carousel_product_img_link stretched-link rounded-4 overflow-hidden o_dynamic_product_hovered" t-att-href="record.website_url">
+                        <img class="card-img-top w-100 h-100 transition-base object-fit-cover o_img_ratio_4x3" loading="lazy" t-att-src="data['image_512']"
+                        t-att-alt="record.display_name"/>
                     </a>
-                    <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                        <div class="h6 card-title" t-field="record.display_name"/>
-                        <div>
-                            <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
-                                <t t-set="rating_avg" t-value="record.rating_avg"/>
-                                <t t-set="rating_count" t-value="record.rating_count"/>
-                            </t>
-                            <div class="mt-2">
-                                <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
+                    <div class="d-flex flex-column flex-grow-1 gap-2">
+                        <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                            <t t-set="rating_avg" t-value="record.rating_avg"/>
+                            <t t-set="rating_count" t-value="record.rating_count"/>
+                        </t>
+                        <p class="card-title mb-0" t-field="record.display_name"/>
+                        <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                            <t t-set="wrapPriceClasses" t-value="'fs-5 fw-bold'"/>
+                            <t t-set="priceClasses" t-value="'fs-5 fw-bold'"/>
+                            <t t-set="preventZeroClasses" t-value="'text-muted'"/>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="dynamic_filter_template_product_product_borderless_2" name="Borderless Product n°2">
+            <t t-foreach="records" t-as="data"
+                data-arrow-position="top"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_2.svg"
+            >
+                <t t-set="record" t-value="data['_record']"/>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card card gap-3 w-100 border-0 bg-transparent text-reset opacity-trigger-hover">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase z-1 bg-o-color-1">Sample</div>
+                    <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute end-0 top-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover z-2 js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant">
+                            <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <a class="o_carousel_product_img_link stretched-link flex-shrink-0 rounded-4 overflow-hidden o_dynamic_product_hovered" t-att-href="record.website_url">
+                        <img class="card-img-top w-100 h-100 transition-base object-fit-cover o_img_ratio_4x3" loading="lazy" t-att-src="data['image_512']"
+                        t-att-alt="record.display_name"/>
+                    </a>
+                    <div class="d-flex flex-column flex-grow-1 gap-2">
+                        <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                            <t t-set="rating_avg" t-value="record.rating_avg"/>
+                            <t t-set="rating_count" t-value="record.rating_count"/>
+                        </t>
+                        <p class="card-title mb-0" t-field="record.display_name"/>
+                        <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                            <t t-set="wrapPriceClasses" t-value="'fs-5 fw-bold'"/>
+                            <t t-set="priceClasses" t-value="'fs-5 fw-bold'"/>
+                            <t t-set="preventZeroClasses" t-value="'mt-auto btn border text-reset opacity-50'"/>
+                        </t>
+                        <button
+                            t-if="record._website_show_quick_add()"
+                            type="button"
+                            role="button"
+                            class="btn btn-primary w-100 mt-auto z-2 js_add_cart"
+                            title="Add to Cart"
+                            t-att-data-product-id="product_id"
+                            t-att-data-product-template-id="product_template_id"
+                            t-att-data-product-selected="record.is_product_variant"
+                        >
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="dynamic_filter_template_product_product_banner" name="Large Banner">
+            <t t-foreach="records" t-as="data"
+                data-arrow-position="top"
+                data-number-of-elements="1"
+                data-number-of-elements-sm="1"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_banner.svg"
+            >
+                <t t-set="record" t-value="data['_record']"/>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card card flex-md-row w-100 border-0 bg-transparent text-reset opacity-trigger-hover" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase bg-o-color-1">Sample</div>
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute end-0 top-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant">
+                            <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <div class="w-md-50 rounded-4 overflow-hidden">
+                        <img class="card-img-top h-100 object-fit-cover o_img_ratio_4x3" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center gap-3 w-md-50 p-3 p-md-5">
+                        <h2 class="card-title mb-0" t-field="record.display_name"/>
+                        <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                            <t t-set="priceClasses" t-value="'fs-3 fw-bold lh-1'"/>
+                            <t t-set="wrapPriceClasses" t-value="'d-flex gap-2 align-items-center'"/>
+                            <t t-set="preventZeroClasses" t-value="'fs-4 opacity-50'"/>
+                            <t t-set="discountClasses" t-value="'text-danger'"/>
+                        </t>
+                        <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                            <t t-set="rating_avg" t-value="record.rating_avg"/>
+                            <t t-set="rating_count" t-value="record.rating_count"/>
+                        </t>
+                        <p class="card-text text-muted" t-field="record.description_sale"/>
+                        <div class="d-flex gap-1 flex-column flex-md-row flex-wrap">
+                            <button
+                                t-if="record._website_show_quick_add()"
+                                type="button"
+                                role="button"
+                                class="btn btn-primary flex-grow-1 flex-lg-grow-0 js_add_cart"
+                                title="Add to Cart"
+                                t-att-data-product-id="product_id"
+                                t-att-data-product-template-id="product_template_id"
+                                t-att-data-product-selected="record.is_product_variant"
+                            >
+                                <i class="fa fa-fw fa-shopping-cart" role="img"/>
+                                Add to Cart
+                            </button>
+                            <a class="btn btn-secondary flex-grow-1 flex-lg-grow-0" t-att-href="record.website_url">
+                                <i class="fa fa-fw fa-eye" role="img"/>
+                                View Product
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="dynamic_filter_template_product_product_horizontal_card" name="Horizontal Card">
+            <t t-foreach="records" t-as="data"
+                data-number-of-elements="3"
+                data-number-of-elements-sm="1"
+                data-row-per-slide="2"
+                data-arrow-position="top"
+                data-extra-classes="o_carousel_multiple_rows"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_horizontal_card.svg"
+            >
+                <t t-set="record" t-value="data['_record']"/>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card card w-100 p-3 opacity-trigger-hover" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase z-1 bg-o-color-1">Sample</div>
+                    <div class="row h-100 p-0">
+                        <div class="col-lg-4 pe-lg-0">
+                            <a class="o_carousel_product_img_link stretched-link d-block rounded overflow-hidden o_dynamic_product_hovered" t-att-href="record.website_url">
+                                <div class="position-relative o_img_ratio_1x1">
+                                    <img class="position-absolute start-0 top-0 w-100 h-100 transition-base object-fit-cover" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="card-body d-flex flex-column h-100 p-0">
+                                <button
+                                t-if="data.get('_latest_viewed')"
+                                    type="button"
+                                    class="btn btn-secondary position-absolute end-0 top-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover z-1 js_remove"
+                                    t-att-data-product-id="product_id"
+                                    t-att-data-product-template-id="product_template_id"
+                                    t-att-data-product-selected="record.is_product_variant">
+                                        <i class="fa fa-trash fa-stack" role="img"/>
+                                </button>
+                                <p class="card-title mt-3 mt-lg-0 text-reset" t-field="record.display_name"/>
+                                <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                                    <t t-set="wrapPriceClasses" t-value="'d-flex align-items-center gap-2'"/>
+                                    <t t-set="priceClasses" t-value="'fs-4 fw-bold'"/>
+                                    <t t-set="preventZeroClasses" t-value="'fs-6 opacity-50'"/>
+                                    <t t-set="discountClasses" t-value="'fs-6 text-danger'"/>
+                                </t>
+                                <div class="mt-lg-auto ms-lg-auto">
+                                    <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                                        <t t-set="rating_style_compressed" t-value="true"/>
+                                        <t t-set="rating_avg" t-value="record.rating_avg"/>
+                                        <t t-set="rating_count" t-value="record.rating_count"/>
+                                    </t>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -196,40 +500,54 @@
             </t>
         </template>
 
-        <template id="dynamic_filter_template_product_product_borderless_2" name="Borderless Product n°2">
-            <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_2.svg">
+        <template id="dynamic_filter_template_product_product_horizontal_card_2" name="Horizontal Card width covered image">
+            <t t-foreach="records" t-as="data"
+                data-row-per-slide="2"
+                data-arrow-position="top"
+                data-number-of-elements="2"
+                data-number-of-elements-sm="1"
+                data-extra-classes="o_carousel_multiple_rows"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_horizontal_card_2.svg"
+            >
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 border-0 bg-transparent" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <a class="o_carousel_product_img_link o_dynamic_product_hovered" t-att-href="record.website_url">
-                        <div class="overflow-hidden rounded">
-                            <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']"
-                            t-att-alt="record.display_name"/>
-                        </div>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card card w-100 border-0 opacity-trigger-hover o_cc o_cc5 o_dynamic_product_hovered">
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase z-1 bg-o-color-1">Sample</div>
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute end-0 top-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover z-2 js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant">
+                            <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <a class="o_carousel_product_img_link stretched-link" t-att-href="record.website_url">
+                        <img class="img img-fluid position-absolute w-100 h-100 object-fit-cover opacity-25 transition-base" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
-                    <div class="o_carousel_product_card_body h-100 p-3 d-flex flex-column justify-content-between">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
-                            <div class="h5 mb-0 me-4">
-                                <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
-                            </div>
-                            <div class="h6 mb-0">
-                                <t t-if="is_view_active('website_sale.product_comment')">
-                                    <t t-call="portal_rating.rating_widget_stars_static">
-                                        <t t-set="rating_style_compressed" t-value="true"/>
-                                        <t t-set="rating_avg" t-value="record.rating_avg"/>
-                                        <t t-set="rating_count" t-value="record.rating_count"/>
-                                    </t>
-                                </t>
-                            </div>
+                    <div class="position-relative d-flex flex-column gap-3 h-100 p-3">
+                        <div class="d-flex align-items-center align-items-md-start align-items-lg-center gap-3 gap-md-1 gap-lg-3 flex-md-column flex-lg-row">
+                            <h4 class="card-title flex-grow-1" t-field="record.display_name"/>
+                            <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                                <t t-set="priceClasses" t-value="'fs-4 fw-bold'"/>
+                                <t t-set="preventZeroClasses" t-value="'text-muted'"/>
+                                <t t-set="wrapPriceClasses" t-value="'d-flex flex-column'"/>
+                                <t t-set="discountClasses" t-value="'badge bg-danger'"/>
+                            </t>
                         </div>
-                        <div class="card-title h6 flex-grow-1 w-100 mt-2 mb-3" t-field="record.display_name"/>
-                        <div class="text-end o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
-                            <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
-                            <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                        <p class="card-text" t-field="record.description_sale"/>
+                        <div class="d-flex align-items-center gap-3 mt-auto">
+                            <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                                <t t-set="customClass" t-value="'flex-grow-1'"/>
+                                <t t-set="rating_avg" t-value="record.rating_avg"/>
+                                <t t-set="rating_count" t-value="record.rating_count"/>
+                            </t>
                             <button
+                                t-if="record._website_show_quick_add()"
                                 type="button"
                                 role="button"
-                                class="btn btn-primary js_add_cart w-100"
+                                class="btn btn-secondary mt-auto z-2 js_add_cart"
                                 title="Add to Cart"
                                 t-att-data-product-id="product_id"
                                 t-att-data-product-template-id="product_template_id"
@@ -243,209 +561,72 @@
             </t>
         </template>
 
-        <template id="dynamic_filter_template_product_product_banner" name="Large Banner">
-            <t t-foreach="records" t-as="data" data-number-of-elements="1" data-number-of-elements-sm="1" data-thumb="/website_sale/static/src/img/snippets_options/product_banner.svg">
-                <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <div class="row flex-row-reverse">
-                        <div class="col-lg-6 d-flex align-items-center justify-content-center justify-content-lg-end o_wrap_product_img position-relative">
-                            <img class="img img-fluid position-absolute o_img_product_cover w-100 h-100" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
-                        </div>
-                        <div class="col-lg-6 px-5 d-flex align-items-center">
-                            <div class="o_carousel_product_card_body card-body p-5">
-                                <div class="card-title h1" t-field="record.display_name"/>
-                                <div class="d-flex align-items-center my-4">
-                                    <div class="h4 mb-0 me-3">
-                                        <span>
-                                            <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
-                                        </span>
-                                    </div>
-                                    <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
-                                        <t t-set="rating_avg" t-value="record.rating_avg"/>
-                                        <t t-set="rating_count" t-value="record.rating_count"/>
-                                    </t>
-                                </div>
-                                <div class="card-text text-muted" t-field="record.description_sale"/>
-                                <div class="mt-4">
-                                    <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
-                                    <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
-                                    <button
-                                        t-if="record._website_show_quick_add()"
-                                        type="button"
-                                        role="button"
-                                        class="btn btn-primary js_add_cart mt-1"
-                                        title="Add to Cart"
-                                        t-att-data-product-id="product_id"
-                                        t-att-data-product-template-id="product_template_id"
-                                        t-att-data-product-selected="record.is_product_variant"
-                                    >
-                                        Add to Cart
-                                    </button>
-                                    <a class="btn btn-secondary me-1 mt-1" t-att-href="record.website_url">
-                                        View Product
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
-        </template>
-
-        <template id="dynamic_filter_template_product_product_horizontal_card" name="Horizontal Card">
-            <t t-foreach="records" t-as="data"
-                data-number-of-elements="3"
-                data-number-of-elements-sm="1"
-                data-row-per-slide="2"
-                data-arrow-position="bottom"
-                data-extra-classes="o_carousel_multiple_rows"
-                data-thumb="/website_sale/static/src/img/snippets_options/product_horizontal_card.svg">
-                <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 border-0 bg-light p-3" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <div class="row h-100 p-0">
-                        <div class="col-lg-4 position-static">
-                            <a class="stretched-link o_dynamic_product_hovered" t-att-href="record.website_url">
-                                <img class="img img-fluid mx-auto o_img_product_square" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
-                            </a>
-                        </div>
-                        <div class="o_carousel_product_card_body col-lg-8 d-flex flex-column justify-content-between">
-                            <div>
-                                <div class="card-title h6" t-field="record.display_name"/>
-                            </div>
-                            <div>
-                                <div class="mb-1">
-                                    <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
-                                        <t t-set="rating_avg" t-value="record.rating_avg"/>
-                                        <t t-set="rating_count" t-value="record.rating_count"/>
-                                    </t>
-                                </div>
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="my-2">
-                                        <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
-                                    </div>
-                                    <div t-if="record._website_show_quick_add()" class="o_dynamic_snippet_btn_wrapper ms-auto">
-                                        <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
-                                        <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
-                                        <button
-                                            type="button"
-                                            role="button"
-                                            class="btn btn-primary js_add_cart"
-                                            title="Add to Cart"
-                                            t-att-data-product-id="product_id"
-                                            t-att-data-product-template-id="product_template_id"
-                                            t-att-data-product-selected="record.is_product_variant"
-                                        >
-                                            <i class="fa fa-fw fa-shopping-cart"/>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
-        </template>
-        <template id="dynamic_filter_template_product_product_horizontal_card_2" name="Horizontal Card width covered image">
-            <t t-foreach="records" t-as="data"
-                data-row-per-slide="2"
-                data-arrow-position="bottom"
-                data-number-of-elements="2"
-                data-number-of-elements-sm="1"
-                data-extra-classes="o_carousel_multiple_rows"
-                data-thumb="/website_sale/static/src/img/snippets_options/product_horizontal_card_2.svg">
-                <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 border-0 o_dynamic_product_hovered o_cc o_cc5">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <a class="stretched-link" t-att-href="record.website_url">
-                        <img class="img img-fluid position-absolute w-100 h-100 o_img_product_cover" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
-                    </a>
-                    <div class="o_carousel_product_card_body d-flex flex-column justify-content-between h-100 bg-black-50 p-3 position-relative">
-                        <div class="mb-3">
-                            <div class="card-title h5" t-field="record.display_name"/>
-                            <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
-                                    <t t-set="rating_avg" t-value="record.rating_avg"/>
-                                    <t t-set="rating_count" t-value="record.rating_count"/>
-                                </t>
-                        </div>
-                        <div class="card-text h6 flex-grow-1" t-field="record.description_sale"/>
-                        <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
-                            <div class="h5 mb-0 me-2">
-                                <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
-                            </div>
-                            <div t-if="record._website_show_quick_add()" class="o_dynamic_snippet_btn_wrapper">
-                                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
-                                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
-                                <button
-                                    type="button"
-                                    role="button"
-                                    class="btn btn-primary js_add_cart"
-                                    title="Add to Cart"
-                                    t-att-data-product-id="product_id"
-                                    t-att-data-product-template-id="product_template_id"
-                                    t-att-data-product-selected="record.is_product_variant"
-                                >
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
-        </template>
-
         <template id="dynamic_filter_template_product_product_card_group" name="Card group">
             <t t-foreach="records" t-as="data"
                 data-row-per-slide="2"
                 data-number-of-elements="2"
                 data-number-of-elements-sm="1"
-                data-arrow-position="bottom"
-                data-extra-classes="o_card_group rounded"
-                data-thumb="/website_sale/static/src/img/snippets_options/product_card_group.svg">
+                data-arrow-position="top"
+                data-extra-classes="o_card_group"
+                data-thumb="/website_sale/static/src/img/snippets_options/product_card_group.svg"
+            >
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 rounded-0 border-top-0 border-start-0" t-att-data-url="record.website_url">
-                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+                <div class="o_carousel_product_card card w-100 rounded-0 border-top-0 border-start-0 opacity-trigger-hover">
+                    <button
+                        t-if="data.get('_latest_viewed')"
+                        type="button"
+                        class="btn btn-secondary position-absolute end-0 top-0 mt-2 me-2 rounded-circle p-0 opacity-0 opacity-100-hover z-2 js_remove"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-template-id="product_template_id"
+                        t-att-data-product-selected="record.is_product_variant">
+                            <i class="fa fa-trash fa-stack" role="img"/>
+                    </button>
+                    <div t-if="is_sample" class="o_ribbon_right fs-5 text-uppercase z-1 bg-o-color-1">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
-                    <div class="o_carousel_product_card_body card-body justify-content-between h-100 p-3">
-                        <div class="row h-100">
-                            <div class="col-8 d-flex flex-column">
-                                <div class="card-title h5" t-field="record.display_name"/>
-                                <div class="card-text h6 text-muted" t-field="record.description_sale"/>
-                                <div class="d-flex justify-content-between align-items-center flex-wrap w-100 mt-auto">
-                                    <div class="h5 text-primary mb-0 me-2">
-                                        <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
-                                    </div>
-                                    <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
-                                        <t t-set="rating_avg" t-value="record.rating_avg"/>
-                                        <t t-set="rating_count" t-value="record.rating_count"/>
-                                    </t>
+                    <div class="card-body d-flex p-0">
+                        <div class="d-flex flex-column flex-grow-1 p-3">
+                            <p class="card-title text-reset" t-field="record.display_name"/>
+                            <t t-call="website_sale.price_dynamic_filter_template_product_product">
+                                <t t-set="priceClasses" t-value="'fs-5 fw-bold'"/>
+                                <t t-set="preventZeroClasses" t-value="'fs-6 opacity-50'"/>
+                            </t>
+                            <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
+                                <t t-set="customClass" t-value="'mt-auto pt-3'"/>
+                                <t t-set="rating_avg" t-value="record.rating_avg"/>
+                                <t t-set="rating_count" t-value="record.rating_count"/>
+                            </t>
+                        </div>
+                        <div class="flex-shrink-0 w-50 w-lg-25">
+                            <a class="o_carousel_product_img_link stretched-link d-block h-100 overflow-hidden o_dynamic_product_hovered" t-att-href="record.website_url">
+                                <div class="position-relative h-100 o_minimum_squared_height">
+                                    <img class="position-absolute start-0 top-0 w-100 h-100 object-fit-cover transition-base" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                                 </div>
-                            </div>
-                            <div class="col-4 position-static">
-                                <div class="overflow-hidden position-static">
-                                    <a class="stretched-link o_dynamic_product_hovered" t-att-href="record.website_url">
-                                        <img class="img img-fluid o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
-                                    </a>
-                                </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
             </t>
         </template>
+
         <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
             <t t-if="data.get('prevent_zero_price_sale')">
-                <span t-field="website.prevent_zero_price_sale_text"/>
+                <span t-attf-class="#{preventZeroClasses}" t-field="website.prevent_zero_price_sale_text"/>
             </t>
             <t t-elif="not data.get('is_sample')">
-                <span t-esc="data['price']"
-                      class="fw-bold"
-                      name="product_price"
-                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                <del t-if="data.get('has_discounted_price')" class="text-danger ms-1 h6" style="white-space: nowrap;"
-                     t-esc="data['list_price']"
-                     t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                <div t-attf-class="#{wrapPriceClasses}">
+                    <span t-out="data['price']"
+                        t-attf-class="#{priceClasses or 'fw-bold'}"
+                        name="product_price"
+                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                    <del t-if="data.get('has_discounted_price')" t-attf-class="#{discountClasses or 'p ms-1 text-nowrap text-danger'}"
+                        t-out="data['list_price']"
+                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                </div>
+            </t>
+            <t t-elif="data.get('is_sample')">
+                <span t-attf-class="#{priceClasses or 'fw-bold'}" t-if="is_sample">$ 99.99</span>
             </t>
         </template>
 
@@ -454,6 +635,13 @@
             <field name="name">Dynamic snippet products 000 SCSS</field>
             <field name="bundle">web.assets_frontend</field>
             <field name="path">website_sale/static/src/snippets/s_dynamic_snippet_products/000.scss</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="website_sale.s_dynamic_snippet_products_001_scss" model="ir.asset">
+            <field name="name">Dynamic snippet products 001 SCSS</field>
+            <field name="bundle">web.assets_frontend</field>
+            <field name="path">website_sale/static/src/snippets/s_dynamic_snippet_products/001.scss</field>
         </record>
 
 </odoo>
