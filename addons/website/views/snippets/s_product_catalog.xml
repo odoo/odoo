@@ -49,8 +49,8 @@
 <template id="s_product_catalog_dish">
     <li class="s_product_catalog_dish" data-name="Product">
         <p class="s_product_catalog_dish_title d-flex align-items-baseline pb-2">
-            <span t-esc="name" class="s_product_catalog_dish_name s_product_catalog_dish_dot_leaders"/>
-            <span t-esc="price" class="s_product_catalog_dish_price ms-auto ps-2"/>
+            <span t-out="name" class="s_product_catalog_dish_name s_product_catalog_dish_dot_leaders"/>
+            <span t-out="price" class="s_product_catalog_dish_price ms-auto ps-2"/>
         </p>
     </li>
 </template>
