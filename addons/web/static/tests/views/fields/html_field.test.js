@@ -119,10 +119,8 @@ test("html fields are correctly rendered in kanban view", async () => {
         arch: /* xml */ `
             <kanban class="o_kanban_test">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="txt"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="txt"/>
                     </t>
                 </templates>
             </kanban>`,

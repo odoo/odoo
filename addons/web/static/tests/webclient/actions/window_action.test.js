@@ -93,10 +93,8 @@ class Partner extends models.Model {
         "kanban,1": `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -319,10 +317,8 @@ test.tags("desktop")("switching into a view with mode=edit lands in edit mode", 
     Partner._views["kanban,1"] = `
         <kanban on_create="quick_create" default_group_by="m2o">
             <templates>
-                <t t-name="kanban-box">
-                    <div>
-                        <field name="foo"/>
-                    </div>
+                <t t-name="kanban-card">
+                    <field name="foo"/>
                 </t>
             </templates>
         </kanban>`;
@@ -2517,8 +2513,8 @@ test.tags("desktop")("sample server: populate groups", async () => {
         "kanban,false": `
             <kanban sample="1" default_group_by="write_date:month">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="display_name"/></div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,

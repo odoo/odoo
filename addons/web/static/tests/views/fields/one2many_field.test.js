@@ -2296,10 +2296,9 @@ test("one2many field when using the pager", async () => {
             <form>
                 <field name="p">
                     <kanban>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div><t t-esc="record.name"/></div>
+                            <t t-name="kanban-card">
+                                <field name="name"/>
                             </t>
                         </templates>
                     </kanban>
@@ -2394,12 +2393,11 @@ test("edition of one2many field with pager", async () => {
             <form>
                 <field name="p">
                     <kanban>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
+                            <t t-name="kanban-card">
                                 <div>
                                     <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
-                                    <span><t t-esc="record.name.value"/></span>
+                                    <field name="name"/>
                                 </div>
                             </t>
                         </templates>
@@ -2530,12 +2528,11 @@ test.tags("desktop")("edition of one2many field with pager on desktop", async ()
             <form>
                 <field name="p">
                     <kanban>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
+                            <t t-name="kanban-card">
                                 <div>
                                     <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
-                                    <span><t t-esc="record.name.value"/></span>
+                                    <field name="name"/>
                                 </div>
                             </t>
                         </templates>
@@ -2611,12 +2608,9 @@ test("When viewing one2many records in an embedded kanban, the delete button sho
             <form>
                 <field name="turtles">
                     <kanban>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <h3>Record 1</h3>
-                                </div>
+                            <t t-name="kanban-card">
+                                <h3>Record 1</h3>
                             </t>
                         </templates>
                     </kanban>
@@ -2645,12 +2639,9 @@ test("open a record in a one2many kanban (mode 'readonly')", async () => {
             <form edit="0">
                 <field name="turtles">
                     <kanban>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <t t-esc="record.name.value"/>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="name"/>
                             </t>
                         </templates>
                     </kanban>
@@ -2681,12 +2672,9 @@ test("open a record in a one2many kanban (mode 'edit')", async () => {
             <form>
                 <field name="turtles">
                     <kanban>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <t t-esc="record.name.value"/>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="name"/>
                             </t>
                         </templates>
                     </kanban>
@@ -2767,12 +2755,9 @@ test("open a record in a one2many kanban with an x2m in the form", async () => {
             <form>
                 <field name="p">
                     <kanban>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <t t-esc="record.name.value"/>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="name"/>
                             </t>
                         </templates>
                     </kanban>
@@ -2812,12 +2797,9 @@ test("one2many in kanban: add a line custom control create editable", async () =
                         <control>
                             <create string="Add pasta" context="{'default_name': 'pasta'}"/>
                         </control>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <t t-esc="record.name.value"/>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="name"/>
                             </t>
                         </templates>
                     </kanban>
@@ -2867,12 +2849,9 @@ test("one2many in kanban: add a line custom control create editable (2)", async 
                             <create string="Create" context="{}" />
                             <button string="Action Button" name="do_something" type="object" context="{'parent_id': parent.id}"/>
                         </control>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <t t-esc="record.name.value"/>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="name"/>
                             </t>
                         </templates>
                     </kanban>
@@ -3393,14 +3372,12 @@ test("one2many kanban: edition", async () => {
             <form>
                 <field name="p">
                     <kanban>
-                        <field name="color"/>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
+                            <t t-name="kanban-card">
                                 <div>
                                     <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
-                                    <span><t t-esc="record.name.value"/></span>
-                                    <span><t t-esc="record.color.value"/></span>
+                                    <field name="name"/>
+                                    <field name="color"/>
                                 </div>
                             </t>
                         </templates>
@@ -3471,7 +3448,7 @@ test("one2many kanban (editable): properly handle add-label node attribute", asy
                 <field name="turtles" add-label="Add turtle" mode="kanban">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-box">
+                            <t t-name="kanban-card">
                                 <field name="name"/>
                             </t>
                         </templates>
@@ -3497,12 +3474,11 @@ test("one2many kanban: create action disabled", async () => {
             <form>
                 <field name="p">
                     <kanban create="0">
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
+                            <t t-name="kanban-card">
                                 <div>
                                     <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
-                                    <span><t t-esc="record.name.value"/></span>
+                                    <field name="name"/>
                                 </div>
                             </t>
                         </templates>
@@ -3527,12 +3503,9 @@ test("one2many kanban: conditional create/delete actions", async () => {
                 <field name="bar"/>
                 <field name="p" options="{'create': [('bar', '=', True)], 'delete': [('bar', '=', True)]}">
                     <kanban>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <span><t t-esc="record.name.value"/></span>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="name"/>
                             </t>
                         </templates>
                     </kanban>
@@ -5742,13 +5715,10 @@ test("one2many kanban with action button", async () => {
             <form>
                 <field name="p">
                     <kanban>
-                        <field name="foo"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <span><t t-esc="record.foo.value"/></span>
-                                    <button name="method_name" type="object" class="fa fa-plus"/>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="foo"/>
+                                <button name="method_name" type="object" class="fa fa-plus"/>
                             </t>
                         </templates>
                     </kanban>
@@ -6443,13 +6413,9 @@ test("one2many field with virtual ids", async () => {
                                 <field name="p" mode="kanban">
                                     <kanban>
                                         <templates>
-                                            <t t-name="kanban-box">
-                                                <div class="o_test_id">
-                                                    <field name="id"/>
-                                                </div>
-                                                <div class="o_test_foo">
-                                                    <field name="foo"/>
-                                                </div>
+                                            <t t-name="kanban-card">
+                                                <field name="id" class="o_test_id"/>
+                                                <field name="foo" class="o_test_foo"/>
                                             </t>
                                         </templates>
                                     </kanban>
@@ -6538,13 +6504,10 @@ test("one2many field with virtual ids with kanban button", async () => {
                 <field name="p" mode="kanban">
                     <kanban>
                         <templates>
-                            <field name="foo"/>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <span><t t-esc="record.foo.value"/></span>
-                                    <button type="object" class="btn btn-link fa fa-shopping-cart" name="button_warn" string="button_warn" warn="warn" />
-                                    <button type="object" class="btn btn-link fa fa-shopping-cart" name="button_disabled" string="button_disabled" />
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="foo"/>
+                                <button type="object" class="btn btn-link fa fa-shopping-cart" name="button_warn" string="button_warn" warn="warn" />
+                                <button type="object" class="btn btn-link fa fa-shopping-cart" name="button_disabled" string="button_disabled" />
                             </t>
                         </templates>
                     </kanban>
@@ -6838,10 +6801,8 @@ test('x2many fields use their "mode" attribute', async () => {
                         </tree>
                         <kanban>
                             <templates>
-                                <t t-name="kanban-box">
-                                    <div>
-                                        <field name="turtle_int"/>
-                                    </div>
+                                <t t-name="kanban-card">
+                                    <field name="turtle_int"/>
                                 </t>
                             </templates>
                         </kanban>
@@ -9526,12 +9487,10 @@ test("field context is correctly passed to x2m subviews", async () => {
                 <field name="turtles" context="{'some_key': 1}">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <t t-if="context.some_key">
-                                        <field name="turtle_foo"/>
-                                    </t>
-                                </div>
+                            <t t-name="kanban-card">
+                                <t t-if="context.some_key">
+                                    <field name="turtle_foo"/>
+                                </t>
                             </t>
                         </templates>
                     </kanban>
@@ -9564,10 +9523,8 @@ test.tags("desktop")("one2many kanban with widget handle", async () => {
                     <kanban>
                         <field name="turtle_int" widget="handle"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <field name="turtle_foo"/>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="turtle_foo"/>
                             </t>
                         </templates>
                     </kanban>
@@ -11437,10 +11394,9 @@ test("one2many can delete a new record", async () => {
             <form>
                 <field name="p">
                     <kanban>
-                        <field name="foo"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div><t t-esc="record.foo.value"/></div>
+                            <t t-name="kanban-card">
+                                <field name="foo"/>
                             </t>
                         </templates>
                     </kanban>
@@ -11863,10 +11819,9 @@ test("kanban one2many in opened view form", async () => {
                     <form>
                         <field name="p">
                             <kanban class="o-custom-class" can_open="0">
-                                <field name="name"/>
                                 <templates>
-                                    <t t-name="kanban-box">
-                                        <div><t t-esc="record.name.value"/></div>
+                                    <t t-name="kanban-card">
+                                        <field name="name"/>
                                     </t>
                                 </templates>
                             </kanban>
@@ -11893,10 +11848,9 @@ test("kanban one2many in opened view form (with _view_ref)", async () => {
     Partner._views = {
         [["kanban", 1234]]: /* xml */ `
             <kanban class="o-custom-class" can_open="0">
-                <field name="name"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><t t-esc="record.name.value"/></div>
+                    <t t-name="kanban-card">
+                        <field name="name"/>
                     </t>
                 </templates>
             </kanban>
@@ -11942,10 +11896,8 @@ test("kanban one2many (with widget) in opened view form", async () => {
                 <field name="p">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <field name="name" widget="char"/>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="name" widget="char"/>
                             </t>
                         </templates>
                     </kanban>
@@ -12752,12 +12704,9 @@ test("x2many kanban with float field in form (non inline) but not in kanban", as
                 <field name="bar"/>
                 <field name="turtles" invisible="not bar">
                     <kanban>
-                        <field name="name"/>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <t t-esc="record.name.raw_value"/>
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="name"/>
                             </t>
                         </templates>
                     </kanban>

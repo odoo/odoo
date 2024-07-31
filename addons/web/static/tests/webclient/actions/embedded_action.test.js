@@ -65,10 +65,8 @@ class Partner extends models.Model {
         "kanban,1": `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -90,10 +88,8 @@ class Pony extends models.Model {
         "list,false": `<tree><field name="name"/></tree>`,
         "kanban,false": `<kanban>
                             <templates>
-                                <t t-name="kanban-box">
-                                    <div>
-                                        <field name="name"/>
-                                    </div>
+                                <t t-name="kanban-card">
+                                    <field name="name"/>
                                 </t>
                             </templates>
                         </kanban>`,

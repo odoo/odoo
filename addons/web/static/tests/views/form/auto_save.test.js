@@ -278,11 +278,8 @@ test.tags("desktop")(`save when action changed`, async () => {
         search: `<search/>`,
         kanban: `
             <kanban>
-                <field name="name"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div></div>
-                    </t>
+                    <t t-name="kanban-card"/>
                 </templates>
             </kanban>
         `,
