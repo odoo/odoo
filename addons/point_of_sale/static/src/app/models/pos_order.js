@@ -1057,6 +1057,9 @@ export class PosOrder extends Base {
             change: this.get_change() && formatCurrency(this.get_change()),
         };
     }
+    getFloatingOrderName() {
+        return this.note || this.tracking_number;
+    }
 }
 
 registry.category("pos_available_models").add(PosOrder.pythonModel, PosOrder);
