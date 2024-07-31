@@ -216,9 +216,12 @@ export function processButton(node) {
         context: (val) => val || "{}",
     };
     const clickParams = {};
+    const attrs = {};
     for (const { name, value } of node.attributes) {
         if (BUTTON_CLICK_PARAMS.includes(name)) {
             clickParams[name] = withDefault[name] ? withDefault[name](value) : value;
+        } else if (name === "data-hotkey") {
+            attrs[name] = value;
         }
     }
     return {
@@ -238,6 +241,7 @@ export function processButton(node) {
         ),
         readonly: node.getAttribute("readonly"),
         required: node.getAttribute("required"),
+        attrs,
     };
 }
 
