@@ -324,16 +324,10 @@ test.tags("desktop")("widget many2one_avatar in kanban view (load more dialog)",
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div class="oe_kanban_footer">
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="user_id" widget="many2one_avatar"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <footer>
+                            <field name="user_id" widget="many2one_avatar"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>`,
@@ -361,16 +355,10 @@ test("widget many2one_avatar in kanban view", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div class="oe_kanban_footer">
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="user_id" widget="many2one_avatar"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <footer>
+                            <field name="user_id" widget="many2one_avatar"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>`,
@@ -404,16 +392,10 @@ test("widget many2one_avatar in kanban view without access rights", async () => 
         arch: `
             <kanban edit="0" create="0">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div class="oe_kanban_footer">
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="user_id" widget="many2one_avatar"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <footer>
+                            <field name="user_id" widget="many2one_avatar"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>`,

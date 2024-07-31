@@ -18,7 +18,7 @@ class Foo extends models.Model {
     _views = {
         search: `<search/>`,
         list: `<list/>`,
-        kanban: `<kanban><t t-name="kanban-box"></t></kanban>`,
+        kanban: `<kanban><t t-name="kanban-card"></t></kanban>`,
     };
 }
 defineModels([Foo]);

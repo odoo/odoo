@@ -31,10 +31,8 @@ test("FavoriteField in kanban view", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="bar" widget="boolean_favorite"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="bar" widget="boolean_favorite"/>
                     </t>
                 </templates>
             </kanban>
@@ -70,10 +68,8 @@ test("FavoriteField saves changes by default", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="bar" widget="boolean_favorite"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="bar" widget="boolean_favorite"/>
                     </t>
                 </templates>
             </kanban>
@@ -103,10 +99,8 @@ test("FavoriteField does not save if autosave option is set to false", async () 
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="bar" widget="boolean_favorite" options="{'autosave': False}"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="bar" widget="boolean_favorite" options="{'autosave': False}"/>
                     </t>
                 </templates>
             </kanban>
@@ -235,10 +229,8 @@ test("FavoriteField in kanban view with readonly attribute", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="bar" widget="boolean_favorite" readonly="1"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="bar" widget="boolean_favorite" readonly="1"/>
                     </t>
                 </templates>
             </kanban>

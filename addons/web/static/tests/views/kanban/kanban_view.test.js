@@ -70,7 +70,6 @@ import {
 import { currencies } from "@web/core/currency";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { getOrigin } from "@web/core/utils/urls";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { SampleServer } from "@web/model/sample_server";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
@@ -233,7 +232,6 @@ test("basic ungrouped rendering", async () => {
             <kanban class="o_kanban_test">
             <templates>
                 <t t-name="kanban-card">
-                    <t t-esc="record.foo.value"/>
                     <field name="foo"/>
                 </t>
             </templates>
@@ -432,7 +430,7 @@ test("display full is supported on fields", async () => {
         arch: `
         <kanban class="o_kanban_test">
             <templates>
-                <t t-name="kanban-box">
+                <t t-name="kanban-card">
                     <field name="foo" display="full"/>
                 </t>
             </templates>
@@ -465,12 +463,9 @@ test.tags("desktop")("basic grouped rendering", async () => {
         resModel: "partner",
         arch: `
             <kanban class="o_kanban_test">
-                <field name="bar" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" />
                     </t>
                 </templates>
             </kanban>`,
@@ -517,12 +512,9 @@ test("basic grouped rendering with no record", async () => {
         resModel: "partner",
         arch: `
             <kanban class="o_kanban_test">
-                <field name="bar" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" />
                     </t>
                 </templates>
             </kanban>`,
@@ -545,13 +537,9 @@ test("grouped rendering with active field (archivable by default)", async () => 
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="active"/>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -586,11 +574,9 @@ test("grouped rendering with active field (archivable true)", async () => {
         resModel: "partner",
         arch: `
             <kanban archivable="true">
-                <field name="active"/>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -626,10 +612,8 @@ test.tags("desktop")("empty group when grouped by date", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `<kanban>
-            <field name="bar"/>
-            <field name="date"/>
             <templates>
-                <t t-name="kanban-box">
+                <t t-name="kanban-card">
                     <field name="foo"/>
                 </t>
             </templates>
@@ -659,11 +643,9 @@ test("grouped rendering with active field (archivable false)", async () => {
         resModel: "partner",
         arch: `
             <kanban archivable="false">
-                <field name="active"/>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -690,11 +672,9 @@ test.tags("desktop")("m2m grouped rendering with active field (archivable true)"
         resModel: "partner",
         arch: `
             <kanban archivable="true">
-                <field name="active"/>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -730,10 +710,9 @@ test("kanban grouped by date field", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="date"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -750,12 +729,8 @@ test("context can be used in kanban template", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                    <div>
-                        <t t-if="context.some_key">
-                            <field name="foo"/>
-                        </t>
-                    </div>
+                    <t t-name="kanban-card">
+                        <field t-if="context.some_key" name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -776,7 +751,7 @@ test("user context can be used in kanban template", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field t-if="user_context.some_key" name="foo"/>
                     </div>
                 </templates>
@@ -795,13 +770,11 @@ test("kanban with sub-template", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <t t-call="another-template"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <t t-call="another-template"/>
                     </t>
                     <t t-name="another-template">
-                        <span><field name="foo"/></span>
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -823,7 +796,7 @@ test("kanban with t-set outside card", async () => {
             <kanban>
                 <field name="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <t t-set="x" t-value="record.int_field.value"/>
                         <div>
                             <t t-esc="x"/>
@@ -843,11 +816,9 @@ test("kanban with t-if/t-else on field", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field t-if="record.int_field.value > -1" name="int_field"/>
-                            <t t-else="">Negative value</t>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field t-if="record.int_field.value > -1" name="int_field"/>
+                        <t t-else="">Negative value</t>
                     </t>
                 </templates>
             </kanban>`,
@@ -868,11 +839,9 @@ test("kanban with t-if/t-else on field with widget", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field t-if="record.int_field.value > -1" name="int_field" widget="integer"/>
-                            <t t-else="">Negative value</t>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field t-if="record.int_field.value > -1" name="int_field" widget="integer"/>
+                        <t t-else="">Negative value</t>
                     </t>
                 </templates>
             </kanban>`,
@@ -908,15 +877,13 @@ test("field with widget and dynamic attributes in kanban", async () => {
             <kanban>
                 <field name="foo"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="int_field" widget="my_field"
-                                t-att-dyn-bool="record.foo.value.length > 3"
-                                t-attf-interp-str="hello {{record.foo.value}}"
-                                t-attf-interp-str2="hello #{record.foo.value} !"
-                                t-attf-interp-str3="hello {{record.foo.value}} }}"
-                            />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="int_field" widget="my_field"
+                            t-att-dyn-bool="record.foo.value.length > 3"
+                            t-attf-interp-str="hello {{record.foo.value}}"
+                            t-attf-interp-str2="hello #{record.foo.value} !"
+                            t-attf-interp-str3="hello {{record.foo.value}} }}"
+                        />
                     </t>
                 </templates>
             </kanban>`,
@@ -944,14 +911,12 @@ test("view button and string interpolated attribute in kanban", async () => {
             <kanban>
                 <field name="foo"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <a name="one" type="object" class="hola"/>
-                            <a name="two" type="object" class="hola" t-attf-class="hello"/>
-                            <a name="sri" type="object" class="hola" t-attf-class="{{record.foo.value}}"/>
-                            <a name="foa" type="object" class="hola" t-attf-class="{{record.foo.value}} olleh"/>
-                            <a name="fye" type="object" class="hola" t-attf-class="hello {{record.foo.value}}"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <a name="one" type="object" class="hola"/>
+                        <a name="two" type="object" class="hola" t-attf-class="hello"/>
+                        <a name="sri" type="object" class="hola" t-attf-class="{{record.foo.value}}"/>
+                        <a name="foa" type="object" class="hola" t-attf-class="{{record.foo.value}} olleh"/>
+                        <a name="fye" type="object" class="hola" t-attf-class="hello {{record.foo.value}}"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -986,12 +951,9 @@ test("pager should be hidden in grouped mode", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1010,8 +972,8 @@ test("there should be no limit on the number of fetched groups", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1034,10 +996,8 @@ test("pager, ungrouped, with default limit", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1053,10 +1013,8 @@ test.tags("desktop")("pager, ungrouped, with default limit on desktop", async ()
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1078,8 +1036,8 @@ test("pager, ungrouped, with limit given in options", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1094,8 +1052,8 @@ test.tags("desktop")("pager, ungrouped, with limit given in options on desktop",
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1119,8 +1077,8 @@ test("pager, ungrouped, with limit set on arch and given in options", async () =
         arch: `
             <kanban limit="3">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1138,8 +1096,8 @@ test.tags("desktop")(
             arch: `
             <kanban limit="3">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1162,8 +1120,8 @@ test.tags("desktop")("pager, ungrouped, with count limit reached", async () => {
         arch: `
             <kanban limit="2">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1198,8 +1156,8 @@ test("pager, ungrouped, with count limit reached, click next", async () => {
         arch: `
             <kanban limit="2">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1230,8 +1188,8 @@ test.tags("desktop")(
             arch: `
             <kanban limit="2">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1260,8 +1218,8 @@ test("pager, ungrouped, with count limit reached, click next (2)", async () => {
         arch: `
             <kanban limit="2">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1299,8 +1257,8 @@ test.tags("desktop")(
             arch: `
             <kanban limit="2">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1334,8 +1292,8 @@ test("pager, ungrouped, with count limit reached, click previous", async () => {
         arch: `
             <kanban limit="2">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1368,8 +1326,8 @@ test.tags("desktop")(
             arch: `
             <kanban limit="2">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1397,8 +1355,8 @@ test.tags("desktop")("pager, ungrouped, with count limit reached, edit pager", a
         arch: `
             <kanban limit="2">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1440,8 +1398,8 @@ test.tags("desktop")("count_limit attrs set in arch", async () => {
         arch: `
             <kanban limit="2" count_limit="3">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1472,11 +1430,9 @@ test.tags("desktop")("pager, ungrouped, deleting all records from last page", as
         arch: `
             <kanban limit="3">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div><a role="menuitem" type="delete" class="dropdown-item">Delete</a></div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1526,8 +1482,8 @@ test.tags("desktop")("pager, update calls onUpdatedPager", async () => {
         arch: `
             <kanban js_class="test_kanban_view">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1549,11 +1505,9 @@ test("click on a button type='delete' to delete a record in a column", async () 
         arch: `
             <kanban limit="3">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div><a role="menuitem" type="delete" class="dropdown-item o_delete">Delete</a></div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <a role="menuitem" type="delete" class="dropdown-item o_delete">Delete</a>
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1584,11 +1538,9 @@ test("click on a button type='archive' to archive a record in a column", async (
         arch: `
             <kanban limit="3">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div><a role="menuitem" type="archive" class="dropdown-item o_archive">archive</a></div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <a role="menuitem" type="archive" class="dropdown-item o_archive">archive</a>
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1619,11 +1571,9 @@ test("click on a button type='unarchive' to unarchive a record in a column", asy
         arch: `
             <kanban limit="3">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div><a role="menuitem" type="unarchive" class="dropdown-item o_unarchive">unarchive</a></div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <a role="menuitem" type="unarchive" class="dropdown-item o_unarchive">unarchive</a>
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1656,8 +1606,8 @@ test.tags("desktop")("kanban with an action id as on_create attrs", async () => 
         arch: `
             <kanban on_create="some.action">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1682,10 +1632,9 @@ test.tags("desktop")("grouped kanban with quick_create attrs set to false", asyn
         resModel: "partner",
         arch: `
             <kanban quick_create="false" on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1708,10 +1657,9 @@ test.tags("desktop")("create in grouped on m2o", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1734,10 +1682,9 @@ test("create in grouped on char", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1760,11 +1707,9 @@ test("prevent deletion when grouped by many2many field", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                            <t t-if="widget.deletable"><span class="thisisdeletable">delete</span></t>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <t t-if="widget.deletable"><span class="thisisdeletable">delete</span></t>
                     </t>
                 </templates>
             </kanban>`,
@@ -1792,8 +1737,8 @@ test.tags("desktop")("kanban grouped by many2one: false column is folded by defa
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1824,10 +1769,9 @@ test.tags("desktop")("quick created records in grouped kanban are on displayed t
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="display_name"/></div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1879,10 +1823,9 @@ test.tags("desktop")("quick create record without quick_create_view", async () =
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -1943,10 +1886,9 @@ test.tags("desktop")("quick create record with quick_create_view", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2012,12 +1954,9 @@ test.tags("desktop")("quick create record flickering", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2062,12 +2001,9 @@ test.tags("desktop")("quick create record flickering (load more)", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2100,10 +2036,9 @@ test.tags("desktop")("quick create record should focus default field", async fun
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2128,10 +2063,9 @@ test.tags("desktop")("quick create record should focus first field input", async
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2154,10 +2088,9 @@ test.tags("desktop")("quick_create_view without quick_create option", async () =
         resModel: "partner",
         arch: `
             <kanban quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2197,10 +2130,9 @@ test.tags("desktop")("quick create record in grouped on m2o (no quick_create_vie
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2258,10 +2190,9 @@ test.tags("desktop")("quick create record in grouped on m2o (with quick_create_v
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2310,10 +2241,9 @@ test("quick create record in grouped on m2m (no quick_create_view)", async () =>
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="category_ids"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2355,10 +2285,9 @@ test.tags("desktop")("quick create record in grouped on m2m in the None column",
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="category_ids"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2412,8 +2341,8 @@ test("quick create record in grouped on m2m (field not in template)", async () =
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2466,8 +2395,8 @@ test("quick create record in grouped on m2m (field in the form view)", async () 
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2511,10 +2440,9 @@ test.tags("desktop")("quick create record validation: stays open when invalid", 
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2565,10 +2493,9 @@ test.tags("desktop")("quick create record with default values and onchanges", as
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2615,10 +2542,9 @@ test("quick create record with quick_create_view: modifiers", async () => {
         resModel: "partner",
         arch: `
             <kanban quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2662,12 +2588,9 @@ test("quick create record with onchange of field marked readonly", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2709,11 +2632,11 @@ test("quick create record and change state in grouped mode", async () => {
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
-                        <div class="oe_kanban_bottom_right">
+                        <footer>
                             <field name="kanban_state" widget="state_selection"/>
-                        </div>
+                        </footer>
                     </div>
                 </templates>
             </kanban>`,
@@ -2739,10 +2662,9 @@ test("window resize should not change quick create form size", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2766,10 +2688,9 @@ test("quick create record: cancel and validate without using the buttons", async
         resModel: "partner",
         arch: `
             <kanban quick_create_view="some_view_ref" on_create="quick_create">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2833,10 +2754,9 @@ test("quick create record: validate with ENTER", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2872,10 +2792,9 @@ test("quick create record: prevent multiple adds with ENTER", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2922,10 +2841,9 @@ test("quick create record: prevent multiple adds with Add clicked", async () => 
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -2967,12 +2885,9 @@ test.tags("desktop")("save a quick create record and create a new one simultaneo
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="display_name"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3035,10 +2950,9 @@ test("quick create record: prevent multiple adds with ENTER, with onchange", asy
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3116,10 +3030,10 @@ test("quick create record: click Add to create, with delayed onchange", async ()
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/><field name="int_field"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <field name="int_field"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3167,10 +3081,9 @@ test.tags("desktop")("quick create when first column is folded", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3206,10 +3119,9 @@ test("quick create record: cancel when not dirty", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3298,8 +3210,8 @@ test.tags("desktop")("quick create record: cancel when modal is opened", async (
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3338,10 +3250,9 @@ test("quick create record: cancel when dirty", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3409,10 +3320,9 @@ test("quick create record and edit in grouped mode", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3446,10 +3356,9 @@ test.tags("desktop")("quick create several records in a row", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3497,10 +3406,9 @@ test("quick create is disabled until record is created and read", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3553,10 +3461,9 @@ test.tags("desktop")("quick create record fail in grouped by many2one", async ()
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3586,10 +3493,9 @@ test.tags("desktop")("quick create record fail in grouped by many2one", async ()
 test("quick create record and click Edit, name_create fails", async () => {
     Partner._views["kanban,false"] = `
         <kanban sample="1">
-            <field name="product_id"/>
             <templates>
-                <t t-name="kanban-box">
-                    <div><field name="foo"/></div>
+                <t t-name="kanban-card">
+                    <field name="foo"/>
                 </t>
             </templates>
         </kanban>`;
@@ -3654,10 +3560,9 @@ test.tags("desktop")("quick create record is re-enabled after discard on failure
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3706,8 +3611,8 @@ test("quick create record fails in grouped by char", async () => {
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3754,8 +3659,8 @@ test("quick create record fails in grouped by selection", async () => {
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="state"/></div>
+                    <t t-name="kanban-card">
+                        <field name="state"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3803,10 +3708,9 @@ test.tags("desktop")("quick create record in empty grouped kanban", async () => 
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3830,8 +3734,8 @@ test.tags("desktop")("quick create record in grouped on date(time) field", async
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="display_name"/></div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3878,8 +3782,8 @@ test("quick create record feature is properly enabled/disabled at reload", async
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="display_name"/></div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3924,8 +3828,8 @@ test("quick create record in grouped by char field", async () => {
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="display_name"/></div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3955,8 +3859,8 @@ test("quick create record in grouped by boolean field", async () => {
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="display_name"/></div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -3986,8 +3890,8 @@ test("quick create record in grouped on selection field", async () => {
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="display_name"/></div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4026,8 +3930,8 @@ test("quick create record in grouped by char field (within quick_create_view)", 
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4062,8 +3966,8 @@ test("quick create record in grouped by boolean field (within quick_create_view)
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="bar"/></div>
+                    <t t-name="kanban-card">
+                        <field name="bar"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4101,8 +4005,8 @@ test("quick create record in grouped by selection field (within quick_create_vie
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="state"/></div>
+                    <t t-name="kanban-card">
+                        <field name="state"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4142,8 +4046,8 @@ test.tags("desktop")("quick create record while adding a new column", async () =
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4203,8 +4107,8 @@ test.tags("desktop")("close a column while quick creating a record", async () =>
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4250,8 +4154,8 @@ test("quick create record: open on a column while another column has already one
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4294,12 +4198,10 @@ test("many2many_tags in kanban views", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            <field name="foo"/>
-                            <field name="state" widget="priority"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="foo"/>
+                        <field name="state" widget="priority"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4357,11 +4259,9 @@ test("priority field should not be editable when missing access rights", async (
         arch: `
             <kanban edit="0">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                            <field name="state" widget="priority"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <field name="state" widget="priority"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4392,13 +4292,9 @@ test("Do not open record when clicking on `a` with `href`", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                            <div>
-                                <a class="o_test_link" href="#">test link</a>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <a class="o_test_link" href="#">test link</a>
                     </t>
                 </templates>
             </kanban>`,
@@ -4443,10 +4339,8 @@ test("Open record when clicking on widget field", async function (assert) {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="salary" widget="monetary"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="salary" widget="monetary"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4483,12 +4377,9 @@ test("o2m loaded in only one batch", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="subtask_ids" widget="many2many_tags"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="subtask_ids" widget="many2many_tags"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4517,12 +4408,9 @@ test.tags("desktop")("kanban with many2many, load and reload", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="category_ids" widget="many2many_tags"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="category_ids" widget="many2many_tags"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4558,12 +4446,9 @@ test.tags("desktop")("kanban with reference field", async () => {
         groupBy: ["product_id"],
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                    <div>
+                    <t t-name="kanban-card">
                         <field name="ref_product"/>
-                    </div>
                     </t>
                 </templates>
             </kanban>`,
@@ -4593,8 +4478,8 @@ test.tags("desktop")("drag and drop a record with load more", async () => {
         arch: `
             <kanban limit="1">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="id"/></div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4621,15 +4506,12 @@ test.tags("desktop")("can drag and drop a record from one column to the next", a
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                            <t t-if="widget.editable">
-                                <span class="thisiseditable">edit</span>
-                            </t>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <t t-if="widget.editable">
+                            <span class="thisiseditable">edit</span>
+                        </t>
                     </t>
                 </templates>
             </kanban>`,
@@ -4668,10 +4550,8 @@ test.tags("desktop")(
             arch: `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="foo"/>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="foo"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -4704,10 +4584,8 @@ test.tags("desktop")(
             arch: `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="foo"/>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="foo"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -4740,10 +4618,9 @@ test.tags("desktop")("drag and drop highlight on hover", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4769,10 +4646,9 @@ test("drag and drop outside of a column", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4807,8 +4683,8 @@ test.tags("desktop")("drag and drop a record, grouped by selection", async () =>
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="state"/></div>
+                    <t t-name="kanban-card">
+                        <field name="state"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4857,7 +4733,7 @@ test.tags("desktop")("prevent drag and drop of record if grouped by readonly", a
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div>
                             <field name="foo"/>
                             <field name="product_id" readonly="0" invisible="1"/>
@@ -4977,11 +4853,9 @@ test("prevent drag and drop if grouped by date/datetime field", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="date"/>
-                <field name="datetime"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5048,10 +4922,9 @@ test.tags("desktop")("prevent drag and drop if grouped by many2many field", asyn
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5134,9 +5007,9 @@ test("Ensuring each progress bar has some space", async () => {
             <kanban>
                 <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="state" widget="state_selection" />
-                        <div><field name="foo" /></div>
+                        <field name="foo" />
                     </div>
                 </templates>
             </kanban>`,
@@ -5152,10 +5025,9 @@ test("completely prevent drag and drop if records_draggable set to false", async
         resModel: "partner",
         arch: `
             <kanban records_draggable="false">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5207,13 +5079,10 @@ test.tags("desktop")("prevent drag and drop of record if save fails", async () =
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                            <field name="product_id"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <field name="product_id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5258,10 +5127,9 @@ test("kanban view with default_group_by", async () => {
         resModel: "partner",
         arch: `
             <kanban default_group_by="bar">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5296,10 +5164,9 @@ test.tags("desktop")("kanban view not groupable", async () => {
         resModel: "partner",
         arch: `
             <kanban default_group_by="bar">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5328,8 +5195,8 @@ test("kanban view with create=False", async () => {
         arch: `
             <kanban create="0">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5345,8 +5212,8 @@ test("kanban view with create=False and groupby", async () => {
         arch: `
             <kanban create="0">
                 <templates>
-                    <t t-name="kanban-box">>
-                        <div><field name="foo"/></div>>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5365,8 +5232,8 @@ test("clicking on a link triggers correct event", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><a type="edit">Edit</a></div>
+                    <t t-name="kanban-card">
+                        <a type="edit">Edit</a>
                     </t>
                 </templates>
             </kanban>`,
@@ -5384,10 +5251,9 @@ test.tags("desktop")("environment is updated when (un)folding groups", async () 
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="id"/></div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5425,10 +5291,9 @@ test.tags("desktop")("create a column in grouped on m2o", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5515,10 +5380,9 @@ test("create a column in grouped on m2o without sequence field on view model", a
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5561,10 +5425,9 @@ test.tags("desktop")("auto fold group when reach the limit", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5625,10 +5488,9 @@ test.tags("desktop")("auto fold group when reach the limit (2)", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5670,10 +5532,9 @@ test.tags("desktop")("show/hide help message (ESC) in quick create [REQUIRE FOCU
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5710,12 +5571,9 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
         resModel: "partner",
         arch: `
             <kanban class="o_kanban_test" on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5854,10 +5712,9 @@ test("create a column, delete it and create another one", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5913,10 +5770,9 @@ test("delete an empty column, then a column with records.", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -5963,10 +5819,9 @@ test.tags("desktop")("edit a column in grouped on m2o", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6041,10 +5896,9 @@ test("edit a column propagates right context", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6061,10 +5915,9 @@ test("quick create column should be opened if there is no column", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6085,10 +5938,9 @@ test("quick create column should not be closed on window click if there is no co
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6114,10 +5966,9 @@ test("quick create several columns in a row", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6165,10 +6016,9 @@ test.tags("desktop")("quick create column with enter", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6208,10 +6058,9 @@ test.tags("desktop")("quick create column and examples", async () => {
         resModel: "partner",
         arch: `
             <kanban examples="test">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6289,10 +6138,9 @@ test("quick create column with x_name as _rec_name", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6329,9 +6177,8 @@ test.tags("desktop")("count of folded groups in empty kanban with sample data", 
         type: "kanban",
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                     </div>
                 </templates>
@@ -6378,10 +6225,9 @@ test.tags("desktop")("quick create column and examples: with folded columns", as
         resModel: "partner",
         arch: `
             <kanban examples="test">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6433,10 +6279,9 @@ test.tags("desktop")("quick create column's apply button's display text", async 
         resModel: "partner",
         arch: `
             <kanban examples="test">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6478,10 +6323,9 @@ test.tags("desktop")("create column and examples background with ghostColumns ti
         resModel: "partner",
         arch: `
             <kanban examples="test">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6513,10 +6357,9 @@ test("create column and examples background without ghostColumns titles", async 
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6559,11 +6402,10 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
         resModel: "partner",
         arch: `
             <kanban >
-                <field name="product_id"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6609,10 +6451,9 @@ test.tags("desktop")("ungrouped kanban view can be grouped, then ungrouped", asy
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6645,11 +6486,9 @@ test("no content helper when archive all records in kanban group", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="active"/>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6680,11 +6519,8 @@ test.tags("desktop")("no content helper when no data", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <t t-esc="record.foo.value"/>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6723,10 +6559,9 @@ test("no nocontent helper for grouped kanban with empty groups", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6747,8 +6582,8 @@ test("no nocontent helper for grouped kanban with no records", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6775,8 +6610,8 @@ test("no nocontent helper is shown when no longer creating column", async () => 
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6825,8 +6660,8 @@ test("no nocontent helper is hidden when quick creating a column", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6865,8 +6700,8 @@ test("remove nocontent helper after adding a record", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6907,8 +6742,8 @@ test("remove nocontent helper when adding a record", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6948,8 +6783,8 @@ test("nocontent helper is displayed again after canceling quick create", async (
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -6975,8 +6810,8 @@ test("nocontent helper for grouped kanban (on m2o field) with no records with no
         arch: `
             <kanban group_create="false">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7003,8 +6838,8 @@ test("nocontent helper for grouped kanban (on date field) with no records with n
         arch: `
             <kanban group_create="false">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7025,9 +6860,8 @@ test("empty grouped kanban with sample data and no columns", async () => {
     await mountView({
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                     </div>
                 </templates>
@@ -7072,12 +6906,9 @@ test("empty kanban with sample data grouped by date range (fill temporal)", asyn
     await mountView({
         arch: `
             <kanban sample="1">
-                <field name="date"/>
-                <field name="state"/>
-                <field name="int_field"/>
                 <progressbar field="state" sum_field="int_field" help="progress" colors="{}"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                         <field name="int_field"/>
                     </div>
@@ -7112,10 +6943,9 @@ test("empty grouped kanban with sample data and click quick create", async () =>
         resModel: "partner",
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7161,10 +6991,9 @@ test.tags("desktop")("quick create record in grouped kanban with sample data", a
         resModel: "partner",
         arch: `
             <kanban sample="1" on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7204,10 +7033,9 @@ test("empty grouped kanban with sample data and cancel quick create", async () =
         resModel: "partner",
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7246,9 +7074,8 @@ test.tags("desktop")("empty grouped kanban with sample data: keynav", async () =
         type: "kanban",
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                         <field name="state" widget="priority"/>
                     </div>
@@ -7274,10 +7101,9 @@ test.tags("desktop")("empty kanban with sample data", async () => {
         resModel: "partner",
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7320,13 +7146,10 @@ test("empty grouped kanban with sample data and many2many_tags", async () => {
         resModel: "partner",
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="int_field"/>
-                            <field name="category_ids" widget="many2many_tags"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="int_field"/>
+                        <field name="category_ids" widget="many2many_tags"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7353,10 +7176,9 @@ test("empty grouped kanban with sample data and many2many_tags", async () => {
 test.tags("desktop")("sample data does not change after reload with sample data", async () => {
     Partner._views["kanban,false"] = `
         <kanban sample="1">
-            <field name="product_id"/>
             <templates>
-                <t t-name="kanban-box">
-                    <div><field name="int_field"/></div>
+                <t t-name="kanban-card">
+                    <field name="int_field"/>
                 </t>
             </templates>
         </kanban>`;
@@ -7406,10 +7228,9 @@ test.tags("desktop")("non empty kanban with sample data", async () => {
         resModel: "partner",
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7448,9 +7269,8 @@ test("empty grouped kanban with sample data: add a column", async () => {
     await mountView({
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                     </div>
                 </templates>
@@ -7493,9 +7313,8 @@ test.tags("desktop")("empty grouped kanban with sample data: cannot fold a colum
         type: "kanban",
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                     </div>
                 </templates>
@@ -7540,9 +7359,8 @@ test("empty grouped kanban with sample data: delete a column", async () => {
         type: "kanban",
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                     </div>
                 </templates>
@@ -7585,9 +7403,8 @@ test("empty grouped kanban with sample data: add a column and delete it right aw
         type: "kanban",
         arch: `
             <kanban sample="1">
-                <field name="product_id"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                     </div>
                 </templates>
@@ -7645,7 +7462,7 @@ test.tags("desktop")("kanban with sample data: do an on_create action", async ()
         arch: `
             <kanban sample="1" on_create="myCreateAction">
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                     </div>
                 </templates>
@@ -7689,7 +7506,7 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
         arch: `
             <kanban sample="1">
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="product_id"/>
                     </div>
                 </templates>
@@ -7711,11 +7528,8 @@ test.tags("desktop")("bounce create button when no data and click on empty area"
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                    <div>
-                        <t t-esc="record.foo.value"/>
+                    <t t-name="kanban-card">
                         <field name="foo"/>
-                    </div>
                     </t>
                 </templates>
             </kanban>`,
@@ -7748,7 +7562,7 @@ test("buttons with modifiers", async () => {
                 <field name="bar"/>
                 <field name="state"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <button class="o_btn_test_1" type="object" name="a1" invisible="foo != 'yop'"/>
                         <button class="o_btn_test_2" type="object" name="a2" invisible="bar and state not in ['abc', 'def']"/>
                     </div>
@@ -7777,7 +7591,7 @@ test("support styling of anchor tags with action type", async function (assert) 
         arch: `
             <kanban>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                         <a type="action" name="42" class="btn-primary" style="margin-left: 10px"><i class="oi oi-arrow-right"/> Click me !</a>
                     </div>
@@ -7807,7 +7621,7 @@ test("button executes action and reloads", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                         <button type="object" name="a1" class="a1"/>
                     </div>
@@ -7850,9 +7664,8 @@ test("button executes action and check domain", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="active"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="foo"/>
                         <button type="object" name="a1" />
                         <button type="object" name="toggle_active" class="toggle-active" />
@@ -7877,10 +7690,8 @@ test("field tag with modifiers but no widget", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" invisible="id == 1"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" invisible="id == 1"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7897,10 +7708,8 @@ test("field tag with widget and class attributes", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" widget="char" class="hi"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" widget="char" class="hi"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7918,14 +7727,10 @@ test("rendering date and datetime (value)", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="date"/>
-                <field name="datetime"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <span class="date" t-esc="record.date.value"/>
-                            <span class="datetime" t-esc="record.datetime.value"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field class="date" name="date"/>
+                        <field class="datetime" name="datetime"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7949,11 +7754,9 @@ test("rendering date and datetime (raw value)", async () => {
                 <field name="date"/>
                 <field name="datetime"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <span class="date" t-esc="record.date.raw_value"/>
-                            <span class="datetime" t-esc="record.datetime.raw_value"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <span class="date" t-esc="record.date.raw_value"/>
+                        <span class="datetime" t-esc="record.datetime.raw_value"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7975,15 +7778,12 @@ test("rendering many2one (value)", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-            <field name="product_id"/>
-            <templates>
-                <t t-name="kanban-box">
-                    <div>
-                        <span class="product_id" t-esc="record.product_id.value"/>
-                    </div>
-                </t>
-            </templates>
-        </kanban>`,
+                <templates>
+                    <t t-name="kanban-card">
+                        <field name="product_id" class="product_id"/>
+                    </t>
+                </templates>
+            </kanban>`,
     });
 
     expect(getKanbanRecordTexts()).toEqual(["hello", "", "hello", "xmo"]);
@@ -7999,10 +7799,8 @@ test("rendering many2one (raw value)", async () => {
             <kanban>
                 <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <span class="product_id" t-esc="record.product_id.raw_value"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <span class="product_id" t-esc="record.product_id.raw_value"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8022,11 +7820,9 @@ test("evaluate conditions on relational fields", async () => {
                 <field name="product_id"/>
                 <field name="category_ids"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <button t-if="!record.product_id.raw_value" class="btn_a">A</button>
-                            <button t-if="!record.category_ids.raw_value.length" class="btn_b">B</button>
-                        </div>
+                    <t t-name="kanban-card">
+                        <button t-if="!record.product_id.raw_value" class="btn_a">A</button>
+                        <button t-if="!record.category_ids.raw_value.length" class="btn_b">B</button>
                     </t>
                 </templates>
             </kanban>`,
@@ -8051,11 +7847,9 @@ test.tags("desktop")("resequence columns in grouped by m2o", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar" />
-                <field name="product_id" readonly="not bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="id"/></div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8104,10 +7898,9 @@ test.tags("desktop")("resequence all when creating new record + partial resequen
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="id"/></div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8148,10 +7941,9 @@ test("prevent resequence columns if groups_draggable=false", async () => {
         resModel: "partner",
         arch: `
             <kanban groups_draggable='0'>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                    <div><field name="id"/></div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8184,10 +7976,9 @@ test("open config dropdown on kanban with records and groups draggable off", asy
         resModel: "partner",
         arch: `
             <kanban groups_draggable='0' records_draggable='0'>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                    <div><field name="id"/></div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8208,15 +7999,12 @@ test("properly evaluate more complex domains", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="foo"/>
                 <field name="bar"/>
                 <field name="category_ids"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                            <button type="object" invisible="bar or category_ids" class="btn btn-primary float-end" name="arbitrary">Join</button>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <button type="object" invisible="bar or category_ids" class="btn btn-primary float-end" name="arbitrary">Join</button>
                     </t>
                 </templates>
             </kanban>`,
@@ -8386,10 +8174,8 @@ test("load more records in column", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="id"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8439,11 +8225,9 @@ test("load more records in column with x2many", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                    <div>
+                    <t t-name="kanban-card">
                         <field name="category_ids"/>
                         <field name="foo"/>
-                    </div>
                     </t>
                 </templates>
             </kanban>`,
@@ -8479,8 +8263,8 @@ test("update buttons after column creation", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8510,11 +8294,10 @@ test.tags("desktop")("group_by_tooltip option when grouping on a many2one", asyn
         resModel: "partner",
         arch: `
             <kanban default_group_by="bar">
-                <field name="bar"/>
                 <field name="product_id" options='{"group_by_tooltip": {"name": "Kikou"}}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8579,11 +8362,10 @@ test.tags("desktop")("asynchronous tooltips when grouped", async () => {
         resModel: "partner",
         arch: `
             <kanban default_group_by="product_id">
-                <field name="bar"/>
                 <field name="product_id" options='{"group_by_tooltip": {"name": "Name"}}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8622,11 +8404,10 @@ test.tags("desktop")("loads data tooltips only when first opening", async () => 
         resModel: "partner",
         arch: `
             <kanban default_group_by="product_id">
-                <field name="bar"/>
-                <field name="product_id"  options='{"group_by_tooltip": {"name": "Name"}}'/>
+                <field name="product_id" options='{"group_by_tooltip": {"name": "Name"}}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8657,10 +8438,9 @@ test.tags("desktop")("move a record then put it again in the same column", async
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="display_name"/></div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8708,10 +8488,9 @@ test.tags("desktop")("resequence a record twice", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="display_name"/></div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8777,13 +8556,10 @@ test("basic support for widgets (being Owl Components)", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="foo"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <t t-esc="record.foo.value"/>
-                            <widget name="test"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <widget name="test"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8813,13 +8589,10 @@ test("kanban card: record value should be updated", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="foo"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div class="foo" t-esc="record.foo.value"/>
-                            <widget name="test"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" class="foo"/>
+                        <widget name="test"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8842,14 +8615,10 @@ test("column progressbars properly work", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
-                <field name="int_field"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8882,11 +8651,10 @@ test("filter on progressbar in new groups", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="bar"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8934,14 +8702,10 @@ test('column progressbars: "false" bar is clickable', async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
-                <field name="int_field"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8995,15 +8759,10 @@ test('column progressbars: "false" bar with sum_field', async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
-                <field name="int_field"/>
-                <field name="foo"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9043,14 +8802,10 @@ test("column progressbars should not crash in non grouped views", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
-                <field name="int_field"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9081,13 +8836,10 @@ test("column progressbars: creating a new column should create a new progressbar
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9127,10 +8879,8 @@ test("column progressbars on quick create properly update counter", async () => 
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9176,10 +8926,8 @@ test("column progressbars are working with load more", async () => {
             <kanban limit="1">
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="id"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9220,10 +8968,9 @@ test("column progressbars with an active filter are working with load more", asy
         arch: `
             <kanban limit="1">
                 <progressbar field="foo" colors='{"blork": "success"}'/>
-                <field name="foo"/>
                 <templates>
-                    <t t-name="kanban-box">
-                    <div><field name="id"/></div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9263,15 +9010,10 @@ test("column progressbars on archiving records update counter", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="active"/>
-                <field name="bar"/>
-                <field name="int_field"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9318,15 +9060,10 @@ test("kanban with progressbars: correctly update env when archiving records", as
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="active"/>
-                <field name="bar"/>
-                <field name="int_field"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="id"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9364,14 +9101,10 @@ test("RPCs when (re)loading kanban view progressbars", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-            <field name="bar"/>
-            <field name="int_field"/>
             <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
             <templates>
-                <t t-name="kanban-box">
-                    <div>
-                        <field name="foo"/>
-                    </div>
+                <t t-name="kanban-card">
+                    <field name="foo"/>
                 </t>
             </templates>
         </kanban>`,
@@ -9408,12 +9141,10 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
-                <field name="int_field"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9471,10 +9202,8 @@ test.tags("desktop")("drag & drop records grouped by m2o with progressbar", asyn
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="int_field"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="int_field"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9551,10 +9280,8 @@ test.tags("desktop")("d&d records grouped by date with progressbar with aggregat
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="int_field"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="int_field"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9595,10 +9322,8 @@ test("progress bar subgroup count recompute", async () => {
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9633,10 +9358,8 @@ test.tags("desktop")("progress bar recompute after d&d to and from other column"
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9682,10 +9405,8 @@ test("progress bar recompute after filter selection", async () => {
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9737,10 +9458,8 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9799,10 +9518,8 @@ test("progress bar with aggregates: activate bars (grouped by boolean)", async (
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9837,10 +9554,8 @@ test("progress bar with aggregates: activate bars (grouped by many2one)", async 
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9875,10 +9590,8 @@ test("progress bar with aggregates: activate bars (grouped by date)", async () =
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9917,10 +9630,8 @@ test("progress bar with aggregates: Archive All in a column", async () => {
         arch: `
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
-                <templates><t t-name="kanban-box">
-                    <div>
+                <templates><t t-name="kanban-card">
                         <field name="foo"/>
-                    </div>
                 </t></templates>
             </kanban>`,
         groupBy: ["bar"],
@@ -9955,14 +9666,9 @@ test.tags("desktop")("load more should load correct records after drag&drop even
         resModel: "partner",
         arch: `
             <kanban limit="1">
-                <field name="id"/>
-                <field name="foo"/>
-                <field name="sequence"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="id"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9995,11 +9701,10 @@ test.tags("desktop")("column progressbars on quick create with quick_create_view
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="int_field"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10047,12 +9752,10 @@ test.tags("desktop")("progressbars and active filter with quick_create_view", as
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create" quick_create_view="some_view_ref">
-                <field name="int_field"/>
-                <field name="foo"/>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10126,12 +9829,9 @@ test.tags("desktop")("quickcreate in first column after moving a record from it"
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10152,199 +9852,6 @@ test.tags("desktop")("quickcreate in first column after moving a record from it"
     );
 });
 
-test("test displaying image (URL, image field not set)", async () => {
-    patchWithCleanup(KanbanCompiler.prototype, {
-        compileImage(el) {
-            el.setAttribute("t-att-data-src", el.getAttribute("t-att-src"));
-            el.removeAttribute("t-att-src");
-            return super.compileImage(el);
-        },
-    });
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="id"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <img t-att-src="kanban_image('partner', 'image', record.id.raw_value)"/>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    // since the field image is not set, kanban_image will generate an URL
-    expect(queryAll(`.o_kanban_record img`).map((img) => img.dataset.src.split("?")[0])).toEqual([
-        `${getOrigin()}/web/image/partner/1/image`,
-        `${getOrigin()}/web/image/partner/2/image`,
-        `${getOrigin()}/web/image/partner/3/image`,
-        `${getOrigin()}/web/image/partner/4/image`,
-    ]);
-    expect(queryFirst(".o_kanban_record img").loading).toBe("lazy");
-});
-
-test("test displaying image (write_date field)", async () => {
-    // the presence of write_date field ensures that the image is reloaded when necessary
-    expect.assertions(2);
-
-    patchWithCleanup(KanbanCompiler.prototype, {
-        compileImage(el) {
-            el.setAttribute("t-att-data-src", el.getAttribute("t-att-src"));
-            el.removeAttribute("t-att-src");
-            return super.compileImage(el);
-        },
-    });
-
-    const rec = Partner._records.find((r) => r.id === 1);
-    rec.write_date = "2022-08-05 08:37:00";
-
-    onRpc("web_search_read", ({ kwargs }) => {
-        expect(kwargs.specification).toEqual({ id: {}, write_date: {} });
-    });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="id"/>
-                <templates>
-                    <t t-name="kanban-box"><div>
-                    <img t-att-src="kanban_image('partner', 'image', record.id.raw_value)"/>
-                    </div></t>
-                </templates>
-            </kanban>`,
-        domain: [["id", "in", [1]]],
-    });
-
-    expect(
-        `.o_kanban_record img[data-src='${getOrigin()}/web/image/partner/1/image?unique=1659688620000']`
-    ).toHaveCount(1);
-});
-
-test("test displaying image (binary & placeholder)", async () => {
-    patchWithCleanup(KanbanCompiler.prototype, {
-        compileImage(el) {
-            el.setAttribute("t-att-data-src", el.getAttribute("t-att-src"));
-            el.removeAttribute("t-att-src");
-            return super.compileImage(el);
-        },
-    });
-
-    Partner._fields.image = fields.Binary();
-    Partner._records[0].image = "R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==";
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="id"/>
-                <field name="image"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <img t-att-src="kanban_image('partner', 'image', record.id.raw_value)"/>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(queryAll(`.o_kanban_record img`).map((img) => img.dataset.src.split("?")[0])).toEqual([
-        "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==",
-        `${getOrigin()}/web/image/partner/2/image`,
-        `${getOrigin()}/web/image/partner/3/image`,
-        `${getOrigin()}/web/image/partner/4/image`,
-    ]);
-});
-
-test("test displaying image (for another record)", async () => {
-    patchWithCleanup(KanbanCompiler.prototype, {
-        compileImage(el) {
-            el.setAttribute("t-att-data-src", el.getAttribute("t-att-src"));
-            el.removeAttribute("t-att-src");
-            return super.compileImage(el);
-        },
-    });
-
-    Partner._fields.image = fields.Binary();
-    Partner._records[0].image = "R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==";
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="id"/>
-                <field name="image"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <img t-att-src="kanban_image('partner', 'image', 1)"/>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    // the field image is set, but we request the image for a specific id
-    // -> for the record matching the ID, the base64 should be returned
-    // -> for all the other records, the image should be displayed by url
-    expect(queryAll(`.o_kanban_record img`).map((img) => img.dataset.src.split("?")[0])).toEqual([
-        "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==",
-        `${getOrigin()}/web/image/partner/1/image`,
-        `${getOrigin()}/web/image/partner/1/image`,
-        `${getOrigin()}/web/image/partner/1/image`,
-    ]);
-});
-
-test("test displaying image from m2o field (m2o field not set)", async () => {
-    patchWithCleanup(KanbanCompiler.prototype, {
-        compileImage(el) {
-            el.setAttribute("t-att-data-src", el.getAttribute("t-att-src"));
-            el.removeAttribute("t-att-src");
-            return super.compileImage(el);
-        },
-    });
-
-    class FooPartner extends models.Model {
-        _name = "foo.partner";
-
-        name = fields.Char();
-        partner_id = fields.Many2one({ relation: "partner" });
-
-        _records = [
-            { id: 1, name: "foo_with_partner_image", partner_id: 1 },
-            { id: 2, name: "foo_no_partner" },
-        ];
-    }
-    defineModels([FooPartner]);
-
-    await mountView({
-        type: "kanban",
-        resModel: "foo.partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <div t-name="kanban-box">
-                        <field name="name"/>
-                        <field name="partner_id"/>
-                        <img t-att-src="kanban_image('partner', 'image', record.partner_id.raw_value)"/>
-                    </div>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(queryAll(`.o_kanban_record img`).map((img) => img.dataset.src.split("?")[0])).toEqual([
-        `${getOrigin()}/web/image/partner/1/image`,
-        `${getOrigin()}/web/image/partner/null/image`,
-    ]);
-});
-
 test.tags("desktop")("grouped kanban: clear groupby when reloading", async () => {
     // in this test, we simulate that clearing the domain is slow, so that
     // clearing the groupby does not corrupt the data handled while
@@ -10363,12 +9870,9 @@ test.tags("desktop")("grouped kanban: clear groupby when reloading", async () =>
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10406,10 +9910,8 @@ test.tags("desktop")("quick_create on grouped kanban without column", async () =
         arch: `
             <kanban group_create="0" on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10430,11 +9932,8 @@ test("keynav: right/left", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <t t-esc="record.foo.value"/>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10457,12 +9956,9 @@ test("keynav: down, with focus is inside a card", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <t t-esc="record.foo.value"/>
-                            <field name="foo"/>
-                            <a href="#" class="o-this-is-focussable">ho! this is focussable</a>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <a href="#" class="o-this-is-focussable">ho! this is focussable</a>
                     </t>
                 </templates>
             </kanban>`,
@@ -10480,12 +9976,9 @@ test.tags("desktop")("keynav: grouped kanban", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10561,12 +10054,9 @@ test.tags("desktop")("keynav: grouped kanban with empty columns", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10613,10 +10103,8 @@ test.tags("desktop")("keynav: no global_click, press ENTER on card with a link",
         arch: `
             <kanban can_open="0">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <a type="archive">Archive</a>
-                        </div>
+                    <t t-name="kanban-card">
+                        <a type="archive">Archive</a>
                     </t>
                 </templates>
             </kanban>`,
@@ -10644,10 +10132,8 @@ test.tags("desktop")("keynav: kanban with global_click", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                         <a name="action_test" type="object" />
                     </t>
                 </templates>
@@ -10702,13 +10188,9 @@ test.tags("desktop")("set cover image", async () => {
                     <t t-name="kanban-menu">
                         <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
                     </t>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                            <div>
-                                <field name="displayed_image_id" widget="attachment_image"/>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <field name="displayed_image_id" widget="attachment_image"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10788,13 +10270,9 @@ test.tags("desktop")("open file explorer if no cover image", async () => {
                     <t t-name="kanban-menu">
                         <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
                     </t>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <field name="foo"/>
-                            <div>
-                                <field name="displayed_image_id" widget="attachment_image"/>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <field name="displayed_image_id" widget="attachment_image"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10857,13 +10335,9 @@ test.tags("desktop")("unset cover image", async () => {
                     <t t-name="kanban-menu">
                         <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
                     </t>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                            <div>
-                                <field name="displayed_image_id" widget="attachment_image"/>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <field name="displayed_image_id" widget="attachment_image"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10925,10 +10399,8 @@ test.tags("desktop")("ungrouped kanban with handle field", async () => {
             <kanban>
                 <field name="int_field" widget="handle" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10953,10 +10425,8 @@ test("ungrouped kanban without handle field", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -10982,10 +10452,8 @@ test("click on image field in kanban (with default global_click)", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="image" widget="image"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="image" widget="image"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11008,8 +10476,8 @@ test("kanban view with boolean field", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="bar"/></div>
+                    <t t-name="kanban-card">
+                        <field name="bar"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11027,8 +10495,8 @@ test("kanban view with boolean widget", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="bar" widget="boolean"/></div>
+                    <t t-name="kanban-card">
+                        <field name="bar" widget="boolean"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11046,8 +10514,8 @@ test("kanban view with boolean toggle widget", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="bar" widget="boolean_toggle"/></div>
+                    <t t-name="kanban-card">
+                        <field name="bar" widget="boolean_toggle"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11076,8 +10544,8 @@ test("kanban view with monetary and currency fields without widget", async () =>
             <kanban>
                 <field name="currency_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="salary"/></div>
+                    <t t-name="kanban-card">
+                        <field name="salary"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11095,9 +10563,8 @@ test.tags("desktop")("quick create: keyboard navigation to buttons", async () =>
     await mountView({
         arch: `
             <kanban on_create="quick_create">
-                <field name="bar"/>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="display_name"/>
                     </div>
                 </templates>
@@ -11137,15 +10604,12 @@ test("kanban with isHtmlEmpty method", async () => {
         resModel: "product",
         arch: `
             <kanban>
-                <field name="description"/>
                 <templates>
-                    <t t-name="kanban-box">
-                    <div>
+                    <t t-name="kanban-card">
                         <field name="display_name"/>
                         <div class="test" t-if="!widget.isHtmlEmpty(record.description.raw_value)">
-                            <t t-out="record.description.value"/>
+                            <field name="description"/>
                         </div>
-                    </div>
                     </t>
                 </templates>
             </kanban>`,
@@ -11172,14 +10636,10 @@ test("progressbar filter state is kept unchanged when domain is updated (records
         arch: `
             <kanban default_group_by="bar">
                 <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
-                <field name="foo"/>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="id"/>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="id"/>
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11250,10 +10710,8 @@ test("progressbar filter state is kept unchanged when domain is updated (emptyin
         arch: `
             <kanban default_group_by="bar">
                 <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
-                <field name="foo"/>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div>
                             <field name="id"/>
                             <field name="foo"/>
@@ -11339,10 +10797,8 @@ test.tags("desktop")("filtered column counters when dropping in non-matching rec
         arch: `
             <kanban default_group_by="bar">
                 <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
-                <field name="foo"/>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div>
                             <field name="id"/>
                             <field name="foo"/>
@@ -11409,10 +10865,8 @@ test.tags("desktop")("filtered column is reloaded when dragging out its last rec
         arch: `
             <kanban default_group_by="bar">
                 <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
-                <field name="foo"/>
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div>
                             <field name="id"/>
                             <field name="foo"/>
@@ -11492,10 +10946,8 @@ test("kanban widget can extract props from attrs", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <widget name="widget_test_option" title="Widget with Option"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <widget name="widget_test_option" title="Widget with Option"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11523,10 +10975,8 @@ test("action/type attributes on kanban arch, type='object'", async () => {
         arch: `
             <kanban action="a1" type="object">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <p>some value</p><field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <p>some value</p><field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11558,10 +11008,8 @@ test("action/type attributes on kanban arch, type='action'", async () => {
         arch: `
             <kanban action="a1" type="action">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <p>some value</p><field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <p>some value</p><field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11586,7 +11034,7 @@ test("Missing t-key is automatically filled with a warning", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div>
                             <span t-foreach="[1, 2, 3]" t-as="i" t-esc="i" />
                         </div>
@@ -11616,10 +11064,8 @@ test("Quick created record is rendered after load", async () => {
                 <field name="category_ids" />
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <span t-esc="record.category_ids.raw_value.length" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <span t-esc="record.category_ids.raw_value.length" />
                     </t>
                 </templates>
             </kanban>`,
@@ -11650,7 +11096,7 @@ test("Allow use of 'editable'/'deletable' in ungrouped kanban", async () => {
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <button t-if="widget.editable">EDIT</button>
                         <button t-if="widget.deletable">DELETE</button>
                     </div>
@@ -11671,10 +11117,8 @@ test.tags("desktop")("folded groups kept when leaving/coming back", async () => 
         "kanban,false": `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="int_field"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="int_field"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11722,10 +11166,8 @@ test.tags("desktop")("filter groups kept when leaving/coming back", async () => 
             <kanban>
                 <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="id" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="id" />
                     </t>
                 </templates>
             </kanban>`,
@@ -11782,10 +11224,8 @@ test.tags("desktop")("folded groups kept when leaving/coming back (grouped by da
         "kanban,false": `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="int_field"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="int_field"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11831,10 +11271,8 @@ test.tags("desktop")("loaded records kept when leaving/coming back", async () =>
         "kanban,false": `
             <kanban limit="1">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="int_field"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="int_field"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -11880,10 +11318,8 @@ test("basic rendering with 2 groupbys", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" />
                     </t>
                 </templates>
             </kanban>`,
@@ -11919,10 +11355,8 @@ test("basic rendering with a date groupby with a granularity", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" />
                     </t>
                 </templates>
             </kanban>`,
@@ -11949,12 +11383,9 @@ test.tags("desktop")("quick create record and click outside (no dirty input)", a
         resModel: "partner",
         arch: `
             <kanban limit="2">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12008,12 +11439,9 @@ test.tags("desktop")("quick create record and click outside (with dirty input)",
         resModel: "partner",
         arch: `
             <kanban limit="2">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12076,12 +11504,9 @@ test("quick create record and click on 'Load more'", async () => {
         resModel: "partner",
         arch: `
             <kanban limit="2">
-                <field name="bar"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12114,7 +11539,7 @@ test("dropdown is closed on item click", async () => {
                     <t t-name="kanban-menu">
                         <a role="menuitem" class="dropdown-item">Item</a>
                     </t>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div/>
                     </t>
                 </templates>
@@ -12142,7 +11567,7 @@ test("can use JSON in kanban template", async () => {
             <kanban>
                 <field name="foo"/>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div>
                             <span t-foreach="JSON.parse(record.foo.raw_value)" t-as="v" t-key="v_index" t-esc="v"/>
                         </div>
@@ -12166,14 +11591,10 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="bar"/>
-                <field name="foo"/>
                 <progressbar field="foo" colors='{"yop": "200", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="state"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="state"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12236,7 +11657,7 @@ test("update field on which progress bars are computed", async () => {
             <kanban>
                 <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="state" widget="state_selection" />
                         <field name="id" />
                     </div>
@@ -12332,7 +11753,7 @@ test("load more button shouldn't be visible when unfiltering column", async () =
             <kanban>
                 <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="state" widget="state_selection" />
                         <field name="id" />
                     </div>
@@ -12389,7 +11810,7 @@ test("click on the progressBar of a new column", async () => {
             <kanban on_create="quick_create">
                 <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="state" widget="state_selection" />
                         <field name="id" />
                     </div>
@@ -12427,10 +11848,8 @@ test.tags("desktop")("keep focus in cp when pressing arrowdown and no kanban car
         arch: `
             <kanban on_create="quick_create">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="display_name"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12482,12 +11901,9 @@ test.tags("desktop")("no leak of TransactionInProgress (grouped case)", async ()
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="state"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12557,10 +11973,8 @@ test.tags("desktop")("no leak of TransactionInProgress (not grouped case)", asyn
             <kanban records_draggable="1">
                 <field name="int_field" widget="handle" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12629,7 +12043,7 @@ test("renders banner_route", async () => {
         arch: `
             <kanban banner_route="/mybody/isacage">
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div/>
                     </t>
                 </templates>
@@ -12658,10 +12072,8 @@ test("fieldDependencies support for fields", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" widget="custom_field"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" widget="custom_field"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12689,10 +12101,8 @@ test("fieldDependencies support for fields: dependence on a relational field", a
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" widget="custom_field"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" widget="custom_field"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12714,10 +12124,8 @@ test("column quick create - title and placeholder", async function (assert) {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="int_field"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="int_field"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12740,7 +12148,7 @@ test.tags("desktop")("fold a column and drag record on it should not unfold it",
         arch: `
             <kanban>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="id"/>
                     </div>
                 </templates>
@@ -12782,7 +12190,7 @@ test.tags("desktop")("drag record on initially folded column should not unfold i
         arch: `
             <kanban>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="id"/>
                     </div>
                 </templates>
@@ -12815,7 +12223,7 @@ test.tags("desktop")("drag record to folded column, with progressbars", async ()
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field" />
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="id" />
                     </div>
                 </templates>
@@ -12874,13 +12282,10 @@ test.tags("desktop")("quick create record in grouped kanban in a form view dialo
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <t t-if="record.foo.raw_value" t-set="foo"/>
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -12942,7 +12347,7 @@ test.tags("desktop")("no sample data when all groups are folded then one is unfo
         arch: `
             <kanban sample="1">
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="id"/>
                     </div>
                 </templates>
@@ -12974,7 +12379,7 @@ test.tags("desktop")("no content helper, all groups folded with (unloaded) recor
         arch: `
             <kanban>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="id"/>
                     </div>
                 </templates>
@@ -12997,7 +12402,7 @@ test.tags("desktop")("Move multiple records in different columns simultaneously"
         arch: `
             <kanban>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="id" />
                     </div>
                 </templates>
@@ -13034,7 +12439,7 @@ test.tags("desktop")("drag & drop: content scrolls when reaching the edges", asy
         arch: `
             <kanban>
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="id" />
                     </div>
                 </templates>
@@ -13110,7 +12515,7 @@ test("attribute default_order", async () => {
         arch: `
             <kanban default_order="int">
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="int" />
                     </div>
                 </templates>
@@ -13134,10 +12539,8 @@ test.tags("desktop")("d&d records grouped by m2o with m2o displayed in records",
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="product_id" widget="many2one"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="product_id" widget="many2one"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -13173,7 +12576,7 @@ test("Can't use KanbanRecord implementation details in arch", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div>
                             <t t-esc="__owl__"/>
                             <t t-esc="props"/>
@@ -13216,10 +12619,8 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -13319,7 +12720,7 @@ test("sample server: _mockWebReadGroup API", async () => {
         arch: `
             <kanban sample="1">
                 <templates>
-                    <div t-name="kanban-box">
+                    <div t-name="kanban-card">
                         <field name="display_name"/>
                     </div>
                 </templates>
@@ -13359,7 +12760,7 @@ test.tags("desktop")("scroll on group unfold and progressbar click", async () =>
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field" />
                 <templates>
-                    <t t-name="kanban-box">Record</t>
+                    <t t-name="kanban-card">Record</t>
                 </templates>
             </kanban>`,
         groupBy: ["product_id"],
@@ -13461,12 +12862,9 @@ test.tags("desktop")("action button in controlPanel with display='always'", asyn
                     <button name="display" type="object" class="display_invisible_2" string="invisible context" display="always" invisible="context.get('a')"/>
                     <button name="default-selection" type="object" class="default-selection" string="default-selection"/>
                 </header>
-                <field name="bar" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" />
                     </t>
                 </templates>
             </kanban>`,
@@ -13492,7 +12890,7 @@ test.tags("desktop")("Keep scrollTop when loading records with load more", async
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <div style="height:1000px;"><field name="id"/></div>
                     </t>
                 </templates>
@@ -13516,12 +12914,9 @@ test("Kanban: no reset of the groupby when a non-empty column is deleted", async
         resModel: "partner",
         arch: `
             <kanban default_group_by="product_id">
-                <field name="foo"/>
-                <field name="product_id"/>
-                <field name="category_ids"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -13571,10 +12966,9 @@ test.tags("desktop")("searchbar filters are displayed directly", async () => {
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="foo"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -13607,10 +13001,9 @@ test("searchbar filters are displayed directly (with progressbar)", async () => 
         arch: `
             <kanban>
                 <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
-                <field name="foo"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -13744,13 +13137,10 @@ test.tags("desktop")("group by properties and drag and drop", async () => {
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                            <field name="properties"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <field name="properties"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -13807,7 +13197,7 @@ test("kanbans with basic and custom compiler, same arch", async () => {
     Partner._views["kanban,false"] = `
         <kanban js_class="my_kanban">
             <templates>
-                <t t-name="kanban-box">
+                <t t-name="kanban-card">
                     <div><field name="foo"/></div>
                 </t>
             </templates>
@@ -13846,10 +13236,8 @@ test("grouped on field with readonly expression depending on context", async () 
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="product_id" readonly="context.get('abc')" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="product_id" readonly="context.get('abc')" />
                     </t>
                 </templates>
             </kanban>`,
@@ -13879,11 +13267,9 @@ test.tags("desktop")("grouped on field with readonly expression depending on fie
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" />
-                            <field name="product_id" readonly="foo == 'yop'" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo" />
+                        <field name="product_id" readonly="foo == 'yop'" />
                     </t>
                 </templates>
             </kanban>`,
@@ -13907,10 +13293,9 @@ test.tags("desktop")("quick create a column by pressing enter when input is focu
         resModel: "partner",
         arch: `
             <kanban>
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -13942,10 +13327,9 @@ test("Correct values for progress bar with toggling filter and slow RPC", async 
         arch: `
             <kanban>
                 <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
-                <field name="foo"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -14002,10 +13386,9 @@ test.tags("desktop")("click on empty kanban must shake the NEW button", async ()
         resModel: "partner",
         arch: `
             <kanban on_create="quick_create">
-                <field name="product_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,

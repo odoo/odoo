@@ -72,10 +72,9 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <kanban>
                     <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
-                    <field name="product_id"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="foo"/></div>
+                        <t t-name="kanban-card">
+                            <field name="foo"/>
                         </t>
                     </templates>
                 </kanban>`,

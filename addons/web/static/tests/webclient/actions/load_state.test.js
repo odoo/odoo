@@ -161,8 +161,8 @@ class Partner extends models.Model {
         kanban: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>

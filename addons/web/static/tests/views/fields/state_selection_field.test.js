@@ -413,10 +413,8 @@ test("works when required in a readonly view", async () => {
         arch: /* xml */ `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="selection" widget="state_selection" required="1"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="selection" widget="state_selection" required="1"/>
                     </t>
                 </templates>
             </kanban>

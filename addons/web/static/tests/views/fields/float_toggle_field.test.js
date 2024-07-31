@@ -71,10 +71,8 @@ test("kanban view (readonly) with option force_button", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="float_field" widget="float_toggle" options="{'force_button': true}"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="float_field" widget="float_toggle" options="{'force_button': true}"/>
                     </t>
                 </templates>
             </kanban>`,

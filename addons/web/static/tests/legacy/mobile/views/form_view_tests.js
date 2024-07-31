@@ -355,10 +355,8 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                 "partner,false,kanban": `
                     <kanban>
                         <templates>
-                            <t t-name="kanban-box">
-                                <div>
-                                    <field name="display_name" />
-                                </div>
+                            <t t-name="kanban-card">
+                                <field name="display_name" />
                             </t>
                         </templates>
                     </kanban>

@@ -92,10 +92,8 @@ test.tags("desktop")("JournalDashboardGraphField is rendered correctly", async (
             <kanban>
                 <field name="graph_type"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -129,10 +127,8 @@ test("rendering of a JournalDashboardGraphField in an updated grouped kanban vie
             <kanban>
                 <field name="graph_type"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>
                     </t>
                 </templates>
             </kanban>`,
