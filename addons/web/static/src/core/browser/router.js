@@ -304,6 +304,9 @@ browser.addEventListener("click", (ev) => {
         ) {
             ev.preventDefault();
             state = router.urlToState(url);
+            if (url.pathname.startsWith("/odoo") && url.hash) {
+                browser.history.pushState({}, "", url.href);
+            }
             new Promise((res) => setTimeout(res, 0)).then(() => routerBus.trigger("ROUTE_CHANGE"));
         }
     }
