@@ -1124,6 +1124,21 @@ class TestHttp(common.HttpCase):
         self.assertEqual(response.json(), {"status": "error"})
         self.assertEqual(response.status_code, 404)
 
+    def test_webhook_trigger_with_public_user(self):
+        task_model = self.env.ref('test_base_automation.model_test_base_automation_task')
+        project = self.env['test_base_automation.project'].create({})
+        task = self.env['test_base_automation.task'].create({'project_id': project.id, 'state': False})
+        automation = create_automation(
+            self,
+            model_id=task_model.id,
+            record_getter="model.browse(payload['id'])",
+            trigger="on_webhook",
+            _actions={'state': 'code', 'code': "record.write({'state': True})"}
+        )
+        response = self.url_open(automation.url, data=json.dumps({"id": task.id}), headers={"Content-Type": "application/json"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "ok"})
+
     def test_payload_in_action_server(self):
         model = self.env["ir.model"]._get("base.automation.linked.test")
         record_getter = "model.search([('name', '=', payload['name'])]) if payload.get('name') else None"
