@@ -19,12 +19,14 @@ import {
     useRef,
     useState,
     useExternalListener,
+    useEffect,
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 
 export class Discuss extends Component {
     static components = {
@@ -35,6 +37,7 @@ export class Discuss extends Component {
         Composer,
         FileUploader,
         ImStatus,
+        MessagingMenu,
     };
     static props = {
         hasSidebar: { type: Boolean, optional: true },
@@ -72,6 +75,21 @@ export class Discuss extends Component {
             },
             { capture: true }
         );
+        if (this.store.inPublicPage) {
+            useEffect(
+                (thread, isSmall) => {
+                    if (!thread) {
+                        return;
+                    }
+                    if (isSmall) {
+                        this.chatWindow = this.thread.openChatWindow();
+                    } else {
+                        this.chatWindow?.close();
+                    }
+                },
+                () => [this.thread, this.ui.isSmall]
+            );
+        }
         onMounted(() => (this.store.discuss.isActive = true));
         onWillUnmount(() => (this.store.discuss.isActive = false));
     }
