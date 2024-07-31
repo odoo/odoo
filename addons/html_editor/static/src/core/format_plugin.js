@@ -358,6 +358,7 @@ function getOrCreateSpan(node, ancestors) {
     }
 }
 function removeFormat(node, formatSpec) {
+    const document = node.ownerDocument;
     node = closestElement(node);
     if (formatSpec.hasStyle(node)) {
         formatSpec.removeStyle(node);
@@ -372,7 +373,7 @@ function removeFormat(node, formatSpec) {
         });
         if (attributesNames.length) {
             // Change tag name
-            const newNode = this.document.createElement("span");
+            const newNode = document.createElement("span");
             while (node.firstChild) {
                 newNode.appendChild(node.firstChild);
             }

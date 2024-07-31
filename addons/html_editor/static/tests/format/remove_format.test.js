@@ -530,6 +530,13 @@ test("should remove multiple format (3)", async () => {
         contentAfter: "<div><p><b>a</b>[bc</p><p>de<br>fg<br></p><p>ijsd]fsf</p></div>",
     });
 });
+test("should remove format and keep attribute in a span", async () => {
+    await testEditor({
+        contentBefore: '<p><strong some-attr="1">[abc]</strong></p>',
+        stepFunction: (editor) => editor.dispatch("FORMAT_REMOVE_FORMAT"),
+        contentAfter: '<p><span some-attr="1">[abc]</span></p>',
+    });
+});
 test("should remove multiple color (1)", async () => {
     await testEditor({
         contentBefore:
