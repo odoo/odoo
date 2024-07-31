@@ -49,6 +49,7 @@ export class ChatWindow extends Component {
         this.state = useState({
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
+            editingGuestName: false,
             editingName: false,
         });
         this.ui = useState(useService("ui"));
@@ -144,6 +145,14 @@ export class ChatWindow extends Component {
         const thread = toRaw(this.thread);
         await thread.rename(name);
         this.state.editingName = false;
+    }
+
+    async renameGuest(name) {
+        const newName = name.trim();
+        if (this.store.self.name !== newName) {
+            await this.store.self.updateGuestName(newName);
+        }
+        this.state.editingGuestName = false;
     }
 
     async onActionsMenuStateChanged(isOpen) {

@@ -44,6 +44,13 @@ patch(Thread.prototype, {
             typeof this.id === "string" ? `mail.box_${this.id}` : `discuss.channel_${this.id}`;
         router.pushState({ active_id: activeId });
     },
+    open(options) {
+        if (this.store.env.services.ui.isSmall) {
+            this.openChatWindow(options);
+            return;
+        }
+        super.open();
+    },
     async unpin() {
         this.isLocallyPinned = false;
         if (this.eq(this.store.discuss.thread)) {

@@ -1,42 +1,25 @@
-import { ImStatus } from "@mail/core/common/im_status";
-import { NotificationItem } from "@mail/core/web/notification_item";
-import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
-import { onExternalClick, useDiscussSystray } from "@mail/utils/common/hooks";
+import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
+import { onExternalClick } from "@mail/utils/common/hooks";
+import { useEffect, useState } from "@odoo/owl";
 
-import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
-
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { patch } from "@web/core/utils/patch";
+import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
 
-export class MessagingMenu extends Component {
-    static components = { Dropdown, NotificationItem, ImStatus, MessagingMenuQuickSearch };
-    static props = [];
-    static template = "mail.MessagingMenu";
+Object.assign(MessagingMenu.components, { MessagingMenuQuickSearch });
 
+patch(MessagingMenu.prototype, {
     setup() {
         super.setup();
-        this.discussSystray = useDiscussSystray();
-        this.store = useState(useService("mail.store"));
-        this.hasTouch = hasTouch;
-        this.notification = useState(useService("mail.notification.permission"));
         this.action = useService("action");
         this.pwa = useState(useService("pwa"));
-        this.ui = useState(useService("ui"));
-        this.state = useState({
-            activeIndex: null,
-            adding: false,
+        this.notification = useState(useService("mail.notification.permission"));
+        Object.assign(this.state, {
             searchOpen: false,
         });
-        this.dropdown = useDropdownState();
-        this.notificationList = useRef("notification-list");
 
         onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
-        useExternalListener(window, "keydown", this.onKeydown, true);
         useEffect(
             () => {
                 if (
@@ -61,8 +44,7 @@ export class MessagingMenu extends Component {
             },
             () => [this.dropdown.isOpen]
         );
-    }
-
+    },
     beforeOpen() {
         this.state.searchOpen = false;
         this.store.discuss.searchTerm = "";
@@ -75,95 +57,10 @@ export class MessagingMenu extends Component {
                 this.store.inbox.fetchNewMessages();
             }
         });
-    }
-
-    onClickThread(isMarkAsRead, thread) {
-        if (!isMarkAsRead) {
-            this.openDiscussion(thread);
-            return;
-        }
-        this.markAsRead(thread);
-    }
-
-    markAsRead(thread) {
-        if (thread.needactionMessages.length > 0) {
-            thread.markAllMessagesAsRead();
-        }
-        if (thread.model === "discuss.channel") {
-            thread.markAsRead();
-        }
-    }
-
-    navigate(direction) {
-        if (this.notificationItems.length === 0) {
-            return;
-        }
-        const activeOptionId = this.state.activeIndex !== null ? this.state.activeIndex : 0;
-        let targetId = undefined;
-        switch (direction) {
-            case "first":
-                targetId = 0;
-                break;
-            case "last":
-                targetId = this.notificationItems.length - 1;
-                break;
-            case "previous":
-                targetId = activeOptionId - 1;
-                if (targetId < 0) {
-                    this.navigate("last");
-                    return;
-                }
-                break;
-            case "next":
-                targetId = activeOptionId + 1;
-                if (targetId > this.notificationItems.length - 1) {
-                    this.navigate("first");
-                    return;
-                }
-                break;
-            default:
-                return;
-        }
-        this.state.activeIndex = targetId;
-        this.notificationItems[targetId]?.scrollIntoView({ block: "nearest" });
-    }
-
-    onKeydown(ev) {
-        if (!this.dropdown.isOpen) {
-            return;
-        }
-        const hotkey = getActiveHotkey(ev);
-        switch (hotkey) {
-            case "enter":
-                if (this.state.activeIndex === null) {
-                    return;
-                }
-                this.notificationItems[this.state.activeIndex].click();
-                break;
-            case "tab":
-                this.navigate(this.state.activeIndex === null ? "first" : "next");
-                break;
-            case "arrowup":
-                this.navigate(this.state.activeIndex === null ? "first" : "previous");
-                break;
-            case "arrowdown":
-                this.navigate(this.state.activeIndex === null ? "first" : "next");
-                break;
-            default:
-                return;
-        }
-        ev.preventDefault();
-        ev.stopPropagation();
-    }
-
-    get notificationItems() {
-        return this.notificationList.el?.children ?? [];
-    }
-
+    },
     get canPromptToInstall() {
         return this.pwa.canPromptToInstall;
-    }
-
+    },
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
@@ -177,8 +74,7 @@ export class MessagingMenu extends Component {
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp)
         );
-    }
-
+    },
     get installationRequest() {
         return {
             body: _t("Come here often? Install Odoo on your device!"),
@@ -190,8 +86,7 @@ export class MessagingMenu extends Component {
             partner: this.store.odoobot,
             isShown: this.store.discuss.activeTab === "main" && this.canPromptToInstall,
         };
-    }
-
+    },
     get notificationRequest() {
         return {
             body: _t("Enable desktop notifications to chat"),
@@ -202,15 +97,7 @@ export class MessagingMenu extends Component {
                 this.store.discuss.activeTab === "main" &&
                 this.notification.permission === "prompt",
         };
-    }
-
-    get threads() {
-        return this.store.menuThreads;
-    }
-
-    /**
-     * @type {{ id: string, icon: string, label: string }[]}
-     */
+    },
     get tabs() {
         return [
             {
@@ -218,33 +105,9 @@ export class MessagingMenu extends Component {
                 id: "main",
                 label: this.env.inDiscussApp ? _t("Mailboxes") : _t("All"),
             },
-            {
-                icon: "fa fa-user",
-                id: "chat",
-                label: _t("Chat"),
-            },
-            {
-                icon: "fa fa-users",
-                id: "channel",
-                label: _t("Channel"),
-            },
+            ...super.tabs,
         ];
-    }
-
-    openDiscussion(thread) {
-        thread.open({ fromMessagingMenu: true });
-        this.dropdown.close();
-    }
-
-    onClickNewMessage() {
-        if (this.ui.isSmall || this.env.inDiscussApp) {
-            Object.assign(this.state, { adding: "chat" });
-        } else {
-            this.store.openNewMessage();
-            this.dropdown.close();
-        }
-    }
-
+    },
     /** @param {import("models").Failure} failure */
     onClickFailure(failure) {
         const threadIds = new Set(failure.notifications.map(({ message }) => message.thread.id));
@@ -255,8 +118,7 @@ export class MessagingMenu extends Component {
             this.openFailureView(failure);
             this.dropdown.close();
         }
-    }
-
+    },
     openThread(thread) {
         if (this.store.discuss.isActive) {
             this.action.doAction({
@@ -272,8 +134,7 @@ export class MessagingMenu extends Component {
             thread.open({ fromMessagingMenu: true });
         }
         this.dropdown.close();
-    }
-
+    },
     openFailureView(failure) {
         if (failure.type !== "email") {
             return;
@@ -292,36 +153,16 @@ export class MessagingMenu extends Component {
             domain: [["message_has_error", "=", true]],
             context: { create: false },
         });
-    }
-
+    },
     cancelNotifications(failure) {
         return this.env.services.orm.call(failure.resModel, "notify_cancel_by_type", [], {
             notification_type: failure.type,
         });
-    }
-
-    onClickNavTab(tabId) {
-        if (this.store.discuss.activeTab === tabId) {
-            return;
-        }
-        this.store.discuss.activeTab = tabId;
-        if (
-            this.store.discuss.activeTab === "main" &&
-            this.env.inDiscussApp &&
-            (!this.store.discuss.thread || this.store.discuss.thread.model !== "mail.box")
-        ) {
-            this.store.inbox.setAsDiscussThread();
-        }
-        if (this.store.discuss.activeTab !== "main") {
-            this.store.discuss.thread = undefined;
-        }
-    }
-
+    },
     toggleSearch() {
         this.store.discuss.searchTerm = "";
         this.state.searchOpen = !this.state.searchOpen;
-    }
-
+    },
     get counter() {
         let value =
             this.store.inbox.counter +
@@ -333,13 +174,8 @@ export class MessagingMenu extends Component {
             value++;
         }
         return value;
-    }
-
+    },
     get displayStartConversation() {
         return this.store.discuss.activeTab !== "channel" && !this.state.adding;
-    }
-}
-
-registry
-    .category("systray")
-    .add("mail.messaging_menu", { Component: MessagingMenu }, { sequence: 25 });
+    },
+});
