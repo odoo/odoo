@@ -62,15 +62,11 @@ export class ControlButtons extends Component {
         }
 
         if (selectedFiscalPosition === "none") {
-            this.currentOrder.update({
-                fiscal_position_id: false,
-            });
+            this.fiscal_position_id = false;
             return;
         }
 
-        this.currentOrder.update({
-            fiscal_position_id: selectedFiscalPosition ? selectedFiscalPosition.id : false,
-        });
+        this.fiscal_position_id = selectedFiscalPosition;
     }
     async clickPricelist() {
         // Create the list to be passed to the SelectionPopup.

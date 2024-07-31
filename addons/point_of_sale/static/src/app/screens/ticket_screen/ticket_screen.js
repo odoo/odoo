@@ -280,9 +280,9 @@ export class TicketScreen extends Component {
                 product_id: refundLine.product_id,
                 order_id: destinationOrder,
                 discount: refundLine.discount,
-                tax_ids: refundLine.tax_ids.map((tax) => ["link", tax]),
+                tax_ids: refundLine.tax_ids,
                 refunded_orderline_id: refundLine,
-                pack_lot_ids: refundLine.pack_lot_ids.map((packLot) => ["link", packLot]),
+                pack_lot_ids: refundLine.pack_lot_ids,
                 price_type: "automatic",
             });
             lines.push(line);
@@ -296,9 +296,7 @@ export class TicketScreen extends Component {
             const children = refundComboParent.refunded_orderline_id.combo_line_ids
                 .map((l) => l.refund_orderline_ids)
                 .flat();
-            refundComboParent.update({
-                combo_line_ids: [["link", ...children]],
-            });
+            refundComboParent.combo_line_ids = children;
         }
 
         //Add a check too see if the fiscal position exist in the pos
@@ -313,7 +311,7 @@ export class TicketScreen extends Component {
         }
 
         if (order.fiscal_position_id) {
-            destinationOrder.update({ fiscal_position_id: order.fiscal_position_id });
+            destinationOrder.fiscal_position_id = order.fiscal_position_id;
         }
         // Set the partner to the destinationOrder.
         this.setPartnerToRefundOrder(partner, destinationOrder);

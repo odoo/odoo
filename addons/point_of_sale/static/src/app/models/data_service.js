@@ -233,6 +233,7 @@ export class PosData extends Reactive {
 
         this.models.loadData(data, this.modelToLoad);
         this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
+
         const dbData = await this.loadIndexedDBData();
         this.loadedIndexedDBProducts = dbData ? dbData["product.product"] : [];
         this.network.loading = false;
@@ -316,24 +317,19 @@ export class PosData extends Reactive {
                             }
 
                             if (X2MANY_TYPES.has(fieldsParams.type)) {
-                                formattedForUpdate[field] = value
-                                    .filter((id) => this.models[fieldsParams.relation].get(id))
-                                    .map((id) => [
-                                        "link",
-                                        this.models[fieldsParams.relation].get(id),
-                                    ]);
+                                formattedForUpdate[field] = value.filter((id) =>
+                                    this.models[fieldsParams.relation].get(id)
+                                );
                             } else if (fieldsParams.type === "many2one") {
                                 if (this.models[fieldsParams.relation].get(value)) {
-                                    formattedForUpdate[field] = [
-                                        "link",
-                                        this.models[fieldsParams.relation].get(value),
-                                    ];
+                                    formattedForUpdate[field] =
+                                        this.models[fieldsParams.relation].get(value);
                                 }
                             } else {
                                 formattedForUpdate[field] = value;
                             }
                         }
-                        localRecord.update(formattedForUpdate);
+                        Object.assign(localRecord, formattedForUpdate);
                     } else {
                         nonExistentRecords.push(record);
                     }
@@ -460,7 +456,7 @@ export class PosData extends Reactive {
         for (const id of ids) {
             const record = this.models[model].get(id);
             delete vals.id;
-            record.update(vals);
+            Object.assign(record, vals);
 
             const dataToUpdate = {};
             const keysToUpdate = Object.keys(vals);
