@@ -19,7 +19,7 @@
                     <t t-else="">
                         <ThreadIcon className="'me-2 align-self-center'" size="'large'" thread="thread"/>
                     </t>
-                    <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" className="'me-1'" persona="thread.correspondent.persona" thread="thread" />
+                    <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" className="'me-1'" member="thread.correspondent" />
                     <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                         <AutoresizeInput
                             className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark py-0'"
