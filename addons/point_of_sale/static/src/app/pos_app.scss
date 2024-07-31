@@ -68,6 +68,9 @@ input::-webkit-inner-spin-button {
 }
 
 @media screen and (max-width: 575px) {
+    .modal{
+        animation: addOpacity 0.2s ease-in-out forwards;
+    }
     .pos .modal-dialog{
         margin: 0;
         max-height: 92dvh;
@@ -86,12 +89,43 @@ input::-webkit-inner-spin-button {
         min-height: unset;
     }
 }
-
+@keyframes addOpacity {
+    0% {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    100% {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+}
 @keyframes popUp {
     0% {
         transform: translateY(100%);
+        background-color: rgba(0, 0, 0, 0) !important;
     }
     100% {
         transform: translateY(0);
+        background-color: rgba(0, 0, 0, 0.5) !important;
+    }
+}
+.isClosing {
+    animation: popDown 0.2s ease-in-out forwards;
+}
+@keyframes popDown {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+.closing-modal-bg {
+    animation: removeOpacity 0.2s ease-in-out;
+}
+@keyframes removeOpacity {
+    0% {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    100% {
+        background-color: rgba(0, 0, 0, 0);
     }
 }
