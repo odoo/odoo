@@ -728,9 +728,7 @@ class MailComposer(models.TransientModel):
         for res_ids_iter in tools.split_every(batch_size, res_ids):
             res_ids_values = list(self._prepare_mail_values(res_ids_iter).values())
 
-            iter_mails_sudo = self.env['mail.mail'].sudo()
-            for mail_values in res_ids_values:
-                iter_mails_sudo += mails_sudo.create(mail_values)
+            iter_mails_sudo = self.env['mail.mail'].sudo().create(res_ids_values)
             mails_sudo += iter_mails_sudo
 
             records = self.env[self.model].browse(res_ids_iter) if self.model and hasattr(self.env[self.model], 'message_post') else False
