@@ -3,7 +3,8 @@
 import { registry } from "@web/core/registry";
 import options from "@web_editor/js/editor/snippets.options.legacy";
 import { loadImage } from "@web_editor/js/editor/image_processing";
-import { ImageTools } from "@web_editor/js/editor/snippets.options";
+import { BackgroundImage, ImageTools, registerBackgroundOptions } from "@web_editor/js/editor/snippets.options";
+import { updateOption } from "@web_editor/js/editor/snippets.registry";
 import { registerSnippetAdditionSelector } from "@web_editor/js/editor/snippets.registry";
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 import weUtils from "@web_editor/js/common/utils";
@@ -29,14 +30,29 @@ registerSnippetAdditionSelector(".o_mail_snippet_general");
 
 // Adding compatibility for the outlook compliance of mailings.
 // Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
-options.registry.MassMailingBackgroundImage = options.registry.BackgroundImage.extend({
-    start: function () {
-        this._super();
+class MassMailingBackgroundImage extends BackgroundImage {
+    /**
+     * @override
+     */
+    willStart() {
+        super.willStart(...arguments);
         const $table_target = this.$target.find('table:first');
         if ($table_target.length) {
             this.$target = $table_target;
         }
     }
+}
+// Allow changing background images in Masonry and Cover
+registerBackgroundOptions("MassMailingBackgroundImage", {
+        selector: ".s_masonry_block .row > div, .s_cover .oe_img_bg",
+        withImages: true,
+        withVideos: false,
+        withShapes: false,
+    },
+    (name) => name === "toggler" && "mass_mailing.snippet_options_background_options"
+);
+updateOption("MassMailingBackgroundImage-bgToggler", {
+    Class: () => MassMailingBackgroundImage,
 });
 
 class MassMailingImageTools extends ImageTools {

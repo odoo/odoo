@@ -349,14 +349,6 @@
         </we-row>
     </div>
 
-    <!-- Allow changing background images in Masonry and Cover -->
-    <t t-call="mass_mailing.snippet_options_background_options">
-        <t t-set="selector" t-value="'.s_masonry_block .row > div, .s_cover .oe_img_bg'"/>
-        <t t-set="with_images" t-value="True"/>
-        <t t-set="with_videos" t-value="false"/>
-        <t t-set="with_shapes" t-value="false"/>
-    </t>
-
     <!-- COLOR | .s_three_columns | .s_comparisons | .s_event  -->
     <div data-js="Box"
          data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
