@@ -876,7 +876,8 @@ class Message(models.Model):
             self._bus_notification_target(),
             "mail.record/insert",
             Store(self, {"reactions": [(group_command, group_values)]})
-            .add(guest or partner, fields=["name", "write_date"])
+            # sudo: mail.guest - guest can send their own name when reacting
+            .add(guest.sudo() or partner, fields=["name", "write_date"])
             .get_result(),
         )
 
