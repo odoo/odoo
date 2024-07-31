@@ -54,7 +54,7 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
 
         def _get_payment_method_information(*args, **kwargs):
             res = Method_get_payment_method_information()
-            res['none'] = {'mode': 'electronic', 'domain': [('type', '=', 'bank')]}
+            res['none'] = {'mode': 'electronic', 'type': ('bank',)}
             return res
 
         with patch.object(self.env.registry['account.payment.method'], '_get_payment_method_information', _get_payment_method_information):

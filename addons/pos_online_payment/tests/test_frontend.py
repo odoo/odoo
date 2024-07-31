@@ -33,7 +33,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
         def _get_payment_method_information(self):
             res = Method_get_payment_method_information(self)
-            res['none'] = {'mode': 'multi', 'domain': [('type', '=', 'bank')]}
+            res['none'] = {'mode': 'multi', 'type': ('bank',)}
             return res
 
         with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
