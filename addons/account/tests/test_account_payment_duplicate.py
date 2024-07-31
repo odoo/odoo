@@ -165,6 +165,17 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
             'duplicate_move_ids': [misc_entry_in.move_id.id],  # not misc_entry_out, as the account is for outbound payments
         }])
 
+    def test_inbound_payment_dup_no_outstanding_account(self):
+        """ Test that duplicate payments query still works in case there are no
+        outstanding accounts in the journal nor the company
+        """
+        self.payment_in.journal_id.outbound_payment_method_line_ids = None
+        self.company.account_journal_payment_debit_account_id = None
+        payment_in_2 = self.payment_in.copy(default={'date': self.payment_in.date})
+        self.assertRecordValues(payment_in_2, [{
+            'duplicate_move_ids': [self.payment_in.move_id.id],
+        }])
+
     def test_in_payment_multiple_duplicate_inbound_batch(self):
         """ Ensure duplicated payments are computed correctly when updated in batch,
         where payments are all of a single payment type
@@ -181,14 +192,21 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
             {'duplicate_move_ids': (payment_1.move_id + payment_2.move_id).ids},
         ])
 
-    def test_in_payment_multiple_duplicate_mixed_batch(self):
+    def test_in_payment_multiple_duplicate_multiple_journals(self):
         """ Ensure duplicated payments are computed correctly when updated in batch,
-        with inbound and outbound payments
+        with inbound and outbound payments with different journals
         """
         payment_in_1 = self.payment_in
         payment_out_1 = self.payment_out
+        # Create a different journals with a different outstanding account
+        bank_journal_B = self.bank_journal.copy()
+        outstanding_payment_account_B = self.company.account_journal_payment_debit_account_id.copy()
+        bank_journal_B.inbound_payment_method_line_ids.payment_account_id = outstanding_payment_account_B
+        # Create new payments in the second journal
         payment_in_2 = payment_in_1.copy(default={'date': payment_in_1.date})
+        payment_in_2.journal_id = bank_journal_B
         payment_out_2 = payment_out_1.copy(default={'date': payment_out_1.date})
+        payment_out_2.journal_id = bank_journal_B
 
         payments = payment_in_1 + payment_out_1 + payment_in_2 + payment_out_2
 
@@ -227,3 +245,13 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
         self.assertRecordValues(payment_2, [{'duplicate_move_ids': []}])  # different amount, not a duplicate
         # Combined payments does not show payment_1 as duplicate because payment_1 is reconciled
         self.assertRecordValues(combined_payments, [{'duplicate_move_ids': [existing_payment.move_id.id]}])
+
+    def test_register_payment_dup_no_outstanding_account(self):
+        """ Test that duplicate payments query for the account payment register still
+        works in case there are no outstanding accounts in the journal nor in the company
+        """
+        self.bank_journal.outbound_payment_method_line_ids = None
+        self.company.account_journal_payment_debit_account_id = None
+        payment_1 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.out_invoice_1.ids).create({})
+
+        self.assertRecordValues(payment_1, [{'duplicate_move_ids': [self.payment_in.move_id.id]}])
