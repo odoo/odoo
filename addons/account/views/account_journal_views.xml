@@ -86,6 +86,7 @@
                                         <field name="profit_account_id" invisible="type not in ('cash', 'bank')"/>
                                         <field name="loss_account_id" invisible="type not in ('cash', 'bank')"/>
                                         <field name="refund_sequence" invisible="type not in ['sale', 'purchase']"/>
+                                        <field name="payment_sequence" invisible="type not in ('bank', 'cash', 'credit')"/>
                                         <field name="code" placeholder="e.g. INV"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>

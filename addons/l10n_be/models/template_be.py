@@ -79,19 +79,4 @@ class AccountChartTemplate(models.AbstractModel):
                 'name@nl': 'Bankkosten (Geen BTW)',
                 'name@de': 'Bankgebühren (Ohne MwSt.)',
             },
-            'virements_internes_template': {
-                'name': 'Internal Transfers',
-                'to_check': False,
-                'line_ids': [
-                    Command.create({
-                        'account_id': 'a58',
-                        'amount_type': 'percentage',
-                        'amount_string': '100',
-                        'label': 'Internal Transfers',
-                    }),
-                ],
-                'name@fr': 'Virements internes',
-                'name@nl': 'Interne overboekingen',
-                'name@de': 'Interne Überweisungen',
-            },
         }

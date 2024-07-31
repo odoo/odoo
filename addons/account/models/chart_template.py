@@ -661,6 +661,11 @@ class AccountChartTemplate(models.AbstractModel):
             if value and field in self.env[model]._fields:
                 self.env['ir.property']._set_default(field, model, self.ref(value).id, company=company)
 
+        # Set default transfer account on the internal transfer reconciliation model
+        reco = self.ref('internal_transfer_reco', raise_if_not_found=False)
+        if reco:
+            reco.line_ids.write({'account_id': company.transfer_account_id.id})
+
     def _get_chart_template_data(self, template_code):
         template_data = defaultdict(lambda: defaultdict(dict))
         template_data['res.company']  # ensure it's the first property when iterating
@@ -1047,6 +1052,17 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'amount_type': 'percentage_st_line',
                         'amount_string': '100',
+                    }),
+                ],
+            },
+            'internal_transfer_reco': {
+                'name': _('Internal Transfers'),
+                'rule_type': 'writeoff_button',
+                'line_ids': [
+                    Command.create({
+                        'amount_type': 'percentage',
+                        'amount_string': '100',
+                        'label': _('Internal Transfers'),
                     }),
                 ],
             },
