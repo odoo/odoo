@@ -91,21 +91,16 @@ export class FloorScreen extends Component {
         this.floorScrollBox = useRef("floor-map-scroll");
         this.map = useRef("map");
         this.alert = useService("alert");
-        const getPosTable = (el) => {
-            return this.pos.models["restaurant.table"].get(
-                [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
-            );
-        };
         const getTableElem = (table) => {
             return this.map.el.querySelector(`.tableId-${table.id}`);
         };
         const findIntersectingTableElem = (tableElem) => {
-            const table = getPosTable(tableElem);
+            const table = this.getPosTable(tableElem);
             return [...tableElem.parentElement.getElementsByClassName("table")].find(
                 (t) =>
                     t !== tableElem &&
                     areElementsIntersecting(t, tableElem) &&
-                    !table.isParent(getPosTable(t))
+                    !table.isParent(this.getPosTable(t))
             );
         };
         const TABLE_LINKING_DELAY = 400;
@@ -124,7 +119,7 @@ export class FloorScreen extends Component {
                 if (this.pos.isEditMode) {
                     return;
                 }
-                const table = getPosTable(ctx.element);
+                const table = this.getPosTable(ctx.element);
                 this.state.potentialLink = { child: table };
                 table.uiState.initialPosition = pick(table, "position_h", "position_v");
                 // This helps when unlinking tables ( to keep the position )
@@ -141,7 +136,7 @@ export class FloorScreen extends Component {
                 offsetY = y - element.getBoundingClientRect().top;
             },
             onDrag: ({ element, x, y }) => {
-                const table = getPosTable(element);
+                const table = this.getPosTable(element);
                 if (!suggestLinkingPositions()) {
                     table.position_h =
                         x - offsetX + this.map.el.parentElement.parentElement.scrollLeft;
@@ -156,7 +151,7 @@ export class FloorScreen extends Component {
                     }
                     this.state.potentialLink = {
                         child: table,
-                        parent: getPosTable(potentialParentElem),
+                        parent: this.getPosTable(potentialParentElem),
                         time: Date.now(),
                     };
                     this.alert.add(
@@ -188,7 +183,7 @@ export class FloorScreen extends Component {
             },
             onDrop: ({ element }) => {
                 this.alert.dismiss();
-                const table = getPosTable(element);
+                const table = this.getPosTable(element);
                 if (this.pos.isEditMode) {
                     this.pos.data.write("restaurant.table", [table.id], {
                         position_h: table.position_h,
@@ -213,48 +208,7 @@ export class FloorScreen extends Component {
                 this.state.potentialLink = null;
             },
         });
-        useDraggable({
-            ref: this.map,
-            elements: "span.table-handle",
-            onDrag: (ctx) => {
-                const table = getPosTable(ctx.element.parentElement);
-                const newPosition = {
-                    minX: table.position_h,
-                    minY: table.position_v,
-                    maxX: table.position_h + table.width,
-                    maxY: table.position_v + table.height,
-                };
-                const dx =
-                    ctx.x - ctx.getRect(ctx.element).left - ctx.getRect(ctx.element).width / 2;
-                const dy =
-                    ctx.y - ctx.getRect(ctx.element).top - ctx.getRect(ctx.element).height / 2;
-                const limits = getLimits(ctx.element.parentElement, this.map.el);
-                const MIN_TABLE_SIZE = 30;
-                const bounds = {
-                    maxX: [table.position_h + MIN_TABLE_SIZE, limits.maxX + table.width],
-                    minX: [limits.minX, newPosition.maxX - MIN_TABLE_SIZE],
-                    maxY: [table.position_v + MIN_TABLE_SIZE, limits.maxY + table.height],
-                    minY: [limits.minY, newPosition.maxY - MIN_TABLE_SIZE],
-                };
-                const moveX = ctx.element.classList.contains("left") ? "minX" : "maxX";
-                const moveY = ctx.element.classList.contains("top") ? "minY" : "maxY";
-                newPosition[moveX] = constrain(newPosition[moveX] + dx, ...bounds[moveX]);
-                newPosition[moveY] = constrain(newPosition[moveY] + dy, ...bounds[moveY]);
-                table.position_h = newPosition.minX;
-                table.position_v = newPosition.minY;
-                table.width = newPosition.maxX - newPosition.minX;
-                table.height = newPosition.maxY - newPosition.minY;
-            },
-            onDrop: (ctx) => {
-                const table = getPosTable(ctx.element.parentElement);
-                this.pos.data.write(
-                    "restaurant.table",
-                    [table.id],
-                    pick(table, "position_h", "position_v", "width", "height")
-                );
-            },
-        });
-
+        this.useResizeHook();
         onMounted(() => {
             this.pos.openCashControl();
         });
@@ -279,6 +233,63 @@ export class FloorScreen extends Component {
             },
             () => [this.state.selectedTableIds.length]
         );
+    }
+    getPosTable(el) {
+        return this.pos.models["restaurant.table"].get(
+            [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
+        );
+    }
+    useResizeHook() {
+        let startX, startY;
+        let startPosH, startPosV, startWidth, startHeight;
+        let table;
+        useDraggable({
+            ref: this.map,
+            elements: "span.table-handle",
+            onDragStart: (ctx) => {
+                table = this.getPosTable(ctx.element.parentElement);
+                startX = ctx.x;
+                startY = ctx.y;
+                startPosH = table.position_h;
+                startPosV = table.position_v;
+                startWidth = table.width;
+                startHeight = table.height;
+            },
+            onDrag: (ctx) => {
+                const newPosition = {
+                    minX: startPosH,
+                    minY: startPosV,
+                    maxX: startPosH + startWidth,
+                    maxY: startPosV + startHeight,
+                };
+                const dx = ctx.x - startX;
+                const dy = ctx.y - startY;
+                const limits = getLimits(ctx.element.parentElement, this.map.el);
+                const MIN_TABLE_SIZE = 30;
+                const bounds = {
+                    maxX: [startPosH + MIN_TABLE_SIZE, limits.maxX + startWidth],
+                    minX: [limits.minX, newPosition.maxX - MIN_TABLE_SIZE],
+                    maxY: [startPosV + MIN_TABLE_SIZE, limits.maxY + startHeight],
+                    minY: [limits.minY, newPosition.maxY - MIN_TABLE_SIZE],
+                };
+                const moveX = ctx.element.classList.contains("left") ? "minX" : "maxX";
+                const moveY = ctx.element.classList.contains("top") ? "minY" : "maxY";
+                newPosition[moveX] = constrain(newPosition[moveX] + dx, ...bounds[moveX]);
+                newPosition[moveY] = constrain(newPosition[moveY] + dy, ...bounds[moveY]);
+                table.position_h = newPosition.minX;
+                table.position_v = newPosition.minY;
+                table.width = newPosition.maxX - newPosition.minX;
+                table.height = newPosition.maxY - newPosition.minY;
+            },
+            onDrop: (ctx) => {
+                const table = this.getPosTable(ctx.element.parentElement);
+                this.pos.data.write(
+                    "restaurant.table",
+                    [table.id],
+                    pick(table, "position_h", "position_v", "width", "height")
+                );
+            },
+        });
     }
     computeFloorSize() {
         if (this.pos.floorPlanStyle === "kanban") {

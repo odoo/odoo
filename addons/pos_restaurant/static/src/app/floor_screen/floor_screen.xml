@@ -93,7 +93,6 @@
                                                 border-radius: {{table.shape === 'round' ? 1000 : 3}}px;
                                                 background: {{hasBg ? table.color || 'rgb(53, 211, 116)' : '#00000020'}};
                                                 color: {{!hasBg ? 'black' : 'white'}};
-                                                transition: 60ms;
                                                 opacity: {{state.potentialLink ? (isIntersecting or isIntersected ? 1 : 0.25) : 1}};
                                                 {{pos.floorPlanStyle == 'kanban' ?
                                                     `
