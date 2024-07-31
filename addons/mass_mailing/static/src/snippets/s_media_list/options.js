@@ -1,8 +1,9 @@
-/** @odoo-module **/
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
 
-import options from "@web_editor/js/editor/snippets.options.legacy";
-
-options.registry.MediaItemLayout = options.Class.extend({
+// FIXME: this is unused (no option definition in mass_mailing),
+//  see addons/website/static/src/snippets/s_media_list/options.js
+//  This is never attached to any snippet (no selector).
+export class MediaItemLayout extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -13,7 +14,7 @@ options.registry.MediaItemLayout = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    layout: function (previewMode, widgetValue, params) {
+    layout(previewMode, widgetValue, params) {
         const $image = this.$target.find('.s_media_list_img_wrapper');
         const $content = this.$target.find('.s_media_list_body');
 
@@ -23,7 +24,7 @@ options.registry.MediaItemLayout = options.Class.extend({
         }
         $image.addClass(`col-lg-${widgetValue}`);
         $content.addClass(`col-lg-${12 - widgetValue}`);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -32,7 +33,7 @@ options.registry.MediaItemLayout = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState(methodName, params) {
+    async _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'layout': {
                 const $image = this.$target.find('.s_media_list_img_wrapper');
@@ -43,6 +44,6 @@ options.registry.MediaItemLayout = options.Class.extend({
                 }
             }
         }
-        return this._super(...arguments);
-    },
-});
+        return super._computeWidgetState(...arguments);
+    }
+}
