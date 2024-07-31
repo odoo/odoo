@@ -158,7 +158,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "last_interest_dt": fields.Datetime.to_string(visitor_member.last_interest_dt),
                     "last_seen_dt": False,
                     "message_unread_counter": 0,
-                    "message_unread_counter_bus_id": self.env["bus.bus"]._bus_last_id(),
+                    "message_unread_counter_bus_id": self.env["bus.bus"]._bus_last_id() - 1,
                     "new_message_separator": 0,
                     "persona": {"id": test_user.partner_id.id, "type": "partner"},
                     "seen_message_id": False,
@@ -240,7 +240,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "last_interest_dt": fields.Datetime.to_string(operator_member.last_interest_dt),
                     "last_seen_dt": False,
                     "message_unread_counter": 0,
-                    "message_unread_counter_bus_id": self.env["bus.bus"]._bus_last_id(),
+                    "message_unread_counter_bus_id": self.env["bus.bus"]._bus_last_id() - 1,
                     "new_message_separator": 0,
                     "persona": {"id": operator.partner_id.id, "type": "partner"},
                     "seen_message_id": False,
@@ -305,7 +305,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             },
         )
         channel = self.env["discuss.channel"].browse(data["Thread"][0]["id"])
-        self.env['bus.bus'].sudo().search([]).unlink()
+        self._reset_bus()
         with self.assertBus(
             [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
             [
