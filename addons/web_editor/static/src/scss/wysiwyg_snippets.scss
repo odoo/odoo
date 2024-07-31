@@ -2854,8 +2854,11 @@ we-select.o_grid we-toggler {
             .o_full_screen_height {
                 aspect-ratio: 4 / 3;
             }
-            .o_half_screen_height, [data-snippet="s_map"] {
+            .o_half_screen_height {
                 aspect-ratio: 8 / 3;
+            }
+            [data-snippet="s_map"], [data-snippet="s_google_map"] {
+                padding: 0 !important;
             }
             > [data-snippet] {
                 isolation: isolate;
