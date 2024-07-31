@@ -347,3 +347,36 @@ test("chat: correspondent is typing in chat window", async () => {
     );
     await contains("[title='Demo is typing...']", { count: 0 });
 });
+
+test("show typing in member list", async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "Other 10" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Other 10", user_ids: [userId] });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Show Member List']");
+    await contains(".o-discuss-ChannelMember", { count: 2 });
+    withUser(userId, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
+    );
+    await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
+    withUser(serverState.userId, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
+    );
+    await contains(
+        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
+    );
+});

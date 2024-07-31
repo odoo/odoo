@@ -14,12 +14,14 @@ export class Typing extends Component {
         size: "small",
         displayText: true,
     };
-    static props = ["channel", "size?", "displayText?"];
+    static props = ["channel?", "size?", "displayText?", "member?"];
     static template = "discuss.Typing";
 
     /** @returns {string} */
     get text() {
-        const typingMemberNames = this.props.channel.otherTypingMembers.map(({ name }) => name);
+        const typingMemberNames = this.props.member
+            ? [this.props.member.name]
+            : this.props.channel.otherTypingMembers.map(({ name }) => name);
         if (typingMemberNames.length === 1) {
             return _t("%s is typing...", typingMemberNames[0]);
         }
