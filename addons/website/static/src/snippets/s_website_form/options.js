@@ -622,6 +622,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                             reject();
                         },
                     });
+                    resolve();
                 },
                 cancel: () => resolve(),
             });
