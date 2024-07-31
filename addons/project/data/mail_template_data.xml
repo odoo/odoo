@@ -118,9 +118,9 @@
         <!-- You have been assigned email -->
         <template id="project_message_user_assigned">
 <div>
-    Dear <t t-esc="assignee_name"/>,
+    Dear <t t-out="assignee_name"/>,
     <br/><br/>
-    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
+    <span style="margin-top: 8px;">You have been assigned to the <t t-out="model_description or 'document'"/> <t t-out="object.display_name"/>.</span>
 </div>
         </template>
 
