@@ -7,11 +7,6 @@
             <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//div[hasclass('col-6') and hasclass('o_kanban_card_manage_section') and hasclass('o_kanban_manage_new')]" position="inside">
-                        <div role="menuitem">
-                            <a name="action_batch" type="object" context="{'view_mode':'form'}">Prepare Batches</a>
-                        </div>
-                    </xpath>
                     <xpath expr="//div[hasclass('col-6') and hasclass('o_kanban_card_manage_section') and hasclass('o_kanban_manage_new')]" position="after">
                         <t t-if="record.code.raw_value == 'incoming' or record.code.raw_value == 'outgoing'">
                             <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
