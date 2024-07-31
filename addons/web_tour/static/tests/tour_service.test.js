@@ -124,17 +124,17 @@ test("Step Tour validity", async () => {
         steps: () => steps,
     });
     await makeMockEnv({});
-    const waited_error1 = `Error for step ${JSON.stringify(
+    const waited_error1 = `Error in schema for TourStep ${JSON.stringify(
         steps[0],
         null,
         4
     )}\nInvalid object: unknown key 'Belgium', unknown key 'wins', unknown key 'EURO2024'`;
-    const waited_error2 = `Error for step ${JSON.stringify(
+    const waited_error2 = `Error in schema for TourStep ${JSON.stringify(
         steps[1],
         null,
         4
     )}\nInvalid object: unknown key 'my_title', unknown key 'doku'`;
-    const waited_error3 = `Error for step ${JSON.stringify(
+    const waited_error3 = `Error in schema for TourStep ${JSON.stringify(
         steps[2],
         null,
         4
@@ -170,8 +170,6 @@ test("points to next step", async () => {
             },
         ],
     });
-    await makeMockEnv();
-
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -199,7 +197,6 @@ test("next step with new anchor at same position", async () => {
             { trigger: "button.bar", run: "click" },
         ],
     });
-    await makeMockEnv();
 
     class Dummy extends Component {
         static props = ["*"];
@@ -255,7 +252,6 @@ test("a failing tour logs the step that failed in run", async () => {
         warn: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
-    await makeMockEnv();
     class Root extends Component {
         static components = {};
         static template = xml/*html*/ `
@@ -288,13 +284,13 @@ test("a failing tour logs the step that failed in run", async () => {
     getService("tour_service").startTour("tour2", { mode: "auto" });
     await advanceTime(750);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour2 on step: '.button0'"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour2 on step: '.button1'"]);
     await advanceTime(750);
 
     const expectedError = [
-        `error: Tour tour2 failed at step .button1. Element has been found. The error seems to be with step.run`,
+        "log: [1/2] Tour tour2 → Step .button0",
+        `log: [2/2] Tour tour2 → Step .button1`,
+        "error: FAILED: [2/2] Tour tour2 → Step .button1. Element has been found. The error seems to be with step.run",
         "error: Cannot read properties of null (reading 'click')",
         "error: tour not succeeded",
     ];
@@ -307,7 +303,6 @@ test("a failing tour with disabled element", async () => {
         warn: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
-    await makeMockEnv();
     class Root extends Component {
         static components = {};
         static template = xml/*html*/ `
@@ -343,13 +338,15 @@ test("a failing tour with disabled element", async () => {
     await advanceTime(750);
     await advanceTime(750);
     await advanceTime(750);
-    await advanceTime(10000);
-    expect.verifySteps([
-        `error: Tour tour3 failed at step .button1. Element has been found. The error seems to be with step.run`,
+    const expectedError = [
+        `error: FAILED: [2/3] Tour tour3 → Step .button1. Element has been found. The error seems to be with step.run`,
         `error: Element can't be disabled when you want to click on it.
 Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`,
-        `error: Tour tour3 failed at step .button2. The cause is that trigger (.button2) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`,
-    ]);
+        `error: FAILED: [3/3] Tour tour3 → Step .button2. The cause is that trigger (.button2) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`,
+        `error: tour not succeeded`,
+    ];
+    await advanceTime(10000);
+    expect.verifySteps(expectedError);
 });
 
 test("a failing tour logs the step that failed", async () => {
@@ -358,7 +355,6 @@ test("a failing tour logs the step that failed", async () => {
         warn: (s) => expect.step(`warn: ${s.replace(/[ \n\-/\r\t]/gi, "")}`),
         error: (s) => expect.step(`error: ${s}`),
     });
-    await makeMockEnv();
 
     class Root extends Component {
         static components = {};
@@ -431,24 +427,23 @@ test("a failing tour logs the step that failed", async () => {
     getService("tour_service").startTour("tour1", { mode: "auto" });
     await advanceTime(750);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button0)'"]);
+    expect.verifySteps(["log: [1/9] Tour tour1 → Step content (trigger: .button0)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button1)'"]);
+    expect.verifySteps(["log: [2/9] Tour tour1 → Step content (trigger: .button1)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button2)'"]);
+    expect.verifySteps(["log: [3/9] Tour tour1 → Step content (trigger: .button2)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button3)'"]);
+    expect.verifySteps(["log: [4/9] Tour tour1 → Step content (trigger: .button3)"]);
     await advanceTime(750);
-    expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .wrong_selector)'"]);
+    expect.verifySteps(["log: [5/9] Tour tour1 → Step content (trigger: .wrong_selector)"]);
     await advanceTime(10000);
-    const expectedWarning = `warn: Tourtour1failedatstepcontent(trigger:.wrong_selector){"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILINGSTEP(59){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`;
-    const expectedError = `error: Tour tour1 failed at step content (trigger: .wrong_selector). The cause is that trigger (.wrong_selector) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`;
-    expect.verifySteps([expectedWarning, expectedError]);
+    expect.verifySteps([
+        `warn: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILED:[59]Tourtour1→Stepcontent(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`,
+        "error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector). The cause is that trigger (.wrong_selector) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+    ]);
 });
 
 test("check tour with inactive steps", async () => {
-    await makeMockEnv();
-
     class Root extends Component {
         static components = {};
         static template = xml/*html*/ `
@@ -509,7 +504,6 @@ test("pointer is added on top of overlay's stack", async () => {
             { trigger: ".btn-primary", run: "click" },
         ],
     });
-    await makeMockEnv({});
     class DummyDialog extends Component {
         static props = ["*"];
         static components = { Dialog };
@@ -548,8 +542,6 @@ test("pointer is added on top of overlay's stack", async () => {
 
 test("registering test tour after service is started doesn't auto-start the tour", async () => {
     patchWithCleanup(session, { tour_disable: false });
-    await makeMockEnv();
-
     class Root extends Component {
         static components = { Counter };
         static template = xml/*html*/ `
@@ -578,8 +570,6 @@ test("registering test tour after service is started doesn't auto-start the tour
 
 test("registering non-test tour after service is started auto-starts the tour", async () => {
     patchWithCleanup(session, { tour_disable: false });
-    await makeMockEnv();
-
     class Root extends Component {
         static components = { Counter };
         static template = xml/*html*/ `
@@ -620,7 +610,6 @@ test("hovering to the anchor element should show the content", async () => {
             },
         ],
     });
-    await makeMockEnv();
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -650,6 +639,9 @@ test("hovering to the anchor element should show the content", async () => {
 });
 
 test("should show only 1 pointer at a time", async () => {
+    patchWithCleanup(browser.console, {
+        error: (s) => {},
+    });
     registry.category("web_tour.tours").add("milan_sanremo", {
         sequence: 10,
         steps: () => [
@@ -668,7 +660,6 @@ test("should show only 1 pointer at a time", async () => {
             },
         ],
     });
-    await makeMockEnv();
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -705,7 +696,6 @@ test("perform edit on next step", async () => {
             },
         ],
     });
-    await makeMockEnv();
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -746,8 +736,6 @@ test("scrolling to next step should update the pointer's height", async (assert)
             },
         ],
     });
-    await makeMockEnv();
-
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -818,7 +806,6 @@ test("scroller pointer to reach next step", async () => {
         sequence: 10,
         steps: () => [{ trigger: "button.inc", content: "Click to increment", run: "click" }],
     });
-    await makeMockEnv();
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
@@ -926,7 +913,7 @@ test("automatic tour with invisible element", async () => {
     await advanceTime(750);
     await advanceTime(10000);
     expect.verifySteps([
-        "error: Tour tour_de_wallonie failed at step .button1. The cause is that trigger (.button1) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+        "error: FAILED: [2/3] Tour tour_de_wallonie → Step .button1. The cause is that trigger (.button1) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
     ]);
 });
 
@@ -984,7 +971,7 @@ test("automatic tour with invisible element but use :not(:visible))", async () =
 
 test("manual tour with inactive steps", async () => {
     registry.category("web_tour.tours").add("tour_de_wallonie", {
-        rainbowMessage: "bravo",
+        rainbowManMessage: "bravo",
         sequence: 10,
         steps: () => [
             {
@@ -1048,7 +1035,7 @@ test("manual tour with inactive steps", async () => {
 test("automatic tour with alternative trigger", async () => {
     patchWithCleanup(browser.console, {
         log: (s) => {
-            if (s.includes("on step")) {
+            if (s.includes("→ Step")) {
                 expect.step("on step");
             } else if (s.toLowerCase().includes("tour tour_des_flandres succeeded")) {
                 expect.step("succeeded");
@@ -1174,7 +1161,6 @@ test("Tour started by the URL", async () => {
     await contains("button.bar").click();
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
-
 });
 
 test("Log a warning if step ignored", async () => {
