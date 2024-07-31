@@ -113,6 +113,7 @@ class WebsocketCase(HttpCase):
         notifications are available. Usefull since the bus is not able to do
         it during tests.
         """
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         channels = [
             hashable(channel_with_db(self.registry.db_name, c)) for c in channels
         ]
