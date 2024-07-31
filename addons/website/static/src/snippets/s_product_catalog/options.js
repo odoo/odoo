@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import {
     MultipleItems,
     SnippetOption,
 } from "@web_editor/js/editor/snippets.options";
+import { updateOption } from "@web_editor/js/editor/snippets.registry";
 import {
     registerWebsiteOption,
 } from "@website/js/editor/snippets.registry";
@@ -84,6 +84,6 @@ registerWebsiteOption("Product Catalog (Drop)", {
     selector: ".s_product_catalog_dish",
     dropNear: ".s_product_catalog_dish",
 });
-const SnippetMoveOption = registry.category("snippet_options").get("SnippetMove (Vertical)");
-SnippetMoveOption.selector = SnippetMoveOption.selector + ", .s_product_catalog_dish";
-registry.category("snippet_options").add("SnippetMove (Vertical)", SnippetMoveOption, { force: true });
+updateOption("SnippetMove (Vertical)", {
+    selector: (SnippetMoveOption) => SnippetMoveOption.selector + ", .s_product_catalog_dish",
+});

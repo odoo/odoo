@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import options from "@web_editor/js/editor/snippets.options.legacy";
 import { SnippetOption } from "@web_editor/js/editor/snippets.options";
 import {
@@ -10,6 +9,8 @@ import {
 import {
     registerWebsiteOption,
 } from "@website/js/editor/snippets.registry";
+import { updateOption } from "@web_editor/js/editor/snippets.registry";
+import "@website/js/editor/snippets.options";
 import { uniqueId } from "@web/core/utils/functions";
 import { patch } from "@web/core/utils/patch";
 
@@ -185,6 +186,6 @@ registerWebsiteOption("BlogPostPageOption", {
 });
 
 // Hides ContainerWidth option for content in blog posts
-const ContainerWidthOption = registry.category("snippet_options").get("container_width");
-ContainerWidthOption.exclude = ContainerWidthOption.exclude + ", #o_wblog_post_content *";
-registry.category("snippet_options").add("container_width", ContainerWidthOption, { force: true });
+updateOption("container_width", {
+    exclude: (ContainerWidthOption) => ContainerWidthOption.exclude + ", #o_wblog_post_content *",
+});

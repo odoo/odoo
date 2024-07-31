@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import {
     MultipleItems,
     SnippetOption,
 } from "@web_editor/js/editor/snippets.options";
+import { updateOption } from "@web_editor/js/editor/snippets.registry";
 import {
     registerWebsiteOption,
 } from "@website/js/editor/snippets.registry";
@@ -52,6 +52,6 @@ registerWebsiteOption("Timeline (Dot Color)", {
     selector: ".s_timeline_row",
 });
 
-const SnippetMoveOption = registry.category("snippet_options").get("SnippetMove (Vertical)");
-SnippetMoveOption.selector = SnippetMoveOption.selector + ", .s_timeline_row";
-registry.category("snippet_options").add("SnippetMove (Vertical)", SnippetMoveOption, { force: true });
+updateOption("SnippetMove (Vertical)", {
+    selector: (SnippetMoveOption) => SnippetMoveOption.selector + ", .s_timeline_row",
+});
