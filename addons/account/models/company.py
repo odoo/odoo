@@ -302,6 +302,7 @@ class ResCompany(models.Model):
                         root_template,
                         company,
                         install_demo=False,
+                        loading_child=False,
                     )
                 self.env.cr.precommit.add(try_loading)
         return companies
@@ -656,10 +657,12 @@ class ResCompany(models.Model):
                 if template_code != 'generic_coa':
                     @self.env.cr.precommit.add
                     def try_loading(template_code=template_code, company=company):
-                        env['account.chart.template'].try_loading(
-                            template_code,
-                            env['res.company'].browse(company.id),
-                        )
+                        company = company.with_env(env)
+                        if not company.chart_template:  # re-check as it might have been set before the precommit
+                            env['account.chart.template'].try_loading(
+                                template_code,
+                                company,
+                            )
         return res
 
     def _existing_accounting(self) -> bool:
@@ -669,6 +672,9 @@ class ResCompany(models.Model):
 
     def _chart_template_selection(self):
         return self.env['account.chart.template']._select_chart_template(self.country_id)
+
+    def _child_chart_template_selection(self):
+        return self.env['account.chart.template']._select_child_chart_template(self.chart_template)
 
     @api.model
     def _action_check_hash_integrity(self):

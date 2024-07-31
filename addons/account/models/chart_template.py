@@ -123,6 +123,17 @@ class AccountChartTemplate(models.AbstractModel):
             )))
         ]
 
+    def _select_child_chart_template(self, parent_template=None):
+        """
+        Get the available child templates in a format suited for Selection fields.
+        """
+        parent_template = parent_template if parent_template is not None else self.env.company.chart_template
+        chart_template_mapping = self._get_chart_template_mapping()
+        return [
+            (template_code, template['name'])
+            for template_code, template in filter(lambda t: t[1]['parent'] == parent_template, chart_template_mapping.items())
+        ]
+
     def _guess_chart_template(self, country):
         """Guess the most appropriate template based on the country."""
         return self._select_chart_template(country)[0][0]
@@ -131,7 +142,7 @@ class AccountChartTemplate(models.AbstractModel):
     # Loading
     # --------------------------------------------------------------------------------
 
-    def try_loading(self, template_code, company, install_demo=False):
+    def try_loading(self, template_code, company, install_demo=False, loading_child=False):
         """Check if the chart template can be loaded then proceeds installing it.
 
         :param template_code: code of the chart template to be loaded.
@@ -141,6 +152,7 @@ class AccountChartTemplate(models.AbstractModel):
         :type company: int, Model<res.company>
         :param install_demo: whether or not we should load demo data right after loading the
             chart template.
+        :param loading_child: whether we want to "reload" the chart template while including a child one.
         :type install_demo: bool
         """
         if not company:
@@ -153,9 +165,9 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code == 'syscohada' and template_code != company.chart_template:
             raise UserError(_("The Syscohada chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country."))
 
-        return self._load(template_code, company, install_demo)
+        return self._load(template_code, company, install_demo, loading_child)
 
-    def _load(self, template_code, company, install_demo):
+    def _load(self, template_code, company, install_demo, loading_child):
         """Install this chart of accounts for the current company.
 
         :param template_code: code of the chart template to be loaded.
@@ -192,7 +204,7 @@ class AccountChartTemplate(models.AbstractModel):
         )
         company = company.with_env(self.env)
 
-        reload_template = template_code == company.chart_template
+        reload_template = (template_code == company.chart_template) or loading_child
         company.chart_template = template_code
 
         if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
@@ -230,7 +242,7 @@ class AccountChartTemplate(models.AbstractModel):
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
         for subsidiary in company.child_ids:
-            self._load(template_code, subsidiary, install_demo)
+            self._load(template_code, subsidiary, install_demo, loading_child)
 
     @api.model
     def _install_demo(self, companies):

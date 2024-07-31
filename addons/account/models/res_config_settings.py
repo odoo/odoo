@@ -34,6 +34,8 @@ class ResConfigSettings(models.TransientModel):
         domain="[('deprecated', '=', False), ('account_type', '=', 'expense')]")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template = fields.Selection(selection=lambda self: self.env.company._chart_template_selection(), default=lambda self: self.env.company.chart_template)
+    child_chart_template = fields.Selection(selection=lambda self: self.env.company._child_chart_template_selection())
+    has_child_chart_of_accounts = fields.Boolean(compute='_compute_has_child_chart_of_accounts')
     sale_tax_id = fields.Many2one(
         'account.tax',
         string="Default Sale Tax",
@@ -229,12 +231,21 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             config.is_account_peppol_eligible = config.country_code in PEPPOL_LIST
 
+    @api.depends('chart_template')
+    def _compute_has_child_chart_of_accounts(self):
+        for config in self:
+            config.has_child_chart_of_accounts = any(self.env.company._child_chart_template_selection())
+
     def set_values(self):
         super().set_values()
-        # install a chart of accounts for the given company (if required)
-        if self.env.company == self.company_id and self.chart_template \
-        and self.chart_template != self.company_id.chart_template:
-            self.env['account.chart.template'].try_loading(self.chart_template, company=self.company_id)
+        setting_current_company = self.env.company == self.company_id
+        if setting_current_company:
+            # install a chart of accounts for the given company (if required)
+            if self.chart_template and self.chart_template != self.company_id.chart_template:
+                self.env['account.chart.template'].try_loading(self.chart_template, company=self.company_id)
+            # If instead a specialization was selected, we load it without changing the base template data.
+            elif self.child_chart_template and self.child_chart_template != self.company_id.chart_template:
+                self.env['account.chart.template'].try_loading(self.child_chart_template, company=self.company_id, loading_child=True)
 
     def reload_template(self):
         self.env['account.chart.template'].try_loading(self.company_id.chart_template, company=self.company_id)
