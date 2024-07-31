@@ -332,3 +332,13 @@ registerMassMailingOption("DesignTab", {
     selector: "design-options",
     noCheck: true,
 });
+
+registerMassMailingOption("mass_mailing_block_width", {
+    template: "mass_mailing.block_width_option",
+    selector: ".s_mail_blockquote, .s_mail_text_highlight",
+});
+
+registerMassMailingOption("mass_mailing_block_align", {
+    template: "mass_mailing.block_align_option",
+    selector: ".s_mail_blockquote, .s_mail_text_highlight",
+});

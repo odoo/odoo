@@ -20,33 +20,17 @@
     </div>
 </template>
 
-<template id="s_alert_options" inherit_id="mass_mailing.snippet_options">
-    <!-- Keep those options in separate xpath for options order -->
-    <xpath expr="//div[@id='so_width']" position="after">
-        <div data-selector=".s_mail_alert .s_alert">
-            <we-select string="Size">
-                <we-button data-select-class="s_alert_sm">Small</we-button>
-                <we-button data-select-class="s_alert_md">Medium</we-button>
-                <we-button data-select-class="s_alert_lg">Large</we-button>
-            </we-select>
-            <we-colorpicker string="Background Color" data-name="alert_colorpicker_opt"
-                data-select-style="true"
-                data-css-property="background-color"
-                data-color-prefix="alert-"/>
-        </div>
-        <div data-selector=".s_mail_alert .s_alert">
-            <t t-call="mass_mailing.snippet_options_border_widgets">
-                <t t-set="so_rounded_no_dependencies" t-value="True"/>
-            </t>
-        </div>
-    </xpath>
-</template>
-
 <!-- Assets -->
 <record id="mass_mailing.s_alert_001_scss" model="ir.asset">
     <field name="name">Alert 001 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">mass_mailing/static/src/snippets/s_alert/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
+<record id="mass_mailing.s_alert_002_scss" model="ir.asset">
+    <field name="name">Alert 002 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">mass_mailing/static/src/snippets/s_alert/002.scss</field>
 </record>
 
 </odoo>

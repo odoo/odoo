@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mass_mailing.block_width_option">
+    <WeSelect title.translate="Width">
+        <WeButton selectClass="'w-25'">25%</WeButton>
+        <WeButton selectClass="'w-50'">50%</WeButton>
+        <WeButton selectClass="'w-75'">75%</WeButton>
+        <WeButton selectClass="'w-100'" name="'so_width_100'">100%</WeButton>
+    </WeSelect>
+</t>
+
+<t t-name="mass_mailing.block_align_option">
+    <WeButtonGroup title.translate="Alignment" dependencies="'!so_width_100'">
+        <WeButton class="'fa fa-fw fa-align-left'" tooltip.translate="Left" selectClass="'me-auto'"/>
+        <WeButton class="'fa fa-fw fa-align-center'" tooltip.translate="Center" selectClass="'mx-auto'"/>
+        <WeButton class="'fa fa-fw fa-align-right'" tooltip.translate="Right" selectClass="'ms-auto'"/>
+    </WeButtonGroup>
+</t>
+
+<!-- Border -->
+<t t-name="mass_mailing.snippet_options_border_line_widgets">
+    <WeRow title="label">
+        <WeInput name="'border_width_opt'"
+                applyTo="apply_to || ''"
+                selectStyle="'0'"
+                cssProperty="'border-' + (direction ? direction + '-' : '') + 'width'"
+                unit="'px'"
+                extraClass="with_bs_class ? 'border' : ''"
+                variable="width_variable || ''"/>
+        <WeSelect dependencies="'border_width_opt'"
+                cssProperty="'border-' + (direction ? direction + '-' : '') + 'style'"
+                applyTo="apply_to || ''"
+                variable="style_variable || ''">
+            <WeButton tooltip.translate="Solid" selectStyle="'solid'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></WeButton>
+            <WeButton tooltip.translate="Dashed" selectStyle="'dashed'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></WeButton>
+            <WeButton tooltip.translate="Dotted" selectStyle="'dotted'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></WeButton>
+            <WeButton tooltip.translate="Double" selectStyle="'double'"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></WeButton>
+        </WeSelect>
+        <WeColorpicker dependencies="'border_width_opt'"
+                        applyTo="apply_to || ''"
+                        selectStyle="'true'"
+                        cssProperty="'border-' + (direction ? direction + '-' : '') + 'color'"
+                        colorPrefix="'border-'"
+                        color="color_variable || ''"/>
+    </WeRow>
+</t>
+
+<t t-name="mass_mailing.snippet_options_border_widgets">
+    <t t-call="mass_mailing.snippet_options_border_line_widgets">
+        <t t-set="label">Border</t>
+        <t t-set="with_bs_class" t-value="true"/>
+    </t>
+    <WeInput title.translate="Round Corners"
+             applyTo="apply_to || ''"
+             dependencies="!so_rounded_no_dependencies and 'border_width_opt,bg_color_opt'"
+             selectStyle="'0'" cssProperty="'border-radius'"
+             unit="'px'" extraClass="'rounded'"
+             variable="radius_variable || ''"/>
+</t>
+
+</templates>

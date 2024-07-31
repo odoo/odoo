@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mass_mailing.s_alert_options">
+        <t t-call="mass_mailing.block_width_option"/>
+        <WeSelect title.translate="Size">
+            <WeButton selectClass="'s_alert_sm'">Small</WeButton>
+            <WeButton selectClass="'s_alert_md'">Medium</WeButton>
+            <WeButton selectClass="'s_alert_lg'">Large</WeButton>
+        </WeSelect>
+        <WeColorpicker title.translate="Background Color"
+                        name="'alert_colorpicker_opt'"
+                        selectStyle="'true'"
+                        cssProperty="'background-color'"
+                        colorPrefix="'alert-'"/>
+        <t t-call="mass_mailing.snippet_options_border_widgets">
+            <t t-set="so_rounded_no_dependencies" t-value="True"/>
+        </t>
+        <t t-call="mass_mailing.block_align_option"/>
+    </t>
+
+</templates>
