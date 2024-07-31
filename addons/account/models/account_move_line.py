@@ -3043,6 +3043,13 @@ class AccountMoveLine(models.Model):
         """ Undo a reconciliation """
         (self.matched_debit_ids + self.matched_credit_ids).unlink()
 
+    def action_unreconcile_match_entries(self):
+        """ This method will do the unreconcile action in the list view of the moves """
+        active_ids = self._context.get('active_ids')
+        if active_ids:
+            move_lines = self.env['account.move.line'].browse(active_ids)._all_reconciled_lines()
+            move_lines.remove_move_reconcile()
+
     def _reconcile_marked(self):
         """Process the pending reconciliation of entries marked (i.e. uring imports).
 

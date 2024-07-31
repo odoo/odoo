@@ -332,7 +332,8 @@
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('move_id.to_check', '=', True)]"/>
                     <separator/>
-                    <filter string="Unreconciled" domain="[('amount_residual', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
+                    <filter string="Unreconciled" domain="[('account_id.reconcile', '=', True)]" name="reconcilable_account" help="Journal items where the account allows reconciliation no matter the residual amount"/>
+                    <filter string="With residual" domain="[('amount_residual', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
                     <separator/>
                     <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
                     <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
