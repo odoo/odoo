@@ -69,6 +69,9 @@ const useDraggable = makeDraggableHook({
     onDrag: ({ ctx }) => pick(ctx.current, "element"),
     onDrop: ({ ctx }) => pick(ctx.current, "element"),
 });
+
+const GRID_SIZE = 10;
+
 export class FloorScreen extends Component {
     static components = { Dropdown, DropdownItem };
     static template = "pos_restaurant.FloorScreen";
@@ -141,6 +144,10 @@ export class FloorScreen extends Component {
                     table.position_h =
                         x - offsetX + this.map.el.parentElement.parentElement.scrollLeft;
                     table.position_v = y - offsetY - this.map.el.getBoundingClientRect().top;
+                    if (this.pos.isEditMode && !this.activeFloor.floor_background_image) {
+                        table.position_h -= table.position_h % GRID_SIZE;
+                        table.position_v -= table.position_v % GRID_SIZE;
+                    }
                     if (this.pos.isEditMode || this.state.potentialLink?.parent) {
                         return;
                     }
@@ -276,6 +283,10 @@ export class FloorScreen extends Component {
                 const moveY = ctx.element.classList.contains("top") ? "minY" : "maxY";
                 newPosition[moveX] = constrain(newPosition[moveX] + dx, ...bounds[moveX]);
                 newPosition[moveY] = constrain(newPosition[moveY] + dy, ...bounds[moveY]);
+                if (!this.activeFloor.floor_background_image) {
+                    newPosition[moveX] -= newPosition[moveX] % GRID_SIZE;
+                    newPosition[moveY] -= newPosition[moveY] % GRID_SIZE;
+                }
                 table.position_h = newPosition.minX;
                 table.position_v = newPosition.minY;
                 table.width = newPosition.maxX - newPosition.minX;
@@ -582,12 +593,16 @@ export class FloorScreen extends Component {
     }
     async onClickTable(table, ev) {
         if (this.pos.isEditMode) {
-            if (ev.ctrlKey || ev.metaKey) {
-                this.state.selectedTableIds.push(table.id);
-            } else {
-                this.unselectTables();
-                this.state.selectedTableIds.push(table.id);
+            if (this.state.selectedTableIds.includes(table.id)) {
+                this.state.selectedTableIds = this.state.selectedTableIds.filter(
+                    (id) => id !== table.id
+                );
+                return;
             }
+            if (!ev.ctrlKey && !ev.metaKey) {
+                this.unselectTables();
+            }
+            this.state.selectedTableIds.push(table.id);
             return;
         }
         if (table.parent_id) {
