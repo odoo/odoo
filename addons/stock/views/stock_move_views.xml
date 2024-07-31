@@ -114,6 +114,9 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><span><field name="product_id" readonly="state == 'done'"/></span></strong>
                                     </div>
+                                    <button name="action_show_details" string="Register lots, packs, location"
+                                            class="o_icon_button fa fa-list" type="object"
+                                            invisible="not show_details_visible"/>
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <div invisible="not is_inventory">
@@ -159,6 +162,8 @@
                     <field name="show_quant" invisible="1"/>
                     <field name="show_lots_text" invisible="1"/>
                     <field name="show_lots_m2o" invisible="1"/>
+                    <field name="product_qty" invisible="1"/>
+                    <field name="quantity" invisible="1"/>
                     <group>
                         <group>
                             <field name="product_id" readonly="id or move_line_ids"/>

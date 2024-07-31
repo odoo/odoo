@@ -6512,9 +6512,10 @@ class StockMove(TransactionCase):
         picking.action_confirm()
         self.assertEqual(picking.state, 'assigned')
 
-        with picking_form.move_ids_without_package.edit(0) as line_form:
-            line_form.lot_ids.add(sn01)
-        picking = picking_form.save()
+        with Form(picking) as picking_form:
+            with picking_form.move_ids_without_package.edit(0) as line_form:
+                line_form.lot_ids.add(sn01)
+            picking = picking_form.save()
         self.assertEqual(picking.move_ids_without_package.lot_ids, sn01)
 
     def test_change_move_line_uom(self):

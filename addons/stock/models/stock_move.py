@@ -270,11 +270,16 @@ class StockMove(models.Model):
         show_details_visible = multi_locations_enabled or has_package or consignment_enabled
 
         for move in self:
-            if not move.product_id:
-                move.show_details_visible = False
-            elif not move.picking_type_id.use_create_lots and not move.picking_type_id.use_existing_lots\
-                and not self.env.user.has_group('stock.group_stock_tracking_lot')\
-                and not self.env.user.has_group('stock.group_stock_multi_locations'):
+            if (
+                not move.product_id
+                or move.state == "draft"
+                or (
+                    not move.picking_type_id.use_create_lots
+                    and not move.picking_type_id.use_existing_lots
+                    and not self.env.user.has_group("stock.group_stock_tracking_lot")
+                    and not self.env.user.has_group("stock.group_stock_multi_locations")
+                )
+            ):
                 move.show_details_visible = False
             elif len(move.move_line_ids) > 1:
                 move.show_details_visible = True
