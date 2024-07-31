@@ -68,6 +68,7 @@ class RPC(Controller):
         data = request.httprequest.get_data()
         params, method = loads(data)
         result = dispatch_rpc(service, method, params)
+        _logger.debug('XMLRPC call %s with params : %s.', method, params)
         return dumps((result,), methodresponse=1, allow_none=False)
 
     @route("/xmlrpc/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
