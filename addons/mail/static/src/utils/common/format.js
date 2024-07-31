@@ -8,7 +8,7 @@ const urlRegexp =
 
 // Match markedown code fences (```xml [...] ```) and inline code (`[...]`),
 // extracted from the marked librairy
-const codeFencesRegexp = /(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/gm;
+export const codeFencesRegexp = /(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/gm;
 
 /**
  * Escape < > & as html entities

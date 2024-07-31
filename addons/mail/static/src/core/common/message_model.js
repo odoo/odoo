@@ -1,6 +1,7 @@
 import { Record } from "@mail/core/common/record";
 import {
     EMOJI_REGEX,
+    codeFencesRegexp,
     convertBrToLineBreak,
     htmlToTextContentInline,
     prettifyMessageContent,
@@ -16,10 +17,12 @@ import { pyToJsLocale } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
 import { omit } from "@web/core/utils/objects";
 import { url } from "@web/core/utils/urls";
+import { loadBundle } from "@web/core/assets";
 
 const { DateTime } = luxon;
 
 const parser = new DOMParser();
+const markdownI = markdown();
 
 export class Message extends Record {
     static id = "id";
@@ -51,8 +54,27 @@ export class Message extends Record {
             if (!this.isBodyEmpty) {
                 const htmlDoc = parser.parseFromString(this.body, "text/html");
                 const markdownElements = htmlDoc.querySelectorAll("odoo-markdown");
+                if (!this.store.markdownLoaded && codeFencesRegexp.test(this.body)) {
+                    loadBundle("mail.assets_markdown").then(() => {
+                        const { markedHighlight } = globalThis.markedHighlight;
+                        const markedHighligthExtension = markedHighlight({
+                            langPrefix: "hljs language-",
+                            highlight(code, lang, info) {
+                                const unescapedCode = code.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+                                if (!lang) {
+                                    lang = "plaintext";
+                                }
+                                // eslint-disable-next-line no-undef
+                                const value = hljs.highlight(unescapedCode, { language: lang, ignoreIllegals: true }).value;
+                                return value;
+                            }
+                        });
+                        markdownI.use(markedHighligthExtension);
+                        this.store.markdownLoaded = true;
+                    });
+                }
                 for (const markdownElement of markdownElements) {
-                    markdownElement.innerHTML = markdown(markdownElement.innerHTML);
+                    markdownElement.innerHTML = markdownI.parse(markdownElement.innerHTML);
                 }
                 return markup(htmlDoc.body.innerHTML);
             }

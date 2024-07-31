@@ -26,6 +26,8 @@ export class Store extends BaseStore {
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
     isReady = new Deferred();
 
+    markdownLoaded = false;
+
     /** @returns {import("models").Store|import("models").Store[]} */
     static insert() {
         return super.insert(...arguments);

@@ -10,7 +10,7 @@ function cleanUrl(href) {
 }
 
 let odooMarked;
-export function markdown(markdown) {
+export function markdown() {
     if (!odooMarked) {
         const odooRenderer = {
             useNewRenderer: true,
@@ -31,20 +31,6 @@ export function markdown(markdown) {
                     out += ' target="_blank">' + text + '</a>';
                     return out;
                 },
-                code({ text, lang, escaped }) {
-                    const langString = (lang || '').match(/^\S*/)?.[0];
-                    const code = text.replace(/\n$/, '') + '\n';
-                    if (!langString) {
-                        return '<pre><code>'
-                            + code
-                            + '</code></pre>\n';
-                    }
-                    return '<pre><code class="language-'
-                        + langString
-                        + '">'
-                        + code
-                        + '</code></pre>\n';
-                }
             },
             tokenizer: {
                 codespan(src) {
@@ -69,5 +55,5 @@ export function markdown(markdown) {
         // eslint-disable-next-line no-undef
         odooMarked = new marked.Marked(odooRenderer);
     }
-    return odooMarked.parse(markdown);
+    return odooMarked;
 };

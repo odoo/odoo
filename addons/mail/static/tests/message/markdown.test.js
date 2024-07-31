@@ -51,7 +51,7 @@ test("basic rendering of markdown message with code snippet", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message-content pre code");
+    await contains(".o-mail-Message-content pre code .hljs-keyword");
 });
 
 test(`Markdown links should have target="_blank" attribute`, async () => {
