@@ -53,3 +53,13 @@ export function clickPlanButton() {
         run: "click",
     };
 }
+
+export function fillTextarea(val, target) {
+    return [
+        {
+            content: "Fill textarea",
+            trigger: "." + target,
+            run: "edit " + val,
+        },
+    ];
+}

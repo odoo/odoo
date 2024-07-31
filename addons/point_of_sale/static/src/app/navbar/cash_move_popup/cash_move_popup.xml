@@ -2,32 +2,32 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.CashMovePopup">
-        <Dialog header="false">
-            <div class="input-amount d-flex mb-2 gap-2">
-                <div class="input-group">
-                    <button t-on-click="() => this.onClickButton('in')" class="input-type btn btn-secondary btn-lg lh-lg" t-att-class="{ 'highlight btn-success': state.type === 'in' }">
-                        Cash In
-                    </button>
-                    <button t-on-click="() => this.onClickButton('out')" class="input-type btn btn-secondary btn-lg lh-lg" t-att-class="{ 'red-highlight btn-danger': state.type === 'out' }">
-                        Cash Out
-                    </button>
+        <Dialog header="false" size="'sm'">
+            <div class="input-amount d-flex mb-2">
+                <div class="d-flex border">
+                    <div class="col btn py-3 fw-bolder border-end" t-on-click="toggleSign">+/-</div>
+                    <div class="input-group">
+                        <Input tModel="[state, 'amount']"
+                        icon="{type: 'string', value: pos.currency.symbol}"
+                        iconOnLeftSide="pos.currency.position === 'before'"
+                        isValid.bind="env.utils.isValidFloat"
+                        autofocus="true"
+                        getRef="(ref) => this.inputRef = ref"
+                        noBorder="true"/>
+                    </div>
                 </div>
-                <Input tModel="[state, 'amount']"
-                    icon="{type: 'string', value: pos.currency.symbol}"
-                    iconOnLeftSide="pos.currency.position === 'before'"
-                    isValid.bind="env.utils.isValidFloat"
-                    autofocus="true"
-                    getRef="(ref) => this.inputRef = ref" />
+                <button class="icon fa fa-money fa-lg btn btn-secondary ms-1" t-on-click="openDetailsPopup" />
             </div>
+
             <div class="form-floating">
-                <textarea class="form-control" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
+                <textarea class="form-control reason" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
                 <label for="reason">Reason</label>
             </div>
             <t t-set-slot="footer">
                 <button class="button confirm btn btn-lg lh-lg btn-primary"
                     t-on-click="confirm"
-                    t-att-disabled="!env.utils.isValidFloat(state.amount)">
-                    Confirm <span t-esc="format(state.amount)"/>
+                    t-att-disabled="!env.utils.isValidFloat(state.amount) || !state.reason">
+                    Confirm
                 </button>
                 <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="props.close">
                     Discard

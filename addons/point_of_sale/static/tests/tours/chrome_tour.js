@@ -13,6 +13,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Dialog.confirm("Open session"),
             Chrome.clickMenuButton(),
             Chrome.clickMenuDropdownOption("Cash In/Out"),
+            Chrome.fillTextarea("reason", "reason"),
             Dialog.confirm(),
             Chrome.clickMenuButton(),
 
