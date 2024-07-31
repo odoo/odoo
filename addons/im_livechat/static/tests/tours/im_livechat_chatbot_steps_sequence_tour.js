@@ -33,7 +33,7 @@ const commonSteps = [
         run: "edit Step 1",
     },
     {
-        trigger: 'button:contains("Save & New")',
+        trigger: "button:contains(Save & New):enabled",
         run: "click",
     },
     {
@@ -44,7 +44,7 @@ const commonSteps = [
         run: "edit Step 2",
     },
     {
-        trigger: 'button:contains("Save & New")',
+        trigger: "button:contains(Save & New):enabled",
         run: "click",
     },
     {

@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 import { markup } from "@odoo/owl";
+import { omit } from "@web/core/utils/objects";
 
 function addMedia(position = "right") {
     return {
@@ -411,7 +412,7 @@ function registerWebsitePreviewTour(name, options, steps) {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
     return registry.category("web_tour.tours").add(name, {
-        ...options,
+        ...omit(options, "edition"),
         url: getClientActionUrl(options.url, !!options.edition),
         steps: () => {
             const tourSteps = [...steps()];
