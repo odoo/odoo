@@ -215,7 +215,7 @@ class AccruedExpenseRevenue(models.TransientModel):
             analytic_distribution = {}
             total = sum(order.amount_total for order in orders)
             for line in orders.order_line:
-                ratio = line.price_total / total
+                ratio = line.price_total / (total or 1)
                 if not is_purchase and line.order_id.analytic_account_id:
                     account_id = str(line.order_id.analytic_account_id.id)
                     analytic_distribution.update({account_id: analytic_distribution.get(account_id, 0) +100.0*ratio})
