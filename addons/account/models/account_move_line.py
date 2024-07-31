@@ -496,14 +496,18 @@ class AccountMoveLine(models.Model):
             else:
                 line.currency_id = line.currency_id or line.company_id.currency_id
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'move_id.ref')
     def _compute_name(self):
         term_by_move = (self.move_id.line_ids | self).filtered(lambda l: l.display_type == 'payment_term').sorted(lambda l: l.date_maturity if l.date_maturity else date.max).grouped('move_id')
         for line in self.filtered(lambda l: l.move_id.inalterable_hash is False):
             if line.display_type == 'payment_term':
                 term_lines = term_by_move.get(line.move_id, self.env['account.move.line'])
                 n_terms = len(line.move_id.invoice_payment_term_id.line_ids)
-                name = line.move_id.payment_reference or ''
+                if line.move_id.payment_reference and line.move_id.ref:
+                    name = f'{line.move_id.ref} - {line.move_id.payment_reference}'
+                else:
+                    name = line.move_id.payment_reference or ''
+
                 if n_terms > 1:
                     index = term_lines._ids.index(line.id) if line in term_lines else len(term_lines)
                     name = _('%(name)s installment #%(number)s', name=name, number=index + 1).lstrip()
