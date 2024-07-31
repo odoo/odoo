@@ -868,6 +868,10 @@ export function removeWithinOperators(tree) {
         }
         const { negate, path, value } = tree;
         const fieldType = value[2];
+
+        // Prevent invalid tokens
+        value[0] = parseInt(value[0]);
+
         const dateExpressions = {
             today: expression(DATE_TODAY_STRING_EXPRESSION),
             delta: expression(
