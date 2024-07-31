@@ -141,16 +141,15 @@ class ResCompany(models.Model):
                         'action': invalid_records._get_records_action(name=_("Check Company Data")),
                     }
         if self.filtered(lambda x: not x.l10n_it_edi_proxy_user_id):
-            new_context = {
-                **self.env.context,
-                'module': 'account',
-                'default_search_setting': _("Italian Electronic Invoicing"),
-                'bin_size': False,
-            }
             errors['l10n_it_edi_settings_l10n_it_edi_proxy_user_id'] = {
                 'message': _("You must accept the terms and conditions in the Settings to use the IT EDI."),
                 'action_text': _("View Settings"),
-                'action': self.env['res.config.settings']._get_records_action(name=_("Settings"), context=new_context),
+                'action': {
+                    'name': _("Settings"),
+                    'type': 'ir.actions.act_url',
+                    'target': 'self',
+                    'url': '/odoo/settings#italian_edi',
+                },
             }
         return errors
 
