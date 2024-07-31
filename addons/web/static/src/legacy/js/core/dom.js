@@ -165,7 +165,9 @@ var dom = {
                 return $scrollable[0].scrollHeight - $scrollable[0].clientHeight;
             }
 
+            el.classList.add("o_check_scroll_position");
             let offsetTop = $el.offset().top;
+            el.classList.remove("o_check_scroll_position");
             if (el.classList.contains('d-none')) {
                 el.classList.remove('d-none');
                 offsetTop = $el.offset().top;
