@@ -1,8 +1,9 @@
-import { tourState } from "./tour_state";
+import { tourState } from "@web_tour/tour_service/tour_state";
 import { debounce } from "@web/core/utils/timing";
-import { getScrollParent, isActive } from "./tour_utils";
+import { getScrollParent } from "@web_tour/tour_service/tour_utils";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_service";
+import { TourStep } from "./tour_step";
 
 /**
  * @typedef ConsumeEvent
@@ -12,7 +13,14 @@ import { utils } from "@web/core/ui/ui_service";
  */
 
 export class TourInteractive {
-    constructor() {
+    mode = "manual";
+    /**
+     * @param {Tour} data
+     */
+    constructor(data) {
+        Object.assign(this, data);
+        this.steps = this.steps.map((step) => new TourStep(step, this));
+        this.actions = this.steps.flatMap((s) => this.getSubActions(s));
         this.anchorEl;
         this.currentAction;
         this.currentActionIndex;
@@ -20,26 +28,16 @@ export class TourInteractive {
     }
 
     /**
-     * @param {import("./tour_service").Tour} tour
      * @param {import("@web_tour/tour_pointer/tour_pointer").TourPointer} pointer
      * @param {Function} onTourEnd
      */
-    loadTour(tour, pointer, onTourEnd) {
-        this.tourName = tour.name;
-        this.actions = tour.steps.flatMap((s) => this.getSubActions(s));
+    start(pointer, onTourEnd) {
         this.pointer = pointer;
         this.debouncedToggleOpen = debounce(this.pointer.showContent, 50, true);
         this.onTourEnd = onTourEnd;
-    }
-
-    /**
-     *
-     * @param {Number} stepAt Step to start at
-     */
-    start(stepAt = 0) {
         this.pointer.start();
         this.observerDisconnect = hoot.observe(document.body, () => this._onMutation());
-        this.currentActionIndex = stepAt;
+        this.currentActionIndex = tourState.get(this.name, "currentIndex") || 0;
         this.play();
     }
 
@@ -50,7 +48,7 @@ export class TourInteractive {
         while (!tempAnchor && tempIndex >= 0) {
             tempIndex--;
             tempAction = this.actions.at(tempIndex);
-            if (!isActive({ isActive: tempAction.isActive }, "manual")) {
+            if (!tempAction.step.active) {
                 continue;
             }
             tempAnchor = tempAction && hoot.queryFirst(tempAction.anchor);
@@ -78,7 +76,7 @@ export class TourInteractive {
             this.play();
         }
 
-        if (!isActive({ isActive: this.currentAction.isActive }, "manual")) {
+        if (!this.currentAction.step.active) {
             this.currentActionIndex++;
             this.play();
             return;
@@ -87,7 +85,7 @@ export class TourInteractive {
         console.log(this.currentAction.event, this.currentAction.anchor);
         this.anchorEl = hoot.queryFirst(this.currentAction.anchor, { visible: true });
 
-        tourState.set(this.tourName, "currentIndex", this.currentActionIndex);
+        tourState.set(this.name, "currentIndex", this.currentActionIndex);
         this.setActionListeners();
     }
 
@@ -196,8 +194,6 @@ export class TourInteractive {
      * @returns {{
      *  event: string,
      *  anchor: string,
-     *  altAnchor: string?,
-     *  isActive: string[]?,
      *  pointerInfo: { tooltipPosition: string?, content: string? },
      * }[]}
      */
@@ -225,20 +221,19 @@ export class TourInteractive {
 
             if (action === "drag_and_drop") {
                 actions.push({
+                    step,
                     event: "drag",
                     anchor: step.trigger,
                     pointerInfo,
-                    isActive: step.isActive,
                 });
                 action = "drop";
             }
 
             actions.push({
+                step,
                 event: action,
                 anchor: action === "edit" ? step.trigger : anchor,
-                altAnchor: step.alt_trigger,
                 pointerInfo,
-                isActive: step.isActive,
             });
         }
 
