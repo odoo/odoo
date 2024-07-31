@@ -165,12 +165,15 @@
     --button-box-gap: 1px;
     --button-box-per-row: 2;
     --button-box-border-color: #{map-get(map-get($o-btns-bs-outline-override, 'secondary'), 'border')};
+    --button-box-spacing: #{map-get($spacers, 3)};
 
     display: grid;
     grid-template-columns: repeat(var(--button-box-per-row), minmax(0, 1fr));
     overflow: hidden;
-    inset-inline-end: $spacer;
     gap: var(--button-box-gap);
+    width: calc(100vw - var(--button-box-spacing) * 2) !important;
+    left: var(--button-box-spacing) !important;
+    right: var(--button-box-spacing) !important;
 
     > span .o_field_widget, .o_stat_info, .o_stat_value {
         @include text-truncate;
