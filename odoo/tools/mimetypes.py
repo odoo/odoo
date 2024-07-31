@@ -227,3 +227,25 @@ def get_extension(filename):
 
     # Unknown extension.
     return ''
+
+
+def fix_filename_extension(filename, mimetype):
+    """
+    Make sure the filename ends with an extension of the mimetype.
+
+    :param str filename: the filename with an unsafe extension
+    :param str mimetype: the mimetype detected reading the file's content
+    :returns: the same filename if its extension matches the detected
+        mimetype, otherwise the same filename with the mimetype's
+        extension added at the end.
+
+    """
+    if mimetypes.guess_type(filename)[0] == mimetype:
+        return filename
+
+    if extension := mimetypes.guess_extension(mimetype):
+        _logger.warning("File %r has an invalid extension for mimetype %r, adding %r", filename, mimetype, extension)
+        return filename + extension
+
+    _logger.warning("File %r has an unknown extension for mimetype %r", filename, mimetype)
+    return filename
