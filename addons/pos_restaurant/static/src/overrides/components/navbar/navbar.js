@@ -2,8 +2,6 @@ import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 import { patch } from "@web/core/utils/patch";
-import { ListContainer } from "@point_of_sale/app/generic_components/list_container/list_container";
-import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { _t } from "@web/core/l10n/translation";
 import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -15,9 +13,6 @@ import {
     BACKSPACE,
 } from "@point_of_sale/app/generic_components/numpad/numpad";
 
-patch(Navbar, {
-    components: { ...Navbar.components, ListContainer },
-});
 patch(Navbar.prototype, {
     async onClickBackButton() {
         if (this.pos.orderToTransferUuid) {
@@ -61,6 +56,9 @@ patch(Navbar.prototype, {
                   ?.table_id
             : this.pos.selectedTable;
     },
+    showTabs() {
+        return !this.pos.selectedTable;
+    },
     get showTableIcon() {
         return typeof this.getTable()?.table_number === "number" && this.pos.showBackButton();
     },
@@ -68,33 +66,6 @@ patch(Navbar.prototype, {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";
         localStorage.setItem("floorPlanStyle", mode);
         this.pos.floorPlanStyle = mode;
-    },
-    newFloatingOrder() {
-        this.pos.add_new_order();
-        this.pos.showScreen("ProductScreen");
-    },
-    getFloatingOrders() {
-        return this.pos.get_open_orders().filter((order) => !order.table_id);
-    },
-    selectFloatingOrder(order) {
-        this.pos.set_order(order);
-        this.pos.showScreen("ProductScreen");
-    },
-    editOrderNote(order) {
-        this.dialog.add(TextInputPopup, {
-            title: _t("Edit order note"),
-            placeholder: _t("Emma's Birthday Party"),
-            startingValue: order.note,
-            getPayload: async (newName) => {
-                if (typeof order.id == "number") {
-                    this.pos.data.write("pos.order", [order.id], {
-                        note: newName,
-                    });
-                } else {
-                    order.note = newName;
-                }
-            },
-        });
     },
     get showEditPlanButton() {
         return true;
