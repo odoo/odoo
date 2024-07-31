@@ -731,7 +731,19 @@ class AccountPayment(models.Model):
         - Are in the suspense account
         """
         def build_query(move_table_and_alias, outstanding_account_ids, payments):
-            suspense_account_id = self.company_id.account_journal_suspense_account_id.id
+            suspense_account_ids = all_journals.suspense_account_id.ids
+            extra_conditions = SQL(
+                """
+                AND (
+                   -- Case 1: a move is a credit in same account receivable or debit in same acc payable as the payment
+                   (dup_move_line.account_id != ANY(%(outstanding_account_ids)s) AND move_line.balance = dup_move_line.balance)
+                   OR
+                   -- Case 2: a move is a credit in outstanding receipts or debit in outstanding payments
+                   (dup_move_line.account_id = ANY(%(outstanding_account_ids)s) AND move_line.balance = -1.0 * dup_move_line.balance)
+               )
+            """,
+                outstanding_account_ids=outstanding_account_ids,
+            ) if outstanding_account_ids else SQL("AND move_line.balance = dup_move_line.balance")
 
             return SQL(
                 """
@@ -744,21 +756,14 @@ class AccountPayment(models.Model):
                    AND move_line.partner_id = dup_move_line.partner_id
                    AND move_line.company_id = dup_move_line.company_id
                    AND move_line.date = dup_move_line.date
-                   AND dup_move_line.parent_state IN %(matching_states)s
+                   AND dup_move_line.parent_state = ANY(%(matching_states)s)
                    AND (
                        move_line.account_id = dup_move_line.account_id
-                       OR dup_move_line.account_id = %(suspense_account_id)s
-                       OR dup_move_line.account_id IN %(outstanding_account_ids)s
+                       OR dup_move_line.account_id = ANY(%(account_ids)s)
                    )
                    AND NOT dup_move_line.reconciled
-                 WHERE move_line.payment_id IN %(payments)s
-                   AND (
-                       -- Case 1: a move is a credit in same account receivable or debit in same acc payable as the payment
-                       (dup_move_line.account_id NOT IN %(outstanding_account_ids)s AND move_line.balance = dup_move_line.balance)
-                       OR
-                       -- Case 2: a move is a credit in outstanding receipts or debit in outstanding payments
-                       (dup_move_line.account_id IN %(outstanding_account_ids)s AND move_line.balance = -1.0 * dup_move_line.balance)
-                   )
+                 WHERE move_line.payment_id = ANY(%(payments)s)
+                   %(extra_conditions)s
                    AND (
                        move_line.payment_type = 'inbound' AND dup_move_line.balance < 0.0
                        OR move_line.payment_type = 'outbound' AND dup_move_line.balance > 0.0
@@ -766,10 +771,10 @@ class AccountPayment(models.Model):
               GROUP BY move_line.payment_id
             """,
                 move_table_and_alias=move_table_and_alias,
-                matching_states=tuple(matching_states),
-                suspense_account_id=suspense_account_id,
-                outstanding_account_ids=outstanding_account_ids,
-                payments=tuple(payments),
+                matching_states=list(matching_states),
+                account_ids=suspense_account_ids + outstanding_account_ids,
+                payments=payments,
+                extra_conditions=extra_conditions,
             )
 
         # Does not perform unnecessary check if partner_id or amount are not set, nor if payment is posted
@@ -778,12 +783,11 @@ class AccountPayment(models.Model):
         # Separate inbound and outbound payments, as their outstanding accounts differ and need to be checked separately
         payments_inbound = self.filtered(lambda p: p.payment_type == 'inbound')
         payments_outbound = self.filtered(lambda p: p.payment_type == 'outbound')
-        if self.journal_id:
-            inbound_outstanding_account_ids = tuple(self.journal_id._get_journal_inbound_outstanding_payment_accounts().ids)
-            outbound_outstanding_account_ids = tuple(self.journal_id._get_journal_outbound_outstanding_payment_accounts().ids)
-        else:
-            inbound_outstanding_account_ids = tuple(self.company_id.account_journal_payment_debit_account_id.ids)
-            outbound_outstanding_account_ids = tuple(self.company_id.account_journal_payment_credit_account_id.ids)
+        all_journals = self.env['account.journal'].search([('type', 'in', ('bank', 'cash'))])
+        if payments_inbound:
+            inbound_outstanding_account_ids = all_journals.inbound_payment_method_line_ids.payment_account_id.ids + self.company_id.account_journal_payment_debit_account_id.ids
+        if payments_outbound:
+            outbound_outstanding_account_ids = all_journals.outbound_payment_method_line_ids.payment_account_id.ids + self.company_id.account_journal_payment_credit_account_id.ids
 
         # Update tables involved in the query
         self.env['account.move.line'].flush_model(('move_id', 'payment_id', 'balance', 'account_id', 'company_id', 'date', 'partner_id'))
@@ -807,7 +811,7 @@ class AccountPayment(models.Model):
                 AS move_line(move_id, payment_id, payment_type, balance, account_id, company_id, date, partner_id)
             """, **place_holders)
             outstanding_account_ids = inbound_outstanding_account_ids if self.payment_type == 'inbound' else outbound_outstanding_account_ids
-            query = build_query(move_table_and_alias, outstanding_account_ids, [0])
+            query = build_query(move_table_and_alias, outstanding_account_ids, [place_holders['payment_id']])
 
         else:
             move_table_and_alias = SQL("""
