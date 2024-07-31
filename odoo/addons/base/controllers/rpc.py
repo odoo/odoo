@@ -45,7 +45,7 @@ def xmlrpc_handle_exception_int(e):
         formatted_info = "".join(traceback.format_exception(*info))
         fault = xmlrpc.client.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
 
-    return xmlrpc.client.dumps(fault, allow_none=None)
+    return dumps(fault)
 
 
 def xmlrpc_handle_exception_string(e):
@@ -65,7 +65,7 @@ def xmlrpc_handle_exception_string(e):
         formatted_info = "".join(traceback.format_exception(*info))
         fault = xmlrpc.client.Fault(odoo.tools.exception_to_unicode(e), formatted_info)
 
-    return xmlrpc.client.dumps(fault, allow_none=None, encoding=None)
+    return dumps(fault)
 
 
 class OdooMarshaller(xmlrpc.client.Marshaller):
@@ -110,8 +110,14 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
     dispatch[Markup] = lambda self, value, write: self.dispatch[str](self, str(value), write)
 
 
-# monkey-patch xmlrpc.client's marshaller
-xmlrpc.client.Marshaller = OdooMarshaller
+def dumps(params: list | tuple | xmlrpc.client.Fault) -> str:
+    response = OdooMarshaller(allow_none=False).dumps(params)
+    return f"""\
+<?xml version="1.0"?>
+<methodResponse>
+{response}
+</methodResponse>
+"""
 
 # ==========================================================
 # RPC Controller
@@ -131,7 +137,7 @@ class RPC(Controller):
         data = request.httprequest.get_data()
         params, method = xmlrpc.client.loads(data)
         result = dispatch_rpc(service, method, params)
-        return xmlrpc.client.dumps((result,), methodresponse=1, allow_none=False)
+        return dumps((result,))
 
     @route("/xmlrpc/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
     def xmlrpc_1(self, service):
