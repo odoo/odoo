@@ -942,22 +942,6 @@ class MrpProduction(models.Model):
                 vals['move_raw_ids'] = [(0, 0, move_vals) for move_vals in production.move_raw_ids.filtered(lambda m: m.product_qty != 0.0).copy_data()]
         return vals_list
 
-    def copy(self, default=None):
-        new_productions = super().copy(default)
-        for old_production, new_production in zip(self, new_productions):
-            if old_production.workorder_ids.blocked_by_workorder_ids:
-                workorders_mapping = {}
-                for original, copied in zip(old_production.workorder_ids, new_production.workorder_ids.sorted()):
-                    workorders_mapping[original] = copied
-                for workorder in old_production.workorder_ids:
-                    if workorder.blocked_by_workorder_ids:
-                        copied_workorder = workorders_mapping[workorder]
-                        dependencies = []
-                        for dependency in workorder.blocked_by_workorder_ids:
-                            dependencies.append(Command.link(workorders_mapping[dependency].id))
-                        copied_workorder.blocked_by_workorder_ids = dependencies
-        return new_productions
-
     def action_generate_bom(self):
         """ Generates a new Bill of Material based on the Manufacturing Order's product, components,
         workorders and by-products, and assigns it to the MO. Returns a new BoM's form view action.
