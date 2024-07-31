@@ -18,7 +18,7 @@ from odoo import api, fields, models, SUPERUSER_ID, tools, _
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.http import Stream, root, request
 from odoo.tools import config, human_size, image, str2bool, consteq
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.mimetypes import guess_mimetype, fix_filename_extension
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -732,6 +732,44 @@ class IrAttachment(models.Model):
             ('create_uid', '=', SUPERUSER_ID),
         ]).unlink()
         self.env.registry.clear_cache('assets')
+
+    def _from_request_file(self, file, *, mimetype, **vals):
+        """
+        Create an attachment out of a request file
+
+        :param file: the request file
+        :param str mimetype:
+            * "TRUST" to use the mimetype and file extension from the
+              request file with no verification.
+            * "GUESS" to determine the mimetype and file extension on
+              the file's content. The determined extension is added at
+              the end of the filename unless the filename already had a
+              valid extension.
+            * a mimetype in format "{type}/{subtype}" to force the
+              mimetype to the given value, it adds the corresponding
+              file extension at the end of the filename unless the
+              filename already had a valid extension.
+        """
+        if mimetype == 'TRUST':
+            mimetype = file.content_type
+            filename = file.filename
+        elif mimetype == 'GUESS':
+            head = file.read(1024)
+            file.seek(-len(head), 1)  # rewind
+            mimetype = guess_mimetype(head)
+            filename = fix_filename_extension(file.filename, mimetype)
+        elif all(mimetype.partition('/')):
+            filename = fix_filename_extension(file.filename, mimetype)
+        else:
+            raise ValueError(f'{mimetype=}')
+
+        return self.create({
+            'name': filename,
+            'type': 'binary',
+            'raw': file.read(),  # load the entire file in memory :(
+            'mimetype': mimetype,
+            **vals,
+        })
 
     def _to_http_stream(self):
         """ Create a :class:`~Stream`: from an ir.attachment record. """
