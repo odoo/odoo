@@ -135,7 +135,7 @@ class RPC(Controller):
         """Common method to handle an XML-RPC request."""
         _check_request()
         data = request.httprequest.get_data()
-        params, method = xmlrpc.client.loads(data)
+        params, method = xmlrpc.client.loads(data, use_datetime=True)
         result = dispatch_rpc(service, method, params)
         return dumps((result,))
 
