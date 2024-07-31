@@ -136,7 +136,9 @@ var dom = {
                 return scrollable.scrollHeight - scrollable.clientHeight;
             }
 
+            el.classList.add("o_check_scroll_position");
             let offsetTop = el.getBoundingClientRect().top + window.scrollY;
+            el.classList.remove("o_check_scroll_position");
             if (el.classList.contains('d-none')) {
                 el.classList.remove('d-none');
                 offsetTop = el.getBoundingClientRect().top + window.scrollY;
