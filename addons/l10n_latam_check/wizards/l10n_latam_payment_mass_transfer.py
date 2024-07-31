@@ -65,8 +65,8 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
         checks = self.check_ids.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
         payment_vals_list = []
 
-        pay_method_line = self.journal_id._get_available_payment_method_lines('outbound').filtered(
-            lambda x: x.code == 'out_third_party_checks')
+        pay_method_line_id = self.journal_id._get_available_payment_method_lines('outbound').filtered(
+            lambda x: x.code == 'out_third_party_checks')[:1].id
 
         for check in checks:
             payment_vals_list.append({
@@ -78,7 +78,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
                 'journal_id': self.journal_id.id,
                 'currency_id': check.currency_id.id,
                 'is_internal_transfer': True,
-                'payment_method_line_id': pay_method_line.id,
+                'payment_method_line_id': pay_method_line_id,
                 'destination_journal_id': self.destination_journal_id.id,
             })
         payments = self.env['account.payment'].create(payment_vals_list)
