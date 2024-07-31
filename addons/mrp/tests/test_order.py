@@ -4091,6 +4091,34 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(wo.date_start, dt)
         self.assertEqual(wo.date_finished, dt + timedelta(hours=0, minutes=30))
 
+    def test_update_qty_producing_done_MO_with_lot(self):
+        """
+        Test that increasing the qty producing of a done MO for a product tracked by lot
+        will create an additional sml for the final product with the same producing lot
+        """
+        tracked_product = self.env['product.template'].create({
+            'name': 'Super Product',
+            'tracking': 'lot',
+            'type': 'product',
+            'bom_ids': [Command.create({
+                'product_qty': 2.0,
+                'bom_line_ids': [Command.create({'product_id': self.product_1.id, 'product_qty': 2.0})],
+            })],
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': tracked_product.product_variant_ids.id,
+            'product_uom_qty': 2.0,
+        })
+        mo.action_generate_serial()
+        producing_lot = mo.lot_producing_id
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_finished_ids.lot_ids, producing_lot)
+        self.assertEqual(mo.move_finished_ids.move_line_ids.mapped('lot_id'), producing_lot)
+        mo.qty_producing = 3.0
+        self.assertTrue(all(sml.lot_id == producing_lot for sml in mo.move_finished_ids.move_line_ids))
+        self.assertEqual(sum(sml.quantity for sml in mo.move_finished_ids.move_line_ids), 3.0)
+
 
 @tagged('post_install', '-at_install')
 class TestMrpSynchronization(HttpCase):
