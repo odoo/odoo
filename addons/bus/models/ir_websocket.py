@@ -49,9 +49,10 @@ class IrWebsocket(models.AbstractModel):
                 identity_field='user_id',
                 identity_value=self.env.uid
             )
-            im_status_notification = self._get_im_status(im_status_ids_by_model)
-            if im_status_notification:
-                self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', im_status_notification)
+
+    def _on_websocket_closed(self, cookies):
+        if self.env.user and not self.env.user._is_public():
+            self.env["bus.presence"].search([("user_id", "=", self.env.uid)]).unlink()
 
     @classmethod
     def _authenticate(cls):
