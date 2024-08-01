@@ -47,7 +47,7 @@ export class ProjectTaskFormController extends FormController {
         this.dialogService.add(
             HistoryDialog,
             {
-                recordId: this.props.resId,
+                recordId: record.resId,
                 recordModel: this.props.resModel,
                 versionedFieldName,
                 historyMetadata,
