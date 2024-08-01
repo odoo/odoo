@@ -14,6 +14,8 @@ except ImportError:
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 
+from .ir_attachment import get_cloud_storage_google_credential
+
 
 class CloudStorageSettings(models.TransientModel):
     """
@@ -84,7 +86,7 @@ class CloudStorageSettings(models.TransientModel):
             'responseHeader': ['Content-Type'],
             'maxAgeSeconds': IrAttachment._cloud_storage_download_url_time_to_expiry,
         }]
-        credential = IrAttachment._get_cloud_storage_google_credential().with_scopes(['https://www.googleapis.com/auth/devstorage.full_control'])
+        credential = get_cloud_storage_google_credential(self.env).with_scopes(['https://www.googleapis.com/auth/devstorage.full_control'])
         credential.refresh(Request())
         url = f"https://storage.googleapis.com/storage/v1/b/{bucket_name}?fields=cors"
         headers = {
