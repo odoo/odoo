@@ -819,7 +819,14 @@ test("channel - states: open should update the value on the server", async () =>
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi"); // wait fully loaded
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
-    await assertSteps(["set_res_users_settings - true"]);
+    await assertSteps(["set_res_users_settings - true"]); // ensure the server is updated before asserting
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi.oi-chevron-down");
+    const newSettings = await getService("orm").call(
+        "res.users.settings",
+        "_find_or_create_for_user",
+        [serverState.userId]
+    );
+    expect(newSettings.is_discuss_sidebar_category_channel_open).toBe(true);
 });
 
 test("channel - states: close from the bus", async () => {
