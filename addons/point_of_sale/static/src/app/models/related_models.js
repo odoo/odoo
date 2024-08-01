@@ -880,6 +880,39 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                                     const toConnect = records[field.relation][id];
                                     if (toConnect) {
                                         connect(field, recorded, toConnect);
+<<<<<<< saas-17.4
+||||||| 97fb1686363933f87e05bc801804df608c83176a
+                                    } else if (this[field.relation]) {
+                                        if (!isFieldExemptedAutoLoad(field)) {
+                                            if (!missingRecords[field.relation]) {
+                                                missingRecords[field.relation] = new Set([id]);
+                                            } else {
+                                                missingRecords[field.relation].add(id);
+                                            }
+                                        }
+                                        const key = `${field.relation}_${id}`;
+                                        if (!missingFields[key]) {
+                                            missingFields[key] = [[recorded, field]];
+                                        } else {
+                                            missingFields[key].push([recorded, field]);
+                                        }
+=======
+                                    } else if (
+                                        this[field.relation] &&
+                                        !isFieldExemptedAutoLoad(field)
+                                    ) {
+                                        if (!missingRecords[field.relation]) {
+                                            missingRecords[field.relation] = new Set([id]);
+                                        } else {
+                                            missingRecords[field.relation].add(id);
+                                        }
+                                        const key = `${field.relation}_${id}`;
+                                        if (!missingFields[key]) {
+                                            missingFields[key] = [[recorded, field]];
+                                        } else {
+                                            missingFields[key].push([recorded, field]);
+                                        }
+>>>>>>> 0500b7b07d7dbd327f23538df9f5ae5e93cfe6bd
                                     }
                                 }
                             }
@@ -890,6 +923,36 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                             const toConnect = records[field.relation][id];
                             if (toConnect) {
                                 connect(field, recorded, toConnect);
+<<<<<<< saas-17.4
+||||||| 97fb1686363933f87e05bc801804df608c83176a
+                            } else if (this[field.relation]) {
+                                if (!isFieldExemptedAutoLoad(field)) {
+                                    if (!missingRecords[field.relation]) {
+                                        missingRecords[field.relation] = new Set([id]);
+                                    } else {
+                                        missingRecords[field.relation].add(id);
+                                    }
+                                }
+                                const key = `${field.relation}_${id}`;
+                                if (!missingFields[key]) {
+                                    missingFields[key] = [[recorded, field]];
+                                } else {
+                                    missingFields[key].push([recorded, field]);
+                                }
+=======
+                            } else if (this[field.relation] && !isFieldExemptedAutoLoad(field)) {
+                                if (!missingRecords[field.relation]) {
+                                    missingRecords[field.relation] = new Set([id]);
+                                } else {
+                                    missingRecords[field.relation].add(id);
+                                }
+                                const key = `${field.relation}_${id}`;
+                                if (!missingFields[key]) {
+                                    missingFields[key] = [[recorded, field]];
+                                } else {
+                                    missingFields[key].push([recorded, field]);
+                                }
+>>>>>>> 0500b7b07d7dbd327f23538df9f5ae5e93cfe6bd
                             }
                         }
                     }
