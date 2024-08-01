@@ -125,7 +125,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     run: "click",
 }, {
-    trigger: '.o_breadcrumb input.o_todo_breadcrumb_name_input',
+    trigger: '.o_todo_breadcrumb_name_input input',
     content: 'Edit the name of the personal task directly in the breadcrumb',
     run: "edit New name for the personal task",
 }, {
