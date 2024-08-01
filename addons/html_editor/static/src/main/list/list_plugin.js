@@ -114,7 +114,7 @@ export class ListPlugin extends Plugin {
             // but never worked because of the ::before pseudo-element is used
             // to display the checkbox.
         ],
-        onInput: p.onInput.bind(p),
+        onInput: { handler: p.onInput.bind(p) },
     });
 
     setup() {

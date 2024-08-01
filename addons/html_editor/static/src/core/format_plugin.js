@@ -1,11 +1,14 @@
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { hasAnyNodesColor } from "@html_editor/utils/color";
-import { unwrapContents } from "../utils/dom";
+import { cleanTextNode, unwrapContents } from "../utils/dom";
 import { isVisibleTextNode, isZWS } from "../utils/dom_info";
-import { closestElement } from "../utils/dom_traversal";
+import { closestElement, descendants, selectElements } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
-import { DIRECTIONS } from "../utils/position";
+import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
+import { prepareUpdate } from "@html_editor/utils/dom_state";
+
+const allWhitespaceRegex = /^[\s\u200b]*$/;
 
 function isFormatted(formatPlugin, format) {
     return (sel, nodes) => formatPlugin.isSelectionFormat(format, nodes);
@@ -28,8 +31,9 @@ function hasFormat(formatPlugin) {
 
 export class FormatPlugin extends Plugin {
     static name = "format";
-    static dependencies = ["selection", "split", "zws"];
-    static shared = ["isSelectionFormat"];
+    static dependencies = ["selection", "split"];
+    static shared = ["isSelectionFormat", "insertAndSelectZws"];
+    /** @type { (p: FormatPlugin) => Record<string, any> } */
     static resources = (p) => ({
         shortcuts: [
             { hotkey: "control+b", command: "FORMAT_BOLD" },
@@ -96,6 +100,8 @@ export class FormatPlugin extends Plugin {
                 ],
             },
         ],
+        arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",
+        onBeforeInput: { handler: p.onBeforeInput.bind(p), sequence: 60 },
     });
 
     handleCommand(command, payload) {
@@ -125,6 +131,13 @@ export class FormatPlugin extends Plugin {
                 break;
             case "FORMAT_REMOVE_FORMAT":
                 this.removeFormat();
+                break;
+            case "CLEAN":
+                // TODO @phoenix: evaluate if this should be cleanforsave instead
+                this.clean(payload.root);
+                break;
+            case "NORMALIZE":
+                this.normalize(payload.node);
                 break;
         }
     }
@@ -201,7 +214,7 @@ export class FormatPlugin extends Plugin {
                     focusOffset: 1,
                 });
             } else {
-                zws = this.shared.insertAndSelectZws();
+                zws = this.insertAndSelectZws();
             }
         }
 
@@ -342,6 +355,122 @@ export class FormatPlugin extends Plugin {
             }
             this.shared.setSelection(newSelection, { normalize: false });
             return true;
+        }
+    }
+
+    normalize(element) {
+        for (const el of selectElements(element, "[data-oe-zws-empty-inline]")) {
+            if (!allWhitespaceRegex.test(el.textContent)) {
+                // The element has some meaningful text. Remove the ZWS in it.
+                delete el.dataset.oeZwsEmptyInline;
+                this.cleanZWS(el);
+                if (
+                    el.tagName === "SPAN" &&
+                    el.getAttributeNames().length === 0 &&
+                    el.classList.length === 0
+                ) {
+                    // Useless span, unwrap it.
+                    unwrapContents(el);
+                }
+            }
+        }
+    }
+
+    clean(root) {
+        for (const el of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
+            this.cleanElement(el);
+        }
+    }
+
+    cleanElement(element) {
+        delete element.dataset.oeZwsEmptyInline;
+        if (!allWhitespaceRegex.test(element.textContent)) {
+            // The element has some meaningful text. Remove the ZWS in it.
+            this.cleanZWS(element);
+            return;
+        }
+        if (this.resources.isUnremovable.some((predicate) => predicate(element))) {
+            return;
+        }
+        if (element.classList.length) {
+            // Original comment from web_editor:
+            // We only remove the empty element if it has no class, to ensure we
+            // don't break visual styles (in that case, its ZWS was kept to
+            // ensure the cursor can be placed in it).
+            return;
+        }
+        const restore = prepareUpdate(...leftPos(element), ...rightPos(element));
+        element.remove();
+        restore();
+    }
+
+    cleanZWS(element) {
+        const textNodes = descendants(element).filter((node) => node.nodeType === Node.TEXT_NODE);
+        const cursors = this.shared.preserveSelection();
+        for (const node of textNodes) {
+            cleanTextNode(node, "\u200B", cursors);
+        }
+        cursors.restore();
+    }
+
+    insertText(selection, content) {
+        if (selection.anchorNode.nodeType === Node.TEXT_NODE) {
+            selection = this.shared.setSelection(
+                {
+                    anchorNode: selection.anchorNode.parentElement,
+                    anchorOffset: this.shared.splitTextNode(
+                        selection.anchorNode,
+                        selection.anchorOffset
+                    ),
+                },
+                { normalize: false }
+            );
+        }
+
+        const txt = this.document.createTextNode(content || "#");
+        const restore = prepareUpdate(selection.anchorNode, selection.anchorOffset);
+        selection.anchorNode.insertBefore(
+            txt,
+            selection.anchorNode.childNodes[selection.anchorOffset]
+        );
+        restore();
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(txt);
+        this.shared.setSelection(
+            { anchorNode, anchorOffset, focusNode, focusOffset },
+            { normalize: false }
+        );
+        return txt;
+    }
+
+    /**
+     * Use the actual selection (assumed to be collapsed) and insert a
+     * zero-width space at its anchor point. Then, select that zero-width
+     * space.
+     *
+     * @returns {Node} the inserted zero-width space
+     */
+    insertAndSelectZws() {
+        const selection = this.shared.getEditableSelection();
+        const zws = this.insertText(selection, "\u200B");
+        this.shared.splitTextNode(zws, selection.anchorOffset);
+        return zws;
+    }
+
+    onBeforeInput(ev) {
+        if (ev.inputType === "insertText") {
+            const selection = this.shared.getEditableSelection();
+            if (!selection.isCollapsed) {
+                return;
+            }
+            const element = closestElement(selection.anchorNode);
+            if (element.hasAttribute("data-oe-zws-empty-inline")) {
+                // Select its ZWS content to make sure the text will be
+                // inserted inside the element, and not before (outside) it.
+                // This addresses an undesired behavior of the
+                // contenteditable.
+                const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(element);
+                this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+            }
         }
     }
 }

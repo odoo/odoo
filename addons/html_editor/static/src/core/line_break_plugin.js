@@ -9,7 +9,7 @@ export class LineBreakPlugin extends Plugin {
     static shared = ["insertLineBreakElement"];
     /** @type { (p: LineBreakPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        onBeforeInput: p.onBeforeInput.bind(p),
+        onBeforeInput: { handler: p.onBeforeInput.bind(p) },
     });
 
     handleCommand(command, payload) {
