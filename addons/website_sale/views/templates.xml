@@ -1595,6 +1595,11 @@
                                 <i class="fa fa-trash-o"/>
                             </button>
                         </div>
+                        <t t-if="line.product_type == 'combo'">
+                            <t t-foreach="line.linked_line_ids" t-as="combo_item_line">
+                                <t t-call="website_sale.cart_combo_item_line"/>
+                            </t>
+                        </t>
                     </div>
                     <div class="d-flex flex-column align-items-end">
                         <div t-attf-class="css_quantity input-group mb-2"
@@ -1652,14 +1657,7 @@
                                      t-out="line._get_displayed_unit_price() * line.product_uom_qty"
                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             </t>
-                            <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-                               t-set='product_price'
-                               t-value='line.price_subtotal'/>
-                            <t t-else=""
-                               t-set='product_price'
-                               t-value='line.price_total'/>
-                            <span t-out="product_price" style="white-space: nowrap;"
-                                  t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                            <t t-call="website_sale.cart_product_price"/>
                             <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
                                    class="cart_product_base_unit_price d-block text-muted"
                                    groups="website_sale.group_show_uom_price">
@@ -1674,6 +1672,55 @@
                 </t>
             </div>
         </div>
+    </template>
+
+    <template id="cart_combo_item_line">
+        <div class="d-flex align-items-center">
+            <div t-field="combo_item_line.product_id.image_128"
+                 t-options="{
+                    'widget': 'image',
+                    'qweb_img_responsive': False,
+                    'class': 'o_image_64_max rounded',
+                 }"
+            />
+            <div class="ms-3">
+                <a t-att-href="combo_item_line.product_id.website_url">
+                    <h6 class="d-inline align-top h6 fw-bold">
+                        <span t-out="combo_item_line._get_displayed_quantity()"/>
+                        x
+                        <span t-out="combo_item_line.name_short"/>
+                    </h6>
+                </a>
+                <t
+                    t-set="description_lines"
+                    t-value="combo_item_line.get_description_following_lines()"
+                />
+                <div t-if="description_lines" t-attf-class="text-muted d-none d-md-block small">
+                    <t t-foreach="description_lines" t-as="description_line">
+                        <span class="d-block" t-if="description_line" t-out="description_line"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="cart_product_price">
+        <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
+        <t
+            t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+            t-set='product_price'
+            t-value="line._get_combo_price_subtotal() if is_combo else line.price_subtotal"
+        />
+        <t
+            t-else=""
+            t-set='product_price'
+            t-value="line._get_combo_price_total() if is_combo else line.price_total"
+        />
+        <span
+            t-out="product_price"
+            style="white-space: nowrap;"
+            t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
+        />
     </template>
 
     <!-- /shop/cart route -->
@@ -2380,12 +2427,7 @@
                                                         </t>
                                                         <td t-attf-class="#{o_cart_sum_padding_top} td-price pe-0 text-end"
                                                             name="website_sale_cart_summary_line_price">
-                                                            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-                                                                t-field="line.price_subtotal" style="white-space: nowrap;"
-                                                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
-                                                            <span t-else=""
-                                                                t-field="line.price_total" style="white-space: nowrap;"
-                                                                t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                                                            <t t-call="website_sale.cart_product_price"/>
                                                         </td>
                                                     </tr>
                                                 </tbody>

@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -95,7 +94,7 @@ class SaleOrderTemplateLine(models.Model):
     @api.model
     def _product_id_domain(self):
         """ Returns the domain of the products that can be added to the template. """
-        return [('sale_ok', '=', True)]
+        return [('sale_ok', '=', True), ('type', '!=', 'combo')]
 
     def _prepare_order_line_values(self):
         """ Give the values to create the corresponding order line.

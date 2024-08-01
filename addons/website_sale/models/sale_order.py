@@ -326,6 +326,7 @@ class SaleOrder(models.Model):
 
         if (
             order_line
+            and order_line.product_template_id.type != 'combo'
             and order_line.price_unit == 0
             and self.website_id.prevent_zero_price_sale
             and product.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
@@ -403,6 +404,7 @@ class SaleOrder(models.Model):
     def _prepare_order_line_values(
         self, product_id, quantity, linked_line_id=False,
         no_variant_attribute_value_ids=None, product_custom_attribute_values=None,
+        combo_item_id=None,
         **kwargs
     ):
         self.ensure_one()
@@ -428,6 +430,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': quantity,
             'order_id': self.id,
             'linked_line_id': linked_line_id,
+            'combo_item_id': combo_item_id,
         }
 
         # add no_variant attributes that were not received

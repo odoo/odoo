@@ -687,26 +687,29 @@ class ProductProduct(models.Model):
         self.ensure_one()
         res = {}
 
+        no_variant_attributes_price_extra = self._get_no_variant_attributes_price_extra(combination)
+
+        if no_variant_attributes_price_extra:
+            res['no_variant_attributes_price_extra'] = no_variant_attributes_price_extra
+
+        return res
+
+    def _get_no_variant_attributes_price_extra(self, combination):
         # It is possible that a no_variant attribute is still in a variant if
         # the type of the attribute has been changed after creation.
-        no_variant_attributes_price_extra = [
+        return sum(
             ptav.price_extra for ptav in combination.filtered(
                 lambda ptav:
                     ptav.price_extra
                     and ptav.product_tmpl_id == self.product_tmpl_id
                     and ptav not in self.product_template_attribute_value_ids
             )
-        ]
-        if no_variant_attributes_price_extra:
-            res['no_variant_attributes_price_extra'] = tuple(no_variant_attributes_price_extra)
-
-        return res
+        )
 
     def _get_attributes_extra_price(self):
         self.ensure_one()
 
-        return self.price_extra + sum(
-            self.env.context.get('no_variant_attributes_price_extra', []))
+        return self.price_extra + self.env.context.get('no_variant_attributes_price_extra', 0)
 
     def _price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
         company = company or self.env.company

@@ -16,6 +16,17 @@
                     t-on-click="onEditConfiguration"/>
             </t>
         </xpath>
+        <!-- Show the product quantity next to the product name for combo lines. -->
+        <t t-out="productName" position="after">
+            <t t-if="isCombo">
+                x <t t-out="props.record.data.product_uom_qty"/>
+            </t>
+        </t>
+        <span t-esc="productName" class="text-truncate" position="after">
+            <t t-if="isCombo">
+                x <t t-out="props.record.data.product_uom_qty"/>
+            </t>
+        </span>
     </t>
 
 </templates>

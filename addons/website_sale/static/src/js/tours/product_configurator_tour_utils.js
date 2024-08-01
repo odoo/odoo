@@ -37,7 +37,7 @@ function assertProductZeroPriced(productName) {
             content: `Assert that ${productName} has no quantity`,
             trigger: `
                 ${configuratorTourUtils.productSelector(productName)}
-                td.o_sale_product_configurator_qty:not(:has(input[name="product_quantity"]))
+                td.o_sale_product_configurator_qty:not(:has(input[name="sale_quantity"]))
             `,
         },
     ];

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sale.ComboConfiguratorDialog">
+        <Dialog
+            title="props.display_name"
+            contentClass="'sale-combo-configurator-dialog'"
+        >
+            <div t-foreach="props.combos" t-as="combo" t-key="combo.id">
+                <span
+                    name="sale_combo_configurator_title"
+                    class="d-inline-block mt-4 mb-3 h4"
+                    t-out="combo.name"
+                />
+                <div class="combo-item-grid d-grid gap-4">
+                    <t t-foreach="combo.combo_items" t-as="comboItem" t-key="comboItem.id">
+                        <ProductCard
+                            product="getSelectedOrProvidedComboItem(combo.id, comboItem).product"
+                            extraPrice="comboItem.extra_price"
+                            onClick="() => this.selectComboItem(combo.id, comboItem)"
+                            isSelected="state.selectedComboItems.get(combo.id)?.id === comboItem.id"
+                        />
+                    </t>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button
+                    name="sale_combo_configurator_confirm_button"
+                    class="btn btn-primary"
+                    t-att-disabled="!areAllCombosSelected"
+                    t-on-click="confirm"
+                >
+                    Confirm
+                </button>
+                <button
+                    name="sale_combo_configurator_cancel_button"
+                    class="btn btn-secondary"
+                    t-on-click="cancel"
+                >
+                    Cancel
+                </button>
+                <!-- This div acts as a spacer to left-align the elements before it and right-align
+                the elements after it. -->
+                <div style="flex: 1"/>
+                <div class="mx-2">
+                    <QuantityButtons
+                        quantity="state.quantity"
+                        setQuantity="quantity => this.setQuantity(quantity)"
+                        isMinusButtonDisabled="state.quantity === 1"
+                    />
+                </div>
+                <span name="sale_combo_configurator_total" class="h4">
+                    Total: <span t-out="formattedTotalPrice"/>
+                </span>
+            </t>
+        </Dialog>
+    </t>
+</templates>

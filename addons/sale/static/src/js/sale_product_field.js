@@ -6,18 +6,17 @@ import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import {
     ProductLabelSectionAndNoteField,
     productLabelSectionAndNoteField,
-    productLabelSectionAndNoteOne2Many,
-    ProductLabelSectionAndNoteOne2Many,
-    ProductLabelSectionAndNoteListRender
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
-import {
-    sectionAndNoteFieldOne2Many,
-} from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
+import { uuid } from "@web/views/utils";
+import { ComboConfiguratorDialog } from "./combo_configurator_dialog/combo_configurator_dialog";
+import { ProductCombo } from "./models/product_combo";
+import { getLinkedSaleOrderLines } from "./sale_utils";
 
 async function applyProduct(record, product) {
     // handle custom values & no variants
@@ -76,7 +75,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             } else if (value && isInternalUpdate) {
                 // we don't want to trigger product update when update comes from an external sources,
                 // such as an onchange, or the product configuration dialog itself
-                if (this.relation === "product.template") {
+                if (this.relation === "product.template" || this.isCombo) {
                     this._onProductTemplateUpdate();
                 } else {
                     this._onProductUpdate();
@@ -111,13 +110,16 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return res || (!!this.props.record.data[this.props.name] && !this.state.isFloating);
     }
     get hasConfigurationButton() {
-        return this.isConfigurableLine || this.isConfigurableTemplate;
+        return this.isConfigurableLine || this.isConfigurableTemplate || this.isCombo;
     }
     get isConfigurableLine() {
         return false;
     }
     get isConfigurableTemplate() {
         return this.props.record.data.is_configurable_product;
+    }
+    get isCombo() {
+        return this.props.record.data.product_type === 'combo';
     }
 
     get configurationButtonHelp() {
@@ -145,13 +147,13 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         );
         if(result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
-                if (result.has_optional_products) {
-                    this._openProductConfigurator();
-                } else {
+                if (!result.has_optional_products) {
                     await this.props.record.update({
                         product_id: [result.product_id, result.product_name],
                     });
-                    this._onProductUpdate();
+                    result.is_combo ? this._openComboConfigurator() : this._onProductUpdate();
+                } else {
+                    this._openProductConfigurator();
                 }
             }
         } else {
@@ -184,65 +186,38 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     onEditConfiguration() {
         if (this.isConfigurableLine) {
             this._editLineConfiguration();
-        } else {
-            this._editProductConfiguration();
-        }
-    }
-    _editLineConfiguration() {} // event_booth_sale, event_sale, sale_renting
-    _editProductConfiguration() { // sale_product_matrix
-        if (this.props.record.data.is_configurable_product) {
+        } else if (this.isCombo) {
+            this._openComboConfigurator(true);
+        } else if (this.isConfigurableTemplate) {
             this._openProductConfigurator(true);
         }
     }
+    _editLineConfiguration() {} // event_booth_sale, event_sale, sale_renting
 
     async _openProductConfigurator(edit=false) {
         const saleOrderRecord = this.props.record.model.root;
-        let ptavIds = this.props.record.data.product_template_attribute_value_ids.records.map(
-            record => record.resId
-        );
-        let customAttributeValues = [];
+        const saleOrderLine = this.props.record.data;
+        let ptavIds = this._getVariantPtavIds(saleOrderLine);
+        let customPtavs = [];
 
         if (edit) {
             /**
              * no_variant and custom attribute don't need to be given to the configurator for new
              * products.
              */
-            ptavIds = ptavIds.concat(this.props.record.data.product_no_variant_attribute_value_ids.records.map(
-                record => record.resId
-            ));
-            /**
-             *  `product_custom_attribute_value_ids` records are not loaded in the view bc sub templates
-             *  are not loaded in list views. Therefore, we fetch them from the server if the record is
-             *  saved. Else we use the value stored on the line.
-             */
-            customAttributeValues =
-                this.props.record.data.product_custom_attribute_value_ids.records[0]?.isNew ?
-                this.props.record.data.product_custom_attribute_value_ids.records.map(
-                    record => record.data
-                ) :
-                await this.orm.read(
-                    'product.attribute.custom.value',
-                    this.props.record.data.product_custom_attribute_value_ids.currentIds,
-                    ["custom_product_template_attribute_value_id", "custom_value"]
-                )
+            ptavIds.push(...this._getNoVariantPtavIds(saleOrderLine));
+            customPtavs = await this._getCustomPtavs(saleOrderLine);
         }
 
         this.dialog.add(ProductConfiguratorDialog, {
-            productTemplateId: this.props.record.data.product_template_id[0],
+            productTemplateId: saleOrderLine.product_template_id[0],
             ptavIds: ptavIds,
-            customAttributeValues: customAttributeValues.map(
-                data => {
-                    return {
-                        ptavId: data.custom_product_template_attribute_value_id[0],
-                        value: data.custom_value,
-                    }
-                }
-            ),
-            quantity: this.props.record.data.product_uom_qty,
-            productUOMId: this.props.record.data.product_uom[0],
+            customPtavs: customPtavs,
+            quantity: saleOrderLine.product_uom_qty,
+            productUOMId: saleOrderLine.product_uom[0],
             companyId: saleOrderRecord.data.company_id[0],
             pricelistId: saleOrderRecord.data.pricelist_id[0],
-            currencyId: this.props.record.data.currency_id[0],
+            currencyId: saleOrderLine.currency_id[0],
             soDate: serializeDateTime(saleOrderRecord.data.date_order),
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
@@ -273,6 +248,127 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     _getAdditionalDialogProps() {
         return {};
     }
+
+    async _openComboConfigurator(edit=false) {
+        const saleOrder = this.props.record.model.root.data;
+        const comboLineRecord = this.props.record;
+        const comboItemLineRecords = getLinkedSaleOrderLines(comboLineRecord);
+        const selectedComboItems = await Promise.all(comboItemLineRecords.map(async record => ({
+            id: record.data.combo_item_id[0],
+            no_variant_ptav_ids: edit ? this._getNoVariantPtavIds(record.data) : [],
+            custom_ptavs: edit ? await this._getCustomPtavs(record.data) : [],
+        })));
+        const { combos, ...remainingData } = await rpc('/sale/combo_configurator/get_data', {
+            product_tmpl_id: comboLineRecord.data.product_template_id[0],
+            currency_id: comboLineRecord.data.currency_id[0],
+            quantity: comboLineRecord.data.product_uom_qty,
+            date: serializeDateTime(saleOrder.date_order),
+            company_id: saleOrder.company_id[0],
+            pricelist_id: saleOrder.pricelist_id[0],
+            selected_combo_items: selectedComboItems,
+        });
+        this.dialog.add(ComboConfiguratorDialog, {
+            combos: combos.map(combo => new ProductCombo(combo)),
+            ...remainingData,
+            company_id: saleOrder.company_id[0],
+            pricelist_id: saleOrder.pricelist_id[0],
+            date: serializeDateTime(saleOrder.date_order),
+            edit: edit,
+            save: async (comboProductData, selectedComboItems) => {
+                saleOrder.order_line.leaveEditMode();
+                if (edit && selectedComboItems.length !== comboItemLineRecords.length) {
+                    // TODO(loti): this can only happen if some combo items are on another page.
+                    throw new Error(_t("Unexpected number of combo choices"));
+                }
+                if (!edit) {
+                    await comboLineRecord.update({ virtual_id: uuid() });
+                }
+                await comboLineRecord.update({ product_uom_qty: comboProductData.quantity });
+                for (const selectedComboItem of selectedComboItems) {
+                    const comboItemLineRecord = edit
+                        ? comboItemLineRecords[selectedComboItems.indexOf(selectedComboItem)]
+                        : await saleOrder.order_line.addNewRecord({
+                              position: 'bottom', mode: 'readonly'
+                          });
+                    if (!edit) {
+                        await comboItemLineRecord.update({
+                            linked_virtual_id: comboLineRecord.data.virtual_id
+                        });
+                    }
+                    await comboItemLineRecord.update({
+                        product_id: [selectedComboItem.product.id, selectedComboItem.product.display_name],
+                        product_uom_qty: comboProductData.quantity,
+                        combo_item_id: [selectedComboItem.id, "unused"],
+                        product_no_variant_attribute_value_ids: [
+                            x2ManyCommands.set(selectedComboItem.product.selectedNoVariantPtavIds)
+                        ],
+                        product_custom_attribute_value_ids: [
+                            x2ManyCommands.set([]),
+                            ...selectedComboItem.product.selectedCustomPtavs.map(customPtav =>
+                                x2ManyCommands.create(undefined, {
+                                    custom_product_template_attribute_value_id: [
+                                        customPtav.id, "unused"
+                                    ],
+                                    custom_value: customPtav.value,
+                                })
+                            ),
+                        ],
+                    });
+                }
+            },
+            discard: () => saleOrder.order_line.delete(comboLineRecord),
+        });
+    }
+
+    /**
+     * Return the PTAV ids of the provided sale order line.
+     *
+     * @param saleOrderLine The sale order line
+     * @return {Number[]} The sale order line's PTAV ids.
+     */
+    _getVariantPtavIds(saleOrderLine) {
+        return saleOrderLine.product_template_attribute_value_ids.records.map(
+            record => record.resId
+        );
+    }
+
+    /**
+     * Return the `no_variant` PTAV ids of the provided sale order line.
+     *
+     * @param saleOrderLine The sale order line
+     * @return {Number[]} The sale order line's `no_variant` PTAV ids.
+     */
+    _getNoVariantPtavIds(saleOrderLine) {
+        return saleOrderLine.product_no_variant_attribute_value_ids.records.map(
+            record => record.resId
+        );
+    }
+
+    /**
+     * Return the custom PTAVs of the provided sale order line.
+     *
+     * @param saleOrderLine The sale order line
+     * @return {Promise<CustomPtav[]>} The sale order line's custom PTAVs.
+     */
+    async _getCustomPtavs(saleOrderLine) {
+        // `product.attribute.custom.value` records are not loaded in the view because sub templates
+        // are not loaded in list views. Therefore, we fetch them from the server if the record was
+        // saved. Otherwise, we use the value stored on the line.
+        const customPtavIds = saleOrderLine.product_custom_attribute_value_ids;
+        const customPtavs = customPtavIds.records[0]?.isNew
+            ? customPtavIds.records.map(record => record.data)
+            : customPtavIds.currentIds.length
+                ? await this.orm.read(
+                    'product.attribute.custom.value',
+                    customPtavIds.currentIds,
+                    ['custom_product_template_attribute_value_id', 'custom_value'],
+                )
+                : [];
+        return customPtavs.map(customPtav => ({
+            id: customPtav.custom_product_template_attribute_value_id[0],
+            value: customPtav.custom_value,
+        }));
+    }
 }
 
 export const saleOrderLineProductField = {
@@ -286,43 +382,3 @@ export const saleOrderLineProductField = {
 };
 
 registry.category("fields").add("sol_product_many2one", saleOrderLineProductField);
-
-
-export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRender {
-    getCellTitle(column, record) {
-        // When using this list renderer, we don't want the product_id cell to have a tooltip with its label.
-        if (column.name === "product_id" || column.name === "product_template_id") {
-            return;
-        }
-        super.getCellTitle(column, record);
-    }
-
-    getActiveColumns(list) {
-        let activeColumns = super.getActiveColumns(list);
-        let productTmplCol = activeColumns.find((col) => col.name === "product_template_id");
-        let productCol = activeColumns.find((col) => col.name === "product_id");
-
-        if (productCol && productTmplCol) {
-            // hide the template column if the variant one is enabled
-            activeColumns = activeColumns.filter((col) => col.name != "product_template_id")
-        }
-
-        return activeColumns;
-    }
-}
-
-export class SaleOrderLineOne2Many extends ProductLabelSectionAndNoteOne2Many {
-    static components = {
-        ...ProductLabelSectionAndNoteOne2Many.components,
-        ListRenderer: SaleOrderLineListRenderer,
-    };
-}
-export const saleOrderLineOne2Many = {
-    ...productLabelSectionAndNoteOne2Many,
-    component: SaleOrderLineOne2Many,
-    additionalClasses: sectionAndNoteFieldOne2Many.additionalClasses,
-};
-
-registry
-    .category("fields")
-    .add("sol_o2m", saleOrderLineOne2Many);
