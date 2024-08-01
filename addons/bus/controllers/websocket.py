@@ -10,12 +10,15 @@ from ..websocket import WebsocketConnectionHandler
 
 class WebsocketController(Controller):
     @route('/websocket', type="http", auth="public", cors='*', websocket=True)
-    def websocket(self):
+    def websocket(self, version=None):
         """
-        Handle the websocket handshake, upgrade the connection if
-        successfull.
+        Handle the websocket handshake, upgrade the connection if successfull.
+
+        :param version: The version of the WebSocket worker that tries to
+            connect. Connections with an outdated version will result in the
+            websocket being closed. See :attr:`WebsocketConnectionHandler._VERSION`.
         """
-        return WebsocketConnectionHandler.open_connection(request)
+        return WebsocketConnectionHandler.open_connection(request, version)
 
     @route('/websocket/health', type='http', auth='none', save_session=False)
     def health(self):

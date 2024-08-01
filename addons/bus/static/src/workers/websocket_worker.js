@@ -5,7 +5,7 @@ import { debounce } from "@bus/workers/websocket_worker_utils";
 /**
  * Type of events that can be sent from the worker to its clients.
  *
- * @typedef { 'connect' | 'reconnect' | 'disconnect' | 'reconnecting' | 'notification' | 'initialized' } WorkerEvent
+ * @typedef { 'connect' | 'reconnect' | 'disconnect' | 'reconnecting' | 'notification' | 'initialized' | 'outdated'} WorkerEvent
  */
 
 /**
@@ -32,9 +32,8 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
     KEEP_ALIVE_TIMEOUT: 4002,
     RECONNECTING: 4003,
 });
-// Should be incremented on every worker update in order to force
-// update of the worker in browser cache.
-export const WORKER_VERSION = "1.0.7";
+/** @deprecated worker version is now retrieved from `session.websocket_worker_bundle` */
+export const WORKER_VERSION = "1.0.8";
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
 /**
@@ -60,6 +59,7 @@ export class WebsocketWorker {
         this.connectTimeout = null;
         this.debugModeByClient = new Map();
         this.isDebug = false;
+        this.active = true;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
         this.lastNotificationId = 0;
@@ -255,6 +255,9 @@ export class WebsocketWorker {
             this.channelsByClient.forEach((_, key) => this.channelsByClient.set(key, []));
         }
         this.sendToClient(client, "initialized");
+        if (!this.active) {
+            this.sendToClient(client, "outdated");
+        }
     }
 
     /**
@@ -316,6 +319,11 @@ export class WebsocketWorker {
         }
         this.broadcast("disconnect", { code, reason });
         if (code === WEBSOCKET_CLOSE_CODES.CLEAN) {
+            if (reason === "OUTDATED_VERSION") {
+                console.warn("Worker deactivated due to an outdated version.");
+                this.active = false;
+                this.broadcast("outdated");
+            }
             // WebSocket was closed on purpose, do not try to reconnect.
             return;
         }
@@ -414,7 +422,7 @@ export class WebsocketWorker {
      * Start the worker by opening a websocket connection.
      */
     _start() {
-        if (this._isWebsocketConnected() || this._isWebsocketConnecting()) {
+        if (!this.active || this._isWebsocketConnected() || this._isWebsocketConnecting()) {
             return;
         }
         if (this.websocket) {
