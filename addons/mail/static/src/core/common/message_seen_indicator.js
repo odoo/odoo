@@ -23,10 +23,6 @@ class MessageSeenIndicatorDialog extends Component {
             true
         );
     }
-
-    get SEEN_BY() {
-        return _t("Seen by:");
-    }
 }
 
 /**

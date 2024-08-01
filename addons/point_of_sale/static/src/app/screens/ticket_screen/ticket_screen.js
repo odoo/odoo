@@ -54,8 +54,6 @@ export class TicketScreen extends Component {
         reuseSavedUIState: false,
         ui: {},
     };
-    static numpadActionName = _t("Refund");
-    static searchPlaceholder = _t("Search Orders...");
 
     setup() {
         this.pos = usePos();

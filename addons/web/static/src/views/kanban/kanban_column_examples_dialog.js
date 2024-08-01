@@ -1,6 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
-import { _t } from "@web/core/l10n/translation";
 
 import { Component, useRef } from "@odoo/owl";
 
@@ -36,7 +35,7 @@ export class KanbanColumnExamplesDialog extends Component {
     static template = "web.KanbanColumnExamplesDialog";
     static components = { Dialog, Notebook };
     static props = ["*"];
-    static title = _t("Kanban Examples");
+
     setup() {
         this.navList = useRef("navList");
         this.pages = [];

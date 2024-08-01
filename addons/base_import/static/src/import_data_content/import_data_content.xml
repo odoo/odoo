@@ -63,7 +63,7 @@
                                     value="column.fieldInfo ? column.fieldInfo.fieldPath : undefined"
                                     groups="getGroups(column)"
                                     onSelect="(fieldPath) => this.onFieldChanged(column, fieldPath)"
-                                    searchPlaceholder="searchPlaceholder"
+                                    searchPlaceholder.translate="Search a field..."
                                     togglerClass="column.fieldInfo ? 'ps-1' : ''"
                                 >
                                     <t t-if="column.fieldInfo">

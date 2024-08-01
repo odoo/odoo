@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 <t t-name="website.MenuDialog">
-    <WebsiteDialog title="title" closeOnClick="false" primaryClick.bind="this.onClickOk" secondaryClick="props.close">
+    <WebsiteDialog title.translate="Add a menu item" closeOnClick="false" primaryClick.bind="this.onClickOk" secondaryClick="props.close">
         <div class="o_menu_dialog_form mb-3 row">
             <label class="col-form-label col-md-3">
                 Name
@@ -45,7 +45,7 @@
 </t>
 
 <t t-name="website.EditMenuDialog">
-    <WebsiteDialog close="props.close" title="title" primaryTitle="saveButton" primaryClick="() => this.onClickSave()">
+    <WebsiteDialog close="props.close" title.translate="Edit Menu" primaryTitle.translate="Save" primaryClick="() => this.onClickSave()">
         <ul t-ref="menu-editor" class="oe_menu_editor list-unstyled">
             <t t-foreach="state.rootMenu.children" t-as="menu" t-key="menu.fields['id']">
                 <MenuRow menu="menu" edit="(id) => this.editMenu(id)" delete="(id) => this.deleteMenu(id)"/>

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -14,7 +12,6 @@ export default class ToursDialog extends Component {
         close: Function,
     };
     setup() {
-        this.title = _t("Tours");
         this.tourService = useService("tour_service");
         this.notification = useService("notification");
         this.onboardingTours = this.tourService.getSortedTours().filter((tour) => !tour.test);

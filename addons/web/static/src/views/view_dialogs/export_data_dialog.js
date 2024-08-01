@@ -116,7 +116,6 @@ export class ExportDataDialog extends Component {
             disabled: false,
         });
 
-        this.title = _t("Export Data");
         this.newTemplateText = _t("New template");
         this.removeFieldText = _t("Remove field");
 

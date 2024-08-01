@@ -30,10 +30,6 @@ class GetViewDialog extends Component {
         arch: { type: String },
         close: { type: Function },
     };
-
-    setup() {
-        this.title = _t("Get View");
-    }
 }
 
 export function getView({ component, env }) {
@@ -247,7 +243,6 @@ class SetDefaultDialog extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.title = _t("Set Defaults");
         this.state = {
             fieldToSet: "",
             condition: "",
