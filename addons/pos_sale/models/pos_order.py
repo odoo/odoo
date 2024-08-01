@@ -52,7 +52,7 @@ class PosOrder(models.Model):
 
         order_ids = self.browse([o['id'] for o in data["pos.order"]])
         for order in order_ids:
-            for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
+            for line in order.lines.filtered(lambda l: not l.sale_order_line_id and l.product_id == order.config_id.down_payment_product_id and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
                 sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
                 sale_order_origin = line.sale_order_origin_id or line.refunded_orderline_id.sale_order_origin_id
                 if not any(line.display_type and line.is_downpayment for line in sale_lines):
@@ -73,6 +73,10 @@ class PosOrder(models.Model):
                     'name': sale_order_line_description
                 })
                 line.sale_order_line_id = sale_line
+                for aml in order.account_move.line_ids:
+                    if aml.product_id == line.product_id:
+                        aml.is_downpayment = True
+                        line.sale_order_line_id.invoice_lines |= aml
 
             so_lines = order.lines.mapped('sale_order_line_id')
 

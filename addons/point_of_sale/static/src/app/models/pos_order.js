@@ -26,7 +26,6 @@ export class PosOrder extends Base {
 
         // Data present in python model
         this.date_order = vals.date_order || getUTCString(luxon.DateTime.now());
-        this.to_invoice = vals.to_invoice || false;
         this.shipping_date = vals.shipping_date || false;
         this.state = vals.state || "draft";
         this.uuid = vals.uuid ? vals.uuid : uuidv4();
@@ -41,6 +40,7 @@ export class PosOrder extends Base {
         if (!vals.lines) {
             this.lines = [];
         }
+        this.set_to_invoice(vals.to_invoice || false);
 
         // !!Keep all uiState in one object!!
         this.uiState = {

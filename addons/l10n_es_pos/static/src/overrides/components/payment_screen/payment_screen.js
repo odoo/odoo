@@ -19,8 +19,8 @@ patch(PaymentScreen.prototype, {
                 return false;
             }
             if (order.is_l10n_es_simplified_invoice) {
-                order.to_invoice = Boolean(
-                    this.pos.config.raw.l10n_es_simplified_invoice_journal_id
+                order.set_to_invoice(
+                    Boolean(this.pos.config.raw.l10n_es_simplified_invoice_journal_id)
                 );
                 if ((await this._askForCustomerIfRequired()) === false) {
                     return false;

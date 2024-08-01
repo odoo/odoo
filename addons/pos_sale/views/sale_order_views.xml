@@ -22,5 +22,57 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_order_kanban_inherit_pos_sale" model="ir.ui.view">
+            <field name="name">sale.order.kanban.pos.sale</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                    <field name="invoice_status"/>
+                    <field name="amount_unpaid"/>
+                </field>
+                <xpath expr="//strong[hasclass('o_kanban_record_title')]" position="attributes">
+                    <attribute name="class" separator=" " add="fw-bolder" />
+                </xpath>
+                <xpath expr="//strong/field[@name='amount_total']" position="replace">
+                    <field name="amount_unpaid" widget="monetary"/> of <field name="amount_total" widget="monetary"/>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_kanban_bottom_left')]/field[@name='activity_ids']" position="replace"/>
+
+                <xpath expr="//div[hasclass('oe_kanban_bottom_right')]/field[@name='state']" position="replace">
+                    <field 
+                        name="invoice_status"
+                        widget="label_selection"
+                        options="{'classes': {'to invoice': 'info', 'no': 'default', 'upselling': 'success'}}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_tree_inherit_pos_sale" model="ir.ui.view">
+            <field name="name">sale.order.tree.pos.sale</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.sale_order_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="edit">0</attribute>
+                    <attribute name="delete">0</attribute>
+                </tree>
+                <field name="user_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <xpath expr="//field[@name='company_id'][@groups='base.group_multi_company']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <field name="activity_ids" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="invoice_status" position="after">
+                    <field name="amount_unpaid" optional="show" string="Amount Unpaid" widget="monetary"/>
+                </field>
+            </field>
+        </record>
     </data>
 </odoo>
