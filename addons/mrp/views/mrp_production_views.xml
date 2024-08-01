@@ -350,51 +350,6 @@
                             <field name="user_id" widget="many2one_avatar" readonly="state in ['cancel', 'done']"/>
                             <field name="show_final_lots" invisible="1"/>
                             <field name="production_location_id" invisible="1" readonly="1"/>
-                            <field name="move_finished_ids" invisible="1" readonly="state == 'cancel' or (state == 'done' and is_locked)">
-                                <tree editable="bottom">
-                                    <field name="product_id" readonly="state == 'done'"/>
-                                    <field name="product_uom_qty" readonly="state == 'done'"/>
-                                    <field name="product_uom"/>
-                                    <field name="operation_id"/>
-                                    <field name="byproduct_id"/>
-                                    <field name="name"/>
-                                    <field name="date_deadline"/>
-                                    <field name="picking_type_id"/>
-                                    <field name="location_id"/>
-                                    <field name="location_dest_id"/>
-                                    <field name="company_id"/>
-                                    <field name="warehouse_id"/>
-                                    <field name="origin"/>
-                                    <field name="group_id"/>
-                                    <field name="propagate_cancel"/>
-                                    <field name="move_dest_ids"/>
-                                    <field name="state"/>
-                                    <!-- Useless as the editable in tree declaration -> For Form Test-->
-                                    <field name="product_uom_category_id"/>
-                                    <field name="allowed_operation_ids"/>
-                                    <!--
-                                    Required for test_00_mrp_byproduct
-                                    when changing the mrp.production product_qty
-                                    `_onchange_producing` is called,
-                                    calling `_set_qty_producing`,
-                                    which changes the `quantity_done` of byproducts
-                                    If byproducts are not in the view (`groups="mrp.group_mrp_byproducts"`)
-                                    and `quantity_done` is not within the finished move views,
-                                    (byproduct moves are a subset of finished moves)
-                                    the `quantity_done` of byproducts is not updated correctly with the onchange
-                                    Another solution is to add `self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')`
-                                    to the test `test_00_mrp_byproduct`, which could makes sense as it's a test testing the byproducts features,
-                                    for which you should have the byproducts group to have access to,
-                                    but it seemed better to keep the feature working even if you do not see the byproducts features with your user.
-                                    That being said, the best would be to have the byproducts feature working without relying on anything in the view,
-                                    e.g. so the byproducts feature works with xmlrpc calls.
-                                    -->
-                                    <field name="quantity"/>
-                                    <field name="picked"/>
-                                    <!-- Required for test_fifo_byproduct -->
-                                    <field name="cost_share"/>
-                                </tree>
-                            </field>
                         </group>
                     </group>
                     <notebook>

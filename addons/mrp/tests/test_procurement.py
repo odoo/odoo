@@ -613,6 +613,71 @@ class TestProcurement(TestMrpCommon):
         # Secondary test
         self.assertEqual(self.env['stock.route'].search_count([]), routes_count)
 
+    def test_orderpoint_update_mo(self):
+        """Test the update of MO created from orderpoint in case same product is requested in another
+        orderpoint"""
+        self.warehouse = self.env.ref('stock.warehouse0')
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id
+        product_1, product_2, product_3 = self.env['product.product'].create([{
+            'name': 'Product A',
+            'is_storable': True,
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        }, {
+            'name': 'Product B',
+            'is_storable': True,
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        }, {
+            'name': 'Product C',
+            'is_storable': True,
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        }])
+
+        op1, op2 = self.env['stock.warehouse.orderpoint'].create([{
+            'name': 'Product A',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_1.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        }, {
+            'name': 'Product B',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_2.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        }])
+
+        self.env['mrp.bom'].create([{
+            'product_id': product_1.id,
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_2.id, 'product_qty': 1})]
+        }, {
+            'product_id': product_2.id,
+            'product_tmpl_id': product_2.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_3.id, 'product_qty': 1})]
+        }])
+        # force a negative forecasted quantity to trigger the creation of MO
+        self.env['stock.quant']._update_available_quantity(product_1, self.warehouse.lot_stock_id, -1)
+        self.env['stock.quant']._update_available_quantity(product_2, self.warehouse.lot_stock_id, -1)
+
+        (op1 | op2)._procure_orderpoint_confirm()
+        mo1 = self.env['mrp.production'].search([('product_id', '=', product_1.id)])
+        mo2 = self.env['mrp.production'].search([('product_id', '=', product_2.id)])
+        move_finished_2 = self.env['stock.move'].search([
+            ('product_id', '=', product_2.id),
+            ('location_dest_id', '=', self.warehouse.lot_stock_id.id),
+        ])
+        self.assertEqual(len(move_finished_2), 1)
+        self.assertEqual(mo1.product_qty, 1)
+        self.assertEqual(mo2.product_qty, 2)
+
     def test_rr_with_dependance_between_bom(self):
         self.warehouse = self.env.ref('stock.warehouse0')
         route_mto = self.warehouse.mto_pull_id.route_id

@@ -165,6 +165,8 @@ class StockMove(models.Model):
         'mrp.production', 'Production Order for finished products', check_company=True, index='btree_not_null')
     raw_material_production_id = fields.Many2one(
         'mrp.production', 'Production Order for components', check_company=True, index='btree_not_null')
+    byproduct_production_id = fields.Many2one(
+        'mrp.production', 'Production Order for byproduct', check_company=True, index='btree_not_null')
     unbuild_id = fields.Many2one(
         'mrp.unbuild', 'Disassembly Order', check_company=True)
     consume_unbuild_id = fields.Many2one(
@@ -520,6 +522,11 @@ class StockMove(models.Model):
             if mo_to_cancel:
                 mo_to_cancel._action_cancel()
         return res
+
+    def _trigger_scheduler(self):
+        ignore_mo_ids = self.env.context.get('ignore_mo_ids', [])
+        self = self.with_context(ignore_mo_ids=ignore_mo_ids + self.raw_material_production_id.ids)
+        super()._trigger_scheduler()
 
     def _prepare_move_split_vals(self, qty):
         defaults = super()._prepare_move_split_vals(qty)
