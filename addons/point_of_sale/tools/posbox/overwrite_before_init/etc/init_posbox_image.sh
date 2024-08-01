@@ -23,12 +23,12 @@ echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo
 echo  "alias odoo_logs='less +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias read_mode='sudo mount -o remount,ro / && sudo mount -o remount,ro /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias install='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks; sudo chroot /root_bypass_ramdisks/; sudo mount -t proc proc /proc'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias install='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks; sudo chroot /root_bypass_ramdisks/; mount -t proc proc /proc'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias blackbox='ls /dev/serial/by-path/'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo "
 show_odoo_aliases() {
   echo 'Welcome to Odoo IoTBox tools'
-  echo 'odoo                Starts/Restarts Odoo server'
+  echo 'odoo                Starts/Restarts Odoo server manually (not through odoo.service)'
   echo 'odoo_logs           Displays Odoo server logs in real time'
   echo 'write_mode          Enables system write mode'
   echo 'read_mode           Switches system to read-only mode'
