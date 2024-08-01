@@ -320,7 +320,13 @@ class AccountMoveSend(models.TransientModel):
     def _compute_mail_partner_ids(self):
         for wizard in self:
             if wizard.mode == 'invoice_single' and wizard.mail_template_id:
+<<<<<<< saas-17.4
                 wizard.mail_partner_ids = self._get_default_mail_partner_ids(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
+||||||| 8ff2381901e4920434eaee73f8c265fc67271c99
+                wizard.mail_partner_ids = self._get_default_mail_partner_ids(self.move_ids, wizard.mail_template_id, wizard.mail_lang)
+=======
+                wizard.mail_partner_ids = wizard._get_default_mail_partner_ids(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
+>>>>>>> 215c8d78f8464477fc6067ceb71bf98b47edcfa3
             else:
                 wizard.mail_partner_ids = None
 
