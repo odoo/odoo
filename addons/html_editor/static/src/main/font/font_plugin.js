@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
-import { isBlock } from "@html_editor/utils/blocks";
+import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
+import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
 import {
     closestElement,
@@ -102,6 +103,7 @@ export class FontPlugin extends Plugin {
             { callback: p.handleSplitBlockPRE.bind(p) },
             { callback: p.handleSplitBlockHeading.bind(p) },
         ],
+        onInput: { handler: p.onInput.bind(p) },
         handle_delete_backward: { callback: p.handleDeleteBackward.bind(p), sequence: 20 },
         handle_delete_backward_word: { callback: p.handleDeleteBackward.bind(p), sequence: 20 },
         toolbarCategory: [
@@ -306,5 +308,37 @@ export class FontPlugin extends Plugin {
         closestHandledElement.remove();
         this.shared.setCursorStart(p);
         return true;
+    }
+
+    onInput(ev) {
+        if (ev.data !== " ") {
+            return;
+        }
+        const selection = this.shared.getEditableSelection();
+        const blockEl = closestBlock(selection.anchorNode);
+        const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
+        let spaceOffset = selection.anchorOffset;
+        let leftLeaf = leftDOMPath.next().value;
+        while (leftLeaf) {
+            // Calculate spaceOffset by adding lengths of previous text nodes
+            // to correctly find offset position for selection within inline
+            // elements. e.g. <p>ab<strong>cd []e</strong></p>
+            spaceOffset += leftLeaf.length;
+            leftLeaf = leftDOMPath.next().value;
+        }
+        const precedingText = blockEl.textContent.substring(0, spaceOffset);
+        if (/^(#{1,6})\s$/.test(precedingText)) {
+            const numberOfHash = precedingText.length - 1;
+            const headingToBe = headingTags[numberOfHash - 1];
+            this.shared.setSelection({
+                anchorNode: blockEl.firstChild,
+                anchorOffset: 0,
+                focusNode: selection.focusNode,
+                focusOffset: selection.focusOffset,
+            });
+            this.shared.extractContent(this.shared.getEditableSelection());
+            fillEmpty(blockEl);
+            this.dispatch("SET_TAG", { tagName: headingToBe });
+        }
     }
 }

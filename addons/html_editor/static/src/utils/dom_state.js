@@ -123,7 +123,7 @@ export function prepareUpdate(...args) {
     };
 }
 
-const leftLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.LEFT, {
+export const leftLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.LEFT, {
     leafOnly: true,
     stopTraverseFunction: isBlock,
     stopFunction: isBlock,

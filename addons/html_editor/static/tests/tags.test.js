@@ -2,7 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, press, queryFirst } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { insertText, tripleClick } from "./_helpers/user_actions";
+import { insertText, tripleClick, undo } from "./_helpers/user_actions";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 
 function setTag(tagName) {
@@ -494,5 +494,55 @@ describe("to blockquote", () => {
         expect(getContent(el)).toBe("[<p>abcd</p>]");
         setTag("h1")(editor);
         expect(getContent(el)).toBe("[<h1>abcd</h1>]");
+    });
+});
+
+describe("transform", () => {
+    test("should transform space preceding by a hashtag to heading 1", async () => {
+        const { el, editor } = await setupEditor("<p>[]</p>");
+        insertText(editor, "# ");
+        expect(getContent(el)).toBe(`<h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1>`);
+
+        undo(editor);
+        expect(getContent(el)).toBe(`<p># []</p>`);
+    });
+
+    test("should transform space preceding by two hashtags to heading 2", async () => {
+        const { el, editor } = await setupEditor("<p>[]</p>");
+        insertText(editor, "## ");
+        expect(getContent(el)).toBe(`<h2 placeholder="Heading 2" class="o-we-hint">[]<br></h2>`);
+    });
+
+    test("should transform space preceding by three hashtags to heading 3", async () => {
+        const { el, editor } = await setupEditor("<p>[]<br></p>");
+        insertText(editor, "### ");
+        expect(getContent(el)).toBe(`<h3 placeholder="Heading 3" class="o-we-hint">[]<br></h3>`);
+    });
+
+    test("should transform space preceding by a hashtag at the starting of text to heading 1", async () => {
+        const { el, editor } = await setupEditor("<p>[]abc</p>");
+        insertText(editor, "# ");
+        expect(getContent(el)).toBe(`<h1>[]abc</h1>`);
+
+        undo(editor);
+        expect(getContent(el)).toBe(`<p># []abc</p>`);
+    });
+
+    test("should transform space preceding by two hashtags at the starting of text to heading 2", async () => {
+        const { el, editor } = await setupEditor("<p>[]abc</p>");
+        insertText(editor, "## ");
+        expect(getContent(el)).toBe(`<h2>[]abc</h2>`);
+    });
+
+    test("should transform space preceding by three hashtags at the starting of text to heading 3", async () => {
+        const { el, editor } = await setupEditor("<p>[]abc</p>");
+        insertText(editor, "### ");
+        expect(getContent(el)).toBe(`<h3>[]abc</h3>`);
+    });
+
+    test("typing space inside formated text with a hashtag at the starting of text should not transform to heading", async () => {
+        const { el, editor } = await setupEditor("<p># a<strong>b[]cd</strong>e</p>");
+        insertText(editor, " ");
+        expect(getContent(el)).toBe(`<p># a<strong>b []cd</strong>e</p>`);
     });
 });
