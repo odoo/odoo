@@ -642,7 +642,7 @@ export function compileStepAuto(stepIndex, step, options) {
                 browser.clearTimeout(tourTimeout);
                 tourState.set(tour.name, "currentIndex", stepIndex + 1);
 
-                if (showPointerDuration > 0) {
+                if (showPointerDuration > 0 && stepEl !== true) {
                     // Useful in watch mode.
                     pointer.pointTo(stepEl, step);
                     await new Promise((r) => browser.setTimeout(r, showPointerDuration));
