@@ -295,6 +295,28 @@
                 <we-button data-set-image-layout="carousel">Carousel</we-button>
                 <we-button data-set-image-layout="grid">Grid</we-button>
             </we-select>
+            <we-select
+                string="Images Ratio"
+                data-name="o_wsale_image_ratio"
+                class="o_we_sublevel_1"
+                data-reload="/"
+            >
+                <we-button data-customize-website-views="">
+                    Default (1x1)
+                </we-button>
+                <we-button data-customize-website-views="website_sale.products_carousel_4x3">
+                    Landscape (4/3)
+                </we-button>
+                <we-button data-customize-website-views="website_sale.products_carousel_4x5">
+                    Portrait (4/5)
+                </we-button>
+                <we-button data-customize-website-views="website_sale.products_carousel_16x9">
+                    Wide (16/9)
+                </we-button>
+                <we-button data-customize-website-views="website_sale.products_carousel_21x9">
+                    Wider (21/9)
+                </we-button>
+            </we-select>
             <we-select string="Image Zoom" class="o_we_sublevel_1" data-name="o_wsale_zoom_mode" data-no-preview="true" data-reload="/">
                 <we-button data-name="o_wsale_zoom_hover" data-customize-website-views="website_sale.product_picture_magnify_hover">Magnifier on hover</we-button>
                 <we-button data-name="o_wsale_zoom_click" data-customize-website-views="website_sale.product_picture_magnify_click">Pop-up on Click</we-button>
