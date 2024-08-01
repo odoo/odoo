@@ -2964,7 +2964,18 @@
                  t-options='{"widget": "image", "preview_image": "image_1024", "class": "oe_unmovable product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'
             />
         </div>
-        <div t-else="" t-field="product_image.image_1920" t-att-class="image_classes + ' oe_unmovable'" t-options='{"widget": "image", "preview_image": "image_1024", "class": "oe_unmovable product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'/>
+        <div
+            t-else=""
+            t-field="product_image.image_1920"
+            t-att-class="image_classes + ' oe_unmovable'"
+            t-options="{
+                'widget': 'image',
+                'preview_image': 'image_1024',
+                'class': 'oe_unmovable product_detail_img w-100',
+                'alt-field': 'name',
+                'zoom': product_image.can_image_1024_be_zoomed and 'image_1920',
+            }"
+        />
     </template>
 
     <!-- Product page images: Carousel -->
@@ -3032,7 +3043,13 @@
 
     <!-- Product page images: Grid -->
     <template id="website_sale.shop_product_grid" name="Shop Product Grid">
-        <div id="o-grid-product" class="o_wsale_product_page_grid mb-3" data-name="Product Grid" t-att-data-image_spacing="website.product_page_image_spacing" t-att-data-grid_columns="website.product_page_grid_columns">
+        <div
+            id="o-grid-product"
+            class="mb-3"
+            data-name="Product Grid"
+            t-att-data-image_spacing="website.product_page_image_spacing"
+            t-att-data-grid_columns="website.product_page_grid_columns"
+        >
             <div class="container position-relative overflow-hidden">
                 <span t-attf-class="o_ribbon #{ribbon._get_position_class()}"
                       t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
@@ -3040,17 +3057,37 @@
                 />
                 <!-- One row for every two images -->
                 <t t-set="image_classes" t-value="'w-100'"/>
-                <t t-set="col_classes" t-value="website._get_product_page_grid_image_classes()"/>
-                <t t-foreach="range(ceil(len(product_images) / website.product_page_grid_columns))" t-as="row_idx">
-                    <div class="row m-0">
-                        <t t-foreach="range(row_idx * website.product_page_grid_columns, (row_idx + 1) * website.product_page_grid_columns)" t-as="image_idx">
-                            <t t-set="product_image" t-value="image_idx &lt; len(product_images) and product_images[image_idx] or False"/>
-                            <div t-if="product_image" t-att-class="col_classes">
-                                <t t-call="website_sale.shop_product_image"/>
-                            </div>
-                        </t>
-                    </div>
-                </t>
+                <div class="row">
+                    <t t-foreach="website.product_page_grid_columns" t-as="col_idx">
+                        <t t-set="col_feed_counter" t-value="0"/>
+
+                        <div
+                            t-if="col_idx_index &lt; len(product_images)"
+                            class="col o_wsale_product_page_grid_column d-flex flex-column px-0"
+                        >
+                            <t t-foreach="len(product_images)" t-as="image_idx">
+                                <t
+                                    t-set="product_image"
+                                    t-value="image_idx &lt; len(product_images) and product_images[image_idx] or False"
+                                />
+                                <t
+                                    t-set="image_classes"
+                                    t-value="website._get_product_page_grid_image_spacing_classes()"
+                                />
+                                <t
+                                    t-if="product_image and col_idx == col_feed_counter"
+                                    t-call="website_sale.shop_product_image"
+                                />
+                                <t t-if="col_feed_counter == (website.product_page_grid_columns - 1)">
+                                    <t t-set="col_feed_counter" t-value="0"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="col_feed_counter" t-value="col_feed_counter + 1"/>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </div>
             </div>
         </div>
     </template>
