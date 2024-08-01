@@ -38,6 +38,7 @@
         'views/snippets/s_cover.xml',
         'views/snippets/s_text_cover.xml',
         'views/snippets/s_image_text_box.xml',
+        'views/snippets/s_striped_top.xml',
         'views/snippets/s_text_image.xml',
         'views/snippets/s_image_text.xml',
         'views/snippets/s_mockup_image.xml',
