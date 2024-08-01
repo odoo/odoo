@@ -55,10 +55,10 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
         { trigger: ".o_data_row > td:contains('10')" },
         {
             trigger: ".o_field_widget[name=quantity] input",
-            run: 'text 7',
+            run: 'text 8',
         },
         { trigger: ".fa-list" },
-        { trigger: ".o_list_footer .o_list_number > span:contains('7')" },
+        { trigger: ".o_list_footer .o_list_number > span:contains('8')" },
         { trigger: ".o_form_button_save" },
         ...stepUtils.saveForm(),
     ]

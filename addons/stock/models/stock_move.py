@@ -359,7 +359,7 @@ class StockMove(models.Model):
     def _set_quantity(self):
         def _process_decrease(move, quantity):
             mls_to_unlink = set()
-            for ml in move.move_line_ids:
+            for ml in reversed(move.move_line_ids):
                 if float_is_zero(quantity, precision_rounding=move.product_uom.rounding):
                     break
                 qty_ml_dec = min(ml.quantity, ml.product_uom_id._compute_quantity(quantity, ml.product_uom_id, round=False))
