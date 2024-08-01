@@ -701,13 +701,21 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
     async _computeWidgetVisibility(widgetName, params) {
         const hasImages = this.productDetailMain.dataset.image_width != 'none';
         const isFullImage = this.productDetailMain.dataset.image_width == '100_pc';
+        const multipleImages = hasImages && this.productDetailMain.querySelector(
+            '.o_wsale_product_images'
+        ).dataset.imageAmount > 1;
+        const isGrid = !!this.productDetailMain.querySelector('#o-grid-product');
         switch (widgetName) {
             case 'o_wsale_thumbnail_pos':
                 return Boolean(this.productPageCarousel) && hasImages;
             case 'o_wsale_grid_spacing':
+                return isGrid && multipleImages;
             case 'o_wsale_grid_columns':
-                return Boolean(this.productPageGrid) && hasImages;
+                return Boolean(this.productPageGrid) && hasImages && isGrid && multipleImages;
             case 'o_wsale_image_layout':
+                return multipleImages;
+            case "o_wsale_image_ratio":
+                return !isGrid && multipleImages;
             case 'o_wsale_zoom_click':
             case 'o_wsale_zoom_none':
             case 'o_wsale_replace_main_image':
