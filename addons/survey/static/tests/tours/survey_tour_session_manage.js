@@ -213,10 +213,10 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     trigger: '.o_survey_session_progress_small:contains("2 / 3")',
 }, {
     // check attendee 2 answer is displayed
-    trigger: '.o_survey_session_text_answer_container:contains("10/10/2010 10:00:00")',
+    trigger: '.o_survey_session_text_answer_container:contains("10/10/2010 10:00:00 AM")',
 }, {
     // check attendee 3 answer is displayed
-    trigger: '.o_survey_session_text_answer_container:contains("11/11/2011 03:55:55\u202FPM")',
+    trigger: '.o_survey_session_text_answer_container:contains("11/11/2011 03:55:55 PM")',
 }, {
     trigger: 'h1',
     run: nextScreen
