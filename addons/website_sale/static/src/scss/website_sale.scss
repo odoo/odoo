@@ -410,17 +410,36 @@ a.no-decoration {
         opacity: 0.2;
     }
 
-    .carousel-outer {
-        height: 400px;
-        max-height: 90vh;
-        display: flex;
-        align-items: center;
-        .carousel-inner {
-            img {
-                object-fit: contain;
-            }
+    .carousel-inner {
+        img {
+            object-fit: contain;
         }
     }
+
+    &.o_carousel_not_single .carousel-outer {
+        aspect-ratio: 1 / 1;
+
+        &.o_wsale_carousel_ratio_4x3 {
+            aspect-ratio: 4 / 3;
+        }
+
+        &.o_wsale_carousel_ratio_4x5 {
+            aspect-ratio: 4 / 5;
+        }
+
+        &.o_wsale_carousel_ratio_16x9 {
+            aspect-ratio: 16 / 9;
+        }
+
+        &.o_wsale_carousel_ratio_21x9 {
+            aspect-ratio: 21 / 9;
+        }
+
+        .product_detail_img {
+            width: auto !important;
+        }
+    }
+
 
     .carousel-control-prev .fa {
         padding-right: 2px;
@@ -545,14 +564,6 @@ a.no-decoration {
         }
 
         &.o_carousel_product_left_indicators {
-            .carousel-outer {
-                height: 500px;
-            }
-
-            .o_carousel_product_indicators {
-                max-height: 500px;
-            }
-
             .carousel-indicators li {
                 margin: 0;
 
