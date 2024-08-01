@@ -89,11 +89,12 @@ class TestHSNsummary(TestTaxCommon):
             display_uom,
         )
 
-    def create_base_line_dict(self, l10n_in_hsn_code, quantity, price_unit, uom, taxes=None, product=None):
+    def create_base_line_dict(self, l10n_in_hsn_code, quantity, price_unit, discount, uom, taxes=None, product=None):
         return {
             'l10n_in_hsn_code': l10n_in_hsn_code,
             'quantity': quantity,
             'price_unit': price_unit,
+            'discount': discount,
             'product': product,
             'uom': uom,
             'taxes': taxes or self.env['account.tax'],
@@ -102,12 +103,12 @@ class TestHSNsummary(TestTaxCommon):
     def test_l10n_in_hsn_summary_1(self):
         """ Test GST/IGST taxes. """
         base_lines1 = [
-            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 100.0, self.uom_unit, self.gst_5),
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, self.uom_unit, self.gst_5),
-            self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, self.uom_unit, self.gst_5),
-            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 100.0, self.uom_unit, self.gst_18),
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, self.uom_unit, self.gst_18),
-            self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, self.uom_unit, self.gst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 100.0, 0.0, self.uom_unit, self.gst_5),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, 0.0, self.uom_unit, self.gst_5),
+            self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, 0.0, self.uom_unit, self.gst_5),
+            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 100.0, 0.0, self.uom_unit, self.gst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, 0.0, self.uom_unit, self.gst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, 0.0, self.uom_unit, self.gst_18),
         ]
         self.assert_l10n_in_hsn_summary(
             base_lines1,
@@ -147,7 +148,7 @@ class TestHSNsummary(TestTaxCommon):
         # Change the UOM of the second line.
         base_lines2 = [
             base_lines1[0],
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 12000.0, self.uom_dozen, self.gst_5),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 12000.0, 0.0, self.uom_dozen, self.gst_5),
         ] + base_lines1[2:]
         self.assert_l10n_in_hsn_summary(
             base_lines2,
@@ -197,9 +198,9 @@ class TestHSNsummary(TestTaxCommon):
 
         # Change GST 5% taxes to IGST.
         base_lines3 = [
-            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 100.0, self.uom_unit, self.igst_5),
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 12000.0, self.uom_dozen, self.igst_5),
-            self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, self.uom_unit, self.igst_5),
+            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 100.0, 0.0, self.uom_unit, self.igst_5),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 12000.0, 0.0, self.uom_dozen, self.igst_5),
+            self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, 0.0, self.uom_unit, self.igst_5),
         ] + base_lines1[3:]
         self.assert_l10n_in_hsn_summary(
             base_lines3,
@@ -250,7 +251,7 @@ class TestHSNsummary(TestTaxCommon):
         # Put back the UOM of the second line to unit.
         base_lines4 = [
             base_lines3[0],
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, self.uom_unit, self.igst_5),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, 0.0, self.uom_unit, self.igst_5),
         ] + base_lines3[2:]
         self.assert_l10n_in_hsn_summary(
             base_lines4,
@@ -289,9 +290,9 @@ class TestHSNsummary(TestTaxCommon):
 
         # Change GST 18% taxes to IGST.
         base_lines5 = base_lines4[:3] + [
-            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 100.0, self.uom_unit, self.igst_18),
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, self.uom_unit, self.igst_18),
-            self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, self.uom_unit, self.igst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 100.0, 0.0, self.uom_unit, self.igst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 600.0, 0.0, self.uom_unit, self.igst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 5.0, 300.0, 0.0, self.uom_unit, self.igst_18),
         ]
         self.assert_l10n_in_hsn_summary(
             base_lines5,
@@ -335,7 +336,7 @@ class TestHSNsummary(TestTaxCommon):
         self.cess_5_plus_1591.sequence = 100
 
         base_lines1 = [
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 15.80, self.uom_unit, self.gst_18 + self.cess_5_plus_1591),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 15.80, 0.0, self.uom_unit, self.gst_18 + self.cess_5_plus_1591),
         ]
         self.assert_l10n_in_hsn_summary(
             base_lines1,
@@ -363,7 +364,7 @@ class TestHSNsummary(TestTaxCommon):
 
         # Change GST 18% taxes to IGST.
         base_lines2 = [
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 15.80, self.uom_unit, self.igst_18 + self.cess_5_plus_1591),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 15.80, 0.0, self.uom_unit, self.igst_18 + self.cess_5_plus_1591),
         ]
         self.assert_l10n_in_hsn_summary(
             base_lines2,
@@ -393,10 +394,10 @@ class TestHSNsummary(TestTaxCommon):
     def test_l10n_in_hsn_summary_3(self):
         """ Test with mixed HSN codes. """
         base_lines1 = [
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 100.0, self.uom_unit, self.gst_18),
-            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 50.0, self.uom_unit, self.gst_18),
-            self.create_base_line_dict(self.test_hsn_code_2, 1.0, 100.0, self.uom_unit, self.gst_18),
-            self.create_base_line_dict(self.test_hsn_code_2, 2.0, 50.0, self.uom_unit, self.gst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 100.0, 0.0, self.uom_unit, self.gst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 50.0, 0.0, self.uom_unit, self.gst_18),
+            self.create_base_line_dict(self.test_hsn_code_2, 1.0, 100.0, 0.0, self.uom_unit, self.gst_18),
+            self.create_base_line_dict(self.test_hsn_code_2, 2.0, 50.0, 0.0, self.uom_unit, self.gst_18),
         ]
         self.assert_l10n_in_hsn_summary(
             base_lines1,
@@ -435,10 +436,10 @@ class TestHSNsummary(TestTaxCommon):
 
         # Change GST 18% taxes to IGST.
         base_lines2 = [
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 100.0, self.uom_unit, self.igst_18),
-            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 50.0, self.uom_unit, self.igst_18),
-            self.create_base_line_dict(self.test_hsn_code_2, 1.0, 100.0, self.uom_unit, self.igst_18),
-            self.create_base_line_dict(self.test_hsn_code_2, 2.0, 50.0, self.uom_unit, self.igst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 100.0, 0.0, self.uom_unit, self.igst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 2.0, 50.0, 0.0, self.uom_unit, self.igst_18),
+            self.create_base_line_dict(self.test_hsn_code_2, 1.0, 100.0, 0.0, self.uom_unit, self.igst_18),
+            self.create_base_line_dict(self.test_hsn_code_2, 2.0, 50.0, 0.0, self.uom_unit, self.igst_18),
         ]
         self.assert_l10n_in_hsn_summary(
             base_lines2,
@@ -479,8 +480,8 @@ class TestHSNsummary(TestTaxCommon):
     def test_l10n_in_hsn_summary_4(self):
         """ Zero rated GST or no taxes at all."""
         base_lines1 = [
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, self.uom_unit),
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, self.uom_unit),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, 0.0, self.uom_unit),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, 0.0, self.uom_unit),
         ]
         self.assert_l10n_in_hsn_summary(
             base_lines1,
@@ -508,8 +509,8 @@ class TestHSNsummary(TestTaxCommon):
 
         # No tax to IGST 0%/exempt.
         base_lines2 = [
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, self.uom_unit, self.igst_0),
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, self.uom_unit, self.exempt_0),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, 0.0, self.uom_unit, self.igst_0),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, 0.0, self.uom_unit, self.exempt_0),
         ]
         self.assert_l10n_in_hsn_summary(
             base_lines2,
@@ -537,7 +538,7 @@ class TestHSNsummary(TestTaxCommon):
 
         # Put one IGST 18% to get a value on the IGST column.
         base_lines3 = [
-            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, self.uom_unit, self.igst_18),
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 350.0, 0.0, self.uom_unit, self.igst_18),
             base_lines2[1],
         ]
         self.assert_l10n_in_hsn_summary(
@@ -566,6 +567,36 @@ class TestHSNsummary(TestTaxCommon):
                         'uom_name': self.uom_unit.name,
                         'rate': 0.0,
                         'amount_untaxed': 350.0,
+                        'tax_amount_igst': 0.0,
+                        'tax_amount_cgst': 0.0,
+                        'tax_amount_sgst': 0.0,
+                        'tax_amount_cess': 0.0,
+                    },
+                ],
+            },
+        )
+        self._run_js_tests()
+
+    def test_l10n_in_hsn_summary_5(self):
+        """ Test with discount. """
+        base_lines = [
+            self.create_base_line_dict(self.test_hsn_code_1, 1.0, 100.0, 10.0, self.uom_unit),
+        ]
+        self.assert_l10n_in_hsn_summary(
+            base_lines,
+            {
+                'has_igst': False,
+                'has_gst': False,
+                'has_cess': False,
+                'nb_columns': 5,
+                'display_uom': False,
+                'items': [
+                    {
+                        'l10n_in_hsn_code': self.test_hsn_code_1,
+                        'quantity': 1.0,
+                        'uom_name': self.uom_unit.name,
+                        'rate': 0.0,
+                        'amount_untaxed': 90.0,
                         'tax_amount_igst': 0.0,
                         'tax_amount_cgst': 0.0,
                         'tax_amount_sgst': 0.0,

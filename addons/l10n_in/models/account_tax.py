@@ -46,14 +46,17 @@ class AccountTax(models.Model):
                 continue
 
             price_unit = base_line['price_unit']
+            discount = base_line['discount']
             quantity = base_line['quantity']
             product = base_line['product']
             uom = base_line['uom']
             taxes = base_line['taxes']
 
+            final_price_unit = price_unit * (1 - (discount / 100))
+
             # Compute the taxes.
             taxes_computation = taxes._get_tax_details(
-                price_unit,
+                final_price_unit,
                 quantity,
                 rounding_method='round_per_line',
                 product=product,
