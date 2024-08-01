@@ -455,6 +455,7 @@ test(`non-editable list with open_form_view`, async () => {
         type: "list",
         arch: `<tree open_form_view="1"><field name="foo"/></tree>`,
     });
+    expect(".o_optional_columns_dropdown").toHaveCount(0);
     expect(`td.o_list_record_open_form_view`).toHaveCount(0, {
         message: "button to open form view should not be present on non-editable list",
     });
@@ -480,12 +481,91 @@ test(`editable list with open_form_view`, async () => {
             expect.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
         },
     });
+    expect(".o_optional_columns_dropdown").toHaveCount(0);
     expect(`td.o_list_record_open_form_view`).toHaveCount(4, {
         message: "button to open form view should be present on each rows",
     });
 
     await contains(`td.o_list_record_open_form_view`).click();
     expect.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
+});
+
+test(`editable list with open_form_view in debug`, async () => {
+    serverState.debug = true;
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree editable="top" open_form_view="1"><field name="foo"/></tree>`,
+    });
+    expect(".o_optional_columns_dropdown").toHaveCount(0);
+    expect(`td.o_list_record_open_form_view`).toHaveCount(4, {
+        message: "button to open form view should be present on each rows",
+    });
+});
+
+test(`editable list without open_form_view in debug`, async () => {
+    patchWithCleanup(localStorage, {
+        getItem(key) {
+            const value = super.getItem(...arguments);
+            if (key.startsWith("debug_open_view")) {
+                expect.step(["getItem", key, value]);
+            }
+            return value;
+        },
+        setItem(key, value) {
+            if (key.startsWith("debug_open_view")) {
+                expect.step(["setItem", key, value]);
+            }
+            super.setItem(...arguments);
+        },
+    });
+    serverState.debug = true;
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        selectRecord(resId, options) {
+            expect.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
+        },
+    });
+    const localStorageKey = "debug_open_view,foo,list,123456789,foo";
+    expect.verifySteps([["getItem", localStorageKey, null]]);
+    expect(`td.o_list_record_open_form_view`).toHaveCount(0);
+    expect(".o_optional_columns_dropdown").toHaveCount(1);
+    await contains(".o_optional_columns_dropdown button").click();
+    expect(".o-dropdown-item:contains('View Button')").toHaveCount(1);
+    await contains(".o-dropdown-item:contains('View Button')").click();
+    expect.verifySteps([
+        ["setItem", localStorageKey, true],
+        ["getItem", localStorageKey, "true"],
+    ]);
+
+    expect(`td.o_list_record_open_form_view`).toHaveCount(4, {
+        message: "button to open form view should be present on each rows",
+    });
+
+    await contains(`td.o_list_record_open_form_view`).click();
+    expect.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
+
+    await contains(".o_optional_columns_dropdown button").click();
+    await contains(".o-dropdown-item:contains('View Button')").click();
+    expect.verifySteps([
+        ["setItem", localStorageKey, false],
+        ["getItem", localStorageKey, "false"],
+    ]);
+    expect(`td.o_list_record_open_form_view`).toHaveCount(0, {
+        message: "button to open form view should no longer be present",
+    });
+});
+
+test(`non-editable list in debug`, async () => {
+    serverState.debug = true;
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree><field name="foo"/></tree>`,
+    });
+    expect(".o_optional_columns_dropdown").toHaveCount(0);
 });
 
 test(`editable readonly list with open_form_view`, async () => {

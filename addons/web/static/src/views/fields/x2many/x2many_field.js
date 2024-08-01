@@ -217,8 +217,8 @@ export class X2ManyField extends Component {
                 !this.props.readonly && ("editable" in params ? params.editable : editable);
             this.onAdd(params);
         };
-        const openFormView = archInfo.editable ? archInfo.openFormView : false;
-        props.onOpenFormView = openFormView ? this.switchToForm.bind(this) : undefined;
+        props.onOpenFormView = this.switchToForm.bind(this);
+        props.hasOpenFormViewButton = archInfo.editable ? archInfo.openFormView : false;
         return props;
     }
 

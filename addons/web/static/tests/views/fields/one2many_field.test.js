@@ -11383,13 +11383,16 @@ test("open a one2many record containing a one2many", async () => {
     expect.verifySteps([
         "localStorage getItem pwa.installationState", // from install_prompt service
         "localStorage getItem optional_fields,partner,form,123456789,p,list,name",
+        "localStorage getItem debug_open_view,partner,form,123456789,p,list,name",
     ]);
 
     await contains(".o_data_cell").click();
     expect(".modal .o_data_row").toHaveCount(1);
     expect.verifySteps([
         "localStorage getItem optional_fields,partner,form,123456789,p,list,name",
+        "localStorage getItem debug_open_view,partner,form,123456789,p,list,name",
         "localStorage getItem optional_fields,partner,form,123456789,turtles,list,name",
+        "localStorage getItem debug_open_view,partner,form,123456789,turtles,list,name",
     ]);
 });
 
