@@ -1,5 +1,4 @@
-/** @odoo-module **/
-
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
 import options from "@web_editor/js/editor/snippets.options.legacy";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -12,25 +11,34 @@ import { ImageToolsAnimate } from "@website/js/editor/snippets.options";
 import {
     ReplaceMedia,
 } from '@web_editor/js/editor/snippets.options';
+import { registerWebsiteOption } from "@website/js/editor/snippets.registry";
 
+export class WebsiteSaleGridLayout extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.orm = this.env.services.orm;
+    }
 
-options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @override
      */
-    start: function () {
+    async _getRenderContext() {
+        return {
+            ...(await super._getRenderContext()),
+            productSorts: await this.orm.call("website", "get_product_sort_mapping"),
+            isListLayoutEnabled: this.$target.closest('#products_grid').hasClass('o_wsale_layout_list'),
+        };
+    }
+
+    /**
+     * @override
+     */
+    async willStart() {
         this.ppg = parseInt(this.$target.closest('[data-ppg]').data('ppg'));
         this.ppr = parseInt(this.$target.closest('[data-ppr]').data('ppr'));
         this.default_sort = this.$target.closest('[data-default-sort]').data('default-sort');
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    onFocus: function () {
-        var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
-        this.$el.filter('.o_wsale_ppr_submenu').toggleClass('d-none', listLayoutEnabled);
-    },
+        return super.willStart(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -39,7 +47,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
-    setPpg: function (previewMode, widgetValue, params) {
+    setPpg(previewMode, widgetValue, params) {
         const PPG_LIMIT = 10000;
         const ppg = parseInt(widgetValue);
         if (!ppg || ppg < 1) {
@@ -47,34 +55,21 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
         }
         this.ppg = Math.min(ppg, PPG_LIMIT);
         return rpc('/shop/config/website', { 'shop_ppg': this.ppg });
-    },
+    }
     /**
      * @see this.selectClass for params
      */
-    setPpr: function (previewMode, widgetValue, params) {
+    setPpr(previewMode, widgetValue, params) {
         this.ppr = parseInt(widgetValue);
         return rpc('/shop/config/website', { 'shop_ppr': this.ppr });
-    },
+    }
     /**
      * @see this.selectClass for params
      */
-    setDefaultSort: function (previewMode, widgetValue, params) {
+    setDefaultSort(previewMode, widgetValue, params) {
         this.default_sort = widgetValue;
         return rpc('/shop/config/website', { 'shop_default_sort': this.default_sort });
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async updateUIVisibility() {
-        await this._super(...arguments);
-        const pprSelector = this.el.querySelector('.o_wsale_ppr_submenu.d-none');
-        this.el.querySelector('.o_wsale_ppr_by').classList.toggle('d-none', pprSelector);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -83,7 +78,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'setPpg': {
                 return this.ppg;
@@ -95,41 +90,68 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
                 return this.default_sort;
             }
         }
-        return this._super(...arguments);
+        return super._computeWidgetState(...arguments);
+    }
+}
+registerWebsiteOption("WebsiteSaleGridLayout", {
+    Class: WebsiteSaleGridLayout,
+    template: "website_sale.WebsiteSaleGridLayout",
+    selector: "main:has(.o_wsale_products_page)",
+    target: "#products_grid .o_wsale_products_grid_table_wrapper > table",
+    noCheck: true,
+    data: {
+        string: _t("Products Page"),
+        groups: ["website.group_website_designer"],
+        pageOptions: true,
     },
 });
 
-options.registry.WebsiteSaleProductsItem = options.Class.extend({
-    events: Object.assign({}, options.Class.prototype.events || {}, {
-        'mouseenter .o_wsale_soptions_menu_sizes table': '_onTableMouseEnter',
-        'mouseleave .o_wsale_soptions_menu_sizes table': '_onTableMouseLeave',
-        'mouseover .o_wsale_soptions_menu_sizes td': '_onTableItemMouseEnter',
-        'click .o_wsale_soptions_menu_sizes td': '_onTableItemClick',
-    }),
+export class WebsiteSaleProductsItem extends SnippetOption {
+    constructor({ options }) {
+        super(...arguments);
+        this.wysiwyg = options.wysiwyg;
+        this._selectedSize = { x: 1, y: 1 };
+    }
 
     /**
      * @override
      */
-    willStart: async function () {
-        const _super = this._super.bind(this);
-        this.ppr = this.$target.closest('[data-ppr]').data('ppr');
-        this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
-        this.ribbonPositionClasses = {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'};
-        this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
-        this.$ribbon = this.$target.find('.o_ribbon');
-        return _super(...arguments);
-    },
+    async _getRenderContext() {
+        const classes = this.$ribbon[0].className;
+        this.$ribbon[0].className = '';
+        const defaultTextColor = window.getComputedStyle(this.$ribbon[0]).color;
+        this.$ribbon[0].className = classes;
+        this.ribbons = this.wysiwyg.getRibbons();
+        return {
+            ...(await super._getRenderContext(...arguments)),
+            defaultTextColor,
+            isListLayoutEnabled: this.$target.closest('#products_grid').hasClass('o_wsale_layout_list'),
+            ppr: this.ppr,
+            ribbonEditMode: this.ribbonEditMode,
+            ribbons: this.ribbons,
+            selectedSize: this._selectedSize,
+        };
+    }
+
     /**
      * @override
      */
-    onFocus: function () {
-        var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
-        this.$el.find('.o_wsale_soptions_menu_sizes')
-            .toggleClass('d-none', listLayoutEnabled);
+    async willStart() {
+        this.ppr = this.$target.closest('[data-ppr]').data('ppr');
+        this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
+        this.ribbonPositionClasses = {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'};
+        this.ribbons = this.wysiwyg.getRibbons();
+        this.$ribbon = this.$target.find('.o_ribbon');
+        return super.willStart(...arguments);
+    }
+    /**
+     * @override
+     */
+    async onFocus() {
         // Ribbons may have been edited or deleted in another products' option, need to make sure they're up to date
         this.rerender = true;
         this.ribbonEditMode = false;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -139,7 +161,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @override
      */
     async selectStyle(previewMode, widgetValue, params) {
-        const proms = [this._super(...arguments)];
+        const proms = [super.selectStyle(...arguments)];
         if (params.cssProperty === 'background-color' && params.colorNames.includes(widgetValue)) {
             // Reset text-color when choosing a background-color class, so it uses the automatic text-color of the class.
             proms.push(this.selectStyle(previewMode, '', {cssProperty: 'color'}));
@@ -148,7 +170,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         if (!previewMode) {
             await this._saveRibbon();
         }
-    },
+    }
     /**
      * @see this.selectClass for params
      */
@@ -160,15 +182,17 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         }
         if (!previewMode) {
             this.ribbonEditMode = false;
+            this.rerender = true;
         }
         await this._setRibbon(widgetValue);
-    },
+    }
     /**
      * @see this.selectClass for params
      */
     editRibbon(previewMode, widgetValue, params) {
         this.ribbonEditMode = !this.ribbonEditMode;
-    },
+        this.rerender = true;
+    }
     /**
      * @see this.selectClass for params
      */
@@ -177,8 +201,9 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         this.$ribbon.text(_t('Ribbon Name'));
         this.$ribbon.addClass('bg-primary o_ribbon_left');
         this.ribbonEditMode = true;
+        this.rerender = true;
         await this._saveRibbon(true);
-    },
+    }
     /**
      * @see this.selectClass for params
      */
@@ -194,12 +219,12 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             return;
         }
         const {ribbonId} = this.$target[0].dataset;
-        this.trigger_up('delete_ribbon', {id: ribbonId});
-        this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
-        this.rerender = true;
+        this.wysiwyg.deleteRibbon(ribbonId);
+        this.ribbons = this.wysiwyg.getRibbons();
         await this._setRibbon(ribbonId);
         this.ribbonEditMode = false;
-    },
+        this.rerender = true;
+    }
     /**
      * @see this.selectClass for params
      */
@@ -208,7 +233,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         if (!previewMode) {
             await this._saveRibbon();
         }
-    },
+    }
     /**
      * @see this.selectClass for params
      */
@@ -217,16 +242,34 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             /o_ribbon_(left|right)/, this.ribbonPositionClasses[widgetValue]
         );
         await this._saveRibbon();
-    },
+    }
     /**
      * @see this.selectClass for params
      */
-    changeSequence: function (previewMode, widgetValue, params) {
+    changeSequence(previewMode, widgetValue, params) {
         return rpc('/shop/config/product', {
             product_id: this.productTemplateID,
             sequence: widgetValue,
         }).then(() => this._reloadEditable());
-    },
+    }
+
+    /**
+     * @see this.selectClass for params
+     */
+    async setProductSize(previewMode, widgetValue, params) {
+        const [x, y] = widgetValue ? widgetValue.split(",").map(v => parseInt(v)) : [1, 1];
+
+        if (previewMode) {
+            this.renderContext.selectedSize = previewMode === "reset" ? this._selectedSize : { x, y };
+        } else {
+            await rpc('/shop/config/product', {
+                product_id: this.productTemplateID,
+                x: x,
+                y: y,
+            });
+            this._reloadEditable();
+        }
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -235,55 +278,25 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     /**
      * @override
      */
-    updateUI: async function () {
-        await this._super.apply(this, arguments);
+    async updateUI({ assetsChanged }) {
+        this._selectedSize = {
+            x: parseInt(this.$target.attr('colspan') || 1),
+            y: parseInt(this.$target.attr('rowspan') || 1),
+        };
 
-        var sizeX = parseInt(this.$target.attr('colspan') || 1);
-        var sizeY = parseInt(this.$target.attr('rowspan') || 1);
-
-        var $size = this.$el.find('.o_wsale_soptions_menu_sizes');
-        $size.find('tr:nth-child(-n + ' + sizeY + ') td:nth-child(-n + ' + sizeX + ')')
-             .addClass('selected');
-
-        // Adapt size array preview to fit ppr
-        $size.find('tr td:nth-child(n + ' + parseInt(this.ppr + 1) + ')').hide();
-        if (this.rerender) {
+        if (this.rerender || assetsChanged) {
             this.rerender = false;
-            return this._rerenderXML();
+            const newContext = await this._getRenderContext();
+            Object.assign(this.renderContext, newContext);
         }
-    },
-    /**
-     * @override
-     */
-    updateUIVisibility: async function () {
-        // TODO: update this once updateUIVisibility can be used to compute visibility
-        // of arbitrary DOM elements and not just widgets.
-        await this._super(...arguments);
-        this.$el.find('[data-name="ribbon_customize_opt"]').toggleClass('d-none', !this.ribbonEditMode);
-    },
+
+        return super.updateUI(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    async _renderCustomXML(uiFragment) {
-        const $select = $(uiFragment.querySelector('.o_wsale_ribbon_select'));
-        this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
-        const classes = this.$ribbon[0].className;
-        this.$ribbon[0].className = '';
-        const defaultTextColor = window.getComputedStyle(this.$ribbon[0]).color;
-        this.$ribbon[0].className = classes;
-        Object.values(this.ribbons).forEach(ribbon => {
-            $select.append(renderToElement('website_sale.ribbonSelectItem', {
-                ribbon,
-                isLeft: ribbon.position === 'left',
-                textColor: ribbon.text_color || defaultTextColor,
-            }));
-        });
-    },
     /**
      * @override
      */
@@ -301,8 +314,8 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
                 return 'right';
             }
         }
-        return this._super(methodName, params);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -310,8 +323,8 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         if (widgetName === 'create_ribbon_opt') {
             return !this.ribbonEditMode;
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * Saves the ribbons.
      *
@@ -327,11 +340,11 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             'position': (this.$ribbon.attr('class').includes('o_ribbon_left')) ? 'left' : 'right',
         };
         ribbon.id = isNewRibbon ? Date.now() : parseInt(this.$target.closest('.oe_product')[0].dataset.ribbonId);
-        this.trigger_up('set_ribbon', {ribbon: ribbon});
-        this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
+        this.wysiwyg.setRibbon(ribbon);
+        this.ribbons = this.wysiwyg.getRibbons();
         this.rerender = true;
         await this._setRibbon(ribbon.id);
-    },
+    }
     /**
      * Sets the ribbon.
      *
@@ -340,10 +353,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     async _setRibbon(ribbonId) {
         this.$target[0].dataset.ribbonId = ribbonId;
-        this.trigger_up('set_product_ribbon', {
-            templateId: this.productTemplateID,
-            ribbonId: ribbonId || false,
-        });
+        this.wysiwyg.setProductRibbon(this.productTemplateID, ribbonId || false);
         const ribbon = (
             this.ribbons[ribbonId] ||
             {name: '', bg_color: '', text_color: '', position: 'left'}
@@ -354,8 +364,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         const $editableDocument = $(this.$target[0].ownerDocument.body);
         const $ribbons = $editableDocument.find(`[data-ribbon-id="${ribbonId}"] .o_ribbon`);
         $ribbons.empty().append(ribbon.name);
-        let htmlClasses;
-        this.trigger_up('get_ribbon_classes', {callback: classes => htmlClasses = classes});
+        const htmlClasses = this.wysiwyg.getRibbonClasses();
         $ribbons.removeClass(htmlClasses);
 
         $ribbons.addClass(this.ribbonPositionClasses[ribbon.position]);
@@ -370,64 +379,24 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         // The ribbon does not have a savable parent, so we need to trigger the
         // saving process manually by flagging the ribbon as dirty.
         this.$ribbon.addClass('o_dirty');
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _onTableMouseEnter: function (ev) {
-        $(ev.currentTarget).addClass('oe_hover');
-    },
-    /**
-     * @private
-     */
-    _onTableMouseLeave: function (ev) {
-        $(ev.currentTarget).removeClass('oe_hover');
-    },
-    /**
-     * @private
-     */
-    _onTableItemMouseEnter: function (ev) {
-        var $td = $(ev.currentTarget);
-        var $table = $td.closest("table");
-        var x = $td.index() + 1;
-        var y = $td.parent().index() + 1;
-
-        var tr = [];
-        for (var yi = 0; yi < y; yi++) {
-            tr.push("tr:eq(" + yi + ")");
-        }
-        var $selectTr = $table.find(tr.join(","));
-        var td = [];
-        for (var xi = 0; xi < x; xi++) {
-            td.push("td:eq(" + xi + ")");
-        }
-        var $selectTd = $selectTr.find(td.join(","));
-
-        $table.find("td").removeClass("select");
-        $selectTd.addClass("select");
-    },
-    /**
-     * @private
-     */
-    _onTableItemClick: function (ev) {
-        var $td = $(ev.currentTarget);
-        var x = $td.index() + 1;
-        var y = $td.parent().index() + 1
-        // TODO this should be awaited somehow
-        rpc('/shop/config/product', {
-            product_id: this.productTemplateID,
-            x: x,
-            y: y,
-        }).then(() => this._reloadEditable());
-    },
     _reloadEditable() {
-        return this.trigger_up('request_save', {reload: true, optionSelector: `.oe_product:has(span[data-oe-id=${this.productTemplateID}])`});
+        this.env.requestSave({
+            reload: true,
+            optionSelector: `.oe_product:has(span[data-oe-id=${this.productTemplateID}])`,
+        });
     }
+}
+registerWebsiteOption("WebsiteSaleProductsItem", {
+    Class: WebsiteSaleProductsItem,
+    template: "website_sale.WebsiteSaleProductsItem",
+    selector: "#products_grid .oe_product",
+    noCheck: true,
 });
 
 // Small override of the MediaDialog to retrieve the attachment ids instead of img elements
@@ -445,12 +414,13 @@ class AttachmentMediaDialog extends MediaDialog {
     }
 }
 
-options.registry.WebsiteSaleProductPage = options.Class.extend({
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.notification = this.bindService("notification");
-    },
+export class WebsiteSaleProductPage extends SnippetOption {
+    constructor() {
+        super(...arguments);
+        this.dialog = this.env.services.dialog;
+        this.notification = this.env.services.notification;
+        this.orm = this.env.services.orm;
+    }
 
     /**
      * @override
@@ -469,14 +439,14 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         this.productDetailMain = this.$target[0].querySelector('#product_detail_main');
         this.productPageCarousel = this.$target[0].querySelector("#o-carousel-product");
         this.productPageGrid = this.$target[0].querySelector("#o-grid-product");
-        return this._super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
 
     _getZoomOptionData() {
         return this._userValueWidgets.find(widget => {
             return widget.options && widget.options.dataAttributes && widget.options.dataAttributes.name === "o_wsale_zoom_mode";
         });
-    },
+    }
 
     /**
      * @override
@@ -488,7 +458,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
         }
         return rpc('/shop/config/website', { product_page_image_width: widgetValue });
-    },
+    }
 
     /**
      * @override
@@ -504,15 +474,15 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
         }
         return rpc('/shop/config/website', { product_page_image_layout: widgetValue });
-    },
+    }
 
     /**
      * Emulate click on the main image of the carousel.
      */
-    replaceMainImage: function () {
+    replaceMainImage() {
         const image = this.productDetailMain.querySelector(`[data-oe-model="${this.mode}"][data-oe-field=image_1920] img`);
         image.dispatchEvent(new Event('dblclick', {bubbles: true}));
-    },
+    }
 
     _getSelectedVariantValues($container) {
         const combination = $container.find('input.js_product_change:checked').data('combination');
@@ -534,12 +504,12 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             });
 
         return values;
-    },
+    }
 
     /**
      * Prompts the user for images, then saves the new images.
      */
-    addImages: function () {
+    addImages() {
         if(this.mode === 'product.template'){
             this.notification.add(
                 'Pictures will be added to the main image. Use "Instant" attributes to set pictures on each variants',
@@ -547,7 +517,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             );
         }
         let extraImageEls;
-        this.call("dialog", "add", AttachmentMediaDialog, {
+        this.dialog.add(AttachmentMediaDialog, {
             multiImages: true,
             onlyImages: true,
             // Kinda hack-ish but the regular save does not get the information we need
@@ -570,11 +540,14 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                     product_template_id: this.productTemplateID,
                     combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
                 }).then(() => {
-                    this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector});
+                    this.env.requestSave({
+                        reload: true,
+                        optionSelector: this.data.selector,
+                    });
                 });
             }
         });
-    },
+    }
 
     async _convertAttachmentToWebp(attachment, imageEl) {
         // This method is widely adapted from onFileUploaded in ImageField.
@@ -621,21 +594,24 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                 mimetype: "image/jpeg",
             }]]);
         }
-    },
+    }
 
     /**
      * Removes all extra-images from the product.
      */
-    clearImages: function () {
+    clearImages() {
         return rpc(`/shop/product/clear-images`, {
             model: this.mode,
             product_product_id: this.productProductID,
             product_template_id: this.productTemplateID,
             combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
         }).then(() => {
-            this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector});
+            this.env.requestSave({
+                reload: true,
+                optionSelector: this.data.selector,
+            });
         });
-    },
+    }
 
     /**
      * @override
@@ -652,14 +628,14 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         return rpc('/shop/config/website', {
             'product_page_image_spacing': spacing,
         });
-    },
+    }
 
     setColumns(previewMode, widgetValue, params) {
         this.productPageGrid.dataset.grid_columns = widgetValue;
         return rpc('/shop/config/website', {
             'product_page_grid_columns': widgetValue,
         });
-    },
+    }
 
     /**
      * @override
@@ -681,8 +657,8 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             case 'setColumns':
                 return this.productPageGrid && this.productPageGrid.dataset.grid_columns || 1;
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
 
     async _computeWidgetVisibility(widgetName, params) {
         const hasImages = this.productDetailMain.dataset.image_width != 'none';
@@ -705,28 +681,41 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             case 'o_wsale_zoom_both':
                 return hasImages && !isFullImage;
         }
-        return this._super(widgetName, params);
+        return super._computeWidgetVisibility(widgetName, params);
     }
+}
+registerWebsiteOption("WebsiteSaleProductPage", {
+    Class: WebsiteSaleProductPage,
+    template: "website_sale.WebsiteSaleProductPage",
+    selector: "main:has(.o_wsale_product_page)",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
+        pageOptions: true,
+    },
 });
 
-options.registry.WebsiteSaleProductAttribute = options.Class.extend({
+export class WebsiteSaleProductAttribute extends SnippetOption {
     /**
      * @override
      */
-     willStart: async function () {
+     async willStart() {
         this.attributeID = this.$target.closest('[data-attribute_id]').data('attribute_id');
-        return this._super(...arguments);
-    },
+        return super.willStart(...arguments);
+     }
 
     /**
      * @see this.selectClass for params
      */
-    setDisplayType: function (previewMode, widgetValue, params) {
+    setDisplayType(previewMode, widgetValue, params) {
         return rpc('/shop/config/attribute', {
             attribute_id: this.attributeID,
             display_type: widgetValue,
-        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
-    },
+        }).then(() => this.env.requestSave({
+            reload: true,
+            optionSelector: this.data.selector,
+        }));
+    }
 
     /**
      * @override
@@ -736,8 +725,14 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
             case 'setDisplayType':
                 return this.$target.closest('[data-attribute_display_type]').data('attribute_display_type');
         }
-        return this._super(methodName, params);
-    },
+        return super._computeWidgetState(methodName, params);
+    }
+}
+registerWebsiteOption("WebsiteSaleProductAttribute", {
+    Class: WebsiteSaleProductAttribute,
+    template: "website_sale.WebsiteSaleProductAttribute",
+    selector: "#product_detail .o_wsale_product_attribute",
+    noCheck: true,
 });
 
 // Disable save for alternative products snippet

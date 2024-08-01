@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- Product page -->
+    <t t-name="website_sale.WebsiteSaleProductPage">
+        <WeRow title.translate="Customers" class="'o_we_full_row'">
+            <WeButton customizeWebsiteViews="'website_sale.product_comment'"
+                      noPreview="'true'"
+                      reload="'/'">
+                Rating
+            </WeButton>
+            <WeButton name="'attributes_opt'"
+                      customizeWebsiteViews="'website_sale.product_share_buttons'"
+                      noPreview="'true'"
+                      reload="'/'">
+                Share
+            </WeButton>
+        </WeRow>
+
+        <WeCheckbox title.translate="Select Quantity"
+                    customizeWebsiteViews="'website_sale.product_quantity'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+
+        <WeCheckbox title.translate="Tax Indication"
+                    customizeWebsiteViews="'website_sale.tax_indication'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+
+        <WeSelect title.translate="Variants"
+                  name="'variants_opt'"
+                  groups="'product.group_product_variant'"
+                  noPreview="'true'"
+                  reload="'/'">
+            <WeButton name="'variants_options_opt'"
+                      customizeWebsiteViews="''">
+                Options
+            </WeButton>
+            <WeButton name="'variants_products_list_opt'"
+                      customizeWebsiteViews="'website_sale.product_variants'">
+                Products List
+            </WeButton>
+        </WeSelect>
+
+        <WeCheckbox title.translate="Product Tags"
+                    customizeWebsiteViews="'website_sale.product_tags'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+
+        <WeRow title.translate="Cart" class="'o_we_full_row'" name="'o_wsale_buy_now_opt'">
+            <WeButton tooltip.translate="Buy Now"
+                      class="'o_we_buy_now_btn'"
+                      customizeWebsiteViews="'website_sale.product_buy_now'"
+                      noPreview="'true'"
+                      reload="'/'">
+                <i class="fa fa-fw fa-bolt"/>
+                Buy Now
+            </WeButton>
+        </WeRow>
+
+        <!-- Image config -->
+        <WeButtonGroup title.translate="Images Width" noPreview="'true'" reload="'/'">
+            <WeButton setImageWidth="'none'"
+                      img="'/website_sale/static/src/img/snippet_options/image-width-none.svg'"
+                      tooltip.translate="None"/>
+            <WeButton setImageWidth="'50_pc'"
+                      img="'/website_sale/static/src/img/snippet_options/image-width-50.svg'"
+                      tooltip.translate="50 percent"/>
+            <WeButton setImageWidth="'66_pc'"
+                      img="'/website_sale/static/src/img/snippet_options/image-width-66.svg'"
+                      tooltip.translate="66 percent"/>
+            <WeButton setImageWidth="'100_pc'"
+                      img="'/website_sale/static/src/img/snippet_options/image-width-100.svg'"
+                      tooltip.translate="100 percent"/>
+        </WeButtonGroup>
+
+        <WeSelect title.translate="Layout" name="'o_wsale_image_layout'" noPreview="'true'" reload="'/'">
+            <WeButton setImageLayout="'carousel'">Carousel</WeButton>
+            <WeButton setImageLayout="'grid'">Grid</WeButton>
+        </WeSelect>
+
+        <WeSelect title.translate="Image Zoom"
+                  class="'o_we_sublevel_1'"
+                  name="'o_wsale_zoom_mode'"
+                  noPreview="'true'"
+                  reload="'/'">
+            <WeButton name="'o_wsale_zoom_hover'"
+                      customizeWebsiteViews="'website_sale.product_picture_magnify_hover'">
+                Magnifier on hover
+            </WeButton>
+            <WeButton name="'o_wsale_zoom_click'"
+                      customizeWebsiteViews="'website_sale.product_picture_magnify_click'">
+                Pop-up on Click
+            </WeButton>
+            <WeButton name="'o_wsale_zoom_both'"
+                      customizeWebsiteViews="'website_sale.product_picture_magnify_both'">
+                Both
+            </WeButton>
+            <WeButton name="'o_wsale_zoom_none'"
+                      customizeWebsiteViews="''">
+                None
+            </WeButton>
+        </WeSelect>
+
+        <!-- Carousel config -->
+        <WeButtonGroup title.translate="Thumbnails"
+                       class="'o_we_sublevel_1'"
+                       name="'o_wsale_thumbnail_pos'"
+                       noPreview="'true'"
+                       reload="'/'">
+            <WeButton class="'fa fa-fw fa-long-arrow-left'"
+                      tooltip.translate="Left"
+                      customizeWebsiteViews="'website_sale.carousel_product_indicators_left'"/>
+            <WeButton class="'fa fa-fw fa-long-arrow-down'"
+                      tooltip.translate="Bottom"
+                      customizeWebsiteViews="'website_sale.carousel_product_indicators_bottom'"/>
+        </WeButtonGroup>
+
+        <!-- Grid config -->
+        <WeRange title.translate="Image Spacing"
+                 class="'o_we_sublevel_1'"
+                 name="'o_wsale_grid_spacing'"
+                 noPreview="'true'"
+                 reload="'/'"
+                 max="'3'"
+                 step="'1'"
+                 setSpacing="''"/>
+
+        <WeSelect title.translate="Columns"
+                  class="'o_we_sublevel_1'"
+                  name="'o_wsale_grid_columns'"
+                  noPreview="'true'"
+                  reload="'/'">
+            <WeButton setColumns="'1'">1</WeButton>
+            <WeButton setColumns="'2'">2</WeButton>
+            <WeButton setColumns="'3'">3</WeButton>
+        </WeSelect>
+
+        <WeRow title.translate="Main Image">
+            <WeButton class="'o_we_bg_success'"
+                      name="'o_wsale_replace_main_image'"
+                      replaceMainImage="'true'"
+                      noPreview="'true'">
+                Replace
+            </WeButton>
+        </WeRow>
+
+        <WeRow title.translate="Extra Images">
+            <WeButton class="'o_we_bg_success'"
+                      name="'o_wsale_add_extra_images'"
+                      addImages="'true'"
+                      noPreview="'true'">
+                Add
+            </WeButton>
+            <WeButton class="'o_we_bg_danger'"
+                      name="'o_wsale_clear_extra_images'"
+                      clearImages="'true'"
+                      noPreview="'true'">
+                Remove all
+            </WeButton>
+        </WeRow>
+    </t>
+
+    <!-- Product attributes -->
+    <t t-name="website_sale.WebsiteSaleProductAttribute">
+        <WeSelect title.translate="Display Type" noPreview="'true'">
+            <WeButton setDisplayType="'radio'">Radio</WeButton>
+            <WeButton setDisplayType="'pills'">Pills</WeButton>
+            <WeButton setDisplayType="'select'">Select</WeButton>
+            <WeButton setDisplayType="'color'">Color</WeButton>
+        </WeSelect>
+    </t>
+
+</templates>

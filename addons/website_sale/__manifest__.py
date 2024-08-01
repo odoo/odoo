@@ -91,7 +91,6 @@
             'website_sale/static/src/js/website_sale_price_range_option.js',
             'website_sale/static/src/js/website_sale_configurators.js',
             'website_sale/static/src/js/website_sale_utils.js',
-            'website_sale/static/src/xml/website_sale_utils.xml',
             'website_sale/static/src/js/website_sale_recently_viewed.js',
             'website_sale/static/src/js/website_sale_tracking.js',
             'website/static/lib/multirange/multirange_custom.js',
@@ -141,6 +140,12 @@
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
+            'website_sale/static/src/js/editor/snippets.options.js',
+            'website_sale/static/src/js/editor/snippets.options.xml',
+            'website_sale/static/src/js/editor/pages/all_products/options.xml',
+            'website_sale/static/src/js/editor/pages/checkout/options.js',
+            'website_sale/static/src/js/editor/pages/checkout/options.xml',
+            'website_sale/static/src/js/editor/pages/product/options.xml',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/options.js',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/options.xml',
             'website_sale/static/src/snippets/s_add_to_cart/options.js',
@@ -153,7 +158,6 @@
         ],
         'website.assets_editor': [
             'website_sale/static/src/js/systray_items/*.js',
-            'website_sale/static/src/xml/website_sale_utils.xml',
         ],
         'website.backend_assets_all_wysiwyg': [
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',

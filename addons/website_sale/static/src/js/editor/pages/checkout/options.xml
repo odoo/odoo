@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- Checkout page  -->
+    <t t-name="website_sale.checkout_page">
+        <WeCheckbox title.translate="Extra Step"
+                    customizeWebsiteViews="'website_sale.extra_info'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+        <WeCheckbox title.translate="Suggested Accessories"
+                    customizeWebsiteViews="'website_sale.suggested_products_list'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+        <WeCheckbox title.translate="Promo Code"
+                    customizeWebsiteViews="'website_sale.reduction_code'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+        <WeCheckbox title.translate="Accept Terms &amp; Conditions"
+                    customizeWebsiteViews="'website_sale.accept_terms_and_conditions'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+        <WeCheckbox title.translate="Show B2B Fields"
+                    customizeWebsiteViews="'website_sale.address_b2b'"
+                    noPreview="'true'"
+                    reload="'/'"/>
+    </t>
+
+</templates>

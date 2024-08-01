@@ -1,30 +1,29 @@
-.o_wsale_soptions_menu_sizes {
+#oe_snippets > .o_we_customize_panel .o_wsale_soptions_menu_sizes {
     we-title {
         align-self: flex-start;
     }
 
-    table {
+    .oe_size_table {
+        display: table;
         margin: auto;
+        border-collapse: collapse;
 
-        td {
-            margin: 0;
-            padding: 0;
-            width: 20px;
-            height: 20px;
-            border: 1px #dddddd solid;
-            cursor: pointer;
+        .oe_size_row {
+            display: table-row;
 
-            &.selected {
-                background-color: #B1D4F1;
-            }
-        }
-
-        &.oe_hover td {
-            &.selected {
+            .oe_size_cell {
+                display: table-cell;
+                margin: 0;
+                padding: 0;
+                width: 20px;
+                height: 20px;
+                border: 1px #dddddd solid;
                 background-color: transparent;
-            }
-            &.select {
-                background-color: #B1D4F1;
+                border-radius: 0;
+
+                &.selected {
+                    background-color: #B1D4F1;
+                }
             }
         }
     }
