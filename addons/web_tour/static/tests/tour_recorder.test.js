@@ -1,11 +1,9 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, edit, keyDown, keyUp, press, queryOne } from "@odoo/hoot-dom";
-import { Deferred, advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
     defineWebModels,
-    getService,
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
@@ -13,17 +11,18 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
+import {
+    TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
+    TourRecorder,
+} from "@web_tour/tour_service/tour_recorder/tour_recorder";
+import { Component, xml } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { WebClient } from "@web/webclient/webclient";
-import { TourRecorder } from "@web_tour_recorder/tour_recorder/tour_recorder";
-import {
-    CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY,
-    TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
-} from "@web_tour_recorder/tour_recorder/tour_recorder_service";
 
 describe.current.tags("desktop");
 
 let tourRecorder;
+
 beforeEach(async () => {
     serverState.debug = "1";
     browser.localStorage.setItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY, "1");
@@ -278,83 +277,16 @@ test("Edit input", async () => {
     expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["edit Bismillah"]);
 });
 
-test("Save a custom tour in the localStorage", async () => {
-    await mountWithCleanup(
-        `
-        <div class="o_parent">
-            <div class="click"></div>
-        </div>
-    `,
-        { noMainContainer: true }
-    );
+test("Save custom tour", async () => {
+    onRpc("/web/dataset/call_kw/web_tour.tour/create", async (request) => {
+        const { params } = await request.json();
+        const tour = params.args[0][0];
+        expect.step(tour.name);
+        expect.step(tour.url);
+        expect.step(tour.step_ids.length);
+        return true;
+    });
 
-    expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
-    await animationFrame();
-    click(".click");
-    await animationFrame();
-    checkTourSteps([".o_parent > div"]);
-
-    click(".o_button_save");
-    await animationFrame();
-    await contains("input[name='name']").click();
-    edit("tour_name");
-    await animationFrame();
-    click(".o_button_save_confirm");
-    await animationFrame();
-
-    const customToursString = browser.localStorage.getItem("custom_tours");
-    const customTours = JSON.parse(customToursString);
-    expect(customTours).toEqual([
-        {
-            name: "tour_name",
-            url: "/",
-            test: true,
-            steps: [
-                {
-                    trigger: ".o_parent > div",
-                    run: "click",
-                },
-            ],
-        },
-    ]);
-});
-
-test("Save a custom tour and check the tour dialog", async () => {
-    await mountWithCleanup(
-        `
-        <div class="o_parent">
-            <div class="click"></div>
-        </div>
-    `,
-        { noMainContainer: true }
-    );
-
-    expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
-    await animationFrame();
-    click(".click");
-    await animationFrame();
-    checkTourSteps([".o_parent > div"]);
-
-    click(".o_button_save");
-    await animationFrame();
-    await contains("input[name='name']").click();
-    edit("tour_name");
-    await animationFrame();
-    click(".o_button_save_confirm");
-    await animationFrame();
-    expect(".o_notification_manager .o_notification_body").toHaveText(
-        "Custom tour 'tour_name' has been added."
-    );
-
-    click(".o_debug_manager > button");
-    await contains(".o-dropdown-item:contains('Start Tour')").click();
-
-    expect("table tr td:contains('tour_name')").toHaveCount(1);
-});
-
-test("Delete saved custom tour and check the tour dialog", async () => {
     await mountWithCleanup(
         `
         <div class="o_parent">
@@ -379,22 +311,7 @@ test("Delete saved custom tour and check the tour dialog", async () => {
     click(".o_button_save_confirm");
     await runAllTimers(); // Wait that the save notification disappear
 
-    click(".o_debug_manager > button");
-    await contains(".o-dropdown-item:contains('Start Tour')").click();
-
-    expect("table tr td:contains('tour_name')").toHaveCount(1);
-
-    click(".o_button_extra");
-    await contains(".o-dropdown-item:contains('Delete')").click();
-
-    expect(".o_notification_manager .o_notification_body").toHaveText(
-        "Tour 'tour_name' correctly deleted."
-    );
-    expect("table tr td:contains('tour_name')").toHaveCount(0);
-
-    const customToursString = browser.localStorage.getItem("custom_tours");
-    const customTours = JSON.parse(customToursString);
-    expect(customTours).toEqual([]);
+    expect.verifySteps(["tour_name", "/", 1]);
 });
 
 test("Drag and drop", async () => {
@@ -444,114 +361,6 @@ test("Edit contenteditable", async () => {
     await animationFrame();
     checkTourSteps([".o_editor[contenteditable='true']"]);
     expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["editor Bismillah"]);
-});
-
-test("Run custom tour", async () => {
-    await mountWithCleanup(
-        `
-        <div class="o_parent">
-            <div class="click">Bishmillah</div>
-        </div>
-    `,
-        { noMainContainer: true }
-    );
-
-    expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
-    await animationFrame();
-    click(".click");
-    await animationFrame();
-    checkTourSteps([".o_parent > div"]);
-
-    click(".o_button_save");
-    await animationFrame();
-    await contains("input[name='name']").click();
-    edit("tour_name");
-    await animationFrame();
-    click("input[name='url']");
-    await animationFrame();
-    edit("");
-    await animationFrame();
-    click(".o_button_save_confirm");
-    await animationFrame();
-    expect(".o_notification_manager .o_notification_body").toHaveText(
-        "Custom tour 'tour_name' has been added."
-    );
-
-    const divElement = queryOne(".click");
-    divElement.addEventListener("click", () => {
-        expect.step("Clicked on div");
-    });
-
-    const def = new Deferred();
-    getService("tour_service").bus.addEventListener("TOUR-FINISHED", () => {
-        def.resolve();
-    });
-
-    click(".o_debug_manager > button");
-    await contains(".o-dropdown-item:contains('Start Tour')").click();
-
-    expect("table tr td:contains('tour_name')").toHaveCount(1);
-    click(".o_test_tour");
-
-    // Max timeout before triggering an error from tour compiler
-    await advanceTime(9999);
-    await def;
-
-    expect.verifySteps(["Clicked on div"]);
-});
-
-test("Run a custom tour twice doesn't trigger traceback", async () => {
-    onRpc("/web/dataset/call_kw/web_tour.tour/consume", async () => {
-        return Promise.resolve(true);
-    });
-    await mountWithCleanup(
-        `
-        <div class="o_parent">
-            <div class="click">Bishmillah</div>
-        </div>
-    `,
-        { noMainContainer: true }
-    );
-
-    expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
-    await animationFrame();
-    click(".click");
-    await animationFrame();
-    checkTourSteps([".o_parent > div"]);
-
-    click(".o_button_save");
-    await animationFrame();
-    await contains("input[name='name']").click();
-    edit("tour_name");
-    await animationFrame();
-    click("input[name='url']");
-    await animationFrame();
-    edit("");
-    await animationFrame();
-    click(".o_button_save_confirm");
-    await animationFrame();
-    expect(".o_notification_manager .o_notification_body").toHaveText(
-        "Custom tour 'tour_name' has been added."
-    );
-
-    click(".o_debug_manager > button");
-    await contains(".o-dropdown-item:contains('Start Tour')").click();
-
-    expect("table tr td:contains('tour_name')").toHaveCount(1);
-    click(".o_start_tour");
-    await animationFrame();
-
-    click(".o_debug_manager > button");
-    await contains(".o-dropdown-item:contains('Start Tour')").click();
-
-    expect("table tr td:contains('tour_name')").toHaveCount(2);
-    click(".o_start_tour:eq(1)");
-    await animationFrame();
-
-    click(".o_parent > div");
-    await animationFrame();
 });
 
 test("Selecting item in autocomplete field though Enter", async () => {
@@ -615,50 +424,4 @@ test("Edit input after autofocus", async () => {
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
     checkTourSteps([".o_input"]);
     expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["edit Bismillah"]);
-});
-
-test("'Disable Tours' clean the custom running tour", async () => {
-    onRpc("/web/dataset/call_kw/web_tour.tour/consume", async () => {
-        return Promise.resolve(true);
-    });
-
-    await mountWithCleanup(
-        `
-        <div class="o_parent">
-            <div class="click">Bishmillah</div>
-        </div>
-    `,
-        { noMainContainer: true }
-    );
-
-    expect(".o_tour_recorder").toHaveCount(1);
-    click(".o_button_record");
-    await animationFrame();
-    click(".click");
-    await animationFrame();
-    checkTourSteps([".o_parent > div"]);
-
-    click(".o_button_save");
-    await animationFrame();
-    await contains("input[name='name']").click();
-    edit("tour_name");
-    await animationFrame();
-    click(".o_button_save_confirm");
-    await animationFrame();
-    expect(".o_notification_manager .o_notification_body").toHaveText(
-        "Custom tour 'tour_name' has been added."
-    );
-
-    click(".o_debug_manager > button");
-    await contains(".o-dropdown-item:contains('Start Tour')").click();
-
-    expect("table tr td:contains('tour_name')").toHaveCount(1);
-    click(".o_start_tour");
-    await animationFrame();
-
-    click(".o_debug_manager > button");
-    await contains(".o-dropdown-item:contains('Disable Tours')").click();
-    await animationFrame();
-
-    expect(browser.localStorage.getItem(CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY)).toBe(null);
 });
