@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('apikeys_tour_setup', {
     test: true,
-    url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
+    url: '/odoo?debug=1', // Needed as API key part is now only displayed in debug mode
     steps: () => [{
     content: 'Open user account menu',
     trigger: '.o_user_menu .dropdown-toggle',
@@ -69,7 +69,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 // deletes the previously created key
 registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     test: true,
-    url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
+    url: '/odoo?debug=1', // Needed as API key part is now only displayed in debug mode
     steps: () => [{
     content: 'Open preferences',
     trigger: '.o_user_menu .dropdown-toggle',
