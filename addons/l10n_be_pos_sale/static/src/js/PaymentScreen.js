@@ -9,7 +9,7 @@ patch(PaymentScreen.prototype, {
     async toggleIsToInvoice() {
         const orderLines = this.currentOrder.get_orderlines();
         const has_origin_order = orderLines.some(line => line.sale_order_origin_id);
-        const has_intracom_taxes = orderLines.some(line=>line.tax_ids?.some(tax=>this.pos.intracom_tax_ids.includes(tax)));
+        const has_intracom_taxes = orderLines.some(line=>line.tax_ids?.some(tax=>this.pos.intracom_tax_ids?.includes(tax)));
         if(this.currentOrder.is_to_invoice() && this.pos.company.country?.code === "BE" && has_origin_order && has_intracom_taxes){
             this.popup.add(ErrorPopup, {
                 title: _t('This order needs to be invoiced'),
