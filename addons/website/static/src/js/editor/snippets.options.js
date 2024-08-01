@@ -747,6 +747,9 @@ options.Class.include({
             }
             case 'customizeWebsiteVariable': {
                 const ownerDocument = this.$target[0].ownerDocument;
+                if (!ownerDocument.defaultView) {
+                    return;
+                }
                 const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
                 let finalValue = weUtils.getCSSVariableValue(params.variable, style);
                 if (!params.colorNames) {
@@ -1345,6 +1348,9 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         // The bg-XXX classes have been updated (and could be updated by another
         // option like changing color palette) -> update the preview element.
         const ownerDocument = this.$target[0].ownerDocument;
+        if (!ownerDocument.defaultView) {
+            return;
+        }
         const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
         const grayPreviewEls = this.$el.find(".o_we_gray_preview span");
         for (const e of grayPreviewEls) {
