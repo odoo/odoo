@@ -141,7 +141,7 @@ export {
     parseViewProps,
     selectFieldDropdownItem,
 } from "./_framework/view_test_helpers";
-export { useTestClientAction } from "./_framework/webclient_test_helpers";
+export { useTestClientAction, mountWebClient } from "./_framework/webclient_test_helpers";
 
 export function defineWebModels() {
     return defineModels(webModels);

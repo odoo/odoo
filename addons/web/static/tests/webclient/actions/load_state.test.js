@@ -11,6 +11,7 @@ import {
     makeMockEnv,
     models,
     mountWithCleanup,
+    mountWebClient,
     onRpc,
     patchWithCleanup,
     stepAllNetworkCalls,
@@ -56,15 +57,6 @@ function logHistoryInteractions() {
 /**
  * @param {{ env: import("@web/env").OdooEnv }} [options]
  */
-async function mountWebClient(options) {
-    await mountWithCleanup(WebClient, options);
-    // Wait for visual changes caused by a potential loadState
-    await animationFrame();
-    // wait for BlankComponent
-    await animationFrame();
-    // wait for the regular rendering
-    await animationFrame();
-}
 
 defineActions([
     {
