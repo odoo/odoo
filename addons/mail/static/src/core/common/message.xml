@@ -63,13 +63,13 @@
                                    'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
                                    }"
                         >
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
+                            <div class="o-mail-Message-content overflow-x-auto o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing)">
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
                                         <t t-else="">
-                                            <div class="position-relative overflow-x-auto d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
+                                            <div class="position-relative d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                                     'border': state.isEditing and !message.is_note,
                                                     'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
