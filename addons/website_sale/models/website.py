@@ -539,20 +539,14 @@ class Website(models.Model):
             '100_pc': (12, 12),
         }.get(self.product_page_image_width)
 
-    def _get_product_page_grid_image_classes(self):
+    def _get_product_page_grid_image_spacing_classes(self):
         spacing_map = {
-            'none': 'p-0',
-            'small': 'p-2',
-            'medium': 'p-3',
-            'big': 'p-4',
+            'none': 'm-0',
+            'small': 'm-1',
+            'medium': 'm-2',
+            'big': 'm-3',
         }
-        columns_map = {
-            1: 'col-12',
-            2: 'col-6',
-            3: 'col-4',
-        }
-        return spacing_map.get(self.product_page_image_spacing) + ' ' +\
-                columns_map.get(self.product_page_grid_columns)
+        return spacing_map.get(self.product_page_image_spacing)
 
     @api.model
     def _send_abandoned_cart_email(self):
