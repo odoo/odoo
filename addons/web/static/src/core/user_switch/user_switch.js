@@ -16,6 +16,7 @@ export class UserSwitch extends Component {
         });
         this.form = document.querySelector("form.oe_login_form");
         this.form.classList.toggle("d-none", users.length);
+        this.form.querySelector(":placeholder-shown")?.focus();
         useEffect(
             (el) => el?.querySelector("button.list-group-item-action")?.focus(),
             () => [this.root.el]
