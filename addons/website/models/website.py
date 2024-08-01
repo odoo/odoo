@@ -1064,6 +1064,7 @@ class Website(models.Model):
         return request.env.user.id == request.website._get_cached('user_id')
 
     @api.model
+    @api.returns("ir.ui.view")
     def viewref(self, view_id, raise_if_not_found=True):
         ''' Given an xml_id or a view_id, return the corresponding view record.
             In case of website context, return the most specific one.
