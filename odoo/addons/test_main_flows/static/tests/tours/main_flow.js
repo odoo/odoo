@@ -9,7 +9,7 @@ import { queryFirst } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
     test: true,
-    url: "/web",
+    url: "/odoo",
     steps: () => [
 ...stepUtils.goToAppSteps('sale.sale_menu_root', markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
 {

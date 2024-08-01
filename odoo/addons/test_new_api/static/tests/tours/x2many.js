@@ -5,7 +5,7 @@
     var inc;
 
     registry.category("web_tour.tours").add('widget_x2many', {
-        url: '/web?debug=tests#action=test_new_api.action_discussions',
+        url: '/odoo/action-test_new_api.action_discussions?debug=tests',
         test: true,
         steps: () => [
     /////////////////////////////////////////////////////////////////////////////////////////////

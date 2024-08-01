@@ -71,7 +71,7 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
             'refund_sequence': True,
         })
 
-        self.start_tour("/web", 'main_flow_tour', login="admin", timeout=180)
+        self.start_tour("/odoo", 'main_flow_tour', login="admin", timeout=180)
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(BaseTestUi):
@@ -111,7 +111,7 @@ class TestUi(BaseTestUi):
         })
 
         with mute_logger("odoo.http"):
-            self.start_tour(f"/web#action={act_window.id}", "test_company_switch_access_error", login="admin", cookies={"cids": f"{company1.id}-{company2.id}"})
+            self.start_tour(f"/odoo/action-{act_window.id}", "test_company_switch_access_error", login="admin", cookies={"cids": f"{company1.id}-{company2.id}"})
 
     def test_company_access_error_redirect(self):
         company1 = self.env.company
