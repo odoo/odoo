@@ -36,6 +36,14 @@
                 <filter string="Partners" name="res_partner" domain="[('model', '=', 'res.partner')]"/>
                 <filter string="Company" name="res_company" domain="[('model', '=', 'res.company')]"/>
                 <separator/>
+                <field string="Field Value" name="tracking_value_ids" filter_domain="[
+                    '|', ('tracking_value_ids.old_value_char', 'ilike', self),
+                    '|', ('tracking_value_ids.new_value_char', 'ilike', self),
+                    '|', ('tracking_value_ids.old_value_text', 'ilike', self),
+                         ('tracking_value_ids.new_value_text', 'ilike', self),
+                ]"/>
+                <field string="Field" name="tracking_value_ids" filter_domain="[('tracking_value_ids.field_id', 'ilike', self)]"/>
+                <separator/>
                 <filter string="Update Only" name="update_only" domain="[('tracking_value_ids', '!=', False)]" groups="base.group_system"/>
                 <filter string="Create Only" name="create_only" domain="[('tracking_value_ids', '=', False)]" groups="base.group_system"/>
                 <separator/>
