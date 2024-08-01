@@ -315,7 +315,7 @@ class SaleOrder(models.Model):
         res = super().write(values)
         if 'state' in values and values['state'] == 'cancel':
             # Remove sale line field reference from all projects
-            self.env['project.project'].sudo().search([('sale_line_id.order_id', '=', self.id)]).sale_line_id = False
+            self.env['project.project'].sudo().search([('sale_line_id.order_id', 'in', self.ids)]).sale_line_id = False
         return res
 
     def _prepare_analytic_account_data(self, prefix=None):
