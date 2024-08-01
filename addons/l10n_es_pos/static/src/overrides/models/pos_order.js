@@ -7,7 +7,7 @@ patch(PosOrder.prototype, {
         return (
             this.config.is_spanish &&
             roundCurrency(this.get_total_with_tax(), this.currency) <
-                this.config.l10n_es_simplified_invoice_limit
+                this.company.l10n_es_simplified_invoice_limit
         );
     },
     wait_for_push_order() {

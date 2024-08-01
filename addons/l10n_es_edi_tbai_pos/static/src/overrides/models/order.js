@@ -10,4 +10,9 @@ patch(PosOrder.prototype, {
         result.l10n_es_pos_tbai_qrsrc = this.l10n_es_pos_tbai_qrsrc;
         return result;
     },
+    wait_for_push_order() {
+        return this.company.l10n_es_tbai_is_enabled
+            ? true
+            : super.wait_for_push_order(...arguments);
+    },
 });

@@ -49,7 +49,6 @@ CRC8_TABLE = [
 class L10nEsEdiTbaiDocument(models.Model):
     _name = 'l10n_es_edi_tbai.document'
     _description = 'TicketBAI Document'
-    _inherit = 'sequence.mixin'
 
     name = fields.Char(
         required=True,
@@ -116,6 +115,9 @@ class L10nEsEdiTbaiDocument(models.Model):
             return _("Please configure the Tax ID on your company for TicketBAI.")
 
         if values['is_sale'] and not self.is_cancel:
+            if any(not base_line['taxes'] for base_line in values['base_lines']):
+                return self.env._("There should be at least one tax set on each line in order to send to TicketBAI.")
+
             # Chain integrity check: chain head must have been REALLY posted
             chain_head_doc = self.company_id._get_l10n_es_tbai_last_chained_document()
             if chain_head_doc and chain_head_doc != self and chain_head_doc.state != 'accepted':
@@ -436,7 +438,7 @@ class L10nEsEdiTbaiDocument(models.Model):
                 'discount': -sign * (discount / rate),
                 'unit_price': sign * (base_line['price_unit'] / rate) if base_line['quantity'] > 0 else 0,
                 'total': sign * (total / rate),
-                'description': re.sub(r'[^0-9a-zA-Z ]+', '', base_line['product'].display_name or '')[:250]
+                'description': re.sub(r'[^0-9a-zA-Z ]+', '', base_line['name'] or base_line['product'].display_name or '')[:250]
             })
 
         return {'lines': lines}
@@ -740,12 +742,15 @@ class L10nEsEdiTbaiDocument(models.Model):
         """Get the TicketBAI sequence a number values for this invoice."""
         self.ensure_one()
 
-        sequence = self.sequence_prefix.rstrip('/')
+        matching = list(re.finditer(r'\d+', self.name))[-1]
+        sequence_prefix = self.name[:matching.start()]
+        sequence_number = int(matching.group())
 
         # NOTE non-decimal characters should not appear in the number
-        seq_length = self._get_sequence_format_param(self.name)[1]['seq_length']
-        number = f"{self.sequence_number:0{seq_length}d}"
+        seq_length = self.env['sequence.mixin']._get_sequence_format_param(self.name)[1]['seq_length']
+        number = f"{sequence_number:0{seq_length}d}"
 
+        sequence = sequence_prefix.rstrip('/')
         sequence = re.sub(r"[^0-9A-Za-z.\_\-\/]+", "", sequence)  # remove forbidden characters
         sequence = re.sub(r"\s+", " ", sequence)  # no more than one consecutive whitespace allowed
         # NOTE (optional) not recommended to use chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])

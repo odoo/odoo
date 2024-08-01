@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
@@ -41,6 +42,33 @@ class TestTbaiUserErrors(TestEsEdiTbaiCommonGipuzkoa):
             self.invoice_send_wizard.action_send_and_print()
 
         self.assertEqual(str(e.exception), self.tbai_error_msg + "Please configure the Tax ID on your company for TicketBAI.")
+
+    def test_no_tax_on_line(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.0,
+                    'quantity': 1,
+                    'tax_ids': self._get_tax_by_xml_id('s_iva21b').ids,
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'price_unit': 50.0,
+                    'quantity': 1,
+                    'tax_ids': False,
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        with self.assertRaises(UserError) as e:
+            self._get_invoice_send_wizard(invoice).action_send_and_print()
+
+        self.assertEqual(str(e.exception), self.tbai_error_msg + "There should be at least one tax set on each line in order to send to TicketBAI.")
 
     def test_pending_invoice(self):
         first_invoice = self._create_posted_invoice()
