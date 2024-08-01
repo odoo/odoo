@@ -3760,7 +3760,7 @@ class AccountMoveLine(models.Model):
         help='Utility field to express amount currency')
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="cascade",
-        domain="[('deprecated', '=', False), ('company_id', '=', 'company_id'),('is_off_balance', '=', False)]",
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id),('is_off_balance', '=', False)]",
         check_company=True,
         tracking=True)
     account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", readonly=True)
