@@ -21,7 +21,7 @@ patch(accountTaxHelpers, {
             const quantity = base_line.quantity;
             const product = base_line.product;
             const uom = base_line.uom || {};
-            const taxes = base_line.taxes;
+            const taxes = base_line.taxes_data;
 
             const final_price_unit = price_unit * (1 - discount / 100);
 

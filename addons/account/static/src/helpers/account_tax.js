@@ -27,7 +27,7 @@ export const accountTaxHelpers = {
      */
     batch_for_taxes_computation(taxes, { special_mode = null } = {}) {
         function sort_key(taxes) {
-            return taxes.sort((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id);
+            return taxes ? taxes.sort((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id) : [];
         }
 
         const results = {
