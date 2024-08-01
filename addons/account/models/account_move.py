@@ -3113,7 +3113,108 @@ class AccountMove(models.Model):
             return lambda *args: False
         return
 
+    def _get_matching_invoice(self, current_file_data, file_data_list, attachment_to_invoice_dict):
+        if current_file_data['type'] != 'pdf':
+            return self.env['account.move']
+
+        # Find a way so that
+        # 2 PDF + 1 XML -> 1 PDF + 1 XML // 1 PDF
+        # 2 PDF + 2 XML -> 1 PDF + 1 XML // 1 PDF + 1 XML
+
+        try:
+            i = file_data_list.index(current_file_data)
+            att = next(file_data['attachment'] for file_data in file_data_list[:i] if file_data['type'] == 'xml')
+        except (StopIteration, ValueError):
+            return self.env['account.move']
+
+        return attachment_to_invoice_dict.get(att, self.env['account.move'])
+
     def _extend_with_attachments(self, attachments, new=False):
+        def _close_file(file_data):
+            if file_data.get('on_close'):
+                file_data['on_close']()
+
+        current_invoice = self
+        decoded_invoices = set()
+        attachment_to_invoice_dict = {}
+        file_data_list = attachments._unwrap_edi_attachments()
+
+        for file_data in file_data_list:
+            attachment = file_data.get('attachment') or file_data.get('originator_pdf')
+            invoice = attachment_to_invoice_dict.get(attachment)
+
+            if invoice:
+                if invoice in decoded_invoices:
+                    # The invoice has already been enhanced by the same attachment from another data format
+                    continue
+                else:
+                    # All previous decoding attempts failed for that attachment, try again with the new data format
+                    current_invoice = invoice
+
+            # Rogue binaries from mail alias are not decoded
+            if (
+                file_data['type'] == 'binary'
+                and self._context.get('from_alias')
+                and not invoice
+            ):
+                _close_file(file_data)
+                continue
+
+            # A previous attachment dataset matches the current one, the two highly like belong to the same invoice
+            matching_invoice = self._get_matching_invoice(file_data, file_data_list, attachment_to_invoice_dict)
+            if matching_invoice:
+                # The previous dataset was not decoded
+                if matching_invoice not in decoded_invoices:
+                    current_invoice = matching_invoice
+                else:
+                    _close_file(file_data)
+                    continue
+
+            # Allow to add lines to existing invoice
+            extend_with_existing_lines = file_data.get('process_if_existing_lines')
+            if current_invoice.invoice_line_ids and not extend_with_existing_lines:
+                _close_file(file_data)
+                continue
+
+            # Attempt to decode
+            decoder = (
+                current_invoice
+                or current_invoice.new(self.default_get(['move_type', 'journal_id']))
+            )._get_edi_decoder(file_data, new=new)
+
+            if not decoder:
+                _close_file(file_data)
+                continue
+
+            try:
+                with self.env.cr.savepoint():
+                    with current_invoice._get_edi_creation() as invoice:
+                        # pylint: disable=not-callable
+                        success = decoder(invoice, file_data, new)
+
+                        if success:
+                            decoded_invoices.add(invoice)
+                            invoice._link_bill_origin_to_purchase_orders(timeout=4)
+
+                        attachment_to_invoice_dict[attachment] = invoice
+
+                        if new:
+                            current_invoice = self.env['account.move']
+                        else:
+                            current_invoice = invoice
+
+            except RedirectWarning:
+                raise
+            except Exception:
+                message = _("Error importing attachment '%s' as invoice (decoder=%s)", file_data['filename'], decoder.__name__)
+                invoice.sudo().message_post(body=message)
+                _logger.exception(message)
+
+            _close_file(file_data)
+
+        return attachment_to_invoice_dict
+
+    def _extend_with_attachments_old(self, attachments, new=False):
         """Main entry point to extend/enhance invoices with attachments.
 
         Either coming from:
@@ -3141,6 +3242,7 @@ class AccountMove(models.Model):
                     attachments_by_invoice[attachment] = invoice
 
         file_data_list = attachments._unwrap_edi_attachments()
+        decoded_attachments = {attachment: False for attachment in attachments}
         attachments_by_invoice = {}
         invoices = self
         current_invoice = self
@@ -3157,8 +3259,11 @@ class AccountMove(models.Model):
                 continue
 
             # The invoice has already been decoded by an embedded file.
-            if attachments_by_invoice.get(file_data['attachment']):
-                add_file_data_results(file_data, attachments_by_invoice[file_data['attachment']])
+            if (
+                attachments_by_invoice.get(file_data['attachment'])
+                and decoded_attachments[file_data['attachment']]
+            ):
+                passed_file_data_list.append(file_data)
                 close_file(file_data)
                 continue
 
@@ -3190,11 +3295,13 @@ class AccountMove(models.Model):
                             # pylint: disable=not-callable
                             success = decoder(invoice, file_data, new)
                         if success:
+                            decoded_attachments[file_data['attachment']] = True
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
 
-                        invoices |= invoice
-                        current_invoice = self.env['account.move']
-                        add_file_data_results(file_data, invoice)
+                        if not attachments_by_invoice.get(file_data['attachment']):
+                            invoices |= invoice
+                            current_invoice = self.env['account.move']
+                            add_file_data_results(file_data, invoice)
 
                         if extend_with_existing_lines:
                             return attachments_by_invoice
