@@ -510,7 +510,7 @@ class Channel(models.Model):
         pids = msg_vals.get('partner_ids', []) if msg_vals else message.partner_ids.ids
 
         # notify only user input (comment or incoming / outgoing emails)
-        if message_type not in ('comment', 'email', 'email_outgoing'):
+        if message_type not in ('comment', 'email', 'email_outgoing', 'whatsapp_message'):
             return []
 
         recipients_data = []
