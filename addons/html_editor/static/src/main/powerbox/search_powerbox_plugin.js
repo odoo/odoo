@@ -9,9 +9,10 @@ import { Plugin } from "../../plugin";
 export class SearchPowerboxPlugin extends Plugin {
     static name = "search_powerbox";
     static dependencies = ["powerbox", "selection", "history"];
+    /** @type { (p: SearchPowerboxPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        onBeforeInput: p.onBeforeInput.bind(p),
-        onInput: p.onInput.bind(p),
+        onBeforeInput: { handler: p.onBeforeInput.bind(p) },
+        onInput: { handler: p.onInput.bind(p) },
     });
     setup() {
         const categoryIds = new Set();

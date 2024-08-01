@@ -46,22 +46,16 @@ import { CTYPES } from "../utils/content_types";
 
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
-const beforeInputHandlers = {
-    deleteContentBackward: "DELETE_BACKWARD",
-    deleteContentForward: "DELETE_FORWARD",
-    deleteWordBackward: "DELETE_BACKWARD_WORD",
-    deleteWordForward: "DELETE_FORWARD_WORD",
-    deleteHardLineBackward: "DELETE_BACKWARD_LINE",
-    deleteHardLineForward: "DELETE_FORWARD_LINE",
-};
-
 export class DeletePlugin extends Plugin {
     static dependencies = ["selection"];
     static name = "delete";
     static shared = ["deleteRange", "isUnmergeable"];
     /** @type { (p: DeletePlugin) => Record<string, any> } */
     static resources = (p) => ({
-        onBeforeInput: p.onBeforeInput.bind(p),
+        onBeforeInput: [
+            { handler: p.onBeforeInputDelete.bind(p) },
+            { handler: p.onBeforeInputInsertText.bind(p), sequence: 10 },
+        ],
         shortcuts: [
             { hotkey: "backspace", command: "DELETE_BACKWARD" },
             { hotkey: "delete", command: "DELETE_FORWARD" },
@@ -1174,11 +1168,29 @@ export class DeletePlugin extends Plugin {
     // Event handlers
     // --------------------------------------------------------------------------
 
-    onBeforeInput(e) {
-        const command = beforeInputHandlers[e.inputType];
-        if (command) {
-            e.preventDefault();
-            this.dispatch(command);
+    onBeforeInputDelete(ev) {
+        const handledInputTypes = {
+            deleteContentBackward: ["backward", "character"],
+            deleteContentForward: ["forward", "character"],
+            deleteWordBackward: ["backward", "word"],
+            deleteWordForward: ["forward", "word"],
+            deleteHardLineBackward: ["backward", "line"],
+            deleteHardLineForward: ["forward", "line"],
+        };
+        const argsForDelete = handledInputTypes[ev.inputType];
+        if (argsForDelete) {
+            ev.preventDefault();
+            this.delete(...argsForDelete);
+        }
+    }
+
+    onBeforeInputInsertText(ev) {
+        if (ev.inputType === "insertText") {
+            const selection = this.shared.getEditableSelection();
+            if (!selection.isCollapsed) {
+                this.deleteSelection();
+            }
+            // Default behavior: insert text and trigger input event
         }
     }
 

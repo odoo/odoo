@@ -18,6 +18,7 @@ export class SplitPlugin extends Plugin {
         "splitSelection",
         "isUnsplittable",
     ];
+    /** @type { (p: SplitPlugin) => Record<string, any> } */
     static resources = (p) => ({
         isUnsplittable: [
             // An unremovable element is also unmergeable (as merging two
@@ -31,7 +32,7 @@ export class SplitPlugin extends Plugin {
             (element) => element.classList.contains("oe_unbreakable"),
             (element) => ["DIV", "SECTION"].includes(element.tagName),
         ],
-        onBeforeInput: p.onBeforeInput.bind(p),
+        onBeforeInput: { handler: p.onBeforeInput.bind(p) },
     });
 
     handleCommand(command, payload) {
