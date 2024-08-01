@@ -996,7 +996,7 @@ var SnippetEditor = Widget.extend({
             const rowCount = parseInt(rowEl.dataset.rowCount);
             previousDropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
         }
-        previousDropzoneEl.classList.remove('invisible');
+        previousDropzoneEl.classList.remove('d-none');
     },
     /**
      * Changes some behaviors before the drag and drop.
@@ -1235,7 +1235,7 @@ var SnippetEditor = Widget.extend({
 
         this.dropped = true;
         const $dropzone = $(dropzone.el).first().after(this.$target);
-        $dropzone.addClass('invisible');
+        $dropzone.addClass('d-none');
 
         // Checking if the "out" event happened before dropzone.el "over": if
         // `this.dragState.currentDropzoneEl` exists, "out" didn't
@@ -1344,7 +1344,7 @@ var SnippetEditor = Widget.extend({
             if (dropzone.el === prev[0]) {
                 this.dropped = false;
                 this.$target.detach();
-                $(dropzone.el).removeClass('invisible');
+                $(dropzone.el).removeClass('d-none');
             }
 
             delete this.dragState.currentDropzoneEl;
@@ -2573,6 +2573,58 @@ var SnippetsMenu = Widget.extend({
             }
         });
 
+        // Avoid dropzone collisions
+
+        function adjustMargin(zone, marginType, overlap, minMargin, maxMargin) {
+            zone = zone[0];
+            const currentMargin = parseFloat(getComputedStyle(zone)[marginType].split("px")[0]);
+            const newMargin = Math.min(Math.max(currentMargin + overlap, minMargin), maxMargin);
+            zone.style[marginType] = `${newMargin}px`;
+        }
+
+        // Sort the dropzones by their vertical position (top value)
+        $zones.sort(function (a, b) {
+            const rectA = a.getBoundingClientRect();
+            const rectB = b.getBoundingClientRect();
+            return rectA.top - rectB.top;
+        });
+
+        // Get dropzone height
+        let dropzoneHeight = 0;
+        if ($zones.length) {
+            dropzoneHeight = $zones[0].getBoundingClientRect().height;
+        }
+
+        for (let i = 0; i < $zones.length - 1; i++) {
+            const $zone1 = $($zones[i]);
+            const rect1 = $zone1[0].getBoundingClientRect();
+
+            for (let j = i + 1; j < $zones.length; j++) {
+                const $zone2 = $($zones[j]);
+                const rect2 = $zone2[0].getBoundingClientRect();
+
+                // Check if the zones are within 30px vertically
+                if (rect2.top - rect1.bottom > dropzoneHeight) {
+                    break; // No need to check further if the next zone is more than 30px away
+                }
+
+                // Check if the zones overlap vertically and horizontally
+                if (rect1.bottom > rect2.top &&
+                    rect1.top < rect2.bottom &&
+                    rect1.left < rect2.right &&
+                    rect1.right > rect2.left) {
+
+                    // Calculate the overlap distance and add 1px to avoid zones touching exactly at the edges
+                    const overlap = rect1.bottom - rect2.top + 1;
+
+                    // Adjust margins for both zones with bounds of -15px to 15px
+                    const minMargin = -(dropzoneHeight) / 2;
+                    const maxMargin = (dropzoneHeight) / 2;
+                    adjustMargin($zone2, "marginTop", overlap, minMargin, maxMargin);
+                    adjustMargin($zone1, "marginBottom", overlap, minMargin, maxMargin);
+                }
+            }
+        }
         // Inserting a grid dropzone for each row in grid mode.
         for (const rowEl of selectorGrids) {
             self._insertGridDropzone(rowEl);
@@ -3527,10 +3579,10 @@ var SnippetsMenu = Widget.extend({
                     $toInsert.detach();
                     $toInsert.addClass('oe_snippet_body');
                     [...$dropZones].forEach(dropzoneEl =>
-                        dropzoneEl.classList.remove("invisible"));
+                        dropzoneEl.classList.remove("d-none"));
                 }
                 dropped = true;
-                $(dropzone.el).first().after($toInsert).addClass('invisible');
+                $(dropzone.el).first().after($toInsert).addClass('d-none');
                 $toInsert.removeClass('oe_snippet_body');
                 this.trigger_up('drop_zone_over');
             },
@@ -3539,7 +3591,7 @@ var SnippetsMenu = Widget.extend({
                 if (dropzone.el === prev[0]) {
                     dropped = false;
                     $toInsert.detach();
-                    $(dropzone.el).removeClass('invisible');
+                    $(dropzone.el).removeClass('d-none');
                     $toInsert.addClass('oe_snippet_body');
                 }
                 this.trigger_up('drop_zone_out');
