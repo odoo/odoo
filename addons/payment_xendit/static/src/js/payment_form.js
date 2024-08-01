@@ -183,6 +183,10 @@ paymentForm.include({
             month: form.querySelector('#o_xendit_month'),
             year: form.querySelector('#o_xendit_year'),
             cvn: form.querySelector('#o_xendit_cvn'),
+            first_name: form.querySelector('#o_xendit_first_name'),
+            last_name: form.querySelector('#o_xendit_last_name'),
+            phone: form.querySelector('#o_xendit_phone'),
+            email: form.querySelector('#o_xendit_email'),
         };
     },
 
@@ -200,6 +204,10 @@ paymentForm.include({
             card_exp_month: inputs.month.value,
             card_exp_year: inputs.year.value,
             card_cvn: inputs.cvn.value,
+            card_holder_email: inputs.email.value,
+            card_holder_first_name: inputs.first_name.value,
+            card_holder_last_name: inputs.last_name.value,
+            card_holder_phone_number: inputs.phone.value 
         };
     },
 
