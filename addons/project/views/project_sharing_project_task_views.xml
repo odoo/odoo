@@ -152,7 +152,12 @@
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="priority" widget="priority" class="me-3"/>
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
+                            <div class="d-flex justify-content-end o_state_container" invisible="not active">
+                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
+                            </div>
+                            <div class="d-flex justify-content-start o_state_container w-100 w-md-50 w-lg-25" invisible="active">
+                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
+                            </div>
                         </h1>
                     </div>
                     <group>

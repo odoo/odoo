@@ -61,3 +61,8 @@ class AccountMove(models.Model):
         """
         param_name = 'l10n_in_edi.manage_invoice_negative_lines'
         return bool(self.env['ir.config_parameter'].sudo().get_param(param_name))
+
+    def _can_force_cancel(self):
+        # OVERRIDE
+        self.ensure_one()
+        return any(document.edi_format_id.code == 'in_einvoice_1_03' and document.state == 'to_cancel' for document in self.edi_document_ids) or super()._can_force_cancel()

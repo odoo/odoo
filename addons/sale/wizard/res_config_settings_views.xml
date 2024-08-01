@@ -161,7 +161,7 @@
                         <setting id="automatic_invoicing" help="Generate the invoice automatically when the online payment is confirmed" invisible="default_invoice_policy != 'order' or not portal_confirmation_pay">
                             <field name="automatic_invoice"/>
                             <div  invisible="not automatic_invoice" groups="base.group_no_one">
-                                <label for="invoice_mail_template_id" class="o_light_label"/>
+                                <label for="invoice_mail_template_id" class="o_light_label me-2"/>
                                 <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
                             </div>
                         </setting>
