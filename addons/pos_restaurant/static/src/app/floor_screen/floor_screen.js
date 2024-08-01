@@ -39,14 +39,13 @@ function constrain(num, min, max) {
  * @returns {{ minX: number, maxX: number, minY: number, maxY: number }} limits
  */
 function getLimits(el, limitEl) {
-    const { width, height } = el.getBoundingClientRect();
     const limitRect = limitEl.getBoundingClientRect();
     const offsetParentRect = el.offsetParent.getBoundingClientRect();
     return {
         minX: limitRect.left - offsetParentRect.left,
-        maxX: limitRect.left - offsetParentRect.left + limitRect.width - width,
+        maxX: limitRect.left - offsetParentRect.left + limitRect.width,
         minY: limitRect.top - offsetParentRect.top,
-        maxY: limitRect.top - offsetParentRect.top + limitRect.height - height,
+        maxY: limitRect.top - offsetParentRect.top + limitRect.height,
     };
 }
 const areElementsIntersecting = (el1, el2) => {
