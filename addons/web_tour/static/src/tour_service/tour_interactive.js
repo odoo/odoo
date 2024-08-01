@@ -201,6 +201,7 @@ export class TourInteractive {
         const actions = [];
         if (!step.run || typeof step.run === "function") {
             actions.push({
+                step,
                 event: "warn",
                 anchor: step.trigger,
             });
