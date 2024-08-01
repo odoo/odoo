@@ -1,26 +1,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.tests import HttpCase, tagged
+from odoo.tests import tagged
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
 @tagged('-at_install', 'post_install')
-class TestSaleCouponApplyPending(HttpCase, TestSaleCouponNumbersCommon):
+class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon):
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.WebsiteSaleController = WebsiteSale()
-        self.WebsiteSaleCartController = Cart()
-
-        self.website = self.env['website'].browse(1)
-        self.global_program = self.p1
-        self.coupon_program = self.env['loyalty.program'].create({
+        cls.global_program = cls.p1
+        cls.coupon_program = cls.env['loyalty.program'].create({
             'name': 'One Free Product',
             'program_type': 'coupons',
             'rule_ids': [(0, 0, {
@@ -28,28 +25,31 @@ class TestSaleCouponApplyPending(HttpCase, TestSaleCouponNumbersCommon):
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'product',
-                'reward_product_id': self.largeCabinet.id,
+                'reward_product_id': cls.largeCabinet.id,
             })]
         })
-        self.env['loyalty.generate.wizard'].with_context(active_id=self.coupon_program.id).create({
+        cls.env['loyalty.generate.wizard'].with_context(active_id=cls.coupon_program.id).create({
             'coupon_qty': 1,
             'points_granted': 1,
         }).generate_coupons()
-        self.coupon = self.coupon_program.coupon_ids[0]
-        installed_modules = set(self.env['ir.module.module'].search([
+        cls.coupon = cls.coupon_program.coupon_ids[0]
+        installed_modules = set(cls.env['ir.module.module'].search([
             ('state', '=', 'installed'),
         ]).mapped('name'))
         for _ in http._generate_routing_rules(installed_modules, nodb_only=False):
             pass
 
+    def setUp(self):
+        super().setUp()
+
+        self.WebsiteSaleController = WebsiteSale()
+        self.WebsiteSaleCartController = Cart()
+
     def test_01_activate_coupon_with_existing_program(self):
-        order = self.empty_order
+        order = self.empty_cart
         self.env['product.pricelist.item'].search([]).unlink()
 
-        with MockRequest(
-                self.env,
-                website=self.website, sale_order_id=order.id, website_sale_current_pl=1
-            ) as request:
+        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.largeCabinet.product_tmpl_id,
                 product_id=self.largeCabinet.id,
@@ -85,13 +85,10 @@ class TestSaleCouponApplyPending(HttpCase, TestSaleCouponNumbersCommon):
             )
 
     def test_02_pending_coupon_with_existing_program(self):
-        order = self.empty_order
+        order = self.empty_cart
         self.env['product.pricelist.item'].search([]).unlink()
 
-        with MockRequest(
-            self.env,
-            website=self.website, sale_order_id=order.id, website_sale_current_pl=1
-        ) as request:
+        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.largeCabinet.product_tmpl_id,
                 product_id=self.largeCabinet.id,
