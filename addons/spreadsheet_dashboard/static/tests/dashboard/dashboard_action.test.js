@@ -67,6 +67,34 @@ test("Fold/unfold the search panel", async function () {
     expect(".o_spreadsheet_dashboard_search_panel").toHaveCount(1);
 });
 
+test("Folding dashboard from 'FAVORITES' group shows correct active dashboard group", async function () {
+    await createSpreadsheetDashboard({
+        mockRPC: async function (route, args) {
+            if (
+                args.method === "action_toggle_favorite" &&
+                args.model === "spreadsheet.dashboard"
+            ) {
+                expect.step("action_toggle_favorite");
+                return true;
+            }
+        },
+    });
+    const fixture = getFixture();
+
+    await contains(".o_dashboard_star").click();
+    expect(".o_search_panel_section").toHaveCount(3);
+    expect(fixture.querySelector(".o_search_panel_category header b").textContent).toBe(
+        "FAVORITES"
+    );
+    expect.verifySteps(["action_toggle_favorite"]);
+
+    await contains(fixture.querySelector(".o_spreadsheet_dashboard_search_panel button")).click();
+    expect(".o_spreadsheet_dashboard_search_panel").toHaveCount(0);
+    expect(fixture.querySelector(".o_search_panel_sidebar").textContent).toBe(
+        "Container 1 / Dashboard CRM 1"
+    );
+});
+
 test("Fold button invisible in the search panel without any dashboard", async function () {
     const serverData = getDashboardServerData();
     serverData.models["spreadsheet.dashboard"].records = [];
@@ -327,4 +355,36 @@ test("Changing filter values will create a new share", async function () {
     expect(target.querySelector(".o_field_CopyClipboardChar")?.innerText).toBe(
         `localhost:8069/share/url/2`
     );
+});
+
+test("Should toggle favorite status of a dashboard when the 'Favorite' icon is clicked", async function () {
+    await createSpreadsheetDashboard({
+        mockRPC: async function (route, args) {
+            if (
+                args.method === "action_toggle_favorite" &&
+                args.model === "spreadsheet.dashboard"
+            ) {
+                expect.step("action_toggle_favorite");
+                return true;
+            }
+        },
+    });
+    expect(".o_search_panel_section").toHaveCount(2);
+    await contains(".o_dashboard_star").click();
+    expect(".o_dashboard_star").toHaveClass("fa-star favorite_button_enabled", {
+        message: "The star should be filled",
+    });
+    expect(".o_search_panel_section").toHaveCount(3);
+    expect.verifySteps(["action_toggle_favorite"]);
+    const fixture = getFixture();
+    const firstSection = fixture.querySelectorAll(".o_search_panel_section")[0];
+    expect(firstSection.querySelector(".o_search_panel_category header b").textContent).toBe(
+        "FAVORITES"
+    );
+    await contains(".o_dashboard_star").click();
+    expect(".o_dashboard_star").not.toHaveClass("fa-star favorite_button_enabled", {
+        message: "The star should not be filled",
+    });
+    expect.verifySteps(["action_toggle_favorite"]);
+    expect(".o_search_panel_section").toHaveCount(2);
 });
