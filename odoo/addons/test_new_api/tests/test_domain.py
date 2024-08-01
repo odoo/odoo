@@ -1,18 +1,15 @@
-# -*- coding: utf-8 -*-
 from itertools import combinations
 
 from odoo import Command
-from odoo.tests import common
+from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 from odoo.tools import SQL
 
 
-class TestDomain(common.TransactionCase):
+class TestDomain(TransactionExpressionCase):
 
-    def _search(self, model, domain, init_domain=None):
-        sql = model.search(domain, order="id")
-        fil = model.search(init_domain or [], order="id").filtered_domain(domain)
-        self.assertEqual(sql._ids, fil._ids, f"filtered_domain do not match SQL search for domain: {domain}")
-        return sql
+    def _search(self, model, domain, init_domain=None, test_complement=False):
+        # just overwrite the defaults here, because we test complements manually
+        return super()._search(model, domain, init_domain, test_complement)
 
     def test_00_test_bool_undefined(self):
         """
@@ -219,10 +216,10 @@ class TestDomain(common.TransactionCase):
         parent_2.child_ids[1].link_sibling_id = parent_2.child_ids[0]
 
         # Check any/not any traversing normal Many2one
-        res_search = Child.search([('link_sibling_id', 'any', [('quantity', '>', 5)])])
+        res_search = self._search(Child, [('link_sibling_id', 'any', [('quantity', '>', 5)])])
         self.assertEqual(res_search, parent_1.child_ids[0])
 
-        res_search = Child.search([('link_sibling_id', 'not any', [('quantity', '>', 5)])])
+        res_search = self._search(Child, [('link_sibling_id', 'not any', [('quantity', '>', 5)])])
         self.assertEqual(res_search, parent_1.child_ids[1] + parent_2.child_ids)
 
         # Check any/not any traversing auto_join Many2one
@@ -230,18 +227,44 @@ class TestDomain(common.TransactionCase):
         self.patch(Child._fields['link_sibling_id'], 'auto_join', True)
         self.assertTrue(Child._fields['link_sibling_id'].auto_join)
 
-        res_search = Child.search([('link_sibling_id', 'any', [('quantity', '>', 5)])])
+        res_search = self._search(Child, [('link_sibling_id', 'any', [('quantity', '>', 5)])])
         self.assertEqual(res_search, parent_1.child_ids[0])
 
-        res_search = Child.search([('link_sibling_id', 'not any', [('quantity', '>', 5)])])
+        res_search = self._search(Child, [('link_sibling_id', 'not any', [('quantity', '>', 5)])])
         self.assertEqual(res_search, parent_1.child_ids[1] + parent_2.child_ids)
 
         # Check any/not any traversing delegate Many2one
-        res_search = Child.search([('parent_id', 'any', [('name', '=', 'Jean')])])
+        res_search = self._search(Child, [('parent_id', 'any', [('name', '=', 'Jean')])])
         self.assertEqual(res_search, parent_1.child_ids)
 
-        res_search = Child.search([('parent_id', 'not any', [('name', '=', 'Jean')])])
+        res_search = self._search(Child, [('parent_id', 'not any', [('name', '=', 'Jean')])])
         self.assertEqual(res_search, parent_2.child_ids)
+
+    def test_anys_many2one_implicit(self):
+        Parent = self.env['test_new_api.any.parent']
+
+        parent_1, parent_2 = Parent.create([
+            {
+                'name': 'Jean',
+                'child_ids': [
+                    Command.create({'quantity': 1}),
+                    Command.create({'quantity': 10}),
+                ],
+            },
+            {
+                'name': 'Clude',
+                'child_ids': [
+                    Command.create({'quantity': 2}),
+                    Command.create({'quantity': 20}),
+                ],
+            },
+        ])
+
+        res_search = self._search(Parent, [('child_ids.quantity', '=', 1)])
+        self.assertEqual(res_search, parent_1)
+
+        res_search = self._search(Parent, [('child_ids.quantity', '>', 15)])
+        self.assertEqual(res_search, parent_2)
 
     def test_anys_one2many(self):
         Parent = self.env['test_new_api.any.parent']
@@ -263,10 +286,10 @@ class TestDomain(common.TransactionCase):
         ])
 
         # Check any/not any traversing normal one2many
-        res_search = Parent.search([('child_ids', 'any', [('quantity', '=', 1)])])
+        res_search = self._search(Parent, [('child_ids', 'any', [('quantity', '=', 1)])])
         self.assertEqual(res_search, parent_1)
 
-        res_search = Parent.search([('child_ids', 'not any', [('quantity', '=', 1)])])
+        res_search = self._search(Parent, [('child_ids', 'not any', [('quantity', '=', 1)])])
         self.assertEqual(res_search, parent_2 + parent_3)
 
         # Check any/not any traversing auto_join Many2one
@@ -274,10 +297,10 @@ class TestDomain(common.TransactionCase):
         self.patch(Parent._fields['child_ids'], 'auto_join', True)
         self.assertTrue(Parent._fields['child_ids'].auto_join)
 
-        res_search = Parent.search([('child_ids', 'any', [('quantity', '=', 1)])])
+        res_search = self._search(Parent, [('child_ids', 'any', [('quantity', '=', 1)])])
         self.assertEqual(res_search, parent_1)
 
-        res_search = Parent.search([('child_ids', 'not any', [('quantity', '=', 1)])])
+        res_search = self._search(Parent, [('child_ids', 'not any', [('quantity', '=', 1)])])
         self.assertEqual(res_search, parent_2 + parent_3)
 
     def test_anys_many2many(self):
@@ -300,8 +323,30 @@ class TestDomain(common.TransactionCase):
         ])
 
         # Check any/not any traversing normal Many2Many
-        res_search = Child.search([('tag_ids', 'any', [('name', '=', 'Urgent')])])
+        res_search = self._search(Child, [('tag_ids', 'any', [('name', '=', 'Urgent')])])
         self.assertEqual(res_search, child_1)
 
-        res_search = Child.search([('tag_ids', 'not any', [('name', '=', 'Urgent')])])
+        res_search = self._search(Child, [('tag_ids', 'not any', [('name', '=', 'Urgent')])])
         self.assertEqual(res_search, child_2 + child_3)
+
+
+class TestDomainComplement(TransactionExpressionCase):
+
+    def test_inequalities_int(self):
+        Model = self.env['test_new_api.empty_int']
+        Model.create([{}])
+        Model.create([{'number': n} for n in range(-5, 6)])
+        self._search(Model, [('number', '>', 2)])
+        self._search(Model, [('number', '>', -2)])
+        self._search(Model, [('number', '<', 1)])
+        self._search(Model, [('number', '<=', 1)])
+
+    def test_inequalities_float(self):
+        Model = self.env['test_new_api.mixed']
+        Model.create([{}])
+        Model.create([{'number2': n} for n in (-5, -3.3, 0.0, 0.1, 3, 4.5)])
+        self._search(Model, [('number2', '>', 2)])
+        self._search(Model, [('number2', '>', -2)])
+        self._search(Model, [('number2', '>', 3)])
+        self._search(Model, [('number2', '<', 1)])
+        self._search(Model, [('number2', '<=', 1)])
