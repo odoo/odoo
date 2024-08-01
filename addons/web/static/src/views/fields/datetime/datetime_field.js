@@ -29,6 +29,7 @@ import { standardFieldProps } from "../standard_field_props";
  *  rounding?: number;
  *  startDateField?: string;
  *  warnFuture?: boolean;
+ *  showTime?: boolean;
  * }} DateTimeFieldProps
  *
  * @typedef {import("@web/core/datetime/datetime_picker").DateTimePickerProps} DateTimePickerProps
@@ -47,7 +48,9 @@ export class DateTimeField extends Component {
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
         warnFuture: { type: Boolean, optional: true },
+        showTime: { type: Boolean, optional: true },
     };
+    static defaultProps = { showTime: true };
 
     static template = "web.DateTimeField";
 
@@ -171,7 +174,7 @@ export class DateTimeField extends Component {
     getFormattedValue(valueIndex) {
         const value = this.values[valueIndex];
         return value
-            ? this.field.type === "date"
+            ? this.field.type === "date" || !this.props.showTime
                 ? formatDate(value)
                 : formatDateTime(value)
             : "";
@@ -345,7 +348,18 @@ export const dateTimeField = {
                 `Control the number of minutes in the time selection. E.g. set it to 15 to work in quarters.`
             ),
         },
+        {
+            label: _t("Show time"),
+            name: "show_time",
+            type: "boolean",
+            default: true,
+            help: _t(`Displays or hides the time in the datetime value.`),
+        },
     ],
+    extractProps: ({ attrs, options }, dynamicInfo) => ({
+        ...dateField.extractProps({ attrs, options }, dynamicInfo),
+        showTime: archParseBoolean(options.show_time ?? true),
+    }),
     supportedTypes: ["datetime"],
 };
 

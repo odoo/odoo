@@ -2692,3 +2692,23 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {'product_id': product_no_branch_tax.id, 'tax_ids': (tax_a + tax_b).ids},
             {'product_id': product_no_tax.id, 'tax_ids': []},
         ])
+
+    def test_purchase_uom_on_vendor_bills(self):
+        uom_gram = self.env.ref('uom.product_uom_gram')
+        uom_kgm = self.env.ref('uom.product_uom_kgm')
+
+        # product with different sale and purchase UOM
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': uom_gram.id,
+            'uom_po_id': uom_kgm.id,
+            'standard_price': 110.0,
+        })
+        # customer invoice should have sale uom
+        invoice = self.init_invoice(move_type='out_invoice', products=[product])
+        invoice_uom = invoice.invoice_line_ids[0].product_uom_id
+        self.assertEqual(invoice_uom, uom_gram)
+        # vendor bill should have purchase uom
+        bill = self.init_invoice(move_type='in_invoice', products=[product])
+        bill_uom = bill.invoice_line_ids[0].product_uom_id
+        self.assertEqual(bill_uom, uom_kgm)
