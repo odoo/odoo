@@ -378,7 +378,7 @@ patch(PosStore.prototype, {
         }
 
         // move price_unit from opt to vals
-        if (opt.price_unit) {
+        if (opt.price_unit !== undefined) {
             vals.price_unit = opt.price_unit;
             delete opt.price_unit;
         }
