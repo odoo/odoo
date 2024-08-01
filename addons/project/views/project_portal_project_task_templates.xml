@@ -71,7 +71,10 @@
                                     <t t-call="project.portal_my_tasks_priority_widget_template"/>
                                 </td>
                                 <td>
-                                    <a t-attf-href="/my/#{task_url}/#{task.id}?{{ keep_query() }}"><span t-att-title="task.name" t-field="task.name"/></a>
+                                    <!-- This div is necessary for documents_project/views/project_templates.xml -->
+                                    <div name="task_documents">
+                                        <a t-attf-href="/my/#{task_url}/#{task.id}?{{ keep_query() }}"><span t-att-title="task.name" t-field="task.name"/></a>
+                                    </div>
                                 </td>
                                 <td>
                                     <t t-set="assignees" t-value="task.sudo().user_ids"/>
