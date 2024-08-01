@@ -1266,6 +1266,11 @@ export class ListRenderer extends Component {
 
         const hotkey = getActiveHotkey(ev);
 
+        if (hotkey === "control+enter" && this.props.onOpenFormView) {
+            this.props.onOpenFormView(record);
+            return;
+        }
+
         if (ev.target.tagName === "TEXTAREA" && hotkey === "enter") {
             return;
         }
