@@ -201,15 +201,15 @@ export function fillShrunkPhrasingParent(el) {
  * @returns {HTMLElement|undefined} the removed br, if any
  */
 export function cleanTrailingBR(el) {
-    let br;
-    const candidate = el.lastChild;
-    if (candidate && candidate.tagName === "BR" && !isEmptyBlock(el)) {
-        if (candidate.previousSibling?.tagName !== "BR") {
-            br = candidate;
-            candidate.remove();
-        }
+    const candidate = el?.lastChild;
+    if (
+        candidate?.nodeName === "BR" &&
+        candidate.previousSibling?.nodeName !== "BR" &&
+        !isEmptyBlock(el)
+    ) {
+        candidate.remove();
+        return candidate;
     }
-    return br;
 }
 
 export function toggleClass(node, className) {
