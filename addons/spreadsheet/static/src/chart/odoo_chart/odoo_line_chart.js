@@ -14,7 +14,11 @@ const {
     getFillingMode,
     colorToRGBA,
     rgbaToHex,
+    getTrendDatasetForLineChart,
+    getChartAxisType,
 } = spreadsheet.helpers;
+
+const { TREND_LINE_XAXIS_ID } = spreadsheet.constants;
 
 const LINE_FILL_TRANSPARENCY = 0.4;
 
@@ -26,6 +30,7 @@ export class OdooLineChart extends OdooChart {
         this.cumulative = definition.cumulative;
         this.axesDesign = definition.axesDesign;
         this.fillArea = definition.fillArea;
+        this.trend = definition.trend;
     }
 
     getDefinition() {
@@ -36,6 +41,7 @@ export class OdooLineChart extends OdooChart {
             cumulative: this.cumulative,
             axesDesign: this.axesDesign,
             fillArea: this.fillArea,
+            trend: this.trend,
         };
     }
 }
@@ -58,7 +64,13 @@ function createOdooChartRuntime(chart, getters) {
     const chartJsConfig = getLineConfiguration(chart, labels, locale);
     const colors = new ColorGenerator(datasets.length);
 
-    for (let [index, { label, data, cumulatedStart }] of datasets.entries()) {
+    let maxLength = 0;
+    const trendDatasets = [];
+    const axisType = getChartAxisType(chart, getters);
+
+    for (const index in datasets) {
+        let { label, data, cumulatedStart } = datasets[index];
+
         const color = colors.next();
         let backgroundColor = color;
         if (chart.fillArea) {
@@ -82,9 +94,45 @@ function createOdooChartRuntime(chart, getters) {
             borderColor: color,
             backgroundColor,
             pointBackgroundColor: color,
-            fill: chart.fillArea ? getFillingMode(index, chart.stacked) : false,
+            fill: chart.fillArea ? getFillingMode(parseInt(index), chart.stacked) : false,
         };
         chartJsConfig.data.datasets.push(dataset);
+
+        const trend = chart.getDefinition().trend;
+        if (!trend?.display) {
+            continue;
+        }
+
+        const trendDataset = getTrendDatasetForLineChart(trend, dataset, axisType, locale);
+        if (trendDataset) {
+            maxLength = Math.max(maxLength, trendDataset.data.length);
+            trendDatasets.push(trendDataset);
+        }
+    }
+
+    if (trendDatasets.length) {
+        /* We add a second x axis here to draw the trend lines, with the labels length being
+         * set so that the second axis points match the classical x axis
+         */
+        chartJsConfig.options.scales[TREND_LINE_XAXIS_ID] = {
+            ...chartJsConfig.options.scales.x,
+            type: "category",
+            labels: Array(maxLength).fill(""),
+            offset: false,
+            display: false,
+        };
+        /* These datasets must be inserted after the original datasets to ensure the way we
+         * distinguish the originals and trendLine datasets after
+         */
+        trendDatasets.forEach((x) => chartJsConfig.data.datasets.push(x));
+
+        const originalTooltipTitle = chartJsConfig.options.plugins.tooltip.callbacks.title;
+        chartJsConfig.options.plugins.tooltip.callbacks.title = function (tooltipItems) {
+            if (tooltipItems.some((item) => item.dataset.xAxisID !== TREND_LINE_XAXIS_ID)) {
+                return originalTooltipTitle?.(tooltipItems);
+            }
+            return "";
+        };
     }
     return { background, chartJsConfig };
 }
