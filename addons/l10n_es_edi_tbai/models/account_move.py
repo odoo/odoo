@@ -11,6 +11,14 @@ from psycopg2.errors import LockNotAvailable
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+TBAI_REFUND_REASONS = [
+    ('R1', "R1: Art. 80.1, 80.2, 80.6 and rights founded error"),
+    ('R2', "R2: Art. 80.3"),
+    ('R3', "R3: Art. 80.4"),
+    ('R4', "R4: Art. 80 - other"),
+    ('R5', "R5: Factura rectificativa en facturas simplificadas"),
+]
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -57,13 +65,7 @@ class AccountMove(models.Model):
     )
 
     l10n_es_tbai_refund_reason = fields.Selection(
-        selection=[
-            ('R1', "R1: Art. 80.1, 80.2, 80.6 and rights founded error"),
-            ('R2', "R2: Art. 80.3"),
-            ('R3', "R3: Art. 80.4"),
-            ('R4', "R4: Art. 80 - other"),
-            ('R5', "R5: Factura rectificativa en facturas simplificadas"),
-        ],
+        selection=TBAI_REFUND_REASONS,
         string="Invoice Refund Reason Code (TicketBai)",
         help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
         "Valor Añadido. Artículo 80. Modificación de la base imponible.",
@@ -94,10 +96,17 @@ class AccountMove(models.Model):
     @api.depends('move_type', 'company_id')
     def _compute_l10n_es_tbai_is_required(self):
         for move in self:
-            move.l10n_es_tbai_is_required = (move.is_sale_document() or move.is_purchase_document() and move.company_id.l10n_es_tbai_tax_agency == 'bizkaia'
-                                             and not any(t.l10n_es_type == 'ignore' for t in move.invoice_line_ids.tax_ids))\
-                and move.country_code == 'ES' \
-                and move.company_id.l10n_es_tbai_tax_agency
+            move.l10n_es_tbai_is_required = (
+                move.company_id.l10n_es_tbai_is_enabled
+                and (
+                    move.is_sale_document()
+                    or (
+                        move.is_purchase_document()
+                        and move.company_id.l10n_es_tbai_tax_agency == 'bizkaia'
+                        and not any(t.l10n_es_type == 'ignore' for t in move.invoice_line_ids.tax_ids)
+                    )
+                )
+            )
 
     @api.depends('l10n_es_tbai_post_document_id.chain_index')
     def _compute_show_reset_to_draft_button(self):
@@ -186,10 +195,10 @@ class AccountMove(models.Model):
             if invoice.l10n_es_tbai_cancel_document_id and invoice.l10n_es_tbai_cancel_document_id.state == 'rejected':
                 invoice.l10n_es_tbai_cancel_document_id.sudo().unlink()
 
-            edi_document = invoice.l10n_es_tbai_cancel_document_id
+            if not invoice.l10n_es_tbai_cancel_document_id:
+                invoice.l10n_es_tbai_cancel_document_id = invoice._l10n_es_tbai_create_edi_document(cancel=True)
 
-            if not edi_document:
-                edi_document = invoice.l10n_es_tbai_cancel_document_id = invoice._l10n_es_tbai_create_edi_document(cancel=True)
+            edi_document = invoice.l10n_es_tbai_cancel_document_id
 
             xml_values = self._l10n_es_tbai_get_values(cancel=True)
             error = edi_document._post_to_web_service(xml_values)
@@ -220,10 +229,10 @@ class AccountMove(models.Model):
         if self.l10n_es_tbai_post_document_id and self.l10n_es_tbai_post_document_id.state == 'rejected':
             self.l10n_es_tbai_post_document_id.sudo().unlink()
 
-        edi_document = self.l10n_es_tbai_post_document_id
+        if not self.l10n_es_tbai_post_document_id:
+            self.l10n_es_tbai_post_document_id = self._l10n_es_tbai_create_edi_document()
 
-        if not edi_document:
-            edi_document = self.l10n_es_tbai_post_document_id = self._l10n_es_tbai_create_edi_document()
+        edi_document = self.l10n_es_tbai_post_document_id
 
         xml_values = self._l10n_es_tbai_get_values()
         error = edi_document._post_to_web_service(xml_values)
@@ -282,7 +291,7 @@ class AccountMove(models.Model):
             'is_refund': self.move_type == 'out_refund',
             'credit_note_code': self.l10n_es_tbai_refund_reason,
             'credit_note_doc': self.reversed_entry_id.l10n_es_tbai_post_document_id,
-            'credit_note_invoice_date': self.reversed_entry_id.invoice_date if self.reversed_entry_id else False
+            'credit_note_invoice_date': self.reversed_entry_id.invoice_date if self.reversed_entry_id else False,
         }
 
     def _l10n_es_tbai_get_tax_details(self):

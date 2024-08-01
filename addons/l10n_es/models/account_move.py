@@ -77,12 +77,12 @@ class AccountMove(models.Model):
         sign = -1 if self.move_type in ('out_refund', 'in_refund') else 1
 
         return {
-            **self._l10n_es_edi_get_tax_details_info(tax_details, recargo_tax_details, sign),
+            **self._l10n_es_edi_get_tax_details_info(tax_details, recargo_tax_details, sign, self.is_sale_document(), self.company_id),
             'tax_details': tax_details,
         }
 
     @api.model
-    def _l10n_es_edi_get_tax_details_info(self, tax_details, recargo_tax_details, sign):
+    def _l10n_es_edi_get_tax_details_info(self, tax_details, recargo_tax_details, sign, is_sale, company):
         tax_details_info = defaultdict(dict)
 
         tax_amount_deductible = 0.0
@@ -92,7 +92,7 @@ class AccountMove(models.Model):
         tax_subject_info_list = []
         tax_subject_isp_info_list = []
         for tax_values in tax_details['tax_details'].values():
-            if self.is_sale_document():
+            if is_sale:
                 # Customer invoices
 
                 if tax_values['l10n_es_type'] in ('sujeto', 'sujeto_isp'):
@@ -178,9 +178,9 @@ class AccountMove(models.Model):
             tax_details_info['Sujeta']['NoExenta']['DesgloseIVA'].setdefault('DetalleIVA', [])
             tax_details_info['Sujeta']['NoExenta']['DesgloseIVA']['DetalleIVA'] += tax_subject_isp_info_list
 
-        if not self.company_id.currency_id.is_zero(base_amount_not_subject) and self.is_sale_document():
+        if not company.currency_id.is_zero(base_amount_not_subject) and is_sale:
             tax_details_info['NoSujeta']['ImportePorArticulos7_14_Otros'] = float_round(sign * base_amount_not_subject, 2)
-        if not self.company_id.currency_id.is_zero(base_amount_not_subject_loc) and self.is_sale_document():
+        if not company.currency_id.is_zero(base_amount_not_subject_loc) and is_sale:
             tax_details_info['NoSujeta']['ImporteTAIReglasLocalizacion'] = float_round(sign * base_amount_not_subject_loc, 2)
 
         return {

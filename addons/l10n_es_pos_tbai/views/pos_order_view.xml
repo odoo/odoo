@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_pos_order_form_inherit_l10n_es_pos_tbai" model="ir.ui.view">
+            <field name="name">pos.order.form.inherit.l10n_es_pos_tbai</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_pos_order_invoice']" position="attributes">
+                    <field name="l10n_es_tbai_post_document_id" invisible="1"/>
+                    <attribute name="invisible" add="l10n_es_tbai_post_document_id" separator="or"></attribute>
+                </xpath>
+                <xpath expr="//group[@name='order_fields']" position="inside">
+                    <field name="l10n_es_tbai_is_required" invisible="1"/>
+                    <field
+                        name="l10n_es_tbai_refund_reason"
+                        invisible="amount_total > 0.0 or not l10n_es_tbai_is_required"
+                        readonly="state != 'draft'"
+                    />
+                </xpath>
+                <xpath expr="//notebook" position='inside'>
+                    <page
+                        id="ticketbai_tab"
+                        string="TicketBAI"
+                        invisible="not l10n_es_tbai_is_required or not l10n_es_tbai_post_document_id"
+                    >
+                        <group>
+                            <field name="l10n_es_tbai_state"/>
+                            <field name="l10n_es_tbai_chain_index" groups="base.group_no_one"/>
+                            <field name="l10n_es_tbai_post_attachment_id"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

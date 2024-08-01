@@ -116,7 +116,7 @@ class L10nEsEdiTbaiDocument(models.Model):
                 return _("TicketBAI: Cannot post invoice while chain head (%s) has not been posted", chain_head_doc.name)
 
             # Tax configuration check: In case of foreign customer we need the tax scope to be set
-            if values['partner']._l10n_es_is_foreign() and values['taxes'].filtered(lambda t: not t.tax_scope):
+            if values['partner'] and values['partner']._l10n_es_is_foreign() and values['taxes'].filtered(lambda t: not t.tax_scope):
                 return _(
                     "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
                     "\n".join(values['taxes'].mapped('name'))
@@ -542,7 +542,7 @@ class L10nEsEdiTbaiDocument(models.Model):
 
     def _get_importe_desglose(self, values):
         sign = -1 if values['is_refund'] else 1
-        if not values['partner']._l10n_es_is_foreign():
+        if not values['partner'] or not values['partner']._l10n_es_is_foreign():
             return self._get_importe_desglose_es_partner(values['tax_details_info_vals'], sign)
         else:
             return self._get_importe_desglose_foreign_partner(

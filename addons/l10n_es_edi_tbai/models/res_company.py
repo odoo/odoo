@@ -79,6 +79,13 @@ class ResCompany(models.Model):
         default=True,
     )
 
+    l10n_es_tbai_is_enabled = fields.Boolean(compute='_compute_l10n_es_tbai_is_enabled')
+
+    @api.depends('country_id', 'l10n_es_tbai_tax_agency')
+    def _compute_l10n_es_tbai_is_enabled(self):
+        for company in self:
+            company.l10n_es_tbai_is_enabled = self.country_code == 'ES' and self.l10n_es_tbai_tax_agency
+
     @api.depends('country_id', 'l10n_es_tbai_certificate_ids')
     def _compute_l10n_es_tbai_certificate(self):
         for company in self:
@@ -116,7 +123,7 @@ class ResCompany(models.Model):
 
     def _get_l10n_es_tbai_license_dict(self):
         self.ensure_one()
-        if self.country_code == 'ES' and self.l10n_es_tbai_tax_agency:
+        if self.l10n_es_tbai_is_enabled:
             if self.l10n_es_tbai_test_env:  # test env: each agency has its test license
                 license_key = self.l10n_es_tbai_tax_agency
             else:  # production env: only one license

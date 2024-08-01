@@ -36,7 +36,7 @@ class AccountMoveReversal(models.TransientModel):
     def _prepare_default_reversal(self, move):
         # OVERRIDE
         values = super()._prepare_default_reversal(move)
-        if move.company_id.country_id.code == "ES" and move.l10n_es_tbai_is_required:
+        if move.l10n_es_tbai_is_required:
             values.update({
                 'l10n_es_tbai_refund_reason': self.l10n_es_tbai_refund_reason,
             })
