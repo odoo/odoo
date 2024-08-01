@@ -370,7 +370,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @returns {HTMLElement}
      */
     get editable() {
-        return this.websiteService.pageDocument.getElementById('wrapwrap');
+        // Page document might become unavailable when leaving the page.
+        return this.websiteService.pageDocument?.getElementById('wrapwrap');
     }
     /**
      * @see {editable} jQuery wrapped editable.
@@ -436,7 +437,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         const formOptionsMod = await odoo.loader.modules.get('@website/snippets/s_website_form/options')[Symbol.for('default')];
         formOptionsMod.clearAllFormsInfo();
 
-        this.$editable[0].removeEventListener("click", this.__onPageClick, { capture: true });
+        // Editable might become unavailable when leaving the page.
+        this.editable?.removeEventListener("click", this.__onPageClick, { capture: true });
         return super.destroy(...arguments);
     }
 
