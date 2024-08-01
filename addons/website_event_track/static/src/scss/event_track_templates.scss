@@ -23,10 +23,18 @@
     hr {
         border-color: lighten($o-wevent-bg-color-base-contrast, 50%);
     }
+
+    .o_we_agenda_horizontal_scroller_container {
+        z-index: $zindex-toast;
+
+        .o_we_agenda_horizontal_scroller {
+            height: 1px;
+        }
+    }
 }
 
 .o_we_online_agenda {
-    $-events-spacing: $grid-gutter-width * 0.5;
+    $-events-spacing: map-get($spacers, 1);
 
     border-top: $border-width solid transparent;
     overflow-x: auto;
