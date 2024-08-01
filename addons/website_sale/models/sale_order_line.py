@@ -63,8 +63,16 @@ class SaleOrderLine(models.Model):
     def _show_in_cart(self):
         self.ensure_one()
         # Exclude delivery & section/note lines from showing up in the cart
-        return not self.is_delivery and not bool(self.display_type)
+        return not self.is_delivery and not bool(self.display_type) and not bool(self.combo_item_id)
 
     def _is_reorder_allowed(self):
         self.ensure_one()
         return self.product_id._is_add_to_cart_allowed()
+
+    def _get_combo_price_subtotal(self):
+        self.ensure_one()
+        return sum(self.linked_line_ids.mapped(lambda line: line.price_subtotal))
+
+    def _get_combo_price_total(self):
+        self.ensure_one()
+        return sum(self.linked_line_ids.mapped(lambda line: line.price_total))

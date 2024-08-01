@@ -8,7 +8,7 @@ from datetime import timedelta
 from markupsafe import Markup
 
 from odoo import _, _lt, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, format_date, groupby
@@ -145,6 +145,13 @@ class SaleOrderLine(models.Model):
     linked_line_ids = fields.One2many(
         string="Linked Order Lines", comodel_name='sale.order.line', inverse_name='linked_line_id',
     )
+    # `virtual_id` uniquely identifies the sale order line before the record is saved in the DB,
+    # i.e. before the record has an `id`.
+    virtual_id = fields.Char()
+    # `linked_virtual_id` allows to link this sale order line to another sale order line, via its
+    # `virtual_id`.
+    linked_virtual_id = fields.Char()
+    combo_item_id = fields.Many2one(comodel_name='product.combo.item')
 
     # Pricing fields
     tax_id = fields.Many2many(
@@ -370,9 +377,9 @@ class SaleOrderLine(models.Model):
             self.product_id.get_product_multiline_description_sale()
             + self._get_sale_order_line_multiline_description_variants()
         )
-        if self.linked_line_id:
+        if self.linked_line_id and not self.combo_item_id:
             description += "\n" + _("Option for: %s", self.linked_line_id.product_id.display_name)
-        if self.linked_line_ids:
+        if self.linked_line_ids and self.product_type != 'combo':
             description += "\n" + "\n".join([
                 _("Option: %s", linked_line.product_id.display_name)
                 for linked_line in self.linked_line_ids
@@ -543,6 +550,21 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
 
+        if self.product_type == 'combo':
+            return 0  # The display price of a combo line should always be 0.
+        if self.combo_item_id:
+            return self._get_combo_item_display_price()
+        return self._get_display_price_ignore_combo()
+
+    def _get_display_price_ignore_combo(self):
+        """ This helper method allows to compute the display price of a SOL, while ignoring combo
+        logic.
+
+        I.e. this method returns the display price of a SOL as if it were neither a combo line nor a
+        combo item line.
+        """
+        self.ensure_one()
+
         pricelist_price = self._get_pricelist_price()
 
         if not self.pricelist_item_id or not self.pricelist_item_id._show_discount():
@@ -609,6 +631,55 @@ class SaleOrderLine(models.Model):
             uom=self.product_uom,
             date=self.order_id.date_order,
             currency=self.currency_id,
+        )
+
+    def _get_combo_item_display_price(self):
+        """ Compute the display price of this SOL's combo item.
+
+        A combo item's price is a fraction of its combo product's price (i.e. the product of type
+        `combo` which is referenced in this SOL's linked line). It is independent of the combo
+        item's product (i.e. the product referenced in this SOL). The combo's `base_price` will be
+        used to prorate the price of this combo with respect to the other combos in the combo
+        product.
+
+        Note: this method will throw if this SOL has no combo item.
+        """
+        self.ensure_one()
+
+        # Compute the combo product's price.
+        combo_line = self._get_linked_line()
+        combo_product_price = combo_line._get_display_price_ignore_combo()
+        # Compute the combos' base prices.
+        combo_base_prices = {
+            combo_id: combo_id.currency_id._convert(
+                from_amount=combo_id.base_price,
+                to_currency=self.currency_id,
+                company=self.company_id,
+                date=self.order_id.date_order,
+            ) for combo_id in combo_line.product_template_id.combo_ids
+        }
+        total_combo_base_price = sum(combo_base_prices.values())
+        # Compute the prorated combo prices.
+        combo_prices = {
+            combo_id: self.currency_id.round(
+                base_price * combo_product_price / total_combo_base_price
+            )
+            for (combo_id, base_price) in combo_base_prices.items()
+        }
+        # Compute the delta between the combo product's price and the sum of its combo prices.
+        # Ideally, this should be 0, but division in python isn't perfect, so we may need to adjust
+        # the combo prices to make the delta 0.
+        combo_price_delta = combo_product_price - sum(combo_prices.values())
+        if combo_price_delta:
+            combo_prices[combo_line.product_template_id.combo_ids[-1]] += combo_price_delta
+        # Add the extra price of this combo item, as well as the extra prices of any `no_variant`
+        # attributes to the combo price.
+        return (
+            combo_prices[self.combo_item_id.combo_id]
+            + self.combo_item_id.extra_price
+            + self.product_id._get_no_variant_attributes_price_extra(
+                self.product_no_variant_attribute_value_ids
+            )
         )
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -989,6 +1060,24 @@ class SaleOrderLine(models.Model):
 
     #=== CONSTRAINT METHODS ===#
 
+    @api.constrains('combo_item_id')
+    def _check_combo_item_id(self):
+        """ `combo_item_id` should never be set manually. This constraint mainly serves to avoid
+        programming errors.
+        """
+        for line in self:
+            linked_line = line._get_linked_line()
+            allowed_combo_items = linked_line.product_template_id.combo_ids.combo_item_ids
+            if line.combo_item_id and line.combo_item_id not in allowed_combo_items:
+                raise ValidationError(_(
+                    "A sale order line's combo item must be among its linked line's available"
+                    " combo items."
+                ))
+            if line.combo_item_id and line.combo_item_id.product_id != line.product_id:
+                raise ValidationError(_(
+                    "A sale order line's combo item's product must match the line's product."
+                ))
+
     #=== ONCHANGE METHODS ===#
 
     @api.onchange('product_id')
@@ -1035,6 +1124,10 @@ class SaleOrderLine(models.Model):
                 vals['product_uom_qty'] = 0.0
 
         lines = super().create(vals_list)
+        for line in lines:
+            linked_line = line._get_linked_line()
+            if linked_line:
+                line.linked_line_id = linked_line
         if self.env.context.get('sale_no_log_for_new_lines'):
             return lines
 
@@ -1346,3 +1439,14 @@ class SaleOrderLine(models.Model):
 
     def has_valued_move_ids(self):
         return self.move_ids
+
+    def _get_linked_line(self):
+        """ If the linked line hasn't been stored in the DB yet, rely on the virtual id to retrieve
+        it.
+        """
+        self.ensure_one()
+        return self.linked_line_id or (
+            self.linked_virtual_id and self.order_id.order_line.filtered(
+                lambda line: line.virtual_id == self.linked_virtual_id
+            ).ensure_one()
+        ) or self.env['sale.order.line']

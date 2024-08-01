@@ -9,12 +9,17 @@
                 areProductsOptional="true"/>
             <t t-set-slot="footer">
                 <button
+                    name="sale_product_configurator_confirm_button"
                     class="btn btn-primary"
                     t-on-click="onConfirm"
                     t-att-disabled="!isPossibleConfiguration()">
                     Confirm
                 </button>
-                <button class="btn btn-secondary" t-on-click="onDiscard">
+                <button
+                    name="sale_product_configurator_cancel_button"
+                    class="btn btn-secondary"
+                    t-on-click="onDiscard"
+                >
                     Cancel
                 </button>
             </t>
