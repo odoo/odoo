@@ -100,6 +100,10 @@ class PublicPageController(http.Controller):
         return self._response_discuss_public_template(store, channel)
 
     def _response_discuss_public_template(self, store, channel):
+        if request.env.user and request.env.user._is_internal():
+            return request.redirect(
+                f"odoo/discuss?active_id=discuss.channel_{channel.id}"
+            )
         store.add(
             {
                 "companyName": request.env.company.name,
