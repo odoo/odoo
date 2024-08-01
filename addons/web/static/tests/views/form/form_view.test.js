@@ -9625,8 +9625,12 @@ test(`form view with inline tree view with optional fields and local storage moc
         `,
     });
 
-    const localStorageKey = "optional_fields,partner,form,123456789,child_ids,list,bar,foo";
-    expect.verifySteps(["getItem pwa.installationState", `getItem ${localStorageKey}`]);
+    const localStorageKey = "partner,form,123456789,child_ids,list,bar,foo";
+    expect.verifySteps([
+        "getItem pwa.installationState",
+        `getItem optional_fields,${localStorageKey}`,
+        `getItem debug_open_view,${localStorageKey}`,
+    ]);
     expect(`.o_list_table th`).toHaveCount(2);
     expect(`th[data-name="foo"]`).toBeVisible();
     expect(`th[data-name="bar"]`).not.toBeVisible();
@@ -9637,7 +9641,11 @@ test(`form view with inline tree view with optional fields and local storage moc
 
     // enable optional field
     await contains(`.o-dropdown--menu input[name="bar"]`).click();
-    expect.verifySteps([`setItem ${localStorageKey} to bar`, `getItem ${localStorageKey}`]);
+    expect.verifySteps([
+        `setItem optional_fields,${localStorageKey} to bar`,
+        `getItem optional_fields,${localStorageKey}`,
+        `getItem debug_open_view,${localStorageKey}`,
+    ]);
 
     expect(`.o_list_table th`).toHaveCount(3);
     expect(`th[data-name="foo"]`).toBeVisible();
@@ -9682,8 +9690,12 @@ test.tags("desktop")(
         `,
         });
 
-        const localStorageKey = "optional_fields,partner,form,123456789,child_ids,list,bar,foo";
-        expect.verifySteps(["getItem pwa.installationState", `getItem ${localStorageKey}`]);
+        const localStorageKey = "partner,form,123456789,child_ids,list,bar,foo";
+        expect.verifySteps([
+            "getItem pwa.installationState",
+            `getItem optional_fields,${localStorageKey}`,
+            `getItem debug_open_view,${localStorageKey}`,
+        ]);
         expect(`.o_list_table th`).toHaveCount(2);
         expect(`th[data-name="foo"]`).not.toBeVisible();
         expect(`th[data-name="bar"]`).toBeVisible();
@@ -9694,7 +9706,11 @@ test.tags("desktop")(
 
         // enable optional field
         await contains(`.o-dropdown--menu input[name="foo"]`).click();
-        expect.verifySteps([`setItem ${localStorageKey} to foo`, `getItem ${localStorageKey}`]);
+        expect.verifySteps([
+            `setItem optional_fields,${localStorageKey} to foo`,
+            `getItem optional_fields,${localStorageKey}`,
+            `getItem debug_open_view,${localStorageKey}`,
+        ]);
 
         expect(`.o_list_table th`).toHaveCount(3);
         expect(`th[data-name="foo"]`).toBeVisible();
