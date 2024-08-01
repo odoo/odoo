@@ -30,7 +30,7 @@
                     <span>
                         <span t-esc="tax.name"/>
                         on
-                        <span t-esc="props.formatCurrency(tax.base)"/>
+                        <span t-esc="props.formatCurrency(tax.base_amount)"/>
                     </span>
                     <span t-esc="props.formatCurrency(tax.amount)" class="ms-auto"/>
                 </div>
