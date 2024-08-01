@@ -83,16 +83,6 @@ export class ReceiptScreen extends Component {
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
     }
-    resumeOrder() {
-        this.currentOrder.uiState.screen_data.value = "";
-        this.currentOrder.uiState.locked = true;
-        this.pos.selectNextOrder();
-        const { name, props } = this.ticketScreen;
-        this.pos.showScreen(name, props);
-    }
-    isResumeVisible() {
-        return this.pos.get_open_orders().length > 0;
-    }
     async _sendReceiptToCustomer({ action }) {
         const order = this.currentOrder;
         if (typeof order.id !== "number") {

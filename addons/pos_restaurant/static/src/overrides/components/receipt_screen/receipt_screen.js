@@ -27,7 +27,11 @@ patch(ReceiptScreen.prototype, {
         this.pos.showScreen("ProductScreen");
     },
     isContinueSplitting() {
-        if (this.pos.config.module_pos_restaurant && this.pos.selectedTable) {
+        if (
+            this.pos.config.module_pos_restaurant &&
+            !this.pos.selectedTable &&
+            !this.currentOrder.originalSplittedOrder
+        ) {
             const originalOrderUuid = this.currentOrder.uiState.splittedOrderUuid;
 
             if (!originalOrderUuid) {
@@ -40,12 +44,6 @@ patch(ReceiptScreen.prototype, {
         } else {
             return false;
         }
-    },
-    isResumeVisible() {
-        if (this.isContinueSplitting()) {
-            return false;
-        }
-        return super.isResumeVisible(...arguments);
     },
     //@override
     get nextScreen() {
