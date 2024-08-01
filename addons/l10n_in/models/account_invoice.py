@@ -183,6 +183,7 @@ class AccountMove(models.Model):
                 'l10n_in_hsn_code': line.l10n_in_hsn_code,
                 'quantity': line.quantity,
                 'price_unit': line.price_unit,
+                'discount': line.discount or 0.0,
                 'product': line.product_id,
                 'uom': line.product_uom_id,
                 'taxes': line.tax_ids,
