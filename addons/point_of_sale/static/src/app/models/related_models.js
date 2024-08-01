@@ -764,13 +764,14 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                                     const toConnect = records[field.relation].get(id);
                                     if (toConnect) {
                                         connect(field, recorded, toConnect);
-                                    } else if (this[field.relation]) {
-                                        if (!isFieldExemptedAutoLoad(field)) {
-                                            if (!missingRecords[field.relation]) {
-                                                missingRecords[field.relation] = new Set([id]);
-                                            } else {
-                                                missingRecords[field.relation].add(id);
-                                            }
+                                    } else if (
+                                        this[field.relation] &&
+                                        !isFieldExemptedAutoLoad(field)
+                                    ) {
+                                        if (!missingRecords[field.relation]) {
+                                            missingRecords[field.relation] = new Set([id]);
+                                        } else {
+                                            missingRecords[field.relation].add(id);
                                         }
                                         const key = `${field.relation}_${id}`;
                                         if (!missingFields[key]) {
@@ -788,13 +789,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                             const toConnect = records[field.relation].get(id);
                             if (toConnect) {
                                 connect(field, recorded, toConnect);
-                            } else if (this[field.relation]) {
-                                if (!isFieldExemptedAutoLoad(field)) {
-                                    if (!missingRecords[field.relation]) {
-                                        missingRecords[field.relation] = new Set([id]);
-                                    } else {
-                                        missingRecords[field.relation].add(id);
-                                    }
+                            } else if (this[field.relation] && !isFieldExemptedAutoLoad(field)) {
+                                if (!missingRecords[field.relation]) {
+                                    missingRecords[field.relation] = new Set([id]);
+                                } else {
+                                    missingRecords[field.relation].add(id);
                                 }
                                 const key = `${field.relation}_${id}`;
                                 if (!missingFields[key]) {
