@@ -74,6 +74,7 @@ export class AttendeeCalendarModel extends CalendarModel {
      */
     async loadFilterSectionGroup(fieldName, filterInfo, previousSection) {
         const result = await super.loadFilterSectionGroup(fieldName, filterInfo, previousSection);
+        result[0].canAddCalendar = true;
         if (result && result.length > 1) {
             result[0].label = "My";
             result[0].canAddFilter = false;
