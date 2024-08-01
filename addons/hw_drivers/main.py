@@ -61,10 +61,13 @@ class Manager(Thread):
                     'manufacturer': iot_devices[device].device_manufacturer,
                     'connection': iot_devices[device].device_connection,
                 }
+            devices_list_to_send = {
+                key: value for key, value in devices_list.items() if key != 'distant_display'
+            }
             data = {
                 'params': {
                     'iot_box': iot_box,
-                    'devices': [d for d in devices_list if d.name != 'distant_display'],
+                    'devices': devices_list_to_send,
                 }  # Don't send distant_display to the db
             }
             # disable certifiacte verification
