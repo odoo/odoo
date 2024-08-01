@@ -9,12 +9,11 @@ Odoo Web tours.
 ========================
 
 """,
-    'version': '0.1',
+    'version': '1.0',
     'depends': ['web'],
     'data': [
         'security/ir.model.access.csv',
-        'security/ir.rule.csv',
-        'views/tour_views.xml'
+        'views/tour_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

@@ -15,6 +15,7 @@ export class TourStepAutomatic extends TourStep {
     constructor(data, tour, index) {
         super(data, tour);
         this.index = index;
+        this.tourConfig = tourState.getCurrentConfig();
     }
 
     get canContinue() {
@@ -31,7 +32,7 @@ export class TourStepAutomatic extends TourStep {
      * @returns {{trigger, action}[]}
      */
     compileToMacro(pointer) {
-        const debugMode = tourState.get(this.tour.name, "debug");
+        const debugMode = this.tourConfig.debug;
 
         return [
             {
@@ -77,7 +78,7 @@ export class TourStepAutomatic extends TourStep {
                 },
                 action: async (stepEl) => {
                     clearTimeout(this._timeout);
-                    tourState.set(this.tour.name, "currentIndex", this.index + 1);
+                    tourState.setCurrentIndex(this.index + 1);
                     if (this.tour.showPointerDuration > 0 && stepEl !== true) {
                         // Useful in watch mode.
                         pointer.pointTo(stepEl, this);
@@ -189,15 +190,15 @@ export class TourStepAutomatic extends TourStep {
      * @param {string} [error]
      */
     throwError(error = "") {
-        tourState.set(this.tour.name, "stepState", "errored");
-        const debugMode = tourState.get(this.tour.name, "debug");
+        tourState.setCurrentTourOnError();
+        const tourConfig = tourState.getCurrentConfig();
         // console.error notifies the test runner that the tour failed.
         const errors = [`FAILED: ${this.describeMe}.`, this.describeWhyIFailed, error];
         console.error(errors.filter(Boolean).join("\n"));
         // The logged text shows the relative position of the failed step.
         // Useful for finding the failed step.
         console.dir(this.describeWhyIFailedDetailed);
-        if (debugMode !== false) {
+        if (tourConfig.debug !== false) {
             // eslint-disable-next-line no-debugger
             debugger;
         }

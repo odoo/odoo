@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-<t t-name="web_tour_recorder.TourRecorder">
-    <div class="d-flex position-fixed bottom-0 start-0 bg-primary o_tour_recorder" t-attf-style="transform: {{state.collapsed ? 'translateX(-100%)' : 'none'}}; transition: 150ms;">
+<t t-name="web_tour.TourRecorder">
+    <div class="d-flex position-fixed bottom-0 start-0 bg-primary o_tour_recorder">
         <div t-ref="tour_recorder" class="d-flex">
             <button class="o_button_record btn btn-primary rounded-0" t-on-click.prevent.stop="toggleRecording">
                 <span class="px-2 me-1 rounded-circle" t-att-class="state.recording ? 'bg-danger': 'bg-secondary'" role="status" aria-hidden="true"></span>
@@ -56,51 +56,8 @@
                 </t>
             </Dropdown>
             <button t-if="state.steps.length" class="btn btn-primary px-1" t-on-click="resetTourRecorderState"><i class="fa fa-undo"></i></button>
-            <button class="btn btn-primary position-absolute bottom-0 start-100 rounded-0 border-1" t-on-click.prevent.stop="() => state.collapsed = !state.collapsed"><i t-att-class="state.collapsed ? 'fa fa-arrow-right' : 'fa fa-arrow-left'"></i></button>
+            <button class="btn btn-primary position-absolute bottom-0 start-100 rounded-0 border-1 o_tour_recorder_close_button" t-on-click.prevent.stop="() => props.onClose()"><i class="fa fa-close"></i></button>
         </div>
     </div>
-</t>
-
-<t t-name="web_tour.TourRecorderDialog" t-inherit="web_tour.ToursDialog" t-inherit-mode="extension">
-    <xpath expr="//Dialog" position="inside">
-        <t t-call="web_tour.ToursRecorderDialog.Table">
-            <t t-set="caption">Custom tours</t>
-            <t t-set="tours" t-value="state.customTours"/>
-        </t>
-    </xpath>
-</t>
-
-<t t-name="web_tour.ToursRecorderDialog.Table" t-inherit="web_tour.ToursDialog.Table" t-inherit-mode="primary">
-    <xpath expr="//button[hasclass('o_copy_url_tour')]" position="replace"/>
-    <xpath expr="//caption">
-        <input type="file" t-ref="import_tour_input" hidden="true" t-on-change="importTour"/>
-        <button class="o_button_import btn btn-link ms-1 fa" title="Import a tour custom from JSON file" t-on-click.prevent="() => importTourInput.el.click()"><span class="fa fa-fw fa-download"></span></button>
-    </xpath>
-    <xpath expr="//tbody/tr">
-        <td>
-            <Dropdown>
-                <button class="o_button_extra btn btn-primary fa">
-                    <span class="fa fa-ellipsis-v o_more_tour"></span>
-                </button>
-                <t t-set-slot="content">
-                    <DropdownItem attrs="{ title: 'Export to import in JS file'}" onSelected="(ev) => this.exportTourJS(tour)">
-                        Export JS
-                    </DropdownItem>
-                    <DropdownItem attrs="{ title: 'Export to import in tours dialog'}" onSelected="(ev) => this.exportTourJSON(tour)">
-                        Export JSON
-                    </DropdownItem>
-                    <DropdownItem onSelected="(ev) => this.deleteTour(tour)">
-                        Delete
-                    </DropdownItem>
-                </t>
-            </Dropdown>
-        </td>
-    </xpath>
-    <xpath expr="//button[hasclass('o_start_tour')]" position="attributes">
-        <attribute name="t-on-click.prevent">onStartCustomTour</attribute>
-    </xpath>
-    <xpath expr="//button[hasclass('o_test_tour')]" position="attributes">
-        <attribute name="t-on-click.prevent">onTestCustomTour</attribute>
-    </xpath>
 </t>
 </templates>

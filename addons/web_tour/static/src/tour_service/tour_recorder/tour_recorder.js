@@ -4,9 +4,10 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { browser } from "@web/core/browser/browser";
 import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { Component, useState, useExternalListener } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { x2ManyCommands } from "@web/core/orm_service";
 
-export class TourRecorderError extends Error {}
-
+export const TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY = "tour_recorder_active";
 const PRECISE_IDENTIFIERS = ["data-menu-xmlid", "name", "contenteditable"];
 const ODOO_CLASS_REGEX = /^oe?(-|_)[\w-]+$/;
 const VALIDATING_KEYS = ["Enter", "Tab"];
@@ -89,9 +90,11 @@ const reducePath = (paths) => {
 };
 
 export class TourRecorder extends Component {
-    static template = "web_tour_recorder.TourRecorder";
+    static template = "web_tour.TourRecorder";
     static components = { Dropdown, DropdownItem };
-    static props = {};
+    static props = {
+        onClose: { type: Function },
+    };
     static defaultState = {
         recording: false,
         url: "",
@@ -101,12 +104,11 @@ export class TourRecorder extends Component {
 
     setup() {
         this.originClickEvent = false;
-        this.tourRecorderService = useService("tour_recorder");
         this.notification = useService("notification");
+        this.orm = useService("orm");
         this.state = useState({
             ...TourRecorder.defaultState,
             steps: [],
-            collapsed: true,
         });
 
         useExternalListener(document, "pointerdown", this.setStartingEvent, { capture: true });
@@ -225,17 +227,24 @@ export class TourRecorder extends Component {
         }
     }
 
-    saveTour() {
+    async saveTour() {
         const newTour = {
             name: this.state.tourName.replaceAll(" ", "_"),
             url: this.state.url,
-            steps: this.state.steps,
-            test: true,
+            step_ids: this.state.steps.map((s) => x2ManyCommands.create(undefined, s)),
+            custom: true,
         };
 
-        const result = this.tourRecorderService.addCustomTour(newTour);
+        const result = await this.orm.create("web_tour.tour", [newTour]);
         if (result) {
+            this.notification.add(_t("Custom tour '%s' has been added.", newTour.name), {
+                type: "success",
+            });
             this.resetTourRecorderState();
+        } else {
+            this.notification.add(_t("Custom tour '%s' couldn't be saved!", newTour.name), {
+                type: "danger",
+            });
         }
     }
 

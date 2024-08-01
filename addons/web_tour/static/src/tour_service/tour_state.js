@@ -2,90 +2,47 @@
 
 import { browser } from "@web/core/browser/browser";
 
-const BOOLEAN = {
-    toLocalStorage: (val) => (val ? "1" : "0"),
-    fromLocalStorage: (val) => (val === "1" ? true : false),
-};
-
-const INTEGER = {
-    toLocalStorage: (val) => val.toString(),
-    fromLocalStorage: (val) => parseInt(val, 10),
-};
-
-const STRING = {
-    toLocalStorage: (x) => x,
-    fromLocalStorage: (x) => x,
-};
-
-const ALLOWED_KEYS = {
-    // Don't close the 'watch' browser when the tour failed.
-    keepWatchBrowser: BOOLEAN,
-
-    // Duration at which the pointer is shown in auto mode.
-    showPointerDuration: INTEGER,
-
-    // Index of the current step.
-    currentIndex: INTEGER,
-
-    // Global step delay that is specified before starting the tour.
-    stepDelay: INTEGER,
-
-    // 'auto' | 'manual' - important that it's persisted because it's only specified during start of tour.
-    mode: STRING,
-
-    // Used to order the tours.
-    sequence: INTEGER,
-
-    // Open DevTools at tour initialization.
-    debug: BOOLEAN,
-
-    // Errored || Succeeded
-    stepState: STRING,
-};
-
-function getPrefixedName(tourName, key) {
-    return `tour__${tourName}__${key}`;
-}
-
-function destructurePrefixedName(prefixedName) {
-    const match = prefixedName.match(/tour__([.\w]+)__([\w]+)/);
-    return match ? [match[1], match[2]] : null;
-}
+const CURRENT_TOUR_LOCAL_STORAGE = "current_tour";
+const CURRENT_TOUR_CONFIG_LOCAL_STORAGE = "current_tour.config";
+const CURRENT_TOUR_INDEX_LOCAL_STORAGE = "current_tour.index";
+const CURRENT_TOUR_ON_ERROR_LOCAL_STORAGE = "current_tour.on_error";
 
 /**
  * Wrapper around localStorage for persistence of the running tours.
  * Useful for resuming running tours when the page refreshed.
  */
 export const tourState = {
-    get(tourName, key) {
-        if (!(key in ALLOWED_KEYS)) {
-            throw new Error(`Invalid key: '${key}' (tourName = '${tourName}')`);
-        }
-        const prefixedName = getPrefixedName(tourName, key);
-        const savedValue = browser.localStorage.getItem(prefixedName);
-        return ALLOWED_KEYS[key].fromLocalStorage(savedValue);
+    getCurrentTour() {
+        return browser.localStorage.getItem(CURRENT_TOUR_LOCAL_STORAGE);
     },
-    set(tourName, key, value) {
-        if (!(key in ALLOWED_KEYS)) {
-            throw new Error(`Invalid key: '${key}' (tourName = '${tourName}')`);
-        }
-        const prefixedName = getPrefixedName(tourName, key);
-        browser.localStorage.setItem(prefixedName, ALLOWED_KEYS[key].toLocalStorage(value));
+    setCurrentTour(tourName) {
+        browser.localStorage.setItem(CURRENT_TOUR_LOCAL_STORAGE, tourName);
     },
-    clear(tourName) {
-        for (const key in ALLOWED_KEYS) {
-            const prefixedName = getPrefixedName(tourName, key);
-            browser.localStorage.removeItem(prefixedName);
-        }
+    getCurrentIndex() {
+        const index = browser.localStorage.getItem(CURRENT_TOUR_INDEX_LOCAL_STORAGE, "0");
+        return parseInt(index, 10);
     },
-    getActiveTourNames() {
-        const tourNames = new Set();
-        for (const key of Object.keys(browser.localStorage)) {
-            const [tourName] = destructurePrefixedName(key) || [false];
-            if (tourName) {
-                tourNames.add(tourName);
-            }
-        }
-        return [...tourNames].sort((a, b) => this.get(a, "sequence") - this.get(b, "sequence"));
+    setCurrentIndex(index) {
+        browser.localStorage.setItem(CURRENT_TOUR_INDEX_LOCAL_STORAGE, index.toString());
+    },
+    getCurrentConfig() {
+        const config = browser.localStorage.getItem(CURRENT_TOUR_CONFIG_LOCAL_STORAGE, "{}");
+        return JSON.parse(config);
+    },
+    setCurrentConfig(config) {
+        config = JSON.stringify(config);
+        browser.localStorage.setItem(CURRENT_TOUR_CONFIG_LOCAL_STORAGE, config);
+    },
+    getCurrentTourOnError() {
+        return browser.localStorage.getItem(CURRENT_TOUR_ON_ERROR_LOCAL_STORAGE);
+    },
+    setCurrentTourOnError() {
+        browser.localStorage.setItem(CURRENT_TOUR_ON_ERROR_LOCAL_STORAGE, "1");
+    },
+    clear() {
+        browser.localStorage.removeItem(CURRENT_TOUR_ON_ERROR_LOCAL_STORAGE);
+        browser.localStorage.removeItem(CURRENT_TOUR_CONFIG_LOCAL_STORAGE);
+        browser.localStorage.removeItem(CURRENT_TOUR_INDEX_LOCAL_STORAGE);
+        browser.localStorage.removeItem(CURRENT_TOUR_LOCAL_STORAGE);
     },
 };

@@ -162,7 +162,7 @@ export class TourPointer extends Component {
     }
 
     get isOpen() {
-        return this.props.pointerState.isOpen;
+        return this.props.pointerState.isOpen && this.content;
     }
 
     get position() {
