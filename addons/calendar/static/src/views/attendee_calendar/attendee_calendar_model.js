@@ -5,7 +5,10 @@ import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
-import { deleteConfirmationMessage, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    deleteConfirmationMessage,
+    ConfirmationDialog,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class AttendeeCalendarModel extends CalendarModel {
     setup(params, { dialog }) {
@@ -69,15 +72,12 @@ export class AttendeeCalendarModel extends CalendarModel {
      * Load the filter section and add both 'user' and 'everybody' filters to the context.
      * @override
      */
-    async loadFilterSection(fieldName, filterInfo, previousSection) {
-        let result = await super.loadFilterSection(fieldName, filterInfo, previousSection);
-        if (result?.filters) {
-            user.updateContext({
-                calendar_filters: {
-                    all: result?.filters?.find((f) => f.type == "all")?.active ?? false,
-                    user: result?.filters?.find((f) => f.type == "user")?.active ?? false,
-                }
-            });
+    async loadFilterSectionGroup(fieldName, filterInfo, previousSection) {
+        const result = await super.loadFilterSectionGroup(fieldName, filterInfo, previousSection);
+        if (result && result.length > 1) {
+            result[0].label = "My";
+            result[0].canAddFilter = false;
+            result[1].label = "Attendee";
         }
         return result;
     }
@@ -96,14 +96,18 @@ export class AttendeeCalendarModel extends CalendarModel {
      * the previous behavior to display a single event.
      */
     async updateAttendeeData(data) {
-        const attendeeFilters = data.filterSections.partner_ids;
+        const filters = Object.values(data.filterSections)
+            .map((section) => {
+                return section.filters;
+            })
+            .flat();
         let isEveryoneFilterActive = false;
         let attendeeIds = [];
         const eventIds = Object.keys(data.records).map((id) => Number.parseInt(id));
-        if (attendeeFilters) {
-            const allFilter = attendeeFilters.filters.find((filter) => filter.type === "all");
+        if (filters) {
+            const allFilter = filters.find((filter) => filter.type === "all");
             isEveryoneFilterActive = (allFilter && allFilter.active) || false;
-            attendeeIds = attendeeFilters.filters
+            attendeeIds = filters
                 .filter((filter) => filter.type !== "all" && filter.value)
                 .map((filter) => filter.value);
         }
@@ -114,7 +118,7 @@ export class AttendeeCalendarModel extends CalendarModel {
         const currentPartnerId = user.partnerId;
         if (!isEveryoneFilterActive) {
             const activeAttendeeIds = new Set(
-                attendeeFilters.filters
+                filters
                     .filter((filter) => filter.type !== "all" && filter.value && filter.active)
                     .map((filter) => filter.value)
             );
@@ -182,15 +186,14 @@ export class AttendeeCalendarModel extends CalendarModel {
             }
         } else {
             const confirm = await new Promise((resolve) => {
-                this.dialog.add(
-                    ConfirmationDialog,{
-                        title: _t("Bye-bye, record!"),
-                        body: deleteConfirmationMessage,
-                        confirm: resolve.bind(null, true),
-                        confirmLabel: _t("Delete"),
-                        cancel: () => resolve.bind(null, false),
-                        cancelLabel: _t("No, keep it"),
-                    });
+                this.dialog.add(ConfirmationDialog, {
+                    title: _t("Bye-bye, record!"),
+                    body: deleteConfirmationMessage,
+                    confirm: resolve.bind(null, true),
+                    confirmLabel: _t("Delete"),
+                    cancel: () => resolve.bind(null, false),
+                    cancelLabel: _t("No, keep it"),
+                });
             });
             if (!confirm) {
                 return;

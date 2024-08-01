@@ -147,6 +147,7 @@ export class CalendarArchParser {
                                 resModel: field.relation,
                                 writeFieldName: null,
                                 writeResModel: null,
+                                groupBy: null,
                             };
                             filterInfo = filtersInfo[fieldName];
                         }
@@ -161,6 +162,9 @@ export class CalendarArchParser {
                         }
                         if (node.hasAttribute("write_field")) {
                             filterInfo.writeFieldName = node.getAttribute("write_field");
+                        }
+                        if (node.hasAttribute("group_by")) {
+                            filterInfo.groupBy = node.getAttribute("group_by");
                         }
                         if (node.hasAttribute("filters")) {
                             if (node.hasAttribute("color")) {
