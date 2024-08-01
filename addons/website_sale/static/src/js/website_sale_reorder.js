@@ -149,13 +149,14 @@ export class ReorderDialog extends Component {
     }
 
     async addProductsToCart() {
-        let promises = [];
         for (const product of this.content.products) {
             if (!product.add_to_cart_allowed) {
                 continue;
             }
 
-            promises.push(this.cart.add({
+            // must be awaited to ensure that all the products are added to the same cart when it
+            // has to be created on the fly because there weren't any open one for the customer.
+            await this.cart.add({
                 productTemplateId: product.product_template_id,
                 productId: product.product_id,
                 quantity: product.qty,
@@ -165,8 +166,7 @@ export class ReorderDialog extends Component {
                 isBuyNow: true,
                 redirectToCart: false,
                 isConfigured: true,
-            }));
+            });
         }
-        return Promise.all(promises);
     }
 }

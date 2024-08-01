@@ -5,6 +5,7 @@ from odoo.tests import tagged
 
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.tests.common import MockRequest
 
 
 @tagged('post_install', '-at_install')
@@ -27,7 +28,7 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
             'event_id': self.event.id,
             'event_ticket_id': self.ticket.id,
             'name': self.event.name,
-            'order_id': self.so.id,
+            'order_id': self.empty_cart.id,
             'product_id': self.ticket.product_id.id,
             'product_uom_qty': 1,
         })
@@ -42,6 +43,9 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
                 'percent_price': 10,
             })],
             'name': 'Percentage Discount',
+            'selectable': True,
         })
-        self.so._cart_update_pricelist(pricelist_id=pl2.id)
-        self.assertEqual(so_line.price_reduce_taxexcl, 900, 'Incorrect amount based on the pricelist and its currency.')
+        with MockRequest(self.env, website=self.website, sale_order_id=self.empty_cart.id) as req:
+            self.assertEqual(req.pricelist, self.pricelist)
+            self.WebsiteSaleController.pricelist_change(pl2)
+            self.assertEqual(so_line.price_reduce_taxexcl, 900, 'Incorrect amount based on the pricelist and its currency.')

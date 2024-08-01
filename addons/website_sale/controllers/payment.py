@@ -29,7 +29,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :param dict kwargs: Locally unused data passed to `_create_transaction`
         :return: The mandatory values for the processing of the transaction
         :rtype: dict
-        :raise: ValidationError if the invoice id or the access token is invalid
+        :raise: ValidationError if the access token is invalid or the order is not in the expected
+            state/configuration.
         """
         # Check the order id and the access token
         try:

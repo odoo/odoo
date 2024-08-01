@@ -41,7 +41,7 @@ configuratorTourUtils.assertOptionalProductPrice("Conference Chair", "22.90"),
 configuratorTourUtils.selectAttribute("Conference Chair", "Legs", "Steel"),
 configuratorTourUtils.addOptionalProduct("Conference Chair"),
 configuratorTourUtils.addOptionalProduct("Chair floor protection"),
-configuratorTourUtils.assertPriceTotal("1,528.50"),
+configuratorTourUtils.assertPriceTotal("1,228.50"),
 {
     trigger: 'button:contains(Proceed to Checkout)',
     run: 'click',

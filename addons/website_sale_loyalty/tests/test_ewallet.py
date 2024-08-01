@@ -4,8 +4,7 @@ from odoo import http
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.website.tools import MockRequest
-from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
@@ -19,7 +18,6 @@ class TestEwallet(HttpCase, WebsiteSaleCommon):
 
         cls.WebsiteSaleController = WebsiteSale()
         cls.WebsiteSaleCartController = Cart()
-        cls.website = cls.env['website'].browse(1)
 
         cls.product.write({'taxes_id': [Command.clear()]})
 

@@ -18,7 +18,7 @@ class TestSaleProductAttributeValueCommon(AccountTestInvoicingCommon, TestProduc
         cls.computer.company_id = cls.env.company
         cls.computer = cls.computer.with_env(cls.env)
         cls.env['product.pricelist'].sudo().search([]).action_archive()
-        cls.env['product.pricelist'].create({'name': 'Base Pricelist'})
+        cls.pricelist = cls.env['product.pricelist'].create({'name': 'Base Pricelist'})
 
     @classmethod
     def _setup_currency(cls, currency_ratio=2):

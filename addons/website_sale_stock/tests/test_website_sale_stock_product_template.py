@@ -4,7 +4,7 @@ from datetime import datetime
 
 from odoo.tests import tagged
 
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 

@@ -1,40 +1,33 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
-
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.payment.tests.common import PaymentCommon
-from odoo.addons.sale.tests.common import SaleCommon
-from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.delivery import Delivery
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
+class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
     def setUp(self):
         super().setUp()
-        self.website = self.env.ref('website.default_website')
         self.Controller = Delivery()
 
     # test that changing the carrier while there is a pending transaction raises an error
     def test_controller_change_carrier_when_transaction(self):
-        with MockRequest(self.env, website=self.website):
-            order = self.website.sale_get_order(force_create=True)
-            order.transaction_ids = self._create_transaction(flow='redirect', state='pending')
-            with self.assertRaises(UserError), patch(
-                'odoo.addons.website_sale.models.website.Website.sale_get_order',
-                return_value=order,
-            ):  # Patch to retrieve the order even if it is linked to a pending transaction.
-                self.Controller.shop_set_delivery_method(dm_id='1')
+        website = self.website.with_env(self.env)
+        self.empty_cart.transaction_ids = self._create_transaction(flow='redirect', state='pending')
+        with MockRequest(website.env, website=website, sale_order_id=self.empty_cart.id) as request, self.assertRaises(UserError):
+            request.cart = self.empty_cart
+            self.Controller.shop_set_delivery_method(dm_id='1')
 
     # test that changing the carrier while there is a draft transaction doesn't raise an error
     def test_controller_change_carrier_when_draft_transaction(self):
-        with MockRequest(self.env, website=self.website):
-            order = self.website.sale_get_order(force_create=True)
-            order.transaction_ids = self._create_transaction(flow='redirect', state='draft')
+        website = self.website.with_env(self.env)
+        self.empty_cart.transaction_ids = self._create_transaction(flow='redirect', state='draft')
+        with MockRequest(website.env, website=website, sale_order_id=self.empty_cart.id):
             self.Controller.shop_set_delivery_method(dm_id='1')
 
     def test_available_methods(self):
@@ -85,5 +78,5 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
         ])
 
         self.assertEqual(
-            self.empty_order._get_delivery_methods().mapped('name'), ['Under 300', 'Fixed']
+            self.empty_cart._get_delivery_methods().mapped('name'), ['Under 300', 'Fixed']
         )

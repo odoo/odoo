@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import MockRequest
 
 
 @tagged('-at_install', 'post_install')

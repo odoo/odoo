@@ -16,11 +16,9 @@ HOST = '127.0.0.1'
 
 @contextlib.contextmanager
 def MockRequest(
-        env, *, path='/mockrequest', routing=True, multilang=True,
-        context=frozendict(), cookies=frozendict(), country_code=None,
-        website=None, remote_addr=HOST, environ_base=None, url_root=None,
-        # website_sale
-        sale_order_id=None, website_sale_current_pl=None,
+    env, *, path='/mockrequest', routing=True, multilang=True,
+    context=frozendict(), cookies=frozendict(), country_code=None,
+    website=None, remote_addr=HOST, environ_base=None, url_root=None,
 ):
     # TODO move MockRequest to a package in addons/web/tests
     from odoo.tests.common import HttpCase  # noqa: PLC0415
@@ -56,8 +54,6 @@ def MockRequest(
         redirect=env['ir.http']._redirect,
         session=DotDict(
             odoo.http.get_default_session(),
-            sale_order_id=sale_order_id,
-            website_sale_current_pl=website_sale_current_pl,
             context={'lang': ''},
         ),
         geoip=odoo.http.GeoIP('127.0.0.1'),

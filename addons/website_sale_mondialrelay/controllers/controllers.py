@@ -1,26 +1,27 @@
-# -*- coding: utf-8 -*-
-from odoo import http, _
-from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.controllers.delivery import Delivery
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import _, http
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
+
+from odoo.addons.website_sale.controllers.delivery import Delivery
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class MondialRelay(http.Controller):
 
     @http.route(['/website_sale_mondialrelay/update_shipping'], type='jsonrpc', auth="public", website=True)
     def mondial_relay_update_shipping(self, **data):
-        order = request.website.sale_get_order()
+        order_sudo = request.cart
 
-        if order.partner_id == request.website.user_id.sudo().partner_id:
+        if order_sudo._is_anonymous_cart():
             raise AccessDenied(self.env._('Customer of the order cannot be the public user at this step.'))
 
-        if order.carrier_id.country_ids:
-            country_is_allowed = data['Pays'][:2].upper() in order.carrier_id.country_ids.mapped(lambda c: c.code.upper())
+        if order_sudo.carrier_id.country_ids:
+            country_is_allowed = data['Pays'][:2].upper() in order_sudo.carrier_id.country_ids.mapped(lambda c: c.code.upper())
             assert country_is_allowed, _("%s is not allowed for this delivery carrier.", data['Pays'])
 
-        partner_shipping = order.partner_id.sudo()._mondialrelay_search_or_create({
+        partner_shipping = order_sudo.partner_id.sudo()._mondialrelay_search_or_create({
             'id': data['ID'],
             'name': data['Nom'],
             'street': data['Adresse1'],
@@ -28,17 +29,17 @@ class MondialRelay(http.Controller):
             'zip': data['CP'],
             'city': data['Ville'],
             'country_code': data['Pays'][:2].lower(),
-            'phone': order.partner_id.phone,
+            'phone': order_sudo.partner_id.phone,
         })
-        if order.partner_shipping_id != partner_shipping:
-            order.partner_shipping_id = partner_shipping
+        if order_sudo.partner_shipping_id != partner_shipping:
+            order_sudo.partner_shipping_id = partner_shipping
 
         return {
             'address': request.env['ir.qweb']._render('website_sale.address_on_payment', {
-                'order': order,
-                'only_services': order and order.only_services,
+                'order': order_sudo,
+                'only_services': order_sudo.only_services,
             }),
-            'new_partner_shipping_id': order.partner_shipping_id.id,
+            'new_partner_shipping_id': order_sudo.partner_shipping_id.id,
         }
 
 

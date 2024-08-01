@@ -50,7 +50,7 @@ class ProductTemplate(models.Model):
             stock_notification_email = request and request.session.get('stock_notification_email', '')
             res.update({
                 'free_qty': free_qty,
-                'cart_qty': product_sudo._get_cart_qty(website),
+                'cart_qty': product_sudo._get_cart_qty(request.cart),
                 'uom_name': product_sudo.uom_id.name,
                 'uom_rounding': product_sudo.uom_id.rounding,
                 'show_availability': product_sudo.show_availability,
@@ -94,7 +94,7 @@ class ProductTemplate(models.Model):
                 product_or_template.sudo(), **kwargs
             ) if product_or_template.is_product_variant else 0
             cart_quantity = product_or_template._get_cart_qty(
-                website
+                request.cart
             ) if product_or_template.is_product_variant else 0
             data['free_qty'] = available_qty - cart_quantity
         return data
