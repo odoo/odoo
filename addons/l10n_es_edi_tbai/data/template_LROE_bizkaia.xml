@@ -102,7 +102,7 @@
                                 </FacturaRectificativa>
                                 <FacturasRectificadasSustituidas t-if="credit_note_invoices">
                                     <IDFacturaRectificadaSustituida t-foreach="credit_note_invoices" t-as="credit_note_invoice">
-                                        <t t-set="seq_and_num" t-value="credit_note_invoice.l10n_es_tbai_post_document_id._get_l10n_es_tbai_sequence_and_number()"/>
+                                        <t t-set="seq_and_num" t-value="credit_note_invoice.l10n_es_tbai_post_document_id._get_tbai_sequence_and_number()"/>
                                         <SerieFactura t-out="seq_and_num[0]"/>
                                         <NumFactura t-out="seq_and_num[1]"/>
                                         <FechaExpedicionFactura t-out="format_date(credit_note_invoice.invoice_date)"/>

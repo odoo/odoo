@@ -284,7 +284,7 @@ class AccountMove(models.Model):
             'taxes': self.invoice_line_ids.tax_ids,
             'rate':  abs(self.amount_total / self.amount_total_signed) if self.amount_total else 1,
             'base_lines': [
-                line._convert_to_tax_base_line_dict()
+                line._convert_to_tax_base_line_dict() | {'name': line.name}
                 for line in self.invoice_line_ids
                 if line.display_type not in ('line_section', 'line_note') and not line._l10n_es_tbai_is_ignored()
             ],
