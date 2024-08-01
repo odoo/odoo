@@ -6268,19 +6268,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const img = this._getImg();
         const _super = this._super.bind(this);
 
-        // Make sure image is loaded because we need its naturalWidth
-        await new Promise((resolve, reject) => {
-            if (img.complete) {
-                resolve();
-                return;
-            }
-            img.addEventListener('load', resolve, {once: true});
-            img.addEventListener('error', resolve, {once: true});
-        });
-
         switch (methodName) {
             case 'selectFormat':
-                return this._getCurrentFormat(img);
+                return await this._getCurrentFormat(img);
             case 'setFilter':
                 return img.dataset.filter;
             case 'glFilter':
@@ -6373,7 +6363,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         // - Changing the specs of the available formats, where some previously
         //   used format cannot be selected anymore
         // - External modification of the format
-        const currentFormat = this._getCurrentFormat(img);
+        const currentFormat = await this._getCurrentFormat(img);
         const [selectedSize, selectedMimetype] = currentFormat?.split(" ") || [];
         if (
             selectedSize &&
@@ -6552,12 +6542,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     },
     /**
      * @param {HTMLImageElement} [image] Override image element.
-     * @return {string} The image's current width.
+     * @return {Promise<string>} The image's current width (selected format).
      * @private
      */
-    _getImageWidth(image = this._getImg()) {
+    async _getImageWidth(image = this._getImg()) {
         return Math.trunc(
-            image.dataset.resizeWidth || image.dataset.width || image.naturalWidth
+            image.dataset.resizeWidth || image.dataset.width || (await this._getOriginalSize())
         ).toString();
     },
     /**
@@ -6571,11 +6561,11 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     },
     /**
      * @param {HTMLImageElement} img
-     * @return {string} The image's current format (widget value).
+     * @return {Promise<string>} The image's current format (widget value).
      * @private
      */
-    _getCurrentFormat(img) {
-        return `${img.naturalWidth} ${this._getImageMimetype(img)}`;
+    async _getCurrentFormat(img) {
+        return `${await this._getImageWidth(img)} ${this._getImageMimetype(img)}`;
     },
     /**
      * Returns whether the format is the image's original format.
@@ -6604,7 +6594,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @private
      */
     async _getImageTargetMimetype(image = this._getImg()) {
-        const currentSize = this._getImageWidth(image);
+        const currentSize = await this._getImageWidth(image);
         const currentMimetype = this._getImageMimetype(image);
 
         const isOriginalFormat = await this._isOriginalFormat(currentSize, currentMimetype);
