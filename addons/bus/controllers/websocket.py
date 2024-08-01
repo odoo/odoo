@@ -52,6 +52,10 @@ class WebsocketController(Controller):
         request.env['ir.websocket']._update_bus_presence(int(inactivity_period), im_status_ids_by_model)
         return {}
 
+    @route("/websocket/on_closed", type="json", auth="public", cors="*")
+    def on_websocket_closed(self):
+        request.env["ir.websocket"]._on_websocket_closed(request.httprequest.cookies)
+
     @route('/bus/websocket_worker_bundle', type='http', auth='public', cors='*')
     def get_websocket_worker_bundle(self, v=None):  # pylint: disable=unused-argument
         """
