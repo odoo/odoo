@@ -511,6 +511,9 @@ class StockMoveLine(models.Model):
             moves.with_prefetch()._recompute_state()
         return res
 
+    def _sorting_move_lines(self):
+        return (self.id,)
+
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
         the source location to the destination location, and unreserve if needed in the source
