@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from odoo import fields, models
 
 
@@ -20,7 +21,8 @@ class StockRule(models.Model):
         domain = super(StockRule, self)._make_po_get_domain(company_id, values, partner)
         if 'supplier' in values and values['supplier'].purchase_requisition_id:
             domain += (
-                ('requisition_id', '=', values['supplier'].purchase_requisition_id.id),
+                ('requisition_id', '=',
+                 values['supplier'].purchase_requisition_id.id),
             )
         return domain
 
@@ -43,9 +45,31 @@ class Orderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
     def _quantity_in_progress(self):
-        res = super(Orderpoint, self)._quantity_in_progress()
+        res = super()._quantity_in_progress()
+        requisitions = self.env['purchase.requisition'].search(
+            [('state', '=', 'draft'), ('origin', 'in', self.mapped('name'))])
+        if not requisitions:
+            return res
+        requisitions.read(['origin'])
+        map_requisitions = {r.id: r.origin for r in requisitions}
+        data_group = self.env['purchase.requisition.line'].sudo().read_group(
+            [('requisition_id', 'in', requisitions.ids),
+             ('product_id', 'in', self.product_id.ids),
+             ('move_dest_id', '=', False)],
+            ['product_id', 'product_qty', 'product_uom_id', 'requisition_id'], ['requisition_id', 'product_id', 'product_uom_id'])
+        data = defaultdict(float)
+        Uom = self.env['uom.uom']
+        Product = self.env['product.product']
+        for group in data_group:
+            key = (
+                map_requisitions[group['requisition_id'][0]], group['product_id'][0])
+            data[key] += Uom.browse(group['product_qty'])._compute_quantity(
+                group['product_qty'], Product.browse(group['product_id'][0]).uom_id, round=False)
         for op in self:
-            for pr in self.env['purchase.requisition'].search([('state', '=', 'draft'), ('origin', '=', op.name)]):
-                for prline in pr.line_ids.filtered(lambda l: l.product_id.id == op.product_id.id and not l.move_dest_id):
-                    res[op.id] += prline.product_uom_id._compute_quantity(prline.product_qty, op.product_uom, round=False)
+            key = (op.name, op.product_id.id)
+            qty = data.get(key, 0)
+            if not qty:
+                continue
+            res[op.id] += op.product_id.uom_id._compute_quantity(
+                qty, op.product_uom, round=False)
         return res
