@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.3alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-24 08:11+0000\n"
+"POT-Creation-Date: 2024-04-24 08:09+0000\n"
 "PO-Revision-Date: 2024-04-24 08:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,6 +24,11 @@ msgid ""
 "                            .company_header {\n"
 "                                .name_container {\n"
 "                                    color:"
+msgstr ""
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "/12345"
 msgstr ""
 
 #. module: l10n_din5008
@@ -56,7 +62,8 @@ msgid ""
 ";\n"
 "                            }\n"
 "                            .page {\n"
-"                                [name=invoice_line_table], [name=stock_move_table], .o_main_table {\n"
+"                                [name=invoice_line_table], "
+"[name=stock_move_table], .o_main_table {\n"
 "                                    th {\n"
 "                                        color:"
 msgstr ""
@@ -69,7 +76,8 @@ msgstr "<span class=\"fw-bold\">Adresse de facturation:</span>"
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "<span class=\"fw-bold\">Invoicing and Shipping Address:</span>"
-msgstr "<span class=\"fw-bold\">Adresse de facturation et d'expédition:</span>."
+msgstr ""
+"<span class=\"fw-bold\">Adresse de facturation et d'expédition:</span>."
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
@@ -80,11 +88,6 @@ msgstr "<span class=\"fw-bold\">Adresse d'expédition:</span>"
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "<span>|</span>"
 msgstr ""
-
-#. module: l10n_din5008
-#: model:ir.model,name:l10n_din5008.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Ligne analytique"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -109,7 +112,7 @@ msgstr "Ville"
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__company_details
 msgid "Company Details"
-msgstr "Détails de la société "
+msgstr "Détails de la société"
 
 #. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_base_document_layout
@@ -128,9 +131,13 @@ msgstr "Note de crédit"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Delivery Date"
 msgstr "Date de livraison"
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "Delivery Date:"
+msgstr "Date de livraison:"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
@@ -139,8 +146,8 @@ msgstr "Projet de facture"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
-msgid "Due Date"
-msgstr "Date d'échéance"
+msgid "Due Date:"
+msgstr "Date d'échéance:"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__account_fiscal_country_id
@@ -155,7 +162,7 @@ msgstr "Pied de page de tous les rapports."
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "HRB Nr:"
-msgstr ""
+msgstr "N° HRB:"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_details
@@ -165,12 +172,12 @@ msgstr "Texte d'en-tête affiché en haut de tous les rapports."
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "IBAN:"
-msgstr ""
+msgstr "IBAN:"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
-msgid "INV/2021/12345"
-msgstr ""
+msgid "INV/"
+msgstr "INV/"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -180,9 +187,8 @@ msgstr "Facture"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Invoice Date"
-msgstr "Invoice Date"
+msgstr "Date de facturation"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
@@ -190,22 +196,34 @@ msgid "Invoice Date Due"
 msgstr "Date d'échéance de la facture"
 
 #. module: l10n_din5008
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "Invoice Date:"
+msgstr "Date de facturation:"
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Invoice No."
 msgstr "Numéro de facture"
 
 #. module: l10n_din5008
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_analytic_line__l10n_din5008_document_title
-#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_document_title
-msgid "L10N Din5008 Document Title"
-msgstr "Titre du document L10N Din5008"
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "Invoice No.:"
+msgstr "Numéro de facture:"
 
 #. module: l10n_din5008
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_analytic_line__l10n_din5008_template_data
-#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_template_data
-msgid "L10N Din5008 Template Data"
-msgstr "Données de modèle L10N Din5008"
+#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_delivery_date
+msgid "L10N Din5008 Delivery Date"
+msgstr ""
+
+#. module: l10n_din5008
+#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_due_date
+msgid "L10N Din5008 Due Date"
+msgstr ""
+
+#. module: l10n_din5008
+#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_invoice_date
+msgid "L10N Din5008 Invoice Date"
+msgstr ""
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -214,9 +232,13 @@ msgstr "Page: <span class=\"page\"/> sur <span class=\"topage\"/>"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Reference"
 msgstr "Référence"
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "Reference:"
+msgstr "Référence:"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__report_footer
@@ -224,9 +246,14 @@ msgid "Report Footer"
 msgstr "Pied de page du rapport"
 
 #. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "SO/2021/45678"
+msgstr "SO/2021/45678"
+
+#. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Source"
-msgstr ""
+msgstr "Source"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__street
@@ -241,14 +268,13 @@ msgstr "Rue 2"
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "Tax ID"
-msgstr ""
+msgstr "N° TVA"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
 msgstr ""
-"Le pays à partir duquel utiliser les déclarations fiscales pour cette "
-"société"
+"Le pays à partir duquel utiliser les déclarations fiscales pour cette société"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_registry
