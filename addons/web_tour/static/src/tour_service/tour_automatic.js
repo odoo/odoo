@@ -12,18 +12,19 @@ export class TourAutomatic {
             target: document,
             defaultCheckDelay: 500,
         });
-        this.stepDelay = +tourState.get(this.name, "stepDelay") || 0;
+        const tourConfig = tourState.getCurrentConfig();
+        this.stepDelay = tourConfig.stepDelay;
     }
 
     start(pointer, callback) {
-        const currentStepIndex = tourState.get(this.name, "currentIndex");
+        const currentStepIndex = tourState.getCurrentIndex();
         const macroSteps = this.steps
             .filter((step) => step.index >= currentStepIndex)
             .flatMap((step) => step.compileToMacro(pointer))
             .concat([
                 {
                     action: () => {
-                        if (tourState.get(this.name, "stepState") === "errored") {
+                        if (tourState.getCurrentTourOnError()) {
                             console.error("tour not succeeded");
                         } else {
                             transitionConfig.disabled = false;
@@ -39,7 +40,6 @@ export class TourAutomatic {
             steps: macroSteps,
         };
 
-        pointer.start();
         transitionConfig.disabled = true;
         //Activate macro in exclusive mode (only one macro per MacroEngine)
         this.macroEngine.activate(macro, true);

@@ -36,9 +36,8 @@ export class TourInteractive {
         this.pointer = pointer;
         this.debouncedToggleOpen = debounce(this.pointer.showContent, 50, true);
         this.onTourEnd = onTourEnd;
-        this.pointer.start();
         this.observerDisconnect = hoot.observe(document.body, () => this._onMutation());
-        this.currentActionIndex = tourState.get(this.name, "currentIndex") || 0;
+        this.currentActionIndex = tourState.getCurrentIndex();
         this.play();
     }
 
@@ -72,7 +71,8 @@ export class TourInteractive {
             .split(/,\s*(?![^(]*\))/)
             .map((part) => hoot.queryFirst(part, { visible: true }))
             .filter((el) => !!el)
-            .map((el) => this.getAnchorEl(el, this.currentAction.event));
+            .map((el) => this.getAnchorEl(el, this.currentAction.event))
+            .filter((el) => !!el);
     }
 
     play() {
@@ -85,13 +85,10 @@ export class TourInteractive {
 
         this.currentAction = this.actions.at(this.currentActionIndex);
 
-        if (this.currentAction.event === "warn") {
-            console.warn(`Step '${this.currentAction.anchor}' ignored because no 'run'`);
-            this.currentActionIndex++;
-            this.play();
-        }
-
-        if (!this.currentAction.step.active) {
+        if (!this.currentAction.step.active || this.currentAction.event === "warn") {
+            if (this.currentAction.event === "warn") {
+                console.warn(`Step '${this.currentAction.anchor}' ignored.`);
+            }
             this.currentActionIndex++;
             this.play();
             return;
@@ -99,22 +96,24 @@ export class TourInteractive {
 
         console.log(this.currentAction.event, this.currentAction.anchor);
 
-        tourState.set(this.name, "currentIndex", this.currentActionIndex);
+        tourState.setCurrentIndex(this.currentActionIndex);
         this.anchorEls = this.findTriggers();
         this.setActionListeners();
         this.updatePointer();
     }
 
     updatePointer() {
-        this.pointer.pointTo(
-            this.anchorEls[0],
-            this.currentAction.pointerInfo,
-            this.currentAction.event === "drop"
-        );
-        this.pointer.setState({
-            onMouseEnter: () => this.debouncedToggleOpen(true),
-            onMouseLeave: () => this.debouncedToggleOpen(false),
-        });
+        if (this.anchorEls.length) {
+            this.pointer.pointTo(
+                this.anchorEls[0],
+                this.currentAction.pointerInfo,
+                this.currentAction.event === "drop"
+            );
+            this.pointer.setState({
+                onMouseEnter: () => this.debouncedToggleOpen(true),
+                onMouseLeave: () => this.debouncedToggleOpen(false),
+            });
+        }
     }
 
     setActionListeners() {
@@ -403,6 +402,7 @@ export class TourInteractive {
                 if (!hoot.queryFirst(".o_home_menu", { visible: true })) {
                     this.backward();
                 }
+                return;
             }
             this.updatePointer();
         }

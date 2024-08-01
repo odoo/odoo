@@ -194,5 +194,5 @@ export function createPointerState() {
     const floatingAnchor = document.createElement("div");
     floatingAnchor.className = "position-fixed";
 
-    return { state, methods: { setState, showContent, pointTo, hide, destroy } };
+    return { state, setState, showContent, pointTo, hide, destroy };
 }

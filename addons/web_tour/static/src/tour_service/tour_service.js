@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { EventBus, markup, whenReady, reactive, validate } from "@odoo/owl";
+import { markup, whenReady, validate } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -8,16 +8,21 @@ import { session } from "@web/session";
 import { TourPointer } from "../tour_pointer/tour_pointer";
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
-import { callWithUnloadCheck } from "./tour_utils";
 import { TourInteractive } from "./tour_interactive";
 import { TourAutomatic } from "./tour_automatic";
+import { callWithUnloadCheck } from "./tour_utils";
+import {
+    TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
+    TourRecorder,
+} from "@web_tour/tour_service/tour_recorder/tour_recorder";
+import { redirect } from "@web/core/utils/urls";
 
 const StepSchema = {
-    id: { type: String, optional: true },
+    id: { type: [String], optional: true },
     content: { type: [String, Object], optional: true }, //allow object(_t && markup)
     debugHelp: { type: String, optional: true },
     isActive: { type: Array, element: String, optional: true },
-    run: { type: [String, Function], optional: true },
+    run: { type: [String, Function, Boolean], optional: true },
     timeout: {
         optional: true,
         validate(value) {
@@ -38,15 +43,9 @@ const StepSchema = {
 
 const TourSchema = {
     checkDelay: { type: Number, optional: true },
-    fadeout: {
-        optional: true,
-        validate(value) {
-            return ["fast", "medium", "slow", "no"].includes(value);
-        },
-    },
     name: { type: String, optional: true },
-    rainbowManMessage: { type: [String, Function, Boolean], optional: true },
     saveAs: { type: String, optional: true },
+    rainbowManMessage: { type: [String, Boolean, Function], optional: true },
     sequence: { type: Number, optional: true },
     steps: Function,
     test: { type: Boolean, optional: true },
@@ -55,158 +54,32 @@ const TourSchema = {
 };
 
 registry.category("web_tour.tours").addValidation(TourSchema);
+const userMenuRegistry = registry.category("user_menuitems");
 
 export const tourService = {
     // localization dependency to make sure translations used by tours are loaded
     dependencies: ["orm", "effect", "overlay", "localization"],
     start: async (_env, { orm, effect, overlay }) => {
         await whenReady();
-        const toursEnabled = "tour_disable" in session && !session.tour_disable;
-        const consumedTours = new Set(session.web_tours);
-
-        /** @type {{ [k: string]: Tour }} */
-        const tours = {};
+        let toursEnabled = session?.tour_enabled;
         const tourRegistry = registry.category("web_tour.tours");
-        function register(name, tour) {
-            name = tour.saveAs || name;
-            const wait_for = tour.wait_for || Promise.resolve();
-            tours[name] = {
-                wait_for,
-                name,
-                get steps() {
-                    const steps = [];
-                    for (const step of tour.steps()) {
-                        try {
-                            validate(step, StepSchema);
-                        } catch (error) {
-                            console.error(
-                                `Error in schema for TourStep ${JSON.stringify(step, null, 4)}\n${
-                                    error.message
-                                }`
-                            );
-                        }
-                        steps.push(step);
-                    }
-                    return steps;
-                },
-                url: tour.url,
-                rainbowManMessage: tour.rainbowManMessage,
-                fadeout: tour.fadeout || "medium",
-                sequence: tour.sequence || 1000,
-                test: tour.test,
-                checkDelay: tour.checkDelay,
-            };
-            wait_for.then(() => {
-                if (
-                    !tour.test &&
-                    toursEnabled &&
-                    !consumedTours.has(name) &&
-                    !tourState.getActiveTourNames().includes(name)
-                ) {
-                    startTour(name, { mode: "manual", redirect: false });
-                }
-            });
-        }
-        for (const [name, tour] of tourRegistry.getEntries()) {
-            register(name, tour);
-        }
-        tourRegistry.addEventListener("UPDATE", ({ detail: { key, value } }) => {
-            if (tourRegistry.contains(key)) {
-                register(key, value);
-                if (
-                    tourState.getActiveTourNames().includes(key) &&
-                    // Don't resume onboarding tours when tours are disabled
-                    (toursEnabled || tourState.get(key, "mode") === "auto")
-                ) {
-                    resumeTour(key);
-                }
-            } else {
-                delete tours[value];
-            }
-        });
+        const pointer = createPointerState();
+        pointer.stop = () => {};
 
-        const bus = new EventBus();
-
-        const pointers = reactive({});
-        /** @type {Set<string>} */
-        const runningTours = new Set();
-
-        // FIXME: this is a hack for stable: whenever the macros advance, for each call to pointTo,
-        // we push a function that will do the pointing as well as the tour name. Then after
-        // a microtask tick, when all pointTo calls have been made by the macro system, we can sort
-        // these by tour priority/sequence and only call the one with the highest priority so we
-        // show the correct pointer.
-        const possiblePointTos = [];
-        function createPointer(tourName, config) {
-            const { state: pointerState, methods } = createPointerState();
-            let remove;
-            return {
-                start() {
-                    pointers[tourName] = {
-                        methods,
-                        id: tourName,
-                        component: TourPointer,
-                        props: { pointerState, ...config },
-                    };
-                    remove = overlay.add(pointers[tourName].component, pointers[tourName].props, {
-                        sequence: 1100, // sequence based on bootstrap z-index values.
-                    });
-                },
-                stop() {
-                    remove?.();
-                    delete pointers[tourName];
-                    methods.destroy();
-                },
-                ...methods,
-                async pointTo(anchor, step, isZone) {
-                    possiblePointTos.push([tourName, () => methods.pointTo(anchor, step, isZone)]);
-                    await Promise.resolve();
-                    // only done once per macro advance
-                    if (!possiblePointTos.length) {
-                        return;
-                    }
-                    const toursByPriority = Object.fromEntries(
-                        getSortedTours().map((t, i) => [t.name, i])
-                    );
-                    const sortedPointTos = possiblePointTos
-                        .slice(0)
-                        .sort(([a], [b]) => toursByPriority[a] - toursByPriority[b]);
-                    possiblePointTos.splice(0); // reset for the next macro advance
-
-                    const active = sortedPointTos[0];
-                    const [activeId, enablePointer] = active || [];
-                    for (const { id, methods } of Object.values(pointers)) {
-                        if (id === activeId) {
-                            enablePointer();
-                        } else {
-                            methods.hide();
-                        }
-                    }
-                },
-            };
-        }
-
-        function showSuccessMessage({ rainbowManMessage, fadeout }) {
-            if (!rainbowManMessage) {
-                return;
-            }
-            let message;
-            if (typeof rainbowManMessage === "function") {
-                message = rainbowManMessage({
-                    isTourConsumed: (name) => consumedTours.has(name),
-                });
-            } else if (typeof rainbowManMessage === "string") {
-                message = rainbowManMessage;
-            } else {
-                message = markup(
-                    _t("<strong><b>Good job!</b> You went through all steps of this tour.</strong>")
-                );
-            }
-            effect.add({ type: "rainbow_man", message, fadeout });
-        }
+        userMenuRegistry.add("web_tour.tour_enabled", () => ({
+            type: "switch",
+            id: "web_tour.tour_enabled",
+            description: _t("Onboarding"),
+            callback: async () => {
+                tourState.clear();
+                await orm.call("res.users", "switch_tour_enabled");
+                browser.location.reload();
+            },
+            isChecked: toursEnabled,
+            sequence: 30,
+        }));
 
         function endTour({ name }) {
-            bus.trigger("TOUR-FINISHED");
             // Used to signal the python test runner that the tour finished without error.
             browser.console.log("tour succeeded");
             // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
@@ -215,122 +88,186 @@ export const tourService = {
             msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
             msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
             browser.console.log(`\n\n${msg.join("\n")}\n`);
-            consumedTours.add(name);
-            runningTours.delete(name);
-            tourState.clear(name);
+            tourState.clear();
         }
 
-        function startTour(tourName, options = {}) {
-            if (runningTours.has(tourName) && options.mode === "manual") {
-                return;
+        function getTourFromRegistry(tourName) {
+            const tour = tourRegistry.getEntries().findLast(([n, t]) => t.saveAs == tourName) || [
+                tourName,
+                tourRegistry.get(tourName),
+            ];
+            if (!tour.at(1)) {
+                throw new Error(`Tour '${tourName}' is not found in the registry.`);
             }
-            runningTours.add(tourName);
+
+            return {
+                ...tour[1],
+                steps: tour[1].steps(),
+                name: tour[0],
+                wait_for: tour[1].wait_for || Promise.resolve(),
+            };
+        }
+
+        async function getTourFromDB(tourName) {
+            const tour = await orm.call("web_tour.tour", "get_tour_json_by_name", [tourName]);
+            if (!tour) {
+                throw new Error(`Tour '${tourName}' is not found in the database.`);
+            }
+
+            return tour;
+        }
+
+        function validateStep(step) {
+            try {
+                validate(step, StepSchema);
+            } catch (error) {
+                console.error(
+                    `Error in schema for TourStep ${JSON.stringify(step, null, 4)}\n${
+                        error.message
+                    }`
+                );
+            }
+        }
+
+        async function startTour(tourName, options = {}) {
+            pointer.stop();
+            const tour = options.fromDB
+                ? { name: tourName, url: options.url }
+                : getTourFromRegistry(tourName);
+
+            if (!session.is_public && !toursEnabled && options.mode === "manual") {
+                const result = await orm.call("res.users", "switch_tour_enabled", [!toursEnabled]);
+                toursEnabled = result;
+            }
+
             const defaultOptions = {
                 stepDelay: 0,
                 keepWatchBrowser: false,
                 mode: "auto",
-                startUrl: "",
                 showPointerDuration: 0,
-                redirect: true,
                 debug: false,
+                redirect: true,
             };
+
             options = Object.assign(defaultOptions, options);
-            const tour = tours[tourName];
-            if (!tour) {
-                throw new Error(`Tour '${tourName}' is not found.`);
-            }
-            tourState.set(tourName, "currentIndex", 0);
-            tourState.set(tourName, "stepDelay", options.stepDelay);
-            tourState.set(tourName, "keepWatchBrowser", options.keepWatchBrowser);
-            tourState.set(tourName, "debug", options.debug);
-            tourState.set(tourName, "showPointerDuration", options.showPointerDuration);
-            tourState.set(tourName, "mode", options.mode);
-            tourState.set(tourName, "sequence", tour.sequence);
-            if (tourState.get(tourName, "debug") !== false) {
+            tourState.setCurrentConfig(options);
+            tourState.setCurrentTour(tour.name);
+            tourState.setCurrentIndex(0);
+            if (options.debug !== false) {
                 // Starts the tour with a debugger to allow you to choose devtools configuration.
                 // eslint-disable-next-line no-debugger
                 debugger;
             }
-            const pointer = createPointer(tourName, {
-                bounce: !(options.mode === "auto" && options.keepWatchBrowser),
-            });
 
             const willUnload = callWithUnloadCheck(() => {
-                if (tour.url && tour.url !== options.startUrl && options.redirect) {
-                    browser.location.href = browser.location.origin + tour.url;
+                if (tour.url && options.startUrl != tour.url && options.redirect) {
+                    redirect(tour.url);
                 }
             });
-
             if (!willUnload) {
-                if (options.mode === "auto") {
-                    new TourAutomatic(tour).start(pointer, () => {
-                        pointer.stop();
-                        endTour(tour);
-                    });
-                } else {
-                    new TourInteractive(tour).start(pointer, () => {
-                        pointer.stop();
-                        orm.call("web_tour.tour", "consume", [[tour.name]]);
-                        showSuccessMessage(tour);
-                        endTour(tour);
-                    });
-                }
+                resumeTour();
             }
         }
 
-        function resumeTour(tourName) {
-            if (runningTours.has(tourName)) {
-                return;
+        async function resumeTour() {
+            const tourName = tourState.getCurrentTour();
+            const tourConfig = tourState.getCurrentConfig();
+
+            let tour;
+            if (tourConfig.fromDB) {
+                tour = await getTourFromDB(tourName);
+            } else {
+                tour = getTourFromRegistry(tourName);
             }
-            runningTours.add(tourName);
-            const tour = tours[tourName];
-            const keepWatchBrowser = tourState.get(tourName, "keepWatchBrowser");
-            const mode = tourState.get(tourName, "mode");
-            const pointer = createPointer(tourName, {
-                bounce: !(mode === "auto" && keepWatchBrowser),
-            });
-            if (mode === "auto") {
+
+            tour.steps.forEach((step) => validateStep(step));
+            pointer.stop = overlay.add(
+                TourPointer,
+                {
+                    pointerState: pointer.state,
+                    bounce: !(tourConfig.mode === "auto" && tourConfig.keepWatchBrowser),
+                },
+                {
+                    sequence: 1100, // sequence based on bootstrap z-index values.
+                }
+            );
+
+            if (tourConfig.mode === "auto") {
                 new TourAutomatic(tour).start(pointer, () => {
                     pointer.stop();
                     endTour(tour);
                 });
             } else {
-                new TourInteractive(tour).start(pointer, () => {
+                new TourInteractive(tour).start(pointer, async () => {
                     pointer.stop();
-                    orm.call("web_tour.tour", "consume", [[tour.name]]);
-                    showSuccessMessage(tour);
                     endTour(tour);
+
+                    if (tour.rainbowManMessage) {
+                        effect.add({
+                            type: "rainbow_man",
+                            message: markup(tour.rainbowManMessage),
+                        });
+                    }
+
+                    const nextTour = await orm.call("web_tour.tour", "consume", [tour.name]);
+                    if (nextTour) {
+                        startTour(nextTour.name, { mode: "manual", redirect: false });
+                    }
                 });
             }
         }
 
-        function getSortedTours() {
-            return Object.values(tours).sort((t1, t2) => {
-                return t1.sequence - t2.sequence || (t1.name < t2.name ? -1 : 1);
-            });
+        function startTourRecorder() {
+            if (!browser.localStorage.getItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY)) {
+                const remove = overlay.add(
+                    TourRecorder,
+                    {
+                        onClose: () => {
+                            remove();
+                            browser.localStorage.removeItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY);
+                        },
+                    },
+                    { sequence: 99999 }
+                );
+            }
+            browser.localStorage.setItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY, "1");
         }
 
         if (!window.frameElement) {
             const paramsTourName = new URLSearchParams(browser.location.search).get("tour");
-            if (paramsTourName && paramsTourName in tours) {
-                startTour(paramsTourName, { mode: "manual " });
+            if (paramsTourName) {
+                startTour(paramsTourName, { mode: "manual" });
             }
-            // Resume running tours.
-            for (const tourName of tourState.getActiveTourNames()) {
-                if (tourName in tours) {
-                    resumeTour(tourName);
-                }
+
+            if (tourState.getCurrentTour()) {
+                resumeTour();
+            } else if (session.current_tour) {
+                startTour(session.current_tour.name, { mode: "manual", redirect: false });
+            }
+
+            if (
+                browser.localStorage.getItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY) &&
+                !session.is_public
+            ) {
+                const remove = overlay.add(
+                    TourRecorder,
+                    {
+                        onClose: () => {
+                            remove();
+                            browser.localStorage.removeItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY);
+                        },
+                    },
+                    { sequence: 99999 }
+                );
             }
         }
 
         odoo.startTour = startTour;
-        odoo.isTourReady = (tourName) => tours[tourName].wait_for.then(() => true);
+        odoo.isTourReady = (tourName) => getTourFromRegistry(tourName).wait_for.then(() => true);
 
         return {
-            bus,
             startTour,
-            resumeTour,
-            getSortedTours,
+            startTourRecorder,
         };
     },
 };
