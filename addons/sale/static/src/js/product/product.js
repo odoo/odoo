@@ -5,9 +5,10 @@ import { formatCurrency } from "@web/core/currency";
 import {
     ProductTemplateAttributeLine as PTAL
 } from "../product_template_attribute_line/product_template_attribute_line";
+import { QuantityButtons } from '../quantity_buttons/quantity_buttons';
 
 export class Product extends Component {
-    static components = { PTAL };
+    static components = { PTAL, QuantityButtons };
     static template = "sale.Product";
     static props = {
         id: { type: [Number, {value: false}], optional: true },
@@ -25,41 +26,6 @@ export class Product extends Component {
         parent_product_tmpl_id: { type: Number, optional: true },
         price_info: { type: String, optional: true },
     };
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Increase the quantity of the product in the state.
-     */
-    increaseQuantity() {
-        this.env.setQuantity(this.props.product_tmpl_id, this.props.quantity+1);
-    }
-
-    /**
-     * Set the quantity of the product in the state.
-     *
-     * @param {Event} event
-     */
-    async setQuantity(event) {
-        const quantity = parseFloat(event.target.value);
-        const didUpdateQuantity = await this.env.setQuantity(
-            this.props.product_tmpl_id, isNaN(quantity) ? 0 : quantity
-        );
-        // If the quantity wasn't updated, the component won't rerender, and the input will display
-        // a stale value. As a result, we need to manually rerender the input.
-        if (!didUpdateQuantity) {
-            this.render();
-        }
-    }
-
-    /**
-     * Decrease the quantity of the product in the state.
-     */
-    decreaseQuantity() {
-        this.env.setQuantity(this.props.product_tmpl_id, this.props.quantity-1);
-    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -81,5 +47,26 @@ export class Product extends Component {
      */
     get isMainProduct() {
         return this.env.mainProductTmplId === this.props.product_tmpl_id;
+    }
+
+    /**
+     * Return this product's image URL.
+     *
+     * @return {String} This product's image URL.
+     */
+    get imageUrl() {
+        const modelPath = this.props.id
+            ? `product.product/${ this.props.id }`
+            : `product.template/${ this.props.product_tmpl_id }`;
+        return `/web/image/${ modelPath }/image_128`;
+    }
+
+    /**
+     * Check whether the provided PTAL should be shown.
+     *
+     * @return {Boolean} Whether the PTAL should be shown.
+     */
+    shouldShowPtal(ptal) {
+        return this.env.canChangeVariant || ptal.create_variant === 'no_variant' ;
     }
 }

@@ -3,15 +3,10 @@
     <t t-name="sale.Product">
         <td class="o_sale_product_configurator_img py-3 px-0">
             <img
-                t-if="this.props.id"
                 class="w-100"
-                t-att-src="'/web/image/product.product/'+this.props.id+'/image_128'"
-                alt="Product Image"/>
-            <img
-                t-else=""
-                class="w-100"
-                t-att-src="'/web/image/product.template/'+this.props.product_tmpl_id+'/image_128'"
-                alt="Product Image"/>
+                t-att-src="imageUrl"
+                alt="Product Image"
+            />
         </td>
         <td class="p-3" t-att-colspan="this.props.optional ? 2:false">
             <div class="mb-4 text-break" name="o_sale_product_configurator_name">
@@ -19,42 +14,30 @@
                 <div
                     t-if="this.props.description_sale"
                     t-out="this.props.description_sale"
-                    class="text-muted small"/>
+                    class="text-muted small"
+                />
                 <div t-if="!this.env.isPossibleCombination(this.props)" class="alert alert-warning mt-3">
                     <span>This option or combination of options is not available</span>
                 </div>
             </div>
             <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
-                <PTAL t-props="ptal" productTmplId="this.props.product_tmpl_id"/>
+                <PTAL
+                    t-if="shouldShowPtal(ptal)"
+                    t-props="ptal"
+                    productTmplId="this.props.product_tmpl_id"
+                />
             </t>
         </td>
-        <td class="o_sale_product_configurator_qty py-3 px-0 text-end">
+        <td
+            t-if="env.showQuantityAndPrice"
+            class="o_sale_product_configurator_qty py-3 px-0 text-end"
+        >
             <t t-if="!this.props.optional">
-                <div
-                    name="sale_product_configurator_quantity_buttons"
-                    class="input-group justify-content-center">
-                    <button
-                        class="btn btn-secondary d-none d-md-inline-block"
-                        name="sale_product_configurator_quantity_button_minus"
-                        aria-label="Remove one"
-                        t-att-disabled="this.props.quantity === 1 &amp;&amp; isMainProduct"
-                        t-on-click="decreaseQuantity">
-                        <i class="fa fa-minus"/>
-                    </button>
-                    <input
-                        class="form-control quantity text-center"
-                        name="product_quantity"
-                        type="number"
-                        t-att-value="this.props.quantity"
-                        t-on-change="setQuantity"/>
-                    <button
-                        class="btn btn-secondary d-none d-md-inline-block"
-                        name="sale_product_configurator_quantity_button_plus"
-                        aria-label="Add one"
-                        t-on-click="increaseQuantity">
-                        <i class="fa fa-plus"/>
-                    </button>
-                </div>
+                <QuantityButtons
+                    quantity="this.props.quantity"
+                    setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
+                    isMinusButtonDisabled="this.props.quantity === 1 &amp;&amp; isMainProduct"
+                />
             </t>
             <t t-else="">
                 <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
@@ -67,7 +50,11 @@
                 Remove
             </a>
         </td>
-        <td class="o_sale_product_configurator_price py-3 px-0 text-end" name="price">
+        <td
+            t-if="env.showQuantityAndPrice"
+            class="o_sale_product_configurator_price py-3 px-0 text-end"
+            name="price"
+        >
             <t t-if="!this.props.optional">
                 <t t-call="sale.product_price" name="sale_product_configurator_price"/>
             </t>

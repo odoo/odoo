@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="sale.ProductCard">
+        <article
+            t-attf-class="product-card card rounded cursor-pointer transition-base {{props.isSelected ? 'selected' : ''}}"
+            t-on-keypress="(event) => event.code === 'Space' ? props.onClick() : () => {}"
+            t-on-click="props.onClick"
+        >
+            <div class="card-header">
+                <img
+                    class="w-100"
+                    t-attf-src="/web/image/product.product/{{props.product.id}}/image_128"
+                    alt="Product Image"
+                />
+            </div>
+            <div class="card-body">
+                <div class="card-title" t-out="props.product.display_name"/>
+                <div class="card-subtitle">
+                    <div
+                        t-foreach="props.product.ptals.filter(shouldShowPtal)"
+                        t-as="ptal"
+                        t-key="ptal.id"
+                        t-out="ptal.ptalDisplayName"
+                    />
+                </div>
+                <BadgeExtraPrice
+                    t-if="props.extraPrice"
+                    price="props.extraPrice"
+                    currencyId="env.currency.id"
+                />
+            </div>
+        </article>
+    </t>
+</templates>

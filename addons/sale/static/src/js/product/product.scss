@@ -3,7 +3,7 @@
         padding-top: 0 !important;
     }
 
-    &.o_sale_product_configurator_table_optional > :not(caption) > *:last-child > * {
+    > :not(caption) > *:last-child > * {
         border-bottom: 0;
     }
 }
@@ -19,20 +19,6 @@
 
 .o_sale_product_configurator_qty {
     width: 64px;
-
-    input {
-        max-width: 4rem;
-        //removing input field=number arrows as their size might
-        //change depending on browser default styling and shift input's position
-        &::-webkit-outer-spin-button,
-        &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        &[type=number] {
-            -moz-appearance: textfield;
-        }
-    }
 
     @include media-breakpoint-up(md) {
         width: 160px;

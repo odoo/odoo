@@ -153,8 +153,8 @@
         </xpath>
     </template>
 
-    <template id="cart_summary" name="Payment" inherit_id="website_sale.checkout_layout">
-        <xpath expr="//td[@name='website_sale_cart_summary_line_price']/child::*" position="attributes">
+    <template id="cart_summary" name="Payment" inherit_id="website_sale.cart_product_price">
+        <xpath expr="//span" position="attributes">
             <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
         </xpath>
     </template>

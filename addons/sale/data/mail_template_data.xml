@@ -135,15 +135,32 @@
                 </td>
             </tr>
         </table>
+        <t t-set="current_subtotal" t-value="0"/>
         <t t-foreach="object.order_line" t-as="line">
-            <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and line.display_type in ['line_section', 'line_note']">
+            <t
+                t-set="line_subtotal"
+                t-value="
+                    line.price_subtotal
+                    if object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'
+                    else line.price_total
+                "
+            />
+            <t t-set="current_subtotal" t-value="current_subtotal + line_subtotal"/>
+            <t
+                t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and (
+                    line.display_type in ['line_section', 'line_note']
+                    or line.product_type == 'combo'
+                )"
+            >
                 <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
                     <t t-set="loop_cycle_number" t-value="loop_cycle_number or 0" />
                     <tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'">
                         <t t-set="loop_cycle_number" t-value="loop_cycle_number + 1" />
                         <td colspan="4">
-                            <t t-if="line.display_type == 'line_section'">
+                            <t t-if="line.display_type == 'line_section' or line.product_type == 'combo'">
                                 <span style="font-weight:bold;" t-out="line.name or ''">Taking care of Trees Course</span>
+                                <t t-set="current_section" t-value="line"/>
+                                <t t-set="current_subtotal" t-value="0"/>
                             </t>
                             <t t-elif="line.display_type == 'line_note'">
                                 <i t-out="line.name or ''">Taking care of Trees Course</i>
@@ -173,6 +190,29 @@
                     </tr>
                 </table>
             </t>
+            <t
+                t-if="current_section and (
+                    line_last
+                    or object.order_line[line_index+1].display_type == 'line_section'
+                    or object.order_line[line_index+1].product_type == 'combo'
+                    or (
+                        line.combo_item_id
+                        and not object.order_line[line_index+1].combo_item_id
+                    )
+                ) and not line.is_downpayment"
+            >
+                <t t-set="current_section" t-value="None"/>
+                <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
+                    <t t-set="loop_cycle_number" t-value="loop_cycle_number or 0"/>
+                    <tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'">
+                        <t t-set="loop_cycle_number" t-value="loop_cycle_number + 1"/>
+                        <td style="width: 100%" align="right">
+                            <span style="font-weight: bold;">Subtotal:</span>
+                            <span t-out="format_amount(current_subtotal, object.currency_id) or ''">$ 10.00</span>
+                        </td>
+                    </tr>
+                </table>
+            </t>
         </t>
     </div>
     <div style="margin: 0px; padding: 0px;" t-if="hasattr(object, 'carrier_id') and object.carrier_id">
@@ -184,7 +224,7 @@
             </tr>
             <tr>
                 <td style="width: 60%"/>
-                <td style="width: 30%;" align="right"><span style="font-weight:bold;">SubTotal:</span></td>
+                <td style="width: 30%;" align="right"><span style="font-weight:bold;">Untaxed Amount:</span></td>
                 <td style="width: 10%;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">$ 10.00</td>
             </tr>
         </table>
@@ -193,7 +233,7 @@
         <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;" align="right">
             <tr>
                 <td style="width: 60%"/>
-                <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">SubTotal:</span></td>
+                <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">Untaxed Amount:</span></td>
                 <td style="width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">$ 10.00</td>
             </tr>
         </table>

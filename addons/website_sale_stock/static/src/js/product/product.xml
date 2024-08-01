@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-inherit="sale.Product" t-inherit-mode="extension">
-        <div name="sale_product_configurator_quantity_buttons" position="attributes">
+        <QuantityButtons position="attributes">
             <attribute name="t-if" add="!isOutOfStock()" separator=" &amp;&amp; "/>
-        </div>
-        <div name="sale_product_configurator_quantity_buttons" position="after">
-            <t t-call="website_sale_stock.out_of_stock"/>
-        </div>
-        <button name="sale_product_configurator_quantity_button_plus" position="attributes">
-            <attribute name="t-att-disabled">
+            <attribute name="isPlusButtonDisabled">
                 !env.isQuantityAllowed(props, props.quantity + 1)
             </attribute>
-        </button>
+        </QuantityButtons>
+        <QuantityButtons position="after">
+            <t t-call="website_sale_stock.out_of_stock"/>
+        </QuantityButtons>
         <button name="sale_product_configurator_add_button" position="attributes">
             <attribute name="t-if" add="!isOutOfStock()" separator=" &amp;&amp; "/>
         </button>

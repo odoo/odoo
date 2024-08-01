@@ -551,7 +551,15 @@
                                 </field>
                                 <field name="product_no_variant_attribute_value_ids" column_invisible="1" />
                                 <field name="is_configurable_product" column_invisible="1" />
-                                <field name="name" widget="section_and_note_text" optional="show"/>
+                                <field name="linked_line_id" column_invisible="1"/>
+                                <field name="virtual_id" column_invisible="1"/>
+                                <field name="linked_virtual_id" column_invisible="1"/>
+                                <field name="combo_item_id" column_invisible="1"/>
+                                <field
+                                    name="name"
+                                    widget="sol_text"
+                                    optional="show"
+                                />
                                 <field name="analytic_distribution" widget="analytic_distribution"
                                            optional="hide"
                                            groups="analytic.group_analytic_accounting"

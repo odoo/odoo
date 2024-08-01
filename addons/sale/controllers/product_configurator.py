@@ -346,7 +346,6 @@ class SaleProductConfiguratorController(Controller):
                 'description_sale': str|False,
                 'display_name': str,
                 'price': float,
-                'quantity': int,
             }
         """
         basic_information = dict(

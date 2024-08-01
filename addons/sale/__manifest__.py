@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -69,14 +68,20 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/src/scss/sale_onboarding.scss',
             'sale/static/src/js/badge_extra_price/*',
             'sale/static/src/js/sale_action_helper/*',
+            'sale/static/src/js/combo_configurator_dialog/*',
+            'sale/static/src/js/models/*',
             'sale/static/src/js/product/*',
+            'sale/static/src/js/product_card/*',
             'sale/static/src/js/product_configurator_dialog/*',
             'sale/static/src/js/product_list/*',
             'sale/static/src/js/product_template_attribute_line/*',
+            'sale/static/src/js/quantity_buttons/*',
+            'sale/static/src/js/sale_order_line_field/*',
             'sale/static/src/js/sale_progressbar_field.js',
             'sale/static/src/js/tours/sale.js',
             'sale/static/src/js/sale_product_field.js',
             'sale/static/src/js/sale_product_field.scss',
+            'sale/static/src/js/sale_utils.js',
             'sale/static/src/xml/**/*',
             'sale/static/src/views/**/*',
         ],

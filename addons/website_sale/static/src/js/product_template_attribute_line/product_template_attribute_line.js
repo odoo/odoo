@@ -7,20 +7,20 @@ import {
 
 patch(ProductTemplateAttributeLine.prototype, {
     /**
-     * Return the product template attribute line, as a read-only display string.
+     * Return the display name of this PTAL.
      *
-     * @return {String} - The read-only product template attribute line.
+     * @return {String} - The display name of this PTAL.
      */
-    getReadOnlyPtal() {
+    getPtalDisplayName() {
         const selectedPtavIds = new Set(this.props.selected_attribute_value_ids);
         const selectedPtavNames = this.props.attribute_values
             .filter(ptav => selectedPtavIds.has(ptav.id))
             .map(ptav => ptav.name)
             .join(', ');
-        let readOnlyPtalDisplayName = `${this.props.attribute.name}: ${selectedPtavNames}`;
+        let ptalDisplayName = `${this.props.attribute.name}: ${selectedPtavNames}`;
         if (this.isSelectedPTAVCustom()) {
-            readOnlyPtalDisplayName += `: ${this.props.customValue}`;
+            ptalDisplayName += `: ${this.props.customValue}`;
         }
-        return readOnlyPtalDisplayName;
+        return ptalDisplayName;
     },
 });

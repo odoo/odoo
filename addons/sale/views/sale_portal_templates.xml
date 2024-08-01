@@ -546,8 +546,18 @@
 
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
-                                <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
-                                    <t t-if="not line.display_type">
+                                <tr
+                                    t-att-class="'fw-bold o_line_section' if (
+                                        line.display_type == 'line_section'
+                                        or line.product_type == 'combo'
+                                    )
+                                    else 'fst-italic o_line_note' if line.display_type == 'line_note'
+                                    else ''"
+                                >
+                                    <t
+                                        name="product_line_row"
+                                        t-if="not line.display_type and line.product_type != 'combo'"
+                                    >
                                         <td id="product_name">
                                             <span t-field="line.name"/>
                                         </td>
@@ -580,7 +590,7 @@
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
                                         </td>
                                     </t>
-                                    <t t-if="line.display_type == 'line_section'">
+                                    <t t-if="line.display_type == 'line_section' or line.product_type == 'combo'">
                                         <td colspan="99">
                                             <span t-field="line.name"/>
                                         </td>
@@ -593,8 +603,19 @@
                                         </td>
                                     </t>
                                 </tr>
-                                <tr t-if="current_section and (line_last or lines_to_report[line_index+1].display_type == 'line_section') and not line.is_downpayment"
-                                    class="is-subtotal text-end">
+                                <tr
+                                    t-if="current_section and (
+                                        line_last
+                                        or lines_to_report[line_index+1].display_type == 'line_section'
+                                        or lines_to_report[line_index+1].product_type == 'combo'
+                                        or (
+                                            line.combo_item_id
+                                            and not lines_to_report[line_index+1].combo_item_id
+                                        )
+                                    ) and not line.is_downpayment"
+                                    class="is-subtotal text-end"
+                                >
+                                    <t t-set="current_section" t-value="None"/>
                                     <td colspan="99">
                                         <strong class="mr16">Subtotal</strong>
                                         <span t-out="current_subtotal"

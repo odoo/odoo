@@ -2,24 +2,42 @@
 <templates xml:space="preserve">
 
     <t t-name="website_sale.addToCartNotification">
-        <div class="row g-2 mb-2" t-foreach="props.lines" t-as="line" t-key="line.id">
-            <div class="col-3">
-                <img class="img o_image_64_max rounded mb-2 img-fluid"
-                    t-att-src="line.image_url"
-                    t-att-alt="line.name"/>
-            </div>
-            <div class="col-6 d-flex flex-column align-items-start">
-                <span t-out="getProductSummary(line)"/>
-                <span class="text-muted small"
-                    t-if="line.description"
-                    t-out="line.description"/>
-            </div>
-            <div class="col-3 d-flex flex-column align-items-end gap-1"
-                t-out="getFormattedPrice(line)"/>
+        <div class="row g-2 mb-2" t-foreach="mainLines" t-as="line" t-key="line.id">
+            <t t-call="website_sale.cartLine"/>
         </div>
         <a role="button" class="w-100 btn btn-primary" href="/shop/cart">
             View cart
         </a>
+    </t>
+
+    <t t-name="website_sale.cartLine">
+        <div class="col-2" t-if="line.linked_line_id"/>
+        <div class="col-3">
+            <img
+                class="img o_image_64_max rounded mb-2 img-fluid"
+                t-att-src="line.image_url"
+                t-att-alt="line.name"
+            />
+        </div>
+        <div class="col-6 d-flex flex-column align-items-start">
+            <span t-out="getProductSummary(line)"/>
+            <span class="text-muted small" t-if="line.description" t-out="line.description"/>
+        </div>
+        <div
+            class="col-3 d-flex flex-column align-items-end gap-1"
+            t-if="!line.linked_line_id"
+            t-out="getFormattedPrice(line)"
+        />
+        <div
+            class="row"
+            t-foreach="getLinkedLines(line.id)"
+            t-as="linkedLine"
+            t-key="linkedLine.id"
+        >
+            <t t-call="website_sale.cartLine">
+                <t t-set="line" t-value="linkedLine"/>
+            </t>
+        </div>
     </t>
 
 </templates>

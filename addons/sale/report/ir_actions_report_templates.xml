@@ -94,8 +94,15 @@
 
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
-                        <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
-                            <t t-if="not line.display_type">
+                        <tr
+                            t-att-class="'fw-bold o_line_section' if (
+                                line.display_type == 'line_section'
+                                or line.product_type == 'combo'
+                            )
+                            else 'fst-italic o_line_note' if line.display_type == 'line_note'
+                            else ''"
+                        >
+                            <t t-if="not line.display_type and line.product_type != 'combo'">
                                 <td name="td_name"><span t-field="line.name">Bacon Burger</span></td>
                                 <td name="td_quantity" class="text-end text-nowrap">
                                     <span t-field="line.product_uom_qty">3</span>
@@ -118,7 +125,7 @@
                                     <span t-field="line.price_subtotal">27.00</span>
                                 </td>
                             </t>
-                            <t t-elif="line.display_type == 'line_section'">
+                            <t t-elif="line.display_type == 'line_section' or line.product_type == 'combo'">
                                 <td name="td_section_line" colspan="99">
                                     <span t-field="line.name">A section title</span>
                                 </td>
@@ -132,7 +139,18 @@
                             </t>
                         </tr>
 
-                        <t t-if="current_section and (line_last or lines_to_report[line_index+1].display_type == 'line_section') and not line.is_downpayment">
+                        <t
+                            t-if="current_section and (
+                                line_last
+                                or lines_to_report[line_index+1].display_type == 'line_section'
+                                or lines_to_report[line_index+1].product_type == 'combo'
+                                or (
+                                    line.combo_item_id
+                                    and not lines_to_report[line_index+1].combo_item_id
+                                )
+                            ) and not line.is_downpayment"
+                        >
+                            <t t-set="current_section" t-value="None"/>
                             <tr class="is-subtotal text-end">
                                 <td name="td_section_subtotal" colspan="99">
                                     <strong class="mr16">Subtotal</strong>

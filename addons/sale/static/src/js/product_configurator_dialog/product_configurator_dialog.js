@@ -9,11 +9,11 @@ export class ProductConfiguratorDialog extends Component {
     static props = {
         productTemplateId: Number,
         ptavIds: { type: Array, element: Number },
-        customAttributeValues: {
+        customPtavs: {
             type: Array,
             element: Object,
             shape: {
-                ptavId: Number,
+                id: Number,
                 value: String,
             }
         },
@@ -24,6 +24,14 @@ export class ProductConfiguratorDialog extends Component {
         currencyId: { type: Number, optional: true },
         soDate: String,
         edit: { type: Boolean, optional: true },
+        options: {
+            type: Object,
+            optional: true,
+            shape: {
+                canChangeVariant: { type: Boolean, optional: true },
+                showQuantityAndPrice: { type: Boolean, optional: true },
+            },
+        },
         save: Function,
         discard: Function,
         close: Function, // This is the close from the env of the Dialog Component
@@ -33,6 +41,7 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     setup() {
+        this.env.dialogData.dismiss = !this.props.edit && this.props.discard.bind(this);
         this.state = useState({
             products: [],
             optionalProducts: [],
@@ -48,6 +57,8 @@ export class ProductConfiguratorDialog extends Component {
         useSubEnv({
             mainProductTmplId: this.props.productTemplateId,
             currency: this.currency,
+            canChangeVariant: this.props.options?.canChangeVariant ?? true,
+            showQuantityAndPrice: this.props.options?.showQuantityAndPrice ?? true,
             addProduct: this._addProduct.bind(this),
             removeProduct: this._removeProduct.bind(this),
             setQuantity: this._setQuantity.bind(this),
@@ -64,11 +75,11 @@ export class ProductConfiguratorDialog extends Component {
             } = await this._loadData(this.props.edit);
             this.state.products = products;
             this.state.optionalProducts = optional_products;
-            for (const customValue of this.props.customAttributeValues) {
+            for (const customPtav of this.props.customPtavs) {
                 this._updatePTAVCustomValue(
                     this.env.mainProductTmplId,
-                    customValue.ptavId,
-                    customValue.value
+                    customPtav.id,
+                    customPtav.value
                 );
             }
             this._checkExclusions(this.state.products[0]);
@@ -219,23 +230,21 @@ export class ProductConfiguratorDialog extends Component {
      * @param {Number} productTmplId - The product template id, as a `product.template` id.
      * @param {Number} ptalId - The PTAL id, as a `product.template.attribute.line` id.
      * @param {Number} ptavId - The PTAV id, as a `product.template.attribute.value` id.
-     * @param {Boolean} multiIdsAllowed - Whether multiple `product.template.attribute.value` can be selected.
+     * @param {Boolean} isMulti - Whether multiple `product.template.attribute.value` can be selected.
      */
-    async _updateProductTemplateSelectedPTAV(productTmplId, ptalId, ptavId, multiIdsAllowed) {
+    async _updateProductTemplateSelectedPTAV(productTmplId, ptalId, ptavId, isMulti) {
         const product = this._findProduct(productTmplId);
-        let selectedIds = product.attribute_lines.find(ptal => ptal.id === ptalId).selected_attribute_value_ids;
-        if (multiIdsAllowed) {
-            const ptavID = parseInt(ptavId);
-            if (!selectedIds.includes(ptavID)){
-                selectedIds.push(ptavID);
-            } else {
-                selectedIds = selectedIds.filter(ptav => ptav !== ptavID);
-            }
-
+        const ptal = product.attribute_lines.find(line => line.id === ptalId);
+        ptavId = parseInt(ptavId);
+        if (isMulti) {
+            const selectedPtavIds = new Set(ptal.selected_attribute_value_ids);
+            selectedPtavIds.has(ptavId)
+                ? selectedPtavIds.delete(ptavId)
+                : selectedPtavIds.add(ptavId);
+            ptal.selected_attribute_value_ids = Array.from(selectedPtavIds);
         } else {
-            selectedIds = [parseInt(ptavId)];
+            ptal.selected_attribute_value_ids = [ptavId];
         }
-        product.attribute_lines.find(ptal => ptal.id === ptalId).selected_attribute_value_ids = selectedIds;
         this._checkExclusions(product);
         if (this._isPossibleCombination(product)) {
             const updatedValues = await this._updateCombination(product, product.quantity);
@@ -377,9 +386,12 @@ export class ProductConfiguratorDialog extends Component {
      * @return {Boolean} - Whether the combination is valid or not.
      */
     _isPossibleCombination(product) {
-        return product.attribute_lines.every(ptal => !ptal.attribute_values.find(
-            ptav => ptal.selected_attribute_value_ids.includes(ptav.id)
-        )?.excluded);
+        return product.attribute_lines.every(ptal => {
+            const selectedPtavIds = new Set(ptal.selected_attribute_value_ids);
+            return ptal.attribute_values
+                .filter(ptav => selectedPtavIds.has(ptav.id))
+                .every(ptav => !ptav.excluded);
+        });
     }
 
     /**
