@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta, time
 from unittest.mock import patch
 
-from odoo import fields
+from odoo import Command, fields
 from .common import PurchaseTestCommon
 from odoo.tests.common import Form
 
@@ -384,3 +384,45 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         today = datetime.combine(fields.Datetime.now(), time(12))
         self.assertEqual(purchase_order.date_order, today)
         self.assertEqual(purchase_order.date_planned, today + timedelta(days=7))
+
+    def test_decrease_po_demand_lead_time(self):
+        """
+        In reception in 2+ steps, check that decreasing a PO with leadtime
+        updates the depending pickings accordingly.
+        """
+        company = self.env.ref('base.main_company')
+        company.write({'po_lead': 1.00})
+
+        # Update warehouse with Incoming Shipments 2 steps
+        warehouse = self.warehouse_1
+        warehouse.write({'reception_steps': 'two_steps'})
+
+        product = self.product_1
+        product.route_ids = [Command.set([self.route_buy])]
+        self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+            product, 50.0, product.uom_id, warehouse.lot_stock_id, 'Test scheduler for RFQ', '/', company,
+            {
+                'warehouse_id': warehouse,
+                'rule_id': warehouse.buy_pull_id,
+                'group_id': False,
+                'route_ids': [],
+            }
+        )])
+
+        # Confirm purchase order
+        po = self.env['purchase.order.line'].search([('product_id', '=', product.id)], limit=1).order_id
+        po.button_confirm()
+
+        incoming_shipment1 = po.picking_ids
+        incoming_shipment2 = self.env['stock.picking'].search([('picking_type_id', '=', warehouse.int_type_id.id)], limit=1)
+        self.assertEqual(
+            [po.order_line.product_qty, incoming_shipment1.move_ids.product_qty, incoming_shipment2.move_ids.product_qty],
+            [50.0, 50.0, 50.0]
+        )
+        with Form(po) as po_form:
+            with po_form.order_line.edit(0) as po_line:
+                po_line.product_qty = 35.0
+        self.assertEqual(
+            [po.order_line.product_qty, incoming_shipment1.move_ids.product_qty, incoming_shipment2.move_ids.product_qty],
+            [35.0, 35.0, 35.0]
+        )
