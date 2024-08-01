@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Axel Eduardo de los Reyes Berrones shelonga@live.com https://github.com/AxeldelosReyes
+Axel Eduardo de los Reyes Berrones axel9410clash@gmail.com https://github.com/AxeldelosReyes
