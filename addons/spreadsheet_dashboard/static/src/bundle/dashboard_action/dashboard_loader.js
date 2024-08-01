@@ -3,6 +3,7 @@
 import { Model } from "@odoo/o-spreadsheet";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDefaultCurrency } from "@spreadsheet/currency/helpers";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @type {{
@@ -92,6 +93,7 @@ export class DashboardLoader {
                 id: dashboard.id,
                 displayName: dashboard.name,
                 status: Status.NotLoaded,
+                isFavorite: dashboard.is_favorite,
             };
         }
     }
@@ -112,7 +114,8 @@ export class DashboardLoader {
      * @returns {Array<DashboardGroup>}
      */
     getDashboardGroups() {
-        return this.groups.map((section) => ({
+        const favoriteDashboards = this._getFavoriteDashboards();
+        const dashboardGroups = this.groups.map((section) => ({
             id: section.id,
             name: section.name,
             dashboards: section.dashboards.map((dashboard) => ({
@@ -121,6 +124,13 @@ export class DashboardLoader {
                 status: this._getDashboard(dashboard.id).status,
             })),
         }));
+
+        return favoriteDashboards.length
+            ? [
+                  { id: "favorites", name: _t("FAVORITES"), dashboards: favoriteDashboards },
+                  ...dashboardGroups,
+              ]
+            : dashboardGroups;
     }
 
     /**
@@ -134,11 +144,33 @@ export class DashboardLoader {
             {
                 specification: {
                     name: {},
-                    published_dashboard_ids: { fields: { name: {} } },
+                    published_dashboard_ids: { fields: { name: {}, is_favorite: {} } },
                 },
             }
         );
         return groups.records;
+    }
+
+    /**
+     * Filters and returns an array of favorite dashboards.
+     * @returns {Array<Dashboard>}
+     */
+    _getFavoriteDashboards() {
+        const favoriteDashboards = [];
+        this.groups
+            .flatMap((group) => group.dashboards)
+            .forEach((dashboard) => {
+                const dashboardData = this._getDashboard(dashboard.id);
+                if (dashboardData.isFavorite) {
+                    favoriteDashboards.push({
+                        id: dashboard.id,
+                        displayName: dashboard.name,
+                        status: dashboardData.status,
+                    });
+                }
+            });
+
+        return favoriteDashboards;
     }
 
     /**

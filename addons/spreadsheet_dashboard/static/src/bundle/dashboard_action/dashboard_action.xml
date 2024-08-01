@@ -15,6 +15,12 @@
             </t>
             <t t-set-slot="control-panel-navigation-additional" t-if="!state.activeDashboard?.isSample">
                 <SpreadsheetShareButton t-key="activeDashboardId" model="state.activeDashboard?.model" onSpreadsheetShared.bind="shareSpreadsheet" togglerClass="'btn-light'"/>
+                <a
+                    t-if="state.activeDashboard"
+                    title="Toggle favorite"
+                    t-on-click="toggleFavorite"
+                    t-attf-class="o_dashboard_star fa fa-lg fa-star{{!state.activeDashboard.isFavorite ? '-o' : ' favorite_button_enabled'}}"
+                />
             </t>
         </ControlPanel>
         <t t-set="dashboard" t-value="state.activeDashboard"/>
