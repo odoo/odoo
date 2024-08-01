@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.3alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-24 08:12+0000\n"
+"POT-Creation-Date: 2024-04-24 08:09+0000\n"
 "PO-Revision-Date: 2024-04-24 08:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,6 +24,11 @@ msgid ""
 "                            .company_header {\n"
 "                                .name_container {\n"
 "                                    color:"
+msgstr ""
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "/12345"
 msgstr ""
 
 #. module: l10n_din5008
@@ -56,7 +62,8 @@ msgid ""
 ";\n"
 "                            }\n"
 "                            .page {\n"
-"                                [name=invoice_line_table], [name=stock_move_table], .o_main_table {\n"
+"                                [name=invoice_line_table], "
+"[name=stock_move_table], .o_main_table {\n"
 "                                    th {\n"
 "                                        color:"
 msgstr ""
@@ -80,11 +87,6 @@ msgstr "<span class=\"fw-bold\">Verzendadres:</span>"
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "<span>|</span>"
 msgstr ""
-
-#. module: l10n_din5008
-#: model:ir.model,name:l10n_din5008.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Kostenplaatsregel"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -128,9 +130,13 @@ msgstr "Kredietnota"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Delivery Date"
 msgstr "Leveringsdatum"
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "Delivery Date:"
+msgstr "Leveringsdatum:"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
@@ -139,8 +145,8 @@ msgstr "Conceptfactuur"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
-msgid "Due Date"
-msgstr "Vervaldatum"
+msgid "Due Date:"
+msgstr "Vervaldatum:"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__account_fiscal_country_id
@@ -155,7 +161,7 @@ msgstr "Voettekst, weergegeven aan de onderzijde van alle rapportages."
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "HRB Nr:"
-msgstr "Kvk nr.:"
+msgstr "HRB nr.:"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_details
@@ -169,7 +175,7 @@ msgstr ""
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
-msgid "INV/2021/12345"
+msgid "INV/"
 msgstr ""
 
 #. module: l10n_din5008
@@ -180,32 +186,43 @@ msgstr "Factuur"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Invoice Date"
 msgstr "Factuurdatum"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Invoice Date Due"
-msgstr "Factuurdatum"
+msgstr "Vervaldatum"
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "Invoice Date:"
+msgstr "Factuurdatum:"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Invoice No."
 msgstr "Factuurnr."
 
 #. module: l10n_din5008
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_analytic_line__l10n_din5008_document_title
-#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_document_title
-msgid "L10N Din5008 Document Title"
-msgstr "L10N Din5008 Document Titel"
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "Invoice No.:"
+msgstr "Factuurnr.:"
 
 #. module: l10n_din5008
-#: model:ir.model.fields,field_description:l10n_din5008.field_account_analytic_line__l10n_din5008_template_data
-#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_template_data
-msgid "L10N Din5008 Template Data"
-msgstr "L10N Din5008 Sjabloon Data"
+#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_delivery_date
+msgid "L10N Din5008 Delivery Date"
+msgstr ""
+
+#. module: l10n_din5008
+#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_due_date
+msgid "L10N Din5008 Due Date"
+msgstr ""
+
+#. module: l10n_din5008
+#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_invoice_date
+msgid "L10N Din5008 Invoice Date"
+msgstr ""
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -214,14 +231,23 @@ msgstr "Pagina: <span class=\"page\"/> van <span class=\"topage\"/>"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Reference"
 msgstr "Referentie"
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "Reference:"
+msgstr "Referentie:"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__report_footer
 msgid "Report Footer"
 msgstr "Rapport voettekst"
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
+msgid "SO/2021/45678"
+msgstr ""
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
@@ -241,7 +267,7 @@ msgstr "Straat2"
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "Tax ID"
-msgstr ""
+msgstr "Btw nr."
 
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__account_fiscal_country_id
@@ -256,8 +282,8 @@ msgid ""
 "The registry number of the company. Use it if it is different from the Tax "
 "ID. It must be unique across all partners of a same country"
 msgstr ""
-"Het registratienummer van het bedrijf. Gebruik het als het verschilt van het"
-" BTW nummer. Het moet uniek zijn voor alle partners van hetzelfde land"
+"Het registratienummer van het bedrijf. Gebruik het als het verschilt van het "
+"btw-nummer. Het moet uniek zijn voor alle partners van hetzelfde land"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
