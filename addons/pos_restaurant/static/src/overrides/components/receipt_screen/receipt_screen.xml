@@ -12,5 +12,11 @@
                 Continue
             </div>
         </xpath>
+        <xpath expr="//div[@id='action_btn_desktop']/button[hasclass('validation')]" position="attributes">
+            <attribute name="t-if">!isContinueSplitting()</attribute>
+        </xpath>
+        <xpath expr="//div[@id='action_btn_mobile']/div[hasclass('validation-button')]" position="attributes">
+            <attribute name="t-if">!isContinueSplitting()</attribute>
+        </xpath>
     </t>
 </templates>
