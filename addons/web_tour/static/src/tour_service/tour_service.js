@@ -21,7 +21,6 @@ const StepSchema = {
     noPrepend: { type: Boolean, optional: true },
     run: { type: [String, Function], optional: true },
     timeout: { type: Number, optional: true },
-    title: { type: String, optional: true },
     tooltipPosition: { type: String, optional: true },
     trigger: { type: String },
     //ONLY IN DEBUG MODE
