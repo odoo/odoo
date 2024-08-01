@@ -8,12 +8,15 @@
 
     display: flex;
     height: var(--o-navbar-height);
-    min-width: min-content;
     padding-top: $o-navbar-padding-v;
     padding-bottom: $o-navbar-padding-v;
     border-bottom: $o-navbar-border-bottom;
     background: $o-navbar-background;
     font-size: $o-navbar-font-size;
+
+    @include media-breakpoint-up(md) {
+        min-width: min-content;
+    }
 
     // = Reset browsers defaults
     // --------------------------------------------------------------------------

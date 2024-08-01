@@ -2947,7 +2947,7 @@ test("action name is displayed in breadcrumbs", async () => {
         type: "ir.actions.act_window",
         views: [[false, "graph"]],
     });
-    expect(".o_control_panel .o_breadcrumb .active:first").toHaveText("Glou glou");
+    expect(".o_breadcrumb .active:first").toHaveText("Glou glou");
 });
 
 test("clicking on bar charts triggers a do_action", async () => {

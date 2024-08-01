@@ -2,34 +2,21 @@
 <templates xml:space="preserve">
 
     <t t-name="project_todo.TodoFormView" t-inherit="web.FormView" t-inherit-mode="primary">
-        <xpath expr="//div[hasclass('o_form_view_container')]/Layout" position="inside">
-            <t t-set-slot="control-panel-priority-field">
-                <t t-set="record" t-value="model.root"/>
-                <div class="o_field_widget mb-0">
-                    <PriorityField
-                        name="'priority'"
-                        record="record"
-                        id="'priority'"
-                    />
-                </div>
-            </t>
-            <t t-set-slot="control-panel-todo-name">
-                <t t-set="record" t-value="model.root"/>
-                <TodoEditableBreadcrumbName
-                    name="'name'"
+        <xpath expr="//t[@t-set-slot='control-panel-additional-actions']" position="inside">
+            <t t-set="record" t-value="model.root"/>
+            <div class="o_field_widget mb-0">
+                <PriorityField
+                    name="'priority'"
                     record="record"
-                    id="'name'"
+                    id="'priority'"
                 />
-            </t>
-            <t t-set-slot="todo-mark-as-done-button">
-                <t t-set="record" t-value="model.root"/>
-                <TodoDoneCheckmark
-                    name="'state'"
-                    record="record"
-                    id="'state'"
-                    viewType="'form'"
-                />
-            </t>
+            </div>
+            <TodoDoneCheckmark
+                name="'state'"
+                record="record"
+                id="'state'"
+                viewType="'form'"
+            />
         </xpath>
     </t>
 
