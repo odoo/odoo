@@ -17,7 +17,7 @@ class TestUi(HttpCaseWithUserDemo):
         # the default, but doesn't account for the fact that it could
         # "fall off" into the "o_extra_menu_items" section if the window is
         # too small or there are too many items preceding it in the tests menu
-        self.start_tour("/web#action=test_new_api.action_discussions",
+        self.start_tour("/odoo/action-test_new_api.action_discussions",
             'widget_x2many', step_delay=100, login="admin", timeout=120)
 
 
@@ -37,5 +37,5 @@ class TestUiTranslation(odoo.tests.HttpCase):
         # is rollbacked at insert and a new cursor is opened, can not test that
         # the message is translated (_load_module_terms is also) rollbacked.
         # Test individually the external id and loading of translation.
-        self.start_tour("/web#action=test_new_api.action_categories",
+        self.start_tour("/odoo/action-test_new_api.action_categories",
             'sql_constaint', login="admin")
