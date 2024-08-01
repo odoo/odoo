@@ -16,7 +16,7 @@ class CloudStorageSettings(models.TransientModel):
         to access all old containers.
     cloud_storage_azure_invalidate_user_delegation_key:
         invalidate the cached value for
-        self.env['ir.attachment']._get_cloud_storage_azure_user_delegation_key
+        get_cloud_storage_azure_user_delegation_key
     """
     _inherit = 'res.config.settings'
 
