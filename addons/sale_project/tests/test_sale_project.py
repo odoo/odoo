@@ -876,3 +876,21 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         })
 
         self.assertTrue(sale_order.analytic_account_id)
+
+    def test_cancel_multiple_quotations(self):
+        quotations = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({'product_id': self.product.id}),
+                ],
+            },
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({'product_id': self.product.id}),
+                ],
+            }
+        ])
+        quotations._action_cancel()
+        self.assertEqual(set(quotations.mapped('state')), {'cancel'}, "Both quotations are in 'cancel' state.")
