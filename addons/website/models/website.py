@@ -849,6 +849,7 @@ class Website(models.Model):
             #       to close to OXP.
             fallback_create_missing_industry_image('s_banner_default_image_2', 's_image_text_default_image')
             fallback_create_missing_industry_image('s_banner_default_image_3', 's_product_list_default_image_1')
+            fallback_create_missing_industry_image('s_striped_top_default_image', 's_picture_default_image')
             fallback_create_missing_industry_image('s_text_cover_default_image', 's_cover_default_image')
             fallback_create_missing_industry_image('s_showcase_default_image', 's_image_text_default_image')
             fallback_create_missing_industry_image('s_image_hexagonal_default_image', 's_cover_default_image')
