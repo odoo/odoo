@@ -8,7 +8,7 @@ export class ActionpadWidget extends Component {
     static components = { SelectPartnerButton };
     static props = {
         partner: { type: [Object, { value: null }], optional: true },
-        actionName: Object,
+        actionName: String,
         actionType: String,
         isActionButtonHighlighted: { type: Boolean, optional: true },
         onClickMore: { type: Function, optional: true },

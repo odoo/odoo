@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { SearchMedia } from "./search_media";
 import { fonts } from "@html_editor/utils/fonts";
 
@@ -28,8 +27,6 @@ export class IconSelector extends Component {
             fonts: this.props.fonts,
             needle: "",
         });
-
-        this.searchPlaceholder = _t("Search a pictogram");
     }
 
     get selectedMediaIds() {

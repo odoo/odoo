@@ -10,7 +10,7 @@
                     <div class="subpads d-flex">
                         <ActionpadWidget
                             partner="currentOrder?.get_partner()"
-                            actionName="constructor.numpadActionName"
+                            actionName.translate="Payment"
                             actionType="'payment'"
                             onClickMore.bind="displayAllControlPopup" />
                         <Numpad t-if="pos.get_order().uiState.selected_orderline_uuid" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>

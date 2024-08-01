@@ -27,7 +27,7 @@ export class SearchBar extends Component {
     static template = "point_of_sale.SearchBar";
     static props = {
         config: Object,
-        placeholder: Object,
+        placeholder: String,
         onSearch: Function,
         onFilterSelected: Function,
     };

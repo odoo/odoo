@@ -64,7 +64,7 @@
 </t>
 
 <t t-name="website.DeletePageDialog">
-    <WebsiteDialog title="title" close="props.close">
+    <WebsiteDialog title.translate="Delete Page" close="props.close">
         <p t-if="props.resIds.length > 1">Are you sure you want to delete those pages?</p>
         <p t-else="">Are you sure you want to delete this page?</p>
         <p t-if="props.hasNewPageTemplate" class="text-warning">

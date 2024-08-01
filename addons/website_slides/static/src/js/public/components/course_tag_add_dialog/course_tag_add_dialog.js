@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -20,7 +18,6 @@ export class CourseTagAddDialog extends Component {
 
     async setup() {
         super.setup();
-        this.title = _t("Add Tag");
         this.choices = useState({
             tagIds: [],
             tagGroupIds: [],

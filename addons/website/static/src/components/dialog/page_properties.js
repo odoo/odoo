@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {CheckBox} from '@web/core/checkbox/checkbox';
 import { _t } from "@web/core/l10n/translation";
 import {useService, useAutofocus} from "@web/core/utils/hooks";
@@ -83,9 +81,6 @@ export class DeletePageDialog extends Component {
 
     setup() {
         this.website = useService('website');
-        this.title = _t("Delete Page");
-        this.deleteButton = _t("Ok");
-        this.cancelButton = _t("Cancel");
 
         this.state = useState({
             confirm: false,

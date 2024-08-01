@@ -41,7 +41,6 @@ export class ProductScreen extends Component {
         ProductCard,
         CameraBarcodeScanner,
     };
-    static numpadActionName = _t("Payment");
     static props = {};
 
     setup() {

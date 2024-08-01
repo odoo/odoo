@@ -92,10 +92,6 @@ export class BarcodeDialog extends Component {
         return this.detector && this.detector.__proto__.constructor.name === "ZXingBarcodeDetector";
     }
 
-    get title() {
-        return _t("Barcode Scanner");
-    }
-
     /**
      * Check for camera preview element readiness
      *

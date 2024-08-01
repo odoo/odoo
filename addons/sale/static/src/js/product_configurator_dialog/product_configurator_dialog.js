@@ -1,6 +1,3 @@
-/** @odoo-module **/
-
-import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart, useState, useSubEnv } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
 import { rpc } from "@web/core/network/rpc";
@@ -36,7 +33,6 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     setup() {
-        this.title = _t("Configure your product");
         this.state = useState({
             products: [],
             optionalProducts: [],
