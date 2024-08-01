@@ -661,7 +661,10 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         if (focusedEl) {
             focusedEl.focus();
         } else {
-            ev.currentTarget.querySelector(".dropdown-toggle").blur();
+            const dropdownToggleEl = ev.currentTarget.querySelector(".dropdown-toggle");
+            if (dropdownToggleEl) {
+                dropdownToggleEl.blur();
+            }
         }
     },
     /**
