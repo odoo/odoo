@@ -68,6 +68,7 @@ class PosConfig(models.Model):
         string="Default User",
         help="Access rights of this user will be used when visiting self order website when no session is open.",
         default=_self_order_default_user,
+        required=True,
     )
     self_ordering_pay_after = fields.Selection(
         selection=lambda self: self._compute_selection_pay_after(),
