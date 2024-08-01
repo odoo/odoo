@@ -5,6 +5,8 @@ import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
+from odoo.exceptions import UserError
+
 
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderCommon(SelfOrderCommonTest):
@@ -51,3 +53,10 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         for mode in ("mobile", "consultation", "kiosk"):
             self.pos_config.write({"self_ordering_mode": mode})
             self.start_tour(self_route, "self_order_pos_closed")
+
+    def test_self_order_config_default_user(self):
+        self.pos_config.payment_method_ids = self.pos_config.payment_method_ids.filtered(lambda pm: not pm.is_cash_count)
+        for mode in ("mobile", "consultation", "kiosk"):
+            self.pos_config.write({"self_ordering_mode": mode})
+            with self.assertRaises(UserError):
+                self.pos_config.write({"self_ordering_default_user_id": False})
