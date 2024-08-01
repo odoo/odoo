@@ -190,13 +190,34 @@ class ReportSaleDetails(models.AbstractModel):
                         payment['count'] = True
             if not is_cash_method:
                 cash_name = _('Cash') + ' ' + str(session.name)
+                previous_session = self.env['pos.session'].search([('id', '<', session.id), ('state', '=', 'closed'), ('config_id', '=', session.config_id.id)], limit=1)
+                final_count = previous_session.cash_register_balance_end_real + session.cash_real_transaction
+                cash_difference = session.cash_register_balance_end_real - final_count
+                cash_moves = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)], order='date asc')
+                cash_in_out_list = []
+
+                if previous_session.cash_register_balance_end_real > 0:
+                    cash_in_out_list.append({
+                        'name': _('Cash Opening'),
+                        'amount': previous_session.cash_register_balance_end_real,
+                    })
+
+                # If there is a cash difference, we remove the last cash move which is the cash difference
+                if cash_difference != 0:
+                    cash_moves = cash_moves[:-1]
+
+                for cash_move in cash_moves:
+                    cash_in_out_list.append({
+                        'name': cash_move.payment_ref,
+                        'amount': cash_move.amount
+                    })
                 payments.insert(0, {
                     'name': cash_name,
                     'total': 0,
-                    'final_count': session.cash_register_balance_start,
+                    'final_count': final_count,
                     'money_counted': session.cash_register_balance_end_real,
-                    'money_difference': session.cash_register_balance_end_real - session.cash_register_balance_start,
-                    'cash_moves': [],
+                    'money_difference': cash_difference,
+                    'cash_moves': cash_in_out_list,
                     'count': True,
                     'session': session.id,
                 })
