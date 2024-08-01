@@ -17,7 +17,7 @@ class PosConfig(models.Model):
         return self.env["res.lang"].get_installed()
 
     def _self_order_default_user(self):
-        users = self.env["res.users"].search(['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)])
+        users = self.env["res.users"].search(['|', ('company_ids', 'in', self.env.company.id), ('company_id', '=', False)])
         for user in users:
             if user.sudo().has_group("point_of_sale.group_pos_manager"):
                 return user
@@ -152,10 +152,11 @@ class PosConfig(models.Model):
     def _check_default_user(self):
         for record in self:
             if (
-                record.self_ordering_mode == 'mobile'
-                and record.self_ordering_default_user_id
+                record.self_ordering_mode != 'nothing' and (
+                not record.self_ordering_default_user_id or (
+                record.self_ordering_default_user_id
                 and not record.self_ordering_default_user_id.sudo().has_group("point_of_sale.group_pos_user")
-                and not record.self_ordering_default_user_id.sudo().has_group("point_of_sale.group_pos_manager")
+                and not record.self_ordering_default_user_id.sudo().has_group("point_of_sale.group_pos_manager")))
             ):
                 raise UserError(_("The Self-Order default user must be a POS user"))
 
