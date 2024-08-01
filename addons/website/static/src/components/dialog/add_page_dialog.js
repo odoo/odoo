@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { rpc } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -40,9 +38,6 @@ export class AddPageConfirmDialog extends Component {
         super.setup();
         useAutofocus();
 
-        this.title = _t("New Page");
-        this.primaryTitle = _t("Create");
-        this.switchLabel = _t("Add to menu");
         this.website = useService('website');
         this.http = useService('http');
         this.action = useService('action');
@@ -403,7 +398,6 @@ export class AddPageDialog extends Component {
         super.setup();
         useAutofocus();
 
-        this.title = _t("New Page");
         this.primaryTitle = _t("Create");
         this.switchLabel = _t("Add to menu");
         this.website = useService('website');

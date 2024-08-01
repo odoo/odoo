@@ -40,8 +40,4 @@ export class PinnedMessagesPanel extends Component {
             return _t("This conversation doesn't have any pinned messages.");
         }
     }
-
-    get title() {
-        return _t("Pinned Messages");
-    }
 }

@@ -65,8 +65,4 @@ export class CashOpeningPopup extends Component {
         }
         this.state.notes = "";
     }
-
-    get inputPlaceholder() {
-        return _t("Opening Balance Eg: 123");
-    }
 }

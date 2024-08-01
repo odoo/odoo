@@ -28,7 +28,7 @@
                         </t>
                         <SearchBar
                             config="getSearchBarConfig()"
-                            placeholder="constructor.searchPlaceholder"
+                            placeholder.translate="Search Orders..."
                             onSearch.bind="onSearch"
                             onFilterSelected.bind="onFilterSelected" />
                         <div t-if="getNbrPages()" class="item">
@@ -173,7 +173,7 @@
                                 <div class="subpads d-flex">
                                     <ActionpadWidget
                                         partner="getSelectedOrder()?.get_partner()"
-                                        actionName="constructor.numpadActionName"
+                                        actionName.translate="Refund"
                                         actionType="'refund'"
                                         actionToTrigger.bind="onDoRefund"
                                         isActionButtonHighlighted="getHasItemsToRefund()" />

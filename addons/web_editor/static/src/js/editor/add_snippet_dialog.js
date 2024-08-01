@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -23,7 +22,6 @@ export class RenameCustomSnippetDialog extends Component {
         Dialog,
     };
     setup() {
-        this.title = _t("Rename the block");
         this.renameInputRef = useRef("renameInput");
     }
     onClickConfirm() {
@@ -53,7 +51,6 @@ export class AddSnippetDialog extends Component {
     };
 
     setup() {
-        this.title = _t("Insert a block");
         this.iframeRef = useRef("iframe");
         this.snippetGroups = this.getSnippetGroups();
 

@@ -129,8 +129,4 @@ export class ChannelInvitation extends Component {
         }
         return _t("Invite");
     }
-
-    get title() {
-        return _t("Invite people");
-    }
 }

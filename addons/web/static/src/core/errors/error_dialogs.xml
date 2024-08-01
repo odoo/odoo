@@ -25,7 +25,7 @@
     </t>
 
     <t t-name="web.Error504Dialog">
-        <Dialog title="this.constructor.title" size="'xl'" contentClass="'o_error_dialog'">
+        <Dialog title.translate="Request timeout" size="'xl'" contentClass="'o_error_dialog'">
             <div role="alert">
                 <p class="text-prewrap">
                     The operation was interrupted. This usually means that the current operation is taking too much time.
@@ -38,7 +38,7 @@
     </t>
 
     <t t-name="web.SessionExpiredDialog">
-        <Dialog title="this.constructor.title" size="'xl'" contentClass="'o_error_dialog'">
+        <Dialog title.translate="Odoo Session Expired" size="'xl'" contentClass="'o_error_dialog'">
             <div role="alert">
                 <p class="text-prewrap">
                     Your Odoo session expired. The current page is about to be refreshed.
@@ -51,7 +51,7 @@
     </t>
 
     <t t-name="web.ErrorDialog">
-        <Dialog title="this.constructor.dialogTitle" size="'xl'" contentClass="'o_error_dialog'">
+        <Dialog title.translate="Oops!" size="'xl'" contentClass="'o_error_dialog'">
             <div role="alert">
                 <p class="text-prewrap">
                     Something went wrong... If you really are stuck, share the report with your friendly support service

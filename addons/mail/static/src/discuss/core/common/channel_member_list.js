@@ -3,7 +3,6 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onWillUpdateProps, onWillStart, useState } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class ChannelMemberList extends Component {
@@ -41,9 +40,5 @@ export class ChannelMemberList extends Component {
             return;
         }
         this.store.openChat({ partnerId: member.persona.id });
-    }
-
-    get title() {
-        return _t("Member List");
     }
 }

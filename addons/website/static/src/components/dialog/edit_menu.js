@@ -1,6 +1,3 @@
-/** @odoo-module **/
-
-import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from '@website/js/utils';
@@ -44,7 +41,6 @@ export class MenuDialog extends Component {
 
     setup() {
         this.website = useService('website');
-        this.title = _t("Add a menu item");
         useAutofocus();
 
         this.name = useControlledInput(this.props.name, value => !!value);
@@ -112,9 +108,6 @@ export class EditMenuDialog extends Component {
         this.orm = useService('orm');
         this.website = useService('website');
         this.dialogs = useService('dialog');
-
-        this.title = _t("Edit Menu");
-        this.saveButton = _t("Save");
 
         this.menuEditor = useRef('menu-editor');
 

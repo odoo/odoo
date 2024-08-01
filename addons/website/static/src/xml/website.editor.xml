@@ -66,11 +66,10 @@
                             <div class="text-muted">Explore on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a>.</div>
                         </div>
                         <div class="col-form-label col-md-8 o_field_widget">
-                            <t t-set="googleFontPlaceholderText">Select a Google Font...</t>
                             <div class="o_input_dropdown">
                                 <GoogleFontAutoComplete
                                     value="state.googleFontFamily"
-                                    placeholder="googleFontPlaceholderText"
+                                    placeholder.translate="Select a Google Font..."
                                     sources="getGoogleFontList"
                                     onSelect.bind="onGoogleFontSelect"
                                 />

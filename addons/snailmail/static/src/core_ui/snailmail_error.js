@@ -1,9 +1,6 @@
-/* @odoo-module */
-
 import { Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class SnailmailError extends Component {
@@ -13,7 +10,6 @@ export class SnailmailError extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.title = _t("Failed letter");
     }
 
     async fetchSnailmailCreditsUrl() {
