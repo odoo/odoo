@@ -32,8 +32,8 @@ class AccountFiscalPosition(models.Model):
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     company_country_id = fields.Many2one(string="Company Country", related='company_id.account_fiscal_country_id')
-    country_id = fields.Many2one('res.country', string='Country',
-        help="Apply only if delivery country matches.")
+    country_id = fields.Many2one('res.country', string='Fiscal Country',
+        help="Country from which's taxes are available for the fiscal position mapping.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery country matches the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')

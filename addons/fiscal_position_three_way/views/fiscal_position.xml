@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_position_form" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form.inherit</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_group_id']" position="attributes">
+                <attribute name="string">Delivery Country Group</attribute>
+                <attribute name="attrs">{'invisible': [('auto_apply', '=', False)]}</attribute>
+                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_id']" position="replace">
+                <field name="delivery_country_id"
+                    attrs="{'invisible': [('auto_apply', '=', False)]}"
+                    options="{'no_open': True, 'no_create': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='foreign_vat']" position="after">
+                <field name="country_id" string="Fiscal Country" attrs="{'required': [('foreign_vat', '!=', False)]}"/>
+            </xpath>
+
+            <xpath expr="//field[@name='tax_dest_id']" position="before">
+                <field name="tax_report_id"
+                    domain="[
+                        ('type_tax_use', '!=', 'none'),
+                        ('country_id', '=', parent.country_id if parent.foreign_vat else parent.company_country_id),
+                        '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                    ]"
+                    context="{'append_type_to_tax_name': True}"
+                    attrs="{'required': [('tax_dest_id', '!=', False)]}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='tax_dest_id']" position="attributes">
+                <attribute name="attrs">{'required': [('tax_report_id', '!=', False)]}</attribute>
+                <attribute name="domain">
+                    [
+                        ('type_tax_use', '!=', 'none'),
+                        ('country_id', '=', parent.delivery_country_id if parent.foreign_vat else parent.company_country_id),
+                        '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                    ]
+                </attribute>
+                <attribute name="context">{'append_type_to_tax_name': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
