@@ -20,6 +20,14 @@ export class SpreadsheetDashboard extends models.Model {
     json_data = fields.Char({});
     is_published = fields.Boolean({ string: "Is published" });
     dashboard_group_id = fields.Many2one({ relation: "spreadsheet.dashboard.group" });
+    favorite_user_ids = fields.Many2many({ relation: "res.users", string: "Favorite Users" });
+    is_favorite = fields.Boolean({ compute: "_compute_is_favorite", string: "Is Favorite" });
+
+    _compute_is_favorite() {
+        for (const record of this) {
+            record.is_favorite = record.favorite_user_ids.includes(this.env.uid);
+        }
+    }
 
     get_readonly_dashboard(id) {
         const dashboard = this.env["spreadsheet.dashboard"].search_read([["id", "=", id]])[0];

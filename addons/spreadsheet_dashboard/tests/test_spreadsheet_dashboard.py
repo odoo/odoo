@@ -104,3 +104,19 @@ class TestSpreadsheetDashboard(DashboardTestCommon):
             "is_sample": True,
             "snapshot": {"sheets": []},
         })
+
+    def test_toggle_favorite(self):
+        dashboard = self.create_dashboard().with_user(self.user)
+
+        self.assertFalse(dashboard.is_favorite)
+        self.assertNotIn(self.user, dashboard.favorite_user_ids)
+
+        dashboard.with_user(self.user).action_toggle_favorite()
+
+        self.assertTrue(dashboard.is_favorite)
+        self.assertIn(self.user, dashboard.favorite_user_ids)
+
+        dashboard.with_user(self.user).action_toggle_favorite()
+
+        self.assertFalse(dashboard.is_favorite)
+        self.assertNotIn(self.user, dashboard.favorite_user_ids)
