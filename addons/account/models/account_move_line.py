@@ -1327,7 +1327,7 @@ class AccountMoveLine(models.Model):
         order = (order or self._order) + ', id'
         # Add the domain and order by in order to compute the cumulated balance in _compute_cumulated_balance
         contextualized = self.with_context(
-            domain_cumulated_balance=to_tuple(domain or []),
+            domain_cumulated_balance=to_tuple(self._apply_analytic_distribution_domain(domain or [])),
             order_cumulated_balance=order,
         )
         return super(AccountMoveLine, contextualized).search_read(domain, fields, offset, limit, order)
