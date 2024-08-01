@@ -7,11 +7,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-
-import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
-import { Store } from "@mail/core/common/store_service";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -63,30 +59,31 @@ test("initially away", async () => {
 
 test("change icon on change partner im_status", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
     const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
         channel_type: "chat",
     });
+    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
     await start();
     await openDiscuss(channelId);
-    await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-mail-ImStatus i[title='Online']");
-    pyEnv["res.partner"].write([partnerId], { im_status: "offline" });
-    // advanceTime() internally mocks date, but time continues to flow.
-    // There's no reliable way to exactly wait UPDATE_BUS_PRESENCE_DELAY,
-    // And we cannot reliably predict how long it takes to reach internal timeouts
-    // Hence we have to overestimate the awaits
-    await advanceTime(UPDATE_BUS_PRESENCE_DELAY * 2);
+    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "offline" });
+    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        partner_id: serverState.partnerId,
+        im_status: "offline",
+    });
     await contains(".o-mail-ImStatus i[title='Offline']");
-    pyEnv["res.partner"].write([partnerId], { im_status: "away" });
-    await advanceTime(UPDATE_BUS_PRESENCE_DELAY * 2);
+    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "away" });
+    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        partner_id: serverState.partnerId,
+        im_status: "away",
+    });
     await contains(".o-mail-ImStatus i[title='Idle']");
-    pyEnv["res.partner"].write([partnerId], { im_status: "online" });
-    await advanceTime(UPDATE_BUS_PRESENCE_DELAY * 2);
+    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
+    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        partner_id: serverState.partnerId,
+        im_status: "online",
+    });
     await contains(".o-mail-ImStatus i[title='Online']");
 });
 
