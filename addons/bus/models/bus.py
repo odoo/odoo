@@ -8,12 +8,18 @@ import os
 import selectors
 import threading
 import time
+from weakref import WeakKeyDictionary
 from psycopg2 import InterfaceError, sql
+from contextlib import suppress
+from concurrent.futures import ThreadPoolExecutor
 
 import odoo
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
-from odoo.tools import date_utils
+from odoo.tools import config, date_utils
+from odoo.http import root
+from odoo.service.security import check_session
+from ..websocket import CloseCode, InvalidStateException, acquire_cursor, WS_CURSORS_COUNT
 
 _logger = logging.getLogger(__name__)
 
@@ -158,6 +164,23 @@ class ImBus(models.Model):
 # Dispatcher
 #----------------------------------------------------------
 
+
+class Task(threading.Event):
+    def __init__(self, db_name, channels):
+        super().__init__()
+        self.channels = channels
+        self.db_name = db_name
+        self.results = None
+
+    def complete(self, results):
+        self.result = results
+        self.set()
+
+    def wait(self):
+        super().wait()
+        return self.results
+
+
 class BusSubscription:
     def __init__(self, channels, last):
         self.last_notification_id = last
@@ -167,7 +190,13 @@ class BusSubscription:
 class ImDispatch(threading.Thread):
     def __init__(self):
         super().__init__(daemon=True, name=f'{__name__}.Bus')
+        self._ws_to_subscription = WeakKeyDictionary()
+        import queue
+        self._ordered_task_queue = queue.Queue()
+        self._channels_waiting_for_fetch = set()
         self._channels_to_ws = {}
+        self._ws_waiting = set()
+        self._channels_waiting_for_fetch = set()
 
     def subscribe(self, channels, last, db, websocket):
         """
@@ -176,17 +205,42 @@ class ImDispatch(threading.Thread):
         is already present, overwrite it.
         """
         channels = {hashable(channel_with_db(db, c)) for c in channels}
+        subscription = self._ws_to_subscription.get(websocket)
+        if subscription:
+            self._clear_outdated_channels(websocket, subscription.channels)
         for channel in channels:
             self._channels_to_ws.setdefault(channel, set()).add(websocket)
-        outdated_channels = websocket._channels - channels
-        self._clear_outdated_channels(websocket, outdated_channels)
-        websocket.subscribe(channels, last)
+        self._ws_to_subscription[websocket] = BusSubscription(channels, last)
         with contextlib.suppress(RuntimeError):
             if not self.is_alive():
                 self.start()
+        # Dispatch past notifications if there are any.
+        self._dispatch_notifications(websocket)
 
-    def unsubscribe(self, websocket):
-        self._clear_outdated_channels(websocket, websocket._channels)
+    def _dispatch_notifications(self, websocket):
+        """
+        Dispatch notifications available for the given websocket. If the session
+        is expired, close the connection with the `SESSION_EXPIRED` close code.
+        """
+        subscription = self._ws_to_subscription.get(websocket)
+        if not subscription:
+            return
+        session = root.session_store.get(websocket._session.sid)
+        if not session:
+            return websocket.disconnect(CloseCode.SESSION_EXPIRED)
+        with acquire_cursor(session.db) as cr:
+            env = api.Environment(cr, session.uid, session.context)
+            if session.uid is not None and not check_session(session, env):
+                return websocket.disconnect(CloseCode.SESSION_EXPIRED)
+            self._ws_waiting.discard(websocket)
+            notifications = env['bus.bus']._poll(
+                subscription.channels, subscription.last_notification_id
+            )
+            if not notifications:
+                return
+            with suppress(InvalidStateException):
+                subscription.last_notification_id = notifications[-1]['id']
+                websocket.send(notifications)
 
     def _clear_outdated_channels(self, websocket, outdated_channels):
         """ Remove channels from channel to websocket map. """
@@ -194,6 +248,22 @@ class ImDispatch(threading.Thread):
             self._channels_to_ws[channel].remove(websocket)
             if not self._channels_to_ws[channel]:
                 self._channels_to_ws.pop(channel)
+
+    def _process_task(self, task):
+        websockets  = set()
+        for channel in task.channels:
+            websockets.update(self._channels_to_ws.get(channel, set()))
+        outdated_websockets = set()
+        with acquire_cursor(task.db_name) as cr:
+            env = api.Environment(cr, odoo.SUPERUSER_ID, {})
+            for websocket in websockets:
+                if websocket._session.uid and not check_session(websocket._session, env):
+                    outdated_websockets.add(websocket)
+        for websocket in outdated_websockets:
+            websocket.disconnect(CloseCode.SESSION_EXPIRED)
+
+
+
 
     def loop(self):
         """ Dispatch postgres notifications to the relevant websockets """
@@ -204,19 +274,23 @@ class ImDispatch(threading.Thread):
             cr.commit()
             conn = cr._cnx
             sel.register(conn, selectors.EVENT_READ)
-            while not stop_event.is_set():
-                if sel.select(TIMEOUT):
-                    conn.poll()
-                    channels = []
-                    while conn.notifies:
-                        channels.extend(json.loads(conn.notifies.pop().payload))
-                    # relay notifications to websockets that have
-                    # subscribed to the corresponding channels.
-                    websockets = set()
-                    for channel in channels:
-                        websockets.update(self._channels_to_ws.get(hashable(channel), []))
-                    for websocket in websockets:
-                        websocket.trigger_notification_dispatching()
+            with ThreadPoolExecutor(max_workers=WS_CURSORS_COUNT) as executor:
+                while not stop_event.is_set():
+                    if sel.select(TIMEOUT):
+                        conn.poll()
+                        channels = set()
+                        while conn.notifies:
+                            channels |= {hashable(c) for c in json.loads(conn.notifies.pop().payload)}
+                        channels = channels & set(self._channels_to_ws.keys()) - self._channels_waiting_for_fetch
+                        channels_by_db = {}
+                        for channel in channels:
+                            channels_by_db.setdefault(channel.db_name, list()).append(channel)
+                        self._channels_waiting_for_fetch.update(channels)
+                        for db_name, channels in channels_by_db.items():
+                            task =  Task(db_name, channels)
+                            self._ordered_task_queue.put(task)
+                            executor.submit(self._process_task, task)
+                        executor.submit(self._process_task, task)
 
     def run(self):
         while not stop_event.is_set():
@@ -234,3 +308,33 @@ class ImDispatch(threading.Thread):
 dispatch = ImDispatch()
 stop_event = threading.Event()
 CommonServer.on_stop(stop_event.set)
+
+
+
+"""
+
+
+task = Task(channels)
+task_queue.put(task)
+executor.submit(fetch_notifications, task)
+
+
+
+def fetch_notifications(task):
+    websockets = set()
+    for channel in channels:
+        related_ws = [
+            ws for ws in self._channels_to_ws.get(hashable(channel), [])
+            if ws not in self._ws_waiting
+        ]
+    with acquire_cursor(session.db) as cr:
+        env = api.Environment(cr, odoo.SUPERUSER_ID, {})
+        outdated_websockets = set()
+        for websocket in websockets:
+            session = websocket._session
+            if session.uid is not None and not check_session(session, env):
+                return websocket.disconnect(CloseCode.SESSION_EXPIRED)
+
+
+
+"""

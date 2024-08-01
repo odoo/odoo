@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import psycopg2
+import queue
 import random
 import socket
 import struct
@@ -14,6 +15,7 @@ import time
 from collections import defaultdict, deque
 from contextlib import closing, suppress
 from enum import IntEnum
+from itertools import count
 from psycopg2.pool import PoolError
 from urllib.parse import urlparse
 from weakref import WeakSet
@@ -23,7 +25,6 @@ from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
 
 import odoo
 from odoo import api, modules
-from .models.bus import dispatch
 from odoo.http import root, Request, Response, SessionExpiredException, get_default_session
 from odoo.modules.registry import Registry
 from odoo.service import model as service_model
@@ -134,6 +135,26 @@ class LifecycleEvent(IntEnum):
 # ------------------------------------------------------
 
 
+# Idea taken from the python cookbook:
+# https://github.com/dabeaz/python-cookbook/blob/6e46b78e5644b3e5bf7426d900e2203b7cc630da/src/12/polling_multiple_thread_queues/pqueue.py
+class PollablePriorityQueue(queue.PriorityQueue):
+    """ A custom PriorityQueue than can be polled """
+    def __init__(self):
+        super().__init__()
+        self._putsocket, self._getsocket = socket.socketpair()
+
+    def fileno(self):
+        return self._getsocket.fileno()
+
+    def put(self, item, **kwargs):
+        super().put(item, **kwargs)
+        self._putsocket.send(b'x')
+
+    def get(self, **kwargs):
+        self._getsocket.recv(1)
+        return super().get(**kwargs)
+
+
 class Opcode(IntEnum):
     CONTINUE = 0x00
     TEXT = 0x01
@@ -181,6 +202,10 @@ _XOR_TABLE = [bytes(a ^ b for a in range(256)) for b in range(256)]
 
 
 class Frame:
+    # This class implements the `__lt__` method in order for frames to
+    # be stored in a `PriorityQueue`: ping/pong frames are prioritary.
+    _id = count(0)
+
     def __init__(
         self,
         opcode,
@@ -190,6 +215,7 @@ class Frame:
         rsv2=False,
         rsv3=False
     ):
+        self._send_order = next(self._id)
         self.opcode = opcode
         self.payload = payload
         self.fin = fin
@@ -197,6 +223,17 @@ class Frame:
         self.rsv2 = rsv2
         self.rsv3 = rsv3
 
+    def __lt__(self, other):
+        if not isinstance(other, Frame):
+            return NotImplemented
+        if (
+            self.opcode in HEARTBEAT_OP
+            and other.opcode in HEARTBEAT_OP
+            or self.opcode in DATA_OP
+            and other.opcode in DATA_OP
+        ):
+            return self._send_order < other._send_order
+        return self.opcode in HEARTBEAT_OP
 
 class CloseFrame(Frame):
     def __init__(self, code, reason):
@@ -238,11 +275,7 @@ class Websocket:
         self._timeout_manager = TimeoutManager()
         # Used for rate limiting.
         self._incoming_frame_timestamps = deque(maxlen=self.RL_BURST)
-        # Used to notify the websocket that bus notifications are
-        # available.
-        self.__notif_sock_w, self.__notif_sock_r = socket.socketpair()
-        self._channels = set()
-        self._last_notif_sent_id = 0
+        self.__outgoing_frame_queue = PollablePriorityQueue()
         # Websocket start up
         self.__selector = (
             selectors.PollSelector()
@@ -250,7 +283,7 @@ class Websocket:
             else selectors.DefaultSelector()
         )
         self.__selector.register(self.__socket, selectors.EVENT_READ)
-        self.__selector.register(self.__notif_sock_r, selectors.EVENT_READ)
+        self.__selector.register(self.__outgoing_frame_queue, selectors.EVENT_READ)
         self.state = ConnectionState.OPEN
         _websocket_instances.add(self)
         self._trigger_lifecycle_event(LifecycleEvent.OPEN)
@@ -274,10 +307,8 @@ class Websocket:
                     )
                     continue
                 if not readables:
-                    self._send_ping_frame()
+                    self._enqueue_ping_frame()
                     continue
-                if self.__notif_sock_r in readables:
-                    self._dispatch_bus_notifications()
                 if self.__socket in readables:
                     message = self._process_next_message()
                     if message is not None:
@@ -295,9 +326,19 @@ class Websocket:
         acknowledgment if the connection was failed beforewards.
         """
         if code is not CloseCode.ABNORMAL_CLOSURE:
-            self._send_close_frame(code, reason)
+            self._enqueue_close_frame(code, reason)
         else:
             self._terminate()
+
+    def send(self, message):
+        if self.state is not ConnectionState.OPEN:
+            raise InvalidStateException(
+                "Trying to send a frame on a closed socket"
+            )
+        opcode = Opcode.BINARY
+        if not isinstance(message, (bytes, bytearray)):
+            opcode = Opcode.TEXT
+        self.__outgoing_frame_queue.put(Frame(opcode, message))
 
     @classmethod
     def onopen(cls, func):
@@ -308,30 +349,6 @@ class Websocket:
     def onclose(cls, func):
         cls.__event_callbacks[LifecycleEvent.CLOSE].add(func)
         return func
-
-    def subscribe(self, channels, last):
-        """ Subscribe to bus channels. """
-        self._channels = channels
-        if self._last_notif_sent_id < last:
-            self._last_notif_sent_id = last
-        # Dispatch past notifications if there are any.
-        self.trigger_notification_dispatching()
-
-    def trigger_notification_dispatching(self):
-        """
-        Warn the socket that notifications are available. Ignore if a
-        dispatch is already planned or if the socket is already in the
-        closing state.
-        """
-        if self.state is not ConnectionState.OPEN:
-            return
-        readables = {
-            selector_key[0].fileobj for selector_key in
-            self.__selector.select(0)
-        }
-        if self.__notif_sock_r not in readables:
-            # Send a random bit to mark the socket as readable.
-            self.__notif_sock_w.send(b'x')
 
     # ------------------------------------------------------
     # PRIVATE METHODS
@@ -459,17 +476,8 @@ class Websocket:
             if frame.fin:
                 return bytes(message_fragments)
 
-    def _send(self, message):
-        if self.state is not ConnectionState.OPEN:
-            raise InvalidStateException(
-                "Trying to send a frame on a closed socket"
-            )
-        opcode = Opcode.BINARY
-        if not isinstance(message, (bytes, bytearray)):
-            opcode = Opcode.TEXT
-        self._send_frame(Frame(opcode, message))
-
     def _send_frame(self, frame):
+        start_time = time.time()
         if frame.opcode in CTRL_OP and len(frame.payload) > 125:
             raise ProtocolError(
                 "Control frames should have a payload length smaller than 126"
@@ -503,6 +511,7 @@ class Websocket:
         output.extend(frame.payload)
         self.__socket.sendall(output)
         self._timeout_manager.acknowledge_frame_sent(frame)
+        _logger.info("[GEVENT DEBUG] Sending frame took %0.3fms, size: %d bytes", (time.time() - start_time) * 1000, len(output))
         if not isinstance(frame, CloseFrame):
             return
         self.state = ConnectionState.CLOSING
@@ -511,19 +520,19 @@ class Websocket:
             return self._terminate()
         # After sending a control frame indicating the connection
         # should be closed, a peer does not send any further data.
-        self.__selector.unregister(self.__notif_sock_r)
+        self.__selector.unregister(self.__outgoing_frame_queue)
 
-    def _send_close_frame(self, code, reason=None):
-        """ Send a close frame. """
-        self._send_frame(CloseFrame(code, reason))
+    def _enqueue_close_frame(self, code, reason=None):
+        """ Put a close frame in the outgoing frame queue. """
+        self.__outgoing_frame_queue.put(CloseFrame(code, reason))
 
-    def _send_ping_frame(self):
-        """ Send a ping frame """
-        self._send_frame(Frame(Opcode.PING))
+    def _enqueue_ping_frame(self):
+        """ Put a ping frame in the outgoing frame queue. """
+        self.__outgoing_frame_queue.put(Frame(Opcode.PING))
 
-    def _send_pong_frame(self, payload):
-        """ Send a pong frame """
-        self._send_frame(Frame(Opcode.PONG, payload))
+    def _enqueue_pong_frame(self, payload):
+        """ Put a pong frame in the outgoing frame queue. """
+        self.__outgoing_frame_queue.put(Frame(Opcode.PONG, payload))
 
     def _terminate(self):
         """ Close the underlying TCP socket. """
@@ -540,12 +549,11 @@ class Websocket:
         self.__selector.close()
         self.__socket.close()
         self.state = ConnectionState.CLOSED
-        dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
 
     def _handle_control_frame(self, frame):
         if frame.opcode is Opcode.PING:
-            self._send_pong_frame(frame.payload)
+            self._enqueue_pong_frame(frame.payload)
         elif frame.opcode is Opcode.CLOSE:
             self.state = ConnectionState.CLOSING
             self._close_received = True
@@ -556,7 +564,7 @@ class Websocket:
             elif frame.payload:
                 raise ProtocolError("Malformed closing frame")
             if not self._close_sent:
-                self._send_close_frame(code, reason)
+                self._enqueue_close_frame(code, reason)
             else:
                 self._terminate()
 
@@ -588,6 +596,7 @@ class Websocket:
                 _logger.warning("Bus operation aborted; registry has been reloaded")
             else:
                 _logger.error(exc, exc_info=True)
+        _logger.info("[GEVENT DEBUG] Disconnect due to transport error: %s", type(exc).__name__)
         self.disconnect(code, reason)
 
     def _limit_rate(self):
@@ -625,29 +634,6 @@ class Websocket:
                         LifecycleEvent(event_type).name,
                         exc_info=True
                     )
-
-    def _dispatch_bus_notifications(self):
-        """
-        Dispatch notifications related to the registered channels. If
-        the session is expired, close the connection with the
-        `SESSION_EXPIRED` close code. If no cursor can be acquired,
-        close the connection with the `TRY_LATER` close code.
-        """
-        session = root.session_store.get(self._session.sid)
-        if not session:
-            raise SessionExpiredException()
-        with acquire_cursor(session.db) as cr:
-            env = api.Environment(cr, session.uid, dict(session.context, lang=None))
-            if session.uid is not None and not check_session(session, env):
-                raise SessionExpiredException()
-            # Mark the notification request as processed.
-            self.__notif_sock_r.recv(1)
-            notifications = env['bus.bus']._poll(self._channels, self._last_notif_sent_id)
-        if not notifications:
-            return
-        self._last_notif_sent_id = notifications[-1]['id']
-        self._send(notifications)
-
 
 class TimeoutReason(IntEnum):
     KEEP_ALIVE = 0

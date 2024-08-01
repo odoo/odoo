@@ -196,6 +196,11 @@ class BaseCursor:
             self.close()
 
 
+GEVENT_CURSOR_SEMAPHORE = threading.Semaphore(
+    int(int(tools.config["db_maxconn_gevent"] or tools.config["db_maxconn"]))
+)
+
+
 class Cursor(BaseCursor):
     """Represents an open transaction to the PostgreSQL DB backend,
        acting as a lightweight wrapper around psycopg2's
@@ -278,6 +283,9 @@ class Cursor(BaseCursor):
         self.__pool = pool
         self.dbname = dbname
 
+        if odoo.evented:
+            GEVENT_CURSOR_SEMAPHORE.acquire()
+        
         self._cnx = pool.borrow(dsn)
         self._obj = self._cnx.cursor()
         if _logger.isEnabledFor(logging.DEBUG):
@@ -466,6 +474,9 @@ class Cursor(BaseCursor):
             chosen_template = tools.config['db_template']
             keep_in_pool = self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
+        
+        if odoo.evented:
+            GEVENT_CURSOR_SEMAPHORE.release()
 
     def commit(self):
         """ Perform an SQL `COMMIT` """
