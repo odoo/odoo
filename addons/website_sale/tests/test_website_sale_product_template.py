@@ -5,8 +5,7 @@ from datetime import datetime
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.website.tools import MockRequest
-from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -47,11 +46,15 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
                 }),
             ],
         })
-        markup_data = product_template._to_markup_data(self.website)
+        website = self.website
+        with MockRequest(website.env, website=website):
+            markup_data = product_template._to_markup_data(self.website)
         self.assertEqual(markup_data['@type'], 'ProductGroup')
         self.assertEqual(len(markup_data['hasVariant']), 2)
 
     def test_markup_data_uses_product_schema_when_single_variant(self):
         product_template = self.env['product.template'].create({'name': 'Test product'})
-        markup_data = product_template._to_markup_data(self.website)
+        website = self.website
+        with MockRequest(website.env, website=website):
+            markup_data = product_template._to_markup_data(self.website)
         self.assertEqual(markup_data['@type'], 'Product')

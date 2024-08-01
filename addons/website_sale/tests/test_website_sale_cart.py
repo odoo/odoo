@@ -8,7 +8,6 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.product.tests.common import ProductAttributesCommon
-from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.cart import Cart
 from odoo.addons.website_sale.controllers.combo_configurator import (
     WebsiteSaleComboConfiguratorController,
@@ -16,7 +15,7 @@ from odoo.addons.website_sale.controllers.combo_configurator import (
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.payment import PaymentPortal
 from odoo.addons.website_sale.models.product_template import ProductTemplate
-from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -42,62 +41,50 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         product_template_id = self.product.product_tmpl_id
         product_id = self.product.id
         self.product.unlink()
+        website = self.website.with_user(self.public_user)
 
-        with self.assertRaises(UserError):
-            with MockRequest(
-                self.product.with_user(self.public_user).env,
-                website=self.website.with_user(self.public_user)
-            ):
-                self.WebsiteSaleCartController.add_to_cart(
-                    product_template_id=product_template_id,
-                    product_id=product_id,
-                    quantity=1,
-                )
+        with self.assertRaises(UserError), MockRequest(website.env, website=website):
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=product_template_id,
+                product_id=product_id,
+                quantity=1,
+            )
 
     def test_add_cart_unpublished_product(self):
         # Try to add an unpublished product
         self.product.website_published = False
+        # Environment must be public user as admin can add unpublished products to cart
+        website = self.website.with_user(self.public_user)
 
-        with self.assertRaises(UserError):
-            with MockRequest(
-                self.product.with_user(self.public_user).env,
-                website=self.website.with_user(self.public_user)
-            ):
-                self.WebsiteSaleCartController.add_to_cart(
-                    product_template_id=self.product.product_tmpl_id,
-                    product_id=self.product.id,
-                    quantity=1,
-                )
+        with self.assertRaises(UserError), MockRequest(website.env, website=website):
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=1,
+            )
 
         # public but remove sale_ok
         self.product.sale_ok = False
         self.product.website_published = True
 
-        with self.assertRaises(UserError):
-            with MockRequest(
-                self.product.with_user(self.public_user).env,
-                website=self.website.with_user(self.public_user)
-            ):
-                self.WebsiteSaleCartController.add_to_cart(
-                    product_template_id=self.product.product_tmpl_id,
-                    product_id=self.product.id,
-                    quantity=1,
-                )
+        with self.assertRaises(UserError), MockRequest(website.env, website=website):
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=1,
+            )
 
     def test_add_cart_archived_product(self):
         # Try to add an archived product
         self.product.active = False
+        website = self.website.with_user(self.public_user)
 
-        with self.assertRaises(UserError):
-            with MockRequest(
-                self.product.with_user(self.public_user).env,
-                website=self.website.with_user(self.public_user)
-            ):
-                self.WebsiteSaleCartController.add_to_cart(
-                    product_template_id=self.product.product_tmpl_id,
-                    product_id=self.product.id,
-                    quantity=1,
-                )
+        with self.assertRaises(UserError), MockRequest(website.env, website=website):
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=1,
+            )
 
     def test_zero_price_product_rule(self):
         """
@@ -124,18 +111,20 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
             'website_published': True,
         })
 
-        with self.assertRaises(
-            UserError,
-            msg="'consu' product type is not allowed to have a 0 price sale"
+        with (
+            self.assertRaises(UserError, msg="'consu' product type is not allowed to have a 0 price sale"),
+            MockRequest(self.env, website=website_prevent_zero_price)
         ):
-            with MockRequest(self.env, website=website_prevent_zero_price):
-                self.WebsiteSaleCartController.add_to_cart(
-                    product_template_id=product_consu.product_tmpl_id,
-                    product_id=product_consu.id,
-                    quantity=1,
-                )
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=product_consu.product_tmpl_id,
+                product_id=product_consu.id,
+                quantity=1,
+            )
 
-        with patch.object(ProductTemplate, '_get_product_types_allow_zero_price', lambda pt: ['no']):
+        with (
+            patch.object(ProductTemplate, '_get_product_types_allow_zero_price', lambda pt: ['no']),
+            MockRequest(self.env, website=website_prevent_zero_price),
+        ):
             # service_tracking 'no' should not raise error
             with MockRequest(self.env, website=website_prevent_zero_price):
                 self.WebsiteSaleCartController.add_to_cart(
@@ -146,13 +135,13 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
 
     def test_update_cart_before_payment(self):
         website = self.website.with_user(self.public_user)
-        with MockRequest(self.product.with_user(self.public_user).env, website=website):
+        with MockRequest(website.env, website=website) as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.product.product_tmpl_id,
                 product_id=self.product.id,
                 quantity=1,
             )
-            sale_order = website.sale_get_order()
+            sale_order = request.cart
             sale_order.access_token = 'test_token'
             old_amount = sale_order.amount_total
             self.WebsiteSaleCartController.add_to_cart(
@@ -170,7 +159,7 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
 
     def test_check_order_delivery_before_payment(self):
         website = self.website.with_user(self.public_user)
-        with MockRequest(self.product.with_user(self.public_user).env, website=website):
+        with MockRequest(website.env, website=website):
             sale_order = self.env['sale.order'].create({
                 'partner_id': self.public_user.id,
                 'order_line': [Command.create({'product_id': self.product.id})],
@@ -187,14 +176,14 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
 
         SaleOrderLine = self.env['sale.order.line']
 
-        with MockRequest(self.product.with_user(portal_user).env, website=website):
+        with MockRequest(website.env, website=website) as request:
             # add the product to the cart
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.product.product_tmpl_id,
                 product_id=self.product.id,
                 quantity=1,
             )
-            sale_order = website.sale_get_order()
+            sale_order = request.cart
             self.assertEqual(sale_order.amount_untaxed, 1000.0)
 
             # remove the product from the cart
@@ -229,19 +218,8 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         })
 
         self.product.accessory_product_ids = [Command.link(accessory_product.id)]
-
-        website = self.website.with_user(self.public_user)
-        with MockRequest(
-            self.product.with_user(self.public_user).env,
-            website=self.website.with_user(self.public_user)
-        ):
-            self.WebsiteSaleCartController.add_to_cart(
-                product_template_id=self.product.product_tmpl_id,
-                product_id=self.product.id,
-                quantity=1,
-            )
-            sale_order = website.sale_get_order()
-            self.assertEqual(len(sale_order._cart_accessories()), 0)
+        self.empty_cart._cart_update(product_id=self.product.id, add_qty=1)
+        self.assertEqual(len(self.empty_cart.with_user(self.public_user)._cart_accessories()), 0)
 
     def test_cart_new_fpos_from_geoip(self):
         fpos_be = self.env["account.fiscal.position"].create({
@@ -252,15 +230,15 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         })
 
         website = self.website.with_user(self.public_user)
-        with MockRequest(website.env, website=website, country_code='BE'):
+        with MockRequest(website.env, website=website, country_code='BE') as request:
+            self.assertEqual(request.fiscal_position, fpos_be)
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.product.product_tmpl_id,
                 product_id=self.product.id,
                 quantity=1,
             )
-            sale_order = website.sale_get_order()
             self.assertEqual(
-                sale_order.fiscal_position_id, fpos_be,
+                request.cart.fiscal_position_id, fpos_be,
                 "Fiscal position should be determined from GEOIP country for public users."
             )
 
@@ -447,13 +425,13 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
             'sale_ok': True,
             'website_published': True,
         })
-        with MockRequest(self.env(user=user), website=website):
+        with MockRequest(self.env(user=user), website=website) as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=product.product_tmpl_id,
                 product_id=product.id,
                 quantity=1,
             )
-            order = website.sale_get_order()
+            order = request.cart
 
             # pre-condition: the order contains an active product
             self.assertRecordValues(order.order_line, [{
@@ -474,8 +452,8 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         # Arrange
         user = self.public_user
         website = self.website.with_user(user)
-        with MockRequest(self.env(user=user), website=website):
-            order = website.sale_get_order(force_create=True)
+        with MockRequest(self.env(user=user), website=website) as request:
+            order = request.website._create_cart()
             order.order_line = [
                 Command.create({
                     "name": "Note",
@@ -502,11 +480,14 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         portal_user.write(self.dummy_partner_address_values)
         self.carrier.country_ids = [Command.set((2,))]
         self.product.type = 'consu'
-        with (MockRequest(self.product.with_user(portal_user).env, website=website), patch(
-            'odoo.addons.website_sale.models.sale_order.SaleOrder._get_preferred_delivery_method',
-            return_value=self.env['delivery.carrier'],
-        )):
-            order = website.sale_get_order(force_create=True)
+        with (
+            MockRequest(website.env, website=website) as request,
+            patch(
+                'odoo.addons.website_sale.models.sale_order.SaleOrder._get_preferred_delivery_method',
+                return_value=self.env['delivery.carrier'],
+            )
+        ):
+            order = request.website._create_cart()
             order.order_line = [
                 Command.create({
                     'product_id': self.product.id,

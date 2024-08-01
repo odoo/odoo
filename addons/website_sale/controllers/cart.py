@@ -29,12 +29,7 @@ class Cart(PaymentPortal):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
 
-        order = request.website.sale_get_order()
-        if order and order.state != 'draft':
-            request.session['sale_order_id'] = None
-            order = request.website.sale_get_order()
-
-        request.session['website_sale_cart_quantity'] = order.cart_quantity
+        order_sudo = request.cart
 
         values = {}
         if id and access_token:
@@ -53,14 +48,14 @@ class Cart(PaymentPortal):
                 values.update({'id': abandoned_order.id, 'access_token': abandoned_order.access_token})
 
         values.update({
-            'website_sale_order': order,
+            'website_sale_order': order_sudo,
             'date': fields.Date.today(),
             'suggested_products': [],
         })
-        if order:
-            order.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
-            values['suggested_products'] = order._cart_accessories()
-            values.update(self._get_express_shop_payment_values(order))
+        if order_sudo:
+            order_sudo.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
+            values['suggested_products'] = order_sudo._cart_accessories()
+            values.update(self._get_express_shop_payment_values(order_sudo))
 
         values.update(self._cart_values(**post))
         return request.render('website_sale.cart', values)
@@ -113,7 +108,7 @@ class Cart(PaymentPortal):
         if not line_id:
             return  # Ensures this method is only used from the cart page.
 
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
 
         values = order_sudo._cart_update(
             line_id=line_id,
@@ -133,11 +128,6 @@ class Cart(PaymentPortal):
                         line_id=linked_line_id.id,
                         set_qty=values['quantity'],
                     )
-
-        request.session['website_sale_cart_quantity'] = order_sudo.cart_quantity
-        if not order_sudo.cart_quantity:
-             request.website.sale_reset()
-             return values
 
         values['cart_quantity'] = order_sudo.cart_quantity
         values['cart_ready'] = order_sudo._is_cart_ready()
@@ -196,10 +186,7 @@ class Cart(PaymentPortal):
         :return: The values
         :rtype: dict
         """
-        order_sudo = request.website.sale_get_order(force_create=True)
-        if order_sudo.state != 'draft':
-            request.session['sale_order_id'] = None
-            order_sudo = request.website.sale_get_order(force_create=True)
+        order_sudo = request.cart or request.website._create_cart()
 
         values = order_sudo._cart_update(
             product_id=product_id,
@@ -232,14 +219,7 @@ class Cart(PaymentPortal):
             order_sudo, line_ids.values()
         )
         values['notification_info']['warning'] = values.pop('warning', '')
-        request.session['website_sale_cart_quantity'] = order_sudo.cart_quantity
-
         values['tracking_info'] = self._get_tracking_information(order_sudo, line_ids.values())
-
-        if not order_sudo.cart_quantity:
-            request.website.sale_reset()
-            return values
-
         values['cart_quantity'] = order_sudo.cart_quantity
 
         return values
@@ -253,7 +233,7 @@ class Cart(PaymentPortal):
     )
     def cart_quantity(self):
         if 'website_sale_cart_quantity' not in request.session:
-            return request.website.sale_get_order().cart_quantity
+            return request.cart.cart_quantity
         return request.session['website_sale_cart_quantity']
 
     @route(
@@ -263,9 +243,7 @@ class Cart(PaymentPortal):
         website=True
     )
     def clear_cart(self):
-        order = request.website.sale_get_order()
-        for line in order.order_line:
-            line.unlink()
+        request.cart.order_line.unlink()
 
     def _get_cart_notification_information(self, order, line_ids):
         """ Get the information about the sales order lines to show in the notification.
