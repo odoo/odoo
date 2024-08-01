@@ -3,7 +3,7 @@
 from werkzeug.exceptions import NotFound, Forbidden
 from odoo.exceptions import ValidationError
 
-from odoo import _, http
+from odoo import _, http, fields
 from odoo.http import request
 from odoo.addons.portal.controllers.mail import _check_special_access, PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
@@ -86,6 +86,7 @@ class SlidesPortalChatter(PortalChatter):
             rating.write({
                 'rating': float(post_data['rating_value']),
                 'feedback': html2plaintext(message.body),
+                'rated_on': fields.Datetime.now(),
             })
         channel = request.env[thread_model].browse(thread_id)
         return {

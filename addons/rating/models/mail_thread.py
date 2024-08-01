@@ -134,7 +134,7 @@ class MailThread(models.AbstractModel):
         if not rating:
             raise ValueError(_('Invalid token or rating.'))
 
-        rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
+        rating.write({'rating': rate, 'feedback': feedback, 'consumed': True, 'rated_on': fields.Datetime.now()})
         if isinstance(self, self.env.registry['mail.thread']):
             if subtype_xmlid is None:
                 subtype_id = self._rating_apply_get_default_subtype_id()
@@ -186,8 +186,9 @@ class MailThread(models.AbstractModel):
                 'message_id': message.id,
                 'consumed': True,
                 'partner_id': self.env.user.partner_id.id,
+                'rated_on': fields.Datetime.now(),
             })
         elif rating_id:
-            self.env['rating.rating'].browse(rating_id).write({'message_id': message.id})
+            self.env['rating.rating'].browse(rating_id).write({'message_id': message.id, 'rated_on': fields.Datetime.now()})
 
         return message
