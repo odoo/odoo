@@ -15,19 +15,50 @@ from odoo.osv import expression
 from odoo import Command
 
 
-class TestExpression(SavepointCaseWithUserDemo):
+class TransactionExpressionCase(TransactionCase):
+
+    def _search(self, model, domain, init_domain=None, test_complement=True):
+        sql = model.search(domain, order="id")
+        init_domain = init_domain or []
+        init_search = model.search(init_domain, order="id")
+        fil = init_search.filtered_domain(domain)
+        self.assertEqual(sql._ids, fil._ids, f"filtered_domain do not match SQL search for domain: {domain}")
+        if test_complement and domain:
+            # testing complement when asked, skip trivial the case where domain is TRUE
+            def inverse(domain):
+                """Return the complement of the given domain"""
+                return expression.distribute_not(['!', *expression.normalize_domain(domain)])
+
+            # test whether the result of the search and the complement are equal to the universe
+            complement_domain = inverse(domain)
+            if init_domain:
+                # the init_search is not TRUE
+                # first, check the complement with a single search; include inactive records for the complement
+                cpl = model.with_context(active_test=False).search(complement_domain, order="id")
+                uni = model.with_context(active_test=False).search([], order="id")
+                self.assertEqual(sorted(sql._ids + cpl._ids), uni.ids, f"{domain} and {complement_domain} don't cover all records (search all)")
+                # second, for the rest of the check, limit the serach with init_domain
+                complement_domain = ['&', *expression.normalize_domain(init_domain), *complement_domain]
+
+            # general case where the universe is init_search
+            cpl = self._search(
+                model,
+                complement_domain,
+                init_domain=init_domain,
+                test_complement=False,
+            )
+            uni = init_search
+            self.assertEqual(sorted(sql._ids + cpl._ids), uni.ids, f"{domain} and {complement_domain} don't cover all records")
+        return sql
+
+
+class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
 
     @classmethod
     def setUpClass(cls):
         super(TestExpression, cls).setUpClass()
         cls._load_partners_set()
         cls.env['res.currency'].with_context({'active_test': False}).search([('name', 'in', ['EUR', 'USD'])]).write({'active': True})
-
-    def _search(self, model, domain, init_domain=None):
-        sql = model.search(domain, order="id")
-        fil = model.search(init_domain or [], order="id").filtered_domain(domain)
-        self.assertEqual(sql._ids, fil._ids, f"filtered_domain do not match SQL search for domain: {domain}")
-        return sql
 
     def test_00_in_not_in_m2m(self):
         # Create 4 partners with no category, or one or two categories (out of two categories).
@@ -348,8 +379,9 @@ class TestExpression(SavepointCaseWithUserDemo):
         # check that multi-level expressions with negative op work
         all_partners = self._search(Partner, [('company_id', '!=', False)])
 
-        # FP Note: filtered_domain differs
-        res_partners = Partner.search([('company_id.partner_id', 'not in', [])])
+        # check with empty list
+        # TODO complement does not work
+        res_partners = self._search(Partner, [('company_id.partner_id', 'not in', [])], test_complement=False)
         self.assertEqual(all_partners, res_partners, "not in [] fails")
 
         # Test the '(not) like/in' behavior. res.partner and its parent_id
@@ -499,6 +531,53 @@ class TestExpression(SavepointCaseWithUserDemo):
         partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
         self.assertFalse(partners)
 
+    def test_15_o2m_subselect(self):
+        Partner = self.env['res.partner']
+        state_us_1 = self.env.ref('base.state_us_1')
+        state_us_2 = self.env.ref('base.state_us_2')
+        state_us_3 = self.env.ref('base.state_us_3')
+        partners = Partner.create(
+            [
+                {
+                    "name": "Partner A",
+                    "child_ids": [
+                        (0, 0, {"name": "Child A1", "state_id": state_us_1.id}),
+                        (0, 0, {"name": "Child A2", "state_id": state_us_2.id}),
+                        (0, 0, {"name": "Child A2", "state_id": state_us_3.id}),
+                    ]
+                },
+                {
+                    "name": "Partner B",
+                    "child_ids": [
+                        (0, 0, {"name": "Child B1", "state_id": state_us_1.id}),
+                    ]
+                },
+                {
+                    "name": "Partner C",
+                    "child_ids": [
+                        (0, 0, {"name": "Child C2", "state_id": state_us_2.id}),
+                        (0, 0, {"name": "Child C3", "state_id": state_us_3.id}),
+                    ]
+                },
+                {
+                    "name": "Partner D",
+                    "state_id": state_us_1.id,
+                }
+            ]
+        )
+        partner_a, partner_b, partner_c, __ = partners
+        init_domain = [("id", "in", partners.ids)]
+
+        # find partners with children in state_us_1
+        domain = init_domain + [("child_ids.state_id", "=", state_us_1.id)]
+        result = self._search(Partner, domain, init_domain)
+        self.assertEqual(result, partner_a + partner_b)
+
+        # find partners with children in other states than state_us_1
+        domain = init_domain + [("child_ids.state_id", "!=", state_us_1.id)]
+        result = self._search(Partner, domain, init_domain)
+        self.assertEqual(result, partner_a + partner_c)
+
     def test_15_equivalent_one2many_1(self):
         Company = self.env['res.company']
         company3 = Company.create({'name': 'Acme 3'})
@@ -638,7 +717,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         # Special =? operator mean "is equal if right is set, otherwise always True"
         users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', False)])
         self.assertEqual(users, a + b1 + b2, '(x =? False) failed')
-        users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', b1.partner_id.id)])
+        users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', b1.partner_id.id)], test_complement=False)  # FIXME complement
         self.assertEqual(users, b2, '(x =? id) failed')
 
     def test_30_normalize_domain(self):
@@ -1044,7 +1123,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(other_partners, all_partner - partner)
 
 
-class TestExpression2(TransactionCase):
+class TestExpression2(TransactionExpressionCase):
 
     def test_long_table_alias(self):
         # To test the 64 characters limit for table aliases in PostgreSQL
@@ -1053,7 +1132,7 @@ class TestExpression2(TransactionCase):
         self.env['res.users'].search([('name', '=', 'test')])
 
 
-class TestAutoJoin(TransactionCase):
+class TestAutoJoin(TransactionExpressionCase):
 
     def test_auto_join(self):
         # Get models
@@ -1064,9 +1143,11 @@ class TestAutoJoin(TransactionCase):
         # Get test columns
         def patch_auto_join(model, fname, value):
             self.patch(model._fields[fname], 'auto_join', value)
+            model.invalidate_model([fname])
 
         def patch_domain(model, fname, value):
             self.patch(model._fields[fname], 'domain', value)
+            model.invalidate_model([fname])
 
         # Get country/state data
         Country = self.env['res.country']
@@ -1100,28 +1181,28 @@ class TestAutoJoin(TransactionCase):
         name_test = '12'
 
         # Do: one2many without _auto_join
-        partners = partner_obj.search([('bank_ids.sanitized_acc_number', 'like', name_test)])
+        partners = self._search(partner_obj, [('bank_ids.sanitized_acc_number', 'like', name_test)])
         self.assertEqual(partners, p_aa,
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
 
-        partners = partner_obj.search(['|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', name_test)])
+        partners = self._search(partner_obj, ['|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', name_test)])
         self.assertIn(p_aa, partners,
             "_auto_join off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
         self.assertIn(p_c, partners,
             "_auto_join off: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
 
         # Do: cascaded one2many without _auto_join
-        partners = partner_obj.search([('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
+        partners = self._search(partner_obj, [('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
         self.assertEqual(partners, p_a + p_b,
             "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]): incorrect result")
 
         # Do: one2many with _auto_join
         patch_auto_join(partner_obj, 'bank_ids', True)
-        partners = partner_obj.search([('bank_ids.sanitized_acc_number', 'like', name_test)])
+        partners = self._search(partner_obj, [('bank_ids.sanitized_acc_number', 'like', name_test)])
         self.assertEqual(partners, p_aa,
             "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') incorrect result")
 
-        partners = partner_obj.search(['|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', name_test)])
+        partners = self._search(partner_obj, ['|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', name_test)])
         self.assertIn(p_aa, partners,
             "_auto_join on: '|', ('name', 'like', 'C'), ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
         self.assertIn(p_c, partners,
@@ -1129,14 +1210,14 @@ class TestAutoJoin(TransactionCase):
 
         # Do: one2many with _auto_join, test final leaf is an id
         bank_ids = [b_aa.id, b_ab.id]
-        partners = partner_obj.search([('bank_ids.id', 'in', bank_ids)])
+        partners = self._search(partner_obj, [('bank_ids.id', 'in', bank_ids)])
         self.assertEqual(partners, p_aa + p_ab,
             "_auto_join on: ('bank_ids.id', 'in', [..]) incorrect result")
 
         # Do: 2 cascaded one2many with _auto_join, test final leaf is an id
         patch_auto_join(partner_obj, 'child_ids', True)
         bank_ids = [b_aa.id, b_ba.id]
-        partners = partner_obj.search([('child_ids.bank_ids.id', 'in', bank_ids)])
+        partners = self._search(partner_obj, [('child_ids.bank_ids.id', 'in', bank_ids)])
         self.assertEqual(partners, p_a + p_b,
             "_auto_join on: ('child_ids.bank_ids.id', 'not in', [..]): incorrect result")
 
@@ -1146,35 +1227,35 @@ class TestAutoJoin(TransactionCase):
         name_test = 'US'
 
         # Do: many2one without _auto_join
-        partners = partner_obj.search([('state_id.country_id.code', 'like', name_test)])
+        partners = self._search(partner_obj, [('state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join off: ('state_id.country_id.code', 'like', '..') incorrect result")
 
-        partners = partner_obj.search(['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
+        partners = self._search(partner_obj, ['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
         self.assertIn(p_a, partners, '_auto_join off: disjunction incorrect result')
         self.assertIn(p_c, partners, '_auto_join off: disjunction incorrect result')
 
         # Do: many2one with 1 _auto_join on the first many2one
         patch_auto_join(partner_obj, 'state_id', True)
-        partners = partner_obj.search([('state_id.country_id.code', 'like', name_test)])
+        partners = self._search(partner_obj, [('state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') incorrect result")
 
-        partners = partner_obj.search(['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
+        partners = self._search(partner_obj, ['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
         self.assertIn(p_a, partners, '_auto_join: disjunction incorrect result')
         self.assertIn(p_c, partners, '_auto_join: disjunction incorrect result')
 
         # Do: many2one with 1 _auto_join on the second many2one
         patch_auto_join(partner_obj, 'state_id', False)
         patch_auto_join(state_obj, 'country_id', True)
-        partners = partner_obj.search([('state_id.country_id.code', 'like', name_test)])
+        partners = self._search(partner_obj, [('state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') incorrect result")
 
         # Do: many2one with 2 _auto_join
         patch_auto_join(partner_obj, 'state_id', True)
         patch_auto_join(state_obj, 'country_id', True)
-        partners = partner_obj.search([('state_id.country_id.code', 'like', name_test)])
+        partners = self._search(partner_obj, [('state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join on: ('state_id.country_id.code', 'like', '..') incorrect result")
 
@@ -1188,14 +1269,14 @@ class TestAutoJoin(TransactionCase):
         patch_domain(partner_obj, 'bank_ids', [('sanitized_acc_number', 'like', '2')])
 
         # Do: 2 cascaded one2many with _auto_join, test final leaf is an id
-        partners = partner_obj.search(['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
+        partners = self._search(partner_obj, ['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
         self.assertLessEqual(p_a, partners,
             "_auto_join on one2many with domains incorrect result")
         self.assertFalse((p_ab + p_ba) & partners,
             "_auto_join on one2many with domains incorrect result")
 
         patch_domain(partner_obj, 'child_ids', lambda self: [('name', '=', '__%s' % self._name)])
-        partners = partner_obj.search(['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
+        partners = self._search(partner_obj, ['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa.id, b_ba.id])])
         self.assertFalse(partners,
             "_auto_join on one2many with domains incorrect result")
 
@@ -1212,7 +1293,7 @@ class TestAutoJoin(TransactionCase):
         patch_domain(partner_obj, 'bank_ids', [])
 
         # Do: ('child_ids.state_id.country_id.code', 'like', '..') without _auto_join
-        partners = partner_obj.search([('child_ids.state_id.country_id.code', 'like', name_test)])
+        partners = self._search(partner_obj, [('child_ids.state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b, partners,
             "_auto_join off: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
 
@@ -1220,7 +1301,8 @@ class TestAutoJoin(TransactionCase):
         patch_auto_join(partner_obj, 'child_ids', True)
         patch_auto_join(partner_obj, 'state_id', True)
         patch_auto_join(state_obj, 'country_id', True)
-        partners = partner_obj.search([('child_ids.state_id.country_id.code', 'like', name_test)])
+        # TODO complement does not work
+        partners = self._search(partner_obj, [('child_ids.state_id.country_id.code', 'like', name_test)], test_complement=False)
         self.assertLessEqual(p_a + p_b, partners,
             "_auto_join on: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
 

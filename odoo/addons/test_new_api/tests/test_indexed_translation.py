@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
-
 import odoo.tests
+from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 from odoo.addons.base.tests.test_translate import SPECIAL_CHARACTERS
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestIndexedTranslation(odoo.tests.TransactionCase):
+class TestIndexedTranslation(TransactionExpressionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -22,22 +21,24 @@ class TestIndexedTranslation(odoo.tests.TransactionCase):
         self.assertEqual(record_fr.name, '<div class="my_class">%bonjour\\</div>\a<div/>')
 
         # matching double quotes
-        self.assertEqual(record_en.search([('name', 'ilike', 'class="my_class')]), record_en)
+        self.assertEqual(self._search(record_en, [('name', 'ilike', 'class="my_class')]), record_en)
 
         # escaped and unescaped PG wildcards
-        self.assertEqual(record_en.search([('name', 'ilike', 'class%class')]), record_en)
-        self.assertEqual(record_en.search([('name', 'ilike', r'class="m_\_class')]), record_en)
-        self.assertEqual(record_en.search([('name', 'ilike', 'bonjour')]), record_en.browse())
-        self.assertEqual(record_en.search([('name', 'ilike', '</div>\n<div/>')]), record_en)
-        self.assertEqual(record_fr.search([('name', 'ilike', '</div>\a<div/>')]), record_fr)
-        self.assertEqual(record_fr.search([('name', 'ilike', r'\%bonjour\\')]), record_fr)
+        self.assertEqual(self._search(record_en, [('name', 'ilike', r'class%class')]), record_en)
+        self.assertEqual(record_en.search([('name', 'ilike', r'class="m_\_class')]), record_en)  # FIXME complement
+        # self.assertEqual(self._search(record_en, [('name', 'ilike', r'class="m_\_class')]), record_en)
+        self.assertEqual(self._search(record_en, [('name', 'ilike', 'bonjour')]), record_en.browse())
+        self.assertEqual(self._search(record_en, [('name', 'ilike', '</div>\n<div/>')]), record_en)
+        self.assertEqual(self._search(record_fr, [('name', 'ilike', '</div>\a<div/>')]), record_fr)
+        self.assertEqual(record_fr.search([('name', 'ilike', r'\%bonjour\\')]), record_fr)  # FIXME complement
+        # self.assertEqual(self._search(record_fr, [('name', 'ilike', r'\%bonjour\\')]), record_fr)
 
         self.assertEqual(
-            record_en.search([('name', '=', '<div class="my_class">hello</div>\n<div/>')]),
+            self._search(record_en, [('name', '=', '<div class="my_class">hello</div>\n<div/>')]),
             record_en,
         )
         self.assertEqual(
-            record_fr.search([('name', '=', '<div class="my_class">%bonjour\\</div>\a<div/>')]),
+            self._search(record_fr, [('name', '=', '<div class="my_class">%bonjour\\</div>\a<div/>')]),
             record_fr,
         )
 
@@ -78,18 +79,18 @@ class TestIndexedTranslation(odoo.tests.TransactionCase):
         record_en.name = name_en
         record_fr.name = name_fr
 
-        self.assertEqual(record_en.search([('name', 'ilike', name_en)]), record_en)
-        self.assertEqual(record_en.search([('name', '=', name_en)]), record_en)
-        self.assertEqual(record_en.search([('name', 'in', [name_en])]), record_en)
+        self.assertEqual(self._search(record_en, [('name', 'ilike', name_en)]), record_en)
+        self.assertEqual(self._search(record_en, [('name', '=', name_en)]), record_en)
+        self.assertEqual(self._search(record_en, [('name', 'in', [name_en])]), record_en)
 
-        self.assertEqual(record_fr.search([('name', 'ilike', name_fr)]), record_en)
-        self.assertEqual(record_fr.search([('name', '=', name_fr)]), record_en)
-        self.assertEqual(record_fr.search([('name', 'in', [name_fr])]), record_en)
+        self.assertEqual(self._search(record_fr, [('name', 'ilike', name_fr)]), record_en)
+        self.assertEqual(self._search(record_fr, [('name', '=', name_fr)]), record_en)
+        self.assertEqual(self._search(record_fr, [('name', 'in', [name_fr])]), record_en)
 
-        self.assertFalse(record_fr.search([('name', 'ilike', name_en)]))
-        self.assertFalse(record_fr.search([('name', '=', name_en)]))
-        self.assertFalse(record_fr.search([('name', 'in', [name_en])]))
+        self.assertFalse(self._search(record_fr, [('name', 'ilike', name_en)]))
+        self.assertFalse(self._search(record_fr, [('name', '=', name_en)]))
+        self.assertFalse(self._search(record_fr, [('name', 'in', [name_en])]))
 
-        self.assertFalse(record_en.search([('name', 'ilike', name_fr)]))
-        self.assertFalse(record_en.search([('name', '=', name_fr)]))
-        self.assertFalse(record_en.search([('name', 'in', [name_fr])]))
+        self.assertFalse(self._search(record_en, [('name', 'ilike', name_fr)]))
+        self.assertFalse(self._search(record_en, [('name', '=', name_fr)]))
+        self.assertFalse(self._search(record_en, [('name', 'in', [name_fr])]))

@@ -14,6 +14,7 @@ import psycopg2
 
 from odoo import models, fields, Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.tests import TransactionCase, tagged, Form, users
 from odoo.tools import mute_logger, float_repr
@@ -21,7 +22,7 @@ from odoo.tools.date_utils import add, subtract, start_of, end_of
 from odoo.tools.image import image_data_uri
 
 
-class TestFields(TransactionCaseWithUserDemo):
+class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def setUp(self):
         # for tests methods that create custom models/fields
@@ -1383,11 +1384,11 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.related_related_name, record.name)
 
         # check searching on related fields
-        records0 = record.search([('name', '=', 'A')])
+        records0 = self._search(record, [('name', '=', 'A')])
         self.assertIn(record, records0)
-        records1 = record.search([('related_name', '=', 'A')])
+        records1 = self._search(record, [('related_name', '=', 'A')])
         self.assertEqual(records1, records0)
-        records2 = record.search([('related_related_name', '=', 'A')])
+        records2 = self._search(record, [('related_related_name', '=', 'A')])
         self.assertEqual(records2, records0)
 
         # check writing on related fields
@@ -1660,16 +1661,18 @@ class TestFields(TransactionCaseWithUserDemo):
             test_cases(field_name, operations, truthy_values[0])
 
         def test_cases(field_name, operations, default=None):
+            field_type = Model._fields[field_name].type
             for operator, values in operations.items():
+                # TODO complement of dates is not working correctly, skip for now
+                test_complement = "date" not in field_type
                 for value in values:
                     domain = [(field_name, operator, value)]
                     with self.subTest(domain=domain, default=default):
-                        search_result = Model.search([('id', 'in', records.ids)] + domain)
-                        filter_result = records.filtered_domain(domain)
-                        self.assertEqual(
-                            search_result, filter_result,
-                            f"Got values {[r[field_name] for r in search_result]} "
-                            f"instead of {[r[field_name] for r in filter_result]}",
+                        self._search(
+                            Model,
+                            [('id', 'in', records.ids)] + domain,
+                            [('id', 'in', records.ids)],
+                            test_complement=test_complement,
                         )
 
         # boolean fields
@@ -2351,20 +2354,20 @@ class TestFields(TransactionCaseWithUserDemo):
         child_of_inactive = Model.create({'parent_id': inactive_parent.id})
 
         self.assertEqual(
-            Model.search([('parent_id.name', '=', 'Parent')]),
+            self._search(Model, [('parent_id.name', '=', 'Parent')]),
             child_of_active + child_of_inactive,
         )
         self.assertEqual(
-            Model.search([('parent_id', '=', 'Parent')]),
+            self._search(Model, [('parent_id', '=', 'Parent')]),
             child_of_active + child_of_inactive,
         )
         # weird semantics: active_parent is in both results but doesn't have a parent_id
         self.assertEqual(
-            Model.search([('parent_id', 'child_of', active_parent.id)]),
+            self._search(Model, [('parent_id', 'child_of', active_parent.id)]),
             active_parent + child_of_active,
         )
         self.assertEqual(
-            Model.search([('parent_id', 'child_of', 'Parent')]),
+            self._search(Model, [('parent_id', 'child_of', 'Parent')]),
             active_parent + child_of_active + child_of_inactive,
         )
 
@@ -3112,7 +3115,7 @@ class TestFields(TransactionCaseWithUserDemo):
                 record.write({'harry': index + 2})
 
 
-class TestX2many(TransactionCase):
+class TestX2many(TransactionExpressionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -3256,6 +3259,7 @@ class TestX2many(TransactionCase):
         self.assertEqual(parent.with_context(active_test=False).active_children_ids, act_children)
 
     def test_12_active_test_one2many_search(self):
+        # TODO use _search, filtered domains behaves strangely for hierarchies
         Model = self.env['test_new_api.model_active_field']
         parent = Model.create({
             'children_ids': [
@@ -3287,6 +3291,7 @@ class TestX2many(TransactionCase):
         self.assertIn(parent, Model.search([('all_children_ids', 'child_of', 'B')]))
 
     def test_12_active_test_many2many_search(self):
+        # TODO use _search, filtered domains behaves strangely for hierarchies
         Model = self.env['test_new_api.model_active_field']
         parent = Model.create({
             'relatives_ids': [
@@ -3334,42 +3339,42 @@ class TestX2many(TransactionCase):
         recs = recW + recX + recY + recZ
 
         # test 'in'
-        result = recs.search([('tags', 'in', (tagA + tagB).ids)])
+        result = self._search(recs, [('tags', 'in', (tagA + tagB).ids)])
         self.assertEqual(result, recX + recY + recZ)
 
-        result = recs.search([('tags', 'in', tagA.ids)])
+        result = self._search(recs, [('tags', 'in', tagA.ids)])
         self.assertEqual(result, recX + recZ)
 
-        result = recs.search([('tags', 'in', tagB.ids)])
+        result = self._search(recs, [('tags', 'in', tagB.ids)])
         self.assertEqual(result, recY + recZ)
 
-        result = recs.search([('tags', 'in', tagC.ids)])
+        result = self._search(recs, [('tags', 'in', tagC.ids)])
         self.assertEqual(result, recs.browse())
 
-        result = recs.search([('tags', 'in', [])])
+        result = self._search(recs, [('tags', 'in', [])])
         self.assertEqual(result, recs.browse())
 
         # test 'not in'
-        result = recs.search([('id', 'in', recs.ids), ('tags', 'not in', (tagA + tagB).ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('tags', 'not in', (tagA + tagB).ids)])
         self.assertEqual(result, recs - recX - recY - recZ)
 
-        result = recs.search([('id', 'in', recs.ids), ('tags', 'not in', tagA.ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('tags', 'not in', tagA.ids)])
         self.assertEqual(result, recs - recX - recZ)
 
-        result = recs.search([('id', 'in', recs.ids), ('tags', 'not in', tagB.ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('tags', 'not in', tagB.ids)])
         self.assertEqual(result, recs - recY - recZ)
 
-        result = recs.search([('id', 'in', recs.ids), ('tags', 'not in', tagC.ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('tags', 'not in', tagC.ids)])
         self.assertEqual(result, recs)
 
-        result = recs.search([('id', 'in', recs.ids), ('tags', 'not in', [])])
+        result = self._search(recs, [('id', 'in', recs.ids), ('tags', 'not in', [])])
         self.assertEqual(result, recs)
 
         # special case: compare with False
-        result = recs.search([('id', 'in', recs.ids), ('tags', '=', False)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('tags', '=', False)])
         self.assertEqual(result, recW)
 
-        result = recs.search([('id', 'in', recs.ids), ('tags', '!=', False)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('tags', '!=', False)])
         self.assertEqual(result, recs - recW)
 
     def test_search_one2many(self):
@@ -3384,52 +3389,52 @@ class TestX2many(TransactionCase):
         line0 = line4.create({})
 
         # test 'in'
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'in', (line1 + line2 + line3 + line4).ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'in', (line1 + line2 + line3 + line4).ids)])
         self.assertEqual(result, recX + recY)
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'in', (line1 + line3 + line4).ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'in', (line1 + line3 + line4).ids)])
         self.assertEqual(result, recX + recY)
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'in', (line1 + line4).ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'in', (line1 + line4).ids)])
         self.assertEqual(result, recX)
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'in', line4.ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'in', line4.ids)])
         self.assertEqual(result, recs.browse())
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'in', [])])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'in', [])])
         self.assertEqual(result, recs.browse())
 
         # test 'not in'
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line2 + line3).ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'not in', (line1 + line2 + line3).ids)])
         self.assertEqual(result, recs - recX - recY)
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line3).ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'not in', (line1 + line3).ids)])
         self.assertEqual(result, recs - recX - recY)
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', line1.ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'not in', line1.ids)])
         self.assertEqual(result, recs - recX)
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line4).ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'not in', (line1 + line4).ids)])
         self.assertEqual(result, recs - recX)
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', line4.ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'not in', line4.ids)])
         self.assertEqual(result, recs)
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', [])])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'not in', [])])
         self.assertEqual(result, recs)
 
         # test 'not in' where the lines contain NULL values
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line0).ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'not in', (line1 + line0).ids)])
         self.assertEqual(result, recs - recX)
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', line0.ids)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', 'not in', line0.ids)])
         self.assertEqual(result, recs)
 
         # special case: compare with False
-        result = recs.search([('id', 'in', recs.ids), ('lines', '=', False)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', '=', False)])
         self.assertEqual(result, recZ)
 
-        result = recs.search([('id', 'in', recs.ids), ('lines', '!=', False)])
+        result = self._search(recs, [('id', 'in', recs.ids), ('lines', '!=', False)])
         self.assertEqual(result, recs - recZ)
 
     def test_create_batch_m2m(self):
@@ -4025,7 +4030,7 @@ class TestRequiredMany2oneTransient(TransactionCase):
 
 
 @tagged('m2oref')
-class TestMany2oneReference(TransactionCase):
+class TestMany2oneReference(TransactionExpressionCase):
 
     def test_delete_m2o_reference_records(self):
         m = self.env['test_new_api.model_many2one_reference']
