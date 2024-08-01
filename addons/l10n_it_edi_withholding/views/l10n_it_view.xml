@@ -22,7 +22,7 @@
         <field name="priority">20</field>
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='amount_untaxed_signed']" position="after">
+            <xpath expr="//field[@name='amount_untaxed_in_currency_signed']" position="after">
                 <field name="l10n_it_amount_vat_signed" string="VAT" sum="Total" optional="hide"/>
                 <field name="l10n_it_amount_pension_fund_signed" string="Pension Fund" sum="Total" optional="hide"/>
                 <field name="l10n_it_amount_withholding_signed" string="Withholding" sum="Total" optional="hide"/>

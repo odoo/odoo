@@ -454,6 +454,11 @@ class AccountMove(models.Model):
         compute='_compute_amount', store=True, readonly=True,
         currency_field='company_currency_id',
     )
+    amount_untaxed_in_currency_signed = fields.Monetary(
+        string="Untaxed Amount Signed Currency",
+        compute='_compute_amount', store=True, readonly=True,
+        currency_field='currency_id',
+    )
     amount_tax_signed = fields.Monetary(
         string='Tax Signed',
         compute='_compute_amount', store=True, readonly=True,
@@ -487,6 +492,14 @@ class AccountMove(models.Model):
         compute='_compute_payment_state', store=True, readonly=True,
         copy=False,
         tracking=True,
+    )
+    status_in_payment = fields.Selection(
+        selection=PAYMENT_STATE_SELECTION + [
+            ('draft', "Draft"),
+            ('cancel', "Cancelled"),
+        ],
+        compute='_compute_status_in_payment',
+        copy=False,
     )
     amount_total_words = fields.Char(
         string="Amount total in words",
@@ -1020,6 +1033,7 @@ class AccountMove(models.Model):
             move.amount_total = sign * total_currency
             move.amount_residual = -sign * total_residual_currency
             move.amount_untaxed_signed = -total_untaxed
+            move.amount_untaxed_in_currency_signed = -total_untaxed_currency
             move.amount_tax_signed = -total_tax
             move.amount_total_signed = abs(total) if move.move_type == 'entry' else -total
             move.amount_residual_signed = total_residual
@@ -1116,6 +1130,11 @@ class AccountMove(models.Model):
                         new_pmt_state = 'partial'
 
             invoice.payment_state = new_pmt_state
+
+    @api.depends('payment_state', 'state')
+    def _compute_status_in_payment(self):
+        for move in self:
+            move.status_in_payment = move.state if move.state in ('draft', 'cancel') else move.payment_state
 
     @api.depends('invoice_payment_term_id', 'invoice_date', 'currency_id', 'amount_total_in_currency_signed', 'invoice_date_due')
     def _compute_needed_terms(self):

@@ -160,7 +160,7 @@
             <field name="model">account.move.line</field>
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
+                <tree name="move_line_tree" string="Journal Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <field name="move_id" column_invisible="True"/>
                     <field name="invoice_date" string="Invoice Date" optional="hide"/>
                     <field name="date" readonly="1"/>
@@ -173,8 +173,14 @@
                     <field name="ref" optional="hide" readonly="False"/>
                     <field name="product_id" readonly="1" optional="hide"/>
                     <field name="name" optional="show"/>
+                    <field name="analytic_distribution"
+                           widget="analytic_distribution"
+                           groups="analytic.group_analytic_accounting"
+                           optional="hide"
+                           options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional'}"
+                    />
                     <field name="tax_ids" widget="many2many_tags" optional="hide" readonly="1"/>
-                    <field name="amount_currency" groups="base.group_multi_currency" optional="show" readonly="1" invisible="is_same_currency"/>
+                    <field name="amount_currency" string="In Currency" groups="base.group_multi_currency" optional="hide" readonly="1" invisible="is_same_currency"/>
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
@@ -184,15 +190,9 @@
                     <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
                     <field name="date_maturity" readonly="1" optional="hide"/>
                     <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
-                    <field name="matching_number" readonly="1" optional="show"/>
+                    <field name="matching_number" string="Matching" readonly="1" optional="show"/>
                     <field name="amount_residual" sum="Total Residual" string="Residual" optional="hide" readonly="1" invisible="not is_account_reconcile"/>
                     <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile"/>
-                    <field name="analytic_distribution" widget="analytic_distribution"
-                           groups="analytic.group_analytic_accounting"
-                           optional="show"
-                           options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional'}"
-                           />
-
                     <field name="move_type" column_invisible="True"/>
                     <field name="parent_state" column_invisible="True"/>
                     <field name="account_type" column_invisible="True"/>
@@ -364,7 +364,7 @@
                         <filter string="Invoice Date" name="groupby_invoice_date" domain="[]" context="{'group_by': 'invoice_date'}"/>
                         <filter string="Taxes" name="group_by_taxes" domain="[]" context="{'group_by': 'tax_ids'}"/>
                         <filter string="Tax Grid" name="group_by_tax_tags" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
-                        <filter string="Matching #" name="group_by_matching" domain="[]" context="{'group_by': 'matching_number'}"/>
+                        <filter string="Matching" name="group_by_matching" domain="[]" context="{'group_by': 'matching_number'}"/>
                     </group>
                     <searchpanel class="account_root w-auto">
                         <field name="account_root_id" icon="fa-filter" groupby="account_id" limit="0"/>
@@ -520,27 +520,26 @@
                     <field name="payment_reference" optional="hide" column_invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')"/>
                     <field name="ref" optional="hide"/>
                     <field name="invoice_user_id" optional="hide" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" string="Salesperson" widget="many2one_avatar_user"/>
-                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="hide"/>
                     <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
-                    <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
+                    <field name="amount_untaxed_in_currency_signed" string="Tax Excluded" sum="Total" optional="show"/>
                     <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
-                    <field name="amount_total_signed" string="Total" sum="Total" decoration-bf="1" decoration-warning="abnormal_amount_warning" optional="show"/>
-                    <field name="amount_total_in_currency_signed" string="Total in Currency" optional="show" decoration-warning="abnormal_amount_warning" groups="base.group_multi_currency"/>
-                    <field name="amount_total_in_currency_signed" string="Total in Currency" optional="hide" decoration-warning="abnormal_amount_warning" groups="!base.group_multi_currency"/>
+                    <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="show" decoration-bf="1" decoration-warning="abnormal_amount_warning" groups="base.group_multi_currency"/>
+                    <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="hide" decoration-bf="1" decoration-warning="abnormal_amount_warning" groups="!base.group_multi_currency"/>
                     <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
                     <field name="currency_id" optional="hide" readonly="state in ['cancel', 'posted']"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="to_check" optional="hide" widget="boolean_toggle"/>
-                    <field name="payment_state"
-                           string="Payment"
+                    <field name="status_in_payment"
+                           string="Status"
                            widget="badge"
-                           decoration-danger="payment_state == 'not_paid'"
+                           decoration-danger="payment_state == 'not_paid' and invoice_date_due &lt; context_today().strftime('%Y-%m-%d')"
                            decoration-warning="payment_state in ('partial', 'in_payment')"
                            decoration-success="payment_state in ('paid', 'reversed')"
-                           invisible="payment_state == 'invoicing_legacy' or state != 'posted' or move_type == 'entry'"
-                           optional="show"/>
-                    <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
+                           invisible="payment_state == 'invoicing_legacy' or move_type == 'entry'"
+                           optional="show"
+                    />
                     <field name="move_sent_values"
                            string="Sent"
                            widget="badge"
