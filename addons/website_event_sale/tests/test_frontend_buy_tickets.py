@@ -124,12 +124,14 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
     def test_check_seats_avail_before_purchase(self):
         self.authenticate(None, None)
 
+        sale_order = self.empty_cart
+
         so_line_1, so_line_2 = self.env['sale.order.line'].create([
             {
                 'event_id': self.event.id,
                 'event_ticket_id': self.ticket.id,
                 'name': self.event.name,
-                'order_id': self.so.id,
+                'order_id': sale_order.id,
                 'product_id': self.ticket.product_id.id,
                 'product_uom_qty': 2,
             },
@@ -137,15 +139,15 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
                 'event_id': self.event_2.id,
                 'event_ticket_id': self.ticket_2.id,
                 'name': self.event_2.name,
-                'order_id': self.so.id,
+                'order_id': sale_order.id,
                 'product_id': self.ticket_2.product_id.id,
             },
         ])
-        self.so._cart_update(line_id=so_line_1.id, product_id=self.ticket.product_id.id)
-        self.so._cart_update(line_id=so_line_2.id, product_id=self.ticket_2.product_id.id)
-        self.so.order_line.product_uom_qty = 2
+        sale_order._cart_update(line_id=so_line_1.id, product_id=self.ticket.product_id.id)
+        sale_order._cart_update(line_id=so_line_2.id, product_id=self.ticket_2.product_id.id)
+        sale_order.order_line.product_uom_qty = 2
 
-        url = self._build_url(f'/shop/payment/transaction/{self.so.id}')
+        url = self._build_url(f'/shop/payment/transaction/{sale_order.id}')
         self.assertEqual(self.event.seats_taken, 0)
         self.assertEqual(self.event_2.seats_taken, 0)
         self.env['event.registration'].create([
@@ -173,7 +175,7 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
             'seats_limited': True,
         })
         self.env['event.registration'].create([
-            {'event_id': e.id, 'sale_order_id': self.so.id, 'partner_id': p.id, 'event_ticket_id': t.id}
+            {'event_id': e.id, 'sale_order_id': sale_order.id, 'partner_id': p.id, 'event_ticket_id': t.id}
             for p in [(self.partner), (self.partner_admin)]
             for e, t in [(self.event, self.ticket), (self.event_2, self.ticket_2)]
         ])
@@ -181,13 +183,13 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
             'provider_id': self.provider.id,
             'payment_method_id': self.payment_method.id,
             'token_id': None,
-            'amount': self.so.amount_total,
+            'amount': sale_order.amount_total,
             'flow': 'direct',
             'tokenization_requested': False,
             'landing_route': '/shop/payment/validate',
             'is_validation': False,
             'csrf_token': odoo.http.Request.csrf_token(self),
-            'access_token': self.so._portal_ensure_token(),
+            'access_token': sale_order._portal_ensure_token(),
         }
         with self.assertRaisesRegex(odoo.tests.JsonRpcException, 'odoo.exceptions.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)

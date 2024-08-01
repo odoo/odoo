@@ -12,7 +12,7 @@ class WebsiteSaleCollect(WebsiteSale):
         """ Override of `website_sale` to include the selected pickup location and zip code. """
         res = super()._prepare_product_values(product, category, search, **kwargs)
         if request.website.sudo().in_store_dm_id:
-            order_sudo = request.website.sale_get_order()
+            order_sudo = request.cart
             if (
                 order_sudo.carrier_id.delivery_type == 'in_store'
                 and order_sudo.pickup_location_data

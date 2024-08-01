@@ -174,9 +174,13 @@ class SaleOrder(models.Model):
         if set_qty == 0 and line.coupon_id and reward_id and reward_id.reward_type == 'discount':
             # Force the deletion of the line even if it's a temporary record created by new()
             line_id = line.id
+            # When a reward line is deleted we remove it from the auto claimable rewards
+            self = self.with_context(website_sale_loyalty_delete=True)  # noqa: PLW0642
         res = super()._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
         self._update_programs_and_rewards()
         self._auto_apply_rewards()
+        if request:  # In case the rewards application modifies the cart quantity
+            request.session['website_sale_cart_quantity'] = self.cart_quantity
         return res
 
     def _get_free_shipping_lines(self):
