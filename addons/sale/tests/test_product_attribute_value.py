@@ -57,11 +57,13 @@ class TestProductAttributeValue(HttpCase, SaleCommon):
 
     def test_attribute_values_deletion_or_archiving(self):
         """Check that product attributes can be deleted if product or linked ptav are archived."""
+        if self.env['ir.module.module']._get('sale_management').state != 'installed':
+            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
+
         self.product_template.attribute_line_ids.update({'value_ids': [Command.set([self.a1.id])]})
         self.assertEqual(
             self.order_line.product_no_variant_attribute_value_ids.product_attribute_value_id,
             self.a3,
         )
         self.assertFalse(self.order_line.product_no_variant_attribute_value_ids.ptav_active)
-        self.env.ref('sale.sale_menu_root').active = True
         self.start_tour("/odoo", 'delete_product_attribute_value_tour', login="admin")
