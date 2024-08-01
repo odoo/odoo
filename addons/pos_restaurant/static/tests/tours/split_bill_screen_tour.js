@@ -112,11 +112,9 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.clickNextOrder(),
+            ReceiptScreen.clickContinueOrder(),
 
             // Check if there is still water in the order
-            FloorScreen.isShown(),
-            FloorScreen.clickTable("2"),
 
             ProductScreen.selectedOrderlineHas("Water", "1.0"),
             ProductScreen.clickPayButton(true),
@@ -171,11 +169,9 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
             ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
-            ...ReceiptScreen.clickNextOrder(),
+            ...ReceiptScreen.clickContinueOrder(),
 
-            // Check if there is still water in the order
-            ...FloorScreen.isShown(),
-            FloorScreen.clickTable("2"),
+            // Check if there is still Minute Maid in the order
             // now we check that all the lines that remained in the order are correct
             ...ProductScreen.selectedOrderlineHas("Minute Maid", "1.0"),
             ...ProductScreen.clickOrderline("Office Combo"),
