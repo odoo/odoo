@@ -12,6 +12,7 @@ from odoo.exceptions import ValidationError, UserError
 
 from ..utils.cloud_storage_azure_utils import UserDelegationKey
 from .. import uninstall_hook
+from ..models.ir_attachment import CloudStorageAzureUserDelegationKeys, get_cloud_storage_azure_user_delegation_key
 
 
 class TestCloudStorageAzure(TransactionCase):
@@ -50,7 +51,7 @@ class TestCloudStorageAzure(TransactionCase):
             <Value>{self.DUMMY_USER_DELEGATION_KEY.value}</Value>
         </UserDelegationKey>""", 'utf-8')
 
-        self.env['ir.attachment']._IrAttachment__cloud_storage_azure_user_delegation_keys.clear()
+        CloudStorageAzureUserDelegationKeys.clear()
 
     def test_get_user_delegation_key_success(self):
         request_num = 0
@@ -68,20 +69,20 @@ class TestCloudStorageAzure(TransactionCase):
             return response
 
         with patch('odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post', post):
-            self.env['ir.attachment']._get_cloud_storage_azure_user_delegation_key()
+            get_cloud_storage_azure_user_delegation_key(self.env)
             self.assertEqual(request_num, 2, '2 requests to create new user_delegation_key')
 
             self.env.invalidate_all()
-            self.env['ir.attachment']._get_cloud_storage_azure_user_delegation_key()
+            get_cloud_storage_azure_user_delegation_key(self.env)
             self.assertEqual(request_num, 2, 'user_delegation_key should be reused if configuration is not changed')
 
             self.env.registry.clear_cache()
-            self.env['ir.attachment']._get_cloud_storage_azure_user_delegation_key()
+            get_cloud_storage_azure_user_delegation_key(self.env)
             self.assertEqual(request_num, 2, 'user_delegation_key should be reused if configuration is not changed')
 
             self.env['ir.config_parameter'].set_param('cloud_storage_azure_account_name', 'newaccountname2')
             self.env.registry.clear_cache()
-            self.env['ir.attachment']._get_cloud_storage_azure_user_delegation_key()
+            get_cloud_storage_azure_user_delegation_key(self.env)
             self.assertEqual(request_num, 4, '2 requests to create new user_delegation_key when the configuration is changed')
 
     def test_get_user_delegation_key_wrong_info(self):
@@ -100,12 +101,12 @@ class TestCloudStorageAzure(TransactionCase):
 
         with patch('odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post', post), \
                 self.assertRaises(ValidationError):
-            self.env['ir.attachment']._get_cloud_storage_azure_user_delegation_key()
+            get_cloud_storage_azure_user_delegation_key(self.env)
         self.assertEqual(request_num, 1, '1 request to validate the validity of the client id and tenant id')
 
         with patch('odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post', post), \
                 self.assertRaises(ValidationError):
-            self.env['ir.attachment']._get_cloud_storage_azure_user_delegation_key()
+            get_cloud_storage_azure_user_delegation_key(self.env)
         self.assertEqual(request_num, 2, '1 request to validate the validity of the client id and tenant id')
 
     def test_get_user_delegation_key_wrong_secret(self):
@@ -124,12 +125,12 @@ class TestCloudStorageAzure(TransactionCase):
 
         with patch('odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post', post), \
                 self.assertRaises(ValidationError):
-            self.env['ir.attachment']._get_cloud_storage_azure_user_delegation_key()
+            get_cloud_storage_azure_user_delegation_key(self.env)
         self.assertEqual(request_num, 1, '1 request to validate the validity of the secret')
 
         with patch('odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post', post), \
                 self.assertRaises(ValidationError):
-            self.env['ir.attachment']._get_cloud_storage_azure_user_delegation_key()
+            get_cloud_storage_azure_user_delegation_key(self.env)
         self.assertEqual(request_num, 1, '401 response should be cached in case the secret is expired')
 
     def test_get_user_delegation_key_wrong_account(self):
@@ -144,10 +145,10 @@ class TestCloudStorageAzure(TransactionCase):
 
         with patch('odoo.addons.cloud_storage_azure.utils.cloud_storage_azure_utils.requests.post', post), \
                 self.assertRaises(ValidationError):
-            self.env['ir.attachment']._get_cloud_storage_azure_user_delegation_key()
+            get_cloud_storage_azure_user_delegation_key(self.env)
 
     def test_generate_sas_url(self):
-        with patch('odoo.addons.cloud_storage_azure.models.ir_attachment.IrAttachment._get_cloud_storage_azure_user_delegation_key', return_value=self.DUMMY_USER_DELEGATION_KEY):
+        with patch('odoo.addons.cloud_storage_azure.models.ir_attachment.get_cloud_storage_azure_user_delegation_key', return_value=self.DUMMY_USER_DELEGATION_KEY):
             # create test cloud attachment like route "/mail/attachment/upload"
             # with dummy binary
             attachment = self.env['ir.attachment'].create([{
