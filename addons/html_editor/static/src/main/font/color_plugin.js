@@ -16,7 +16,8 @@ import { reactive } from "@odoo/owl";
 
 export class ColorPlugin extends Plugin {
     static name = "color";
-    static dependencies = ["selection", "split", "history", "zws"];
+    static dependencies = ["selection", "split", "history", "format"];
+    /** @type { (p: ColorPlugin) => Record<string, any> } */
     static resources = (p) => ({
         toolbarGroup: {
             id: "color",

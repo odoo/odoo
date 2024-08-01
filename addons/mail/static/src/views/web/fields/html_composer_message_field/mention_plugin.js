@@ -22,7 +22,7 @@ export class MentionPlugin extends Plugin {
     static dependencies = ["overlay", "dom", "history"];
 
     static resources = (p) => ({
-        onBeforeInput: p.onBeforeInput.bind(p),
+        onBeforeInput: { handler: p.onBeforeInput.bind(p) },
     });
 
     setup() {

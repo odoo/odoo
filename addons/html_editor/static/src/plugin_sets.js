@@ -6,7 +6,6 @@ import { DomPlugin } from "./core/dom_plugin";
 import { FormatPlugin } from "./core/format_plugin";
 import { HistoryPlugin } from "./core/history_plugin";
 import { InputPlugin } from "./core/input_plugin";
-import { InsertTextPlugin } from "./core/insert_text_plugin";
 import { LineBreakPlugin } from "./core/line_break_plugin";
 import { OverlayPlugin } from "./core/overlay_plugin";
 import { ProtectedNodePlugin } from "./core/protected_node_plugin";
@@ -14,7 +13,6 @@ import { SanitizePlugin } from "./core/sanitize_plugin";
 import { SelectionPlugin } from "./core/selection_plugin";
 import { ShortCutPlugin } from "./core/shortcut_plugin";
 import { SplitPlugin } from "./core/split_plugin";
-import { ZwsPlugin } from "./core/zws_plugin";
 import { BannerPlugin } from "./main/banner_plugin";
 import { ChatGPTPlugin } from "./main/chatgpt/chatgpt_plugin";
 import { ColumnPlugin } from "./main/column_plugin";
@@ -62,14 +60,12 @@ export const CORE_PLUGINS = [
     FormatPlugin,
     HistoryPlugin,
     InputPlugin,
-    InsertTextPlugin,
     LineBreakPlugin,
     OverlayPlugin,
     ProtectedNodePlugin,
     SanitizePlugin,
     SelectionPlugin,
     SplitPlugin,
-    ZwsPlugin,
 ];
 
 export const MAIN_PLUGINS = [
