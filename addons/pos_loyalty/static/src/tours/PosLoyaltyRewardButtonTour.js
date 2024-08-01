@@ -203,3 +203,33 @@ ProductScreen.check.selectedOrderlineHas('Product B', '1.00', '50.00');
 PosLoyalty.check.orderTotalIs('40.00');
 
 Tour.register('PosLoyaltySpecificDiscountCategoryTour', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickDisplayedProduct("Desk Organizer");
+ProductScreen.do.clickDisplayedProduct("Desk Organizer");
+PosLoyalty.check.isRewardButtonHighlighted(true);
+PosLoyalty.do.clickRewardButton();
+SelectionPopup.do.clickItem("product_a");
+PosLoyalty.check.hasRewardLine("Free Product", "-2", "1.00");
+PosLoyalty.check.isRewardButtonHighlighted(false);
+
+ProductScreen.do.clickDisplayedProduct("Desk Organizer");
+ProductScreen.do.clickDisplayedProduct("Desk Organizer");
+PosLoyalty.check.isRewardButtonHighlighted(true);
+PosLoyalty.do.clickRewardButton();
+SelectionPopup.do.clickItem("product_b");
+PosLoyalty.check.hasRewardLine("Free Product", "-5", "1.00");
+PosLoyalty.check.isRewardButtonHighlighted(false);
+
+ProductScreen.do.clickDisplayedProduct("Desk Organizer");
+ProductScreen.do.clickDisplayedProduct("Desk Organizer");
+PosLoyalty.check.isRewardButtonHighlighted(true);
+PosLoyalty.do.clickRewardButton();
+SelectionPopup.do.clickItem("product_b");
+PosLoyalty.check.hasRewardLine("Free Product", "-10", "2.00");
+PosLoyalty.check.isRewardButtonHighlighted(false);
+
+Tour.register("PosLoyaltyRewardProductTag", { test: true, url: "/pos/web" }, getSteps());
