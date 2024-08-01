@@ -157,7 +157,10 @@ export class EmbeddedComponentPlugin extends Plugin {
         return this.hostToStateChangeManagerMap.get(host);
     }
 
-    mountComponent(host, { Component, getEditableDescendants, getProps, StateChangeManager }) {
+    mountComponent(
+        host,
+        { Component, getEditableDescendants, getProps, name, StateChangeManager }
+    ) {
         const props = getProps?.(host) || {};
         const { dev, translateFn, getRawTemplate } = this.app;
         const env = Object.create(this.env);
@@ -166,6 +169,10 @@ export class EmbeddedComponentPlugin extends Plugin {
         }
         if (getEditableDescendants) {
             env.getEditableDescendants = getEditableDescendants;
+        }
+        for (const cb of this.resources["embedded_component_env"] || []) {
+            // Add plugin specific additional environments
+            Object.assign(env, cb(name));
         }
         const app = new App(Component, {
             test: dev,

@@ -39,6 +39,7 @@ import { deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actio
 import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
+import { Plugin } from "@html_editor/plugin";
 
 function getConfig(components) {
     return {
@@ -837,6 +838,47 @@ describe("Mount processing", () => {
         // mounting wave.
         expect.verifySteps(["unknown handled"]);
         expect(getContent(el)).toBe(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`);
+    });
+    test("Mount a component with a plugin that modifies the Component's env", async () => {
+        let setSelection;
+        class SimplePlugin extends Plugin {
+            static name = "simple";
+            static dependencies = ["selection", "embedded_components", "dom"];
+            static resources(p) {
+                return {
+                    embedded_component_env: (name) => {
+                        if (name === "embeddedCounter") {
+                            return { ...p.shared };
+                        }
+                    },
+                };
+            }
+
+            insertElement(element) {
+                const html = parseHTML(this.document, element);
+                this.shared.domInsert(html);
+                this.dispatch("ADD_STEP");
+            }
+        }
+
+        class EmbeddedCounter extends Counter {
+            static template = xml`
+                <span class="counter" t-on-click="increment">
+                    <t t-esc="state.value"/>
+                </span>
+            `;
+            setup() {
+                super.setup();
+                setSelection = this.env.setSelection;
+            }
+        }
+        const config = getConfig([embedding("embeddedCounter", EmbeddedCounter)]);
+        config.Plugins.push(SimplePlugin);
+        const { plugins } = await setupEditor(`<div>[]a</div>`, { config });
+        const simplePlugin = plugins.get("simple");
+        simplePlugin.insertElement("<div data-embedded='embeddedCounter'/>");
+        await animationFrame();
+        expect(setSelection).toBe(simplePlugin.shared.setSelection);
     });
 });
 
