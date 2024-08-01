@@ -6,8 +6,7 @@ from odoo.tests import tagged
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
     TestSaleProductAttributeValueCommon,
 )
-from odoo.addons.website.tools import MockRequest
-from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -108,6 +107,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestSaleProductAttributeV
             with_variants = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter,
                 hide_variants=False,
+                website_id=self.website.id,
             )._get_products('latest_sold')
             self.assertSetEqual(
                 {p['product_id'] for p in with_variants},
@@ -123,6 +123,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestSaleProductAttributeV
             no_variants = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter,
                 hide_variants=True,
+                website_id=self.website.id,
             )._get_products('latest_sold')
             self.assertSetEqual(
                 {p['product_id'] for p in no_variants},
@@ -191,6 +192,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestSaleProductAttributeV
             with_variants = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter,
                 hide_variants=False,
+                website_id=self.website.id,
             )._get_products('recently_sold_with', product_template_id=str(self.computer.id))
             self.assertSetEqual(
                 {p['product_id'] for p in with_variants},
@@ -201,6 +203,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestSaleProductAttributeV
             no_variants = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter,
                 hide_variants=True,
+                website_id=self.website.id,
             )._get_products('recently_sold_with', product_template_id=str(self.computer.id))
             self.assertSetEqual(
                 {p['product_id'] for p in no_variants},

@@ -4,7 +4,7 @@
 from odoo.tests import tagged
 
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import MockRequest
 
 
 @tagged('post_install', '-at_install')
@@ -88,6 +88,7 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
         be returned and the quantity updated to its maximum. """
 
         so = self.env['sale.order'].create({
+            'website_id': self.website.id,
             'partner_id': self.env.user.partner_id.id,
             'order_line': [(0, 0, {
                 'name': self.product_A.name,
@@ -97,8 +98,9 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
             })]
         })
 
-        with MockRequest(self.env, website=self.website, sale_order_id=so.id):
-            website_so = self.website.sale_get_order()
+        with MockRequest(self.env, website=self.website, sale_order_id=so.id) as req:
+            website_so = req.cart
+            self.assertEqual(website_so, so)
             self.assertEqual(
                 website_so.order_line.product_id.virtual_available,
                 25,

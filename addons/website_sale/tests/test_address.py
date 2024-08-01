@@ -4,13 +4,11 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import api
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -100,9 +98,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.demo_partner.id)
 
-        env = api.Environment(self.env.cr, self.demo_user.id, {})
-        # change also website env for `sale_get_order` to not change order partner_id
-        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+        website = self.website.with_user(self.demo_user).with_context({})
+        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             # 1. Logged in user, new shipping
@@ -123,9 +120,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.website.user_id.partner_id.id)
 
-        env = api.Environment(self.env.cr, self.website.user_id.id, {})
-        # change also website env for `sale_get_order` to not change order partner_id
-        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+        website = self.website.with_user(self.public_user).with_context({})
+        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             # 1. Public user, new billing
@@ -143,16 +139,23 @@ class TestCheckoutAddress(WebsiteSaleCommon):
     def test_03_carrier_rate_on_shipping_address_change(self):
         """ Test that when a shipping address is changed the price of delivery is recalculated
         and updated on the order."""
-        partner = self.env.user.partner_id
-        order = self._create_so()
-        order.carrier_id = self.carrier.id  # Set the carrier on the order.
-        shipping_partner_values = {'name': 'dummy', 'parent_id': partner.id, 'type': 'delivery'}
-        shipping_partner = self.env['res.partner'].create(shipping_partner_values)
-        order.partner_shipping_id = shipping_partner
-        with MockRequest(self.env, website=self.website, sale_order_id=order.id), patch(
-            'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
-            return_value={'success': True, 'price': 10, 'warning_message': ''}
-        ) as rate_shipment_mock:
+        shipping_partner = self.env['res.partner'].create({
+            'name': 'dummy',
+            'parent_id': self.partner.id,
+            'type': 'delivery',
+        })
+        self.cart.write({
+            'carrier_id': self.carrier.id,
+            'partner_shipping_id': shipping_partner.id
+        })
+        website = self.website.with_user(self.public_user).with_context({})
+        with (
+            MockRequest(website.env, website=website, sale_order_id=self.cart.id),
+            patch(
+                'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
+                return_value={'success': True, 'price': 10, 'warning_message': ''}
+            ) as rate_shipment_mock
+        ):
             # Change a shipping address of the order in the checkout.
             shipping_partner2 = shipping_partner.copy()
             self.WebsiteSaleController.shop_update_address(
@@ -164,7 +167,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
                 msg="The carrier rate must be recalculated when shipping address is changed.",
             )
             self.assertEqual(
-                order.order_line.filtered(lambda l: l.is_delivery)[0].price_unit,
+                self.cart.order_line.filtered('is_delivery')[0].price_unit,
                 10,
                 msg="The recalculated delivery price must be updated on the order.",
             )
@@ -205,15 +208,17 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self.assertEqual(so.pricelist_id, self.pricelist)
 
         with MockRequest(
-            self.env, website=self.website,
+            public_user_env,
+            website=self.website.with_env(public_user_env),
             sale_order_id=so.id,
             website_sale_current_pl=so.pricelist_id.id
-        ):
-            self.assertEqual(self.website.pricelist_id, self.pricelist)
-            order = self.website.with_env(public_user_env).sale_get_order()
+        ) as request:
+            self.assertEqual(request.pricelist, self.pricelist)
+            order = request.cart
             self.assertEqual(order, so)
             self.assertEqual(order.pricelist_id, self.pricelist)
-            order_b = self.website.with_user(test_user).sale_get_order()
+
+            order_b = request.website.with_user(test_user)._get_and_cache_current_cart()
             self.assertEqual(order, order_b)
             self.assertEqual(order_b.pricelist_id, pl_with_code)
 
@@ -245,9 +250,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.portal_partner.id)
 
-        env = api.Environment(self.env.cr, self.portal_user.id, {})
-        # change also website env for `sale_get_order` to not change order partner_id
-        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+        website = self.website.with_user(self.portal_user).with_context({})
+        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             # 1. Portal user, new shipping, same with the log in user
@@ -326,8 +330,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             [90.91, 9.09, 100.0]
         )
 
-        env = api.Environment(self.env.cr, self.website.user_id.id, {})
-        with MockRequest(self.env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+        website = self.website.with_user(self.public_user).with_context({})
+        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             self.WebsiteSaleController.shop_address_submit(**be_address_POST)
@@ -355,9 +359,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.demo_partner.id)
 
-        env = api.Environment(self.env.cr, self.demo_user.id, {})
-        # change also website env for `sale_get_order` to not change order partner_id
-        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+        website = self.website.with_user(self.demo_user).with_context({})
+        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             # check the default values
@@ -480,9 +483,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self.assertFalse(colleague._can_be_edited_by_current_customer(so, 'billing'))
         self.assertFalse(colleague._can_be_edited_by_current_customer(so, 'delivery'))
 
-        env = api.Environment(self.env.cr, user.id, {})
-        # change also website env for `sale_get_order` to not change order partner_id
-        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id):
+        website = self.website.with_user(user).with_context({})
+        with MockRequest(website.env, website=website, sale_order_id=so.id):
 
             # Invalid addresses unaccessible to current customer
             with self.assertRaises(Forbidden):
@@ -601,8 +603,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         so = self._create_so(partner_id=self.portal_partner.id)
         self.assertTrue(so.payment_term_id, "A payment term should be set by default on the sale order")
 
-        env = api.Environment(self.env.cr, self.portal_user.id, {})
-        with MockRequest(env, website=self.website.with_env(env).with_context(website_id=self.website.id)) as req:
+        website = self.website.with_user(self.portal_user).with_context({})
+        with MockRequest(website.env, website=website) as req:
             req.httprequest.method = "POST"
 
             self.default_address_values['partner_id'] = self.portal_partner.id

@@ -10,7 +10,7 @@ from odoo.tests import HttpCase, tagged
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
     TestSaleProductAttributeValueCommon,
 )
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
@@ -252,11 +252,11 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCoupon(HttpCase):
+class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestWebsiteSaleCoupon, cls).setUpClass()
+        super().setUpClass()
         program = cls.env['loyalty.program'].create({
             'name': '10% TEST Discount',
             'trigger': 'with_code',
@@ -274,14 +274,6 @@ class TestWebsiteSaleCoupon(HttpCase):
             'points_granted': 1
         }).generate_coupons()
         cls.coupon = program.coupon_ids[0]
-
-        cls.steve = cls.env['res.partner'].create({
-            'name': 'Steve Bucknor',
-            'email': 'steve.bucknor@example.com',
-        })
-        cls.empty_order = cls.env['sale.order'].create({
-            'partner_id': cls.steve.id
-        })
 
     def _apply_promo_code(self, order, code, no_reward_fail=True):
         status = order._try_apply_code(code)
@@ -302,18 +294,17 @@ class TestWebsiteSaleCoupon(HttpCase):
 
     def test_01_gc_coupon(self):
         # 1. Simulate a frontend order (website, product)
-        order = self.empty_order
-        order.website_id = self.env['website'].browse(1)
-        self.env['sale.order.line'].create({
-            'product_id': self.env['product.product'].create({
-                'name': 'Product A',
-                'list_price': 100,
-                'sale_ok': True,
-            }).id,
-            'name': 'Product A',
-            'product_uom_qty': 2.0,
-            'order_id': order.id,
-        })
+        order = self.empty_cart
+        order.order_line = [
+            Command.create({
+                'product_id': self.env['product.product'].create({
+                    'name': 'Product A',
+                    'list_price': 100,
+                    'sale_ok': True,
+                }).id,
+                'product_uom_qty': 2.0,
+            })
+        ]
 
         # 2. Apply the coupon
         self._apply_promo_code(order, self.coupon.code)
@@ -380,15 +371,14 @@ class TestWebsiteSaleCoupon(HttpCase):
 
     def test_03_remove_coupon(self):
         # 1. Simulate a frontend order (website, product)
-        order = self.empty_order
-        order.website_id = self.env['website'].browse(1)
-        self.env['sale.order.line'].create({
-            'product_id': self.env['product.product'].create({
-                'name': 'Product A', 'list_price': 100, 'sale_ok': True
-            }).id,
-            'name': 'Product A',
-            'order_id': order.id,
-        })
+        order = self.empty_cart
+        order.order_line = [
+            Command.create({
+                'product_id': self.env['product.product'].create({
+                    'name': 'Product A', 'list_price': 100, 'sale_ok': True
+                }).id,
+            })
+        ]
 
         # 2. Apply the coupon
         self._apply_promo_code(order, self.coupon.code)
@@ -411,9 +401,6 @@ class TestWebsiteSaleCoupon(HttpCase):
             1. Raise an error
             2. Not delete the coupon
         """
-        self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
-        website = self.env['website'].browse(1)
-
         # Create product
         product = self.env['product.product'].create({
             'name': 'Product',
@@ -422,15 +409,8 @@ class TestWebsiteSaleCoupon(HttpCase):
             'taxes_id': [],
         })
 
-        order = self.empty_order
-        order.write({
-            'website_id': website.id,
-            'order_line': [
-                Command.create({
-                    'product_id': product.id,
-                }),
-            ]
-        })
+        order = self.empty_cart
+        order.order_line = [Command.create({'product_id': product.id})]
 
         WebsiteSaleController = WebsiteSale()
 
@@ -440,7 +420,7 @@ class TestWebsiteSaleCoupon(HttpCase):
         for _ in http._generate_routing_rules(installed_modules, nodb_only=False):
             pass
 
-        with MockRequest(self.env, website=website, sale_order_id=order.id) as request:
+        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
             # Check the base cart value
             self.assertEqual(order.amount_total, 100.0, "The base cart value is incorrect.")
 
@@ -511,11 +491,8 @@ class TestWebsiteSaleCoupon(HttpCase):
             } for name, taxes_id in products_data]
         )
 
-        order = self.empty_order
-        order.write({
-            'website_id': self.env['website'].browse(1),
-            'order_line': [Command.create({'product_id': product.id}) for product in products],
-        })
+        order = self.empty_cart
+        order.order_line = [Command.create({'product_id': product.id}) for product in products]
 
         msg = "There should only be 4 lines for the 4 products."
         self.assertEqual(len(order.order_line), 4, msg=msg)

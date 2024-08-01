@@ -169,7 +169,7 @@ class ProductProduct(models.Model):
             'image': f'{base_url}{website.image_url(self, "image_1920")}',
             'offers': {
                 '@type': 'Offer',
-                'price': float_round(website.pricelist_id._get_product_price(
+                'price': float_round(request.pricelist._get_product_price(
                     self, quantity=1, target_currency=website.currency_id
                 ), 2),
                 'priceCurrency': website.currency_id.name,

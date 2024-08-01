@@ -3,6 +3,7 @@
 from collections import Counter
 
 from odoo import _, api, fields, models
+from odoo.http import request
 from odoo.osv import expression
 
 
@@ -147,7 +148,7 @@ class WebsiteSnippetFilter(models.Model):
         products = self.env['product.product']
         visitor = self.env['website.visitor']._get_visitor_from_request()
         if visitor:
-            excluded_products = website.sale_get_order().order_line.product_id.ids
+            excluded_products = request.cart.order_line.product_id.ids
             tracked_products = self.env['website.track'].sudo()._read_group([
                 ('visitor_id', '=', visitor.id),
                 ('product_id', '!=', False),
@@ -187,7 +188,7 @@ class WebsiteSnippetFilter(models.Model):
                 ('order_line.product_id.product_tmpl_id', '=', current_template.id),
             ], limit=8, order='date_order DESC')
             if sale_orders:
-                cart_products = website.sale_get_order().order_line.product_id
+                cart_products = request.cart.order_line.product_id
                 excluded_products = cart_products.product_tmpl_id.product_variant_ids
                 excluded_products |= current_template.product_variant_ids
                 included_products = sale_orders.order_line.product_id
@@ -209,7 +210,7 @@ class WebsiteSnippetFilter(models.Model):
             product_template_id and int(product_template_id)
         ).exists()
         if current_template:
-            cart_products = website.sale_get_order().order_line.product_id
+            cart_products = request.cart.order_line.product_id
             excluded_products = cart_products.product_tmpl_id.product_variant_ids
             excluded_products |= current_template.product_variant_ids
             included_products = current_template._get_website_accessory_product()
@@ -233,7 +234,7 @@ class WebsiteSnippetFilter(models.Model):
             product_template_id and int(product_template_id)
         ).exists()
         if current_template:
-            cart_products = website.sale_get_order().order_line.product_id
+            cart_products = request.cart.order_line.product_id
             excluded_products = cart_products.product_tmpl_id.product_variant_ids
             excluded_products |= current_template.product_variant_ids
             alternative_products = current_template._get_website_alternative_product()

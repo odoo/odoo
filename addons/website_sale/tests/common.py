@@ -1,9 +1,38 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import contextmanager
+
 from odoo.fields import Command
+from odoo.tools import lazy
 
 from odoo.addons.delivery.tests.common import DeliveryCommon
 from odoo.addons.product.tests.common import ProductCommon
+from odoo.addons.website.tools import MockRequest as websiteMockRequest
+from odoo.addons.website_sale.models.website import (
+    CART_SESSION_CACHE_KEY,
+    FISCAL_POSITION_SESSION_CACHE_KEY,
+    PRICELIST_SESSION_CACHE_KEY,
+)
+
+
+@contextmanager
+def MockRequest(
+    *args, sale_order_id=None, website_sale_current_pl=None, fiscal_position_id=None, **kwargs
+):
+    with websiteMockRequest(*args, **kwargs) as request:
+        if sale_order_id is not None:
+            request.session[CART_SESSION_CACHE_KEY] = sale_order_id
+        request.cart = lazy(request.website._get_and_cache_current_cart)
+
+        if website_sale_current_pl is not None:
+            request.session[PRICELIST_SESSION_CACHE_KEY] = website_sale_current_pl
+        request.pricelist = lazy(request.website._get_and_cache_current_pricelist)
+
+        if fiscal_position_id is not None:
+            request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = fiscal_position_id
+        request.fiscal_position = lazy(request.website._get_and_cache_current_fiscal_position)
+
+        yield request
 
 
 class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
@@ -15,8 +44,10 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
 
         cls.website = cls.env.company.website_id
         if not cls.website:
-            cls.website = cls.env.ref('website.default_website')
-            cls.website.company_id = cls.env.company
+            cls.website = cls.env['website'].create({
+                'name': 'Test Website',
+                'company_id': cls.env.company.id,
+            })
 
         cls.public_user = cls.website.user_id
         cls.public_partner = cls.public_user.partner_id

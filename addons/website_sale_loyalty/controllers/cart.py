@@ -9,13 +9,9 @@ class Cart(WebsiteSaleCart):
 
     @route()
     def cart(self, **post):
-        order = request.website.sale_get_order()
-        if order and order.state != 'draft':
-            request.session['sale_order_id'] = None
-            order = request.website.sale_get_order()
-        if order:
-            order._update_programs_and_rewards()
-            order._auto_apply_rewards()
+        if order_sudo := request.cart:
+            order_sudo._update_programs_and_rewards()
+            order_sudo._auto_apply_rewards()
         return super().cart(**post)
 
     @route()

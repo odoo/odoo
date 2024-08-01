@@ -11,6 +11,11 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_is_zero
 
+from odoo.addons.website_sale.models.website import (
+    FISCAL_POSITION_SESSION_CACHE_KEY,
+    PRICELIST_SESSION_CACHE_KEY,
+)
+
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -264,13 +269,18 @@ class SaleOrder(models.Model):
             # Recompute taxes on fpos change
             self._recompute_taxes()
 
+            new_fpos = self.fiscal_position_id
+            request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = new_fpos.id
+            request.fiscal_position = new_fpos
+
         if self.pricelist_id != pricelist_before or fpos_changed:
             # Pricelist may have been recomputed by the `partner_id` field update
             # we need to recompute the prices to match the new pricelist if it changed
             self._recompute_prices()
 
-            request.session['website_sale_current_pl'] = self.pricelist_id.id
-            self.website_id.invalidate_recordset(['pricelist_id'])
+            new_pricelist = self.pricelist_id
+            request.session[PRICELIST_SESSION_CACHE_KEY] = new_pricelist.id
+            request.pricelist = new_pricelist
 
         if self.carrier_id and 'partner_shipping_id' in fnames and self._has_deliverable_products():
             # Update the delivery method on shipping address change.
@@ -282,22 +292,10 @@ class SaleOrder(models.Model):
             # Only add the main partner as follower of the order
             self._message_subscribe([partner_id])
 
-    def _cart_update_pricelist(self, pricelist_id=None):
-        self.ensure_one()
-
-        if self.pricelist_id.id != pricelist_id:
-            self.pricelist_id = pricelist_id
-            self._recompute_prices()
-
     def _cart_update(self, product_id, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
         self = self.with_company(self.company_id)
-
-        if self.state != 'draft':
-            request.session.pop('sale_order_id', None)
-            request.session.pop('website_sale_cart_quantity', None)
-            raise UserError(_('It is forbidden to modify a sales order which is not in draft status.'))
 
         product = self.env['product.product'].browse(product_id).exists()
         if add_qty and (not product or not product._is_add_to_cart_allowed()):
@@ -362,6 +360,9 @@ class SaleOrder(models.Model):
                 self.order_line.filtered(lambda line: line.is_delivery).price_unit = rate['price']
             else:
                 self._remove_delivery_line()
+
+        if request:
+            request.session['website_sale_cart_quantity'] = self.cart_quantity
 
         return {
             'line_id': order_line.id,
@@ -509,6 +510,13 @@ class SaleOrder(models.Model):
     def _update_cart_line_values(self, order_line, update_values):
         self.ensure_one()
         order_line.write(update_values)
+
+    def _verify_cart(self):
+        """Check cart content and clear outdated/invalid lines."""
+        self.ensure_one()
+
+        # Remove lines with inactive products
+        self.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
 
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """
