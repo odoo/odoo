@@ -174,6 +174,9 @@ class PosPaymentMethod(models.Model):
 
     def copy_data(self, default=None):
         default = dict(default or {}, config_ids=[(5, 0, 0)])
+        if self.journal_id and self.journal_id.type == 'cash':
+            if ('journal_id' in default and default['journal_id'] == self.journal_id.id) or ('journal_id' not in default):
+                default.update({'journal_id': False})
         return super().copy_data(default=default)
 
     @api.constrains('payment_method_type', 'journal_id', 'qr_code_method')
