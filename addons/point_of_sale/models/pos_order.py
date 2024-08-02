@@ -155,8 +155,7 @@ class PosOrder(models.Model):
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
 
-        if pos_session._is_capture_system_activated():
-            pos_session._remove_capture_content(order)
+        pos_session._remove_capture_content(order)
 
         return pos_order._process_saved_order(draft)
 
@@ -971,6 +970,9 @@ class PosOrder(models.Model):
                     existing_orders = self.env['pos.order'].search([('pos_reference', '=', order_name)])
                     if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
                         order_ids.append(self._process_order(order, draft, False))
+                    else:
+                        _logger.info("PoS order %s already exists and is the same as the one sent by the PoS", order_name)
+                        self.env['pos.session']._remove_capture_content(order['data'])
             except Exception as e:
                 _logger.exception("An error occurred when processing the PoS order %s", order_name)
                 pos_session = self.env['pos.session'].browse(order['data']['pos_session_id'])
