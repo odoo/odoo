@@ -282,7 +282,7 @@
                         </div>
                     </t>
                     <t t-if="not object.company_id.uses_default_logo">
-                        <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % object.company_id.name"/>
+                        <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; margin-right: 10px; height: auto; width: 80px;" t-att-alt="'%s' % object.company_id.name"/>
                     </t>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
@@ -512,8 +512,10 @@
 <t t-set="date_begin" t-value="format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)"/>
 <t t-set="date_end" t-value="format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)"/>
 <t t-set="is_online" t-value="'is_published' in object.event_id and object.event_id.is_published"/>
+<t t-set="is_sale" t-value="'sale_order_id' in object and object.sale_order_id"/>
 <t t-set="event_organizer" t-value="object.event_id.organizer_id"/>
 <t t-set="event_address" t-value="object.event_id.address_id"/>
+<t t-set="registration_ids" t-value="object.ids if not is_sale else object._get_event_registration_ids_from_order()"/>
 <table border="0" cellpadding="0" cellspacing="0"  width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
 <tbody>
     <!-- HEADER -->
@@ -523,15 +525,20 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your registration</span><br/>
                     <span style="font-size: 20px; font-weight: bold;" t-out="object.name or 'Guest'"/>
-                </td><td valign="middle" align="right">
-                    <t t-if="is_online">
-                        <a t-attf-href="{{ object.event_id.website_url }}"
-                            style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
-                            View Event
+                    <div style="margin-bottom: 5px;margin-top: 18px;">
+                        <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ registration_ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}&amp;responsive_html=1"
+                            target="_blank" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
+                            View Tickets
                         </a>
+                    </div>
+                </td><td valign="middle" align="right">
+                    <t t-if="object.barcode">
+                        <div style="margin-bottom: 5px;">
+                            <img t-attf-src="/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0" width="100" height="100" alt="QR Code"/>
+                        </div>
                     </t>
-                    <t t-elif="not object.company_id.uses_default_logo">
-                        <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % object.company_id.name"/>
+                    <t t-if="not object.company_id.uses_default_logo">
+                        <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; margin-right: 10px; height: auto; width: 80px;" t-att-alt="'%s' % object.company_id.name"/>
                     </t>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
