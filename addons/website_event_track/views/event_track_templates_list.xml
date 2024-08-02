@@ -272,19 +272,25 @@
                         <div class="row g-0">
                             <div class="col-12 d-flex justify-content-between">
                                 <!-- Hour: Live > Remaining > Hour: desktop only -->
-                                <div t-if="tracks_date and today_tz &lt;= tracks_date"
-                                    >
-                                    <span t-if="track.is_track_live and not track.is_track_done"
-                                        class="alert alert-danger px-2 py-1">Live</span>
-                                    <span class="fw-bold" t-elif="not track.is_track_done and track.is_track_soon">
-                                        <span t-out="track.track_start_remaining"
-                                            t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
-                                                        'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
-                                    </span>
-                                    <span class="fw-bold" t-elif="not track.is_track_done and not track.is_track_soon"
-                                        t-out="track.date"
-                                        t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short', 'tz_name': event.date_tz}"/>
-                                    <span t-else="" class="alert alert-dark px-2 py-1 small">Finished</span>
+                                <div class="d-flex align-items-center gap-1 flex-wrap">
+                                    <div t-if="tracks_date and today_tz &lt;= tracks_date"
+                                        >
+                                        <span t-if="track.is_track_live and not track.is_track_done"
+                                            class="alert alert-danger px-2 py-1">Live</span>
+                                        <span class="fw-bold" t-elif="not track.is_track_done and track.is_track_soon">
+                                            <span t-out="track.track_start_remaining"
+                                                t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
+                                                            'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
+                                        </span>
+                                        <span class="fw-bold" t-elif="not track.is_track_done and not track.is_track_soon"
+                                            t-out="track.date"
+                                            t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short', 'tz_name': event.date_tz}"/>
+                                        <span t-else="" class="alert alert-dark px-2 py-1 small">Finished</span>
+                                    </div>
+                                    <span t-if="tracks_date and today_tz &lt;= tracks_date and track.location_id">-</span>
+                                    <div t-if="track.location_id">
+                                        <i class="fa fa-map-marker" role="img"/> <span t-field="track.location_id"/>
+                                    </div>
                                 </div>
                                 <!-- reminder -->
                                 <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
