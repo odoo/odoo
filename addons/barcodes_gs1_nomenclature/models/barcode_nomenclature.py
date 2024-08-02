@@ -57,6 +57,7 @@ class BarcodeNomenclature(models.Model):
     def parse_gs1_rule_pattern(self, match, rule):
         result = {
             'rule': rule,
+            'type': rule.type,
             'ai': match.group(1),
             'string_value': match.group(2),
         }
@@ -126,10 +127,10 @@ class BarcodeNomenclature(models.Model):
 
         return results
 
-    def parse_barcode(self, barcode):
+    def parse_nomenclature_barcode(self, barcode):
         if self.is_gs1_nomenclature:
             return self.gs1_decompose_extanded(barcode)
-        return super().parse_barcode(barcode)
+        return super().parse_nomenclature_barcode(barcode)
 
     @api.model
     def _preprocess_gs1_search_args(self, args, barcode_types, field='barcode'):
@@ -155,7 +156,7 @@ class BarcodeNomenclature(models.Model):
 
                 replacing_operator = 'ilike' if operator in ['ilike', '='] else 'not ilike'
                 for data in parsed_data:
-                    data_type = data['rule'].type
+                    data_type = data['type']
                     value = data['value']
                     if data_type in barcode_types:
                         if data_type == 'lot':

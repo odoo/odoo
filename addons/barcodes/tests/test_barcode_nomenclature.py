@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo.exceptions import ValidationError
 from odoo.tests import common
 
@@ -253,3 +252,39 @@ class TestBarcodeNomenclature(common.TransactionCase):
         self.assertEqual(res['encoding'], 'ean13')
         self.assertEqual(res['base_code'], '2212300000002')
         self.assertEqual(res['value'], 456.1025)
+
+    def test_barcode_uri_conversion(self):
+        """ This test ensures URIs are correctly converted into barcode data."""
+
+        uri = 'urn:epc:class:lgtin : 4012345.012345.998877'
+        barcode_data = self.nomenclature.parse_barcode(uri)
+        self.assertEqual(len(barcode_data), 2)
+        product_part, lot_part = barcode_data
+        self.assertEqual(product_part['type'], 'product')
+        self.assertEqual(product_part['value'], '04012345123456')
+        self.assertEqual(lot_part['type'], 'lot')
+        self.assertEqual(lot_part['value'], '998877')
+
+        uri = 'urn:epc:id:sgtin:9521141.012345.4711'
+        barcode_data = self.nomenclature.parse_barcode(uri)
+        self.assertEqual(len(barcode_data), 2)
+        product_part, serial_part = barcode_data
+        self.assertEqual(product_part['type'], 'product')
+        self.assertEqual(product_part['value'], '09521141123454')
+        self.assertEqual(serial_part['type'], 'lot')
+        self.assertEqual(serial_part['value'], '4711')
+
+        uri = 'urn:epc:tag:sgtin-96 : 1.358378.0728089.620776'
+        barcode_data = self.nomenclature.parse_barcode(uri)
+        self.assertEqual(len(barcode_data), 2)
+        product_part, serial_part = barcode_data
+        self.assertEqual(product_part['type'], 'product')
+        self.assertEqual(product_part['value'], '03583787280898')
+        self.assertEqual(serial_part['type'], 'lot')
+        self.assertEqual(serial_part['value'], '620776')
+
+        uri = 'urn:epc:id:sscc:952656789012.03456'
+        barcode_data = self.nomenclature.parse_barcode(uri)
+        self.assertEqual(len(barcode_data), 1)
+        self.assertEqual(barcode_data[0]['type'], 'package')
+        self.assertEqual(barcode_data[0]['value'], '095265678901234568')
