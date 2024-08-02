@@ -103,7 +103,9 @@
 
                         <div id="contacts_settings">
                             <block title="Contacts" name="contacts_setting_container">
-                                <setting id="sms" string="Send SMS" documentation="/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" help="Send texts to your contacts" />
+                                <setting id="sms" string="Send SMS" documentation="/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" help="Send texts to your contacts">
+                                    <field name="module_sms"/>
+                                </setting>
                                 <setting help="Automatically enrich your contact base with company data" title="When populating your address book, Odoo provides a list of matching companies. When selecting one item, the company data and logo are auto-filled." id="partner_autocomplete">
                                     <field name="module_partner_autocomplete"/>
                                 </setting>

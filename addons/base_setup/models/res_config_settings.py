@@ -28,6 +28,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_inter_company_rules = fields.Boolean("Manage Inter Company")
     module_voip = fields.Boolean("VoIP")
     module_web_unsplash = fields.Boolean("Unsplash Image Library")
+    module_sms = fields.Boolean("SMS")
     module_partner_autocomplete = fields.Boolean("Partner Autocomplete")
     module_base_geolocalize = fields.Boolean("GeoLocalize")
     module_google_recaptcha = fields.Boolean("reCAPTCHA")

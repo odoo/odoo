@@ -1295,7 +1295,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
     def test_message_to_store_single(self):
         message = self.messages_all[0].with_env(self.env)
 
-        with self.assertQueryCount(employee=24):
+        with self.assertQueryCount(employee=27):
             res = Store(message, for_current_user=True).get_result()
 
         self.assertEqual(len(res["mail.message"]), 1)

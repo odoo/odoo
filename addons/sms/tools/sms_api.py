@@ -1,19 +1,44 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _
 from odoo.addons.iap.tools import iap_tools
+from odoo.tools.translate import _lt
+
+
+ERROR_MESSAGES = {
+    # Errors that could occur while updating sender name
+    'format_error': _lt("Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters."),
+    'unregistered_account': _lt("Your sms account has not been activated yet."),
+    'existing_sender': _lt("This account already has an existing sender name and it cannot be changed."),
+
+    # Errors that could occur while sending the verification code
+    'invalid_phone_number': _lt("Invalid phone number. Please make sure to follow the international format, i.e. a plus sign (+), then country code, city code, and local phone number. For example: +1 555-555-555"),
+    'verification_sms_delivery': _lt(
+        "We were not able to reach you via your phone number. "
+        "If you have requested multiple codes recently, please retry later."
+    ),
+    'closed_feature': _lt("The SMS Service is currently unavailable for new users and new accounts registrations are suspended."),
+    'banned_account': _lt("This phone number/account has been banned from our service."),
+
+    # Errors that could occur while verifying the code
+    'invalid_code': _lt("The verification code is incorrect."),
+    'no_sms_account': _lt("We were not able to find your account in our database."),
+    'too_many_attempts': _lt("You tried too many times. Please retry later."),
+
+    # Default error
+    'unknown_error': _lt("An unknown error occurred. Please contact Odoo support if this error persists."),
+}
 
 
 class SmsApi:
     DEFAULT_ENDPOINT = 'https://sms.api.odoo.com'
 
-    def __init__(self, env):
+    def __init__(self, env, account=None):
         self.env = env
+        self.account = account or self.env['iap.account'].get('sms')
 
     def _contact_iap(self, local_endpoint, params, timeout=15):
-        account = self.env['iap.account'].get('sms')
-        params['account_token'] = account.account_token
+        params['account_token'] = self.account.account_token
         endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
         return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params, timeout=timeout)
 
@@ -73,3 +98,18 @@ class SmsApi:
             'incompatible_content': _("The content of the message violates rules applied by our providers."),
             'registration_needed': ' '.join([_("Country-specific registration required."), register_now]),
         }
+
+    def _send_verification_sms(self, phone_number):
+        return self._contact_iap('/api/sms/1/account/create', {
+            'phone_number': phone_number,
+        })
+
+    def _verify_account(self, verification_code):
+        return self._contact_iap('/api/sms/2/account/verify', {
+            'code': verification_code,
+        })
+
+    def _set_sender_name(self, sender_name):
+        return self._contact_iap('/api/sms/1/account/update_sender', {
+            'sender_name': sender_name,
+        })
