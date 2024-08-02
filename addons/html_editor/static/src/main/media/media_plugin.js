@@ -18,9 +18,9 @@ export class MediaPlugin extends Plugin {
     static shared = ["savePendingImages"];
     /** @type { (p: MediaPlugin) => Record<string, any> } */
     static resources = (p) => {
-        const powerboxCommands = [];
+        const powerboxItems = [];
         if (!p.config.disableImage) {
-            powerboxCommands.push({
+            powerboxItems.push({
                 name: _t("Image"),
                 description: _t("Insert an image"),
                 category: "media",
@@ -31,7 +31,7 @@ export class MediaPlugin extends Plugin {
             });
         }
         if (!p.config.disableVideo) {
-            powerboxCommands.push({
+            powerboxItems.push({
                 name: _t("Video"),
                 description: _t("Insert a video"),
                 category: "media",
@@ -48,22 +48,19 @@ export class MediaPlugin extends Plugin {
         }
         const resources = {
             powerboxCategory: { id: "media", name: _t("Media"), sequence: 40 },
-            powerboxCommands,
-            toolbarGroup: {
-                id: "replace_image",
-                sequence: 29,
-                namespace: "image",
-                buttons: [
-                    {
-                        id: "replace_image",
-                        action(dispatch) {
-                            dispatch("REPLACE_IMAGE");
-                        },
-                        name: "Replace media",
-                        text: "Replace",
+            powerboxItems,
+            toolbarCategory: { id: "replace_image", sequence: 29, namespace: "image" },
+            toolbarItems: [
+                {
+                    id: "replace_image",
+                    category: "replace_image",
+                    action(dispatch) {
+                        dispatch("REPLACE_IMAGE");
                     },
-                ],
-            },
+                    name: "Replace media",
+                    text: "Replace",
+                },
+            ],
         };
         return resources;
     };

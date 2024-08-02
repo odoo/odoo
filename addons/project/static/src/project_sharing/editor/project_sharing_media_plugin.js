@@ -5,7 +5,8 @@ import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 export class ProjectSharingMediaPlugin extends MediaPlugin {
     static resources = (p) => {
         const resources = MediaPlugin.resources(p);
-        delete resources.toolbarGroup;
+        delete resources.toolbarCategory;
+        delete resources.toolbarItems;
         return resources;
     };
     async createAttachment({ el, imageData, resId }) {

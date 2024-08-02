@@ -14,7 +14,7 @@ export class TableUIPlugin extends Plugin {
     static dependencies = ["overlay", "table"];
     /** @type { (p: TableUIPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        powerboxCommands: [
+        powerboxItems: [
             {
                 name: _t("Table"),
                 description: _t("Insert a table"),

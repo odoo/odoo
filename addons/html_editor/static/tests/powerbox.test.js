@@ -113,7 +113,7 @@ describe("search", () => {
             static name = "test";
             static resources = () => ({
                 powerboxCategory: { id: "test", name: "Test" },
-                powerboxCommands: [
+                powerboxItems: [
                     {
                         name: "Test1",
                         description: "Test1",
@@ -393,7 +393,7 @@ class NoOpPlugin extends Plugin {
     static name = "no_op";
     static resources = () => ({
         powerboxCategory: { id: "no_op", name: "No-op" },
-        powerboxCommands: [
+        powerboxItems: [
             {
                 name: "No-op",
                 description: "No-op",

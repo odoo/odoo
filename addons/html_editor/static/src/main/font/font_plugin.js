@@ -104,40 +104,37 @@ export class FontPlugin extends Plugin {
         ],
         handle_delete_backward: { callback: p.handleDeleteBackward.bind(p), sequence: 20 },
         handle_delete_backward_word: { callback: p.handleDeleteBackward.bind(p), sequence: 20 },
-        toolbarGroup: [
+        toolbarCategory: [
             {
                 id: "font",
                 sequence: 10,
-                buttons: [
-                    {
-                        id: "font",
-                        Component: FontSelector,
-                        props: {
-                            getItems: () => fontItems,
-                            command: "SET_TAG",
-                        },
-                    },
-                ],
+            },
+            { id: "font-size", sequence: 29 },
+        ],
+        toolbarItems: [
+            {
+                id: "font",
+                category: "font",
+                Component: FontSelector,
+                props: {
+                    getItems: () => fontItems,
+                    command: "SET_TAG",
+                },
             },
             {
                 id: "font-size",
-                sequence: 29,
-                buttons: [
-                    {
-                        id: "font-size",
-                        Component: FontSelector,
-                        props: {
-                            getItems: () => p.fontSizeItems,
-                            isFontSize: true,
-                            command: "FORMAT_FONT_SIZE_CLASSNAME",
-                            document: p.document,
-                        },
-                    },
-                ],
+                category: "font-size",
+                Component: FontSelector,
+                props: {
+                    getItems: () => p.fontSizeItems,
+                    isFontSize: true,
+                    command: "FORMAT_FONT_SIZE_CLASSNAME",
+                    document: p.document,
+                },
             },
         ],
         powerboxCategory: { id: "format", name: _t("Format"), sequence: 30 },
-        powerboxCommands: [
+        powerboxItems: [
             {
                 name: _t("Heading 1"),
                 description: _t("Big section heading"),

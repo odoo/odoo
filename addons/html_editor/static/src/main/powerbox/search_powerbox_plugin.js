@@ -23,7 +23,7 @@ export class SearchPowerboxPlugin extends Plugin {
             categoryIds.add(category.id);
         }
         this.categories = this.resources.powerboxCategory.sort((a, b) => a.sequence - b.sequence);
-        this.commands = this.resources.powerboxCommands.map((command) => ({
+        this.commands = this.resources.powerboxItems.map((command) => ({
             ...command,
             categoryName: this.categories.find((category) => category.id === command.category).name,
         }));

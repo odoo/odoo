@@ -10,35 +10,33 @@ export class ChatGPTPlugin extends Plugin {
     static name = "chatgpt";
     static dependencies = ["selection", "history", "dom", "sanitize"];
     static resources = (p) => ({
-        toolbarGroup: [
+        toolbarCategory: [
             {
                 id: "ai",
                 sequence: 50,
-                buttons: [
-                    {
-                        id: "chatgpt",
-                        action(dispatch) {
-                            dispatch("OPEN_CHATGPT_DIALOG");
-                        },
-                        icon: "fa-magic",
-                        name: "chatgpt",
-                        label: _t("Generate or transform content with AI."),
-                    },
-                ],
+            },
+            { id: "translate", sequence: 110 },
+        ],
+        toolbarItems: [
+            {
+                id: "chatgpt",
+                category: "ai",
+                action(dispatch) {
+                    dispatch("OPEN_CHATGPT_DIALOG");
+                },
+                icon: "fa-magic",
+                name: "chatgpt",
+                label: _t("Generate or transform content with AI."),
             },
             {
                 id: "translate",
-                sequence: 110,
-                buttons: [
-                    {
-                        id: "translate",
-                        Component: LanguageSelector,
-                    },
-                ],
+                category: "translate",
+                Component: LanguageSelector,
             },
         ],
+
         powerboxCategory: { id: "ai", name: _t("AI Tools"), sequence: 70 },
-        powerboxCommands: {
+        powerboxItems: {
             name: _t("ChatGPT"),
             description: _t("Generate or transform content with AI."),
             category: "ai",
