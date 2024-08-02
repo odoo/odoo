@@ -84,6 +84,10 @@ class Contract(models.Model):
         for contract in self:
             contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
 
+    def _get_salary_costs_factor(self):
+        self.ensure_one()
+        return 12.0
+
     @api.depends('employee_id')
     def _compute_employee_contract(self):
         for contract in self.filtered('employee_id'):
