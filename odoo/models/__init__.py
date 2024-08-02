@@ -21,7 +21,7 @@ from odoo.orm.models import (
     parse_read_group_spec,
     to_record_ids,
 )
-from odoo.orm.table_objects import Constraint
+from odoo.orm.table_objects import Constraint, Index, UniqueIndex
 from odoo.orm.utils import (
     READ_GROUP_TIME_GRANULARITY,
     check_method_name,

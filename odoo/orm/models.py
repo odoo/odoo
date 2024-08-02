@@ -4,7 +4,7 @@
 """
     Object Relational Mapping module:
      * Hierarchical structure
-     * Constraints consistency and validation
+     * Constraints consistency and validation, indexes
      * Object metadata depends on its status
      * Optimised processing by complex query (multiple actions at once)
      * Default field values

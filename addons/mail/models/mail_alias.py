@@ -93,14 +93,7 @@ class MailAlias(models.Model):
         ], compute='_compute_alias_status', store=True,
         help='Alias status assessed on the last message received.')
 
-    def init(self):
-        """Make sure there aren't multiple records for the same name and alias
-        domain. Not in _sql_constraint because COALESCE is not supported for
-        PostgreSQL constraint. """
-        self.env.cr.execute("""
-            CREATE UNIQUE INDEX IF NOT EXISTS mail_alias_name_domain_unique
-            ON mail_alias (alias_name, COALESCE(alias_domain_id, 0))
-        """)
+    _name_domain_unique = models.UniqueIndex('(alias_name, COALESCE(alias_domain_id, 0))')
 
     @api.constrains('alias_domain_id', 'alias_force_thread_id', 'alias_parent_model_id',
                     'alias_parent_thread_id', 'alias_model_id')
