@@ -17,8 +17,7 @@
                         <field name="department_id" invisible="allocation_mode != 'department'" required="allocation_mode == 'department'"/>
                         <field name="category_id" invisible="allocation_mode != 'category'" required="allocation_mode == 'category'"/>
                         <field name="holiday_status_id"/>
-                        <field name="allocation_type" widget="radio"/>
-                        <field name="request_unit" invisible="1"/>
+                        <field name="allocation_type" widget="radio" readonly="not can_edit_type"/>
                         <field name="accrual_plan_id"
                             invisible="allocation_type == 'regular'"
                             required="allocation_type == 'accrual'"/>
@@ -44,8 +43,15 @@
                         </div>
                     </group>
                 </group>
+                <div class="alert alert-warning m-0" role="alert" invisible="not allocation_type_discrepancy">
+                    <span>
+                        There are existing allocations for some employees that are not compatible with the allocations you're trying to create.
+                        Only one allocation type can be set for a given employee and a given time off type.
+                    </span>
+                </div>
                 <footer>
-                    <button name="action_generate_allocations" type="object" class="btn-primary" string="Create Allocations" accesskey="c"/>
+                    <button name="action_generate_allocations" type="object" class="btn-primary"
+                        invisible="allocation_type_discrepancy" string="Create Allocations" accesskey="c"/>
                     <button special="cancel" string="Discard" close="1" accesskey="j" />
                 </footer>
             </form>

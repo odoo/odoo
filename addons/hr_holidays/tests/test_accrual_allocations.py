@@ -1675,53 +1675,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             accrual_allocation._update_accrual()
             self.assertAlmostEqual(accrual_allocation.number_of_days, 4.0, places=0)
 
-    def test_cancel_invalid_leaves_with_regular_and_accrual_allocations(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Monthly accrual',
-            'carryover_date': 'year_start',
-            'accrued_gain_time': 'start',
-            'level_ids': [(0, 0, {
-                'added_value_type': 'day',
-                'start_count': 0,
-                'start_type': 'day',
-                'added_value': 1,
-                'frequency': 'monthly',
-                'first_day_display': '1',
-                'cap_accrued_time': False,
-            })],
-        })
-        allocations = self.env['hr.leave.allocation'].create([
-            {
-                'name': 'Regular allocation',
-                'allocation_type': 'regular',
-                'date_from': '2024-05-01',
-                'holiday_status_id': self.leave_type.id,
-                'employee_id': self.employee_emp.id,
-                'number_of_days': 2,
-            },
-            {
-                'name': 'Accrual allocation',
-                'allocation_type': 'accrual',
-                'date_from': '2024-05-01',
-                'holiday_status_id': self.leave_type.id,
-                'employee_id': self.employee_emp.id,
-                'accrual_plan_id': accrual_plan.id,
-                'number_of_days': 3,
-            }
-        ])
-        allocations.action_validate()
-        leave = self.env['hr.leave'].create({
-                'name': 'Leave',
-                'employee_id': self.employee_emp.id,
-                'holiday_status_id': self.leave_type.id,
-                'request_date_from': '2024-05-13',
-                'request_date_to': '2024-05-17',
-            })
-        leave.action_validate()
-        with freeze_time('2024-05-06'):
-            self.env['hr.leave']._cancel_invalid_leaves()
-        self.assertEqual(leave.state, 'validate', "Leave must not be canceled")
-
     def test_accrual_leaves_cancel_cron(self):
         leave_type_no_negative = self.env['hr.leave.type'].create({
             'name': 'Test Accrual - No negative',

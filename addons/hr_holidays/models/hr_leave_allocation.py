@@ -101,10 +101,19 @@ class HolidaysAllocation(models.Model):
     lastcall = fields.Date("Date of the last accrual allocation", readonly=True)
     nextcall = fields.Date("Date of the next accrual allocation", readonly=True, default=False)
     already_accrued = fields.Boolean()
-    allocation_type = fields.Selection([
-        ('regular', 'Regular Allocation'),
-        ('accrual', 'Accrual Allocation')
-    ], string="Allocation Type", default="regular", required=True, readonly=True)
+    allocation_type = fields.Selection(
+        selection=[
+            ('regular', 'Regular Allocation'),
+            ('accrual', 'Accrual Allocation')
+        ],
+        compute="_compute_allocation_type", store=True,
+        string="Allocation Type", default="regular", required=True, readonly=True,
+        help="""
+            Only one allocation type can be set for a given employee and a given time off type.
+            If an employee already has an allocation of the same leave type, the field is not editable.
+        """)
+    can_edit_type = fields.Boolean(compute="_compute_can_edit_type", export_string_translation=False)
+    allocation_type_discrepancy = fields.Boolean(compute="_compute_can_edit_type", export_string_translation=False)
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan',
         compute="_compute_accrual_plan_id", store=True, readonly=False, tracking=True,
@@ -120,6 +129,23 @@ class HolidaysAllocation(models.Model):
     def _check_date_from_date_to(self):
         if any(allocation.date_to and allocation.date_from > allocation.date_to for allocation in self):
             raise UserError(_("The Start Date of the Validity Period must be anterior to the End Date."))
+
+    @api.constrains('employee_id', 'holiday_status_id', 'allocation_type', 'state')
+    def _check_allocation_type_unicity(self):
+        existing_allocations_list = self.search([
+            ('employee_id', 'in', self.employee_id.ids),
+            ('holiday_status_id', 'in', self.holiday_status_id.ids),
+            ('state', '=', 'validate'),
+        ])
+        for allocation in self:
+            if allocation.state != 'validate':
+                continue
+            existing_allocations = existing_allocations_list.filtered_domain([
+                ('employee_id', '=', allocation.employee_id.id),
+                ('holiday_status_id', '=', allocation.holiday_status_id.id),
+            ]) | allocation
+            if len(set(existing_allocations.mapped('allocation_type'))) > 1:
+                raise UserError(_("An employee cannot have two different allocation types for a same time off type."))
 
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
@@ -221,6 +247,47 @@ class HolidaysAllocation(models.Model):
     def _compute_department_id(self):
         for allocation in self:
             allocation.department_id = allocation.employee_id.department_id
+
+    @api.depends('employee_id', 'holiday_status_id')
+    def _compute_allocation_type(self):
+        existing_allocations_list = self.search([
+            ('employee_id', 'in', self.employee_id.ids),
+            ('holiday_status_id', 'in', self.holiday_status_id.ids),
+            ('state', '=', 'validate'),
+        ])
+        for allocation in self:
+            existing_allocations = existing_allocations_list.filtered_domain([
+                ('id', '!=', allocation.id),
+                ('employee_id', '=', allocation.employee_id.id),
+                ('holiday_status_id', '=', allocation.holiday_status_id.id),
+            ])
+            if not existing_allocations or not allocation.employee_id or not allocation.holiday_status_id:
+                continue
+            allocation.allocation_type = existing_allocations.mapped('allocation_type')[0]
+
+    @api.depends('employee_id', 'holiday_status_id')
+    def _compute_can_edit_type(self):
+        self.allocation_type_discrepancy = False
+        existing_allocations_list = self.search([
+            ('employee_id', 'in', self.employee_id.ids),
+            ('holiday_status_id', 'in', self.holiday_status_id.ids),
+        ])
+        if not existing_allocations_list:
+            self.can_edit_type = True
+            return
+        for allocation in self:
+            existing_allocations = existing_allocations_list.filtered_domain([
+                ('id', '!=', allocation.id),
+                ('employee_id', '=', allocation.employee_id.id),
+                ('holiday_status_id', '=', allocation.holiday_status_id.id),
+                ('state', '=', 'validate'),
+            ])
+            if not existing_allocations or not allocation.employee_id or not allocation.holiday_status_id:
+                allocation.can_edit_type = True
+            else:
+                allocation.can_edit_type = False
+            if len(set(existing_allocations.mapped('allocation_type'))) > 1:
+                allocation.allocation_type_discrepancy = True
 
     @api.depends('employee_id')
     def _compute_manager_id(self):

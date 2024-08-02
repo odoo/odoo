@@ -115,7 +115,7 @@
                             <field name="allocation_type"
                                 widget="radio"
                                 invisible="1"
-                                readonly="not is_officer or state == 'validate'"/>
+                                readonly="not can_edit_type or not is_officer or state == 'validate'"/>
                             <field name="is_officer" invisible="1"/>
                             <field name="accrual_plan_id"
                                 invisible="allocation_type == 'regular'"
@@ -184,6 +184,14 @@
                 <button string="Mark as ready to approve" name="action_set_to_confirm" type="object"
                         invisible="not can_approve or state != 'refuse'"/>
             </field>
+            <div id="title" position="before">
+                <div invisible="not allocation_type_discrepancy">
+                    <span class="alert alert-warning" role="alert">
+                        This employee has validated allocations of regular and accrual type for this time off type.
+                        This might lead to computation issues.
+                    </span>
+                </div>
+            </div>
             <div id="title" position="replace">
                 <div class="oe_title">
                     <h2><field name="name" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" required="1"/></h2>
@@ -270,7 +278,7 @@
                 <field name="duration_display" string="Amount"/>
                 <field name="date_from" string="Validity Start" optional="hide"/>
                 <field name="date_to" string="Validity Stop" optional="hide" readonly="state in ['refuse', 'validate', 'validate1']"/>
-                <field name="allocation_type" readonly="state not in ['confirm']"/>
+                <field name="allocation_type" readonly="not can_edit_type or state not in ['confirm']"/>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="active_employee" column_invisible="True"/>
                 <field name="state" widget="badge" decoration-warning="state == 'confirm'" decoration-success="state == 'validate'"/>
