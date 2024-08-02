@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, waitFor, press } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
@@ -98,4 +98,27 @@ test("Unsplash error is displayed when there is no key", async () => {
     await fetchDef;
     await waitFor(".unsplash_error");
     expect(".unsplash_error").toHaveCount(1);
+});
+
+test("Document tab does not crash with FileSelector extension", async () => {
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
+        return [
+            {
+                id: 1,
+                name: "logo",
+                mimetype: "image/png",
+                image_src: "/web/static/img/logo2.png",
+                access_token: false,
+                public: true,
+            },
+        ];
+    });
+    const env = await makeMockEnv();
+    const { editor } = await setupEditor("<p>a[]</p>", { env });
+    insertText(editor, "/image");
+    await animationFrame();
+    press("enter");
+    await animationFrame();
+    click("li:nth-child(2) > a.nav-link");
+    expect(".o_existing_attachment_cell").toHaveCount(1);
 });
