@@ -423,8 +423,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             ['account_id',               'tax_ids',                      'balance',     'price_total', 'analytic_distribution'       ],
             # base lines
             [self.revenue_account.id,    (self.tax_15 + self.tax_10).ids, -100,         125,           {an_acc_01: 100}              ],
-            [self.revenue_account.id,    self.tax_10.ids,                 -100,         110,           {an_acc_01: 50, an_acc_02: 50}],
-            [self.revenue_account.id,    self.tax_10.ids,                 -100,         110,           {an_acc_01: 100}],
+            [self.revenue_account.id,    self.tax_10.ids,                 -200,         220,           {an_acc_01: 75, an_acc_02: 25}],
             [self.revenue_account.id,    self.env['account.tax'],         -100,         100 ,          False                         ],
             # taxes
             [self.tax_account.id,        self.env['account.tax'],         -30,          0,             False                         ],

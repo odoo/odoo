@@ -100,6 +100,7 @@ class Project(models.Model):
 
 class Task(models.Model):
     _name = _description = 'test_base_automation.task'
+    _inherit = ['mail.thread']
 
     name = fields.Char()
     parent_id = fields.Many2one('test_base_automation.task')
@@ -107,12 +108,18 @@ class Task(models.Model):
         'test_base_automation.project',
         compute='_compute_project_id', recursive=True, store=True, readonly=False,
     )
+    state = fields.Boolean(tracking=True)
 
     @api.depends('parent_id.project_id')
     def _compute_project_id(self):
         for task in self:
             if not task.project_id:
                 task.project_id = task.parent_id.project_id
+
+    def _track_template(self, changes):
+        if 'state' in changes:
+            return {'state': (self.env.ref("test_base_automation.test_tracking_template"), {})}
+        return {}
 
 
 class Stage(models.Model):

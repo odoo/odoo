@@ -2079,19 +2079,25 @@
     <!-- Deactivatable through the website editor. -->
     <template id="address_b2b" inherit_id="address" name="Show b2b fields" />
 
-    <!-- Called in `website_sale.payment`. -->
+    <!-- Called in `website_sale.payment` and `website_sale.confirmation`. -->
     <template id="address_on_payment" name="Address on payment">
-        <div class="card">
+        <div class="card o_not_editable">
             <div class="card-body" id="shipping_and_billing">
-                <a class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-pencil me-1"/>Edit</a>
+                <a t-if="not disable_edit" class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-pencil me-1"/>Edit</a>
                 <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
+                <t t-set="order_address" t-value="order.with_context(show_address=True)"/>
                 <div>
                     <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b>
-                    <span t-esc="order.partner_invoice_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
+                    <span
+                        t-esc="', '.join(order_address.partner_invoice_id.display_name.split('\n')[1:])"
+                        class="address-inline lh-sm o_address_font_sm"/>
                 </div>
                 <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address">
                     <b>Shipping: </b>
-                    <span t-esc="order.partner_shipping_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
+                    <span
+                        id="shipping_on_payment_details"
+                        t-esc="', '.join(order_address.partner_shipping_id.display_name.split('\n')[1:])"
+                        class="address-inline lh-sm o_address_font_sm"/>
                 </div>
             </div>
         </div>
@@ -2385,12 +2391,10 @@
                 </tbody>
             </table>
             <t t-call="website_sale.payment_confirmation_status"/>
-            <div class="card mt-3">
-                <div class="card-body">
-                    <t t-set="same_shipping" t-value="bool(order.partner_shipping_id == order.partner_invoice_id or only_services)" />
-                    <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_invoice_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
-                    <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
-                </div>
+            <div id="address_on_confirmation" class="mt-3">
+                <t t-call="website_sale.address_on_payment">
+                    <t t-set="disable_edit" t-value="True"/>
+                </t>
             </div>
             <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
             <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Shop' t-attf-data-event-params='{"CTA": "Order Confirmed", "amount": "#{"%3s-%3s" % (max(0, round(website_sale_order.amount_total/100)*100 - 50), round(website_sale_order.amount_total/100)*100 + 50)}"}' />
