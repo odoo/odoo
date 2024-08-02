@@ -2447,7 +2447,7 @@ export class Wysiwyg extends Component {
                 callback: async () => {
                     const [user] = await this.orm.read(
                         'res.users',
-                        [session.uid],
+                        [session.user_id],
                         ['signature'],
                     );
                     if (user && user.signature) {
