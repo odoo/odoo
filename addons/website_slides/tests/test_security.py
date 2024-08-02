@@ -536,7 +536,7 @@ class TestReview(common.SlidesCase, HttpCase):
         self.authenticate("admin", "admin")
 
         res1 = self.opener.post(
-            url="%s/mail/chatter_post" % self.base_url(),
+            url="%s/mail/message/post" % self.base_url(),
             json={
                 "params": {
                     "thread_model": "slide.channel",
@@ -554,7 +554,7 @@ class TestReview(common.SlidesCase, HttpCase):
 
 
         res2 = self.opener.post(
-            url="%s/mail/chatter_post" % self.base_url(),
+            url="%s/mail/message/post" % self.base_url(),
             json={
                 "params": {
                     "thread_model": "slide.channel",

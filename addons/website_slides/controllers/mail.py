@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.exceptions import NotFound, Forbidden
-from odoo.exceptions import ValidationError
 
-from odoo import _, http
+from odoo import http
 from odoo.http import request
-from odoo.addons.portal.controllers.mail import _check_special_access, PortalChatter
+from odoo.addons.portal.controllers.mail import PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
 
 
@@ -18,32 +17,8 @@ class SlidesPortalChatter(PortalChatter):
             return True
         return super()._portal_post_has_content(thread_model, thread_id, message, attachment_ids=attachment_ids, **kw)
 
-    @http.route()
-    def portal_chatter_post(self, thread_model, thread_id, post_data, **kwargs):
-        previous_post = request.env['mail.message'].search([('res_id', '=', thread_id),
-                                                            ('author_id', '=', request.env.user.partner_id.id),
-                                                            ('model', '=', 'slide.channel'),
-                                                            ('subtype_id', '=', request.env.ref('mail.mt_comment').id)])
-        if previous_post:
-            raise ValidationError(_("Only a single review can be posted per course."))
-
-        result = super().portal_chatter_post(thread_model, thread_id, post_data, **kwargs)
-        if result and thread_model == 'slide.channel':
-            rating_value = kwargs.get('rating_value', False)
-            slide_channel = request.env[thread_model].sudo().browse(int(thread_id))
-            if rating_value and slide_channel and request.env.user.partner_id.id == int(kwargs.get('pid')):
-                request.env.user._add_karma(slide_channel.karma_gen_channel_rank, slide_channel, _('Course Ranked'))
-            result.update({
-                'default_rating_value': rating_value,
-                'rating_avg': slide_channel.rating_avg,
-                'rating_count': slide_channel.rating_count,
-                'force_submit_url': result.get('default_message_id') and '/slides/mail/update_comment',
-            })
-        return result
-
     @http.route([
         '/slides/mail/update_comment',
-        '/mail/chatter_update',
         ], type='json', auth="user", methods=['POST'])
     def mail_update_message(self, thread_model, thread_id, message_id, post_data, **post):
         # keep this mechanism intern to slide currently (saas 12.5) as it is
@@ -56,9 +31,15 @@ class SlidesPortalChatter(PortalChatter):
         self._portal_post_check_attachments(attachment_ids, post.get('attachment_tokens', []))
 
         pid = int(post['pid']) if post.get('pid') else False
-        if not _check_special_access(thread_model, thread_id, post.get('token'), post.get('hash'), pid):
+        channel = request.env["slide.channel"]._get_thread_with_access(
+            thread_id,
+            request.env["slide.channel"]._mail_post_access,
+            token=post.get("token"),
+            hash=post.get("hash"),
+            pid=pid,
+        )
+        if not channel:
             raise Forbidden()
-
         # fetch and update mail.message
         message_id = int(message_id)
         message_body = plaintext2html(post_data.get('body', ''))
@@ -87,7 +68,6 @@ class SlidesPortalChatter(PortalChatter):
                 'rating': float(post_data['rating_value']),
                 'feedback': html2plaintext(message.body),
             })
-        channel = request.env[thread_model].browse(thread_id)
         return {
             'default_message_id': message.id,
             'default_message': html2plaintext(message.body),

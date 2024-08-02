@@ -41,6 +41,7 @@ class MailMessage(models.Model):
             'attachment_ids',
             'author_avatar_url',
             'author_id',
+            'author_guest_id',
             'body',
             'date',
             'id',
@@ -94,9 +95,9 @@ class MailMessage(models.Model):
             if message_to_attachments:
                 values['attachment_ids'] = message_to_attachments.get(message.id, {})
             if 'author_avatar_url' in properties_names:
-                if options and 'token' in options:
+                if options and options.get("token"):
                     values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?access_token={options["token"]}'
-                elif options and options.keys() >= {"hash", "pid"}:
+                elif options and options.get("_hash") and options.get("pid"):
                     values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={options["hash"]}&pid={options["pid"]}'
                 else:
                     values['author_avatar_url'] = f'/web/image/mail.message/{message.id}/author_avatar/50x50'

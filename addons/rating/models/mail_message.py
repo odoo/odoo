@@ -43,6 +43,15 @@ class MailMessage(models.Model):
                             "id": rating.id,
                             "ratingImageUrl": rating.rating_image_url,
                             "ratingText": rating.rating_text,
-                        }
+                            "ratingValue": rating.rating,
+                        },
                     },
+                )
+                store.add(
+                    rating.resource_ref,
+                    {
+                        "rating_avg": rating.resource_ref.rating_avg,
+                        "rating_count": rating.resource_ref.rating_count,
+                    },
+                    as_thread=True
                 )

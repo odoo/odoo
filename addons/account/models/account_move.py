@@ -5221,6 +5221,8 @@ class AccountMove(models.Model):
         # EXTENDS mail mail.thread
         # When posting a message, check the attachment to see if it's an invoice and update with the imported data.
         res = super()._message_post_after_hook(new_message, message_values)
+        if not self.env.user._is_internal():
+            return res
 
         attachments = new_message.attachment_ids
         if not attachments or self.env.context.get('no_new_invoice'):

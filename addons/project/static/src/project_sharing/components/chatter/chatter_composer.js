@@ -77,6 +77,8 @@ export class ChatterComposer extends Component {
             post_data: {
                 body: this.state.message,
                 attachment_ids,
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
             },
             attachment_tokens,
             project_sharing_id: this.props.projectSharingId,
@@ -91,7 +93,7 @@ export class ChatterComposer extends Component {
         }
 
         await rpc(
-            "/mail/chatter_post",
+            "/mail/message/post",
             this.prepareMessageData(),
         );
         this.props.postProcessMessageSent();
