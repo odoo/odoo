@@ -22,6 +22,11 @@ class StockMove(models.Model):
         distinct_fields.append('sale_line_id')
         return distinct_fields
 
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        res['sale_line_id'] = self.sale_line_id.id
+        return res
+
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
         related to this stock move.
@@ -31,6 +36,12 @@ class StockMove(models.Model):
         rslt += invoices
         #rslt += invoices.mapped('reverse_entry_ids')
         return rslt
+
+    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
+        move_values = super()._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
+        if values.get('sale_line_id'):
+            move_values['sale_line_id'] = values['sale_line_id']
+        return move_values
 
     def _get_source_document(self):
         res = super()._get_source_document()

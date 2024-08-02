@@ -117,7 +117,7 @@ class SaleOrder(models.Model):
             # TODO: Log a note on each down document
             deadline_datetime = values.get('commitment_date')
             for order in self:
-                order.order_line.move_ids.date_deadline = deadline_datetime or order.expected_date
+                order.order_line.move_ids.filtered(lambda m: m.location_dest_usage == 'customer').date_deadline = deadline_datetime or order.expected_date
 
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
