@@ -46,7 +46,7 @@ class ResourceResource(models.Model):
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,
         domain="[('company_id', '=', company_id)]",
-        help="Define the working schedule of the resource. If not set, the resource will have a fully flexible working hours.")
+        help="Define the working schedule of the resource. If not set, the resource will have fully flexible working hours.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC')
@@ -196,7 +196,7 @@ class ResourceResource(models.Model):
         for calendar in (calendars or []):
             calendar_resources[calendar] |= self.env['resource.resource']
         for calendar, resources in calendar_resources.items():
-            # If the calendar is flexible or resource has no calendar (fully flexible)
+            # for fully flexible resource, return the whole interval
             if not calendar:
                 for resource in resources:
                     resource_work_intervals[resource.id] |= Intervals([(start, end, self.env['resource.calendar.attendance'])])

@@ -53,6 +53,12 @@
                     <group name="resource_details" col="2">
                         <group name="resource_working_hours">
                             <field name="flexible_hours"/>
+                            <label for="full_time_required_hours" invisible="flexible_hours"/>
+                            <label for="full_time_required_hours" string="Hours per Week" invisible="not flexible_hours"/>
+                            <div>
+                                <field name="full_time_required_hours" style="width: 10%" widget="float_time"/>
+                                <span> hours/week</span>
+                            </div>
                             <field name="hours_per_day" widget="float_time" readonly="not flexible_hours"/>
                         </group>
                         <group name="resource_company">

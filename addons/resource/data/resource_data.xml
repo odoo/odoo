@@ -4,6 +4,7 @@
         <record id="resource_calendar_std" model="resource.calendar">
             <field name="name">Standard 40 hours/week</field>
             <field name="company_id" ref="base.main_company"/>
+            <field name="full_time_required_hours">40</field>
         </record>
 
         <record id="base.main_company" model="res.company">
