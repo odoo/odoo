@@ -28,6 +28,7 @@ class PaypalForm(PaypalCommon):
             'item_number': self.reference,
             'last_name': 'Buyer',
             'lc': 'en_US',
+            'no_shipping': '1',
             'notify_url': self._build_url(PaypalController._notify_url),
             'return': return_url,
             'rm': '2',
