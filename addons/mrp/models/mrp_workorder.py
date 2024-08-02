@@ -516,6 +516,8 @@ class MrpWorkorder(models.Model):
 
     def _plan_workorder(self, replan=False):
         self.ensure_one()
+        if replan and not self.leave_id:
+            return
         # Plan workorder after its predecessors
         start_date = max(self.production_id.date_planned_start, datetime.now())
         for workorder in self.blocked_by_workorder_ids:

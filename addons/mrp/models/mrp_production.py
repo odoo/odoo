@@ -797,8 +797,7 @@ class MrpProduction(models.Model):
                 joined_move_ids.append(move_finished)
             vals['move_finished_ids'] = joined_move_ids
             del vals['move_byproduct_ids']
-        if 'workorder_ids' in self:
-            production_to_replan = self.filtered(lambda p: p.is_planned)
+        production_to_replan = self.filtered(lambda p: p.is_planned) if 'workorder_ids' in vals else self.env['mrp.production']
         if 'move_raw_ids' in vals and self.state not in ['draft', 'cancel', 'done']:
             # When adding a move raw, it should have the source location's `warehouse_id`.
             # Before, it was handle by an onchange, now it's forced if not already in vals.
@@ -826,7 +825,7 @@ class MrpProduction(models.Model):
             if any(field in ['move_raw_ids', 'move_finished_ids', 'workorder_ids'] for field in vals) and production.state != 'draft':
                 production._autoconfirm_production()
                 if production in production_to_replan:
-                    production._plan_workorders()
+                    production._plan_workorders(replan=True)
             if production.state == 'done' and ('lot_producing_id' in vals or 'qty_producing' in vals):
                 finished_move_lines = production.move_finished_ids.filtered(
                     lambda move: move.product_id == production.product_id and move.state == 'done').mapped('move_line_ids')
@@ -1400,7 +1399,7 @@ class MrpProduction(models.Model):
         for workorder in final_workorders:
             workorder._plan_workorder(replan)
 
-        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])
+        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'] and w.leave_id)
         if not workorders:
             return
 

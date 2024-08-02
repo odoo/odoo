@@ -3959,3 +3959,34 @@ class TestMrpOrder(TestMrpCommon):
         mo_2.button_plan()
         self.assertEqual(mo_2.workorder_ids[0].workcenter_id.id, workcenter_1.id)
         self.assertEqual(mo_2.workorder_ids[0].duration_expected, 72)
+
+    def test_update_duration_of_done_workorder(self):
+        """
+        Test that we can update the duration of a completed workorder and
+        that the other workorder is not affected.
+        """
+        self.env['mrp.routing.workcenter'].create({
+            'name': name,
+            'workcenter_id': self.workcenter_1.id,
+            'bom_id': self.bom_1.id,
+            } for name in ('OP1', 'OP2', 'OP3')
+        )
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': self.bom_1.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+        })
+
+        self.assertEqual(len(mo.workorder_ids), 3)
+        second_workorder = mo.workorder_ids[1]
+        second_workorder.button_start()
+        self.assertEqual(second_workorder.state, 'progress')
+        second_workorder.button_finish()
+        self.assertEqual(second_workorder.state, 'done')
+        self.assertFalse((mo.workorder_ids - second_workorder).leave_id)
+        with Form(mo) as mo_form:
+            with mo_form.workorder_ids.edit(1) as wo_line:
+                wo_line.duration = 0.05
+        self.assertFalse((mo.workorder_ids - second_workorder).leave_id)
+        self.assertEqual(mo.workorder_ids.mapped('duration'), [0, 0.05, 0])
