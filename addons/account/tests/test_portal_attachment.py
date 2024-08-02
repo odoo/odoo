@@ -171,7 +171,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can't be associated if no attachment token.
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/mail/chatter_post',
+            url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
                     'thread_model': self.out_invoice._name,
@@ -189,7 +189,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can't be associated if no main document token
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/mail/chatter_post',
+            url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
                     'thread_model': self.out_invoice._name,
@@ -200,13 +200,13 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             },
         )
         self.assertEqual(res.status_code, 200)
-        self.assertIn("You are not allowed to access 'Journal Entry' (account.move) records.", res.text)
+        self.assertIn("The requested URL was not found on the server.", res.text)
 
         # Test attachment can't be associated if not "pending" state
         self.assertFalse(self.out_invoice.message_ids)
         attachment.write({'res_model': 'model'})
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/mail/chatter_post',
+            url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
                     'thread_model': self.out_invoice._name,
@@ -226,7 +226,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         # Test attachment can't be associated if not correct user
         attachment.write({'res_model': 'mail.compose.message'})
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/mail/chatter_post',
+            url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
                     'thread_model': self.out_invoice._name,
@@ -262,7 +262,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertEqual(create_res['name'], "final attachment")
 
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/mail/chatter_post',
+            url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
                     'thread_model': self.out_invoice._name,

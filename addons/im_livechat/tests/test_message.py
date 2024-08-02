@@ -107,6 +107,7 @@ class TestImLivechatMessage(HttpCase):
                             "id": record_rating.id,
                             "ratingImageUrl": record_rating.rating_image_url,
                             "ratingText": "top",
+                            "ratingValue": 5.0
                         },
                         "recipients": [],
                         "record_name": "test1 Ernest Employee",
@@ -123,6 +124,8 @@ class TestImLivechatMessage(HttpCase):
                         "id": channel_livechat_1.id,
                         "model": "discuss.channel",
                         "module_icon": "/mail/static/description/icon.png",
+                        "rating_avg": 5.0,
+                        "rating_count": 1,
                     },
                 ],
                 "res.partner": [

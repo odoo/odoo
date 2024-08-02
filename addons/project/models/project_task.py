@@ -13,6 +13,7 @@ from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import format_list, SQL
 from odoo.addons.resource.models.utils import filter_domain_leaf
+from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 
 
 PROJECT_TASK_READABLE_FIELDS = {
@@ -1989,3 +1990,12 @@ class Task(models.Model):
     def _compute_subtask_completion_percentage(self):
         for task in self:
             task.subtask_completion_percentage = task.subtask_count and task.closed_subtask_count / task.subtask_count
+
+    @api.model
+    def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
+        if project_sharing_id := kwargs.get("project_sharing_id"):
+            if token := ProjectSharingChatter._check_project_access_and_get_token(
+                self, project_sharing_id, self._name, thread_id, kwargs.get("token")
+            ):
+                kwargs["token"] = token
+        return super()._get_thread_with_access(thread_id, mode, **kwargs)

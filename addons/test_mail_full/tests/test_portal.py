@@ -100,7 +100,7 @@ class TestPortalControllers(TestPortal):
 
     def test_portal_avatar_with_hash_pid(self):
         self.authenticate(None, None)
-        post_url = f"{self.record_portal.get_base_url()}/mail/chatter_post"
+        post_url = f"{self.record_portal.get_base_url()}/mail/message/post"
         res = self.opener.post(
             url=post_url,
             json={
@@ -163,7 +163,7 @@ class TestPortalControllers(TestPortal):
         """ Test posting through portal controller allowing to use a hash to
         post wihtout access rights. """
         self.authenticate(None, None)
-        post_url = f"{self.record_portal.get_base_url()}/mail/chatter_post"
+        post_url = f"{self.record_portal.get_base_url()}/mail/message/post"
 
         # test as not logged
         self.opener.post(

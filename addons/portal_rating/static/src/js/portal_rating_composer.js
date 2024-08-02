@@ -107,19 +107,33 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         const data = event.data;
 
         // Refresh the internal state of the widget
-        this.rating_avg = data.rating_avg;
-        this.rating_count = data.rating_count;
-        this.rating_value = data.rating_value;
+        this.rating_avg = data.rating_avg || data["mail.thread"][0].rating_avg;
+        this.rating_count = data.rating_count || data["mail.thread"][0].rating_count;
+        this.rating_value =
+            data.rating_value ||
+            (data["mail.message"] && data["mail.message"][0].rating.ratingValue);
 
         // Clean the dictionary
         delete data.rating_avg;
         delete data.rating_count;
         delete data.rating_value;
 
-        this.options = Object.assign(this.options, data);
-
+        this._update_options(data);
         this._reloadRatingPopupComposer();
-    }
+    },
+
+    _update_options: function (data) {
+        const defaultOptions = {
+            default_message:
+                data.default_message ||
+                (data["mail.message"] && data["mail.message"][0].body.replace(/<[^>]+>/g, "")),
+            default_message_id: data.default_message_id || data["mail.message"][0].id,
+            default_attachment_ids: data.default_attachment_ids || data["ir.attachment"],
+            default_rating_value: data.default_rating_value || this.rating_value,
+        };
+        Object.assign(data, defaultOptions);
+        this.options = Object.assign(this.options, data);
+    },
 });
 
 publicWidget.registry.RatingPopupComposer = RatingPopupComposer;

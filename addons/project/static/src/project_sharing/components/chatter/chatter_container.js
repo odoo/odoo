@@ -84,9 +84,7 @@ export class ChatterContainer extends Component {
             postProcessMessageSent: async () => {
                 this.state.currentPage = 1;
                 const prom = [this.fetchMessages()];
-                if (!this.options.is_follower) {
-                    prom.push(this.toggleIsFollower());
-                }
+                this.state.options.is_follower = true;
                 await Promise.all(prom);
             },
             attachments: this.state.options.default_attachment_ids,

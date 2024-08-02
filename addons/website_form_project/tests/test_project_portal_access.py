@@ -4,7 +4,7 @@ from re import search
 
 from odoo.tests import HttpCase
 
-from odoo.addons.portal.controllers.mail import PortalChatter
+from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.project.tests.test_project_sharing import TestProjectSharingCommon
 from odoo.addons.website.tools import MockRequest
 
@@ -17,7 +17,7 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
         access_token, pid, _hash = match.groups()
 
         with self.with_user('chell'), MockRequest(self.env, path=share_link):
-            PortalChatter().portal_chatter_post(
+            ThreadController().mail_message_post(
                 thread_model='project.task',
                 thread_id=self.task_no_collabo.id,
                 post_data={'body': '(-b ±√[b²-4ac]) / 2a'},
