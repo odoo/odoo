@@ -17,7 +17,7 @@ class MockSMS(common.BaseCase):
         self._clear_sms_sent()
 
     @contextmanager
-    def mockSMSGateway(self, sms_allow_unlink=False, sim_error=None, nbr_t_error=None, moderated=False):
+    def mockSMSGateway(self, sms_allow_unlink=False, sim_error=None, nbr_t_error=None, moderated=False, force_delivered=False):
         self._clear_sms_sent()
         sms_create_origin = SmsSms.create
         sms_send_origin = SmsSms._send
@@ -34,7 +34,7 @@ class MockSMS(common.BaseCase):
             if local_endpoint == '/iap/sms/2/send':
                 result = []
                 for to_send in params['messages']:
-                    res = {'res_id': to_send['res_id'], 'state': 'success', 'credit': 1}
+                    res = {'res_id': to_send['res_id'], 'state': 'delivered' if force_delivered else 'success', 'credit': 1}
                     error = sim_error or (nbr_t_error and nbr_t_error.get(to_send['number']))
                     if error and error == 'credit':
                         res.update(credit=0, state='insufficient_credit')
@@ -45,7 +45,7 @@ class MockSMS(common.BaseCase):
                             'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was ' + local_endpoint
                         )
                     result.append(res)
-                    if res['state'] == 'success':
+                    if res['state'] == 'success' or res['state'] == 'delivered':
                         self._sms.append({
                             'number': to_send['number'],
                             'body': to_send['content'],
@@ -66,7 +66,7 @@ class MockSMS(common.BaseCase):
                             error = 'insufficient_credit'
                         res = {
                             'uuid': number['uuid'],
-                            'state': error if error else 'success' if not moderated else 'processing',
+                            'state': error or ('delivered' if force_delivered else 'success' if not moderated else 'processing'),
                             'credit': 1,
                         }
                         if error:
