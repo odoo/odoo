@@ -23,7 +23,7 @@ export class CalendarFormController extends FormController {
     async beforeExecuteActionButton(clickParams) {
         const action = clickParams.name;
         if (action == "clear_videocall_location" || action === "set_discuss_videocall_location") {
-            let newVal = false;
+            let newVal = "";
             let videoCallSource = "custom";
             let changes = {};
             if (action === "set_discuss_videocall_location") {
