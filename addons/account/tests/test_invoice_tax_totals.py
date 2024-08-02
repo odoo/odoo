@@ -929,7 +929,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         moves.action_post()
         cash_rounding_add_invoice_line.rounding_method = 'DOWN'
         # check if rounding is recomputed
-        moves.to_check = True
+        moves.checked = False
         for move in moves_rounding:
             self.assertEqual(sum(move.line_ids.filtered(lambda line: line.display_type == 'rounding').mapped('balance')), moves_rounding[move])
 

@@ -97,6 +97,8 @@ class AccountJournal(models.Model):
         "Select 'Purchase' for vendor bills journals.\n"\
         "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"\
         "Select 'General' for miscellaneous operations journals.")
+
+    autocheck_on_post = fields.Boolean(string="Auto-Check on Post", default=True)
     account_control_ids = fields.Many2many('account.account', 'journal_account_control_rel', 'journal_id', 'account_id', string='Allowed accounts',
         check_company=True,
         domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]")
