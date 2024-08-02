@@ -27,7 +27,6 @@ class TestQris(AccountTestInvoicingCommon):
             'l10n_id_qris_api_key': 'apikey',
             'l10n_id_qris_mid': 'mid',
         })
-
         cls.qris_qr_invoice = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
@@ -94,13 +93,13 @@ class TestQris(AccountTestInvoicingCommon):
             result = self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
             self.assertIsNotNone(result)
 
-            # Confirm that the QR was successfully registered on the invoice.
-            qr_details = self.qris_qr_invoice.l10n_id_qris_invoice_details
-            self.assertNotEqual(qr_details, False)
+            # Confirm that a transaction should be registered on the invoice
+            qr_details = self.qris_qr_invoice.l10n_id_qris_transaction_ids
+            self.assertEqual(len(qr_details), 1)
 
             qris_data = self.success_qris_get['data']
-            self.assertEqual(qr_details[-1]['qris_invoice_id'], qris_data['qris_invoiceid'])
-            self.assertEqual(qr_details[-1]['qris_content'], qris_data['qris_content'])
+            self.assertEqual(qr_details.qris_invoice_id, qris_data['qris_invoiceid'])
+            self.assertEqual(qr_details.qris_content, qris_data['qris_content'])
             patched.assert_called_once()
 
         with patch(
@@ -111,26 +110,25 @@ class TestQris(AccountTestInvoicingCommon):
             patched.assert_not_called()
 
             # Check that if the qr code has expired, we correctly generate a new one.
-            qr_details[0]['qris_creation_datetime'] = '2024-02-27 03:00:00'
-            self.qris_qr_invoice.l10n_id_qris_invoice_details = qr_details
+            qr_details.qris_creation_datetime = '2024-02-27 03:00:00'
             self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
             patched.assert_called_once()
+
+            self.assertEqual(len(self.qris_qr_invoice.l10n_id_qris_transaction_ids), 2)
 
         with patch(
             'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.success_qris_get_second
         ):
-            qr_details = self.qris_qr_invoice.l10n_id_qris_invoice_details
-            qr_details[-1]['qris_creation_datetime'] = '2024-02-27 03:00:00'
-            self.qris_qr_invoice.l10n_id_qris_invoice_details = qr_details
+            self.qris_qr_invoice.l10n_id_qris_transaction_ids[-1]['qris_creation_datetime'] = '2024-02-27 03:00:00'
             self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
 
-            # Ensure that the l10n_id_latest_qris_content is the new one, while the l10n_id_qris_invoice_details contains all three QR data
-            qr_details = self.qris_qr_invoice.l10n_id_qris_invoice_details
+            # Ensure that the l10n_id_latest_qris_content is the new one, while now there are 3 qris transactions linked to the inovice
+            qr_details = self.qris_qr_invoice.l10n_id_qris_transaction_ids
             qris_data = self.success_qris_get_second['data']
-            self.assertEqual(qr_details[-1]['qris_invoice_id'], qris_data['qris_invoiceid'])
-            self.assertEqual(qr_details[-1]['qris_content'], qris_data['qris_content'])
+            self.assertEqual(qr_details[-1].qris_invoice_id, qris_data['qris_invoiceid'])
+            self.assertEqual(qr_details[-1].qris_content, qris_data['qris_content'])
 
-            self.assertEqual(len(qr_details), 3)
+            self.assertEqual(len(self.qris_qr_invoice.l10n_id_qris_transaction_ids), 3)
 
     @freeze_time("2024-02-27 04:15:00")
     def test_fetch_payment_status_fail(self):
@@ -166,35 +164,32 @@ class TestQris(AccountTestInvoicingCommon):
                 self.qris_qr_invoice.message_ids[0].body,
                 Markup('<p>This invoice was paid by Zainal Arief using QRIS with the payment method Sakuku.</p>')
             )
+            # One of the QRIS transactions linked to the invoice should be paid already
+            self.assertTrue(any(self.qris_qr_invoice.l10n_id_qris_transaction_ids.mapped('paid')))
 
     @freeze_time("2024-02-27 04:15:00")
-    def test_cron_removes_outdated_transactions(self):
-        """ Everytime CRON runs, should do cleanup transactions to remove paid transactions and
-        transactions that have been around for more than 30 minutes """
-
+    def test_gc_no_remove_transactions_unpaid_within_30(self):
+        # Case 2: Unsuccessful, latest transaction is < 30 minutes, should avoid garbage-collection
         with patch(
             'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.success_qris_get
         ):
             self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
-            qr_details = self.qris_qr_invoice.l10n_id_qris_invoice_details
-            qr_details[-1]['qris_creation_datetime'] = '2024-02-27 03:00:00'
-            self.qris_qr_invoice.l10n_id_qris_invoice_details = qr_details
 
-            self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
-
-        # There should be two transactions, one recent and one outdated
-        self.assertEqual(len(self.qris_qr_invoice.l10n_id_qris_invoice_details), 2)
         with patch(
             'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.qris_status_fail
         ):
-            # After updating the status, the outdated one is removed as it cannot be paid anymore.
             self.qris_qr_invoice.action_l10n_id_update_payment_status()
-            self.assertEqual(len(self.qris_qr_invoice.l10n_id_qris_invoice_details), 1)
+            self.assertEqual(self.env['l10n_id.qris.transaction'].search_count([]), 1)
+            self.env['l10n_id.qris.transaction']._gc_remove_pointless_qris_transactions()
+            self.assertEqual(self.env['l10n_id.qris.transaction'].search_count([]), 1)
 
+    @freeze_time("2024-02-27 05:15:00")
+    def test_gc_remove_transactions_unpaid_after_30(self):
+        # Case 3: Unsuccessful, latest transaction is > 30 minutes, should be garbage-collected
         with patch(
-            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.qris_status_success
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.success_qris_get
         ):
-            # On the other hand, the most recent one is still there, and is only removed if it becomes outdated or in this case, is paid.
-            self.qris_qr_invoice.action_l10n_id_update_payment_status()
-            self.assertFalse(self.qris_qr_invoice.l10n_id_qris_invoice_details)
-            self.assertEqual(self.qris_qr_invoice.payment_state, self.env['account.move']._get_invoice_in_payment_state())
+            self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
+            self.assertEqual(self.env['l10n_id.qris.transaction'].search_count([]), 1)
+            self.env['l10n_id.qris.transaction']._gc_remove_pointless_qris_transactions()
+            self.assertEqual(self.env['l10n_id.qris.transaction'].search_count([]), 0)

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import datetime
 import requests
 import pytz
 from urllib.parse import urljoin
@@ -59,22 +60,28 @@ class ResBank(models.Model):
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
     def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
-        """ Getting content for the QR through calling QRIS API """
+        """ Getting content for the QR through calling QRIS API and storing the QRIS transaction as a record"""
         # EXTENDS account
         if qr_method == "id_qr":
-            invoice = self.env['account.move'].browse(self._context.get('qris_originating_invoice_id'))
+            model = self._context.get('qris_model')
+            model_id = self._context.get('qris_model_id')
+
+            # qris_trx is to help us fetch the backend record associated to the model and model_id.
+            # we are using model and model_id instead of model.browse(id) because while executing this method
+            # not all backend records are created already. For example, pos.order record isn't created until
+            # payment is completed on the PoS interace.
+            qris_trx = self.env['l10n_id.qris.transaction']._get_latest_transaction(model, model_id)
 
             # QRIS codes are valid for 30 minutes. To leave some margin, we will return the same QR code we already
-            # generated if the invoice is re-accessed before 25m. Otherwise, a new QR code is generated.
-            if invoice and invoice.l10n_id_qris_invoice_details:
-                now = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Jakarta'), fields.Datetime.now())
-                # We need it to be tz aware for the comparison below.
-                latest_qr_date = fields.Datetime.to_datetime(
-                    invoice.l10n_id_qris_invoice_details[-1]['qris_creation_datetime']
-                ).replace(tzinfo=pytz.timezone('Asia/Jakarta'))
+            # generated if the invoice is re-accessed before 25m. Otherwise, a new QR code is generated
+            # Additionally, we want to check that it's requesting for the same amount as it's possible to change
+            # amount in apps like PoS.
+            if qris_trx and qris_trx.qris_amount == int(amount):
+                now = fields.Datetime.now()
+                latest_qr_date = qris_trx.qris_creation_datetime
 
-                if invoice and (now - latest_qr_date).total_seconds() < 1500:
-                    return invoice.l10n_id_qris_invoice_details[-1]['qris_content']
+                if (now - latest_qr_date).total_seconds() < 1500:
+                    return qris_trx['qris_content']
 
             params = {
                 "do": "create-invoice",
@@ -86,19 +93,23 @@ class ResBank(models.Model):
             response = _l10n_id_make_qris_request('show_qris.php', params)
             data = response.get('data')
 
-            # if the invoice is available, we will write the QR information on it to allow fetching payment information later on.
-            if invoice:
-                # it's a bit far-fetched, but let's imagine the qr was generated 27m ago by a user A, and then user B check the invoice
-                # it would regenerate a new QR code, but user A could have been paid the first one.
-                # To that end, we will store the id and date of all generated qr codes, and only discard them later on when checking the status.
-                qris_invoice_details = invoice.l10n_id_qris_invoice_details or []
-                qris_invoice_details.append({
+            # create a new transaction line while also converting the qris_request_date to UTC time
+            if model and model_id:
+                new_trx = self.env['l10n_id.qris.transaction'].create({
+                    'model': model,
+                    'model_id': model_id,
                     'qris_invoice_id': data.get('qris_invoiceid'),
                     'qris_amount': int(amount),
-                    'qris_creation_datetime': data.get('qris_request_date'),  # need to convert timezone to UTC to store
+                    # Since the QRIS response is always returned with "Asia/Jakarta" timezone which is UTC+07:00
+                    'qris_creation_datetime': fields.Datetime.to_datetime(data.get('qris_request_date')) - datetime.timedelta(hours=7),
                     'qris_content': data.get('qris_content'),
+                    'bank_id': self.id
                 })
-                invoice.l10n_id_qris_invoice_details = qris_invoice_details
+
+                # Search the backend record and attach the qris transaction to the record if it exists.
+                trx_record = new_trx._get_record()
+                if trx_record:
+                    trx_record.l10n_id_qris_transaction_ids |= new_trx
 
             return data.get('qris_content')
 
