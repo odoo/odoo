@@ -123,10 +123,10 @@ class PosConfig(models.Model):
             self._load_bar_data()
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods()
-        bar_categories = [
-            self.env.ref('pos_restaurant.pos_category_cocktails').id,
-            self.env.ref('pos_restaurant.pos_category_soft_drinks').id,
-        ]
+        bar_categories = self.get_categories([
+            'pos_restaurant.pos_category_cocktails',
+            'pos_restaurant.pos_category_soft_drinks',
+        ])
         config = self.env['pos.config'].create({
             'name': 'Bar',
             'company_id': self.env.company.id,
@@ -150,10 +150,10 @@ class PosConfig(models.Model):
             self._load_restaurant_data()
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods()
-        restaurant_categories = [
-            self.env.ref('pos_restaurant.food').id,
-            self.env.ref('pos_restaurant.drinks').id,
-        ]
+        restaurant_categories = self.get_categories([
+            'pos_restaurant.food',
+            'pos_restaurant.drinks',
+        ])
         config = self.env['pos.config'].create({
             'name': _('Restaurant'),
             'company_id': self.env.company.id,
