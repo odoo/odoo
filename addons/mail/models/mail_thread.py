@@ -4531,6 +4531,21 @@ class MailThread(models.AbstractModel):
     # CONTROLLERS
     # ------------------------------------------------------
 
+    def _get_mail_thread_data_access_rights(self, store):
+        """ Return the access rights of the current user on threads in self.
+        The threads are expected to be of the same model.
+        """
+        readable_threads = self._filter_access_rules('read')
+        writable_threads = readable_threads._filter_access_rules('write')
+        has_write_access = self.check_access_rights('write', raise_exception=False)
+        for thread in self:
+            data = {
+                'hasReadAccess': thread in readable_threads,
+                'hasWriteAccess': thread in writable_threads and has_write_access,
+                'canPostOnReadonly': thread._mail_post_access == 'read',
+            }
+            store.add(thread, data, as_thread=True)
+
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
@@ -4539,18 +4554,8 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         if fields is None:
             fields = []
+        self._get_mail_thread_data_access_rights(store)
         res = {}
-        if request_list:
-            res["hasReadAccess"] = True
-            res["hasWriteAccess"] = False
-            res["canPostOnReadonly"] = self._mail_post_access == 'read'
-        try:
-            self.check_access_rights("write")
-            self.check_access_rule("write")
-            if request_list:
-                res["hasWriteAccess"] = True
-        except AccessError:
-            pass
         if (
             request_list and "activities" in request_list
             and isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"])

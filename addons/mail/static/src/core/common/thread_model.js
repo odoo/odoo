@@ -1,11 +1,14 @@
 import { AND, Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
+import { useSequential } from "@mail/utils/common/hooks";
 import { assignDefined, compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
+
+const sequential = useSequential();
 
 /**
  * @typedef SuggestedRecipient
@@ -585,6 +588,49 @@ export class Thread extends Record {
 
     get unknownMembersCount() {
         return this.memberCount - this.channelMembers.length;
+    }
+
+    isReadonly(fetchAccessRights = true) {
+        if (this.model === "discuss.channel" || !this.id) {
+            return false;
+        }
+        if (this.hasWriteAccess === undefined && fetchAccessRights) {
+            sequential(async () => {
+                if (this.hasWriteAccess !== undefined) {
+                    return;
+                }
+                const threadData = {};
+                const mailBoxThread = this.store.discuss.thread;
+                if (this.store.discuss.isActive && mailBoxThread.model === "mail.box") {
+                    for (const message of mailBoxThread.nonEmptyMessages) {
+                        if (
+                            message.thread &&
+                            message.thread.hasWriteAccess === undefined &&
+                            message.thread.model !== "discuss.channel" &&
+                            message.thread.id
+                        ) {
+                            if (!threadData[message.thread.model]) {
+                                threadData[message.thread.model] = new Set();
+                            }
+                            threadData[message.thread.model].add(message.thread.id);
+                        }
+                    }
+                    for (const model in threadData) {
+                        threadData[model] = Array.from(threadData[model]);
+                    }
+                } else {
+                    threadData[this.model] = [this.id];
+                }
+                if (Object.keys(threadData).length > 0) {
+                    const res = await rpc("/mail/thread/data/access_rights", {
+                        thread_data: threadData,
+                    });
+                    this.store.insert(res);
+                }
+            });
+            return false;
+        }
+        return !this.hasWriteAccess && !(this.hasReadAccess && this.canPostOnReadonly);
     }
 
     executeCommand(command, body = "") {

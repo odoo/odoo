@@ -12,6 +12,26 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class ThreadController(http.Controller):
+
+    @http.route("/mail/thread/data/access_rights", methods=["POST"], type="json", auth="user")
+    def mail_thread_data_access_rights(self, thread_data):
+        """ Returns the access rights of currentuser on the given threads.
+        :param thread_data: A dictionary where the key is a model name (string) and the value is a list of integers.
+                            Each integer represents the ID of a record with the same model name.
+                            Example: {'model_name1': [1, 2, 3], 'model_name2': [4, 5, 6]}
+        :type thread_data: dict
+        :rtype: Store
+        """
+        store = Store()
+        for thread_model in thread_data:
+            threads = request.env[thread_model].with_context(active_test=False).browse(thread_data[thread_model])
+            if hasattr(threads, "_get_mail_thread_data_access_rights"):
+                threads._get_mail_thread_data_access_rights(store)
+            else:
+                for thread in threads:
+                    store.add(thread, {'hasReadAccess': False, 'hasWriteAccess': False}, as_thread=True)
+        return store.get_result()
+
     @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user")
     def mail_thread_data(self, thread_model, thread_id, request_list):
         thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
