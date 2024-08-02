@@ -1776,8 +1776,8 @@ class IrModelFieldsSelection(models.Model):
 
 class IrModelConstraint(models.Model):
     """
-    This model tracks PostgreSQL foreign keys and constraints used by Odoo
-    models.
+    This model tracks PostgreSQL indexes, foreign keys and constraints
+    used by Odoo models.
     """
     _description = 'Model Constraint'
     _allow_sudo_commands = False
@@ -1840,6 +1840,12 @@ class IrModelConstraint(models.Model):
                     ))
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
+            if typ == 'i':
+                hname = sql.make_identifier(name)
+                # drop index if it exists
+                self.env.execute_query(SQL("DROP INDEX IF EXISTS %s", SQL.identifier(hname)))
+                _logger.info('Dropped INDEX %s@%s', name, data.model.model)
+
         return super().unlink()
 
     def copy_data(self, default=None):
@@ -1850,14 +1856,14 @@ class IrModelConstraint(models.Model):
         """ Reflect the given constraint, and return its corresponding record
             if a record is created or modified; returns ``None`` otherwise.
             The reflection makes it possible to remove a constraint when its
-            corresponding module is uninstalled. ``type`` is either 'f', or 'u'
+            corresponding module is uninstalled. ``type`` is either 'f', 'i', or 'u'
             depending on the constraint being a foreign key or not.
         """
         if not module:
             # no need to save constraints for custom models as they're not part
             # of any module
             return
-        assert type in ('f', 'u')
+        assert type in ('f', 'u', 'i')
         rows = self.env.execute_query_dict(SQL(
             """SELECT c.id, type, definition, message->'en_US' as message
             FROM ir_model_constraint c, ir_module_module m
@@ -1911,7 +1917,7 @@ class IrModelConstraint(models.Model):
             message = cons.message
             if not isinstance(message, str) or not message:
                 message = None
-            typ = 'u'
+            typ = 'i' if isinstance(cons, models.Index) else 'u'
             record = self._reflect_constraint(model, conname, typ, definition, module, message)
             xml_id = '%s.constraint_%s' % (module, conname)
             if record:
@@ -2158,6 +2164,8 @@ class IrModelData(models.Model):
     reference = fields.Char(string='Reference', compute='_compute_reference', readonly=True, store=False)
 
     _name_nospaces = models.Constraint("CHECK(name NOT LIKE '% %')", "External IDs cannot contain spaces")
+    _module_name_uniq_index = models.UniqueIndex('(module, name)')
+    _model_res_id_index = models.Index('(model, res_id)')
 
     @api.depends('module', 'name')
     def _compute_complete_name(self):
@@ -2168,16 +2176,6 @@ class IrModelData(models.Model):
     def _compute_reference(self):
         for res in self:
             res.reference = "%s,%s" % (res.model, res.res_id)
-
-    def _auto_init(self):
-        res = super(IrModelData, self)._auto_init()
-        sql.create_unique_index(
-            self._cr, 'ir_model_data_module_name_uniq_index',
-            self._table, ['module', 'name'])
-        sql.create_index(
-            self._cr, 'ir_model_data_model_res_id_index',
-            self._table, ['model', 'res_id'])
-        return res
 
     @api.depends('res_id', 'model', 'complete_name')
     def _compute_display_name(self):
