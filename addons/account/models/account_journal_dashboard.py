@@ -427,7 +427,7 @@ class account_journal(models.Model):
              WHERE st_line.journal_id IN %s
                AND st_line.company_id IN %s
                AND NOT st_line.is_reconciled
-               AND st_line_move.to_check IS NOT TRUE
+               AND st_line_move.checked IS TRUE
                AND st_line_move.state = 'posted'
           GROUP BY st_line.journal_id
         """, [tuple(bank_cash_journals.ids), tuple(self.env.companies.ids)])
@@ -475,7 +475,7 @@ class account_journal(models.Model):
                 domain=[
                     ('journal_id', 'in', bank_cash_journals.ids),
                     ('move_id.company_id', 'in', self.env.companies.ids),
-                    ('move_id.to_check', '=', True),
+                    ('move_id.checked', '=', False),
                     ('move_id.state', '=', 'posted'),
                 ],
                 groupby=['journal_id'],
@@ -565,7 +565,8 @@ class account_journal(models.Model):
                 domain=[
                     *self.env['account.move']._check_company_domain(self.env.companies),
                     ('journal_id', 'in', sale_purchase_journals.ids),
-                    ('to_check', '=', True),
+                    ('checked', '=', False),
+                    ('state', '=', 'posted'),
                 ],
                 groupby=['journal_id'],
                 aggregates=['amount_total_signed:sum', '__count'],
@@ -638,7 +639,8 @@ class account_journal(models.Model):
                 domain=[
                     *self.env['account.move']._check_company_domain(self.env.companies),
                     ('journal_id', 'in', general_journals.ids),
-                    ('to_check', '=', True),
+                    ('checked', '=', False),
+                    ('state', '=', 'posted'),
                 ],
                 groupby=['journal_id'],
                 aggregates=['amount_total_signed:sum', '__count'],
@@ -934,7 +936,7 @@ class account_journal(models.Model):
         return self.env['account.bank.statement.line'].search([
             ('journal_id', '=', self.id),
             ('move_id.company_id', 'in', self.env.companies.ids),
-            ('move_id.to_check', '=', True),
+            ('move_id.checked', '=', False),
             ('move_id.state', '=', 'posted'),
         ])
 
