@@ -2135,6 +2135,43 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
         self.main_pos_config.current_session_id.close_session_from_ui()
 
+    def test_loyalty_reward_product_tag(self):
+        """
+        We test that a program using product tag to define reward products will
+        correctly compute the reward lines.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        free_product_tag = self.env['product.tag'].create({'name': 'Free Product Tag'})
+        self.product_a.write({'product_tag_ids': [(4, free_product_tag.id)], 'lst_price': 2, 'taxes_id': None})
+        self.product_b.write({'product_tag_ids': [(4, free_product_tag.id)], 'lst_price': 5, 'taxes_id': None})
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1 Free Product',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': self.desk_organizer,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 2,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': free_product_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyRewardProductTag",
+            login="pos_user",
+        )
+
     def test_gift_card_no_points(self):
         self.env['loyalty.program'].search([]).write({'active': False})
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})

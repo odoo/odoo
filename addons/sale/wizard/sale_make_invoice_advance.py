@@ -354,11 +354,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 ])
 
         downpayment_line_map = {}
+        analytic_map = {}
         for tax_id, analytic_distribution, price_subtotal in down_payment_values:
-            grouping_key = frozendict({
-                'tax_id': tuple(sorted(tax_id.ids)),
-                'analytic_distribution': analytic_distribution,
-            })
+            grouping_key = frozendict({'tax_id': tuple(sorted(tax_id.ids))})
             downpayment_line_map.setdefault(grouping_key, {
                 **base_downpayment_lines_values,
                 **grouping_key,
@@ -366,10 +364,21 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'price_unit': 0.0,
             })
             downpayment_line_map[grouping_key]['price_unit'] += price_subtotal
-        for key in downpayment_line_map:
-            downpayment_line_map[key]['price_unit'] = \
-                order.currency_id.round(downpayment_line_map[key]['price_unit'] * percentage)
+            if analytic_distribution:
+                analytic_map.setdefault(grouping_key, [])
+                analytic_map[grouping_key].append((price_subtotal, analytic_distribution))
 
+        for key, line_vals in downpayment_line_map.items():
+            # weight analytic account distribution
+            if analytic_map.get(key):
+                line_analytic_distribution = {}
+                for price_subtotal, account_distribution in analytic_map[key]:
+                    for account, distribution in account_distribution.items():
+                        line_analytic_distribution.setdefault(account, 0.0)
+                        line_analytic_distribution[account] += price_subtotal / line_vals['price_unit'] * distribution
+                line_vals['analytic_distribution'] = line_analytic_distribution
+            # round price unit
+            line_vals['price_unit'] = order.currency_id.round(line_vals['price_unit'] * percentage)
 
         return list(downpayment_line_map.values())
 

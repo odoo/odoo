@@ -47,13 +47,15 @@
             }
         },
         {
-            content: "Check Create Report Button and click on it",
-            trigger: ".btn-secondary:contains(\"Create Report\")",
-        },
-        {
-            trigger: '.fa-cloud-upload',
-            content: 'Save the new report',
-            run: 'click',
+            content: "Check Create Report Button, but not click on it",
+            trigger: "button.o_switch_view.o_kanban.active",
+            run() {
+                const button = Array.from(document.querySelectorAll('.btn-secondary'))
+                    .filter(element => element.textContent.includes('Create Report'));
+                if(!button) {
+                    console.error('Missing Create Report button in My Expenses to Report > Kanban View');
+                }
+            }
         },
         {
             content: "Go to Reporting",
