@@ -57,7 +57,7 @@
             </div>
         </t>
     </div>
-    <t t-if="!env.inChatter" t-call="mail.Thread.jumpPresent"/>
+    <t t-if="!env.inChatter and !props.thread.isEmpty" t-call="mail.Thread.jumpPresent"/>
 </t>
 
 <t t-name="mail.Thread.jumpPresent">
