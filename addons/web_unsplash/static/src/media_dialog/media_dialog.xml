@@ -29,7 +29,7 @@
 
     <t t-inherit="html_editor.FileSelector" t-inherit-mode="extension">
         <xpath expr="//div[@name='load_more_attachments']" position="before">
-            <div t-if="unsplashState.unsplashError" class="d-flex mt-2 unsplash_error">
+            <div t-if="unsplashState?.unsplashError" class="d-flex mt-2 unsplash_error">
                 <UnsplashError
                     title="errorTitle"
                     subtitle="errorSubtitle"
@@ -48,7 +48,7 @@
 
     <t t-inherit="html_editor.FileSelector" t-inherit-mode="extension">
         <xpath expr="//FileSelectorControlPanel" position="attributes">
-            <attribute name="useUnsplash">unsplashState.useUnsplash</attribute>
+            <attribute name="useUnsplash">unsplashState?.useUnsplash</attribute>
         </xpath>
     </t>
 </templates>
