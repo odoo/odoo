@@ -330,7 +330,7 @@
                     <filter string="Unposted" name="unposted" domain="[('parent_state', '=', 'draft')]" help="Unposted Journal Items"/>
                     <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items"/>
                     <separator/>
-                    <filter string="To Check" name="to_check" domain="[('move_id.to_check', '=', True)]"/>
+                    <filter string="To check" name="to_check" domain="[('move_id.checked', '=', False), ('parent_state', '!=', 'draft')]"/>
                     <separator/>
                     <filter string="Unreconciled" domain="[('account_id.reconcile', '=', True)]" name="reconcilable_account" help="Journal items where the account allows reconciliation no matter the residual amount"/>
                     <filter string="With residual" domain="[('amount_residual', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
@@ -475,7 +475,7 @@
                     <field name="amount_total_signed" sum="Total Amount" string="Total" decoration-bf="1"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
                     <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'posted']"/>
-                    <field name="to_check" optional="hide" widget="boolean_toggle"/>
+                    <field name="checked" optional="hide" widget="boolean_toggle"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                 </tree>
             </field>
@@ -530,7 +530,7 @@
                     <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
                     <field name="currency_id" optional="hide" readonly="state in ['cancel', 'posted']"/>
                     <field name="company_currency_id" column_invisible="True"/>
-                    <field name="to_check" optional="hide" widget="boolean_toggle"/>
+                    <field name="checked" optional="hide" widget="boolean_toggle"/>
                     <field name="status_in_payment"
                            string="Status"
                            widget="badge"
@@ -754,7 +754,7 @@
 
                         <!-- Set as Checked -->
                         <button name="button_set_checked" string="Set as Checked" type="object" groups="account.group_account_invoice"
-                                invisible="not to_check" data-hotkey="k" />
+                                invisible="checked or state == 'draft'" data-hotkey="k" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
                     <div class="alert alert-warning w-100 d-flex align-items-center gap-1" invisible="state != 'draft' or not duplicated_ref_ids"  role="alert">
@@ -1394,7 +1394,7 @@
                                         <field name="auto_post_until"
                                                invisible="auto_post in ('no', 'at_date')"
                                                readonly="state != 'draft'"/>
-                                        <field name="to_check"/>
+                                        <field name="checked"/>
                                     </group>
                                 </group>
                             </page>
@@ -1410,7 +1410,7 @@
                                         <field name="auto_post_until"
                                                invisible="auto_post in ('no', 'at_date')"
                                                readonly="state != 'draft'"/>
-                                        <field name="to_check"
+                                        <field name="checked"
                                                invisible="move_type != 'entry'" />
                                     </group>
                                     <group>
@@ -1474,7 +1474,7 @@
                     <separator/>
                     <filter string="Reversed" name="reversed" domain="[('payment_state', '=', 'reversed')]"/>
                     <separator/>
-                    <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
+                    <filter string="To Check" name="to_check" domain="[('checked', '=', False), ('state', '!=', 'draft')]"/>
                     <separator/>
                     <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
                     <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
@@ -1535,7 +1535,7 @@
                             invisible="context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')"
                     />
                     <separator/>
-                    <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
+                    <filter string="To Check" name="to_check" domain="[('checked', '=', False), ('state', '!=', 'draft')]"/>
                     <separator/>
                     <!-- not_paid & partial -->
                     <filter name="open" string="Unpaid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
