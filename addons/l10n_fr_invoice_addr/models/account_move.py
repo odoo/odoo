@@ -11,10 +11,15 @@ class AccountMove(models.Model):
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
+
         company = self.env.company
-        if view_type == 'form' and company.country_code in company._get_france_country_codes():
-            shipping_field = arch.xpath("//field[@name='partner_shipping_id']")[0]
-            shipping_field.attrib.pop("groups", None)
+        if view_type != 'form' or self.env.user.has_group('account.group_delivery_invoice_address') or company.country_code not in company._get_france_country_codes():
+            return arch, view
+
+        shipping_field = arch.xpath("//field[@name='partner_shipping_id']")[0]
+        shipping_field.attrib['t-attf-invisible'] = "{{int(not o.move_type.startswith('out_'))}}"
+        shipping_field.attrib.pop('groups', None)
+
         return arch, view
 
     @api.depends('company_id.country_code')
