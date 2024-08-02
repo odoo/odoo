@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from babel.dates import format_datetime
 from datetime import datetime, timedelta
 from freezegun import freeze_time
+import json
+from random import randint
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, users
-from odoo.tools.misc import format_date
+from odoo.tools.misc import format_date, get_lang
 from odoo.tests.common import HttpCase, tagged
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
@@ -4240,6 +4243,55 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(wo.duration_expected, 30.0)
         self.assertEqual(wo.date_start, dt)
         self.assertEqual(wo.date_finished, dt + timedelta(hours=0, minutes=30))
+
+    def test_workcenter_graph_data(self):
+        """
+        Tests the correctness of workcenter weekly load calculation for
+        the graph in workcenter kanban cards
+        1. Create a random number of workorders in last, current, and next weeks
+        2. Aggregate the total expected duration in each week
+        3. Parse aggregated graph of the actual data
+        4. Assert aggregated durations each week f the graph is equal to total durations
+        in our test
+        """
+        def create_workorder(workcenter, duration_expected, date_start):
+            mo = self.env['mrp.production'].create({
+                'bom_id': self.bom_1.id,
+                'date_start': date_start
+            })
+
+            self.env['mrp.workorder'].create({
+                'name': 'Test order',
+                'workcenter_id': workcenter.id,
+                'product_uom_id': self.bom_1.product_uom_id.id,
+                'production_id': mo.id,
+                'duration_expected': duration_expected
+            })
+
+            mo.action_confirm()
+            self.assertEqual(mo.state, 'confirmed')
+
+        workcenter = self.env['mrp.workcenter'].create({
+            'name': 'Test workcenter',
+        })
+        today = fields.Date.today()
+        day_of_week = int(format_datetime(today, 'e', locale=get_lang(self.env).code))
+        first_day_current_week = today + timedelta(days=-day_of_week + 1)
+        first_day_last_week = first_day_current_week + timedelta(days=-7)
+        first_day_next_week = first_day_current_week + timedelta(days=7)
+
+        week_starts = [first_day_last_week, first_day_current_week, first_day_next_week]
+        week_durations = [0, 0, 0]
+        for week_idx, start in enumerate(week_starts):
+            for _ in range(randint(10, 20)):
+                expected_duration = randint(1, 4)
+                date_start = start + timedelta(days=randint(0, 6))
+                create_workorder(workcenter, expected_duration, date_start)
+                week_durations[week_idx] += expected_duration
+        graph_data = json.loads(workcenter.kanban_dashboard_graph)[0]['values']
+
+        for week_idx, week_graph_data in enumerate(graph_data):
+            self.assertEqual(week_durations[week_idx], week_graph_data['value'])
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):

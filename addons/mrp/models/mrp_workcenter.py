@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from babel.dates import format_datetime
+from collections import defaultdict
 from dateutil import relativedelta
 from datetime import timedelta, datetime
 from functools import partial
+import json
 from pytz import timezone
 from random import randint
 
@@ -11,7 +14,7 @@ from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.resource.models.utils import make_aware, Intervals
 from odoo.tools.float_utils import float_compare
-
+from odoo.tools.misc import get_lang
 
 class MrpWorkcenter(models.Model):
     _name = 'mrp.workcenter'
@@ -75,6 +78,49 @@ class MrpWorkcenter(models.Model):
     tag_ids = fields.Many2many('mrp.workcenter.tag')
     capacity_ids = fields.One2many('mrp.workcenter.capacity', 'workcenter_id', string='Product Capacities',
         help="Specific number of pieces that can be produced in parallel per product.", copy=True)
+    kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
+
+    def _compute_kanban_dashboard_graph(self):
+        today = fields.Date.today()
+        day_of_week = int(format_datetime(today, 'e', locale=get_lang(self.env).code))
+        first_day_of_week = today + timedelta(days=-day_of_week + 1)
+        week_bounds = [
+            (first_day_of_week + timedelta(days=-7), first_day_of_week),
+            (first_day_of_week, first_day_of_week + timedelta(days=7)),
+            (first_day_of_week + timedelta(days=7), first_day_of_week + timedelta(days=14))
+        ]
+
+        expected_durations_per_week = [
+            self.env['mrp.workorder']._read_group([
+                ('production_id.date_start', '>=', start),
+                ('production_id.date_start', '<', end),
+                ('workcenter_id', 'in', self.ids),
+                ('state', 'in', ['ready', 'waiting', 'pending'])], ['workcenter_id'], ['duration_expected:sum'])
+                for start, end in week_bounds
+        ]
+        week_durations = [{workcenter.id: expected for workcenter, expected in week}
+                          for week in expected_durations_per_week]
+        week_types = ['past', 'current', 'future']
+        week_labels = [_('Last Week'), _('This Week'), _('Next Week')]
+
+        data = defaultdict(list)
+
+        self.kanban_dashboard_graph = False
+        for workcenter in self:
+            for label, week_type, duration in zip(week_labels, week_types, week_durations):
+                data[workcenter.id].append({
+                    'label': label,
+                    'type': week_type,
+                    'value': duration.get(workcenter.id, 0),
+                })
+
+        for workcenter in self:
+            workcenter.kanban_dashboard_graph = json.dumps([{
+                'values': data[workcenter.id],
+                'key': _('Load'),
+                'area': True,
+                'is_sample_data': False
+            }])
 
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
