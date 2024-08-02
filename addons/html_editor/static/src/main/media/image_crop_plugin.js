@@ -10,21 +10,20 @@ export class ImageCropPlugin extends Plugin {
     /** @type { (p: ImageCropPlugin) => Record<string, any> } */
     static resources(p) {
         return {
-            toolbarGroup: [
+            toolbarCategory: {
+                id: "image_crop",
+                namespace: "image",
+                sequence: 27,
+            },
+            toolbarItems: [
                 {
                     id: "image_crop",
-                    namespace: "image",
-                    sequence: 27,
-                    buttons: [
-                        {
-                            id: "image_crop",
-                            name: _t("Crop image"),
-                            icon: "fa-crop",
-                            action(dispatch) {
-                                dispatch("CROP_IMAGE");
-                            },
-                        },
-                    ],
+                    category: "image_crop",
+                    name: _t("Crop image"),
+                    icon: "fa-crop",
+                    action(dispatch) {
+                        dispatch("CROP_IMAGE");
+                    },
                 },
             ],
         };

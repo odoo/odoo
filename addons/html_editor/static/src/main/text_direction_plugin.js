@@ -8,7 +8,7 @@ export class TextDirectionPlugin extends Plugin {
     static dependencies = ["selection", "split", "format"];
     /** @type { (p: TextDirectionPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        powerboxCommands: [
+        powerboxItems: [
             {
                 name: _t("Switch direction"),
                 description: _t("Switch the text's direction"),

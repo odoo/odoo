@@ -44,40 +44,43 @@ export class ListPlugin extends Plugin {
         handle_tab: { callback: p.handleTab.bind(p), sequence: 10 },
         handle_shift_tab: { callback: p.handleShiftTab.bind(p), sequence: 10 },
         split_element_block: { callback: p.handleSplitBlock.bind(p) },
-        toolbarGroup: {
+        toolbarCategory: {
             id: "list",
             sequence: 30,
-            buttons: [
-                {
-                    id: "bulleted_list",
-                    action(dispatch) {
-                        dispatch("TOGGLE_LIST", { mode: "UL" });
-                    },
-                    icon: "fa-list-ul",
-                    name: "Bulleted list",
-                    isFormatApplied: isListActive("UL"),
-                },
-                {
-                    id: "numbered_list",
-                    action(dispatch) {
-                        dispatch("TOGGLE_LIST", { mode: "OL" });
-                    },
-                    icon: "fa-list-ol",
-                    name: "Numbered list",
-                    isFormatApplied: isListActive("OL"),
-                },
-                {
-                    id: "checklist",
-                    action(dispatch) {
-                        dispatch("TOGGLE_LIST", { mode: "CL" });
-                    },
-                    icon: "fa-check-square-o",
-                    name: "Checklist",
-                    isFormatApplied: isListActive("CL"),
-                },
-            ],
         },
-        powerboxCommands: [
+        toolbarItems: [
+            {
+                id: "bulleted_list",
+                category: "list",
+                action(dispatch) {
+                    dispatch("TOGGLE_LIST", { mode: "UL" });
+                },
+                icon: "fa-list-ul",
+                name: "Bulleted list",
+                isFormatApplied: isListActive("UL"),
+            },
+            {
+                id: "numbered_list",
+                category: "list",
+                action(dispatch) {
+                    dispatch("TOGGLE_LIST", { mode: "OL" });
+                },
+                icon: "fa-list-ol",
+                name: "Numbered list",
+                isFormatApplied: isListActive("OL"),
+            },
+            {
+                id: "checklist",
+                category: "list",
+                action(dispatch) {
+                    dispatch("TOGGLE_LIST", { mode: "CL" });
+                },
+                icon: "fa-check-square-o",
+                name: "Checklist",
+                isFormatApplied: isListActive("CL"),
+            },
+        ],
+        powerboxItems: [
             {
                 name: _t("Bulleted list"),
                 description: _t("Create a simple bulleted list"),

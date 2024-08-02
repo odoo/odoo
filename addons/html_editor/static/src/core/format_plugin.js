@@ -41,63 +41,60 @@ export class FormatPlugin extends Plugin {
             { hotkey: "control+u", command: "FORMAT_UNDERLINE" },
             { hotkey: "control+5", command: "FORMAT_STRIKETHROUGH" },
         ],
-        toolbarGroup: [
+        toolbarCategory: [
+            { id: "decoration", sequence: 20 },
+            { id: "remove_format", sequence: 26 },
+        ],
+        toolbarItems: [
             {
-                id: "decoration",
-                sequence: 20,
-                buttons: [
-                    {
-                        id: "bold",
-                        action(dispatch) {
-                            dispatch("FORMAT_BOLD");
-                        },
-                        icon: "fa-bold",
-                        name: "Toggle bold",
-                        isFormatApplied: isFormatted(p, "bold"),
-                    },
-                    {
-                        id: "italic",
-                        action(dispatch) {
-                            dispatch("FORMAT_ITALIC");
-                        },
-                        icon: "fa-italic",
-                        name: "Toggle italic",
-                        isFormatApplied: isFormatted(p, "italic"),
-                    },
-                    {
-                        id: "underline",
-                        action(dispatch) {
-                            dispatch("FORMAT_UNDERLINE");
-                        },
-                        icon: "fa-underline",
-                        name: "Toggle underline",
-                        isFormatApplied: isFormatted(p, "underline"),
-                    },
-                    {
-                        id: "strikethrough",
-                        action(dispatch) {
-                            dispatch("FORMAT_STRIKETHROUGH");
-                        },
-                        icon: "fa-strikethrough",
-                        name: "Toggle strikethrough",
-                        isFormatApplied: isFormatted(p, "strikeThrough"),
-                    },
-                ],
+                id: "bold",
+                category: "decoration",
+                action(dispatch) {
+                    dispatch("FORMAT_BOLD");
+                },
+                icon: "fa-bold",
+                name: "Toggle bold",
+                isFormatApplied: isFormatted(p, "bold"),
+            },
+            {
+                id: "italic",
+                category: "decoration",
+                action(dispatch) {
+                    dispatch("FORMAT_ITALIC");
+                },
+                icon: "fa-italic",
+                name: "Toggle italic",
+                isFormatApplied: isFormatted(p, "italic"),
+            },
+            {
+                id: "underline",
+                category: "decoration",
+                action(dispatch) {
+                    dispatch("FORMAT_UNDERLINE");
+                },
+                icon: "fa-underline",
+                name: "Toggle underline",
+                isFormatApplied: isFormatted(p, "underline"),
+            },
+            {
+                id: "strikethrough",
+                category: "decoration",
+                action(dispatch) {
+                    dispatch("FORMAT_STRIKETHROUGH");
+                },
+                icon: "fa-strikethrough",
+                name: "Toggle strikethrough",
+                isFormatApplied: isFormatted(p, "strikeThrough"),
             },
             {
                 id: "remove_format",
-                sequence: 26,
-                buttons: [
-                    {
-                        id: "remove_format",
-                        action(dispatch) {
-                            dispatch("FORMAT_REMOVE_FORMAT");
-                        },
-                        icon: "fa-eraser",
-                        name: "Remove Format",
-                        hasFormat: hasFormat(p),
-                    },
-                ],
+                category: "remove_format",
+                action(dispatch) {
+                    dispatch("FORMAT_REMOVE_FORMAT");
+                },
+                icon: "fa-eraser",
+                name: "Remove Format",
+                hasFormat: hasFormat(p),
             },
         ],
         arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",

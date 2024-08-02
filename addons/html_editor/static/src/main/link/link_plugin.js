@@ -60,34 +60,38 @@ export class LinkPlugin extends Plugin {
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
     /** @type { (p: LinkPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        toolbarGroup: {
+        toolbarCategory: {
             id: "link",
             sequence: 40,
-            buttons: [
-                {
-                    id: "link",
-                    action(dispatch) {
-                        dispatch("CREATE_LINK_ON_SELECTION");
-                    },
-                    icon: "fa-link",
-                    name: "link",
-                    label: _t("Link"),
-                    isFormatApplied: isLinkActive,
-                },
-                {
-                    id: "unlink",
-                    action(dispatch) {
-                        dispatch("REMOVE_LINK_FROM_SELECTION");
-                    },
-                    icon: "fa-unlink",
-                    name: "unlink",
-                    label: _t("Remove Link"),
-                    isAvailable: isSelectionHasLink,
-                },
-            ],
         },
+        toolbarItems: [
+            {
+                id: "link",
+                category: "link",
+                action(dispatch) {
+                    dispatch("CREATE_LINK_ON_SELECTION");
+                },
+                icon: "fa-link",
+                name: "link",
+                label: _t("Link"),
+                isFormatApplied: isLinkActive,
+            },
+            {
+                id: "unlink",
+                category: "link",
+
+                action(dispatch) {
+                    dispatch("REMOVE_LINK_FROM_SELECTION");
+                },
+                icon: "fa-unlink",
+                name: "unlink",
+                label: _t("Remove Link"),
+                isAvailable: isSelectionHasLink,
+            },
+        ],
+
         powerboxCategory: { id: "navigation", name: _t("Navigation"), sequence: 50 },
-        powerboxCommands: [
+        powerboxItems: [
             {
                 name: _t("Link"),
                 description: _t("Add a link"),
