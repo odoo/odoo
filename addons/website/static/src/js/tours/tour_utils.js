@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
+import { waitFor } from "@odoo/hoot-dom";
 import { markup } from "@odoo/owl";
 
 function addMedia(position = "right") {
@@ -430,9 +431,10 @@ function registerThemeHomepageTour(name, steps) {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
     return registerWebsitePreviewTour(name, {
-        url: '/',
-        sequence: 50,
-        saveAs: "homepage",
+            url: "/",
+            sequence: 50,
+            saveAs: "homepage",
+            waitFor: () => waitFor('.o_iframe[is-ready="true"]', { timeout: 5000 }),
         },
         () => [
             ...clickOnEditAndWaitEditMode(),

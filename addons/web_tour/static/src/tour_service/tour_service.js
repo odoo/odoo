@@ -24,7 +24,10 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {boolean} [rainbowMan]
  * @property {number} [sequence]
  * @property {boolean} [test]
- * @property {Promise<any>} [wait_for]
+ * @property {Promise<any>} [wait_for] - TODO: remove in master
+ * @property {() => Promise<void>} [waitFor] - An async callback that waits
+ * for tour dependencies to load before calling the steps getter. If it is
+ * rejected, the tour isn't started and a warning is logged.
  * @property {string} [saveAs]
  * @property {string} [fadeout]
  * @property {number} [checkDelay]
@@ -103,10 +106,11 @@ export const tourService = {
         const tourRegistry = registry.category("web_tour.tours");
         function register(name, tour) {
             name = tour.saveAs || name;
-            const wait_for = tour.wait_for || Promise.resolve();
+            const wait_for = tour.wait_for || Promise.resolve(); // TODO: remove in master
             let steps;
             tours[name] = {
-                wait_for,
+                wait_for, // TODO: remove in master
+                waitFor: tour.waitFor,
                 name,
                 get steps() {
                     if (typeof tour.steps !== "function") {
@@ -293,7 +297,27 @@ export const tourService = {
             macroEngine.activate(macro, mode === "auto");
         }
 
-        function startTour(tourName, options = {}) {
+        /**
+         * @param {Tour} tour
+         * @return {Promise<boolean>} - Whether the tour can be started or not
+         */
+        async function waitForTourDependencies(tour) {
+            if (tour.waitFor) {
+                try {
+                    await tour.waitFor();
+                    return true;
+                } catch {
+                    console.warn(
+                        `Tour ${tour.name} couldn't be started, waitFor dependencies are not available.`,
+                    );
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        async function startTour(tourName, options = {}) {
             if (runningTours.has(tourName) && options.mode === "manual") {
                 return;
             }
@@ -327,19 +351,26 @@ export const tourService = {
             const pointer = createPointer(tourName, {
                 bounce: !(options.mode === "auto" && options.keepWatchBrowser),
             });
-            const macro = convertToMacro(tour, pointer, options);
+
+            // Switch url if needed
             const willUnload = callWithUnloadCheck(() => {
                 if (tour.url && tour.url !== options.startUrl && options.redirect) {
                     browser.location.href = browser.location.origin + tour.url;
                 }
             });
+
             if (!willUnload) {
+                if (!(await waitForTourDependencies(tour))) {
+                    return;
+                }
+
+                const macro = convertToMacro(tour, pointer, options);
                 pointer.start();
                 activateMacro(macro, options.mode);
             }
         }
 
-        function resumeTour(tourName) {
+        async function resumeTour(tourName) {
             if (runningTours.has(tourName)) {
                 return;
             }
@@ -352,6 +383,9 @@ export const tourService = {
             const pointer = createPointer(tourName, {
                 bounce: !(mode === "auto" && keepWatchBrowser),
             });
+            if (!(await waitForTourDependencies(tour))) {
+                return;
+            }
             const macro = convertToMacro(tour, pointer, {
                 mode,
                 stepDelay,
@@ -378,7 +412,7 @@ export const tourService = {
         }
 
         odoo.startTour = startTour;
-        odoo.isTourReady = (tourName) => tours[tourName].wait_for.then(() => true);
+        odoo.isTourReady = (tourName) => tours[tourName].wait_for.then(() => true); // TODO: remove in master
 
         return {
             bus,

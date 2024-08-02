@@ -4,14 +4,14 @@ import wTourUtils from "@website/js/tours/tour_utils";
 import { _t } from "@web/core/l10n/translation";
 
 wTourUtils.registerThemeHomepageTour('configurator_tour', () => {
-
+    const iframeDocument = document.querySelector(".o_iframe").contentDocument;
     let titleSelector = "#wrap > section:first-child";
-    let title = document.querySelector(titleSelector).querySelector("h1, h2");
+    let title = iframeDocument.querySelector(titleSelector).querySelector("h1, h2");
     if (!(title instanceof Node)) {
         titleSelector = titleSelector.replace("section:first-child", "section:nth-child(2)");
-        title = document.querySelector(titleSelector).querySelector("h1, h2");
+        title = iframeDocument.querySelector(titleSelector).querySelector("h1, h2");
     }
-    const isTitleTextImage = document
+    const isTitleTextImage = iframeDocument
         .querySelector(titleSelector)
         .classList.contains("s_text_image");
     titleSelector = titleSelector.concat(` ${title.matches('h1') ? 'h1' : 'h2'}`);
@@ -28,7 +28,7 @@ wTourUtils.registerThemeHomepageTour('configurator_tour', () => {
     }
 
     const shapeStep = [];
-    if (document.querySelector(shapeSelector)) {
+    if (iframeDocument.querySelector(shapeSelector)) {
         if (!$(backgroundSelector).is($(shapeSelector))) {
             shapeStep.push(...wTourUtils.clickOnSnippet(shapeSelector));
         }

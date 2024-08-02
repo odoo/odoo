@@ -90,7 +90,7 @@ export const tourRecorderService = {
         /**
          * @param {string} customTourName
          */
-        function startCustomTour(customTourName, options) {
+        async function startCustomTour(customTourName, options) {
             const customTours = getCustomTours();
             const customTour = customTours.find((t) => t.name === customTourName);
             if (!registry.category("web_tour.tours").contains(customTour.name)) {
@@ -103,7 +103,7 @@ export const tourRecorderService = {
                     JSON.stringify(customTour)
                 );
             }
-            tour_service.startTour(customTour.name, options);
+            return tour_service.startTour(customTour.name, options);
         }
 
         return {

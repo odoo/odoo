@@ -77,7 +77,8 @@ patch(ToursDialog.prototype, {
         downloadFile(
             JSON.stringify({
                 ...tour,
-                wait_for: undefined,
+                wait_for: undefined, // TODO: remove in master
+                waitFor: undefined,
                 steps: tour.steps.map((s) => {
                     return {
                         ...s,

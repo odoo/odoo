@@ -139,7 +139,7 @@ test("Step Tour validity", async () => {
         null,
         4
     )}\nInvalid object: 'run' is not a string or function`;
-    getService("tour_service").startTour("tour1");
+    await getService("tour_service").startTour("tour1");
     expect.verifySteps([waited_error1, waited_error2, waited_error3]);
 });
 
@@ -182,7 +182,7 @@ test("points to next step", async () => {
     }
 
     await mountWithCleanup(Root);
-    getService("tour_service").startTour("tour1", { mode: "manual" });
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
     await animationFrame();
     await advanceTime(100);
     expect(".o_tour_pointer").toHaveCount(1);
@@ -220,7 +220,7 @@ test("next step with new anchor at same position", async () => {
     }
 
     await mountWithCleanup(Root);
-    getService("tour_service").startTour("tour1", { mode: "manual" });
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
     await animationFrame();
     await advanceTime(100);
     expect(".o_tour_pointer").toHaveCount(1);
@@ -282,8 +282,7 @@ test("a failing tour logs the step that failed in run", async () => {
             },
         ],
     });
-    getService("tour_service").startTour("tour2", { mode: "auto" });
-    await advanceTime(750);
+    await getService("tour_service").startTour("tour2", { mode: "auto" });
     await advanceTime(750);
     expect.verifySteps(["log: Tour tour2 on step: '.button0'"]);
     await advanceTime(750);
@@ -335,8 +334,7 @@ test("a failing tour with disabled element", async () => {
             },
         ],
     });
-    getService("tour_service").startTour("tour3", { mode: "auto" });
-    await advanceTime(750);
+    await getService("tour_service").startTour("tour3", { mode: "auto" });
     await advanceTime(750);
     expect.verifySteps(["log: Tour tour3 on step: '.button0'"]);
     await advanceTime(750);
@@ -426,8 +424,7 @@ test("a failing tour logs the step that failed", async () => {
             },
         ],
     });
-    getService("tour_service").startTour("tour1", { mode: "auto" });
-    await advanceTime(750);
+    await getService("tour_service").startTour("tour1", { mode: "auto" });
     await advanceTime(750);
     expect.verifySteps(["log: Tour tour1 on step: 'content (trigger: .button0)'"]);
     await advanceTime(750);
@@ -488,7 +485,7 @@ test("check tour with inactive steps", async () => {
             },
         ],
     });
-    getService("tour_service").startTour("pipu_tour", { mode: "auto" });
+    await getService("tour_service").startTour("pipu_tour", { mode: "auto" });
     await advanceTime(750);
     await advanceTime(750);
     await advanceTime(750);
@@ -526,7 +523,7 @@ test("pointer is added on top of overlay's stack", async () => {
 
     await mountWithCleanup(Root);
 
-    getService("tour_service").startTour("tour1", { mode: "manual" });
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
     getService("dialog").add(DummyDialog, {});
     await advanceTime(100);
     expect(`.o-overlay-item`).toHaveCount(2);
@@ -621,7 +618,7 @@ test("hovering to the anchor element should show the content", async () => {
     }
 
     await mountWithCleanup(Root);
-    getService("tour_service").startTour("la_vuelta", { mode: "manual" });
+    await getService("tour_service").startTour("la_vuelta", { mode: "manual" });
     await animationFrame();
     await advanceTime(750);
     expect(".o_tour_pointer").toHaveCount(1);
@@ -665,8 +662,8 @@ test("should show only 1 pointer at a time", async () => {
     }
 
     await mountWithCleanup(Root);
-    getService("tour_service").startTour("paris_roubaix", { mode: "manual" });
-    getService("tour_service").startTour("milan_sanremo", { mode: "manual" });
+    await getService("tour_service").startTour("paris_roubaix", { mode: "manual" });
+    await getService("tour_service").startTour("milan_sanremo", { mode: "manual" });
     await animationFrame();
     await advanceTime(100);
     expect(".o_tour_pointer").toHaveCount(1);
@@ -702,7 +699,7 @@ test("perform edit on next step", async () => {
     }
 
     await mountWithCleanup(Root);
-    getService("tour_service").startTour("giro_d_italia", { mode: "manual" });
+    await getService("tour_service").startTour("giro_d_italia", { mode: "manual" });
     await animationFrame();
     await advanceTime(100);
     expect(".o_tour_pointer").toHaveCount(1);
@@ -748,7 +745,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
     }
 
     await mountWithCleanup(Root);
-    getService("tour_service").startTour("tour_de_france", { mode: "manual" });
+    await getService("tour_service").startTour("tour_de_france", { mode: "manual" });
     await animationFrame();
     await advanceTime(100); // awaits the macro engine
     const pointer = queryFirst(".o_tour_pointer");
@@ -818,7 +815,7 @@ test("scroller pointer to reach next step", async () => {
     }
 
     await mountWithCleanup(Root);
-    getService("tour_service").startTour("tour_des_flandres", { mode: "manual" });
+    await getService("tour_service").startTour("tour_des_flandres", { mode: "manual" });
     await animationFrame();
     await advanceTime(100); // awaits the macro engine
 
@@ -917,7 +914,7 @@ test("manual tour with inactive steps", async () => {
         `;
     }
     await mountWithCleanup(Root);
-    getService("tour_service").startTour("tour_de_wallonie", { mode: "manual" });
+    await getService("tour_service").startTour("tour_de_wallonie", { mode: "manual" });
     await animationFrame();
     await advanceTime(100);
     expect(".o_tour_pointer").toHaveCount(1);
