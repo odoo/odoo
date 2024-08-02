@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="iap_account_view_form" model="ir.ui.view">
+            <field name="name">iap.account.view.form</field>
+            <field name="model">iap.account</field>
+            <field name="inherit_id" ref="iap.iap_account_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='account']" position="before">
+                    <div role="status" class="alert alert-danger mb-0" invisible="service_name != 'sms' or (state != 'unregistered' and state)">
+                        <i class="fa fa-warning"/> You cannot send SMS while your account is not registered.
+                        <button type="object"
+                            name="action_open_registration_wizard" class="btn-link p-0">
+                            <i class="oi oi-arrow-right"/>
+                            Register
+                        </button>
+                    </div>
+                    <div role="status" class="alert alert-danger mb-0" invisible="service_name != 'sms' or (state != 'banned')">
+                        <i class="fa fa-warning"/> An error occurred with your account. Please contact the support for more information...
+                    </div>
+                </xpath>
+                <xpath expr="//button[@name='action_buy_credits']" position="attributes">
+                    <attribute name="invisible">service_name == 'sms' and not state</attribute>
+                </xpath>
+                <xpath expr="//group[@name='external']/*[1]" position="before">
+                    <label for="sender_name" class="oe_inline" invisible="service_name != 'sms' or not (state == 'registered' and state)"/>
+                    <div invisible="service_name != 'sms'  or not (state == 'registered' and state)">
+                        <field name="sender_name" class="oe_inline" invisible="not sender_name"/>
+                        <button type="object" invisible="sender_name"
+                            name="action_open_sender_name_wizard" class="btn-link p-0">
+                            <i class="oi oi-arrow-right"/>
+                            Set Sender Name
+                        </button>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -124,7 +124,7 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
         req = requests.post(url, json=payload, timeout=timeout)
         req.raise_for_status()
         response = req.json()
-        _logger.info("iap jsonrpc %s answered in %s seconds", url, req.elapsed.total_seconds())
+        _logger.info("iap jsonrpc %s responded in %.3f seconds", url, req.elapsed.total_seconds())
         if 'error' in response:
             name = response['error']['data'].get('name').rpartition('.')[-1]
             message = response['error']['data'].get('message')
@@ -142,7 +142,7 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
         return response.get('result')
     except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
         raise exceptions.AccessError(
-            _('The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was %s', url)
+            _("An error occurred while reaching %s. Please contact Odoo support if this error persists.", url)
         )
 
 #----------------------------------------------------------

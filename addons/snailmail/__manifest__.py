@@ -12,6 +12,7 @@ Allows users to send documents by post
         'mail'
     ],
     'data': [
+        'data/iap_service_data.xml',
         'data/snailmail_data.xml',
         'views/report_assets.xml',
         'views/snailmail_views.xml',
