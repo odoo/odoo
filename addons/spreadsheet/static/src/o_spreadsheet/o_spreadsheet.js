@@ -3343,7 +3343,7 @@
          * Static helper which returns a successful DispatchResult
          */
         static get Success() {
-            return new DispatchResult();
+            return SUCCESS;
         }
         get isSuccessful() {
             return this.reasons.length === 0;
@@ -3356,6 +3356,7 @@
             return this.reasons.includes(reason);
         }
     }
+    const SUCCESS = new DispatchResult();
     exports.CommandResult = void 0;
     (function (CommandResult) {
         CommandResult[CommandResult["Success"] = 0] = "Success";
@@ -4083,8 +4084,8 @@
      * Return the o-spreadsheet element position relative
      * to the browser viewport.
      */
-    function useSpreadsheetPosition() {
-        const position = owl.useState({ x: 0, y: 0 });
+    function useSpreadsheetRect() {
+        const position = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
         let spreadsheetElement = document.querySelector(".o-spreadsheet");
         updatePosition();
         function updatePosition() {
@@ -4092,9 +4093,11 @@
                 spreadsheetElement = document.querySelector(".o-spreadsheet");
             }
             if (spreadsheetElement) {
-                const { top, left } = spreadsheetElement.getBoundingClientRect();
+                const { top, left, width, height } = spreadsheetElement.getBoundingClientRect();
                 position.x = left;
                 position.y = top;
+                position.width = width;
+                position.height = height;
             }
         }
         owl.onMounted(updatePosition);
@@ -4129,7 +4132,7 @@
     class Popover extends owl.Component {
         constructor() {
             super(...arguments);
-            this.spreadsheetPosition = useSpreadsheetPosition();
+            this.spreadsheetRect = useSpreadsheetRect();
         }
         get maxHeight() {
             return Math.max(0, this.viewportDimension.height - BOTTOMBAR_HEIGHT - SCROLLBAR_WIDTH);
@@ -4138,8 +4141,8 @@
             // the props's position is expressed relative to the "body" element
             // but we teleport the element in ".o-spreadsheet" to keep everything
             // within our control and to avoid leaking into external DOM
-            const horizontalPosition = `left:${this.horizontalPosition() - this.spreadsheetPosition.x}`;
-            const verticalPosition = `top:${this.verticalPosition() - this.spreadsheetPosition.y}`;
+            const horizontalPosition = `left:${this.horizontalPosition() - this.spreadsheetRect.x}`;
+            const verticalPosition = `top:${this.verticalPosition() - this.spreadsheetRect.y}`;
             const maxHeight = this.maxHeight;
             const height = `max-height:${maxHeight}`;
             const shadow = maxHeight !== 0 ? "box-shadow: 1px 2px 5px 2px rgb(51 51 51 / 15%);" : "";
@@ -11420,7 +11423,10 @@
             return false;
         }
         if (typeof operand === "number" && operator === "=") {
-            return toString(value) === toString(operand);
+            if (typeof value === "string" && (isNumber(value) || isDateTime(value))) {
+                return toNumber(value) === operand;
+            }
+            return value === operand;
         }
         if (operator === "<>" || operator === "=") {
             let result;
@@ -20429,6 +20435,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         constructor() {
             super(...arguments);
             this.composerRef = owl.useRef("o_composer");
+            this.spreadsheetRect = useSpreadsheetRect();
             this.contentHelper = new ContentEditableHelper(this.composerRef.el);
             this.composerState = owl.useState({
                 positionStart: 0,
@@ -20464,24 +20471,28 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
         }
         get assistantStyle() {
+            const composerRect = this.composerRef.el.getBoundingClientRect();
+            const assistantStyle = {
+                width: `${ASSISTANT_WIDTH}px`,
+            };
             if (this.props.delimitation && this.props.rect) {
                 const { x: cellX, y: cellY, height: cellHeight } = this.props.rect;
                 const remainingHeight = this.props.delimitation.height - (cellY + cellHeight);
-                let assistantStyle = "";
                 if (cellY > remainingHeight) {
                     // render top
-                    assistantStyle += `
-          top: -8px;
-          transform: translate(0, -100%);
-        `;
+                    assistantStyle.top = "-8px";
+                    assistantStyle.transform = "translate(0, -100%)";
                 }
                 if (cellX + ASSISTANT_WIDTH > this.props.delimitation.width) {
                     // render left
-                    assistantStyle += `right:0px;`;
+                    assistantStyle.right = "0px";
                 }
-                return (assistantStyle += `width:${ASSISTANT_WIDTH}px;`);
+                return cssPropertiesToCss(assistantStyle);
             }
-            return `width:${ASSISTANT_WIDTH}px;`;
+            if (composerRect.left + ASSISTANT_WIDTH > this.spreadsheetRect.width) {
+                assistantStyle.right = "0px";
+            }
+            return cssPropertiesToCss(assistantStyle);
         }
         setup() {
             owl.onMounted(() => {
@@ -27465,12 +27476,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.clearBorders(cmd.sheetId, cmd.target);
                     break;
                 case "REMOVE_COLUMNS_ROWS":
-                    for (let el of [...cmd.elements].sort((a, b) => b - a)) {
+                    const elements = [...cmd.elements].sort((a, b) => b - a);
+                    for (const group of groupConsecutive(elements)) {
                         if (cmd.dimension === "COL") {
-                            this.shiftBordersHorizontally(cmd.sheetId, el + 1, -1);
+                            this.shiftBordersHorizontally(cmd.sheetId, group[group.length - 1] + 1, -group.length);
                         }
                         else {
-                            this.shiftBordersVertically(cmd.sheetId, el + 1, -1);
+                            this.shiftBordersVertically(cmd.sheetId, group[group.length - 1] + 1, -group.length);
                         }
                     }
                     break;
@@ -30967,12 +30979,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             });
                         }
                         if (colIndex > deletedColumn) {
-                            this.dispatch("UPDATE_CELL_POSITION", {
-                                sheetId: sheet.id,
-                                cellId: cellId,
-                                col: colIndex - 1,
-                                row: rowIndex,
-                            });
+                            this.setNewPosition(cellId, sheet.id, colIndex - 1, rowIndex);
                         }
                     }
                 }
@@ -30982,7 +30989,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Move the cells after a column or rows insertion
          */
         moveCellsOnAddition(sheet, addedElement, quantity, dimension) {
-            const commands = [];
+            const updates = [];
             for (let rowIndex = 0; rowIndex < sheet.rows.length; rowIndex++) {
                 const row = sheet.rows[rowIndex];
                 if (dimension !== "rows" || rowIndex >= addedElement) {
@@ -30991,20 +30998,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         const cellId = row.cells[i];
                         if (cellId) {
                             if (dimension === "rows" || colIndex >= addedElement) {
-                                commands.push({
-                                    type: "UPDATE_CELL_POSITION",
+                                updates.push({
                                     sheetId: sheet.id,
                                     cellId: cellId,
                                     col: colIndex + (dimension === "columns" ? quantity : 0),
                                     row: rowIndex + (dimension === "rows" ? quantity : 0),
+                                    type: "UPDATE_CELL_POSITION",
                                 });
                             }
                         }
                     }
                 }
             }
-            for (let cmd of commands.reverse()) {
-                this.dispatch(cmd.type, cmd);
+            for (let update of updates.reverse()) {
+                this.updateCellPosition(update);
             }
         }
         /**
@@ -31037,12 +31044,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         const colIndex = Number(i);
                         const cellId = row.cells[i];
                         if (cellId) {
-                            this.dispatch("UPDATE_CELL_POSITION", {
-                                sheetId: sheet.id,
-                                cellId: cellId,
-                                col: colIndex,
-                                row: rowIndex - numberRows,
-                            });
+                            this.setNewPosition(cellId, sheet.id, colIndex, rowIndex - numberRows);
                         }
                     }
                 }
@@ -43438,9 +43440,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.48';
-    __info__.date = '2024-07-18T14:28:03.435Z';
-    __info__.hash = 'a1be508';
+    __info__.version = '16.0.49';
+    __info__.date = '2024-08-02T08:36:54.838Z';
+    __info__.hash = '97d415b';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
