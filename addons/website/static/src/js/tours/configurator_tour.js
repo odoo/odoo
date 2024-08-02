@@ -5,16 +5,14 @@ import { _t } from "@web/core/l10n/translation";
 
 wTourUtils.registerThemeHomepageTour('configurator_tour', () => {
 
-    let titleSelector = "#wrap > section:first-child";
-    let title = document.querySelector(titleSelector).querySelector("h1, h2");
-    if (!(title instanceof Node)) {
-        titleSelector = titleSelector.replace("section:first-child", "section:nth-child(2)");
-        title = document.querySelector(titleSelector).querySelector("h1, h2");
+    let titleSelector = '#wrap > section:first-child';
+    let title = $(titleSelector).find('h1, h2').first();
+    if (!title.length) {
+        titleSelector = titleSelector.replace('section:first-child', 'section:nth-child(2)');
+        title = $(titleSelector).find('h1, h2').first();
     }
-    const isTitleTextImage = document
-        .querySelector(titleSelector)
-        .classList.contains("s_text_image");
-    titleSelector = titleSelector.concat(` ${title.matches('h1') ? 'h1' : 'h2'}`);
+    let isTitleTextImage = $(titleSelector).hasClass('s_text_image');
+    titleSelector = titleSelector.concat(` ${title.is('h1') ? 'h1' : 'h2'}`);
 
     const shapeSelector = '#wrap > section[data-oe-shape-data]';
     const backgroundSelector = '#wrap > section:nth-child(2)';
@@ -28,7 +26,7 @@ wTourUtils.registerThemeHomepageTour('configurator_tour', () => {
     }
 
     const shapeStep = [];
-    if (document.querySelector(shapeSelector)) {
+    if ($(shapeSelector).first().length) {
         if (!$(backgroundSelector).is($(shapeSelector))) {
             shapeStep.push(...wTourUtils.clickOnSnippet(shapeSelector));
         }
