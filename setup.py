@@ -40,6 +40,7 @@ setup(
         'MarkupSafe',
         'num2words',
         'ofxparse',
+        'openpyxl',
         'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'polib',
