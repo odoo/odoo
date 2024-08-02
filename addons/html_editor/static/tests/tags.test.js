@@ -435,7 +435,7 @@ describe("to blockquote", () => {
         expect(getContent(el)).toBe("<p>abcd</p>");
 
         setTag("h1")(editor);
-        expect(getContent(el)).toBe("<h1>ab[]cd</h1>");
+        expect(getContent(el)).toBe("<h1>abcd</h1>");
     });
 
     test("setTag should work when we move the selection outside of the editor", async () => {
@@ -445,7 +445,7 @@ describe("to blockquote", () => {
         expect(getContent(el)).toBe("<p>abcd</p>");
 
         setTag("h1")(editor);
-        expect(getContent(el)).toBe("<h1>ab[]cd</h1>");
+        expect(getContent(el)).toBe("<h1>abcd</h1>");
     });
 
     test("triple click with setTag should only switch the tag on the selected line", async () => {
@@ -486,5 +486,13 @@ describe("to blockquote", () => {
 
         press("enter");
         expect(getContent(el)).toBe("<blockquote>ab[]cd</blockquote>");
+    });
+
+    test("setTag should work after control+a", async () => {
+        const { el, editor } = await setupEditor("<p>[]abcd</p>");
+        press("control+a");
+        expect(getContent(el)).toBe("[<p>abcd</p>]");
+        setTag("h1")(editor);
+        expect(getContent(el)).toBe("[<h1>abcd</h1>]");
     });
 });
