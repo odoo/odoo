@@ -61,9 +61,11 @@ export class PublicReadonlySpreadsheet extends Component {
 
     async createModel() {
         this.data = await this.http.get(this.props.dataUrl);
-        this.model = new Model(this.data, {
-            mode: this.props.mode === "dashboard" ? "dashboard" : "readonly",
-        });
+        this.model = new Model(
+            this.data,
+            { mode: this.props.mode === "dashboard" ? "dashboard" : "readonly" },
+            this.data.revisions || []
+        );
         if (this.env.debug) {
             // eslint-disable-next-line no-import-assign
             spreadsheet.__DEBUG__ = spreadsheet.__DEBUG__ || {};
