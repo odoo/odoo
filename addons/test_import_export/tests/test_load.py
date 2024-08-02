@@ -1,6 +1,5 @@
 import contextlib
 import json
-import re
 
 from odoo import fields
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
@@ -471,13 +470,21 @@ class test_required_string_field(ImporterCase):
     @mute_logger('odoo.sql_db', 'odoo.models')
     def test_empty(self):
         result = self.import_(['value'], [[]])
-        self.assertEqual(result['messages'], [message("Missing required value for the field 'Value' (value)")])
+        self.assertEqual(len(result['messages']), 1)
+        result_message = result['messages'][0]
+        expected_message = message("Missing required value for the field 'Value' (value)")
+        self.assertIn(expected_message.pop('message'), result_message.pop('message'))
+        self.assertEqual(result_message, expected_message)
         self.assertIs(result['ids'], False)
 
     @mute_logger('odoo.sql_db', 'odoo.models')
     def test_not_provided(self):
         result = self.import_(['const'], [['12']])
-        self.assertEqual(result['messages'], [message("Missing required value for the field 'Value' (value)")])
+        self.assertEqual(len(result['messages']), 1)
+        result_message = result['messages'][0]
+        expected_message = message("Missing required value for the field 'Value' (value)")
+        self.assertIn(expected_message.pop('message'), result_message.pop('message'))
+        self.assertEqual(result_message, expected_message)
         self.assertIs(result['ids'], False)
 
     @mute_logger('odoo.sql_db', 'odoo.models')
@@ -487,7 +494,7 @@ class test_required_string_field(ImporterCase):
         self.assertEqual(len(result['messages']), 11)
         for m in result['messages'][:-1]:
             self.assertEqual(m['type'], 'error')
-            self.assertEqual(m['message'], "Missing required value for the field 'Value' (value)")
+            self.assertIn("Missing required value for the field 'Value' (value)", m['message'])
         last = result['messages'][-1]
         self.assertEqual(last['type'], 'warning')
         self.assertEqual(
@@ -1512,13 +1519,20 @@ class test_unique(ImporterCase):
             ],
         )
         self.assertFalse(result['ids'])
-        self.assertEqual(
-            result['messages'],
-            [
-                dict(message="The value for the field 'value' already exists (this is probably 'Value' in the current model).", type='error', rows={'from': 1, 'to': 1}, record=1, field='value'),
-                dict(message="The value for the field 'value' already exists (this is probably 'Value' in the current model).", type='error', rows={'from': 4, 'to': 4}, record=4, field='value'),
-            ],
-        )
+        messages = result['messages']
+        messages_messages = [m.pop('message') for m in messages]
+        expected = [
+            dict(message="The value for 'value' (Value) already exists.",
+                 type='error', rows={'from': 1, 'to': 1},
+                 record=1, field='value'),
+            dict(message="The value for 'value' (Value) already exists.",
+                 type='error', rows={'from': 4, 'to': 4},
+                 record=4, field='value'),
+        ]
+        expected_messages = [m.pop('message') for m in expected]
+        for actual, expect in zip(messages_messages, expected_messages):
+            self.assertIn(expect, actual)
+        self.assertEqual(messages, expected)
 
     @mute_logger('odoo.sql_db')
     def test_unique_pair(self):
@@ -1537,19 +1551,7 @@ class test_unique(ImporterCase):
         self.assertEqual(message['type'], 'error')
         self.assertEqual(message['record'], 3)
         self.assertEqual(message['rows'], {'from': 3, 'to': 3})
-        m = re.match(
-            r"The values for the fields '([^']+)' already exist \(they are probably '([^']+)' in the current model\)\.",
-            message['message'],
-        )
-        self.assertIsNotNone(m)
-        self.assertItemsEqual(
-            m.group(1).split(' and '),
-            ['value2', 'value3'],
-        )
-        self.assertItemsEqual(
-            m.group(2).split(' and '),
-            ['Value2', 'Value3'],
-        )
+        self.assertIn("The value for 'value2, value3' (Value2 and Value3) already exists.", message['message'])
 
 
 class test_inherits(ImporterCase):

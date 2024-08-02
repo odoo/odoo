@@ -289,9 +289,7 @@ class IrModel(models.Model):
                 if field not in stored_fields:
                     raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.", field))
 
-    _sql_constraints = [
-        ('obj_name_uniq', 'unique (model)', 'Each model must have a unique name.'),
-    ]
+    _obj_name_uniq = models.Constraint('UNIQUE (model)', 'Each model must have a unique name.')
 
     def _get(self, name):
         """ Return the (sudoed) `ir.model` record with the given name.
@@ -650,15 +648,12 @@ class IrModelFields(models.Model):
                 msg = _("Field names can only contain characters, digits and underscores (up to 63).")
                 raise ValidationError(msg)
 
-    _sql_constraints = [
-        ('name_unique', 'UNIQUE(model, name)', "Field names must be unique per model."),
-        ('size_gt_zero', 'CHECK (size>=0)', 'Size of the field cannot be negative.'),
-        (
-            "name_manual_field",
-            "CHECK (state != 'manual' OR name LIKE 'x\\_%')",
-            "Custom fields must have a name that starts with 'x_'!"
-        ),
-    ]
+    _name_unique = models.Constraint('UNIQUE(model, name)', "Field names must be unique per model.")
+    _size_gt_zero = models.Constraint('CHECK (size>=0)', 'Size of the field cannot be negative.')
+    _name_manual_field = models.Constraint(
+        "CHECK (state != 'manual' OR name LIKE 'x\\_%')",
+        "Custom fields must have a name that starts with 'x_'!",
+    )
 
     def _related_field(self):
         """ Return the ``ir.model.fields`` record corresponding to ``self.related``. """
@@ -1389,9 +1384,7 @@ class IrModelInherit(models.Model):
     parent_id = fields.Many2one("ir.model", required=True, ondelete="cascade")
     parent_field_id = fields.Many2one("ir.model.fields", ondelete="cascade")  # in case of inherits
 
-    _sql_constraints = [
-        ("uniq", "UNIQUE(model_id, parent_id)", "Models inherits from another only once")
-    ]
+    _uniq = models.Constraint("UNIQUE(model_id, parent_id)", "Models inherits from another only once")
 
     def _reflect_inherits(self, model_names):
         """ Reflect the given models' inherits (_inherit and _inherits). """
@@ -1479,10 +1472,10 @@ class IrModelFieldsSelection(models.Model):
     name = fields.Char(translate=True, required=True)
     sequence = fields.Integer(default=1000)
 
-    _sql_constraints = [
-        ('selection_field_uniq', 'unique(field_id, value)',
-         'Selections values must be unique per field'),
-    ]
+    _selection_field_uniq = models.Constraint(
+        'UNIQUE (field_id, value)',
+        'Selections values must be unique per field',
+    )
 
     def _get_selection(self, field_id):
         """ Return the given field's selection as a list of pairs (value, string). """
@@ -1800,10 +1793,8 @@ class IrModelConstraint(models.Model):
         string='Constraint Type', required=True, size=1, index=True, readonly=True,
         help="Type of the constraint: `f` for a foreign key, `u` for other constraints.")
 
-    _sql_constraints = [
-        ('module_name_uniq', 'unique(name, module)',
-         'Constraints with the same name are unique per module.'),
-    ]
+    _module_name_uniq = models.Constraint('UNIQUE (name, module)',
+        'Constraints with the same name are unique per module.')
 
     def unlink(self):
         self.check_access('unlink')
@@ -1816,38 +1807,33 @@ class IrModelConstraint(models.Model):
                 table = data.model.model.replace('.', '_')
 
             # double-check we are really going to delete all the owners of this schema element
-            self._cr.execute("""SELECT id from ir_model_constraint where name=%s""", [name])
-            external_ids = set(x[0] for x in self._cr.fetchall())
+            external_ids = {
+                id_ for [id_] in self.env.execute_query(SQL(
+                    """SELECT id from ir_model_constraint where name=%s""", name
+                ))
+            }
             if external_ids - ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue
 
             typ = data.type
-            if typ == 'f':
-                # test if FK exists on this table (it could be on a related m2m table, in which case we ignore it)
-                self._cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
-                                    WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
-                                 ('f', name, table))
-                if self._cr.fetchone():
-                    self._cr.execute(SQL(
-                        'ALTER TABLE %s DROP CONSTRAINT %s',
-                        SQL.identifier(table),
-                        SQL.identifier(name[:63]),
-                    ))
-                    _logger.info('Dropped FK CONSTRAINT %s@%s', name, data.model.model)
-
-            if typ == 'u':
-                hname = sql.make_identifier(name)
-                # test if constraint exists
+            if typ in ('f', 'u'):
+                # test if FK exists on this table
                 # Since type='u' means any "other" constraint, to avoid issues we limit to
                 # 'c' -> check, 'u' -> unique, 'x' -> exclude constraints, effective leaving
                 # out 'p' -> primary key and 'f' -> foreign key, constraints.
+                # For 'f', it could be on a related m2m table, in which case we ignore it.
                 # See: https://www.postgresql.org/docs/9.5/catalog-pg-constraint.html
-                self._cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
-                                    WHERE cs.contype in ('c', 'u', 'x') and cs.conname=%s and cl.relname=%s""",
-                                 (hname, table))
-                if self._cr.fetchone():
-                    self._cr.execute(SQL(
+                hname = sql.make_identifier(name)
+                if self.env.execute_query(SQL(
+                    """SELECT
+                    FROM pg_constraint cs
+                    JOIN pg_class cl
+                    ON (cs.conrelid = cl.oid)
+                    WHERE cs.contype IN %s AND cs.conname = %s AND cl.relname = %s
+                    """, ('c', 'u', 'x') if typ == 'u' else (typ,), hname, table
+                )):
+                    self.env.execute_query(SQL(
                         'ALTER TABLE %s DROP CONSTRAINT %s',
                         SQL.identifier(table),
                         SQL.identifier(hname),
@@ -1864,7 +1850,7 @@ class IrModelConstraint(models.Model):
         """ Reflect the given constraint, and return its corresponding record
             if a record is created or modified; returns ``None`` otherwise.
             The reflection makes it possible to remove a constraint when its
-            corresponding module is uninstalled. ``type`` is either 'f' or 'u'
+            corresponding module is uninstalled. ``type`` is either 'f', or 'u'
             depending on the constraint being a foreign key or not.
         """
         if not module:
@@ -1872,58 +1858,61 @@ class IrModelConstraint(models.Model):
             # of any module
             return
         assert type in ('f', 'u')
-        cr = self._cr
-        query = """ SELECT c.id, type, definition, message->>'en_US' as message
-                    FROM ir_model_constraint c, ir_module_module m
-                    WHERE c.module=m.id AND c.name=%s AND m.name=%s """
-        cr.execute(query, (conname, module))
-        cons = cr.dictfetchone()
-        if not cons:
-            query = """ INSERT INTO ir_model_constraint
-                            (name, create_date, write_date, create_uid, write_uid, module, model, type, definition, message)
-                        VALUES (%s,
-                                now() AT TIME ZONE 'UTC',
-                                now() AT TIME ZONE 'UTC',
-                                %s, %s,
-                                (SELECT id FROM ir_module_module WHERE name=%s),
-                                (SELECT id FROM ir_model WHERE model=%s),
-                                %s, %s, %s)
-                        RETURNING id"""
-            cr.execute(query, (conname, self.env.uid, self.env.uid, module, model._name, type, definition, Json({'en_US': message})))
-            return self.browse(cr.fetchone()[0])
-
+        rows = self.env.execute_query_dict(SQL(
+            """SELECT c.id, type, definition, message->'en_US' as message
+            FROM ir_model_constraint c, ir_module_module m
+            WHERE c.module = m.id AND c.name = %s AND m.name = %s
+            """, conname, module
+        ))
+        if not rows:
+            [[cons_id]] = self.env.execute_query(SQL(
+                """
+                INSERT INTO ir_model_constraint
+                    (name, create_date, write_date, create_uid, write_uid, module, model, type, definition, message)
+                VALUES (%s,
+                        now() AT TIME ZONE 'UTC',
+                        now() AT TIME ZONE 'UTC',
+                        %s, %s,
+                        (SELECT id FROM ir_module_module WHERE name=%s),
+                        (SELECT id FROM ir_model WHERE model=%s),
+                        %s, %s, %s)
+                RETURNING id
+                """, conname, self.env.uid, self.env.uid, module, model._name, type, definition, Json({'en_US': message})
+            ))
+            return self.browse(cons_id)
+        [cons] = rows
         cons_id = cons.pop('id')
         if cons != dict(type=type, definition=definition, message=message):
-            query = """ UPDATE ir_model_constraint
-                        SET write_date=now() AT TIME ZONE 'UTC',
-                            write_uid=%s, type=%s, definition=%s, message=%s
-                        WHERE id=%s"""
-            cr.execute(query, (self.env.uid, type, definition, Json({'en_US': message}), cons_id))
+            self.env.execute_query(SQL(
+                """
+                UPDATE ir_model_constraint
+                SET write_date=now() AT TIME ZONE 'UTC',
+                    write_uid = %s, type = %s, definition = %s, message = %s
+                WHERE id = %s""",
+                self.env.uid, type, definition, Json({'en_US': message}), cons_id
+            ))
             return self.browse(cons_id)
+        return None
 
     def _reflect_constraints(self, model_names):
-        """ Reflect the SQL constraints of the given models. """
+        """ Reflect the table objects of the given models. """
         for model_name in model_names:
             self._reflect_model(self.env[model_name])
 
     def _reflect_model(self, model):
-        """ Reflect the _sql_constraints of the given model. """
-        def cons_text(txt):
-            return txt.lower().replace(', ',',').replace(' (','(')
-
-        # map each constraint on the name of the module where it is defined
-        constraint_module = {
-            constraint[0]: cls._module
-            for cls in reversed(self.env.registry[model._name].mro())
-            if models.is_definition_class(cls)
-            for constraint in getattr(cls, '_local_sql_constraints', ())
-        }
-
+        """ Reflect the _table_objects of the given model. """
         data_list = []
-        for (key, definition, message) in model._sql_constraints:
-            conname = '%s_%s' % (model._table, key)
-            module = constraint_module.get(key)
-            record = self._reflect_constraint(model, conname, 'u', cons_text(definition), module, message)
+        for conname, cons in model._table_objects.items():
+            module = cons._module
+            if not conname or not module:
+                _logger.warning("Missing module or constraint name for %s", cons)
+                continue
+            definition = cons.definition
+            message = cons.message
+            if not isinstance(message, str) or not message:
+                message = None
+            typ = 'f' if isinstance(cons, models.Constraint) and cons._type == 'FK' else 'u'
+            record = self._reflect_constraint(model, conname, typ, definition, module, message)
             xml_id = '%s.constraint_%s' % (module, conname)
             if record:
                 data_list.append(dict(xml_id=xml_id, record=record))
@@ -2168,10 +2157,7 @@ class IrModelData(models.Model):
     noupdate = fields.Boolean(string='Non Updatable', default=False)
     reference = fields.Char(string='Reference', compute='_compute_reference', readonly=True, store=False)
 
-    _sql_constraints = [
-        ('name_nospaces', "CHECK(name NOT LIKE '% %')",
-         "External IDs cannot contain spaces"),
-    ]
+    _name_nospaces = models.Constraint("CHECK(name NOT LIKE '% %')", "External IDs cannot contain spaces")
 
     @api.depends('module', 'name')
     def _compute_complete_name(self):

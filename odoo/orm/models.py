@@ -37,13 +37,12 @@ import uuid
 import warnings
 from collections import defaultdict, deque
 from collections.abc import MutableMapping, Callable
-from contextlib import closing
 from inspect import getmembers
 from operator import attrgetter, itemgetter
 
 import babel
 import babel.dates
-import psycopg2
+import psycopg2.errors
 import psycopg2.extensions
 from psycopg2.extras import Json
 
@@ -70,6 +69,7 @@ from .fields_misc import Id
 from .fields_temporal import Datetime
 from .fields_textual import Char
 
+from .table_objects import Constraint
 from .identifiers import NewId
 from .utils import OriginIds, expand_ids, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
 from odoo.osv import expression
@@ -77,6 +77,7 @@ from odoo.osv import expression
 import typing
 if typing.TYPE_CHECKING:
     from collections.abc import Reversible
+    from .table_objects import TableObject
     from .environments import Environment
     from .registry import Registry
     from .types import Self, ValuesType, IdType
@@ -205,6 +206,8 @@ class MetaModel(api.Meta):
         attrs.setdefault('__slots__', ())
         # this collects the fields defined on the class (via Field.__set_name__())
         attrs.setdefault('_field_definitions', [])
+        # this collects the table object definitions on the class (via TableObject.__set_name__())
+        attrs.setdefault('_table_object_definitions', [])
 
         if attrs.get('_register', True):
             # determine '_module'
@@ -222,6 +225,12 @@ class MetaModel(api.Meta):
 
             if not attrs.get('_name'):
                 attrs['_name'] = class_name_to_model_name(name)
+
+        # copy _sql_constraints into _table_object_definitions
+        for cons in attrs.get('_sql_constraints', ()):
+            cons_name, definition, cons_message = cons
+            constraint = Constraint(definition, cons_message)
+            attrs['_' + cons_name] = constraint
 
         return super().__new__(meta, name, bases, attrs)
 
@@ -516,7 +525,8 @@ class BaseModel(metaclass=MetaModel):
     """
     _table = None                   #: SQL table name used by model if :attr:`_auto`
     _table_query = None             #: SQL expression of the table's content (optional)
-    _sql_constraints: list[tuple[str, str, str]] = []   #: SQL constraints [(name, sql_def, message)]
+    _sql_constraints: list[tuple[str, str, str]] = ()   #: SQL constraints [(name, sql_def, message)]
+    _table_objects: dict[str, TableObject] = frozendict()  #: SQL/Table objects
 
     _rec_name = None                #: field to use for labeling records, default: ``name``
     _rec_names_search: list[str] | None = None    #: fields to consider in ``name_search``
@@ -630,10 +640,6 @@ class BaseModel(metaclass=MetaModel):
             _logger.warning("Model attribute '_constraints' is no longer supported, "
                             "please use @api.constrains on methods instead.")
 
-        # Keep links to non-inherited constraints in cls; this is useful for
-        # instance when exporting translations
-        cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
-
         # all models except 'base' implicitly inherit from 'base'
         name = cls._name
         parents = list(cls._inherit)
@@ -656,6 +662,7 @@ class BaseModel(metaclass=MetaModel):
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
                 '_fields': {},                          # populated in _setup_base()
+                '_table_objects': frozendict(),         # populated in _setup_base()
             })
             check_parent = cls._build_model_check_parent
 
@@ -726,7 +733,6 @@ class BaseModel(metaclass=MetaModel):
         cls._log_access = cls._auto
         inherits = {}
         depends = {}
-        cls._sql_constraints = {}
 
         for base in reversed(cls.__base_classes):
             if is_definition_class(base):
@@ -741,11 +747,6 @@ class BaseModel(metaclass=MetaModel):
 
             for mname, fnames in base._depends.items():
                 depends.setdefault(mname, []).extend(fnames)
-
-            for cons in base._sql_constraints:
-                cls._sql_constraints[cons[0]] = cons
-
-        cls._sql_constraints = list(cls._sql_constraints.values())
 
         # avoid assigning an empty dict to save memory
         if inherits:
@@ -764,10 +765,6 @@ class BaseModel(metaclass=MetaModel):
 
     @classmethod
     def _init_constraints_onchanges(cls):
-        # store list of sql constraint qualified names
-        for (key, _, _) in cls._sql_constraints:
-            cls.pool._sql_constraints.add(cls._table + '_' + key)
-
         # reset properties memoized on cls
         cls._constraint_methods = BaseModel._constraint_methods
         cls._ondelete_methods = BaseModel._ondelete_methods
@@ -1253,7 +1250,12 @@ class BaseModel(metaclass=MetaModel):
                     messages.append(dict(info, type='warning', message=str(e)))
                 except psycopg2.Error as e:
                     info = rec_data['info']
-                    messages.append(dict(info, type='error', **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
+                    pg_error_info = {'message': self._sql_error_to_message(e)}
+                    if e.diag.table_name == self._table:
+                        e_fields = get_columns_from_sql_diagnostics(self.env.cr, e.diag, check_registry=True)
+                        if len(e_fields) == 1:
+                            pg_error_info['field'] = e_fields[0]
+                    messages.append(dict(info, type='error', **pg_error_info))
                     # Failed to write, log to messages, rollback savepoint (to
                     # avoid broken transaction) and keep going
                     errors += 1
@@ -3348,37 +3350,83 @@ class BaseModel(metaclass=MetaModel):
             _logger.error('parent_path field on model %r should be indexed! Add index=True to the field definition.', self._name)
 
     def _add_sql_constraints(self):
-        """ Modify this model's database table constraints so they match the one
-        in _sql_constraints.
-
+        """ Modify this model's database table objects so they match the one
+        in _table_objects.
         """
-        cr = self._cr
-        foreign_key_re = re.compile(r'\s*foreign\s+key\b.*', re.I)
+        for obj in self._table_objects.values():
+            obj.apply_to_database(self)
 
-        for (key, definition, _message) in self._sql_constraints:
-            conname = '%s_%s' % (self._table, key)
-            if len(conname) > 63:
-                hashed_conname = sql.make_identifier(conname)
-                current_definition = sql.constraint_definition(cr, self._table, hashed_conname)
-                if not current_definition:
-                    _logger.info("Constraint name %r has more than 63 characters, internal PG identifier is %r", conname, hashed_conname)
-                conname = hashed_conname
-            else:
-                current_definition = sql.constraint_definition(cr, self._table, conname)
-            if current_definition == definition:
-                continue
+    @api.model
+    def _sql_error_to_message(self, exc: psycopg2.Error) -> str:
+        """ Convert a database exception to a user error message depending on the model.
 
-            if current_definition:
-                # constraint exists but its definition may have changed
-                sql.drop_constraint(cr, self._table, conname)
+        Note that the cursor on self has to be in a valid state.
+        """
+        if (constraint_name := exc.diag.constraint_name) and (cons := self._table_objects.get(constraint_name)):
+            cons_rec = self.env['ir.model.constraint'].search_fetch([
+                ('name', '=', constraint_name),
+                ('model.model', '=', self._name),
+            ], ['message'], limit=1)
+            if message := cons_rec.message:
+                return message
+            # get the message from the object
+            if message := cons.get_error_message(self, exc.diag):
+                return message
+        return self._sql_error_to_message_generic(exc)
 
-            if not definition:
-                # virtual constraint (e.g. implemented by a custom index)
-                self.pool.post_init(sql.check_index_exist, cr, conname)
-            elif foreign_key_re.match(definition):
-                self.pool.post_init(sql.add_constraint, cr, self._table, conname, definition)
-            else:
-                self.pool.post_constraint(sql.add_constraint, cr, self._table, conname, definition)
+    @api.model
+    def _sql_error_to_message_generic(self, exc: psycopg2.Error) -> str:
+        """ Convert a database exception to a generic user error message. """
+        diag = exc.diag
+        unknown = self.env._('Unknown')
+        model_string = self.env['ir.model']._get(self._name).name or self._description
+        info = {
+            'model_display': f"'{model_string}' ({self._name})",
+            'table_name': diag.table_name,
+            'constraint_name': diag.constraint_name,
+        }
+        if self._table == diag.table_name:
+            columns = get_columns_from_sql_diagnostics(self.env.cr, diag, check_registry=True)
+        else:
+            columns = get_columns_from_sql_diagnostics(self.env.cr, diag)
+            info['model_display'] = unknown
+        if not columns:
+            info['field_display'] = unknown
+        elif len(columns) == 1 and (field := self._fields.get(columns[0])):
+            field_string = field._description_string(self.env)
+            info['field_display'] = f"'{field_string}' ({field.name})"
+        else:
+            info['field_display'] = f"'{format_list(self.env, columns)}'"
+
+        if isinstance(exc, psycopg2.errors.NotNullViolation):
+            return self.env._(
+                "Missing required value for the field %(field_display)s.\n"
+                "Model: %(model_display)s\n"
+                "- create/update: a mandatory field is not set\n"
+                "- delete: another model requires the record being deleted, you can archive it instead\n",
+                **info,
+            )
+
+        if isinstance(exc, psycopg2.errors.ForeignKeyViolation):
+            if len(columns) != 1:
+                info['field_display'] = info['constraint_name']
+            return self.env._(
+                "Another model requires the record being deleted, if possible, archive it instead.\n\n"
+                "Model: %(model_display)s\n"
+                "Foreign key: %(field_display)s\n",
+                **info,
+            )
+
+        if isinstance(exc, psycopg2.errors.UniqueViolation) and columns:
+            column_names = [self._fields[f].string if f in self._fields else f for f in columns]
+            info['field_display'] = f"'{', '.join(columns)}' ({format_list(self.env, column_names)})"
+            info['detail'] = diag.message_detail  # contains conflicting key and value
+            return self.env._("The value for %(field_display)s already exists.\n\nDetail: %(detail)s\n", **info)
+
+        # No good message can be created for psycopg2.errors.CheckViolation
+
+        # fallback
+        return tools.exception_to_unicode(exc)
 
     #
     # Update objects that use this one to update their _inherits fields
@@ -3539,6 +3587,15 @@ class BaseModel(metaclass=MetaModel):
             cls._active_name = 'active'
         elif 'x_active' in cls._fields:
             cls._active_name = 'x_active'
+
+        # 7. determine table objects
+        assert not cls._table_object_definitions, "cls is a registry model"
+        cls._table_objects = frozendict({
+            cons.full_name(self): cons
+            for klass in reversed(cls._model_classes)
+            if isinstance(klass, MetaModel)
+            for cons in klass._table_object_definitions
+        })
 
     @api.model
     def _setup_fields(self):
@@ -7367,80 +7424,25 @@ def itemgetter_tuple(items):
     return operator.itemgetter(*items)
 
 
-def convert_pgerror_not_null(model, fields, info, e):
-    env = model.env
-    if e.diag.table_name != model._table:
-        return {'message': env._("Missing required value for the field '%(name)s' on a linked model [%(linked_model)s]", name=e.diag.column_name, linked_model=e.diag.table_name)}
-
-    field_name = e.diag.column_name
-    field = fields[field_name]
-    message = env._("Missing required value for the field '%(name)s' (%(technical_name)s)", name=field['string'], technical_name=field_name)
-    return {
-        'message': message,
-        'field': field_name,
-    }
-
-
-def convert_pgerror_unique(model, fields, info, e):
-    # new cursor since we're probably in an error handler in a blown
-    # transaction which may not have been rollbacked/cleaned yet
-    with closing(model.env.registry.cursor()) as cr_tmp:
-        cr_tmp.execute(SQL("""
-            SELECT
-                conname AS "constraint name",
-                t.relname AS "table name",
-                ARRAY(
-                    SELECT attname FROM pg_attribute
-                    WHERE attrelid = conrelid
-                      AND attnum = ANY(conkey)
-                ) as "columns"
-            FROM pg_constraint
-            JOIN pg_class t ON t.oid = conrelid
-            WHERE conname = %s
-        """, e.diag.constraint_name))
-        constraint, table, ufields = cr_tmp.fetchone() or (None, None, None)
-    # if the unique constraint is on an expression or on an other table
-    if not ufields or model._table != table:
-        return {'message': tools.exception_to_unicode(e)}
-
-    # TODO: add stuff from e.diag.message_hint? provides details about the constraint & duplication values but may be localized...
-    if len(ufields) == 1:
-        field_name = ufields[0]
-        field = fields[field_name]
-        message = model.env._(
-            "The value for the field '%(field)s' already exists (this is probably '%(other_field)s' in the current model).",
-            field=field_name,
-            other_field=field['string'],
-        )
-        return {
-            'message': message,
-            'field': field_name,
-        }
-    field_strings = [fields[fname]['string'] for fname in ufields]
-    message = model.env._(
-        "The values for the fields '%(fields)s' already exist (they are probably '%(other_fields)s' in the current model).",
-        fields=format_list(model.env, ufields),
-        other_fields=format_list(model.env, field_strings),
-    )
-    return {
-        'message': message,
-        # no field, unclear which one we should pick and they could be in any order
-    }
-
-
-def convert_pgerror_constraint(model, fields, info, e):
-    sql_constraints = dict([(('%s_%s') % (e.diag.table_name, x[0]), x) for x in model._sql_constraints])
-    if e.diag.constraint_name in sql_constraints.keys():
-        return {'message': "'%s'" % sql_constraints[e.diag.constraint_name][2]}
-    return {'message': tools.exception_to_unicode(e)}
-
-
-PGERROR_TO_OE = defaultdict(
-    # shape of mapped converters
-    lambda: (lambda model, fvg, info, pgerror: {'message': tools.exception_to_unicode(pgerror)}),
-    {
-        '23502': convert_pgerror_not_null,
-        '23505': convert_pgerror_unique,
-        '23514': convert_pgerror_constraint,
-    },
-)
+def get_columns_from_sql_diagnostics(cr, diagnostics, *, check_registry=False) -> list[str]:
+    """Given the diagnostics of an error, return the affected column names by the constraint.
+    Return an empty list if we cannot determine the columns.
+    """
+    if column := diagnostics.column_name:
+        return [column]
+    if not check_registry:
+        return []
+    cr.execute(SQL("""
+        SELECT
+            ARRAY(
+                SELECT attname FROM pg_attribute
+                WHERE attrelid = conrelid
+                AND attnum = ANY(conkey)
+            ) as "columns"
+        FROM pg_constraint
+        JOIN pg_class t ON t.oid = conrelid
+        WHERE conname = %s
+            AND t.relname = %s
+    """, diagnostics.constraint_name, diagnostics.table_name))
+    [columns] = cr.fetchone() or ([])
+    return columns

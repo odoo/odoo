@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from functools import partial
 from xmlrpc.client import Fault
 
@@ -26,13 +24,13 @@ class TestError(common.HttpCase):
 
         e = ctx.exception
         self.assertIn("The operation cannot be completed:", e.faultString)
-        self.assertIn("Create/update: a mandatory field is not set.", e.faultString)
+        self.assertIn("create/update: a mandatory field is not set", e.faultString)
         self.assertIn(
-            "Delete: another model requires the record being deleted. If possible, archive it instead.",
+            "delete: another model requires the record being deleted",
             e.faultString,
         )
-        self.assertIn("Model: Model B (test_rpc.model_b)", e.faultString)
-        self.assertIn("Field: Name (name)", e.faultString)
+        self.assertIn("Model: 'Model B' (test_rpc.model_b)", e.faultString)
+        self.assertIn("field 'Name' (name)", e.faultString)
 
     def test_02_delete(self):
         """ Delete: NOT NULL and ON DELETE RESTRICT constraints """
@@ -46,11 +44,11 @@ class TestError(common.HttpCase):
         e = ctx.exception
         self.assertIn("The operation cannot be completed:", e.faultString)
         self.assertIn(
-            "another model requires the record being deleted. If possible, archive it instead.",
+            "Another model requires the record being deleted, if possible, archive it instead",
             e.faultString,
         )
-        self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
-        self.assertIn("Constraint: test_rpc_model_a_field_b1_fkey", e.faultString)
+        self.assertIn("Model: 'Model A' (test_rpc.model_a)", e.faultString)
+        self.assertIn("Foreign key: 'required field'", e.faultString)
 
         # Unlink b2 => ON DELETE RESTRICT constraint raises
         with self.assertRaises(Fault) as ctx, mute_logger("odoo.sql_db"):
@@ -59,11 +57,11 @@ class TestError(common.HttpCase):
         e = ctx.exception
         self.assertIn("The operation cannot be completed:", e.faultString)
         self.assertIn(
-            " another model requires the record being deleted. If possible, archive it instead.",
+            "Another model requires the record being deleted, if possible, archive it instead",
             e.faultString,
         )
-        self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
-        self.assertIn("Constraint: test_rpc_model_a_field_b2_fkey", e.faultString)
+        self.assertIn("Model: 'Model A' (test_rpc.model_a)", e.faultString)
+        self.assertIn("Foreign key: 'restricted field'", e.faultString)
 
     def test_03_sql_constraint(self):
         with mute_logger("odoo.sql_db"):
