@@ -11,7 +11,7 @@
             t-att-class="{ o_disabled: state.disabled, 'w-100 mx-0': props.listIsGrouped }"
             t-ref="root"
         >
-            <t t-component="props.Renderer" class="'o_form_view o_xxs_form_view p-0'" record="model.root" Compiler="props.Compiler" archInfo="props.archInfo"/>
+            <t t-component="props.Renderer" class="'o_form_view o_xxs_form_view o_kanban_quick_create_form p-0'" record="model.root" Compiler="props.Compiler" archInfo="props.archInfo"/>
             <div class="d-flex flex-wrap justify-content-end gap-1">
                 <button class="btn btn-primary o_kanban_add me-1" t-on-click="() => this.validate('add')">
                     Add
