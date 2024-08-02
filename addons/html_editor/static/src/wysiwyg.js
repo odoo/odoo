@@ -1,4 +1,5 @@
-import { Component, onMounted, onWillDestroy, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillStart, useRef, useState } from "@odoo/owl";
+import { ensureJQuery } from "@web/core/ensure_jquery";
 import { Editor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
 
@@ -56,6 +57,7 @@ export class Wysiwyg extends Component {
         this.editor = new Editor(config, this.env.services);
         this.props.onLoad(this.editor);
 
+        onWillStart(ensureJQuery);
         onMounted(() => {
             // now that component is mounted, editor is attached to el, and
             // plugins are started, so we can allow the toolbar to be displayed

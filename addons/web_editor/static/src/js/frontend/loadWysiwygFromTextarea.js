@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { loadBundle } from "@web/core/assets";
+import { ensureJQuery } from "@web/core/ensure_jquery";
 import { attachComponent } from '@web/legacy/utils';
 
 export async function loadWysiwygFromTextarea(parent, textarea, options) {
@@ -15,6 +16,7 @@ export async function loadWysiwygFromTextarea(parent, textarea, options) {
         currentOptions.value = '<p><br></p>';
     }
 
+    await ensureJQuery();
     await loadBundle("web_editor.assets_wysiwyg");
     const { Wysiwyg } = await odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
     let wysiwyg;

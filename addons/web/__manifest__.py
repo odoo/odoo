@@ -65,7 +65,6 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/polyfills/clipboard.js',
 
-            'web/static/lib/jquery/jquery.js',
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',
@@ -94,7 +93,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/js/dist/tab.js',
             'web/static/lib/bootstrap/js/dist/toast.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
-            'web/static/src/legacy/js/libs/jquery.js',
 
             'base/static/src/css/modules.css',
 
@@ -402,6 +400,10 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_primary_variables'),
             ('include', 'web._assets_secondary_variables'),
         ],
+        'web._assets_jquery': [
+            'web/static/lib/jquery/jquery.js',
+            'web/static/src/legacy/js/libs/jquery.js',
+        ],
         'web._assets_bootstrap': [
             'web/static/src/scss/import_bootstrap.scss',
             'web/static/src/scss/utilities_custom.scss',
@@ -448,6 +450,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
 
+            'web/static/lib/jquery/jquery.js',
+
             'web/static/lib/hoot/**/*',
             'web/static/lib/hoot-dom/**/*',
             ('remove', 'web/static/lib/hoot/ui/hoot_style.css'),
@@ -483,6 +487,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/legacy/legacy_tests/helpers/**/*',
             ('remove', 'web/static/tests/legacy/legacy_tests/helpers/test_utils_tests.js'),
+
+            'web/static/lib/jquery/jquery.js',
 
             'web/static/lib/fullcalendar/core/index.global.js',
             'web/static/lib/fullcalendar/interaction/index.global.js',

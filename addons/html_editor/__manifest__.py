@@ -23,6 +23,11 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/**/*',
             ('include', 'html_editor.assets_media_dialog'),
             'html_editor/static/lib/DOMpurify.js',
+        ],
+        'web._assets_jquery': [
+            'html_editor/static/lib/jQuery.transfo.js',
+        ],
+        'web.assets_unit_tests_setup': [
             'html_editor/static/lib/jQuery.transfo.js',
         ],
         'html_editor.assets_media_dialog': [
