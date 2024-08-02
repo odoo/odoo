@@ -381,7 +381,7 @@ export class SaleOrderManagementScreen extends Component {
         Object.keys(grouped).forEach((key) => {
             const group = grouped[key];
             const tab = group.map((line) => ({
-                product_name: line.product_id[1],
+                product_name: line.name,
                 product_uom_qty: line.product_uom_qty,
                 price_unit: line.price_unit,
                 total: line.price_total,
