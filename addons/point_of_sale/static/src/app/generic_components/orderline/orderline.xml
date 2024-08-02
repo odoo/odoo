@@ -21,7 +21,7 @@
                 </div>
                 <ul class="info-list small d-flex flex-column small">
                     <li class="price-per-unit">
-                        <span class="px-1 border rounded text-bg-view fw-bolder me-1">x<t t-esc="line.qty"/></span>
+                        <span class="qty px-1 border rounded text-bg-view fw-bolder me-1">x<t t-esc="line.qty"/></span>
                         <t t-if="line.price !== 0">
                             <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" />
                             <t t-esc="line.unitPrice" />

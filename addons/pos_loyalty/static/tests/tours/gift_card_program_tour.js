@@ -22,6 +22,7 @@ registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour2", {
     steps: () =>
         [
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickControlButtonMore(),
             PosLoyalty.enterCode("044123456"),
             PosLoyalty.orderTotalIs("0.00"),
             PosLoyalty.finalizeOrder("Cash", "0"),
@@ -41,11 +42,13 @@ registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", {
             PosLoyalty.finalizeOrder("Cash", "5"),
             // Partially use the gift card. (4$)
             ProductScreen.addOrderline("Desk Pad", "2", "2", "4.0"),
+            ProductScreen.clickControlButtonMore(),
             PosLoyalty.enterCode("043123456"),
             PosLoyalty.orderTotalIs("0.00"),
             PosLoyalty.finalizeOrder("Cash", "0"),
             // Use the remaining of the gift card. (5$ - 4$ = 1$)
             ProductScreen.addOrderline("Whiteboard Pen", "6", "6", "36.0"),
+            ProductScreen.clickControlButtonMore(),
             PosLoyalty.enterCode("043123456"),
             PosLoyalty.orderTotalIs("35.00"),
             PosLoyalty.finalizeOrder("Cash", "35"),
@@ -84,6 +87,7 @@ registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
             Dialog.confirm("Open session"),
             // Use gift card
             ProductScreen.addOrderline("Magnetic Board", "1", "1.98", "1.98"),
+            ProductScreen.clickControlButtonMore(),
             PosLoyalty.enterCode("043123456"),
             Dialog.confirm(),
             ProductScreen.clickOrderline("Gift Card"),
@@ -110,6 +114,7 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA"),
             ProductScreen.addOrderline("product_a", "1"),
+            ProductScreen.clickControlButtonMore(),
             PosLoyalty.enterCode("044123456"),
             PosLoyalty.orderTotalIs("50.00"),
             PosLoyalty.pointsAwardedAre("100"),

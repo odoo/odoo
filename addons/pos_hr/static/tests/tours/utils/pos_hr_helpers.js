@@ -15,7 +15,7 @@ export function clickCashierName() {
     return [
         {
             content: "click cashier name",
-            trigger: ".oe_status .cashier-name",
+            trigger: ".cashier-name",
             run: "click",
         },
     ];
@@ -56,7 +56,7 @@ export function login(name, pin) {
 export function clickLockButton() {
     return {
         content: "Click on the menu button",
-        trigger: ".pos-rightheader button.fa-lock",
+        trigger: ".pos-rightheader i.fa-unlock",
         run: "click",
     };
 }

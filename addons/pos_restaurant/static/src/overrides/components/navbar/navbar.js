@@ -13,6 +13,9 @@ import {
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 
 patch(Navbar.prototype, {
+    showBackButton() {
+        return !this.pos.config.module_pos_restaurant && super.showBackButton();
+    },
     onClickPlanButton() {
         if (this.pos.config.module_pos_restaurant) {
             this.pos.showScreen("FloorScreen", { floor: this.floor });

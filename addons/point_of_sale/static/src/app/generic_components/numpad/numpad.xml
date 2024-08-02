@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
   <t t-name="point_of_sale.Numpad">
-    <div t-attf-class="d-grid numpad-{{buttons.length / 4}}-cols m-n1 {{props.class}}">
+    <div t-attf-class="d-grid numpad numpad-{{buttons.length / 4}}-cols m-n1 {{props.class}}">
       <button t-foreach="buttons.map((b) => typeof b === 'object' ? b : { value: b })" t-as="button" t-key="button.value"
         t-attf-class="numpad-button btn btn-light btn-lg fs-3 lh-lg m-1 {{ button.class  or '' }}"
         t-att-value="button.text or button.value"

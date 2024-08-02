@@ -4,6 +4,9 @@
     <t t-name="point_of_sale.Navbar">
         <div class="pos-topheader d-flex align-items-center justify-content-between px-2 py-1 m-0 bg-white border-bottom">
             <div class="pos-leftheader d-flex">
+                <button t-if="showBackButton()" class="back-button btn btn-light btn-lg lh-lg" t-on-click="onClickBackButton">
+                  <i class="oi oi-chevron-left fa-fw" role="img" aria-label="Go Back" title="Go Back" />
+                </button>
                 <t t-if="showTabs()">
                     <div t-attf-class=" d-flex overflow-x-auto {{ ui.isSmall ? 'flex-shrink-0' : 'flex-shrink-1'}}">
                         <ListContainer items="getFloatingOrders()" t-slot-scope="scope">

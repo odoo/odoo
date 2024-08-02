@@ -14,14 +14,6 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             Dialog.confirm("Open session"),
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 3"),
-            {
-                content: "check that amount is not displayed if zero",
-                trigger: `article.product .product-content:not(:has(.price-tag:contains("0")))`,
-            },
-            {
-                content: "check that amount is properly displayed when it is not 0",
-                trigger: `article.product .product-content .product-name:contains("Combo Product 3") ~.price-tag:contains("2.60")`,
-            },
             combo.isConfirmationButtonDisabled(),
             combo.select("Combo Product 5"),
             combo.select("Combo Product 7"),

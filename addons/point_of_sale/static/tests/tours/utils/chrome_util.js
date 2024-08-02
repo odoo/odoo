@@ -7,7 +7,7 @@ export function confirmPopup() {
 export function clickMenuButton() {
     return {
         content: "Click on the menu button",
-        trigger: ".pos-rightheader button.fa-bars",
+        trigger: ".pos-rightheader button:has(.fa-bars)",
         run: "click",
     };
 }

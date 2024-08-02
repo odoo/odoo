@@ -30,8 +30,15 @@ export function clickPaymentMethod(name, isCheckNeeded = false, options = {}) {
 
     const step = [
         {
+            isActive: ["desktop"],
             content: `click '${name}' payment method`,
-            trigger: `.paymentmethods .button.paymentmethod:contains("${name}")`,
+            trigger: `.paymentmethods .button.paymentmethod .payment-name:contains("${name}")`,
+            run: "click",
+        },
+        {
+            isActive: ["mobile"],
+            content: `click '${name}' payment method`,
+            trigger: `.paymentmethods .button.paymentmethod .payment-name:contains("${name}"):not(:visible)`,
             run: "click",
         },
     ];
@@ -137,7 +144,7 @@ export function clickBack() {
 export function clickTipButton() {
     return [
         {
-            trigger: ".payment-screen .button.js_tip",
+            trigger: ".payment-screen .button:contains('Tip')",
             run: "click",
         },
     ];

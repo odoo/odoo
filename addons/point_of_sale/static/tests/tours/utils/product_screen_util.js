@@ -185,8 +185,8 @@ export function clickControlButtonMore() {
         },
         {
             isActive: ["desktop"],
-            content: "click more button",
-            trigger: controlButtonTrigger("More..."),
+            content: "click Actions button",
+            trigger: controlButtonTrigger("Actions"),
             run: "click",
         },
     ];
@@ -265,12 +265,7 @@ export function enterOpeningAmount(amount) {
 export function clickFiscalPosition(name, checkIsNeeded = false) {
     const step = [
         clickReview(),
-        {
-            isActive: ["mobile"],
-            content: "click more button",
-            trigger: ".mobile-more-button",
-            run: "click",
-        },
+        ...clickControlButtonMore(),
         {
             content: "click fiscal position button",
             trigger: ".o_fiscal_position_button",
@@ -285,15 +280,10 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
 
     if (checkIsNeeded) {
         step.push(
-            {
-                isActive: ["mobile"],
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                run: "click",
-            },
+            ...clickControlButtonMore(),
             {
                 content: "the fiscal position " + name + " has been set to the order",
-                trigger: `.control-buttons button.o_fiscal_position_button:contains("${name}")`,
+                trigger: `.o_fiscal_position_button:contains("${name}")`,
             },
             {
                 content: "cancel dialog",
@@ -466,12 +456,7 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
 export function addCustomerNote(note) {
     return inLeftSide(
         [
-            {
-                isActive: ["mobile"],
-                content: "click more button",
-                trigger: ".mobile-more-button",
-                run: "click",
-            },
+            clickControlButtonMore(),
             clickControlButton("Customer Note"),
             TextInputPopup.inputText(note),
             Dialog.confirm(),

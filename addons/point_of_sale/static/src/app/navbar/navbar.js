@@ -14,6 +14,9 @@ import { Component, onMounted, useState } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_scanner";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -96,6 +99,29 @@ export class Navbar extends Component {
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
         this.dialog.add(CashMovePopup);
+    }
+
+    showBackButton() {
+        const screenWoBackBtnMobile = [ProductScreen, ReceiptScreen];
+        return (
+            (this.pos.ui.isSmall && !screenWoBackBtnMobile.includes(this.pos.mainScreen.component)) ||
+            (this.pos.mobile_pane === "left" && this.pos.mainScreen.component === ProductScreen)
+        );
+    }
+    async onClickBackButton() {
+        if (this.pos.mainScreen.component === TicketScreen) {
+            if (this.pos.ticket_screen_mobile_pane == "left") {
+                this.pos.closeScreen();
+            } else {
+                this.pos.ticket_screen_mobile_pane = "left";
+            }
+        } else if (
+            this.pos.mobile_pane == "left" ||
+            this.pos.mainScreen.component === PaymentScreen
+        ) {
+            this.pos.mobile_pane = "right";
+            this.pos.showScreen("ProductScreen");
+        }
     }
 
     get orderCount() {

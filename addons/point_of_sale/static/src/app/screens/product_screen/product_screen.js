@@ -121,7 +121,7 @@ export class ProductScreen extends Component {
 
         return getButtons(DEFAULT_LAST_ROW, [
             { value: "quantity", text: _t("Qty") },
-            { value: "discount", text: _t("% "), disabled: !this.pos.config.manual_discount },
+            { value: "discount", text: _t("%"), disabled: !this.pos.config.manual_discount },
             {
                 value: "price",
                 text: _t("Price"),
