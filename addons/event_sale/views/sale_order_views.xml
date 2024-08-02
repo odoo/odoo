@@ -40,7 +40,6 @@
                         ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),
                         '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
-                    invisible="service_tracking != 'event'"
                     required="service_tracking == 'event'"
                     options="{'no_open': True, 'no_create': True}"/>
                 <field name="event_ticket_id"
@@ -49,7 +48,6 @@
                         ('event_id', '=', event_id), ('product_id','=',product_id),
                          '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
-                    invisible="service_tracking != 'event' or not event_id"
                     required="service_tracking == 'event' and event_id"
                     options="{'no_open': True, 'no_create': True}"/>
             </xpath>
