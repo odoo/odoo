@@ -145,14 +145,10 @@ class Users(models.Model):
                 )
         if 'notification_type' in vals:
             for user in user_notification_type_modified:
-                self.env["bus.bus"]._sendone(
+                user._bus_send_store(
                     user.partner_id,
-                    "mail.record/insert",
-                    Store(
-                        user.partner_id,
-                        fields=["notification_type"],
-                        main_user_by_partner={user.partner_id: user},
-                    ).get_result(),
+                    fields=["notification_type"],
+                    main_user_by_partner={user.partner_id: user},
                 )
 
         return write_res

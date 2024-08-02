@@ -26,11 +26,11 @@ class MailMessage(models.Model):
                     message, {"parentMessage": Store.one(message.parent_id, format_reply=False)}
                 )
 
-    def _bus_notification_target(self):
+    def _bus_channel(self):
         self.ensure_one()
         if self.model == "discuss.channel" and self.res_id:
-            return self.env["discuss.channel"].browse(self.res_id)
+            return self.env["discuss.channel"].browse(self.res_id)._bus_channel()
         guest = self.env["mail.guest"]._get_guest_from_context()
         if self.env.user._is_public() and guest:
-            return guest
-        return super()._bus_notification_target()
+            return guest._bus_channel()
+        return super()._bus_channel()

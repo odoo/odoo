@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from markupsafe import Markup
 
 from odoo import models, _
 from odoo.tools import html2plaintext
@@ -9,14 +10,22 @@ class DiscussChannel(models.Model):
     _inherit = 'discuss.channel'
 
     def execute_command_lead(self, **kwargs):
-        partner = self.env.user.partner_id
         key = kwargs['body']
-        if key.strip() == '/lead':
-            msg = _('Create a new lead (/lead lead title)')
+        lead_command = "/lead"
+        if key.strip() == lead_command:
+            msg = _(
+                "Create a new lead: "
+                "%(pre_start)s%(lead_command)s %(i_start)slead title%(i_end)s%(pre_end)s",
+                lead_command=lead_command,
+                pre_start=Markup("<pre>"),
+                pre_end=Markup("</pre>"),
+                i_start=Markup("<i>"),
+                i_end=Markup("</i>"),
+            )
         else:
-            lead = self._convert_visitor_to_lead(partner, key)
-            msg = _('Created a new lead: %s', lead._get_html_link())
-        self._send_transient_message(partner, msg)
+            lead = self._convert_visitor_to_lead(self.env.user.partner_id, key)
+            msg = _("Created a new lead: %s", lead._get_html_link())
+        self.env.user._bus_send_transient_message(self, msg)
 
     def _convert_visitor_to_lead(self, partner, key):
         """ Create a lead from channel /lead command

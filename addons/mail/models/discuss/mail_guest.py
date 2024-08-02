@@ -5,7 +5,6 @@ import uuid
 from datetime import datetime, timedelta
 from functools import wraps
 
-import odoo
 from odoo.tools import consteq
 from odoo import _, api, fields, models
 from odoo.http import request
@@ -44,7 +43,7 @@ def add_guest_to_context(func):
 class MailGuest(models.Model):
     _name = 'mail.guest'
     _description = "Guest"
-    _inherit = ['avatar.mixin']
+    _inherit = ["avatar.mixin", "bus.listener.mixin"]
     _avatar_name_field = "name"
     _cookie_name = 'dgid'
     _cookie_separator = '|'
@@ -108,11 +107,8 @@ class MailGuest(models.Model):
             raise UserError(_("Guest's name is too long."))
         self.name = name
         store = Store(self, fields=["name", "write_date"])
-        bus_notifs = []
-        for channel in self.channel_ids:
-            bus_notifs.append((channel, "mail.record/insert", store.get_result()))
-        bus_notifs.append((self, "mail.record/insert", store.get_result()))
-        self.env["bus.bus"]._sendmany(bus_notifs)
+        self.channel_ids._bus_send_store(store)
+        self._bus_send_store(store)
 
     def _update_timezone(self, timezone):
         query = """

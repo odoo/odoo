@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # core models (required for mixins)
@@ -7,6 +6,7 @@ from . import mail_alias_domain
 from . import models
 
 # mixin
+from . import bus_listener_mixin
 from . import mail_activity_mixin
 from . import mail_alias_mixin_optional
 from . import mail_alias_mixin

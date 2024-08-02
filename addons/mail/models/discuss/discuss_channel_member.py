@@ -3,8 +3,8 @@
 import logging
 import requests
 import uuid
+from markupsafe import Markup
 
-import odoo
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -17,6 +17,7 @@ SFU_MODE_THRESHOLD = 3
 
 class ChannelMember(models.Model):
     _name = "discuss.channel.member"
+    _inherit = ["bus.listener.mixin"]
     _description = "Channel Member"
     _rec_names_search = ["channel_id", "partner_id", "guest_id"]
     _bypass_create_check = {}
@@ -185,45 +186,26 @@ class ChannelMember(models.Model):
         self.sudo().rtc_session_ids.unlink()  # ensure unlink overrides are applied
         return super().unlink()
 
+    def _bus_channel(self):
+        return (self.partner_id or self.guest_id)._bus_channel()
+
     def _notify_typing(self, is_typing):
         """ Broadcast the typing notification to channel members
             :param is_typing: (boolean) tells whether the members are typing or not
         """
-        notifications = []
         for member in self:
-            notifications.append(
-                [
-                    member.channel_id,
-                    "mail.record/insert",
-                    Store(member).add(member, {"isTyping": is_typing}).get_result(),
-                ]
-            )
-        self.env['bus.bus']._sendmany(notifications)
+            member.channel_id._bus_send_store(Store(member).add(member, {"isTyping": is_typing}))
 
     def _notify_mute(self):
-        notifications = []
         for member in self:
-            notifications.append(
-                (
-                    member.partner_id,
-                    "mail.record/insert",
-                    Store(member.channel_id, {"mute_until_dt": member.mute_until_dt}).get_result(),
-                )
-            )
+            member._bus_send_store(member.channel_id, {"mute_until_dt": member.mute_until_dt})
             if member.mute_until_dt and member.mute_until_dt != -1:
                 self.env.ref("mail.ir_cron_discuss_channel_member_unmute")._trigger(member.mute_until_dt)
-        self.env["bus.bus"]._sendmany(notifications)
 
     def set_custom_notifications(self, custom_notifications):
         self.ensure_one()
         self.custom_notifications = custom_notifications
-        self.env["bus.bus"]._sendone(
-            self.partner_id,
-            "mail.record/insert",
-            Store(
-                self.channel_id, {"custom_notifications": self.custom_notifications}
-            ).get_result(),
-        )
+        self._bus_send_store(self.channel_id, {"custom_notifications": self.custom_notifications})
 
     @api.model
     def _cleanup_expired_mutes(self):
@@ -293,12 +275,15 @@ class ChannelMember(models.Model):
         if self.fold_state == state:
             return
         self.fold_state = state
-        self.env['bus.bus']._sendone(self.partner_id or self.guest_id, 'discuss.Thread/fold_state', {
-            'foldStateCount': state_count,
-            'id': self.channel_id.id,
-            'model': 'discuss.channel',
-            'fold_state': self.fold_state,
-        })
+        self._bus_send(
+            "discuss.Thread/fold_state",
+            {
+                "fold_state": self.fold_state,
+                "foldStateCount": state_count,
+                "id": self.channel_id.id,
+                "model": "discuss.channel",
+            },
+        )
     # --------------------------------------------------------------------------
     # RTC (voice/video)
     # --------------------------------------------------------------------------
@@ -364,15 +349,11 @@ class ChannelMember(models.Model):
         response_dict = response.json()
         self.channel_id.sfu_channel_uuid = response_dict["uuid"]
         self.channel_id.sfu_server_url = response_dict["url"]
-        notifications = [
-            [
-                session.guest_id or session.partner_id,
+        for session in self.channel_id.rtc_session_ids:
+            session._bus_send(
                 "discuss.channel.rtc.session/sfu_hot_swap",
                 {"serverInfo": self._get_rtc_server_info(session, ice_servers, key=sfu_local_key)},
-            ]
-            for session in self.channel_id.rtc_session_ids
-        ]
-        self.env["bus.bus"]._sendmany(notifications)
+            )
 
     def _get_rtc_server_info(self, rtc_session, ice_servers=None, key=None):
         sfu_channel_uuid = self.channel_id.sfu_channel_uuid
@@ -423,37 +404,20 @@ class ChannelMember(models.Model):
         ]
         if member_ids:
             channel_member_domain = expression.AND([channel_member_domain, [('id', 'in', member_ids)]])
-        invitation_notifications = []
         members = self.env['discuss.channel.member'].search(channel_member_domain)
         for member in members:
             member.rtc_inviting_session_id = self.rtc_session_ids.id
-            if member.partner_id:
-                target = member.partner_id
-            else:
-                target = member.guest_id
-            invitation_notifications.append(
-                (
-                    target,
-                    "mail.record/insert",
-                    Store(
-                        self.channel_id,
-                        {"rtcInvitingSession": Store.one(member.rtc_inviting_session_id)},
-                    ).get_result(),
-                )
+            member._bus_send_store(
+                self.channel_id, {"rtcInvitingSession": Store.one(member.rtc_inviting_session_id)}
             )
-        self.env['bus.bus']._sendmany(invitation_notifications)
         if members:
-            self.env["bus.bus"]._sendone(
+            self.channel_id._bus_send_store(
                 self.channel_id,
-                "mail.record/insert",
-                Store(
-                    self.channel_id,
-                    {
-                        "invitedMembers": Store.many(
-                            members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
-                        ),
-                    },
-                ).get_result(),
+                {
+                    "invitedMembers": Store.many(
+                        members, "ADD", fields={"channel": [], "persona": ["name", "im_status"]}
+                    ),
+                },
             )
         return members
 
@@ -494,15 +458,11 @@ class ChannelMember(models.Model):
         self.last_seen_dt = fields.Datetime.now()
         if not notify:
             return
-        target = self.partner_id or self.guest_id
+        target = self
         if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
             target = self.channel_id
-        self.env["bus.bus"]._sendone(
-            target,
-            "mail.record/insert",
-            Store(
-                self, fields={"channel": [], "persona": ["name"], "seen_message_id": True}
-            ).get_result(),
+        target._bus_send_store(
+            self, fields={"channel": [], "persona": ["name"], "seen_message_id": True}
         )
 
     def _set_new_message_separator(self, message_id, sync=False):
@@ -517,10 +477,7 @@ class ChannelMember(models.Model):
         if message_id == self.new_message_separator:
             return
         self.new_message_separator = message_id
-        target = self.partner_id or self.guest_id
-        self.env["bus.bus"]._sendone(
-            target,
-            "mail.record/insert",
+        self._bus_send_store(
             Store(
                 self,
                 fields={
@@ -529,7 +486,12 @@ class ChannelMember(models.Model):
                     "new_message_separator": True,
                     "persona": ["name"],
                 },
-            )
-            .add(self, {"syncUnread": sync})
-            .get_result(),
+            ).add(self, {"syncUnread": sync})
         )
+
+    def _get_html_link(self, *args, for_persona=False, **kwargs):
+        if not for_persona:
+            return self._get_html_link(*args, **kwargs)
+        if self.partner_id:
+            return self.partner_id._get_html_link(title=f"@{self.partner_id.name}")
+        return Markup("<strong>%s</strong>") % self.guest_id.name

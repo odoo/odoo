@@ -96,12 +96,15 @@ class ImBus(models.Model):
         return self.sudo().search(domain).unlink()
 
     @api.model
-    def _sendmany(self, notifications):
-        for notification in notifications:
-            self._sendone(*notification)
-
-    @api.model
     def _sendone(self, target, notification_type, message):
+        """Low-level method to send ``notification_type`` and ``message`` to ``target``.
+
+        Using ``_bus_send()`` from ``bus.listener.mixin`` is recommended for simplicity and
+        security.
+
+        When using ``_sendone`` directly, ``target`` (if str) should not be guessable by an
+        attacker.
+        """
         self._ensure_hooks()
         channel = channel_with_db(self.env.cr.dbname, target)
         self.env.cr.precommit.data["bus.bus.values"].append(
