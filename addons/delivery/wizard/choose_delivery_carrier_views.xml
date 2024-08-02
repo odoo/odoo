@@ -38,7 +38,21 @@
                 </div>
                 <footer>
                     <button name="button_confirm" invisible="not context.get('carrier_recompute')" type="object" string="Update" class="btn-primary" data-hotkey="q"/>
-                    <button name="button_confirm" invisible="context.get('carrier_recompute')" type="object" string="Add" class="btn-primary" data-hotkey="q"/>
+                    <button
+                        name="button_confirm"
+                        type="object"
+                        invisible="context.get('carrier_recompute') or not delivery_type in ('fixed', 'base_on_rule') and not display_price"
+                        string="Add"
+                        class="btn-primary"
+                        data-hotkey="q"/>
+                    <button
+                        name="button_confirm"
+                        type="object"
+                        invisible="context.get('carrier_recompute') or display_price or delivery_type in ('fixed', 'base_on_rule')"
+                        confirm="Are you sure you want the delivery to be free for this order? You might have forgotten to compute the rates."
+                        string="Add"
+                        class="btn-primary"
+                        data-hotkey="q"/>
                     <button string="Discard" special="cancel" data-hotkey="x" class="btn-secondary"/>
                 </footer>
             </form>
