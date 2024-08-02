@@ -117,6 +117,17 @@ class PosOrder(models.Model):
         pos_order._link_combo_items(combo_child_uuids_by_parent_uuid)
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
+<<<<<<< saas-17.4
+||||||| 69de944b95a9790548b239f3bf05ba48eda2efef
+
+        if pos_session._is_capture_system_activated():
+            pos_session._remove_capture_content(order)
+
+=======
+
+        pos_session._remove_capture_content(order)
+
+>>>>>>> 162d44235d39ec4a05ee67356564758a576fd55b
         return pos_order._process_saved_order(draft)
 
     def _prepare_combo_line_uuids(self, order_vals):
@@ -946,6 +957,7 @@ class PosOrder(models.Model):
                 if all(not self._is_the_same_order(order, existing_order) for existing_order in existing_orders):
                     order_ids.append(self._process_order(order, False))
 
+<<<<<<< saas-17.4
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)
         config_id = pos_order_ids[0].config_id.id if pos_order_ids else False
@@ -956,6 +968,48 @@ class PosOrder(models.Model):
             'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(pos_order_ids.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
+||||||| 69de944b95a9790548b239f3bf05ba48eda2efef
+            if not existing_draft_order:
+                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order_name), ('state', '=', 'draft')], limit=1)
+
+            try:
+                if existing_draft_order:
+                    order_ids.append(self._process_order(order, draft, existing_draft_order))
+                else:
+                    existing_orders = self.env['pos.order'].search([('pos_reference', '=', order_name)])
+                    if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
+                        order_ids.append(self._process_order(order, draft, False))
+            except Exception as e:
+                _logger.exception("An error occurred when processing the PoS order %s", order_name)
+                pos_session = self.env['pos.session'].browse(order['data']['pos_session_id'])
+                pos_session._handle_order_process_fail(order, e, draft)
+                raise
+        res = self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+        _logger.info("Finish PoS synchronisation #%d with result: %s", sync_token, res)
+        return res
+=======
+            if not existing_draft_order:
+                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order_name), ('state', '=', 'draft')], limit=1)
+
+            try:
+                if existing_draft_order:
+                    order_ids.append(self._process_order(order, draft, existing_draft_order))
+                else:
+                    existing_orders = self.env['pos.order'].search([('pos_reference', '=', order_name)])
+                    if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
+                        order_ids.append(self._process_order(order, draft, False))
+                    else:
+                        _logger.info("PoS order %s already exists and is the same as the one sent by the PoS", order_name)
+                        self.env['pos.session']._remove_capture_content(order['data'])
+            except Exception as e:
+                _logger.exception("An error occurred when processing the PoS order %s", order_name)
+                pos_session = self.env['pos.session'].browse(order['data']['pos_session_id'])
+                pos_session._handle_order_process_fail(order, e, draft)
+                raise
+        res = self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+        _logger.info("Finish PoS synchronisation #%d with result: %s", sync_token, res)
+        return res
+>>>>>>> 162d44235d39ec4a05ee67356564758a576fd55b
 
     def _is_the_same_order(self, data, existing_order):
         received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['payment_ids']]
