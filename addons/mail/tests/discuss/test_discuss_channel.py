@@ -59,6 +59,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             member = self.env["discuss.channel.member"].search([], order="id desc", limit=1)
             return (
                 [
+                    (self.cr.dbname, "res.partner", self.test_partner.id),
                     (self.cr.dbname, "discuss.channel", channel.id),
                     (self.cr.dbname, "discuss.channel", channel.id, "members"),
                     (self.cr.dbname, "discuss.channel", channel.id),
@@ -88,7 +89,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                             "id": self.env.user.partner_id.id,
                                             "type": "partner",
                                         },
-                                        "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">Test Partner</a> to the channel</div>',
+                                        "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
                                         "create_date": fields.Datetime.to_string(
                                             message.create_date
                                         ),
@@ -789,8 +790,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "<br>Type <b>/command</b> to execute a command."
                             "</span>",
                         "thread": {
-                            "model": "discuss.channel",
                             "id": channel.id,
+                            "model": "discuss.channel",
                         },
                     },
                 },
@@ -821,14 +822,16 @@ class TestChannelInternals(MailCommon, HttpCase):
                     "payload": {
                         "body":
                             "<span class='o_mail_notification'>"
-                            "You are in a private conversation with <b>@Mario</b> and <b>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</b>."
+                            "You are in a private conversation with "
+                            f"<a href=# data-oe-model='res.partner' data-oe-id='{test_user.partner_id.id}'>@Mario</a> "
+                            f"and <a href=# data-oe-model='res.partner' data-oe-id='{self.partner_employee_nomail.id}'>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</a>."
                             "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
                             "<br>Type <b>#channel</b> to mention a channel."
                             "<br>Type <b>/command</b> to execute a command."
                             "</span>",
                         "thread": {
-                            "model": "discuss.channel",
                             "id": test_group.id,
+                            "model": "discuss.channel",
                         },
                     },
                 },

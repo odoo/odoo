@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
@@ -3160,7 +3159,6 @@ class MailThread(models.AbstractModel):
         :param dict msg_vals: values dict used to create the message, allows to
           skip message usage and spare some queries;
         """
-        bus_notifications = []
         inbox_pids_uids = [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
         if inbox_pids_uids:
             notif_create_values = [
@@ -3185,20 +3183,14 @@ class MailThread(models.AbstractModel):
                 ]
             )
             for user in users:
-                bus_notifications.append(
-                    (
-                        user.partner_id,
-                        "mail.message/inbox",
-                        Store(
-                            message.with_user(user),
-                            msg_vals=msg_vals,
-                            for_current_user=True,
-                            add_followers=True,
-                            followers=followers,
-                        ).get_result(),
-                    )
+                user._bus_send_store(
+                    message.with_user(user),
+                    msg_vals=msg_vals,
+                    for_current_user=True,
+                    add_followers=True,
+                    followers=followers,
+                    notification_type="mail.message/inbox",
                 )
-        self.env["bus.bus"].sudo()._sendmany(bus_notifications)
 
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
@@ -4533,11 +4525,7 @@ class MailThread(models.AbstractModel):
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             res["translationValue"] = False
-        self.env["bus.bus"]._sendone(
-            message._bus_notification_target(),
-            "mail.record/insert",
-            Store(message, res).get_result(),
-        )
+        message._bus_send_store(message, res)
 
     # ------------------------------------------------------
     # CONTROLLERS

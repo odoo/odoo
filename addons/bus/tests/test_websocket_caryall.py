@@ -9,10 +9,6 @@ from freezegun import freeze_time
 from threading import Event
 from unittest.mock import patch
 from weakref import WeakSet
-try:
-    from websocket._exceptions import WebSocketBadStatusException
-except ImportError:
-    pass
 
 from odoo import http
 from odoo.api import Environment
@@ -225,10 +221,8 @@ class TestWebsocketCaryall(WebsocketCase):
         websocket = self.websocket_connect()
         with patch.object(IrWebsocket, "_build_bus_channel_list", return_value=[channel]):
             self.subscribe(websocket, [], self.env['bus.bus']._bus_last_id())
-            self.env["bus.bus"]._sendmany([
-                (channel, "notif_on_global_channel", "message"),
-                ((channel, "PRIVATE"), "notif_on_private_channel", "message"),
-            ])
+            channel._bus_send("notif_on_global_channel", "message")
+            channel._bus_send("notif_on_private_channel", "message", subchannel="PRIVATE")
             self.trigger_notification_dispatching([channel, (channel, "PRIVATE")])
             notifications = json.loads(websocket.recv())
             self.assertEqual(len(notifications), 1)
@@ -237,10 +231,8 @@ class TestWebsocketCaryall(WebsocketCase):
 
         with patch.object(IrWebsocket, "_build_bus_channel_list", return_value=[(channel, "PRIVATE")]):
             self.subscribe(websocket, [], self.env['bus.bus']._bus_last_id())
-            self.env["bus.bus"]._sendmany([
-                (channel, "notif_on_global_channel", "message"),
-                ((channel, "PRIVATE"), "notif_on_private_channel", "message"),
-            ])
+            channel._bus_send("notif_on_global_channel", "message")
+            channel._bus_send("notif_on_private_channel", "message", subchannel="PRIVATE")
             self.trigger_notification_dispatching([channel, (channel, "PRIVATE")])
             notifications = json.loads(websocket.recv())
             self.assertEqual(len(notifications), 1)

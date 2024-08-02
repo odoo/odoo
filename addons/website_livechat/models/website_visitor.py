@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
 from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
@@ -102,8 +100,9 @@ class WebsiteVisitor(models.Model):
         channel_members.write({
             'fold_state': 'open',
         })
-        store = Store(discuss_channels)
-        self.env['bus.bus']._sendone(operator.partner_id, "website_livechat.send_chat_request", store.get_result())
+        operator._bus_send(
+            "website_livechat.send_chat_request", Store(discuss_channels).get_result()
+        )
 
     def _merge_visitor(self, target):
         """ Copy sessions of the secondary visitors to the main partner visitor. """

@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER
 from odoo.addons.bus.models.bus_presence import DISCONNECTION_TIMER
 
 
 class ResUsers(models.Model):
-
-    _inherit = "res.users"
+    _name = "res.users"
+    _inherit = ["res.users", "bus.listener.mixin"]
 
     im_status = fields.Char('IM Status', compute='_compute_im_status')
 
@@ -26,3 +26,6 @@ class ResUsers(models.Model):
         res = dict(((status['id'], status['status']) for status in self.env.cr.dictfetchall()))
         for user in self:
             user.im_status = res.get(user.id, 'offline')
+
+    def _bus_channel(self):
+        return self.partner_id._bus_channel()

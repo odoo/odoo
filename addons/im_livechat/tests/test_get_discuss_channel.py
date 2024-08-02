@@ -342,15 +342,17 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "type": "discuss.channel/transient_message",
                     "payload": {
                         "body":
-                            "<span class='o_mail_notification'>You are in a private conversation with <b>@Paul</b> and <b>@Visitor</b>."
+                            "<span class='o_mail_notification'>You are in a private conversation with "
+                            f"<a href=# data-oe-model='res.partner' data-oe-id='{self.operators[1].partner_id.id}'>@Paul</a> "
+                            "and <strong>Visitor</strong>."
                             "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
                             "<br>Type <b>#channel</b> to mention a channel."
                             "<br>Type <b>/command</b> to execute a command."
                             "<br>Type <b>:shortcut</b> to insert a canned response in your message."
                             "</span>",
                             "thread": {
-                                "model": "discuss.channel",
                                 "id": channel.id,
+                                "model": "discuss.channel",
                             },
                     },
                 },

@@ -15,6 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class MailRtcSession(models.Model):
     _name = 'discuss.channel.rtc.session'
+    _inherit = ["bus.listener.mixin"]
     _description = 'Mail RTC session'
     _rec_name = 'channel_member_id'
 
@@ -38,19 +39,11 @@ class MailRtcSession(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rtc_sessions = super().create(vals_list)
-        notifications = []
         rtc_sessions_by_channel = defaultdict(lambda: self.env["discuss.channel.rtc.session"])
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            notifications.append(
-                (
-                    channel,
-                    "mail.record/insert",
-                    Store(channel, {"rtcSessions": Store.many(rtc_sessions, "ADD")}).get_result(),
-                )
-            )
-        self.env["bus.bus"]._sendmany(notifications)
+            channel._bus_send_store(channel, {"rtcSessions": Store.many(rtc_sessions, "ADD")})
         return rtc_sessions
 
     def unlink(self):
@@ -66,25 +59,21 @@ class MailRtcSession(models.Model):
                 # than to attempt recycling a possibly stale channel uuid.
                 channel.sfu_channel_uuid = False
                 channel.sfu_server_url = False
-        notifications = []
         rtc_sessions_by_channel = defaultdict(lambda: self.env["discuss.channel.rtc.session"])
         for rtc_session in self:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            notifications.append(
-                (
-                    channel,
-                    "mail.record/insert",
-                    Store(
-                        channel, {"rtcSessions": Store.many(rtc_sessions, "DELETE", only_id=True)}
-                    ).get_result(),
-                )
+            channel._bus_send_store(
+                channel, {"rtcSessions": Store.many(rtc_sessions, "DELETE", only_id=True)}
             )
         for rtc_session in self:
-            target = rtc_session.guest_id or rtc_session.partner_id
-            notifications.append((target, 'discuss.channel.rtc.session/ended', {'sessionId': rtc_session.id}))
-        self.env['bus.bus']._sendmany(notifications)
+            rtc_session._bus_send(
+                "discuss.channel.rtc.session/ended", {"sessionId": rtc_session.id}
+            )
         return super().unlink()
+
+    def _bus_channel(self):
+        return self.channel_member_id._bus_channel()
 
     def _update_and_broadcast(self, values):
         """ Updates the session and notifies all members of the channel
@@ -93,8 +82,7 @@ class MailRtcSession(models.Model):
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
         store = Store(self, extra=True)
-        self.env["bus.bus"]._sendone(
-            self.channel_id,
+        self.channel_id._bus_send(
             "discuss.channel.rtc.session/update_and_broadcast",
             {"data": store.get_result(), "channelId": self.channel_id.id},
         )
@@ -144,9 +132,9 @@ class MailRtcSession(models.Model):
         payload_by_target = defaultdict(lambda: {'sender': self.id, 'notifications': []})
         for target_session_ids, content in notifications:
             for target_session in self.env['discuss.channel.rtc.session'].browse(target_session_ids).exists():
-                target = target_session.guest_id or target_session.partner_id
-                payload_by_target[target]['notifications'].append(content)
-        return self.env['bus.bus']._sendmany([(target, 'discuss.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
+                payload_by_target[target_session]['notifications'].append(content)
+        for target, payload in payload_by_target.items():
+            target._bus_send("discuss.channel.rtc.session/peer_notification", payload)
 
     def _to_store(self, store: Store, extra=False):
         for rtc_session in self:

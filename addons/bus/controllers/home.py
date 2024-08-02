@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import ipaddress
 
 from odoo import _, SUPERUSER_ID
@@ -18,12 +19,16 @@ def _admin_password_warn(uid):
     has_demo = bool(env['ir.module.module'].search_count([('demo', '=', True)]))
     if has_demo:
         return
-    user = request.env(user=uid)['res.users']
-    env(context=user.context_get())['bus.bus']._sendone(admin, 'simple_notification', {
-        'type': 'danger',
-        'message': _("Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"),
-        'sticky': True,
-    })
+    admin.with_context(request.env(user=uid)["res.users"].context_get())._bus_send(
+        "simple_notification",
+        {
+            "type": "danger",
+            "message": _(
+                "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
+            ),
+            "sticky": True,
+        },
+    )
 
 
 class Home(WebHome):
