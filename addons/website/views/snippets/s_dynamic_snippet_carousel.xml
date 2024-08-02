@@ -3,6 +3,7 @@
     <template id="s_dynamic_snippet_carousel" name="Dynamic Carousel">
         <t t-call="website.s_dynamic_snippet_template">
             <t t-set="snippet_name" t-value="'s_dynamic_snippet_carousel'"/>
+            <t t-set="snippet_css_version" t-value="'001'"/>
         </t>
     </template>
     <template id="dynamic_snippet_carousel_options_template">
@@ -28,6 +29,13 @@
     <field name="name">Dynamic snippet carousel 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_dynamic_snippet_carousel/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.s_dynamic_snippet_carousel_001_scss" model="ir.asset">
+    <field name="name">Dynamic snippet carousel 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_dynamic_snippet_carousel/001.scss</field>
 </record>
 
 <record id="website.s_dynamic_snippet_carousel_000_js" model="ir.asset">
