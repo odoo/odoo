@@ -330,6 +330,22 @@ describe("Selection collapsed", () => {
                 contentAfter: `<div contenteditable="false"><div contenteditable="true"><p>abc[]def</p></div></div>`,
             });
         });
+
+        test("should remove a link to uploaded document", async () => {
+            await testEditor({
+                contentBefore: `<p>[]<a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a>abc</p>`,
+                stepFunction: deleteForward,
+                contentAfter: `<p>[]abc</p>`,
+            });
+        });
+
+        test("should remove a link to uploaded document at the end of the editable", async () => {
+            await testEditor({
+                contentBefore: `<p>[]<a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a></p>`,
+                stepFunction: deleteForward,
+                contentAfter: `<p>[]<br></p>`,
+            });
+        });
     });
 
     describe("white spaces", () => {

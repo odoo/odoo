@@ -365,7 +365,7 @@ describe("Selection collapsed", () => {
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
                 },
-                contentAfter: `<div><p>abc[]def</p></div>`,
+                contentAfter: `<div><p>abc</p>[]def</div>`,
             });
         });
 
@@ -437,11 +437,36 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should remove a media element inside a p", async () => {
+        test("should merge paragraph with previous one containing a media element", async () => {
             await testEditor({
                 contentBefore: `<p>abc</p><p style="margin-bottom: 0px;"><o-image class="o_image" contenteditable="false"></o-image></p><p>[]def</p>`,
                 stepFunction: deleteBackward,
-                contentAfter: `<p>abc</p><p>[]def</p>`,
+                contentAfterEdit: `<p>abc</p><p style="margin-bottom: 0px;"><o-image class="o_image" contenteditable="false"></o-image>[]def</p>`,
+                contentAfter: `<p>abc</p><p style="margin-bottom: 0px;"><o-image class="o_image"></o-image>[]def</p>`,
+            });
+        });
+
+        test("should remove a media element inside a p", async () => {
+            await testEditor({
+                contentBefore: `<p>abc</p><p style="margin-bottom: 0px;"><o-image class="o_image" contenteditable="false"></o-image>[]def</p>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<p>abc</p><p style="margin-bottom: 0px;">[]def</p>`,
+            });
+        });
+
+        test("should remove a link to uploaded document", async () => {
+            await testEditor({
+                contentBefore: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a>[]</p>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<p>abc[]</p>`,
+            });
+        });
+
+        test("should remove a link to uploaded document at the beginning of the editable", async () => {
+            await testEditor({
+                contentBefore: `<p><a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a>[]</p>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<p>[]<br></p>`,
             });
         });
 
