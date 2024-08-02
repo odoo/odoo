@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
+import { user } from "@web/core/user";
 
 /**
  * This widget is responsible of displaying quiz questions and propositions. Submitting the quiz will fetch the
@@ -44,7 +44,7 @@ var Quiz = publicWidget.Widget.extend({
             this.quiz.questionsCount = quizData.questions.length;
         }
         this.isMember = data.isMember || false;
-        this.userId = session.user_id;
+        this.userId = user.userId;
         this.redirectURL = encodeURIComponent(document.URL);
 
         this.notification = this.bindService("notification");

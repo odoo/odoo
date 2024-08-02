@@ -19,7 +19,7 @@ import { nextTick } from "@web/../tests/legacy/legacy_tests/helpers/test_utils";
 import { createWebClient } from "@web/../tests/legacy/webclient/helpers";
 import { assertSteps, step, click, contains } from "@web/../tests/legacy/utils";
 import { browser } from "@web/core/browser/browser";
-import { session } from "@web/session";
+import { user } from "@web/core/user";
 
 QUnit.module("Bus");
 
@@ -215,13 +215,13 @@ QUnit.test("Websocket disconnects upon user log out", async () => {
     addBusServicesToRegistry();
     patchWebsocketWorkerWithCleanup();
     // first tab connects to the worker with user logged.
-    patchWithCleanup(session, { user_id: 1 });
+    patchWithCleanup(user, { userId: 1 });
     const firstTabEnv = await makeTestEnv();
     firstTabEnv.services["bus_service"].start();
     await waitForBusEvent(firstTabEnv, "connect");
-    // second tab connects to the worker after disconnection: user_id
+    // second tab connects to the worker after disconnection: userId
     // is now false.
-    patchWithCleanup(session, { user_id: false });
+    patchWithCleanup(user, { userId: false });
     const env2 = await makeTestEnv();
     env2.services["bus_service"].start();
     await waitForBusEvent(firstTabEnv, "disconnect");
@@ -231,13 +231,13 @@ QUnit.test("Websocket reconnects upon user log in", async () => {
     addBusServicesToRegistry();
     patchWebsocketWorkerWithCleanup();
     // first tab connects to the worker with no user logged.
-    patchWithCleanup(session, { user_id: false });
+    patchWithCleanup(user, { userId: false });
     const firstTabEnv = await makeTestEnv();
     firstTabEnv.services["bus_service"].start();
     await waitForBusEvent(firstTabEnv, "connect");
-    // second tab connects to the worker after connection: user_id
+    // second tab connects to the worker after connection: userId
     // is now set.
-    patchWithCleanup(session, { user_id: 1 });
+    patchWithCleanup(user, { userId: 1 });
     const secondTabEnv = await makeTestEnv();
     secondTabEnv.services["bus_service"].start();
     await Promise.all([
