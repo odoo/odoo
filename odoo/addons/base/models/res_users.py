@@ -194,10 +194,12 @@ class ResGroups(models.Model):
     api_key_duration = fields.Float(string='API Keys maximum duration days',
         help="Determines the maximum duration of an api key created by a user belonging to this group.")
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!'),
-        ('check_api_key_duration', 'CHECK(api_key_duration >= 0)', 'The api key duration cannot be a negative value.'),
-    ]
+    _name_uniq = models.Constraint("UNIQUE (category_id, name)",
+        'The name of the group must be unique within an application!')
+    _check_api_key_duration = models.Constraint(
+        'CHECK(api_key_duration >= 0)',
+        'The api key duration cannot be a negative value.',
+    )
 
     @api.constrains('users')
     def _check_one_user_type(self):
@@ -409,9 +411,8 @@ class ResUsers(models.Model):
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
 
-    _sql_constraints = [
-        ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login!')
-    ]
+    _login_key = models.Constraint("UNIQUE (login)",
+        'You can not have two users with the same login!')
 
     def init(self):
         cr = self.env.cr

@@ -2,7 +2,7 @@
 # Exports features of the ORM to developers.
 # This is a `__init__.py` file to avoid merge conflicts on `odoo/models.py`.
 
-# TODO we should only expose *Model objects here, maybe check_comp*
+# TODO we should only expose *Model objects, TableObjects, maybe check_comp*
 
 from odoo.orm.models import (
     LOG_ACCESS_COLUMNS,
@@ -21,6 +21,7 @@ from odoo.orm.models import (
     parse_read_group_spec,
     to_record_ids,
 )
+from odoo.orm.table_objects import Constraint
 from odoo.orm.utils import (
     READ_GROUP_TIME_GRANULARITY,
     check_method_name,

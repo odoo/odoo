@@ -156,8 +156,8 @@ class ExportUnique(models.Model):
     value3 = fields.Integer()
 
     _sql_constraints = [
-        ('value_unique', 'unique (value)', "The value must be unique"),
-        ('pair_unique', 'unique (value2, value3)', "The values must be unique"),
+        ('value_unique', 'unique (value)', ""),
+        ('pair_unique', 'unique (value2, value3)', ""),
     ]
 
 

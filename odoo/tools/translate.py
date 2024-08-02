@@ -435,13 +435,6 @@ html_translate.is_text = is_text
 
 xml_translate.term_adapter = xml_term_adapter
 
-def translate_sql_constraint(cr, key, lang):
-    cr.execute("""
-        SELECT COALESCE(c.message->>%s, c.message->>'en_US') as message
-        FROM ir_model_constraint c
-        WHERE name=%s and type='u'
-        """, (lang, key))
-    return cr.fetchone()[0]
 
 
 def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> str:
