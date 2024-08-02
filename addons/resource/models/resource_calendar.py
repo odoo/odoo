@@ -102,7 +102,8 @@ class ResourceCalendar(models.Model):
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
     flexible_hours = fields.Boolean(string="Flexible Hours",
-                                    help="When enabled, it will allow employees to work flexibly, without relying on company's working schedule (working hours).")
+                                    help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
+    full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
 
     @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'flexible_hours')
     def _compute_hours_per_day(self):
