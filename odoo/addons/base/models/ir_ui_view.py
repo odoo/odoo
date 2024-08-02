@@ -74,11 +74,9 @@ class ViewCustom(models.Model):
     user_id = fields.Many2one('res.users', string='User', index=True, required=True, ondelete='cascade')
     arch = fields.Text(string='View Architecture', required=True)
 
-    def _auto_init(self):
-        res = super(ViewCustom, self)._auto_init()
-        tools.create_index(self._cr, 'ir_ui_view_custom_user_id_ref_id',
-                           self._table, ['user_id', 'ref_id'])
-        return res
+    _sql_constraints = [
+        ('user_id_ref_id', "INDEX (user_id, ref_id)"),
+    ]
 
 
 def _hasclass(context, *cls):
@@ -442,13 +440,8 @@ actual arch.
         ('qweb_required_key',
          "CHECK (type != 'qweb' OR key IS NOT NULL)",
          "Invalid key: QWeb view should have a key"),
+        ('model_type_inherit_id', "INDEX (model, inherit_id)", ''),
     ]
-
-    def _auto_init(self):
-        res = super(View, self)._auto_init()
-        tools.create_index(self._cr, 'ir_ui_view_model_type_inherit_id',
-                           self._table, ['model', 'inherit_id'])
-        return res
 
     def _compute_defaults(self, values):
         if 'inherit_id' in values:

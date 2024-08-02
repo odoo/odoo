@@ -175,12 +175,10 @@ class IrFilters(models.Model):
             'Constraint to ensure that the embedded_parent_res_id is only defined when a top_action_id is defined.'
         ),
         ('check_sort_json', "CHECK(sort IS NULL OR jsonb_typeof(sort::jsonb) = 'array')", 'Invalid sort definition'),
-    ]
-
-    def _auto_init(self):
-        result = super(IrFilters, self)._auto_init()
         # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)
-        tools.create_unique_index(self._cr, 'ir_filters_name_model_uid_unique_action_index',
-                                  self._table, ['model_id', 'COALESCE(user_id,-1)', 'COALESCE(action_id,-1)',
-                                                'lower(name)', 'embedded_parent_res_id', 'COALESCE(embedded_action_id,-1)'])
-        return result
+        (
+            'name_model_uid_unique_action_index',
+            "UNIQUE INDEX (model_id, COALESCE(user_id, -1), COALESCE(action_id, -1), "
+            "lower(name), embedded_parent_res_id, COALESCE(embedded_action_id,-1))",
+        ),
+    ]

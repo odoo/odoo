@@ -152,7 +152,6 @@ class Registry(Mapping):
 
     def init(self, db_name):
         self.models: dict[str, type[BaseModel]] = {}    # model name/model instance mapping
-        self._sql_constraints = set()
         self._init = True
         self._database_translated_fields = ()  # names of translated fields in database
         if config['test_enable'] or config['test_file']:

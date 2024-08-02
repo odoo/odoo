@@ -18,13 +18,9 @@ class OnboardingProgressStep(models.Model):
 
     company_id = fields.Many2one('res.company', ondelete='cascade')
 
-    def init(self):
-        """Make sure there aren't multiple records for the same onboarding step and company."""
-        # not in _sql_constraint because COALESCE is not supported for PostgreSQL constraint
-        self.env.cr.execute("""
-            CREATE UNIQUE INDEX IF NOT EXISTS onboarding_progress_step_company_uniq
-            ON onboarding_progress_step (step_id, COALESCE(company_id, 0))
-        """)
+    _sql_constraints = [
+        ('company_uniq', 'UNIQUE INDEX (step_id, COALESCE(company_id, 0))'),
+    ]
 
     def action_consolidate_just_done(self):
         was_just_done = self.filtered(lambda progress: progress.step_state == 'just_done')

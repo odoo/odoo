@@ -1911,22 +1911,24 @@ class IrModelConstraint(models.Model):
 
     def _reflect_model(self, model):
         """ Reflect the _sql_constraints of the given model. """
-        def cons_text(txt):
-            return txt.lower().replace(', ',',').replace(' (','(')
-
         # map each constraint on the name of the module where it is defined
         constraint_module = {
-            constraint[0]: cls._module
+            # XXX map to all SQL objects
+            constraint.key if isinstance(constraint, models.Constraint) else constraint[0]: cls._module
             for cls in reversed(self.env.registry[model._name].mro())
             if models.is_definition_class(cls)
             for constraint in getattr(cls, '_local_sql_constraints', ())
         }
 
         data_list = []
-        for (key, definition, message) in model._sql_constraints:
-            conname = '%s_%s' % (model._table, key)
-            module = constraint_module.get(key)
-            record = self._reflect_constraint(model, conname, 'u', cons_text(definition), module, message)
+        for cons in model._sql_constraints:
+            conname = cons.full_name(model)
+            module = constraint_module.get(cons.key)
+            definition = cons.definition
+            message = cons.message
+            if not isinstance(message, str) or not message:
+                message = None
+            record = self._reflect_constraint(model, conname, 'u', definition, module, message)
             xml_id = '%s.constraint_%s' % (module, conname)
             if record:
                 data_list.append(dict(xml_id=xml_id, record=record))
@@ -2177,6 +2179,8 @@ class IrModelData(models.Model):
     _sql_constraints = [
         ('name_nospaces', "CHECK(name NOT LIKE '% %')",
          "External IDs cannot contain spaces"),
+        ('module_name_uniq_index', "UNIQUE INDEX (module, name)"),
+        ('model_res_id_index', "INDEX (model, res_id)"),
     ]
 
     @api.depends('module', 'name')
@@ -2188,16 +2192,6 @@ class IrModelData(models.Model):
     def _compute_reference(self):
         for res in self:
             res.reference = "%s,%s" % (res.model, res.res_id)
-
-    def _auto_init(self):
-        res = super(IrModelData, self)._auto_init()
-        sql.create_unique_index(
-            self._cr, 'ir_model_data_module_name_uniq_index',
-            self._table, ['module', 'name'])
-        sql.create_index(
-            self._cr, 'ir_model_data_model_res_id_index',
-            self._table, ['model', 'res_id'])
-        return res
 
     @api.depends('res_id', 'model', 'complete_name')
     def _compute_display_name(self):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, tools
+from odoo import api, fields, models
 
 
 class BaseModel(models.Model):
@@ -54,9 +54,9 @@ class LineModel(models.Model):
     base_id = fields.Many2one('test_performance.base', required=True, ondelete='cascade')
     value = fields.Integer()
 
-    def init(self):
-        # line values should be unique per "base" - useful for testing corner cases with unique lines
-        tools.create_unique_index(self._cr, 'test_performance_line_uniq', self._table, ['base_id', 'value'])
+    _sql_constraints = [
+        ('line_uniq', 'UNIQUE INDEX (base_id, value)', "base_id and value should be unique"),
+    ]
 
 
 class TagModel(models.Model):

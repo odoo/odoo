@@ -4,18 +4,29 @@ from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.sql import column_exists, create_column, drop_index, index_exists
+from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMove(models.Model):
 
     _inherit = "account.move"
 
-    _sql_constraints = [(
-        'unique_name', "", "Another entry with the same name already exists.",
-    ), (
-        'unique_name_latam', "", "Another entry with the same name already exists.",
-    )]
+    _sql_constraints = [
+        (
+            'unique_name',
+            "UNIQUE INDEX (name, journal_id)"
+            " WHERE (state = 'posted' AND name != '/'"
+            " AND (l10n_latam_document_type_id IS NULL OR move_type NOT IN ('in_invoice', 'in_refund', 'in_receipt')))",
+            "Another entry with the same name already exists.",
+        ),
+        (
+            'unique_name_latam',
+            "UNIQUE INDEX (name, commercial_partner_id, l10n_latam_document_type_id, company_id)"
+            " WHERE (state = 'posted' AND name != '/'"
+            " AND (l10n_latam_document_type_id IS NOT NULL AND move_type IN ('in_invoice', 'in_refund', 'in_receipt')))",
+            "Another entry with the same name already exists.",
+        ),
+    ]
 
     def _auto_init(self):
         # Skip the computation of the field `l10n_latam_document_type_id` at the module installation
@@ -47,19 +58,6 @@ class AccountMove(models.Model):
         # for a Chilian or Argentian company (`res.company`) before installing `l10n_cl` or `l10n_ar`.
         if not column_exists(self.env.cr, "account_move", "l10n_latam_document_type_id"):
             create_column(self.env.cr, "account_move", "l10n_latam_document_type_id", "int4")
-
-        if not index_exists(self.env.cr, "account_move_unique_name_latam"):
-            drop_index(self.env.cr, "account_move_unique_name", self._table)
-            self.env.cr.execute("""
-                CREATE UNIQUE INDEX account_move_unique_name
-                                 ON account_move(name, journal_id)
-                              WHERE (state = 'posted' AND name != '/'
-                                AND (l10n_latam_document_type_id IS NULL OR move_type NOT IN ('in_invoice', 'in_refund', 'in_receipt')));
-                CREATE UNIQUE INDEX account_move_unique_name_latam
-                                 ON account_move(name, commercial_partner_id, l10n_latam_document_type_id, company_id)
-                              WHERE (state = 'posted' AND name != '/'
-                                AND (l10n_latam_document_type_id IS NOT NULL AND move_type IN ('in_invoice', 'in_refund', 'in_receipt')));
-            """)
         return super()._auto_init()
 
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
