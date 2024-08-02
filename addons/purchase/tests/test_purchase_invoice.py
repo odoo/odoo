@@ -328,12 +328,12 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertInvoiceValues(move, [
             {
                 'display_type': 'product',
-                'amount_currency': 1000,
-                'balance': 1000,
-            }, {
-                'display_type': 'product',
                 'amount_currency': 500,
                 'balance': 500,
+            }, {
+                'display_type': 'product',
+                'amount_currency': 1000,
+                'balance': 1000,
             }, {
                 'display_type': 'payment_term',
                 'amount_currency': -1500,
