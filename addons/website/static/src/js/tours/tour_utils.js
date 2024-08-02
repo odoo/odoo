@@ -431,7 +431,10 @@ function registerWebsitePreviewTour(name, options, steps) {
             } else {
                 tourSteps[0].timeout = 20000;
             }
-            return tourSteps;
+            return tourSteps.map((step) => {
+                delete step.noPrepend;
+                return step;
+            });
         },
     });
 }
