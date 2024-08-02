@@ -114,7 +114,75 @@ class Constraint(TableObject):
             # constraint exists but its definition may have changed
             sql.drop_constraint(cr, model._table, conname)
 
-        if not definition:
-            # virtual constraint (e.g. implemented by a custom index)
-            model.pool.post_init(sql.check_index_exist, cr, conname)
         model.pool.post_constraint(sql.add_constraint, cr, model._table, conname, definition)
+
+
+class Index(TableObject):
+    """ Index on the table.
+
+    ``CREATE INDEX ... ON model_table <your definition>``.
+    """
+    unique: bool = False
+
+    def __init__(self, definition: str):
+        """ Index in SQL.
+
+        The name of the SQL object will be "{model._table}_{key}". The definition
+        is the SQL that will be used to create the constraint.
+
+        Example of definition:
+        - (group_id, active) WHERE active IS TRUE
+        - USING btree (group_id, user_id)
+        """
+        super().__init__()
+        self._index_definition = definition
+
+    @property
+    def definition(self):
+        return f"{'UNIQUE ' if self.unique else ''}INDEX {self._index_definition}"
+
+    def apply_to_database(self, model: BaseModel):
+        cr = model.env.cr
+        conname = self.full_name(model)
+        definition = self.definition
+        current_definition = sql.index_definition(cr, conname)
+        if current_definition == definition:
+            return
+
+        if current_definition:
+            # constraint exists but its definition may have changed
+            sql.drop_index(cr, conname, model._table)
+
+        definition_clause = self._index_definition
+        model.pool.post_constraint(
+            sql.add_index,
+            cr,
+            conname,
+            model._table,
+            comment=definition,
+            definition=definition_clause,
+            unique=self.unique,
+        )
+
+
+class UniqueIndex(Index):
+    """ Unique index on the table.
+
+    ``CREATE UNIQUE INDEX ... ON model_table <your definition>``.
+    """
+    unique = True
+
+    def __init__(self, definition: str, message: ConstraintMessageType = ''):
+        """ Unique index in SQL.
+
+        The name of the SQL object will be "{model._table}_{key}". The definition
+        is the SQL that will be used to create the constraint.
+        You can also specify a message to be used when constraint is violated.
+
+        Example of definition:
+        - (group_id, active) WHERE active IS TRUE
+        - USING btree (group_id, user_id)
+        """
+        super().__init__(definition)
+        if message:
+            self.message = message

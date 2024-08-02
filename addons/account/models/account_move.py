@@ -694,46 +694,20 @@ class AccountMove(models.Model):
         search='_search_next_payment_date',
     )
 
-    _sql_constraints = [(
-        'unique_name', "", "Another entry with the same name already exists.",
-    )]
+    _checked_idx = models.Index("(journal_id) WHERE (checked = FALSE)")
+    _payment_idx = models.Index("(journal_id, state, payment_state, move_type, date)")
+    _unique_name = models.UniqueIndex(
+        "(name, journal_id) WHERE (state = 'posted'AND name != '/')",
+        "Another entry with the same name already exists.",
+    )
+    _journal_id_company_id_idx = models.Index('(journal_id, company_id, date)')
+    # used in <account.journal>._query_has_sequence_holes
+    _made_gaps = models.Index('(journal_id, state, payment_state, move_type, date) WHERE (made_sequence_gap = TRUE)')
 
     def _auto_init(self):
         super()._auto_init()
-        if not index_exists(self.env.cr, 'account_move_checked_idx'):
-            self.env.cr.execute("""
-                CREATE INDEX account_move_checked_idx
-                          ON account_move(journal_id)
-                       WHERE checked = false
-            """)
-        if not index_exists(self.env.cr, 'account_move_payment_idx'):
-            self.env.cr.execute("""
-                CREATE INDEX account_move_payment_idx
-                          ON account_move(journal_id, state, payment_state, move_type, date)
-            """)
-        if not index_exists(self.env.cr, 'account_move_unique_name'):
-            self.env.cr.execute("""
-                CREATE UNIQUE INDEX account_move_unique_name
-                                 ON account_move(name, journal_id)
-                              WHERE (state = 'posted' AND name != '/')
-            """)
-
         if not column_exists(self.env.cr, "account_move", "preferred_payment_method_line_id"):
             create_column(self.env.cr, "account_move", "preferred_payment_method_line_id", "int4")
-
-    def init(self):
-        super().init()
-        create_index(self.env.cr,
-                     indexname='account_move_journal_id_company_id_idx',
-                     tablename='account_move',
-                     expressions=['journal_id', 'company_id', 'date'])
-        create_index(
-            self.env.cr,
-            indexname='account_move_made_gaps',
-            tablename='account_move',
-            expressions=['journal_id', 'company_id', 'date'],
-            where="made_sequence_gap = TRUE",
-        )  # used in <account.journal>._query_has_sequence_holes
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
