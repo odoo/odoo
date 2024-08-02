@@ -882,6 +882,7 @@ class Website(models.Model):
             fallback_create_missing_industry_image('s_image_punchy_default_image', 's_cover_default_image')
             fallback_create_missing_industry_image('s_image_frame_default_image', 's_carousel_default_image_2')
 
+            fallback_create_missing_industry_image('s_framed_intro_default_image', 's_cover_default_image')
         except Exception:
             pass
 
