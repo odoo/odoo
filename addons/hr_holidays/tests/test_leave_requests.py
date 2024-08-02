@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import datetime, date, timedelta
 import time
 from dateutil.relativedelta import relativedelta
@@ -604,7 +602,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         allocation_vals = {
             'name': 'Allocation',
             'employee_id': self.employee_emp_id,
-            'holiday_status_id': self.holidays_type_2.id,
             'state': 'confirm',
             'date_from': '2022-01-01',
             'date_to': '2022-12-31',
@@ -613,13 +610,22 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_vals = {
             'name': 'Holiday Request',
             'employee_id': self.employee_emp_id,
-            'holiday_status_id': self.holidays_type_2.id,
         }
 
         for unit in ['hour', 'day']:
-            self.holidays_type_2.request_unit = unit
+            leave_type = self.env['hr.leave.type'].create({
+                'name': 'Limited',
+                'requires_allocation': 'yes',
+                'employee_requests': 'yes',
+                'leave_validation_type': 'hr',
+                'request_unit': unit,
+            })
 
-            allocation_vals.update({'number_of_days': 4})
+            leave_vals.update({'holiday_status_id': leave_type.id})
+            allocation_vals.update({
+                'number_of_days': 4,
+                'holiday_status_id': leave_type.id,
+            })
             allocation_4days = Allocation.create(allocation_vals)
             allocation_4days.action_validate()
             allocation_vals.update({'number_of_days': 1})
@@ -646,14 +652,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             leaves = (leave_4days + leave_1day)
             leaves.action_approve()
 
-            allocation_days = self.employee_emp._get_consumed_leaves(self.holidays_type_2)[0]
+            allocation_days = self.employee_emp._get_consumed_leaves(leave_type)[0]
 
             self.assertEqual(
-                allocation_days[self.employee_emp][self.holidays_type_2][allocation_4days]['leaves_taken'],
+                allocation_days[self.employee_emp][leave_type][allocation_4days]['leaves_taken'],
                 leave_4days['number_of_%ss' % unit],
                 'As 4 days were available in this allocation, they should have been taken')
             self.assertEqual(
-                allocation_days[self.employee_emp][self.holidays_type_2][allocation_1day]['leaves_taken'],
+                allocation_days[self.employee_emp][leave_type][allocation_1day]['leaves_taken'],
                 leave_1day['number_of_%ss' % unit],
                 'As no days were available in previous allocation, they should have been taken in this one')
             leaves.action_refuse()
@@ -783,11 +789,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(time_off.number_of_days, 0)
 
     def test_holiday_type_requires_no_allocation(self):
-        # holiday_type_2 initially requires an allocation
-        # Once an allocation is granted and a leave is taken,
-        # the holiday type is changed to no longer require an allocation.
-        # Leaves taken and available days should be correctly computed.
         with freeze_time('2020-09-15'):
+<<<<<<< HEAD
             allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Expired Allocation',
                 'employee_id': self.employee_emp_id,
@@ -800,23 +803,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             allocation.action_validate()
 
             leave1 = self.env['hr.leave'].with_user(self.user_employee_id).create({
+=======
+            leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+>>>>>>> f07d33b4bb23 ([IMP] hr_holidays: restrict allocation type to leave type)
                 'name': 'Holiday Request',
                 'employee_id': self.employee_emp_id,
-                'holiday_status_id': self.holidays_type_2.id,
-                'request_date_from': '2020-09-07',
-                'request_date_to': '2020-09-09',
-            })
-
-            self._check_holidays_count(
-                self.employee_emp._get_consumed_leaves(self.holidays_type_2)[0][self.employee_emp][self.holidays_type_2][allocation],
-                ml=5, lt=0, rl=5, vrl=2, vlt=3,
-            )
-
-            self.holidays_type_2.requires_allocation = 'no'
-            leave2 = self.env['hr.leave'].with_user(self.user_employee_id).create({
-                'name': 'Holiday Request',
-                'employee_id': self.employee_emp_id,
-                'holiday_status_id': self.holidays_type_2.id,
+                'holiday_status_id': self.holidays_type_1.id,
                 'request_date_from': '2020-07-06',
                 'request_date_to': '2020-07-08',
             })
@@ -824,17 +816,16 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             # The 5 allocation days are not consumed anymore
             # virtual_remaining_leaves reflect the total number of leave days taken
             self._check_holidays_count(
-                self.employee_emp._get_consumed_leaves(self.holidays_type_2)[0][self.employee_emp][self.holidays_type_2][False],
-                ml=0, lt=0, rl=0, vrl=0, vlt=6,
+                self.employee_emp._get_consumed_leaves(self.holidays_type_1)[0][self.employee_emp][self.holidays_type_1][False],
+                ml=0, lt=0, rl=0, vrl=0, vlt=3,
             )
 
-            leave1.with_user(self.user_hrmanager_id).action_approve()
-            leave2.with_user(self.user_hrmanager_id).action_approve()
+            leave.with_user(self.user_hrmanager_id).action_approve()
 
             # leaves_taken and virtual_leaves_taken reflect the total number of leave days taken
             self._check_holidays_count(
-                self.employee_emp._get_consumed_leaves(self.holidays_type_2)[0][self.employee_emp][self.holidays_type_2][False],
-                ml=0, lt=6, rl=0, vrl=0, vlt=6,
+                self.employee_emp._get_consumed_leaves(self.holidays_type_1)[0][self.employee_emp][self.holidays_type_1][False],
+                ml=0, lt=3, rl=0, vrl=0, vlt=3,
             )
 
     def test_archived_allocation(self):

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import datetime
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
@@ -20,7 +17,12 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'requires_allocation': 'yes',
+<<<<<<< HEAD
             'allocation_validation_type': 'hr',
+=======
+            'allocation_validation_type': 'officer',
+            'allocation_type': 'accrual',
+>>>>>>> f07d33b4bb23 ([IMP] hr_holidays: restrict allocation type to leave type)
         })
 
     def test_frequency_hourly_attendance(self):
@@ -45,7 +47,6 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
-                'allocation_type': 'accrual',
             })
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
@@ -85,13 +86,17 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             })],
         })
         self.env['hr.attendance'].create({
-                'employee_id': self.employee_emp.id,
-                'check_in': datetime.datetime(2024, 4, 1, 8, 0, 0),
-                'check_out': datetime.datetime(2024, 4, 1, 17, 0, 0),
-            })
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 4, 1, 8, 0, 0),
+            'check_out': datetime.datetime(2024, 4, 1, 17, 0, 0),
+        })
         with Form(self.env['hr.leave.allocation']) as allocation_form:
+<<<<<<< HEAD
             allocation_form.allocation_type = 'accrual'
             allocation_form.employee_id = self.employee_emp
+=======
+            allocation_form.employee_ids = self.employee_emp
+>>>>>>> f07d33b4bb23 ([IMP] hr_holidays: restrict allocation type to leave type)
             allocation_form.accrual_plan_id = accrual_plan
             allocation_form.holiday_status_id = self.leave_type
             allocation_form.date_from = datetime.date(2024, 3, 20)

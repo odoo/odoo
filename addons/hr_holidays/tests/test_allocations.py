@@ -17,7 +17,12 @@ class TestAllocations(TestHrHolidaysCommon):
             'name': 'Time Off with no validation for approval',
             'time_type': 'leave',
             'requires_allocation': 'yes',
+<<<<<<< HEAD
             'allocation_validation_type': 'no_validation',
+=======
+            'allocation_validation_type': 'no',
+            'allocation_type': 'regular',
+>>>>>>> f07d33b4bb23 ([IMP] hr_holidays: restrict allocation type to leave type)
         })
         cls.department = cls.env['hr.department'].create({
             'name': 'Test Department',
@@ -44,8 +49,12 @@ class TestAllocations(TestHrHolidaysCommon):
             'allocation_mode': 'company',
             'company_id': self.company.id,
             'holiday_status_id': self.leave_type.id,
+<<<<<<< HEAD
             'duration': 2,
             'allocation_type': 'regular',
+=======
+            'number_of_days': 2,
+>>>>>>> f07d33b4bb23 ([IMP] hr_holidays: restrict allocation type to leave type)
         })
 
         company_allocation.action_generate_allocations()
@@ -59,8 +68,12 @@ class TestAllocations(TestHrHolidaysCommon):
             'allocation_mode': 'employee',
             'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
             'holiday_status_id': self.leave_type.id,
+<<<<<<< HEAD
             'duration': 2,
             'allocation_type': 'regular',
+=======
+            'number_of_days': 2,
+>>>>>>> f07d33b4bb23 ([IMP] hr_holidays: restrict allocation type to leave type)
         })
 
         employee_allocation.action_generate_allocations()
@@ -74,8 +87,12 @@ class TestAllocations(TestHrHolidaysCommon):
             'allocation_mode': 'department',
             'department_id': self.department.id,
             'holiday_status_id': self.leave_type.id,
+<<<<<<< HEAD
             'duration': 2,
             'allocation_type': 'regular',
+=======
+            'number_of_days': 2,
+>>>>>>> f07d33b4bb23 ([IMP] hr_holidays: restrict allocation type to leave type)
         })
 
         department_allocation.action_generate_allocations()
@@ -89,8 +106,12 @@ class TestAllocations(TestHrHolidaysCommon):
             'allocation_mode': 'category',
             'category_id': self.category_tag.id,
             'holiday_status_id': self.leave_type.id,
+<<<<<<< HEAD
             'duration': 2,
             'allocation_type': 'regular',
+=======
+            'number_of_days': 2,
+>>>>>>> f07d33b4bb23 ([IMP] hr_holidays: restrict allocation type to leave type)
         })
 
         category_allocation.action_generate_allocations()

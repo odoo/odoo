@@ -32,6 +32,17 @@
         <field name="max_allowed_negative" eval="20"/>
     </record>
 
+    <record id="holiday_status_seniority" model="hr.leave.type">
+        <field name="name">Seniority Leaves</field>
+        <field name="requires_allocation">yes</field>
+        <field name="employee_requests">no</field>
+        <field name="leave_validation_type">both</field>
+        <field name="allocation_validation_type">officer</field>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_10"/>
+        <field name="allocation_type">accrual</field>
+    </record>
+
     <!-- Accrual Plan -->
     <record id="hr_accrual_plan_1" model="hr.leave.accrual.plan">
         <field name="name">Seniority Plan</field>
