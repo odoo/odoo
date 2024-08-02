@@ -1024,7 +1024,6 @@ class Message(models.Model):
                 for content, reactions in reactions_per_content.items()
             ]
             vals = {
-                "notifications": Store.many(message.notification_ids._filtered_for_web_client()),
                 # sudo: mail.message - reading attachments on accessible message is allowed
                 "attachments": Store.many(message.sudo().attachment_ids.sorted("id")),
                 # sudo: mail.message - reading link preview on accessible message is allowed
@@ -1041,6 +1040,8 @@ class Message(models.Model):
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
                 "thread": Store.one(record, as_thread=True, only_id=True),
             }
+            if self.env.user._is_internal():
+                vals["notifications"] = Store.many(message.notification_ids._filtered_for_web_client())
             if for_current_user:
                 # sudo: mail.message - filtering allowed tracking values
                 displayed_tracking_ids = message.sudo().tracking_value_ids._filter_has_field_access(

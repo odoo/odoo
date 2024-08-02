@@ -116,7 +116,7 @@ class TestProjectSharingChatterAccess(TestProjectSharingCommon, HttpCase):
         access_token, pid, _hash = match.groups()
 
         res = self.url_open(
-            url="/mail/chatter_post",
+            url="/mail/message/post",
             data=json.dumps({
                 "params": {
                     "thread_model": self.task_no_collabo._name,
