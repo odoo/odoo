@@ -7,12 +7,6 @@
 
 // jQuery selectors extensions
 $.extend($.expr[':'], {
-    propValue: function (element, index, matches) {
-        return $(element).prop("value") === matches[3];
-    },
-    hasData: function (element) {
-        return !!_.toArray(element.dataset).length;
-    },
     data: function (element, index, matches) {
         return $(element).data(matches[3]);
     },

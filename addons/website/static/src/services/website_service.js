@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { user } from "@web/core/user";
 import { loadBundle } from "@web/core/assets";
+import { ensureJQuery } from "@web/core/ensure_jquery";
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
 import { WebsiteLoader } from '../components/website_loader/website_loader';
@@ -232,6 +233,7 @@ export const websiteService = {
                 websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name']))];
             },
             async loadWysiwyg() {
+                await ensureJQuery();
                 await loadBundle('website.backend_assets_all_wysiwyg');
             },
             blockPreview(showLoader, processId) {

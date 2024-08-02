@@ -14,6 +14,7 @@ import {
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from '@web_editor/js/backend/convert_inline';
 import { getBundle, loadBundle } from '@web/core/assets';
+import { ensureJQuery } from '@web/core/ensure_jquery';
 import {
     Component,
     useRef,
@@ -409,6 +410,7 @@ export class HtmlField extends Component {
         this.MoveNodePlugin = (await odoo.loader.modules.get('@web_editor/js/wysiwyg/MoveNodePlugin'))?.MoveNodePlugin;
         // Otherwise, load the module.
         if (!wysiwygModule) {
+            await ensureJQuery();
             await loadBundle('web_editor.backend_assets_wysiwyg');
             wysiwygModule = await odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
             this.MoveNodePlugin = (await odoo.loader.modules.get('@web_editor/js/wysiwyg/MoveNodePlugin')).MoveNodePlugin;
