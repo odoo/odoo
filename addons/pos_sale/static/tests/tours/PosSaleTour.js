@@ -87,6 +87,8 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.checkDownpaymentProducts("product_a"),
             ReceiptScreen.clickNextOrder(),
             ...ProductScreen.clickRefund(),
             // Filter should be automatically 'Paid'.
