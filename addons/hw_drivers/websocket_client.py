@@ -1,5 +1,6 @@
 import json
 import logging
+import pprint
 import time
 import urllib.parse
 import urllib3
@@ -42,20 +43,30 @@ def send_to_controller(print_id, device_identifier, iot_mac):
 
 def on_message(ws, messages):
     """
-        When a message is receive, this function is triggered
-        The message is load and if its type is 'print', is sent to the printer
+        Synchronously handle messages received by the websocket.
     """
     messages = json.loads(messages)
+    _logger.debug("websocket received a message: %s", pprint.pformat(messages))
     for document in messages:
-        if (document['message']['type'] == 'print'):
+        message_type = document['message']['type']
+        if message_type == 'print':
             payload = document['message']['payload']
             iot_mac = helpers.get_mac_address()
             if iot_mac in payload['iotDevice']['iotIdentifiers']:
                 #send box confirmation
                 for device in payload['iotDevice']['identifiers']:
-                    if device['identifier'] in main.iot_devices:
-                        main.iot_devices[device["identifier"]]._action_default(payload)
+                    device_identifier = device['identifier']
+                    if device_identifier in main.iot_devices:
+                        start_operation_time = time.perf_counter()
+                        _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
+                        main.iot_devices[device_identifier]._action_default(payload)
+                        _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
                         send_to_controller(payload['print_id'], device['identifier'], iot_mac)
+            else:
+                # likely intended as IoT share the same channel
+                _logger.debug("message ignored due to different iot mac: %s", iot_mac)
+        elif message_type != 'print_confirmation':  # intended to be ignored
+            _logger.warning("message type not supported: %s", message_type)
 
 
 def on_error(ws, error):
