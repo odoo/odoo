@@ -208,6 +208,11 @@ html:not(.o_mass_mailing_iframe), body:not(.o_mass_mailing_iframe), html.o_fulls
     }
 }
 
+// Prevent the website snippets sidebar from overlapping the template
+body.has_snippets_sidebar .o_layout {
+    padding-right: $o-we-sidebar-width !important;
+}
+
 body.o_force_mail_theme_choice {
     #oe_snippets {
         width: 100%;
