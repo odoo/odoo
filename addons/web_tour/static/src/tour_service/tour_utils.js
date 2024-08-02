@@ -54,16 +54,6 @@ export const stepUtils = {
         return step;
     },
 
-    editionEnterpriseModifier(step) {
-        step.edition = "enterprise";
-        return step;
-    },
-
-    mobileModifier(step) {
-        step.isActive = ["mobile"];
-        return step;
-    },
-
     showAppsMenuItem() {
         return {
             isActive: ["auto", "community", "desktop"],
@@ -91,9 +81,13 @@ export const stepUtils = {
         ];
     },
 
-    autoExpandMoreButtons() {
+    autoExpandMoreButtons(isActiveMobile = false) {
+        const isActive = ["auto"];
+        if (isActiveMobile) {
+            isActive.push("mobile");
+        }
         return {
-            isActive: ["auto"],
+            isActive,
             content: `autoExpandMoreButtons`,
             trigger: ".o-form-buttonbox",
             run() {
@@ -103,18 +97,6 @@ export const stepUtils = {
                 }
             },
         };
-    },
-
-    goBackBreadcrumbsMobile(description) {
-        return [
-            {
-                isActive: ["mobile"],
-                trigger: ".o_back_button",
-                content: description,
-                tooltipPosition: "bottom",
-                run: "click",
-            },
-        ];
     },
 
     goToAppSteps(dataMenuXmlid, description) {

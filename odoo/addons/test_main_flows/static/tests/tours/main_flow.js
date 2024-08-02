@@ -1060,7 +1060,7 @@ stepUtils.autoExpandMoreButtons(),
     isActive: ["mobile"],
     trigger: '.o_navbar_breadcrumbs .o_breadcrumb:contains("S0")',
 },
-stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons()),
+stepUtils.autoExpandMoreButtons(true),
 {
     isActive: ["desktop"],
     trigger: '.oe_stat_button:has(div[name=tasks_count])',
@@ -1126,9 +1126,13 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons()),
     isActive: ["mobile"],
     trigger: ".o_breadcrumb .active:contains('the_flow.service')",
 },
-...stepUtils.goBackBreadcrumbsMobile(
-        _t('Back to the sale order')
-    ),
+{
+    isActive: ["mobile"],
+    trigger: ".o_back_button",
+    content: _t('Back to the sale order'),
+    tooltipPosition: "bottom",
+    run: "click",
+},
 {
     isActive: ["desktop"],
     trigger: 'div:not(.o_form_editable)', // Waiting save

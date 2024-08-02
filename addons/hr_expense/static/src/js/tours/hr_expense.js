@@ -68,9 +68,13 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     isActive: ["mobile"],
     trigger: ".o_hr_expense_form_view_view",
 },
-...stepUtils.goBackBreadcrumbsMobile(
-    _t("Use the breadcrumbs to go back to the list of expenses."),
-),
+{
+    isActive: ["mobile"],
+    trigger: ".o_back_button",
+    content:  _t("Use the breadcrumbs to go back to the list of expenses."),
+    tooltipPosition: "bottom",
+    run: "click",
+},
 {
     trigger: ".o_hr_expense_form_view_view",
 }, {
