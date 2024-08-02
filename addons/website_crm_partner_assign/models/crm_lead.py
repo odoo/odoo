@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
@@ -6,8 +5,6 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
-from odoo.tools import html_escape
-
 
 
 class CrmLead(models.Model):
@@ -59,7 +56,7 @@ class CrmLead(models.Model):
         leads_with_country = self.filtered(lambda lead: lead.country_id)
         leads_without_country = self - leads_with_country
         if leads_without_country:
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+            self.env.user._bus_send('simple_notification', {
                 'type': 'danger',
                 'title': _("Warning"),
                 'message': _('There is no country set in addresses for %(lead_names)s.', lead_names=', '.join(leads_without_country.mapped('name'))),

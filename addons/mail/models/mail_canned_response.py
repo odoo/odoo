@@ -72,12 +72,7 @@ class MailCannedResponse(models.Model):
     def _broadcast(self, method="insert"):
         notif_type = "mail.record/insert" if method == "insert" else "mail.record/delete"
         field_names = ["id", "source", "substitution"] if method == "insert" else ["id"]
-        notifications = []
         for canned_response in self:
-            targets = [self.env.user.partner_id]
-            if self.env.user != canned_response.create_uid:
-                targets.append(canned_response.create_uid.partner_id)
-            targets.extend(canned_response.group_ids)
             payload = {"CannedResponse": canned_response._read_format(field_names)}
-            notifications.extend((target, notif_type, payload) for target in targets)
-        self.env["bus.bus"]._sendmany(notifications)
+            (self.env.user | canned_response.create_uid)._bus_send(notif_type, payload)
+            canned_response.group_ids._bus_send(notif_type, payload)

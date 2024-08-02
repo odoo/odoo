@@ -241,10 +241,9 @@ class LivechatController(http.Controller):
     @http.route("/im_livechat/history", type="json", auth="public")
     @add_guest_to_context
     def history_pages(self, pid, channel_id, page_history=None):
-        partner_ids = (pid, request.env.user.partner_id.id)
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
-            channel._send_history_message(pid, page_history)
-        return True
+            if pid in channel.sudo().channel_member_ids.partner_id.ids:
+                request.env["res.partner"].browse(pid)._bus_send_history_message(channel, page_history)
 
     @http.route("/im_livechat/email_livechat_transcript", type="json", auth="public")
     @add_guest_to_context

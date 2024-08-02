@@ -1,15 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 from datetime import timedelta, datetime
 from dateutil.relativedelta import relativedelta
 from pytz import UTC
 
 from odoo import api, fields, models
 from odoo.tools import plaintext2html
-
-_logger = logging.getLogger(__name__)
 
 
 class AlarmManager(models.AbstractModel):
@@ -247,10 +243,7 @@ class AlarmManager(models.AbstractModel):
 
     def _notify_next_alarm(self, partner_ids):
         """ Sends through the bus the next alarm of given partners """
-        notifications = []
         users = self.env['res.users'].search([('partner_id', 'in', tuple(partner_ids))])
         for user in users:
             notif = self.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).get_next_notif()
-            notifications.append([user.partner_id, 'calendar.alarm', notif])
-        if len(notifications) > 0:
-            self.env['bus.bus']._sendmany(notifications)
+            user._bus_send("calendar.alarm", notif)

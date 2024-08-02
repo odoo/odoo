@@ -819,19 +819,32 @@ class TestChannelRTC(MailCommon):
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda member: member.guest_id == test_guest)
         found_bus_notifs = self.assertBusNotifications(
             [
-                (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- new_message (not asserted below)
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update new message separator
-                (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- last_interest (not asserted below)
-                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update new message separator
-                (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # new members (not asserted below)
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # channel joined  -- last_interest (not asserted below)
-                (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
-                (self.cr.dbname, 'discuss.channel', channel.id),  # update list of invitations
-                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
-                (self.cr.dbname, 'mail.guest', test_guest.id),  # channel joined for guest (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # new member (guest) (not asserted below)
+                # discuss.channel/joined
+                (self.cr.dbname, "res.partner", test_user.partner_id.id),
+                # mail.record/insert - discuss.channel (last_interest_dt)
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # mail.record/insert - discuss.channel.member (message_unread_counter, new_message_separator, …)
+                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # mail.record/insert - discuss.channel (is_pinned: true)
+                (self.cr.dbname, "discuss.channel", channel.id, "members"),
+                # discuss.channel/new_message
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # discuss.channel/joined
+                (self.cr.dbname, "mail.guest", test_guest.id),
+                # mail.record/insert - discuss.channel.member (message_unread_counter, new_message_separator, …)
+                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # mail.record/insert - discuss.channel (is_pinned: true)
+                (self.cr.dbname, "discuss.channel", channel.id, "members"),
+                # discuss.channel/new_message
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # mail.record/insert - discuss.channel (memberCount), discuss.channel.member
+                (self.cr.dbname, "discuss.channel", channel.id),
+                # mail.record/insert - discuss.channel (rtcInvitingSession), discuss.channel.member
+                (self.cr.dbname, "res.partner", test_user.partner_id.id),
+                # mail.record/insert - discuss.channel (rtcInvitingSession), discuss.channel.member
+                (self.cr.dbname, "mail.guest", test_guest.id),
+                # mail.record/insert - discuss.channel (invitedMembers), discuss.channel.member
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             message_items=[
                 {

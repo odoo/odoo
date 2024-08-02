@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER
 from odoo.addons.bus.models.bus_presence import DISCONNECTION_TIMER
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _name = "res.partner"
+    _inherit = ["res.partner", "bus.listener.mixin"]
 
     im_status = fields.Char('IM Status', compute='_compute_im_status')
 

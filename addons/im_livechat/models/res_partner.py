@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from markupsafe import Markup
+
+from odoo import api, models, fields, _
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -46,3 +48,15 @@ class Partners(models.Model):
         if fields and "user_livechat_username" in fields:
             if partners := self.filtered(lambda p: not p.user_livechat_username):
                 super(Partners, partners)._to_store(store, fields=["name"])
+
+    def _bus_send_history_message(self, channel, page_history):
+        message_body = _("No history found")
+        if page_history:
+            message_body = Markup("<ul>%s</ul>") % (
+                Markup("").join(
+                    Markup('<li><a href="%(page)s" target="_blank">%(page)s</a></li>')
+                    % {"page": page}
+                    for page in page_history
+                )
+            )
+        self._bus_send_transient_message(channel, message_body)

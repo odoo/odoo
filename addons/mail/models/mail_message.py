@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -7,7 +6,7 @@ import textwrap
 from binascii import Error as binascii_error
 from collections import defaultdict
 
-from odoo import _, api, Command, fields, models, modules, tools
+from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.tools import clean_context, groupby, SQL
@@ -65,6 +64,7 @@ class Message(models.Model):
     information.
     """
     _name = 'mail.message'
+    _inherit = ["bus.listener.mixin"]
     _description = 'Message'
     _order = 'id desc'
     _rec_name = 'record_name'
@@ -733,14 +733,9 @@ class Message(models.Model):
         for elem in self:
             for partner in elem.partner_ids & partners_with_user:
                 messages_by_partner[partner] |= elem
-
         # Notify front-end of messages deletion for partners having a user
-        if messages_by_partner:
-            self.env['bus.bus']._sendmany([
-                (partner, 'mail.message/delete', {'message_ids': messages.ids})
-                for partner, messages in messages_by_partner.items()
-            ])
-
+        for partner, messages in messages_by_partner.items():
+            partner._bus_send("mail.message/delete", {"message_ids": messages.ids})
         return super(Message, self).unlink()
 
     def export_data(self, fields_to_export):
@@ -784,43 +779,43 @@ class Message(models.Model):
         notifications = self.env['mail.notification'].sudo().search_fetch(notif_domain, ['mail_message_id'])
         notifications.write({'is_read': True})
 
-        self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/mark_as_read', {
-            'message_ids': notifications.mail_message_id.ids,
-            'needaction_inbox_counter': self.env.user.partner_id._get_needaction_count(),
-        })
+        self.env.user._bus_send(
+            "mail.message/mark_as_read",
+            {
+                "message_ids": notifications.mail_message_id.ids,
+                "needaction_inbox_counter": self.env.user.partner_id._get_needaction_count(),
+            },
+        )
 
     def set_message_done(self):
         """ Remove the needaction from messages for the current partner. """
         partner_id = self.env.user.partner_id
-
         notifications = self.env['mail.notification'].sudo().search_fetch([
             ('mail_message_id', 'in', self.ids),
             ('res_partner_id', '=', partner_id.id),
             ('is_read', '=', False),
         ], ['mail_message_id'])
-
         if not notifications:
             return
-
         notifications.write({'is_read': True})
-
         # notifies changes in messages through the bus.
-        self.env['bus.bus']._sendone(partner_id, 'mail.message/mark_as_read', {
-            'message_ids': notifications.mail_message_id.ids,
-            'needaction_inbox_counter': self.env.user.partner_id._get_needaction_count(),
-        })
+        self.env.user._bus_send(
+            "mail.message/mark_as_read",
+            {
+                "message_ids": notifications.mail_message_id.ids,
+                "needaction_inbox_counter": self.env.user.partner_id._get_needaction_count(),
+            },
+        )
 
     @api.model
     def unstar_all(self):
         """ Unstar messages for the current partner. """
         partner = self.env.user.partner_id
-
         starred_messages = self.search([('starred_partner_ids', 'in', partner.id)])
         partner.starred_message_ids -= starred_messages
-        self.env['bus.bus']._sendone(partner, 'mail.message/toggle_star', {
-            'message_ids': starred_messages.ids,
-            'starred': False,
-        })
+        self.env.user._bus_send(
+            "mail.message/toggle_star", {"message_ids": starred_messages.ids, "starred": False}
+        )
 
     def toggle_message_starred(self):
         """ Toggle messages as (un)starred. Technically, the notifications related
@@ -834,11 +829,9 @@ class Message(models.Model):
             partner.starred_message_ids |= self
         else:
             partner.starred_message_ids -= self
-
-        self.env['bus.bus']._sendone(partner, 'mail.message/toggle_star', {
-            'message_ids': [self.id],
-            'starred': starred,
-        })
+        self.env.user._bus_send(
+            "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
+        )
 
     def _message_reaction(self, content, action):
         self.ensure_one()
@@ -872,13 +865,11 @@ class Message(models.Model):
             "personas": Store.many_ids(guest or partner, "ADD" if action == "add" else "DELETE"),
             "message": Store.one_id(self),
         }
-        self.env["bus.bus"]._sendone(
-            self._bus_notification_target(),
-            "mail.record/insert",
-            Store(self, {"reactions": [(group_command, group_values)]})
-            # sudo: mail.guest - guest can send their own name when reacting
-            .add(guest.sudo() or partner, fields=["name", "write_date"])
-            .get_result(),
+        # sudo: mail.guest - guest can send their own name when reacting
+        self._bus_send_store(
+            Store(self, {"reactions": [(group_command, group_values)]}).add(
+                guest.sudo() or partner, fields=["name", "write_date"]
+            )
         )
 
     # ------------------------------------------------------
@@ -1163,16 +1154,13 @@ class Message(models.Model):
                 messages_per_partner[self.env.user.partner_id] |= message
             if message.author_id and not any(user._is_public() for user in message.author_id.with_context(active_test=False).user_ids):
                 messages_per_partner[message.author_id] |= message
-        updates = []
         for partner, messages in messages_per_partner.items():
             store = Store()
             messages._message_notifications_to_store(store)
-            updates.append((partner, "mail.record/insert", store.get_result()))
-        self.env['bus.bus']._sendmany(updates)
+            partner._bus_send_store(store)
 
-    def _bus_notification_target(self):
-        self.ensure_one()
-        return self.env.user.partner_id
+    def _bus_channel(self):
+        return self.env.user._bus_channel()
 
     # ------------------------------------------------------
     # TOOLS
@@ -1197,25 +1185,17 @@ class Message(models.Model):
               ORDER BY res_partner_id
             """, [tuple(outdated_starred_partners.ids)])
             star_count_by_partner_id = dict(self.env.cr.fetchall())
-            notifications = []
             for partner in outdated_starred_partners:
-                notifications.append(
-                    (
-                        partner,
-                        "mail.record/insert",
-                        Store(
-                            "mail.thread",
-                            {
-                                "counter": star_count_by_partner_id.get(partner.id, 0),
-                                "counter_bus_id": bus_last_id,
-                                "id": "starred",
-                                "messages": Store.many(self, "DELETE", only_id=True),
-                                "model": "mail.box",
-                            },
-                        ).get_result(),
-                    )
+                partner._bus_send_store(
+                    "mail.thread",
+                    {
+                        "counter": star_count_by_partner_id.get(partner.id, 0),
+                        "counter_bus_id": bus_last_id,
+                        "id": "starred",
+                        "messages": Store.many(self, "DELETE", only_id=True),
+                        "model": "mail.box",
+                    },
                 )
-            self.env["bus.bus"]._sendmany(notifications)
 
     def _filter_empty(self):
         """ Return subset of "void" messages """

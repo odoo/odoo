@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
 
-from odoo import _, api, models, SUPERUSER_ID
+from odoo import _, models, SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.tools import consteq
@@ -66,14 +65,17 @@ class IrAttachment(models.Model):
         if message:
             # sudo: mail.message - safe write just updating the date, because guests don't have the rights
             message.sudo().write({})  # to make sure write_date on the message is updated
-        self.env['bus.bus']._sendmany((attachment._bus_notification_target(), 'ir.attachment/delete', {
-            'id': attachment.id, 'message': {'id': message.id, 'write_date': message.write_date} if message else None
-        }) for attachment in self)
+        for attachment in self:
+            attachment._bus_send(
+                "ir.attachment/delete",
+                {
+                    "id": attachment.id,
+                    "message": (
+                        {"id": message.id, "write_date": message.write_date} if message else None
+                    ),
+                },
+            )
         self.unlink()
-
-    def _bus_notification_target(self):
-        self.ensure_one()
-        return self.env.user.partner_id
 
     def _to_store(self, store: Store, /, *, fields=None, access_token=False):
         if fields is None:

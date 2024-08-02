@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import uuid
 from odoo import fields, models
 
@@ -26,4 +26,7 @@ class PosBusMixin(models.AbstractModel):
             if len(notifications) != 2:
                 raise ValueError("If you want to send a single notification, you must provide a name: str and a message: any")
             notifications = [notifications]
-        self.env['bus.bus']._sendmany((self.access_token, f"{self.access_token}-{name}" if private else name, message) for name, message in notifications)
+        for name, message in notifications:
+            self.env["bus.bus"]._sendone(
+                self.access_token, f"{self.access_token}-{name}" if private else name, message
+            )
