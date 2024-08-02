@@ -190,6 +190,14 @@ defineActions([
             [false, "form"],
         ],
     },
+    {
+        id: 9,
+        xml_id: "action_9",
+        name: "Ponies",
+        res_model: "pony",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
+    },
 ]);
 
 test("can execute act_window actions from db ID", async () => {
@@ -205,6 +213,40 @@ test("can execute act_window actions from db ID", async () => {
         "get_views",
         "web_search_read",
     ]);
+});
+
+test("can open default form view with selectRecord when there is none in the action", async () => {
+    stepAllNetworkCalls();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(9);
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "/web/action/load",
+        "get_views",
+        "web_search_read",
+        "has_group",
+    ]);
+    await contains(".o_data_row:eq(0) .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1, { message: "should display the form view" });
+    expect.verifySteps(["get_views", "web_read"]);
+});
+
+test("can open default form view with createRecord when there is none in the action", async () => {
+    stepAllNetworkCalls();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(9);
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "/web/action/load",
+        "get_views",
+        "web_search_read",
+        "has_group",
+    ]);
+    await contains(".o_list_button_add").click();
+    expect(".o_form_view").toHaveCount(1, { message: "should display the form view" });
+    expect.verifySteps(["get_views", "onchange"]);
 });
 
 test.tags("desktop")("sidebar is present in list view", async () => {
