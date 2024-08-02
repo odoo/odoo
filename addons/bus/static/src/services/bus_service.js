@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { EventBus } from "@odoo/owl";
+import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
 const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification"]);
@@ -111,14 +112,13 @@ export const busService = {
          */
         function initializeWorkerConnection() {
             // User_id has different values according to its origin:
-            //     - frontend: number or false,
-            //     - backend: array with only one number
+            //     - user service : number or false (key: userId)
             //     - guest page: array containing null or number
             //     - public pages: undefined
             // Let's format it in order to ease its usage:
             //     - number if user is logged, false otherwise, keep
             //       undefined to indicate session_info is not available.
-            let uid = Array.isArray(session.user_id) ? session.user_id[0] : session.user_id;
+            let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
             if (!uid && uid !== undefined) {
                 uid = false;
             }

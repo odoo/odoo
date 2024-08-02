@@ -37,7 +37,11 @@ test("persisted session history", async () => {
     });
     expirableStorage.setItem(
         "im_livechat.saved_state",
-        JSON.stringify({ store: { "discuss.channel": [{ id: channelId }] }, persisted: true })
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: channelId }] },
+            persisted: true,
+            livechatUserId: serverState.publicUserId,
+        })
     );
     pyEnv["mail.message"].create({
         author_id: serverState.partnerId,

@@ -26,7 +26,11 @@ test("persisted session", async () => {
     });
     expirableStorage.setItem(
         "im_livechat.saved_state",
-        JSON.stringify({ store: { "discuss.channel": [{ id: channelId }] }, persisted: true })
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: channelId }] },
+            persisted: true,
+            livechatUserId: serverState.publicUserId,
+        })
     );
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },

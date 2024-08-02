@@ -7,6 +7,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { user } from "@web/core/user";
 
 /**
  * @typedef LivechatRule
@@ -185,7 +186,7 @@ export class LivechatService {
         expirableStorage.setItem(
             SAVED_STATE_STORAGE_KEY,
             JSON.stringify({
-                livechatUserId: this.savedState?.livechatUserId ?? session.user_id,
+                livechatUserId: this.savedState?.livechatUserId ?? user.userId,
                 persisted,
                 store: persisted ? { "discuss.channel": [{ id: this.thread.id }] } : saveData,
             }),
@@ -257,7 +258,7 @@ export const livechatService = {
         (async () => {
             // Live chat state should be deleted if it is linked to another user
             // (log in/out after chat start).
-            if ((livechat.savedState?.livechatUserId || false) !== (session.user_id || false)) {
+            if ((livechat.savedState?.livechatUserId || false) !== (user.userId || false)) {
                 await livechat.leave({ notifyServer: false });
             }
             if (livechat.available) {

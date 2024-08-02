@@ -10,6 +10,7 @@
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
     import { rpc } from "@web/core/network/rpc";
     import { SlideQuizFinishDialog } from "@website_slides/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog";
+    import { user } from "@web/core/user";
 
     import { _t } from "@web/core/l10n/translation";
 
@@ -70,7 +71,7 @@
             this.isMember = slide_data.isMember || false;
             this.isMemberOrInvited = slide_data.isMemberOrInvited || false;
             this.publicUser = session.is_website_user;
-            this.userId = session.user_id;
+            this.userId = user.userId;
             this.redirectURL = encodeURIComponent(document.URL);
             this.channel = channel_data;
 

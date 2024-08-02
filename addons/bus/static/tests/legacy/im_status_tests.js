@@ -10,7 +10,7 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { assertSteps, step } from "@web/../tests/utils";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
+import { user } from "@web/core/user";
 
 // Delays can slighly differ since time is not frozen. Let's tolerate 1000ms
 // of difference.
@@ -26,7 +26,7 @@ QUnit.module("IM status", {
         patchWebsocketWorkerWithCleanup();
         registry.category("services").add("im_status", imStatusService);
         const pyEnv = await startServer();
-        patchWithCleanup(session, { partner_id: pyEnv.currentPartner.id });
+        patchWithCleanup(user, { partnerId: pyEnv.currentPartner.id });
         registry.category("mock_server").add("res.users/has_group", (route, args) => {
             return args[0] === "base.group_public";
         });

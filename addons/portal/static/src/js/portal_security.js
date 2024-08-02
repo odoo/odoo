@@ -3,9 +3,9 @@
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { renderToMarkup } from "@web/core/utils/render";
 import publicWidget from '@web/legacy/js/public/public_widget';
-import { session } from "@web/session";
 import { InputConfirmationDialog } from './components/input_confirmation_dialog/input_confirmation_dialog';
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
     selector: '.o_portal_new_api_key',
@@ -27,7 +27,7 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
         // The result of the call is unused. But it's required to call a method with the decorator `@check_identity`
         // in order to use `handleCheckIdentity`.
         await handleCheckIdentity(
-            this.orm.call("res.users", "api_key_wizard", [session.user_id]),
+            this.orm.call("res.users", "api_key_wizard", [user.userId]),
             this.orm,
             this.dialog
         );
@@ -123,7 +123,7 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
 
     async _onClick() {
         const { res_id: checkId } = await this.orm.call("res.users", "api_key_wizard", [
-            session.user_id,
+            user.userId,
         ]);
         this.call("dialog", "add", InputConfirmationDialog, {
             title: _t("Log out from all devices?"),

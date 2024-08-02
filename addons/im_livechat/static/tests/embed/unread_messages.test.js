@@ -41,7 +41,11 @@ test("new message from operator displays unread counter", async () => {
     });
     expirableStorage.setItem(
         "im_livechat.saved_state",
-        JSON.stringify({ store: { "discuss.channel": [{ id: channelId }] }, persisted: true })
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: channelId }] },
+            persisted: true,
+            livechatUserId: serverState.publicUserId,
+        })
     );
     onRpcBefore("/mail/action", (args) => {
         if (args.init_messaging) {

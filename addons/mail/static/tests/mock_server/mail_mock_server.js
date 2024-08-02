@@ -11,7 +11,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 import { groupBy } from "@web/core/utils/arrays";
 
 export const DISCUSS_ACTION_ID = 104;
@@ -35,7 +34,6 @@ export const authenticateGuest = (guest) => {
     env.cookie.set("dgid", guest.id);
     authenticate(publicUser.login, publicUser.password);
     env.uid = serverState.publicUserId;
-    session.user_id = false;
 };
 
 /**
@@ -50,9 +48,7 @@ export async function withGuest(guestId, fn) {
     const MailGuest = env["mail.guest"];
     const currentUser = env.user;
     const [targetGuest] = MailGuest.browse(guestId);
-    const OLD_SESSION_USER_ID = session.user_id;
     authenticateGuest(targetGuest);
-    session.user_id = false;
     let result;
     try {
         result = await fn();
@@ -63,7 +59,6 @@ export async function withGuest(guestId, fn) {
             logout();
             env.cookie.delete("dgid");
         }
-        session.user_id = OLD_SESSION_USER_ID;
     }
     return result;
 }

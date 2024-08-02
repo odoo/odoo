@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { session } from "@web/session";
 import portalComposer from "@portal/js/portal_composer";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { user } from "@web/core/user";
 
 const PortalComposer = portalComposer.PortalComposer;
 
@@ -34,7 +34,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
             'pid': 0,
             'display_rating': true,
             'csrf_token': odoo.csrf_token,
-            'user_id': session.user_id,
+            'user_id': user.userId,
         }, options, {});
         this.options.send_button_label = this.options.default_message_id ? _t("Update review") : _t("Post review");
 
