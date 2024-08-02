@@ -18,7 +18,6 @@ const StepSchema = {
     content: { type: [String, Object], optional: true }, //allow object(_t && markup)
     debugHelp: { type: String, optional: true },
     isActive: { type: Array, element: String, optional: true },
-    noPrepend: { type: Boolean, optional: true },
     run: { type: [String, Function], optional: true },
     timeout: { type: Number, optional: true },
     tooltipPosition: { type: String, optional: true },

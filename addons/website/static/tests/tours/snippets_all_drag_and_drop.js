@@ -154,5 +154,9 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
         trigger: "body",
         run: () => unpatchWysiwygAdapter(),
     }
-]),
+            ])
+            .map((step) => {
+                delete step.noPrepend;
+                return step;
+            }),
 });
