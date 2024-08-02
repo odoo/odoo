@@ -919,17 +919,21 @@ class PosConfig(models.Model):
 
         convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/furniture_data.xml', None, noupdate=True, mode='init', kind='data')
 
+    def get_categories(self, categories):
+        # filters out unavailable external id
+        return [self.env.ref(category).id for category in categories if self.env.ref(category, raise_if_not_found=False)]
+
     @api.model
     def load_onboarding_clothes_scenario(self):
         ref_name = 'point_of_sale.pos_config_clothes'
         if not self.env.ref(ref_name, raise_if_not_found=False):
             convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/clothes_data.xml', None, noupdate=True, mode='init', kind='data')
 
-        clothes_categories = [
-            self.env.ref('point_of_sale.pos_category_upper').id,
-            self.env.ref('point_of_sale.pos_category_lower').id,
-            self.env.ref('point_of_sale.pos_category_others').id
-        ]
+        clothes_categories = self.get_categories([
+            'point_of_sale.pos_category_upper',
+            'point_of_sale.pos_category_lower',
+            'point_of_sale.pos_category_others'
+        ])
         journal, payment_methods_ids = self._create_journal_and_payment_methods()
         config = self.env['pos.config'].create([{
             'name': _('Clothes Shop'),
@@ -952,10 +956,10 @@ class PosConfig(models.Model):
             convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/bakery_data.xml', None, mode='init', noupdate=True, kind='data')
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods()
-        bakery_categories = [
-            self.env.ref('point_of_sale.pos_category_breads').id,
-            self.env.ref('point_of_sale.pos_category_pastries').id
-        ]
+        bakery_categories = self.get_categories([
+            'point_of_sale.pos_category_breads',
+            'point_of_sale.pos_category_pastries',
+        ])
         config = self.env['pos.config'].create({
             'name': _('Bakery Shop'),
             'company_id': self.env.company.id,
@@ -977,11 +981,11 @@ class PosConfig(models.Model):
             self._load_furniture_data()
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods('point_of_sale.cash_payment_method_furniture')
-        furniture_categories = [
-            self.env.ref('point_of_sale.pos_category_miscellaneous').id,
-            self.env.ref('point_of_sale.pos_category_desks').id,
-            self.env.ref('point_of_sale.pos_category_chairs').id
-        ]
+        furniture_categories = self.get_categories([
+            'point_of_sale.pos_category_miscellaneous',
+            'point_of_sale.pos_category_desks',
+            'point_of_sale.pos_category_chairs'
+        ])
         config = self.env['pos.config'].create([{
             'name': _('Furniture Shop'),
             'company_id': self.env.company.id,
