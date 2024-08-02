@@ -4,8 +4,8 @@ import {
     isAllowedContent,
     isEditorTab,
     isEmpty,
-    isIconElement,
     isInPre,
+    isMediaElement,
     isSelfClosingElement,
     isShrunkBlock,
     isTangible,
@@ -1096,7 +1096,7 @@ export class DeletePlugin extends Plugin {
         }
         // @todo: register these as resources by other plugins?
         if (
-            [isSelfClosingElement, isIconElement, isEditorTab].some((predicate) => predicate(leaf))
+            [isSelfClosingElement, isMediaElement, isEditorTab].some((predicate) => predicate(leaf))
         ) {
             return false;
         }
