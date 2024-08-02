@@ -10,7 +10,7 @@ export class StarPlugin extends Plugin {
     static name = "star";
     static dependencies = ["dom"];
     static resources = (p) => ({
-        powerboxCommands: [
+        powerboxItems: [
             {
                 name: _t("3 Stars"),
                 description: _t("Insert a rating over 3 stars"),

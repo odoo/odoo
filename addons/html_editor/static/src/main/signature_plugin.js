@@ -9,7 +9,7 @@ export class SignaturePlugin extends Plugin {
     /** @type { (p: SignaturePlugin) => Record<string, any> } */
     static resources = (p) => ({
         powerboxCategory: { id: "basic_block", name: _t("Basic Bloc"), sequence: 100 },
-        powerboxCommands: [
+        powerboxItems: [
             {
                 category: "basic_block",
                 name: _t("Signature"),

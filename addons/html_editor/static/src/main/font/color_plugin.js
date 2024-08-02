@@ -20,30 +20,34 @@ export class ColorPlugin extends Plugin {
     static shared = ["colorElement"];
     /** @type { (p: ColorPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        toolbarGroup: {
+        toolbarCategory: {
             id: "color",
             sequence: 25,
-            buttons: [
-                {
-                    id: "forecolor",
-                    Component: ColorSelector,
-                    props: {
-                        type: "foreground",
-                        getUsedCustomColors: () => p.getUsedCustomColors("color"),
-                        getSelectedColors: () => p.selectedColors,
-                    },
-                },
-                {
-                    id: "backcolor",
-                    Component: ColorSelector,
-                    props: {
-                        type: "background",
-                        getUsedCustomColors: () => p.getUsedCustomColors("background"),
-                        getSelectedColors: () => p.selectedColors,
-                    },
-                },
-            ],
         },
+        toolbarItems: [
+            {
+                id: "forecolor",
+                category: "color",
+                Component: ColorSelector,
+                props: {
+                    type: "foreground",
+                    getUsedCustomColors: () => p.getUsedCustomColors("color"),
+                    getSelectedColors: () => p.selectedColors,
+                },
+            },
+            {
+                id: "backcolor",
+                category: "color",
+
+                Component: ColorSelector,
+                props: {
+                    type: "background",
+                    getUsedCustomColors: () => p.getUsedCustomColors("background"),
+                    getSelectedColors: () => p.selectedColors,
+                },
+            },
+        ],
+
         onSelectionChange: p.updateSelectedColor.bind(p),
         removeFormat: p.removeAllColor.bind(p),
     });

@@ -22,7 +22,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
     /** @type { (p: DynamicPlaceholderPlugin) => Record<string, any> } */
     static resources = (p) => ({
         powerboxCategory: { id: "marketing_tools", name: _t("Marketing Tools"), sequence: 60 },
-        powerboxCommands: {
+        powerboxItems: {
             name: _t("Dynamic Placeholder"),
             description: _t("Insert personalized content"),
             category: "marketing_tools",

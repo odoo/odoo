@@ -29,7 +29,7 @@ export class DomPlugin extends Plugin {
     static dependencies = ["selection", "split", "delete"];
     static shared = ["domInsert", "copyAttributes"];
     static resources = () => ({
-        powerboxCommands: {
+        powerboxItems: {
             name: _t("Separator"),
             description: _t("Insert a horizontal rule separator"),
             category: "structure",

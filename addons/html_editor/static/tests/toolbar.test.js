@@ -312,18 +312,13 @@ test("toolbar correctly show namespace button group and stop showing when namesp
                         },
                     },
                 ],
-                toolbarGroup: [
+                toolbarCategory: { id: "test_group", sequence: 24, namespace: "aNamespace" },
+                toolbarItems: [
                     {
-                        id: "test_group",
-                        sequence: 24,
-                        namespace: "aNamespace",
-                        buttons: [
-                            {
-                                id: "test_btn",
-                                name: "Test Button",
-                                icon: "fa-square",
-                            },
-                        ],
+                        id: "test_btn",
+                        category: "test_group",
+                        name: "Test Button",
+                        icon: "fa-square",
                     },
                 ],
             };
@@ -344,21 +339,19 @@ test("toolbar correctly process inheritance buttons chain", async () => {
         static name = "TestPlugin";
         static resources(p) {
             return {
-                toolbarGroup: [
+                toolbarCategory: { id: "test_group" },
+                toolbarItems: [
                     {
-                        id: "test_group",
-                        buttons: [
-                            {
-                                id: "test_btn",
-                                name: "Test Button",
-                                icon: "fa-square",
-                            },
-                            {
-                                id: "test_btn2",
-                                inherit: "test_btn",
-                                name: "Test Button 2",
-                            },
-                        ],
+                        id: "test_btn",
+                        category: "test_group",
+                        name: "Test Button",
+                        icon: "fa-square",
+                    },
+                    {
+                        id: "test_btn2",
+                        category: "test_group",
+                        inherit: "test_btn",
+                        name: "Test Button 2",
                     },
                 ],
             };
@@ -383,22 +376,17 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
         static name = "TestPlugin";
         static resources(p) {
             return {
-                toolbarGroup: [
+                toolbarCategory: { id: "test_group", sequence: 24, namespace: "image" },
+                toolbarItems: [
                     {
-                        id: "test_group",
-                        sequence: 24,
-                        namespace: "image",
-                        buttons: [
-                            {
-                                id: "test_btn",
-                                action(dispatch) {
-                                    dispatch("test_cmd");
-                                },
-                                name: "Test Button",
-                                icon: "fa-square",
-                                isFormatApplied: () => expect.step("image format evaluated"),
-                            },
-                        ],
+                        id: "test_btn",
+                        category: "test_group",
+                        action(dispatch) {
+                            dispatch("test_cmd");
+                        },
+                        name: "Test Button",
+                        icon: "fa-square",
+                        isFormatApplied: () => expect.step("image format evaluated"),
                     },
                 ],
             };
@@ -427,20 +415,16 @@ test("plugins can create buttons with text in toolbar", async () => {
         static name = "TestPlugin";
         static resources(p) {
             return {
-                toolbarGroup: [
+                toolbarCategory: { id: "test_group", sequence: 24 },
+                toolbarItems: [
                     {
-                        id: "test_group",
-                        sequence: 24,
-                        buttons: [
-                            {
-                                id: "test_btn",
-                                action(dispatch) {
-                                    dispatch("test_cmd");
-                                },
-                                name: "Test Button",
-                                text: "Text button",
-                            },
-                        ],
+                        id: "test_btn",
+                        category: "test_group",
+                        action(dispatch) {
+                            dispatch("test_cmd");
+                        },
+                        name: "Test Button",
+                        text: "Text button",
                     },
                 ],
             };

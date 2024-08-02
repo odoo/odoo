@@ -195,19 +195,18 @@ export class HtmlField extends Component {
             dynamicPlaceholderResModel:
                 this.props.record.data[this.props.dynamicPlaceholderModelReferenceField || "model"],
             resources: {
-                toolbarGroup: [
+                toolbarCategory: {
+                    id: "codeview",
+                    sequence: 100,
+                },
+                toolbarItems: [
                     {
                         id: "codeview",
-                        sequence: 100,
-                        buttons: [
-                            {
-                                id: "codeview",
-                                icon: "fa-code",
-                                action: () => {
-                                    this.toggleCodeView();
-                                },
-                            },
-                        ],
+                        category: "codeview",
+                        icon: "fa-code",
+                        action: () => {
+                            this.toggleCodeView();
+                        },
                     },
                 ],
             },

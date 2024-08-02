@@ -12,7 +12,7 @@ export class BannerPlugin extends Plugin {
     /** @type { (p: BannerPlugin) => Record<string, any> } */
     static resources = (p) => ({
         powerboxCategory: { id: "banner", name: _t("Banner"), sequence: 20 },
-        powerboxCommands: [
+        powerboxItems: [
             {
                 category: "banner",
                 name: _t("Banner Info"),

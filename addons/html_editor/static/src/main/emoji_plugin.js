@@ -20,7 +20,7 @@ export class EmojiPlugin extends Plugin {
     static shared = ["showEmojiPicker"];
     /** @type { (p: EmojiPlugin) => Record<string, any> } */
     static resources = (p) => ({
-        powerboxCommands: [
+        powerboxItems: [
             {
                 category: "widget",
                 name: _t("Emoji"),

@@ -2648,8 +2648,8 @@ export class Wysiwyg extends Component {
         if (editorOptions.powerboxCategories) {
             categories.push(...editorOptions.powerboxCategories);
         }
-        if (editorOptions.powerboxCommands) {
-            commands.push(...editorOptions.powerboxCommands);
+        if (editorOptions.powerboxItems) {
+            commands.push(...editorOptions.powerboxItems);
         }
         return {commands, categories};
     }

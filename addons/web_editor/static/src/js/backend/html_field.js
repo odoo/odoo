@@ -186,7 +186,7 @@ export class HtmlField extends Component {
             dynamicPlaceholderOptions = {
                 // Add the powerbox option to open the Dynamic Placeholder
                 // generator.
-                powerboxCommands: [
+                powerboxItems: [
                     {
                         category: _t('Marketing Tools'),
                         name: _t('Dynamic Placeholder'),

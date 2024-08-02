@@ -33,7 +33,7 @@ export class ColumnPlugin extends Plugin {
     static dependencies = ["selection"];
     static resources = () => ({
         isUnremovable: isUnremovableColumn,
-        powerboxCommands: [
+        powerboxItems: [
             {
                 name: _t("2 columns"),
                 description: _t("Convert into 2 columns"),

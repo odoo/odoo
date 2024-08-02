@@ -12,13 +12,28 @@ export class ToolbarPlugin extends Plugin {
     });
 
     setup() {
-        this.buttonGroups = this.resources.toolbarGroup.sort((a, b) => a.sequence - b.sequence);
+        const categoryIds = new Set();
+        for (const category of this.resources.toolbarCategory) {
+            if (categoryIds.has(category.id)) {
+                throw new Error(`Duplicate toolbar category id: ${category.id}`);
+            }
+            categoryIds.add(category.id);
+        }
+        this.categories = this.resources.toolbarCategory.sort((a, b) => a.sequence - b.sequence);
+        this.buttonGroups = [];
+        for (const category of this.categories) {
+            this.buttonGroups.push({
+                ...category,
+                buttons: this.resources.toolbarItems.filter(
+                    (command) => command.category === category.id
+                ),
+            });
+        }
         this.buttonsDict = Object.assign(
             {},
-            ...this.buttonGroups
-                .flatMap((g) => g.buttons)
-                .map((button) => ({ [button.id]: button }))
+            ...this.resources.toolbarItems.map((button) => ({ [button.id]: button }))
         );
+
         this.overlay = this.shared.createOverlay(Toolbar, { position: "top-start" });
         this.state = reactive({
             buttonsActiveState: this.buttonGroups.flatMap((g) =>

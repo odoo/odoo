@@ -15,89 +15,89 @@ export class IconPlugin extends Plugin {
                     },
                 },
             ],
-            toolbarGroup: [
+            toolbarCategory: [
                 {
                     id: "icon_color",
                     sequence: 1,
                     namespace: "icon",
-                    buttons: [
-                        {
-                            id: "icon_forecolor",
-                            inherit: "forecolor",
-                        },
-                        {
-                            id: "icon_backcolor",
-                            inherit: "backcolor",
-                        },
-                    ],
                 },
                 {
                     id: "icon_size",
                     sequence: 1,
                     namespace: "icon",
-                    buttons: [
-                        {
-                            id: "icon_size_1",
-                            action(dispatch) {
-                                dispatch("RESIZE_ICON", "1");
-                            },
-                            text: "1x",
-                            name: _t("Icon size 1x"),
-                            isFormatApplied: () => p.hasIconSize("1"),
-                        },
-                        {
-                            id: "icon_size_2",
-                            action(dispatch) {
-                                dispatch("RESIZE_ICON", "2");
-                            },
-                            text: "2x",
-                            name: _t("Icon size 2x"),
-                            isFormatApplied: () => p.hasIconSize("2"),
-                        },
-                        {
-                            id: "icon_size_3",
-                            action(dispatch) {
-                                dispatch("RESIZE_ICON", "3");
-                            },
-                            text: "3x",
-                            name: _t("Icon size 3x"),
-                            isFormatApplied: () => p.hasIconSize("3"),
-                        },
-                        {
-                            id: "icon_size_4",
-                            action(dispatch) {
-                                dispatch("RESIZE_ICON", "4");
-                            },
-                            text: "4x",
-                            name: _t("Icon size 4x"),
-                            isFormatApplied: () => p.hasIconSize("4"),
-                        },
-                        {
-                            id: "icon_size_5",
-                            action(dispatch) {
-                                dispatch("RESIZE_ICON", "5");
-                            },
-                            text: "5x",
-                            name: _t("Icon size 5x"),
-                            isFormatApplied: () => p.hasIconSize("5"),
-                        },
-                    ],
+                },
+                { id: "icon_spin", sequence: 3, namespace: "icon" },
+            ],
+            toolbarItems: [
+                {
+                    id: "icon_forecolor",
+                    category: "icon_color",
+                    inherit: "forecolor",
+                },
+                {
+                    id: "icon_backcolor",
+                    category: "icon_color",
+                    inherit: "backcolor",
+                },
+                {
+                    id: "icon_size_1",
+                    category: "icon_size",
+                    action(dispatch) {
+                        dispatch("RESIZE_ICON", "1");
+                    },
+                    text: "1x",
+                    name: _t("Icon size 1x"),
+                    isFormatApplied: () => p.hasIconSize("1"),
+                },
+                {
+                    id: "icon_size_2",
+                    category: "icon_size",
+                    action(dispatch) {
+                        dispatch("RESIZE_ICON", "2");
+                    },
+                    text: "2x",
+                    name: _t("Icon size 2x"),
+                    isFormatApplied: () => p.hasIconSize("2"),
+                },
+                {
+                    id: "icon_size_3",
+                    category: "icon_size",
+                    action(dispatch) {
+                        dispatch("RESIZE_ICON", "3");
+                    },
+                    text: "3x",
+                    name: _t("Icon size 3x"),
+                    isFormatApplied: () => p.hasIconSize("3"),
+                },
+                {
+                    id: "icon_size_4",
+                    category: "icon_size",
+                    action(dispatch) {
+                        dispatch("RESIZE_ICON", "4");
+                    },
+                    text: "4x",
+                    name: _t("Icon size 4x"),
+                    isFormatApplied: () => p.hasIconSize("4"),
+                },
+                {
+                    id: "icon_size_5",
+                    category: "icon_size",
+                    action(dispatch) {
+                        dispatch("RESIZE_ICON", "5");
+                    },
+                    text: "5x",
+                    name: _t("Icon size 5x"),
+                    isFormatApplied: () => p.hasIconSize("5"),
                 },
                 {
                     id: "icon_spin",
-                    sequence: 3,
-                    namespace: "icon",
-                    buttons: [
-                        {
-                            id: "icon_spin",
-                            action(dispatch) {
-                                dispatch("TOGGLE_SPIN_ICON");
-                            },
-                            icon: "fa-play",
-                            name: _t("Toggle icon spin"),
-                            isFormatApplied: () => p.hasSpinIcon(),
-                        },
-                    ],
+                    category: "icon_spin",
+                    action(dispatch) {
+                        dispatch("TOGGLE_SPIN_ICON");
+                    },
+                    icon: "fa-play",
+                    name: _t("Toggle icon spin"),
+                    isFormatApplied: () => p.hasSpinIcon(),
                 },
             ],
             colorApply: p.applyIconColor.bind(p),
