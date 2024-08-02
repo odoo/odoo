@@ -296,28 +296,15 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: "iframe .s_text_image p a[href='http://callmemaybe.com']:contains('callmemaybe.com')",
     },
     // 10. Test that UI stays up-to-date.
-    // TODO this step which was added by https://github.com/odoo/odoo/commit/9fc283b514d420fdfd66123845d9ec3563572692
-    // for no apparent reason (the X-original-commit of that one does not add
-    // this step) is not required for the test to work (it passes more often
-    // without this step than with it). It is a cause of race condition (last
-    // check: 31 over 162 tries failed on this). It however makes sense: the
-    // popover should indeed be shown and stay shown at this point. To be
-    // reenabled once the related feature is robust.
-    /*
     {
         content: "Popover should be shown",
         trigger: "iframe .o_edit_menu_popover .o_we_url_link:contains('http://callmemaybe.com')",
         isCheck: true,
     },
-    */
     {
         content: "Edit link label",
         trigger: "iframe .s_text_image p a",
         run(actions) {
-            // See SHOPS_STEP_DISABLED. TODO. These steps do not consistently
-            // update the link for some reason... to investigate.
-            /*
-            // Simulating text input.
             const link = this.$anchor[0];
             actions.text("callmemaybe.com/shops");
             // Trick the editor into keyboardType === 'PHYSICAL' and delete the
@@ -325,47 +312,30 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
             link.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace", bubbles: true }));
             // Trigger editor's '_onInput' handler, which leads to a history step.
             link.dispatchEvent(new InputEvent('input', {inputType: 'insertText', bubbles: true}));
-            */
         },
     },
-    // See SHOPS_STEP_DISABLED. TODO.
-    /*
+    {
+        content: "Resolve above step promises",
+        trigger: "iframe .s_text_image img",
+    },
     {
         content: "Check that links's href was updated",
         trigger: "iframe .s_text_image p a[href='http://callmemaybe.com/shop']:contains('callmemaybe.com/shop')",
-        isCheck: true,
     },
-    */
-    // TODO this step is disabled for now because it is a cause of race
-    // condition (last check: 57 over 162 tries failed on this). The popover
-    // seems to sometimes unexpectedly close. Probably why the "Popover should
-    // be shown" step above had to be disabled as well.
-    /*
     {
         content: "Check popover content is up-to-date",
         trigger: "iframe .popover div a:contains('http://callmemaybe.com/shop')",
         isCheck: true,
     },
-    */
-    // TODO this step is disabled for now because writing "/shop" in above steps
-    // currently is not considered most of the time all of a sudden... to
-    // investigate (it was not needed in 16.4). See SHOPS_STEP_DISABLED.
-    /*
     {
         content: "Check Link tools URL input content is up-to-date",
         trigger: "#o_link_dialog_url_input",
         run() {
-            // FIXME this was changed with 69a27360c98aee3d97eb42e9a27a751311791e15
-            // to omit the http:// part... but this part is removed
-            // inconsistently. Trying to fix the test actually made it so
-            // http:// is still there at this point... make it consistent and
-            // then remove http:// here again.
-            if (this.$anchor[0].value !== 'http://callmemaybe.com/shop') {
+            if (this.$anchor[0].value !== "callmemaybe.com/shop") {
                 throw new Error("Tour step failed");
             }
         }
     },
-    */
     // 11. Pick a URL with auto-complete
     {
         content: "Enter partial URL",
@@ -391,16 +361,11 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Check that the link's href was updated and click on it",
         trigger: "iframe .s_text_image p a[href='/this-address-does-not-exist']",
     },
-    // TODO this step is disabled for now because it is a cause of race
-    // condition (last check: 3 times over 95). The popover seems to sometimes
-    // unexpectedly close.
-    /*
     {
         content: "Check popover content is up-to-date (2)",
         trigger: "iframe .popover div a:contains('/this-address-does-not-exist')",
         isCheck: true,
     },
-    */
     // 13. Check that ZWS is not added in the link label input.
     clickOnImgStep,
     {

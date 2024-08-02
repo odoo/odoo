@@ -115,6 +115,12 @@ export class LinkPopoverWidget {
             const popover = Popover.getInstance(this.target);
             popover.tip.classList.add('o_edit_menu_popover');
         })
+        .on("shown.bs.popover.link_popover", () => {
+            if (!this.target.getAttribute("aria-describedby") && popoverShown) {
+                this.popover = Popover.getInstance(this.target);
+                this.popover.show();
+            }
+        })
         .popover('show');
 
         this.popover = Popover.getInstance(this.target);
