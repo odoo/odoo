@@ -34,6 +34,7 @@
         'data/digest_data.xml',
         'views/website_templates.xml',
         'views/snippets/snippets.xml',
+        'views/snippets/s_framed_intro.xml',
         'views/snippets/s_title.xml',
         'views/snippets/s_cover.xml',
         'views/snippets/s_text_cover.xml',
