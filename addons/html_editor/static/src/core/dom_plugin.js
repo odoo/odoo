@@ -5,7 +5,9 @@ import {
     cleanTrailingBR,
     fillShrunkPhrasingParent,
     makeContentsInline,
+    removeClass,
     setTagName,
+    unwrapContents,
 } from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
@@ -20,6 +22,7 @@ import {
 import { closestElement, descendants } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, rightPos } from "../utils/position";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 export class DomPlugin extends Plugin {
     static name = "dom";
@@ -362,16 +365,13 @@ export class DomPlugin extends Plugin {
 
     setTag({ tagName, extraClass = "" }) {
         tagName = tagName.toUpperCase();
-        const selection = this.shared.getEditableSelection();
+        const cursors = this.shared.preserveSelection();
         const selectedBlocks = [...this.shared.getTraversedBlocks()];
         const deepestSelectedBlocks = selectedBlocks.filter(
             (block) =>
                 !descendants(block).some((descendant) => selectedBlocks.includes(descendant)) &&
                 block.isContentEditable
         );
-        let { startContainer, startOffset, endContainer, endOffset } = selection;
-        const startContainerChild = startContainer.firstChild;
-        const endContainerChild = endContainer.lastChild;
         for (const block of deepestSelectedBlocks) {
             if (
                 ["P", "PRE", "H1", "H2", "H3", "H4", "H5", "H6", "LI", "BLOCKQUOTE"].includes(
@@ -382,57 +382,35 @@ export class DomPlugin extends Plugin {
                     if (block.nodeName === "LI") {
                         continue;
                     } else if (block.parentNode.nodeName === "LI") {
-                        block.before(...block.childNodes);
-                        block.remove();
+                        cursors.update(callbacksForCursorUpdate.unwrap(block));
+                        unwrapContents(block);
                         continue;
                     }
                 }
 
                 const newEl = setTagName(block, tagName);
-                newEl.classList.remove(
-                    ...FONT_SIZE_CLASSES,
-                    ...TEXT_STYLE_CLASSES,
-                    // We want to be able to edit the case `<h2 class="h3">`
-                    // but in that case, we want to display "Header 2" and
-                    // not "Header 3" as it is more important to display
-                    // the semantic tag being used (especially for h1 ones).
-                    // This is why those are not in `TEXT_STYLE_CLASSES`.
-                    "h1",
-                    "h2",
-                    "h3",
-                    "h4",
-                    "h5",
-                    "h6"
-                );
+                cursors.remapNode(block, newEl);
+                // We want to be able to edit the case `<h2 class="h3">`
+                // but in that case, we want to display "Header 2" and
+                // not "Header 3" as it is more important to display
+                // the semantic tag being used (especially for h1 ones).
+                // This is why those are not in `TEXT_STYLE_CLASSES`.
+                const headingClasses = ["h1", "h2", "h3", "h4", "h5", "h6"];
+                removeClass(newEl, ...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES, ...headingClasses);
                 delete newEl.style.fontSize;
                 if (extraClass) {
                     newEl.classList.add(extraClass);
-                }
-                if (newEl.classList.length === 0) {
-                    newEl.removeAttribute("class");
                 }
             } else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
                 const newBlock = this.document.createElement(tagName);
-                const children = [...block.childNodes];
-                block.insertBefore(newBlock, block.firstChild);
-                children.forEach((child) => newBlock.appendChild(child));
+                newBlock.append(...block.childNodes);
+                block.append(newBlock);
+                cursors.remapNode(block, newBlock);
             }
         }
-        const isContextBlock = (container) => ["TD", "DIV", "LI"].includes(container.nodeName);
-        if (!startContainer.isConnected || isContextBlock(startContainer)) {
-            startContainer = startContainerChild.parentNode;
-        }
-        if (!endContainer.isConnected || isContextBlock(endContainer)) {
-            endContainer = endContainerChild.parentNode;
-        }
-        this.shared.setSelection({
-            anchorNode: startContainer,
-            anchorOffset: startOffset,
-            focusNode: endContainer,
-            focusOffset: endOffset,
-        });
+        cursors.restore();
         this.dispatch("ADD_STEP");
     }
 
