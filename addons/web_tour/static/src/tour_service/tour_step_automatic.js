@@ -75,7 +75,7 @@ export class TourStepAutomatic extends TourStep {
                 action: async (stepEl) => {
                     clearTimeout(this._timeout);
                     tourState.set(this.tour.name, "currentIndex", this.index + 1);
-                    if (this.tour.showPointerDuration > 0) {
+                    if (this.tour.showPointerDuration > 0 && stepEl !== true) {
                         // Useful in watch mode.
                         pointer.pointTo(stepEl, this);
                         await new Promise((r) =>
