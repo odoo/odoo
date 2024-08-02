@@ -84,7 +84,7 @@ class AccountMove(models.Model):
         depends=['l10n_it_edi_attachment_file'],
     )
     l10n_it_edi_is_self_invoice = fields.Boolean(compute="_compute_l10n_it_edi_is_self_invoice")
-    l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo")
+    l10n_it_stamp_duty = fields.Float(string="Dati Bollo")
     l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', copy=False)
 
     l10n_it_origin_document_type = fields.Selection(
