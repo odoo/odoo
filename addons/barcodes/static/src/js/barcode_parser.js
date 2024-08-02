@@ -177,7 +177,14 @@ export class BarcodeParser {
      *      - base_code: the barcode with all the encoding parts set to zero; the one put on the product in the backend
      */
     parse_barcode(barcode) {
-        var parsed_result = {
+        if (barcode.match(/^urn:/)) {
+            return this.parseURI(barcode);
+        }
+        return this.parseBarcodeNomenclature(barcode);
+    }
+
+    parseBarcodeNomenclature(barcode) {
+        const parsed_result = {
             encoding: '',
             type:'error',
             code:barcode,
@@ -232,5 +239,70 @@ export class BarcodeParser {
             }
         }
         return parsed_result;
+    }
+
+    // URI methods
+    /**
+     * Parse an URI into an object with either the product and its lot/serial
+     * number, either the package.
+     * @param {String} barcode
+     * @returns {Object}
+     */
+    parseURI(barcode) {
+        const uriParts = barcode.split(":").map(v => v.trim());
+        // URI should be formatted like that (number is the index once split):
+        // 0: urn, 1: epc, 2: id/tag, 3: identifier, 4: data
+        const identifier = uriParts[3];
+        const data = uriParts[4].split(".");
+        if (identifier === "lgtin" || identifier === "sgtin") {
+            return this.convertURIGTINDataIntoProductAndTrackingNumber(barcode, data);
+        } else if (identifier === "sgtin-96" || identifier === "sgtin-198") {
+            // Same compute then SGTIN but we have to remove the filter.
+            return this.convertURIGTINDataIntoProductAndTrackingNumber(barcode, data.slice(1));
+        } else if (identifier === "sscc") {
+            return this.convertURISSCCDataIntoPackage(barcode, data);
+        } else if (identifier === "sscc-96") {
+            // Same compute then SSCC but we have to remove the filter.
+            return this.convertURISSCCDataIntoPackage(barcode, data.slice(1));
+        }
+        return barcode;
+    }
+
+    convertURIGTINDataIntoProductAndTrackingNumber(base_code, data) {
+        const [gs1CompanyPrefix, itemRefAndIndicator, trackingNumber] = data;
+        const indicator = itemRefAndIndicator[0];
+        const itemRef = itemRefAndIndicator.slice(1);
+        let productBarcode = indicator + gs1CompanyPrefix + itemRef;
+        productBarcode += this.get_barcode_check_digit(productBarcode + "0");
+        return [
+            {
+                base_code,
+                code: productBarcode,
+                string_value: productBarcode,
+                type: "product",
+                value: productBarcode,
+            }, {
+                base_code,
+                code: trackingNumber,
+                string_value: trackingNumber,
+                type: "lot",
+                value: trackingNumber,
+            }
+        ];
+    }
+
+    convertURISSCCDataIntoPackage(base_code, data) {
+        const [gs1CompanyPrefix, serialReference] = data;
+        const extension = serialReference[0];
+        const serialRef = serialReference.slice(1);
+        let sscc = extension + gs1CompanyPrefix + serialRef;
+        sscc += this.get_barcode_check_digit(sscc + "0");
+        return [{
+            base_code,
+            code: sscc,
+            string_value: sscc,
+            type: "package",
+            value: sscc,
+        }];
     }
 }
