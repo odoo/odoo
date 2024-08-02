@@ -1,5 +1,6 @@
 import json
 import logging
+import pprint
 import time
 import urllib.parse
 import urllib3
@@ -40,17 +41,28 @@ def send_to_controller(device_type, params):
 
 def on_message(ws, messages):
     """
-        When a message is receive, this function is triggered
-        The message is load and if its type is 'iot_action', is sent to the device
+        Synchronously handle messages received by the websocket.
     """
     messages = json.loads(messages)
+    _logger.debug("websocket received a message: %s", pprint.pformat(messages))
+    iot_mac = helpers.get_mac_address()
     for message in messages:
-        if message['message']['type'] == 'iot_action':
+        message_type = message['message']['type']
+        if message_type == 'iot_action':
             payload = message['message']['payload']
-            if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
+            if iot_mac in payload['iotDevice']['iotIdentifiers']:
                 for device in payload['iotDevice']['identifiers']:
-                    if device['identifier'] in main.iot_devices:
-                        main.iot_devices[device["identifier"]].action(payload)
+                    device_identifier = device['identifier']
+                    if device_identifier in main.iot_devices:
+                        start_operation_time = time.perf_counter()
+                        _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
+                        main.iot_devices[device_identifier].action(payload)
+                        _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
+            else:
+                # likely intended as IoT share the same channel
+                _logger.debug("message ignored due to different iot mac: %s", iot_mac)
+        elif message_type != 'print_confirmation':  # intended to be ignored
+            _logger.warning("message type not supported: %s", message_type)
 
 
 def on_error(ws, error):
