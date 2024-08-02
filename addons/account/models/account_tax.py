@@ -1527,6 +1527,7 @@ class AccountTax(models.Model):
 
             subtotal_title = tax_group.preceding_subtotal or _("Untaxed Amount")
             sequence = tax_group.sequence
+            tax_group_name_suffix = _("on")
 
             subtotal_order[subtotal_title] = min(subtotal_order.get(subtotal_title, float('inf')), sequence)
             groups_by_subtotal[subtotal_title].append({
@@ -1538,6 +1539,7 @@ class AccountTax(models.Model):
                 'formatted_tax_group_amount': formatLang(self.env, tax_group_vals['tax_amount'], currency_obj=currency),
                 'formatted_tax_group_base_amount': formatLang(self.env, tax_group_vals['base_amount'], currency_obj=currency),
                 'hide_base_amount': tax_group_vals['hide_base_amount'],
+                'tax_group_name_suffix': tax_group_name_suffix,
             })
             if is_company_currency_requested:
                 groups_by_subtotal[subtotal_title][-1]['tax_group_amount_company_currency'] = tax_group_vals['tax_amount_company_currency']
