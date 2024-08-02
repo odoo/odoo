@@ -8,3 +8,12 @@ export function checkCustomerNotes(note) {
         }
     ];
 }
+export function checkDownpaymentProducts(product) {
+    return [
+        {
+            content: `check down-payment details`,
+            trigger: `.orderline:contains('Down Payment') .info-list:contains(${product})`,
+            run: () => {},
+        }
+    ];
+}
