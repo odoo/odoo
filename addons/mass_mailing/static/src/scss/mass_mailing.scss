@@ -25,6 +25,17 @@
     border: none;
 }
 
+body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
+    // Forcing the iframe to have the correct display mode (mobile vs desktop) by making it
+    // take all the available horizontal space so that the theme lg rules are correctly applied.
+    position: relative;
+    justify-content: end;
+    iframe {
+        position: absolute !important;
+        height: 100%;
+    }
+}
+
 .o_form_view.o_mass_mailing_mailing_form .o_form_renderer {
     &.o_form_readonly .o_mass_mailing_subject {
         // Place the favorite button without breaking the emoji widget

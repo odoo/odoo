@@ -463,7 +463,10 @@ export class MassMailingHtmlField extends HtmlField {
 
             $themeSelectorNew.remove();
 
-            this.wysiwyg.setSnippetsMenuFolded(uiUtils.isSmall() || themeName === 'basic');
+            const isSnippetsFolded = uiUtils.isSmall() || themeName === 'basic';
+            this.wysiwyg.setSnippetsMenuFolded(isSnippetsFolded);
+            // Inform the iframe content of the snippets menu visibility
+            this.wysiwyg.$iframeBody.closest('body').toggleClass("has_snippets_sidebar", !isSnippetsFolded);
 
             this._switchImages(themeParams, $snippets);
 
