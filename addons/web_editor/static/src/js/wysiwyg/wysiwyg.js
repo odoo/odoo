@@ -2057,7 +2057,7 @@ const Wysiwyg = Widget.extend({
                     const res = await this._rpc({
                         model: 'res.users',
                         method: 'read',
-                        args: [this.getSession().uid, ['signature']],
+                        args: [this.getSession().user_id, ['signature']],
                     });
                     if (res && res[0] && res[0].signature) {
                         this.odooEditor.execCommand('insert', parseHTML(res[0].signature));
