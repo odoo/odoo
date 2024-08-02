@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.osv.expression import OR
 
 
 class PosConfig(models.Model):
@@ -37,7 +36,3 @@ class PosConfig(models.Model):
         res = super()._get_special_products()
         default_discount_product = self.env.ref('pos_discount.product_product_consumable', raise_if_not_found=False) or self.env['product.product']
         return res | self.env['pos.config'].search([]).mapped('discount_product_id') | default_discount_product
-
-    def _get_available_product_domain(self):
-        domain = super()._get_available_product_domain()
-        return OR([domain, [('id', '=', self.discount_product_id.id)]])

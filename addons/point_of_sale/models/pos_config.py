@@ -8,7 +8,6 @@ import secrets
 
 from odoo import api, fields, models, _, Command
 from odoo.http import request
-from odoo.osv.expression import OR, AND
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import convert, SQL
 
@@ -691,8 +690,6 @@ class PosConfig(models.Model):
         ]
         if self.limit_categories and self.iface_available_categ_ids:
             domain.append(('pos_categ_ids', 'in', self._get_available_categories().ids))
-        if self.iface_tipproduct:
-            domain = OR([domain, [('id', '=', self.tip_product_id.id)]])
         return domain
 
     def _link_same_non_cash_payment_methods(self, source_config):
@@ -756,6 +753,7 @@ class PosConfig(models.Model):
             self.get_limited_product_count(),
         )
         product_ids = [r[0] for r in self.env.execute_query(sql)]
+        product_ids.extend(self._get_special_products().ids)
         products = self.env['product.product'].browse(product_ids)
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
         product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
