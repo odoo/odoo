@@ -8,7 +8,11 @@ defineHrHolidaysModels();
 
 test("on leave & online", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_online" });
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo",
+        im_status: "leave_online",
+        out_of_office_date_end: "2023-01-01",
+    });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -18,12 +22,16 @@ test("on leave & online", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-ImStatus i.fa-plane[title='Online']");
+    await contains(".o-mail-ImStatus i.fa-plane[title*='Online']");
 });
 
 test("on leave & away", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_away" });
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo",
+        im_status: "leave_away",
+        out_of_office_date_end: "2023-01-01",
+    });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -33,12 +41,16 @@ test("on leave & away", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-ImStatus i.fa-plane[title='Idle']");
+    await contains(".o-mail-ImStatus i.fa-plane[title*='Idle']");
 });
 
 test("on leave & offline", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_offline" });
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo",
+        im_status: "leave_offline",
+        out_of_office_date_end: "2023-01-01",
+    });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -48,5 +60,5 @@ test("on leave & offline", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-ImStatus i.fa-plane[title='Out of office']");
+    await contains(".o-mail-ImStatus i.fa-plane[title*='Out of office']");
 });
