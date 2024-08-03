@@ -140,7 +140,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
     def test_code_editor_usable(self):
         # TODO: enable debug mode when failing tests have been fixed (props validation)
-        url = '/web#action=website.website_preview'
+        url = '/odoo/action-website.website_preview'
         self.start_tour(url, 'website_code_editor_usable', login='admin')
 
 
@@ -227,7 +227,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_admin_tour_homepage(self):
-        self.start_tour("/web", 'homepage', login='admin')
+        self.start_tour("/odoo", 'homepage', login='admin')
 
     def test_02_restricted_editor(self):
         self.restricted_editor = self.env['res.users'].create({
@@ -367,7 +367,7 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
-        self.start_tour('/web', 'conditional_visibility_2', login='admin')
+        self.start_tour('/odoo', 'conditional_visibility_2', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_4', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_5', login='admin')
@@ -454,16 +454,16 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour('/', 'website_snippets_menu_tabs', login='admin')
 
     def test_19_website_page_options(self):
-        self.start_tour("/web", "website_page_options", login="admin")
+        self.start_tour("/odoo", "website_page_options", login="admin")
 
     def test_20_snippet_editor_panel_options(self):
         self.start_tour('/@/', 'snippet_editor_panel_options', login='admin')
 
     def test_21_website_start_cloned_snippet(self):
-        self.start_tour('/web', 'website_start_cloned_snippet', login='admin')
+        self.start_tour('/odoo', 'website_start_cloned_snippet', login='admin')
 
     def test_22_website_gray_color_palette(self):
-        self.start_tour('/web', 'website_gray_color_palette', login='admin')
+        self.start_tour('/odoo', 'website_gray_color_palette', login='admin')
 
     def test_23_website_multi_edition(self):
         self.start_tour('/@/', 'website_multi_edition', login='admin')
@@ -492,7 +492,7 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour("/", 'website_media_dialog_icons', login='admin')
 
     def test_27_website_clicks(self):
-        self.start_tour('/web', 'website_click_tour', login='admin')
+        self.start_tour('/odoo', 'website_click_tour', login='admin')
 
     def test_29_website_text_edition(self):
         self.start_tour('/@/', 'website_text_edition', login='admin')

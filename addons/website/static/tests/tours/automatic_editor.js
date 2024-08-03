@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { redirect } from "@web/core/utils/urls";
 import wTourUtils from "@website/js/tours/tour_utils";
 
 wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
@@ -54,7 +55,7 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
             // Now go through the settings for a new website. A frontend_lang
             // cookie was set during previous steps. It should not be used when
             // redirecting to the frontend in the following steps.
-            window.location.href = '/web#action=website.action_website_configuration';
+            redirect('/odoo/action-website.action_website_configuration');
         }
     },
     {

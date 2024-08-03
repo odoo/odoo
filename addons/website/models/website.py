@@ -1097,7 +1097,7 @@ class Website(models.Model):
                 dependencies[model_name] += [{
                     'field_name': field_name,
                     'record_name': rec.display_name,
-                    'link': 'website_url' in rec and rec.website_url or f'/web#id={rec.id}&view_type=form&model={model}',
+                    'link': 'website_url' in rec and rec.website_url or f'/odoo/{model}/{rec.id}',
                     'model_name': model_name,
                 } for rec in dependency_records]
 
@@ -1487,12 +1487,11 @@ class Website(models.Model):
 
     def get_client_action_url(self, url, mode_edit=False):
         action_params = {
-            "action": "website.website_preview",
             "path": url,
         }
         if mode_edit:
             action_params["enable_editor"] = 1
-        return "/web#" + urls.url_encode(action_params)
+        return "/odoo/action-website.website_preview?" + urls.url_encode(action_params)
 
     def get_client_action(self, url, mode_edit=False, website_id=False):
         action = self.env["ir.actions.actions"]._for_xml_id("website.website_preview")

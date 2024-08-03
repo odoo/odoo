@@ -54,7 +54,7 @@ class TestLangUrl(HttpCase):
         """
         # 1. Load backend
         self.authenticate('admin', 'admin')
-        r = self.url_open('/web')
+        r = self.url_open('/odoo')
         self.assertEqual(r.status_code, 200)
 
         for line in r.text.splitlines():
