@@ -123,6 +123,7 @@ class GoogleCalendarService():
         return 'https://www.googleapis.com/auth/calendar%s' % (readonly)
 
     def _google_authentication_url(self, from_url='http://www.odoo.com'):
+        from_url = self.google_service.env['ir.config_parameter'].sudo().get_param('web.base.url')
         state = {
             'd': self.google_service.env.cr.dbname,
             's': 'calendar',
