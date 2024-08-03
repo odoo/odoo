@@ -1,27 +1,31 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from uuid import uuid4
-import requests
 import json
 import logging
+from uuid import uuid4
+
+import requests
 
 from odoo import fields
-from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_account.models.google_service import TIMEOUT
-
+from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 
 _logger = logging.getLogger(__name__)
+
 
 def requires_auth_token(func):
     def wrapped(self, *args, **kwargs):
         if not kwargs.get('token'):
             raise AttributeError("An authentication token is required")
         return func(self, *args, **kwargs)
+
     return wrapped
+
 
 class InvalidSyncToken(Exception):
     pass
+
 
 class GoogleCalendarService():
 
@@ -74,11 +78,13 @@ class GoogleCalendarService():
     @requires_auth_token
     def insert(self, values, token=None, timeout=TIMEOUT, callback_method=None):
         send_updates = self.google_service._context.get('send_updates', True)
-        url = "/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=%s" % ("all" if send_updates else "none")
+        url = "/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=%s" % (
+            "all" if send_updates else "none")
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
         if not values.get('id'):
             values['id'] = uuid4().hex
-        request_values = self.google_service._do_request(url, json.dumps(values), headers, method='POST', timeout=timeout)
+        request_values = self.google_service._do_request(url, json.dumps(values), headers, method='POST',
+                                                         timeout=timeout)
         # Execute optional callback function using the returned values from insertion. TODO (gdpf) refactor in master.
         if callable(callback_method):
             callback_method(request_values, values)
@@ -109,11 +115,9 @@ class GoogleCalendarService():
                 raise e
             _logger.info("Google event %s was already deleted" % event_id)
 
-
     #################################
     ##  MANAGE CONNEXION TO GMAIL  ##
     #################################
-
 
     def is_authorized(self, user):
         return bool(user.sudo().google_calendar_rtoken)
@@ -129,7 +133,7 @@ class GoogleCalendarService():
             's': 'calendar',
             'f': from_url
         }
-        base_url = self.google_service._context.get('base_url') or self.google_service.get_base_url()
+        base_url = self.google_service.get_base_url()
         return self.google_service._get_authorize_uri(
             'calendar',
             self._get_calendar_scope(),
