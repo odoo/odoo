@@ -8,7 +8,6 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 VALID_JPEG = base64.b64decode('/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/yQALCAABAAEBAREA/8wABgAQEAX/2gAIAQEAAD8A0s8g/9k=')
-DEFAULT_ROLES = ('background', 'header', 'subheader', 'section_1', 'subsection_1', 'subsection_2', 'button', 'image_1', 'image_2')
 
 
 def mock_image_render(func):
@@ -69,37 +68,22 @@ class MarketingCardCommon(TransactionCase, MockImageRender):
             company_id=cls.company.id,
             email='system.marketing.card@example.com',
             login='marketing_card_system_admin',
-            groups='base.group_system',
+            groups='base.group_system,marketing_card.marketing_card_group_manager',
             name='System Admin',
         )
 
         cls.partners = cls.env['res.partner'].create([
             {'name': 'John', 'email': 'john93@trombino.scope'},
-            {'name': 'Bob', 'email': 'bob@justbob.me'},
-        ])
-
-        cls.tag_free, cls.tag_open = cls.env['card.test.event.location.tag'].create([
-            {'name': 'Free Access'}, {'name': 'Open Space'},
-        ])
-        cls.location_plaza, cls.location_square = cls.env['card.test.event.location'].create([
-            {'name': 'Green Plaza', 'tag_ids': [(4, cls.tag_free.id, 0), (4, cls.tag_open.id, 0)]},
-            {'name': 'Red Square'},
-        ])
-        cls.events = cls.env['card.test.event'].create([
-            {'name': 'Concert', 'location_id': cls.location_plaza.id},
-            {'name': 'Debate', 'location_id': cls.location_square.id},
-        ])
-        cls.concert_performances = cls.env['card.test.event.performance'].create([
-            {'name': "John's Holiday", 'event_id': cls.events[0].id, 'partner_id': cls.partners[0].id},
-            {'name': "Bob's (grand) slam", 'event_id': cls.events[0].id, 'partner_id': cls.partners[1].id},
+            {'name': 'Bob', 'email': 'bob@justbob.me',
+             'phone': '+32 123 446 789', 'image_1920': base64.b64encode(VALID_JPEG),
+             },
         ])
 
         cls.card_template = cls.env['card.template'].create({
             'name': 'Test Template',
             'body': """
 <html>
-    <t t-set="role_values" t-value="card_campaign._get_card_element_values(object, preview_values)"/>
-    <t t-set="elements" t-value="card_campaign.card_element_ids.grouped('card_element_role')"/>
+    <t t-set="values" t-value="card_campaign._get_card_element_values(object)"/>
     <head>
         <style>
             p { margin: 1px };
@@ -107,40 +91,44 @@ class MarketingCardCommon(TransactionCase, MockImageRender):
         </style>
     </head>
     <body>
-    <div id="body" t-attf-style="background-image: url('data:image/png;base64,{{role_values['background']}}');">
-        <p id="header" t-out="role_values['header']" t-att-style="'color: %s;' % elements['header'].text_color"></p>
-        <p id="subheader" t-out="role_values['subheader']" t-att-style="'color: %s;' % elements['subheader'].text_color"></p>
-        <p id="section_1" t-out="role_values['section_1']" t-att-style="'color: %s;' % elements['section_1'].text_color"></p>
-        <p id="subsection_1" t-out="role_values['subsection_1']" t-att-style="'color: %s;' % elements['subsection_1'].text_color"></p>
-        <p id="subsection_2" t-out="role_values['subsection_2']" t-att-style="'color: %s;' % elements['subsection_2'].text_color"></p>
-        <p id="subsection_3" t-out="role_values['button']" t-att-style="'color: %s;' % elements['button'].text_color"></p>
-        <p id="button" t-out="role_values['button']" t-att-style="'color: %s;' % elements['button'].text_color"></p>
-        <img id="image_1" t-att-src="role_values['image_1']"></p>
-        <img id="image_2" t-att-src="role_values['image_2']"></p>
+    <div id="body" t-attf-style="background-image: url('data:image/png;base64,{{card_campaign.content_background or card_campaign.card_template_id.default_background}}');">
+                <span id="header" t-out="values['header']" t-att-style="'color: %s;' % card_campaign.content_header_color"/>
+                <span id="subheader" t-out="values['sub_header']" t-att-style="'color: %s;' % card_campaign.content_sub_header_color"/>
+                <span id="button" t-out="card_campaign.content_button">Button</span>
+                <span id="section" t-out="values['section']"/>
+                <span id="sub_section1" t-out="values['sub_section1']"/>
+                <span id="sub_section2" t-out="values['sub_section2']"/>
+                <img id="image1" t-if="values['image1']" t-attf-src="data:image/png;base64,{{values['image1']}}"/>
+                <img id="image2" t-if="values['image2']" t-attf-src="data:image/png;base64,{{values['image2']}}"/>
     </div>
     </body>
 </html>
             """,
         })
 
-        card_element_commands = [
-            (0, 0, {'card_element_role': 'subheader', 'value_type': 'field', 'field_path': 'name'}),
-            (0, 0, {'card_element_role': 'section_1', 'value_type': 'field', 'field_path': 'event_id'}),
-            (0, 0, {'card_element_role': 'subsection_1', 'value_type': 'field', 'field_path': 'event_id.location_id'}),
-            (0, 0, {'card_element_role': 'subsection_2', 'value_type': 'field', 'field_path': 'event_id.location_id.tag_ids'}),
-            (0, 0, {'card_element_role': 'image_1', 'value_type': 'field', 'field_path': 'event_id.image'}),
-        ]
-        card_element_commands.extend([
-            command
-            for command in cls.env['card.campaign'].default_get(['card_element_ids'])['card_element_ids']
-            if command[2]['card_element_role'] not in {command[2]['card_element_role'] for command in card_element_commands}
-        ])
         cls.campaign = cls.env['card.campaign'].with_user(cls.marketing_card_user).create({
             'name': 'Test Campaign',
-            'card_element_ids': card_element_commands,
             'card_template_id': cls.card_template.id,
-            'res_model': cls.concert_performances._name,
             'post_suggestion': 'Come see my show!',
+            'preview_record_ref': f'{cls.partners._name},{cls.partners[0].id}',
+            'reward_message': """<p>Thanks for sharing!</p>""",
+            'reward_target_url': f"{cls.env['card.campaign'].get_base_url()}/share-rewards/2039-sharer-badge/",
+            'target_url': cls.env['card.campaign'].get_base_url(),
+            'content_section': 'Contact',
+            'content_sub_header_dyn': True,
+            'content_sub_header_path': 'name',
+            'content_sub_section1_dyn': True,
+            'content_sub_section1_path': 'email',
+            'content_sub_section2_dyn': True,
+            'content_sub_section2_path': 'phone',
+            'content_image1_path': 'user_ids.image_256',
+            'content_image2_path': 'image_256',
+        })
+        cls.static_campaign = cls.env['card.campaign'].with_user(cls.marketing_card_user).create({
+            'name': 'Simple Campaign',
+            'card_template_id': cls.card_template.id,
+            'post_suggestion': 'Come see my show!',
+            'preview_record_ref': f'{cls.partners._name},{cls.partners[0].id}',
             'reward_message': """<p>Thanks for sharing!</p>""",
             'reward_target_url': f"{cls.env['card.campaign'].get_base_url()}/share-rewards/2039-sharer-badge/",
             'target_url': cls.env['card.campaign'].get_base_url(),
