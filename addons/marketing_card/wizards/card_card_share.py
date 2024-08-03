@@ -21,24 +21,30 @@ class CardsCardShare(models.TransientModel):
     domain = fields.Char(default="[]")
     subject = fields.Char()
     message = fields.Html(default=_default_message)
-    res_model = fields.Selection(related='card_campaign_id.res_model')
+    res_model = fields.Char(related='card_campaign_id.res_model')
 
     def action_send(self):
         self.ensure_one()
-        target_records = self.env[self.res_model].search(literal_eval(self.domain) or [])
+        records = self.env[self.res_model].search(literal_eval(self.domain) or []).ids
+
+        # Create cards by 100 and commit, to continue where it stopped if too long to generate images
+        done = 0
+        while done < len(records):
+            if done:
+                self.env.cr.commit()
+            self.card_campaign_id._get_or_create_cards_from_res_ids(records[done:done + 200])
+            done += 200
+
         composer = self.env['mail.compose.message'].create({
             'composition_mode': 'mass_mail',
             'model': self.res_model,
-            'res_ids': target_records.ids,
+            'res_ids': records,
             'subject': self.subject,
             'body': Markup(
                 "<div>{}</div>\n"
-                """<a t-att-href="env['card.campaign'].browse(ctx['marketing_card_campaign_id'])._get_preview_url_from_res_id(object.id)" class="o_no_link_popover">{}</a>"""
-            ).format(self.message or '', _("Your Card"))
+                """<a t-att-href="env['card.campaign'].browse(ctx['marketing_card_campaign_id'])._get_url_from_res_id(object.id)" class="o_no_link_popover">{}</a>"""
+            ).format(self.message or '', _("Share the news"))
         })
-
-        # pre-create empty cards so that they may be used for tracking purposes
-        self.card_campaign_id.sudo()._get_or_create_cards_from_res_ids(target_records.ids)
 
         # template requires the campaign to be passed in through context
         composer.with_context(marketing_card_campaign_id=self.card_campaign_id.id)._action_send_mail()

@@ -36,22 +36,4 @@
         <field name="perm_write" eval="True"/>
         <field name="perm_unlink" eval="True"/>
     </record>
-
-    <record id="marketing_card_campaign_element_manager_own_rule" model="ir.rule">
-        <field name="name">Managers may access and edit any card campaign's element</field>
-        <field name="model_id" ref="model_card_campaign_element"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('marketing_card_group_manager'))]"></field>
-    </record>
-
-    <record id="marketing_card_campaign_element_user_own_rule" model="ir.rule">
-        <field name="name">Users may only edit their own card campaigns' elements</field>
-        <field name="model_id" ref="model_card_campaign_element"/>
-        <field name="domain_force">[('campaign_id.user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('marketing_card_group_user'))]"></field>
-        <field name="perm_create" eval="True"/>
-        <field name="perm_read" eval="False"/>
-        <field name="perm_write" eval="True"/>
-        <field name="perm_unlink" eval="True"/>
-    </record>
 </odoo>
