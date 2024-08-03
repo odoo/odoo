@@ -485,7 +485,7 @@ class BaseModel(models.AbstractModel):
                 for value in field_value
             )
         return ' '.join(str(value if value is not False and value is not None else '') for value in field_value)
-    
+
     def _mail_get_timezone(self):
         """To be override to get desired timezone of the model
 
