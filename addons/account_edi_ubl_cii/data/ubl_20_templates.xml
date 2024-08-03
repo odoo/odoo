@@ -2,8 +2,7 @@
 <odoo>
 
     <template id="ubl_20_AddressType">
-        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID t-out="vals.get('id')"/>
             <cbc:AddressTypeCode t-out="vals.get('address_type_code')"/>
@@ -28,8 +27,7 @@
     </template>
 
     <template id="ubl_20_PartyType">
-        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <t t-set="partner" t-value="vals.get('partner') or builder.env['res.partner']"/>
             <cbc:EndpointID
@@ -97,8 +95,7 @@
     </template>
 
     <template id="ubl_20_PaymentMeansType">
-        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID t-out="vals.get('id')"/>
             <cbc:PaymentMeansCode
@@ -147,8 +144,7 @@
     </template>
 
     <template id="ubl_20_TaxCategoryType">
-        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID
                 t-att="vals.get('id_attrs', {})"
@@ -171,8 +167,7 @@
     </template>
 
     <template id="ubl_20_TaxTotalType">
-        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:TaxAmount
                 t-att-currencyID="vals['currency'].name"
@@ -201,8 +196,7 @@
     </template>
 
     <template id="ubl_20_AllowanceChargeType">
-        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ChargeIndicator t-out="vals.get('charge_indicator')"/>
             <cbc:AllowanceChargeReasonCode t-out="vals.get('allowance_charge_reason_code')"/>
@@ -302,8 +296,7 @@
     </template>
 
     <template id="ubl_20_CommonLineType">
-        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:ID t-out="vals.get('id')"/>
             <cbc:Note t-out="vals.get('note')"/>
