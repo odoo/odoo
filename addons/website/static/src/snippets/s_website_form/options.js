@@ -6,6 +6,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import weUtils from "@web_editor/js/common/utils";
 import "@website/js/editor/snippets.options";
 import { unique } from "@web/core/utils/arrays";
+import { redirect } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
@@ -930,7 +931,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      * @param {string} action
      */
     _redirectToAction: function (action) {
-        window.location.replace(`/web#action=${encodeURIComponent(action)}`);
+        redirect(`/odoo/action-${encodeURIComponent(action)}`);
     },
 
     //--------------------------------------------------------------------------

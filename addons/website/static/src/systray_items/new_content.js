@@ -5,6 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from '@web/core/registry';
 import { user } from "@web/core/user";
 import { useService } from '@web/core/utils/hooks';
+import { redirect } from "@web/core/utils/urls";
 import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -207,7 +208,7 @@ export class NewContentModal extends Component {
             // A reload is needed after installing a new module, to instantiate
             // a NewContentModal with patches from the installed module.
             this.website.prepareOutLoader();
-            window.location.replace(`/web#action=website.website_preview&website_id=${id}&path=${encodeURIComponent(url.toString())}&display_new_content=true`);
+            redirect(`/odoo/action-website.website_preview?website_id=${id}&path=${encodeURIComponent(url.toString())}&display_new_content=true`);
         }
     }
 

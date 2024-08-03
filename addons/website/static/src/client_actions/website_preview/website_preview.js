@@ -5,6 +5,7 @@ import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 import { ResizablePanel } from '@web/core/resizable_panel/resizable_panel';
 import { useService, useBus } from '@web/core/utils/hooks';
+import { redirect } from "@web/core/utils/urls";
 import { ResourceEditor } from '../../components/resource_editor/resource_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
@@ -94,7 +95,7 @@ export class WebsitePreview extends Component {
                     showSecondaryButton: false,
                 }, {
                     onClose: () => {
-                        window.location.href = `${encodeURI(this.websiteDomain)}/web#action=website.website_preview&path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}`;
+                        redirect(`${encodeURI(this.websiteDomain)}/odoo/action-website.website_preview?path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}`);
                     }
                 });
             } else {
@@ -312,7 +313,7 @@ export class WebsitePreview extends Component {
     }
 
     /**
-     * This replaces the browser url (/web#action=website...) with
+     * This replaces the browser url (/odoo/action-website...) with
      * the iframe's url (it is clearer for the user).
      */
     _replaceBrowserUrl() {
@@ -322,7 +323,7 @@ export class WebsitePreview extends Component {
             // loads "about:blank"), do not push that into the history
             // state as that could prevent the user from going back and could
             // trigger a traceback.
-            history.replaceState(history.state, document.title, '/web');
+            history.replaceState(history.state, document.title, '/odoo');
             return;
         }
         const currentTitle = this.iframe.el.contentDocument.title;
@@ -536,10 +537,8 @@ export class WebsitePreview extends Component {
         }
         ev.preventDefault();
         const path = this.websiteService.contentWindow.location;
-        const debugMode = this.env.debug ? `?debug=${this.env.debug}` : "";
-        browser.location.assign(
-            `/web${debugMode}#action=website.website_preview&path=${encodeURIComponent(path)}`
-        );
+        const debugMode = this.env.debug ? `&debug=${this.env.debug}` : "";
+        redirect(`/odoo/action-website.website_preview?path=${encodeURIComponent(path)}${debugMode}`);
     }
 }
 
