@@ -8,14 +8,15 @@ class MarketingCard(models.Model):
     _name = 'card.card'
     _description = 'Marketing Card'
 
+    active = fields.Boolean('Active', default=True)
     campaign_id = fields.Many2one('card.campaign', required=True, ondelete="cascade")
     res_model = fields.Selection(related='campaign_id.res_model')
-    record_ref = fields.Reference(string='Record', selection='_selection_record_ref', compute='_compute_record_ref')
     res_id = fields.Many2oneReference('Record ID', model_field='res_model', required=True)
     image = fields.Image()
+    requires_sync = fields.Boolean(help="Whether the image needs to be updated to match the campaign template.", default=True)
     share_status = fields.Selection([
-        ('shared', 'Shared on Social Networks'),
-        ('visited', 'Share URL Visited'),
+        ('shared', 'Shared'),
+        ('visited', 'Visited'),
     ])
 
     _sql_constraints = [
@@ -24,30 +25,36 @@ class MarketingCard(models.Model):
     ]
 
     @api.depends('res_model', 'res_id')
-    def _compute_record_ref(self):
-        for card in self:
-            card.record_ref = f'{card.res_model},{card.res_id}'
+    def _compute_display_name(self):
+        for model, cards in self.grouped('res_model').items():
+            if not model:
+                cards.display_name = ""
+                continue
+            self.env[model].browse(cards.mapped('res_id')).sudo().fetch(['display_name'])
+            for card in cards:
+                card.display_name = self.env[model].browse(card.res_id).sudo().display_name
+
+    @api.depends('campaign_id')
+    def _compute_res_model(self):
+        """Compute the res_model once and never update it again."""
+        for campaign, cards in self.grouped('campaign_id').items():
+            cards.res_model = campaign.res_model
 
     @api.autovacuum
-    def _gc_card_url_images(self):
-        """Remove images after a day. Social networks are expected to cache the images on their side."""
-        timedelta_days = self.env['ir.config_parameter'].get_param('marketing_card.card_image_cleanup_interval_days', 1)
+    def _gc_card(self):
+        """Remove cards. Social networks are expected to cache the images on their side."""
+        timedelta_days = self.env['ir.config_parameter'].get_param('marketing_card.card_image_cleanup_interval_days', 60)
         if not timedelta_days:
             return
-        self.search([('write_date', '<=', datetime.now() - timedelta(days=timedelta_days))]).image = False
+        self.with_context({"active_test": False}).search([('write_date', '<=', datetime.now() - timedelta(days=timedelta_days))]).unlink()
 
     def _get_card_url(self):
-        return self.campaign_id._get_card_path(self.res_id, 'card.jpg')
+        return self._get_path('card.jpg')
 
     def _get_redirect_url(self):
-        return self.campaign_id._get_card_path(self.res_id, 'redirect')
+        return self._get_path('redirect')
 
-    def _get_or_generate_image(self):
-        # generate if not already stored
-        if not self.image:
-            self.image = self.campaign_id._get_image_b64(self.env[self.res_model].browse(self.res_id))
-        return self.image
-
-    @api.model
-    def _selection_record_ref(self):
-        return self.env['card.campaign']._fields['res_model']._description_selection(self.env)
+    def _get_path(self, suffix):
+        self.ensure_one()
+        card_slug = self.env['ir.http']._slug(self)
+        return f'{self.get_base_url()}/cards/{card_slug}/{suffix}'
