@@ -374,12 +374,12 @@ function prepend_trigger(steps, prepend_text='') {
 }
 
 function getClientActionUrl(path, edition) {
-    let url = `/web#action=website.website_preview`;
+    let url = `/odoo/action-website.website_preview`;
     if (path) {
-        url += `&path=${encodeURIComponent(path)}`;
+        url += `?path=${encodeURIComponent(path)}`;
     }
     if (edition) {
-        url += '&enable_editor=1';
+        url += `${path ? '&' : '?'}enable_editor=1`;
     }
     return url;
 }
@@ -462,7 +462,7 @@ function registerBackendAndFrontendTour(name, options, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
-    if (window.location.pathname === '/web') {
+    if (window.location.pathname === '/odoo') {
         return registerWebsitePreviewTour(name, options, () => {
             const newSteps = [];
             for (const step of steps()) {

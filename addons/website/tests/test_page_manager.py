@@ -23,7 +23,7 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
 
         alternate_website = self.env['website'].search([('name', '=', 'My Website 2')], limit=1)
         alternate_website.domain = f'http://{HOST}:{config["http_port"]}'
-        self.start_tour('/web#action=website.action_website_pages_list', 'website_page_manager_direct_access', login='admin')
+        self.start_tour('/odoo/action-website.action_website_pages_list', 'website_page_manager_direct_access', login='admin')
 
     def test_generic_page_diverged_not_shown(self):
         Page = self.env['website.page']
