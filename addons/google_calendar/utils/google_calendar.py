@@ -133,7 +133,7 @@ class GoogleCalendarService():
             's': 'calendar',
             'f': from_url
         }
-        base_url = self.google_service.get_base_url().stripe("/")
+        base_url = self.google_service.get_base_url()
         return self.google_service._get_authorize_uri(
             'calendar',
             self._get_calendar_scope(),
