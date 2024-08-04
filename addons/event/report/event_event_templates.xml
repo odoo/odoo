@@ -177,17 +177,17 @@
                                     <div class="d-flex">
                                         <i class="fa fa-calendar fa-2x fa-fw me-2 mt-1"/>
                                         <div t-if="event.is_one_day">
-                                            <span t-field="event.date_begin"
+                                            <span t-field="event.date_begin" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'/><br/>
-                                            <span class="me-1">from</span><span t-field="event.date_begin"
+                                            <span class="me-1">from</span><span t-field="event.date_begin" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz, "format": "short"}'/>
-                                            <span class="me-1">to</span><span t-field="event.date_end"
+                                            <span class="me-1">to</span><span t-field="event.date_end" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz, "format": "short"}'/>
                                         </div>
                                         <div t-else="">
-                                            <span t-field="event.date_begin"
+                                            <span t-field="event.date_begin" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/><br/>
-                                            <span class="me-1">to</span><span t-field="event.date_end"
+                                            <span class="me-1">to</span><span t-field="event.date_end" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/>
                                         </div>
                                     </div>
