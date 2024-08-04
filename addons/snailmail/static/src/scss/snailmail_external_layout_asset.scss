@@ -29,6 +29,12 @@ div .address.row {
         > span:not(:first-child) {
             display: none;
         }
+
+        > address {
+            // Moving anything under the address (eg Tax ID) further down to
+            // avoid breaking Pingen validation.
+            margin-bottom: 12mm !important;
+        }
     }
 }
 
@@ -49,6 +55,11 @@ div .row.fallback_header {
         // Hide VAT number line
         > span:not(:first-child) {
             display: none;
+        }
+
+        div[itemscope="itemscope"] > div:first-child {
+            // Same as above move anything under the address further down
+            margin-bottom: 12mm;
         }
     }
 }

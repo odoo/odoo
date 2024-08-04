@@ -180,6 +180,7 @@ export class Product extends PosModel {
         let quantity = 1;
         let comboLines = [];
         let attribute_custom_values = {};
+        let extras = {};
 
         if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
             quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
@@ -205,6 +206,7 @@ export class Product extends PosModel {
                 return;
             }
             comboLines = payload;
+            extras.price_type = "manual";
         }
         // Gather lot information if required.
         if (this.isTracked()) {
@@ -265,6 +267,7 @@ export class Product extends PosModel {
             price_extra,
             comboLines,
             attribute_value_ids,
+            extras,
         };
     }
     isPricelistItemUsable(item, date) {
@@ -2239,6 +2242,7 @@ export class Order extends PosModel {
                     comboParent,
                     comboLine: line.comboLine,
                     attribute_value_ids: line.attribute_value_ids,
+                    extras: {price_type: "manual"},
                 }
             );
         }

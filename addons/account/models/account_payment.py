@@ -98,6 +98,7 @@ class AccountPayment(models.Model):
         comodel_name='account.account',
         string="Outstanding Account",
         store=True,
+        index='btree_not_null',
         compute='_compute_outstanding_account_id',
         check_company=True)
     destination_account_id = fields.Many2one(

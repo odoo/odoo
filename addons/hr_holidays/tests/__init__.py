@@ -22,3 +22,4 @@ from . import test_negative
 from . import test_past_accruals
 from . import test_allocations
 from . import test_multicompany
+from . import test_dashboard

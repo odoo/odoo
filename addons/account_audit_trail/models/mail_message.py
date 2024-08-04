@@ -7,6 +7,8 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import OR
 
+bypass_token = object()
+
 
 class Message(models.Model):
     _inherit = 'mail.message'
@@ -171,6 +173,8 @@ class Message(models.Model):
 
     @api.ondelete(at_uninstall=True)
     def _except_audit_log(self):
+        if self.env.context.get('bypass_audit') is bypass_token:
+            return
         for message in self:
             if message.show_audit_log and not (
                 message.account_audit_log_move_id
@@ -179,6 +183,10 @@ class Message(models.Model):
                 raise UserError(_("You cannot remove parts of the audit trail. Archive the record instead."))
 
     def write(self, vals):
-        if vals.keys() & {'res_id', 'res_model', 'subject', 'message_type', 'subtype_id'}:
+        if (
+            vals.keys() & {'res_id', 'res_model', 'message_type', 'subtype_id'}
+            or ('subject' in vals and any(self.mapped('subject')))
+            or ('body' in vals and any(self.mapped('body')))
+        ):
             self._except_audit_log()
         return super().write(vals)
