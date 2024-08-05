@@ -21,13 +21,11 @@ class MailComposeMessage(models.TransientModel):
         for res_id, body in res_id_body_pairs:
             if body:
                 def fill_card_image_url(match):
-                    campaign = self.env['card.campaign'].browse(int(match[3]))
-                    card = campaign._get_or_create_cards_from_res_ids([res_id])[0]
+                    card = self.env['card.card'].browse(int(match[3]))
                     return card._get_path('card.jpg')
 
                 def fill_card_preview_url(match):
-                    campaign = self.env['card.campaign'].browse(int(match[2]))
-                    card = campaign._get_or_create_cards_from_res_ids([res_id])[0]
+                    card = self.env['card.card'].browse(int(match[2]))
                     return card._get_path('preview')
 
                 body = re.sub(CARD_IMAGE_URL, fill_card_image_url, body)
