@@ -168,14 +168,9 @@ patch(mailDataHelpers, {
         const store = await super.processRequest(...arguments);
         const { livechat_channels } = await parseRequestParams(request);
         if (livechat_channels) {
-            const LivechatChannel = this.env["im_livechat.channel"];
             store.add(
-                "LivechatChannel",
-                LivechatChannel.search_read([]).map((channel) => ({
-                    id: channel.id,
-                    name: channel.name,
-                    hasSelfAsMember: channel.user_ids.includes(this.env.user.id),
-                }))
+                this.env["im_livechat.channel"].search([]),
+                makeKwArgs({ fields: ["hasSelfAsMember", "name"] })
             );
         }
         return store;

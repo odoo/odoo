@@ -5,6 +5,7 @@ import random
 import re
 
 from odoo import api, Command, fields, models, _
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ImLivechatChannel(models.Model):
@@ -102,16 +103,12 @@ class ImLivechatChannel(models.Model):
     def action_join(self):
         self.ensure_one()
         self.user_ids = [Command.link(self.env.user.id)]
-        self.env.user._bus_send_store(
-            "LivechatChannel", {"id": self.id, "name": self.name, "hasSelfAsMember": True}
-        )
+        self.env.user._bus_send_store(self, fields=["hasSelfAsMember", "name"])
 
     def action_quit(self):
         self.ensure_one()
         self.user_ids = [Command.unlink(self.env.user.id)]
-        self.env.user._bus_send_store(
-            "LivechatChannel", {"id": self.id, "name": self.name, "hasSelfAsMember": False}
-        )
+        self.env.user._bus_send_store(self, fields=["hasSelfAsMember", "name"])
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
@@ -332,6 +329,17 @@ class ImLivechatChannel(models.Model):
             info['options'] = self._get_channel_infos()
             info['options']["default_username"] = username
         return info
+
+    def _to_store(self, store: Store, /, *, fields=None):
+        if fields is None:
+            fields = []
+        for livechat_channel in self:
+            data = livechat_channel._read_format(
+                [field for field in fields if field != "hasSelfAsMember"]
+            )[0]
+            if "hasSelfAsMember" in fields:
+                data["hasSelfAsMember"] = self.env.user in livechat_channel.user_ids
+            store.add(livechat_channel, data)
 
 
 class ImLivechatChannelRule(models.Model):
