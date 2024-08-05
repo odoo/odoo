@@ -184,7 +184,13 @@ patch(Chatter.prototype, {
     },
 
     get requestList() {
-        return [...super.requestList, "followers", "attachments", "suggestedRecipients"];
+        return [
+            ...super.requestList,
+            "activities",
+            "followers",
+            "attachments",
+            "suggestedRecipients",
+        ];
     },
 
     /**
