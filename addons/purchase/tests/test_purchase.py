@@ -6,6 +6,7 @@ from odoo import Command, fields
 
 
 from datetime import timedelta
+from freezegun import freeze_time
 import pytz
 
 
@@ -764,3 +765,42 @@ class TestPurchase(AccountTestInvoicingCommon):
             {'product_id': product_no_branch_tax.id, 'taxes_id': (tax_a + tax_b).ids},
             {'product_id': product_no_tax.id, 'taxes_id': []},
         ])
+
+    @freeze_time('2024-07-08')
+    def test_description_price__date_depending_on_vendor(self):
+        """
+        Test that the description and the price are updated accordingly when the vendor is changed.
+        """
+        self.product_a.seller_ids = [
+            Command.create({
+                'partner_id': self.partner_a.id,
+                'min_qty': 1,
+                'price': 5,
+                'product_code': 'Vendor A',
+                'delay': 5,
+            }),
+            Command.create({
+                'partner_id': self.partner_b.id,
+                'min_qty': 1,
+                'price': 10,
+                'product_code': 'Vendor B',
+                'delay': 6,
+            }),
+        ]
+        self.assertFalse(False)
+        # Create PO and set vendor A
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            po_line.product_qty = 10
+        po = po_form.save()
+        self.assertEqual(po.order_line.price_unit, 5)
+        self.assertEqual(po.order_line.name, '[Vendor A] product_a')
+        self.assertEqual(po.order_line.product_qty, 10)
+        self.assertEqual(po.order_line.date_planned, fields.Datetime.now() + timedelta(days=5))
+        po.partner_id = self.partner_b
+        self.assertEqual(po.order_line.price_unit, 10)
+        self.assertEqual(po.order_line.name, '[Vendor B] product_a')
+        self.assertEqual(po.order_line.product_qty, 10)
+        self.assertEqual(po.order_line.date_planned, fields.Datetime.now() + timedelta(days=6))
