@@ -47,7 +47,7 @@ class StockMoveLine(models.Model):
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number',
         domain="[('product_id', '=', product_id)]", check_company=True)
-    lot_name = fields.Char('Lot/Serial Number Name')
+    lot_name = fields.Char('Lot/Serial Number Name', compute='_compute_lot_name', store=True)
     result_package_id = fields.Many2one(
         'stock.quant.package', 'Destination Package',
         ondelete='restrict', required=False, check_company=True,
@@ -159,6 +159,12 @@ class StockMoveLine(models.Model):
         for line in self:
             line.quantity_product_uom = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id, rounding_method='HALF-UP')
 
+    @api.depends('lot_id')
+    def _compute_lot_name(self):
+        for line in self:
+            if line.lot_id:
+                line.lot_name = line.lot_id.name
+
     @api.constrains('lot_id', 'product_id')
     def _check_lot_product(self):
         for line in self:
@@ -198,7 +204,7 @@ class StockMoveLine(models.Model):
             message = None
             if self.lot_name or self.lot_id:
                 move_lines_to_check = self._get_similar_move_lines() - self
-                if self.lot_name:
+                if self.lot_name and not self.lot_id:
                     counter = Counter([line.lot_name for line in move_lines_to_check])
                     if counter.get(self.lot_name) and counter[self.lot_name] > 1:
                         message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
