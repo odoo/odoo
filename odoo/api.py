@@ -16,6 +16,7 @@ __all__ = [
 ]
 
 import logging
+import warnings
 from collections import defaultdict
 from collections.abc import Mapping
 from contextlib import contextmanager
@@ -462,7 +463,10 @@ def model_create_single(method: T) -> T:
             record = model.create(vals)
             records = model.create([vals, ...])
     """
-    _create_logger.warning("The model %s is not overriding the create method in batch", method.__module__)
+    warnings.warn(
+        f"The model {method.__module__} is not overriding the create method in batch",
+        DeprecationWarning
+    )
     wrapper = _model_create_single(method) # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
     return wrapper
