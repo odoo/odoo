@@ -122,5 +122,9 @@ class ProductCategory(models.Model):
         help="""This account will be used as a valuation counterpart for both components and final products for manufacturing orders.
                 If there are any workcenter/employee costs, this value will remain on the account once the production is completed.""")
 
+    def write(self, vals):
+        return super(ProductCategory, self.with_context(product_category_mrp_account_write=True)).write(vals)
+
     def _get_stock_account_property_field_names(self):
-        return super()._get_stock_account_property_field_names() + ['property_stock_account_production_cost_id']
+        mrp_value = ['property_stock_account_production_cost_id'] if self.property_stock_account_production_cost_id or not self.env.context.get('product_category_mrp_account_write') else []
+        return super()._get_stock_account_property_field_names() + mrp_value
