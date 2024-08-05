@@ -17,4 +17,9 @@ class WebsiteEventSale(WebsiteSale):
             aggregates=['id:recordset'],
         )
         values['attendee_ids_per_event'] = dict(attendee_per_event_read_group)
+        values['urls_per_event'] = {
+            event.id: event._get_event_resource_urls()
+            for event in values['events']
+        }
+
         return values
