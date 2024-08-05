@@ -20,6 +20,12 @@
             <form string="Product Attribute">
             <field name="number_related_products" invisible="1"/>
             <sheet>
+                <widget
+                    name="web_ribbon"
+                    title="Archived"
+                    bg_color="text-bg-danger"
+                    invisible="active"
+                />
                 <div class="oe_button_box" name="button_box">
                     <button name="action_open_product_template_attribute_lines"
                             type="object"
@@ -158,6 +164,16 @@
                 <field name="name"/>
                 <filter string="Active" name="active" domain="[('ptav_active', '=', True)]"/>
                 <filter string="Inactive" name="inactive" domain="[('ptav_active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_attribute_search" model="ir.ui.view">
+        <field name="name">product.attribute.view.search</field>
+        <field name="model">product.attribute</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
             </search>
         </field>
     </record>
