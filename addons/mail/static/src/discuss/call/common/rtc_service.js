@@ -316,6 +316,40 @@ export class Rtc extends Record {
                 }
             }, 100);
         });
+
+        this.multiTab.bus.addEventListener("discuss.rtc/toggleAction", async ({ detail }) => {
+            if (!this.selfSession) {
+                return;
+            }
+            switch (detail.type) {
+                case "call":
+                    const channel = this.store.Thread.get({
+                        model: "discuss.channel",
+                        id: detail.channelId,
+                    });
+                    await this.toggleCall(channel);
+                    break;
+                case "microphone":
+                    await this.toggleMicrophone();
+                    break;
+                case "deaf":
+                    if (this.selfSession.isDeaf) {
+                        await this.undeafen();
+                    } else {
+                        await this.deafen();
+                    }
+                    break;
+                case "camera":
+                    await this.toggleVideo("camera");
+                    break;
+                case "screen":
+                    await this.toggleVideo("screen");
+                    break;
+                case "raiseHand":
+                    await this.raiseHand(!this.selfSession.raisingHand);
+                    break;
+            }
+        });
     }
 
     setPttReleaseTimeout(duration = 200) {
@@ -1026,12 +1060,13 @@ export class Rtc extends Record {
                             is_deaf: this.selfSession.isDeaf,
                             is_muted: this.selfSession.isSelfMuted,
                             is_screen_sharing_on: this.selfSession.isScreenSharingOn,
+                            is_raising_hand: Boolean(this.selfSession.raisingHand),
                         },
                     },
                     { silent: true }
                 );
             },
-            3000,
+            300,
             { leading: true, trailing: true }
         );
         this.state.channel.rtcInvitingSession = undefined;
@@ -1329,7 +1364,7 @@ export class Rtc extends Record {
         if (!this.selfSession || !this.state.channel) {
             return;
         }
-        this.selfSession.raisingHand = raise ? new Date() : undefined;
+        this.updateAndBroadcast({ raisingHand: raise ? new Date() : undefined });
         await this.notify(this.state.channel.rtcSessions, "raise_hand", {
             active: this.selfSession.raisingHand,
         });

@@ -16,6 +16,7 @@ export class CallActionList extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.rtc = useState(useService("discuss.rtc"));
+        this.multiTab = useService("multi_tab");
         this.callActions = useCallActions();
     }
 
@@ -35,6 +36,37 @@ export class CallActionList extends Component {
         return isMobileOS();
     }
 
+    get isMute () {
+        return this.getActionState("isMute");
+    }
+    
+    get isDeaf () {
+        return this.getActionState("isDeaf");
+    }
+    
+    get isCameraOn () {
+        return this.getActionState("isCameraOn");
+    }
+
+    get raisingHand () {
+        return this.getActionState("raisingHand");
+    }
+    
+    get isScreenSharingOn () {
+        return this.getActionState("isScreenSharingOn");
+    }
+    
+    getActionState(actionName = "id") {
+        if (this.isOfActiveCall && this.rtc.selfSession) {
+            return this.rtc.selfSession[actionName];
+        }
+        for (const channelMember of this.store.self.channelMembers) {
+            if (channelMember.thread === this.props.thread) {
+                return channelMember.rtcSession?.[actionName];
+            }
+        }
+    }
+
     /**
      * @param {MouseEvent} ev
      */
@@ -49,6 +81,10 @@ export class CallActionList extends Component {
      * @param {MouseEvent} ev
      */
     async onClickToggleAudioCall(ev) {
-        await this.rtc.toggleCall(this.props.thread);
+        if (this.isOfActiveCall || !this.getActionState()) {
+            await this.rtc.toggleCall(this.props.thread);
+        } else {
+            this.multiTab.broadcast("discuss.rtc/toggleAction", { type: "call", channelId: this.props.thread.id });
+        }
     }
 }

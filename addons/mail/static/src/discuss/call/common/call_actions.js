@@ -8,12 +8,16 @@ export const callActionsRegistry = registry.category("discuss.call/actions");
 callActionsRegistry
     .add("mute", {
         condition: (component) => component.rtc,
-        name: (component) => (component.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
-        isActive: (component) => component.rtc.selfSession?.isMute,
+        name: (component) => (component.isMute ? _t("Unmute") : _t("Mute")),
+        isActive: (component) => component.isMute,
         inactiveIcon: "fa-microphone",
         icon: "fa-microphone-slash",
         activeClass: "text-danger",
         select: (component) => {
+            if (!component.rtc.selfSession) {
+                component.multiTab.broadcast("discuss.rtc/toggleAction", { type: "microphone" });
+                return;
+            }
             if (component.rtc.selfSession.isMute) {
                 if (component.rtc.selfSession.isSelfMuted) {
                     component.rtc.unmute();
@@ -29,43 +33,62 @@ callActionsRegistry
     })
     .add("deafen", {
         condition: (component) => component.rtc,
-        name: (component) => (component.rtc.selfSession.isDeaf ? _t("Undeafen") : _t("Deafen")),
-        isActive: (component) => component.rtc.selfSession?.isDeaf,
+        name: (component) => (component.isDeaf ? _t("Undeafen") : _t("Deafen")),
+        isActive: (component) => component.isDeaf,
         inactiveIcon: "fa-headphones",
         icon: "fa-deaf",
         activeClass: "text-danger",
-        select: (component) =>
-            component.rtc.selfSession.isDeaf ? component.rtc.undeafen() : component.rtc.deafen(),
+        select: (component) => {
+            if (component.rtc.selfSession) {
+                component.rtc.selfSession.isDeaf ? component.rtc.undeafen() : component.rtc.deafen();
+            } else {
+                component.multiTab.broadcast("discuss.rtc/toggleAction", { type: "deaf" });
+            }
+        },
         sequence: 20,
     })
     .add("camera-on", {
         condition: (component) => component.rtc,
-        name: (component) =>
-            component.rtc.selfSession.isCameraOn ? _t("Stop camera") : _t("Turn camera on"),
-        isActive: (component) => component.rtc.selfSession?.isCameraOn,
+        name: (component) => (component.isCameraOn ? _t("Stop camera") : _t("Turn camera on")),
+        isActive: (component) => component.isCameraOn,
         icon: "fa-video-camera",
         activeClass: "text-success",
-        select: (component) => component.rtc.toggleVideo("camera"),
+        select: (component) => {
+            if (component.rtc.selfSession) {
+                component.rtc.toggleVideo("camera");
+            } else {
+                component.multiTab.broadcast("discuss.rtc/toggleAction", { type: "camera" });
+            }
+        },
         sequence: 30,
     })
     .add("raise-hand", {
         condition: (component) => component.rtc,
-        name: (component) =>
-            component.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand"),
-        isActive: (component) => component.rtc.selfSession?.raisingHand,
+        name: (component) => (component.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
+        isActive: (component) => component.raisingHand,
         icon: "fa-hand-paper-o",
-        select: (component) => component.rtc.raiseHand(!component.rtc.selfSession.raisingHand),
+        select: (component) => {
+            if (component.rtc.selfSession) {
+                component.rtc.raiseHand(!component.rtc.selfSession.raisingHand);
+            } else {
+                component.multiTab.broadcast("discuss.rtc/toggleAction", { type: "raiseHand" });
+            }
+        },
         sequence: 40,
     })
     .add("share-screen", {
         condition: (component) => component.rtc && !isMobileOS(),
         name: (component) =>
-            component.rtc.selfSession.isScreenSharingOn
-                ? _t("Stop Sharing Screen")
-                : _t("Share Screen"),
-        isActive: (component) => component.rtc.selfSession?.isScreenSharingOn,
+            component.isScreenSharingOn ? _t("Stop Sharing Screen") : _t("Share Screen"),
+        isActive: (component) => component.isScreenSharingOn,
         icon: "fa-desktop",
-        select: (component) => component.rtc.toggleVideo("screen"),
+        select: (component) => {
+            if (component.rtc.selfSession) {
+                component.rtc.toggleVideo("screen");
+            } else {
+                component.multiTab.broadcast("discuss.rtc/toggleAction", { type: "screen" });
+            }
+        },
         sequence: 50,
     })
     .add("fullscreen", {
@@ -112,8 +135,8 @@ function transformAction(component, id, action) {
         /** Determines the order of this action (smaller first) */
         get sequence() {
             return typeof action.sequence === "function"
-                ? action.sequence(component)
-                : action.sequence;
+            ? action.sequence(component)
+            : action.sequence;
         },
     };
 }
