@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': "Project - SMS",
+    'name': 'Task Stage Notification via SMS',
     'summary': 'Send text messages when project/task stage move',
-    'description': "Send text messages when project/task stage move",
+    'description': "Automatically send an SMS to your customers when a task reaches a specific stage of the project.",
     'category': 'Services/Project',
     'version': '1.1',
     'depends': ['project', 'sms'],

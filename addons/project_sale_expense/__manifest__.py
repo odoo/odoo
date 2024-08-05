@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Project - Sale - Expense',
-    'description': 'Adds a full traceability of reinvoice expenses on the profitability report.',
+    'name': 'Project Expenses Revenues Analytics',
+    'description': 'Track the revenues of expenses associated with the analytic account of your projects.',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'category': 'Services/Project',

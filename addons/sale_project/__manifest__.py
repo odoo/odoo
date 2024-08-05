@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
-    'name': "Sales - Project",
-    'summary': "Task Generation from Sales Orders",
+    'name': 'Project Auto-Generation from Sales Orders',
+    'summary': 'Automatically generate a project and/or a task at confirmation of sales orders.',
     'description': """
 Allows to create task from your sales order
 =============================================

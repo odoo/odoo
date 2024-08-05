@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': "Project Purchase",
-    'summary': "Monitor purchase in project",
+    'name': 'Project Purchase Analytics',
+    'summary': 'Track the costs of purchase orders associated with the analytic account of your projects.',
     'category': 'Services/Project',
     'depends': ['purchase', 'project_account'],
     'demo': [
