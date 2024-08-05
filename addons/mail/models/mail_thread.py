@@ -4090,7 +4090,7 @@ class MailThread(models.AbstractModel):
         author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else msg_sudo.author_id.ids
         # never send to author and to people outside Odoo (email), except comments
         pids = set()
-        if msg_type == 'comment':
+        if msg_type in {'comment', 'whatsapp_message'}:
             pids = set(notif_pids) - set(author_id)
         elif msg_type in ('notification', 'user_notification', 'email'):
             pids = (set(notif_pids) - set(author_id) - set(no_inbox_pids))
