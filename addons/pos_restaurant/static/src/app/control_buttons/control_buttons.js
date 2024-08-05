@@ -62,7 +62,7 @@ patch(ControlButtons.prototype, {
         this.dialog.add(TextInputPopup, {
             title: _t("Edit order note"),
             placeholder: _t("Emma's Birthday Party"),
-            startingValue: order.note,
+            startingValue: order.note || "",
             getPayload: async (newName) => {
                 if (typeof order.id == "number") {
                     this.pos.data.write("pos.order", [order.id], {
