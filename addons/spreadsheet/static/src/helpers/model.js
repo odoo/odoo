@@ -7,7 +7,7 @@ import { loadBundle } from "@web/core/assets";
 import { OdooSpreadsheetModel } from "@spreadsheet/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
-const { formatValue, isDefined, toCartesian } = helpers;
+const { formatValue, isDefined, toCartesian, toXC } = helpers;
 import {
     isMarkdownViewUrl,
     isMarkdownIrMenuIdUrl,
@@ -109,6 +109,23 @@ export async function freezeOdooData(model) {
                 cell.content = evaluatedCell.value.toString();
                 if (evaluatedCell.format) {
                     cell.format = getItemId(evaluatedCell.format, data.formats);
+                }
+                const spreadZone = model.getters.getSpreadZone(position);
+                if (spreadZone) {
+                    const { left, right, top, bottom } = spreadZone;
+                    for (let row = top; row <= bottom; row++) {
+                        for (let col = left; col <= right; col++) {
+                            const xc = toXC(col, row);
+                            const evaluatedCell = model.getters.getEvaluatedCell({ sheetId, col, row });
+                            sheet.cells[xc] = {
+                                ...sheet.cells[xc],
+                                content: evaluatedCell.value.toString(),
+                            };
+                            if (evaluatedCell.format) {
+                                sheet.cells[xc].format = getItemId(evaluatedCell.format, data.formats);
+                            }
+                        }
+                    }
                 }
             }
             if (containsLinkToOdoo(evaluatedCell.link)) {
