@@ -5,7 +5,7 @@ import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 
-const { formatValue, isDefined, toCartesian } = helpers;
+const { formatValue, isDefined, toCartesian, toXC } = helpers;
 import {
     isMarkdownViewUrl,
     isMarkdownIrMenuIdUrl,
@@ -67,15 +67,26 @@ export async function freezeOdooData(model) {
         for (const [xc, cell] of Object.entries(sheet.cells)) {
             const { col, row } = toCartesian(xc);
             const sheetId = sheet.id;
-            const evaluatedCell = model.getters.getEvaluatedCell({
-                sheetId,
-                col,
-                row,
-            });
+            const position = { sheetId, col, row };
+            const evaluatedCell = model.getters.getEvaluatedCell(position);
             if (containsOdooFunction(cell.content)) {
                 cell.content = evaluatedCell.value.toString();
                 if (evaluatedCell.format) {
                     cell.format = getItemId(evaluatedCell.format, data.formats);
+                }
+                const spreadPositions = model.getters.getSpreadPositionsOf(position);
+                if (spreadPositions.length) {
+                    for (const spreadPosition of spreadPositions) {
+                        const xc = toXC(spreadPosition.col, spreadPosition.row);
+                        const evaluatedCell = model.getters.getEvaluatedCell(spreadPosition);
+                        sheet.cells[xc] = {
+                            ...sheet.cells[xc],
+                            content: evaluatedCell.value.toString(),
+                        };
+                        if (evaluatedCell.format) {
+                            sheet.cells[xc].format = getItemId(evaluatedCell.format, data.formats);
+                        }
+                    }
                 }
             }
             if (containsLinkToOdoo(evaluatedCell.link)) {
