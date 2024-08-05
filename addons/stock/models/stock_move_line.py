@@ -710,17 +710,6 @@ class StockMoveLine(models.Model):
             lot = lots[key_to_index[key]].with_prefetch(lots._ids)   # With prefetch to reconstruct the ones broke by accessing by index
             mls.write({'lot_id': lot.id})
 
-    def _reservation_is_updatable(self, quantity, reserved_quant):
-        self.ensure_one()
-        if (self.product_id.tracking != 'serial' and
-                self.location_id.id == reserved_quant.location_id.id and
-                self.lot_id.id == reserved_quant.lot_id.id and
-                self.package_id.id == reserved_quant.package_id.id and
-                self.owner_id.id == reserved_quant.owner_id.id and
-                not self.result_package_id):
-            return True
-        return False
-
     def _log_message(self, record, move, template, vals):
         data = vals.copy()
         if 'lot_id' in vals and vals['lot_id'] != move.lot_id.id:
