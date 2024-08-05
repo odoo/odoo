@@ -1112,8 +1112,15 @@ class MailThread(models.AbstractModel):
             for ref in mail_header_msgid_re.findall(thread_references)
             if 'reply_to' not in ref
         ]
+
+        # avoid creating a gigantic query by limiting the number of references taken into account.
+        # newer msg_ids are *appended* to References as per RFC5322 §3.6.4, so we should generally
+        # find a match just with the last entry (equal to `In-Reply-To`). 32 refs seems large enough,
+        # we've seen performance degrade with 100+ refs.
+        msg_references = msg_references[-32:]
+
         replying_to_msg = self.env['mail.message'].sudo().search(
-            [('message_id', 'in', msg_references)], limit=1, order='id desc, message_id'
+            [('message_id', 'in', msg_references)], limit=1, order='id desc'
         ) if msg_references else self.env['mail.message']
         is_a_reply, reply_model, reply_thread_id = bool(replying_to_msg), replying_to_msg.model, replying_to_msg.res_id
 
