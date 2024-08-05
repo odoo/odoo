@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
+import { assignDefined } from "@mail/utils/common/misc";
 import { reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -109,14 +110,27 @@ export class LivechatService {
         if (Record.isRecord(values?.channel)) {
             values.channel = values.channel.toData();
         }
-        const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
+        let session = this.sessionCookie || {};
         Object.assign(session, {
             visitor_uid: this.visitorUid,
             ...values,
         });
+        if (this.state === SESSION_STATE.PERSISTED) {
+            session = assignDefined({}, session, [
+                "chatbot_script_id",
+                "id",
+                "model",
+                "name",
+                "operator_pid",
+                "seen_message_id",
+                "state",
+                "uuid",
+                "visitor_uid",
+            ]);
+        }
         cookie.delete(this.SESSION_COOKIE);
         cookie.delete(this.OPERATOR_COOKIE);
-        cookie.set(this.SESSION_COOKIE, JSON.stringify(session).replaceAll("→", " "), 60 * 60 * 24); // 1 day cookie.
+        cookie.set(this.SESSION_COOKIE, encodeURI(JSON.stringify(session)), 60 * 60 * 24); // 1 day cookie.
         if (session?.operator_pid) {
             cookie.set(this.OPERATOR_COOKIE, session.operator_pid[0], 7 * 24 * 60 * 60); // 1 week cookie.
         }
@@ -129,7 +143,7 @@ export class LivechatService {
      * never be called if the session was not persisted.
      */
     async leaveSession({ notifyServer = true } = {}) {
-        const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
+        const session = this.sessionCookie || {};
         try {
             if (session?.uuid && notifyServer) {
                 this.busService.deleteChannel(session.uuid);
@@ -241,14 +255,23 @@ export class LivechatService {
     }
 
     get sessionCookie() {
-        return JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "false");
+        try {
+            return cookie.get(this.SESSION_COOKIE)
+                ? JSON.parse(decodeURI(cookie.get(this.SESSION_COOKIE)))
+                : false;
+        } catch {
+            // Cookies are not supposed to contain non-ASCII characters.
+            // However, some were set in the past. Let's clean them up.
+            cookie.delete(this.SESSION_COOKIE);
+            return false;
+        }
     }
 
     get shouldRestoreSession() {
         if (this.state !== SESSION_STATE.NONE) {
             return false;
         }
-        return Boolean(cookie.get(this.SESSION_COOKIE));
+        return Boolean(this.sessionCookie);
     }
 
     /**
