@@ -21,9 +21,17 @@ export class TimeOffDashboard extends Component {
 
         onWillStart(async () => {
             await this.loadDashboardData();
+            const context = {};
+            if (this.props && this.props.employeeId !== null) {
+                context["employee_id"] = this.props.employeeId;
+            }
             this.hasAccrualAllocation = await this.orm.call(
                 "hr.leave.type",
-                "has_accrual_allocation"
+                "has_accrual_allocation",
+                [],
+                {
+                    context: context,
+                }
             );
         });
     }
