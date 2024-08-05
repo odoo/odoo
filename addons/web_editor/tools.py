@@ -58,6 +58,8 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
     """ Computes the platform name and embed_url from given URL
         (or error message in case of invalid URL).
     """
+    # TODO: In Master, remove the parameter "hide_yt_logo" (the parameter is no
+    # longer supported in the YouTube API.)
     source = get_video_source_data(video_url)
     if source is None:
         return {'error': True, 'message': _('The provided url is invalid')}
@@ -85,8 +87,6 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
             params['playlist'] = video_id
         if hide_fullscreen:
             params['fs'] = 0
-        if hide_yt_logo:
-            params['modestbranding'] = 1
         yt_extra = platform_match[1] or ''
         embed_url = f'//www.youtube{yt_extra}.com/embed/{video_id}'
     elif platform == 'vimeo':

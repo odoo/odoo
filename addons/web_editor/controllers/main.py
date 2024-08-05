@@ -293,13 +293,14 @@ class Web_Editor(http.Controller):
     def video_url_data(self, video_url, autoplay=False, loop=False,
                        hide_controls=False, hide_fullscreen=False, hide_yt_logo=False,
                        hide_dm_logo=False, hide_dm_share=False):
+        # TODO: In Master, remove the parameter "hide_yt_logo" (the parameter is
+        # no longer supported in the YouTube API.)
         if not request.env.user._is_internal():
             raise werkzeug.exceptions.Forbidden()
         return get_video_url_data(
             video_url, autoplay=autoplay, loop=loop,
             hide_controls=hide_controls, hide_fullscreen=hide_fullscreen,
-            hide_yt_logo=hide_yt_logo, hide_dm_logo=hide_dm_logo,
-            hide_dm_share=hide_dm_share
+            hide_dm_logo=hide_dm_logo, hide_dm_share=hide_dm_share
         )
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
