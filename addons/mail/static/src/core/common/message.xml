@@ -2,14 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message">
-        <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
-            <div class="o-mail-Message position-relative"
+        <ActionSwiper onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
+            <div class="o-mail-Message position-relative rounded-0"
                 t-att-class="attClass"
                 role="group"
                 t-att-aria-label="messageTypeText"
                 t-on-click="onClick"
                 t-on-mouseenter="onMouseenter"
                 t-on-mouseleave="onMouseleave"
+                t-on-touchstart.capture="onTouchstart"
+                t-on-touchend.capture="onTouchend"
                 t-ref="root"
                 t-if="message.exists()"
             >
@@ -56,11 +58,7 @@
                         <div
                             class="position-relative d-flex"
                             t-att-class="{
-                                   'justify-content-end': isAlignedRight,
-                                   'ps-4': env.inChatWindow and isAlignedRight and !state.isEditing,
-                                   'ps-2': env.inChatWindow and isAlignedRight and state.isEditing,
-                                   'pe-4': env.inChatWindow and !isAlignedRight and !state.isEditing and !env.messageCard,
-                                   'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
+                                   'flex-row-reverse': isAlignedRight,
                                    }"
                         >
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
@@ -84,7 +82,7 @@
                                                             'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.is_note,
                                                             'o-mail-Message-editable flex-grow-1': state.isEditing,
                                                             }" t-ref="body">
-                                                    <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
+                                                    <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
                                                         <div t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
@@ -119,7 +117,7 @@
                                     unlinkAttachment.bind="onClickAttachmentUnlink"
                                     imagesHeight="message.attachments.length === 1 ? 300 : 75"
                                     messageSearch="props.messageSearch"/>
-                                <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
+                                <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="props.message.editable"/>
                             </div>
                             <t t-if="!message.is_note and !message.isPending and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
                         </div>
@@ -133,57 +131,64 @@
 <t t-name="mail.Message.actions">
     <div t-if="props.hasActions and message.hasActions and !state.isEditing" class="o-mail-Message-actions d-print-none"
         t-att-class="{
-            'start-0 ms-3': isAlignedRight,
-            'end-0 me-3': (env.inChatWindow or ui.isSmall) and !isAlignedRight,
-            'position-absolute top-0 mt-n3': env.inChatWindow or ui.isSmall,
-            'ms-2': !env.inChatWindow and !ui.isSmall,
-            'mt-1': !env.inChatWindow and !ui.isSmall and !message.is_note,
+            'start-0': isAlignedRight,
+            'mx-1': !isMobileOS,
+            'mt-1': !message.is_note,
             'my-n2': message.is_note,
-            'invisible': !isActive,
+            'invisible': !isActive and !isMobileOS,
             'o-expanded': optionsDropdown.isOpen
         }"
     >
-        <t t-set="isReverse" t-value="env.inChatWindow and isAlignedRight"/>
-        <div class="d-flex rounded-1 overflow-hidden" t-att-class="{
-                'flex-row-reverse': isReverse,
-                'bg-view shadow-sm': env.inChatWindow,
-            }"
-        >
-            <t t-foreach="messageActions.actions.slice(0, quickActionCount)" t-as="action" t-key="action.id">
-                <t t-set="isStart" t-value="(!isReverse and action.isFirst) or (isReverse and action.isLast)"/>
-                <t t-set="isEnd" t-value="(!isReverse and action.isLast) or (isReverse and action.isFirst)"/>
-                <t t-if="action.callComponent" t-component="action.callComponent" t-props="action.props" classNames="{
-                    'rounded-start-1': isStart,
-                    'rounded-end-1': isEnd,
-                }"/>
-                <button t-else="" class="btn px-1 py-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick" t-att-class="{
-                    'rounded-start-1': isStart,
-                    'rounded-end-1': isEnd,
-                }">
-                    <i class="fa fa-lg" t-att-class="action.icon"/>
-                </button>
-            </t>
-            <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
-                <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" >
-                    <button class="btn px-1 py-0 rounded-0" t-att-title="expandText" t-att-class="{
-                        'bg-200': optionsDropdown.isOpen,
-                        'rounded-start-1': isReverse,
-                        'rounded-end-1': !isReverse,
+        <t t-if="isMobileOS and !mobileExpanded" t-call="mail.Message.expandAction"/>
+        <t t-else="">
+            <t t-set="isReverse" t-value="env.inChatWindow and isAlignedRight"/>
+            <div class="d-flex rounded-1 overflow-hidden" t-att-class="{ 'flex-row-reverse': isReverse }">
+                <t t-set="quickActions" t-value="messageActions.actions.slice(0, messageActions.actions.length gt quickActionCount ? quickActionCount - 1 : quickActionCount)"/>
+                <t t-foreach="quickActions" t-as="action" t-key="action.id">
+                    <t t-set="isStart" t-value="(!isReverse and action.isFirst) or (isReverse and action.isLast)"/>
+                    <t t-set="isEnd" t-value="(!isReverse and action.isLast) or (isReverse and action.isFirst)"/>
+                    <t t-if="action.callComponent" t-component="action.callComponent" t-props="action.props" classNames="{
+                        'rounded-start-1': isStart,
+                        'rounded-end-1': isEnd,
+                    }"/>
+                    <button t-else="" class="btn px-1 py-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick" t-att-class="{
+                        'rounded-start-1': isStart,
+                        'rounded-end-1': isEnd,
                     }">
-                        <i class="fa fa-lg fa-ellipsis-h" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
+                        <i class="fa fa-lg" t-att-class="action.icon"/>
                     </button>
-                    <t t-set-slot="content">
-                        <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
-                            <DropdownItem class="'px-2 d-flex align-items-center rounded-0'" onSelected="action.onClick" attrs="{ title: action.title}">
-                                <i class="fa fa-lg fa-fw pe-2" t-att-class="action.icon"/>
-                                <t t-esc="action.title"/>
-                            </DropdownItem>
+                </t>
+                <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
+                    <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" >
+                        <t t-call="mail.Message.expandAction"/>
+                        <t t-set-slot="content">
+                            <t t-foreach="messageActions.actions.slice(quickActionCount - 1)" t-as="action" t-key="action.id">
+                                <DropdownItem class="'px-2 d-flex align-items-center rounded-0'" onSelected="action.onClick" attrs="{ title: action.title}">
+                                    <i class="fa fa-lg fa-fw pe-2" t-att-class="action.icon"/>
+                                    <t t-esc="action.title"/>
+                                </DropdownItem>
+                            </t>
                         </t>
-                    </t>
-                </Dropdown>
+                    </Dropdown>
+                </div>
             </div>
-        </div>
+        </t>
     </div>
+</t>
+
+
+<t t-name="mail.Message.expandAction">
+    <button class="btn rounded-0" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
+        'o-mail-Message-openActionMobile opacity-25 p-2 mt-n2 rounded-circle user-select-none': isMobileOS and !mobileExpanded,
+        'me-n2': isMobileOS and !mobileExpanded and isAlignedRight,
+        'ms-n2': isMobileOS and !mobileExpanded and !isAlignedRight,
+        'px-2 py-0': !isMobileOS,
+        'bg-200': optionsDropdown.isOpen,
+        'rounded-start-1': !isMobileOS and isReverse,
+        'rounded-end-1': !isMobileOS and !isReverse,
+    }">
+        <i class="fa fa-lg fa-ellipsis-v" t-att-class="{ 'order-1': props.isInChatWindow, 'fa-fw': isMobileOS }" tabindex="1"/>
+    </button>
 </t>
 
 <t t-name="mail.Message.notification">

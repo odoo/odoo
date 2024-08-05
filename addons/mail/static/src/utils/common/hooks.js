@@ -69,6 +69,69 @@ export function onExternalClick(refName, cb) {
     });
 }
 
+const LONG_TOUCH_PRESS_STATE = {
+    NEUTRAL: 0, // no prior touch start
+    ONGOING: 1, // ongoing, non-reached touch start long-press
+    REACHED: 2, // long touchstart that has reached trigger time but hasn't touchend yet
+};
+
+/**
+ * @param {string} refName
+ * @param {() => {}} fn
+ */
+export function useLongTouchPress(refName, fn, delay = 500) {
+    const ref = useRef(refName);
+    let timeoutId;
+    let current = LONG_TOUCH_PRESS_STATE.NEUTRAL;
+    function onTouchend() {
+        if (current === LONG_TOUCH_PRESS_STATE.REACHED) {
+            return;
+        }
+        if (current === LONG_TOUCH_PRESS_STATE.ONGOING) {
+            clearTimeout(timeoutId);
+            current = LONG_TOUCH_PRESS_STATE.NEUTRAL;
+        }
+    }
+    // prevent iOS text-selection from long press
+    useLazyExternalListener(
+        () => ref.el,
+        "webkitmouseforcewillbegin",
+        (ev) => ev.preventDefault()
+    );
+    useLazyExternalListener(
+        () => ref.el,
+        "webkitmouseforcedown",
+        (ev) => ev.preventDefault()
+    );
+    useLazyExternalListener(
+        () => ref.el,
+        "webkitmouseforcechanged",
+        (ev) => ev.preventDefault()
+    );
+    onMounted(() => {
+        document.body.addEventListener("touchend", onTouchend, true);
+    });
+    onWillUnmount(() => {
+        document.body.removeEventListener("touchend", onTouchend, true);
+        clearTimeout(timeoutId);
+    });
+    useLazyExternalListener(
+        () => ref.el,
+        "touchstart",
+        () => {
+            if (current !== LONG_TOUCH_PRESS_STATE.NEUTRAL) {
+                return;
+            }
+            current = LONG_TOUCH_PRESS_STATE.ONGOING;
+            timeoutId = setTimeout(() => {
+                current = LONG_TOUCH_PRESS_STATE.REACHED;
+                fn();
+                current = LONG_TOUCH_PRESS_STATE.NEUTRAL;
+            }, delay);
+        }
+    );
+}
+
 /**
  * @param {string | string[]} refNames
  * @param {(boolean) => void} callback
