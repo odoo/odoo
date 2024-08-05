@@ -1261,7 +1261,7 @@ class HrExpenseSheet(models.Model):
             )._compute_taxes([
                 expense._convert_to_tax_base_line_dict(price_unit=expense_amount, currency=currency)
             ])
-            rate = abs(expense_amount / expense.total_amount_company)
+            rate = abs(expense_amount / expense.total_amount_company) if expense_amount else 1.0
             base_line_data, to_update = tax_data['base_lines_to_update'][0]  # Add base lines
             amount_currency = to_update['price_subtotal']
             expense_name = expense.name.split("\n")[0][:64]

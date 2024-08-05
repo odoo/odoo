@@ -1457,3 +1457,34 @@ class TestExpenses(TestExpenseCommon):
         moves = expense_sheet.action_sheet_move_create()
         tax_lines = moves.line_ids.filtered(lambda line: line.tax_line_id == caba_tax)
         self.assertNotEqual(tax_lines.account_id, caba_transition_account, "The tax should not be on the transition account")
+
+    def test_expense_sheet_company_payment_void_amount(self):
+        ''' Test expense sheet company payment with a 0 amount line'''
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'expense_line_ids': [
+                Command.create({
+                    'name': 'Car Travel Expenses',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_a.id,
+                    'unit_amount': 350.00,
+                    'payment_mode': 'company_account',
+                }),
+                Command.create({
+                    'name': 'Void line',
+                    'employee_id': self.expense_employee.id,
+                    'unit_amount': 0.0,
+                    'payment_mode': 'company_account',
+                })]
+            })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        # Should not raise traceback
+        move = expense_sheet.action_sheet_move_create()
+
+        # Void line is correctly created
+        self.assertTrue(move.line_ids.filtered(lambda line: line.balance == 0.0))
