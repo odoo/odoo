@@ -144,6 +144,8 @@ class ResourceResource(models.Model):
             calendar_mapping[resource.calendar_id or resource.company_id.resource_calendar_id] |= resource
 
         for calendar, resources in calendar_mapping.items():
+            if not calendar:
+                continue
             resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources, tz=timezone(calendar.tz))
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
