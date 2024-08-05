@@ -44,12 +44,6 @@ export class VideoSelector extends Component {
                 urlParameter: 'fs=0',
                 isHidden: () => this.state.options.filter(option => option.id === 'hide_controls')[0].value,
             },
-            hide_yt_logo: {
-                label: this.env._t("Hide Youtube logo"),
-                platforms: [this.PLATFORMS.youtube],
-                urlParameter: 'modestbranding=1',
-                isHidden: () => this.state.options.filter(option => option.id === 'hide_controls')[0].value,
-            },
             hide_dm_logo: {
                 label: this.env._t("Hide Dailymotion logo"),
                 platforms: [this.PLATFORMS.dailymotion],
