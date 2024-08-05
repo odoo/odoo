@@ -677,14 +677,7 @@ class StockMoveLine(models.Model):
             mls.write({'lot_id': lot.id})
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
-        self.ensure_one()
-        if (self.product_id.tracking != 'serial' and
-                self.location_id.id == reserved_quant.location_id.id and
-                self.lot_id.id == reserved_quant.lot_id.id and
-                self.package_id.id == reserved_quant.package_id.id and
-                self.owner_id.id == reserved_quant.owner_id.id and
-                not self.result_package_id):
-            return True
+        # To remove in master
         return False
 
     def _log_message(self, record, move, template, vals):
