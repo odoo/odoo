@@ -60,12 +60,20 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Dialog.confirm("Open session"),
 
             // Create a floating order. The idea is to have one of the draft orders be a floating order during the tour.
-            Chrome.newOrder(),
 
+            {
+                content: "open table selector",
+                trigger: ".pos-topheader button.table-free-order-label",
+                run: "click",
+            },
+            {
+                content: "create new order",
+                trigger: ".modal-body button i.fa-plus-circle",
+                run: "click",
+            },
             // Dine in / Takeaway can be toggled.
             ProductScreen.clickControlButton("Dine in"),
             ProductScreen.clickControlButton("Takeaway"),
-
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
