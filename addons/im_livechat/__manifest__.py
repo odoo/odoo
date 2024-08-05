@@ -149,6 +149,10 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/tests/_framework/**/*',
             'im_livechat/static/tests/embed/**/*',
         ],
+        "mail.assets_public": [
+            "im_livechat/static/src/core/common/**/*",
+            "im_livechat/static/src/core/public_web/**/*",
+        ],
     },
     'license': 'LGPL-3',
 }

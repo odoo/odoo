@@ -24,11 +24,13 @@ export function makeStore(env, { localRegistry } = {}) {
     /** @type {Object<string, typeof Record>} */
     const Models = {};
     const chosenModelRegistry = localRegistry ?? modelRegistry;
-    for (const [name, _OgClass] of chosenModelRegistry.getEntries()) {
+    for (const [, _OgClass] of chosenModelRegistry.getEntries()) {
         /** @type {typeof Record} */
         const OgClass = _OgClass;
-        if (store[name]) {
-            throw new Error(`There must be no duplicated Model Names (duplicate found: ${name})`);
+        if (store[OgClass.getName()]) {
+            throw new Error(
+                `There must be no duplicated Model Names (duplicate found: ${OgClass.getName()})`
+            );
         }
         // classes cannot be made reactive because they are functions and they are not supported.
         // work-around: make an object whose prototype is the class, so that static props become
@@ -37,7 +39,7 @@ export function makeStore(env, { localRegistry } = {}) {
         const Model = Object.create(OgClass);
         // Produce another class with changed prototype, so that there are automatic get/set on relational fields
         const Class = {
-            [OgClass.name]: class extends OgClass {
+            [OgClass.getName()]: class extends OgClass {
                 constructor() {
                     super();
                     this.setup();
@@ -138,15 +140,15 @@ export function makeStore(env, { localRegistry } = {}) {
                     return recordProxy;
                 }
             },
-        }[OgClass.name];
+        }[OgClass.getName()];
         Model._ = markRaw(new ModelInternal());
         Object.assign(Model, {
             Class,
             env,
             records: reactive({}),
         });
-        Models[name] = Model;
-        store[name] = Model;
+        Models[Model.getName()] = Model;
+        store[Model.getName()] = Model;
         // Detect fields with a dummy record and setup getter/setters on them
         const obj = new OgClass();
         obj.setup();
@@ -171,17 +173,21 @@ export function makeStore(env, { localRegistry } = {}) {
                 const OtherModel = Models[targetModel];
                 const rel2TargetModel = OtherModel._.fieldsTargetModel.get(inverse);
                 const rel2Inverse = OtherModel._.fieldsInverse.get(inverse);
-                if (rel2TargetModel && rel2TargetModel !== Model.name) {
+                if (rel2TargetModel && rel2TargetModel !== Model.getName()) {
                     throw new Error(
-                        `Fields ${Models[targetModel].name}.${inverse} has wrong targetModel. Expected: "${Model.name}" Actual: "${rel2TargetModel}"`
+                        `Fields ${Models[
+                            targetModel
+                        ].getName()}.${inverse} has wrong targetModel. Expected: "${Model.getName()}" Actual: "${rel2TargetModel}"`
                     );
                 }
                 if (rel2Inverse && rel2Inverse !== name) {
                     throw new Error(
-                        `Fields ${Models[targetModel].name}.${inverse} has wrong inverse. Expected: "${name}" Actual: "${rel2Inverse}"`
+                        `Fields ${Models[
+                            targetModel
+                        ].getName()}.${inverse} has wrong inverse. Expected: "${name}" Actual: "${rel2Inverse}"`
                     );
                 }
-                OtherModel._.fieldsTargetModel.set(inverse, Model.name);
+                OtherModel._.fieldsTargetModel.set(inverse, Model.getName());
                 OtherModel._.fieldsInverse.set(inverse, name);
                 // // FIXME: lazy fields are not working properly with inverse.
                 Model._.fieldsEager.set(name, true);
@@ -199,7 +205,7 @@ export function makeStore(env, { localRegistry } = {}) {
     for (const Model of Object.values(Models)) {
         Model._rawStore = store;
         Model.store = store._proxy;
-        store._proxy[Model.name] = Model;
+        store._proxy[Model.getName()] = Model;
     }
     Object.assign(store, { Models, storeReady: true });
     return store._proxy;

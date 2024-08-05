@@ -1,6 +1,6 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { Command, fields, models } from "@web/../tests/web_test_helpers";
+import { Command, fields, getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class LivechatChannel extends models.ServerModel {
     _name = "im_livechat.channel";
@@ -11,16 +11,14 @@ export class LivechatChannel extends models.ServerModel {
     /** @param {integer} id */
     action_join(id) {
         this.write([id], { user_ids: [Command.link(this.env.user.id)] });
-        const self = this.read([id])[0];
         const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
         this.env["bus.bus"]._sendone(
             partner,
             "mail.record/insert",
-            new mailDataHelpers.Store("LivechatChannel", {
-                id,
-                name: self.name,
-                hasSelfAsMember: true,
-            }).get_result()
+            new mailDataHelpers.Store(
+                this.browse(id),
+                makeKwArgs({ fields: ["hasSelfAsMember", "name"] })
+            ).get_result()
         );
     }
 
@@ -28,15 +26,13 @@ export class LivechatChannel extends models.ServerModel {
     action_quit(id) {
         this.write(id, { user_ids: [Command.unlink(this.env.user.id)] });
         const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
-        const self = this.read([id])[0];
         this.env["bus.bus"]._sendone(
             partner,
             "mail.record/insert",
-            new mailDataHelpers.Store("LivechatChannel", {
-                id,
-                name: self.name,
-                hasSelfAsMember: false,
-            }).get_result()
+            new mailDataHelpers.Store(
+                this.browse(id),
+                makeKwArgs({ fields: ["hasSelfAsMember", "name"] })
+            ).get_result()
         );
     }
 
@@ -95,5 +91,24 @@ export class LivechatChannel extends models.ServerModel {
             availableUsers.find((operator) => operator.partner_id === previous_operator_id) ??
             availableUsers[0]
         );
+    }
+
+    _to_store(ids, store, fields) {
+        const kwargs = getKwArgs(arguments, "ids", "store", "fields");
+        fields = kwargs.fields;
+        if (!fields) {
+            fields = [];
+        }
+        for (const livechatChannel of this.browse(ids)) {
+            const [res] = this.read(
+                [livechatChannel.id],
+                fields.filter((field) => field !== "hasSelfAsMember"),
+                false
+            );
+            if (fields.includes("hasSelfAsMember")) {
+                res.hasSelfAsMember = livechatChannel.user_ids.includes(this.env.user.id);
+            }
+            store.add(this.browse(livechatChannel.id), res);
+        }
     }
 }
