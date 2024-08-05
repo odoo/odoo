@@ -82,11 +82,11 @@
                                 <h5>Don't miss out!</h5>
                                 <small>Add this event to your calendar</small>
                                 <div id="add_to_calendar" class="o_event_add_to_calendar_btns d-flex flex-wrap gap-3 mt-2">
-                                    <a role="button" class="o_outlook_calendar btn btn-block bg-white" t-att-href="iCal_url">
+                                    <a role="button" class="o_outlook_calendar btn btn-block bg-white" t-att-href="urls_per_event.get(event.id, {}).get('iCal_url', '')">
                                         <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" loading="lazy"/>
                                         Add to iCal/Outlook
                                     </a>
-                                    <a role="button" class="o_google_calendar btn btn-block bg-white" t-att-href="google_url">
+                                    <a role="button" class="o_google_calendar btn btn-block bg-white" t-att-href="urls_per_event.get(event.id, {}).get('google_url', '')">
                                         <img src="/event/static/src/img/google-calendar.svg" alt="Google Agenda" loading="lazy"/>
                                         Add to Google Agenda
                                     </a>
