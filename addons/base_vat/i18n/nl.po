@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Dylan Kiss, 2022
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-21 21:59+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +53,15 @@ msgstr ""
 #, python-format
 msgid "49-098-576 or 49098576"
 msgstr "49-098-576 of 49098576"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXX [9 cijfers] en de Luhn-algoritme-controlesom moet worden "
+"gerespecteerd"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -202,11 +211,22 @@ msgstr ""
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"Het gevonden land voor dit buitenlandse btw-nummer komt niet overeen met het"
-" land dat op deze fiscale positie is ingesteld."
+"Het gedetecteerde land voor dit buitenlandse btw-nummer komt niet overeen "
+"met een van de landen binnen de ingestelde landengroep voor deze fiscale "
+"positie."
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"Het land van het buitenlandse btw-nummer kon niet worden gedetecteerd. Wijs "
+"een land toe aan de fiscale positie of stel een landengroep in"
 
 #. module: base_vat
 #. odoo-python

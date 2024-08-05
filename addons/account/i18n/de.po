@@ -14220,6 +14220,17 @@ msgid "The company this distribution line belongs to."
 msgstr "Das Unternehmen, zu dem diese Verteilungszeile gehört."
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"Das Land der ausländischen MwSt.-Nummer konnte nicht erkannt werden. Bitte "
+"weisen Sie der Steuerposition ein Land zu oder legen Sie eine Ländergruppe "
+"fest"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
 msgstr "Das Land, für das diese Steuergruppe gilt."
@@ -16907,6 +16918,16 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
+"Sie können keine Steuerposition mit einem Land außerhalb der ausgewählten "
+"Ländergruppe erstellen."
+
+#. module: account
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
