@@ -181,7 +181,7 @@ export class FloorScreen extends Component {
                         time: Date.now(),
                     };
                     this.alert.add(
-                        `Link Table ${table.name} with ${this.state.potentialLink.parent.name}`
+                        `Link Table ${table.table_number} with ${this.state.potentialLink.parent.table_number}`
                     );
                     return;
                 }
