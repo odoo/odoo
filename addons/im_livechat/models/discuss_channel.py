@@ -72,8 +72,10 @@ class DiscussChannel(models.Model):
                 channel_info["operator"] = Store.one(
                     channel.livechat_operator_id, fields=["user_livechat_username", "write_date"]
                 )
-            if channel.channel_type == "livechat" and channel.livechat_channel_id and self.env.user._is_internal():
-                channel_info['livechatChannel'] = {"id": channel.livechat_channel_id.id, "name": channel.livechat_channel_id.name}
+            if channel.channel_type == "livechat" and self.env.user._is_internal():
+                channel_info["livechatChannel"] = Store.one(
+                    channel.livechat_channel_id, fields=["name"]
+                )
             store.add(channel, channel_info)
 
     @api.autovacuum

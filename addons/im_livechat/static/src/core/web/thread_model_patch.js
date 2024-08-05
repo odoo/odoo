@@ -11,7 +11,7 @@ patch(Thread.prototype, {
                 return this.channel_type === "livechat" ? this.store.discuss : null;
             },
         });
-        this.livechatChannel = Record.one("LivechatChannel");
+        this.livechatChannel = Record.one("im_livechat.channel", { inverse: "threads" });
     },
     _computeDiscussAppCategory() {
         if (this.channel_type !== "livechat") {

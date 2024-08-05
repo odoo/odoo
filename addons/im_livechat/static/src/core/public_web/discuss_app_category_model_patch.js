@@ -6,7 +6,7 @@ import { compareDatetime } from "@mail/utils/common/misc";
 patch(DiscussAppCategory.prototype, {
     setup() {
         super.setup(...arguments);
-        this.livechatChannel = Record.one("LivechatChannel", {
+        this.livechatChannel = Record.one("im_livechat.channel", {
             inverse: "appCategory",
             onDelete() {
                 this.delete();

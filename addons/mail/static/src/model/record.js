@@ -43,12 +43,15 @@ export class Record {
         const Model = toRaw(this);
         return this.records[Model.localId(data)];
     }
+    static getName() {
+        return this._name || this.name;
+    }
     static register(localRegistry) {
         if (localRegistry) {
             // Record-specific tests use local registry as to not affect other tests
-            localRegistry.add(this.name, this);
+            localRegistry.add(this.getName(), this);
         } else {
-            modelRegistry.add(this.name, this);
+            modelRegistry.add(this.getName(), this);
         }
     }
     static localId(data) {
@@ -59,7 +62,7 @@ export class Record {
         } else {
             idStr = data; // non-object data => single id
         }
-        return `${Model.name},${idStr}`;
+        return `${Model.getName()},${idStr}`;
     }
     static _localId(expr, data, { brackets = false } = {}) {
         const Model = toRaw(this);
@@ -196,7 +199,7 @@ export class Record {
             Object.assign(record._, { localId: Model.localId(ids) });
             Object.assign(recordProxy, { ...ids });
             Model.records[record.localId] = recordProxy;
-            if (record.Model.name === "Store") {
+            if (record.Model.getName() === "Store") {
                 Object.assign(record, {
                     env: Model._rawStore.env,
                     recordByLocalId: Model._rawStore.recordByLocalId,

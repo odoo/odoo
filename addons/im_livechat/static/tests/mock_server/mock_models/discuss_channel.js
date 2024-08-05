@@ -11,8 +11,6 @@ export class DiscussChannel extends mailModels.DiscussChannel {
      * @type {typeof mailModels.DiscussChannel["prototype"]["_to_store"]}
      */
     _to_store(ids, store) {
-        /** @type {import("mock_models").LivechatChannel} */
-        const LivechatChannel = this.env["im_livechat.channel"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
@@ -33,14 +31,10 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 } else {
                     channelInfo.operator = false;
                 }
-                if (channel.livechat_channel_id) {
-                    channelInfo.livechatChannel = LivechatChannel.search_read([
-                        ["id", "=", channel.livechat_channel_id],
-                    ]).map((c) => ({
-                        id: c.id,
-                        name: c.name,
-                    }))[0];
-                }
+                channelInfo.livechatChannel = mailDataHelpers.Store.one(
+                    this.env["im_livechat.channel"].browse(channel.livechat_channel_id),
+                    makeKwArgs({ fields: ["name"] })
+                );
             }
             store.add(this.browse(channel.id), channelInfo);
         }
