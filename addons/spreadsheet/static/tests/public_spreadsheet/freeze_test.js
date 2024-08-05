@@ -2,7 +2,12 @@
 
 import { freezeOdooData } from "../../src/helpers/model";
 import { createSpreadsheetWithChart } from "../utils/chart";
-import { setCellContent, setCellFormat, setGlobalFilterValue } from "../utils/commands";
+import {
+    setCellContent,
+    setCellFormat,
+    setCellStyle,
+    setGlobalFilterValue,
+} from "../utils/commands";
 import { getCell, getEvaluatedCell } from "../utils/getters";
 import { createSpreadsheetWithPivot } from "../utils/pivot";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
@@ -221,5 +226,27 @@ QUnit.module("freezing spreadsheet", {}, function () {
             frozenData.sheets[0].cells.A5.content,
             "[internal_link](o-spreadsheet://Sheet1)"
         );
+    });
+
+    QUnit.test("spilled pivot table", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+              <pivot>
+                  <field name="probability" type="measure"/>
+              </pivot>
+            `,
+        });
+        setCellContent(model, "A10", "=ODOO.PIVOT.TABLE(1)");
+        setCellStyle(model, "B12", { bold: true });
+        const data = await freezeOdooData(model);
+        const cells = data.sheets[0].cells;
+        assert.strictEqual(cells.A10.content, "(#1) Partner Pivot");
+        assert.strictEqual(cells.A11.content, "");
+        assert.strictEqual(cells.A12.content, "Total");
+        assert.strictEqual(cells.B10.content, "Total");
+        assert.strictEqual(cells.B11.content, "Probability");
+        assert.strictEqual(cells.B12.content, "131");
+        assert.strictEqual(data.formats[cells.B12.format], "#,##0.00");
+        assert.deepEqual(data.styles[cells.B12.style], { bold: true }, "style is preserved");
     });
 });
