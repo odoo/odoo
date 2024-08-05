@@ -60,7 +60,7 @@ class ImLivechatChannel(models.Model):
 
     def _are_you_inside(self):
         for channel in self:
-            channel.are_you_inside = bool(self.env.uid in [u.id for u in channel.user_ids])
+            channel.are_you_inside = self.env.user in channel.user_ids
 
     @api.depends('user_ids.im_status')
     def _compute_available_operator_ids(self):
@@ -103,12 +103,12 @@ class ImLivechatChannel(models.Model):
     def action_join(self):
         self.ensure_one()
         self.user_ids = [Command.link(self.env.user.id)]
-        self.env.user._bus_send_store(self, fields=["hasSelfAsMember", "name"])
+        self.env.user._bus_send_store(self, fields=["are_you_inside", "name"])
 
     def action_quit(self):
         self.ensure_one()
         self.user_ids = [Command.unlink(self.env.user.id)]
-        self.env.user._bus_send_store(self, fields=["hasSelfAsMember", "name"])
+        self.env.user._bus_send_store(self, fields=["are_you_inside", "name"])
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
@@ -333,13 +333,7 @@ class ImLivechatChannel(models.Model):
     def _to_store(self, store: Store, /, *, fields=None):
         if fields is None:
             fields = []
-        for livechat_channel in self:
-            data = livechat_channel._read_format(
-                [field for field in fields if field != "hasSelfAsMember"]
-            )[0]
-            if "hasSelfAsMember" in fields:
-                data["hasSelfAsMember"] = self.env.user in livechat_channel.user_ids
-            store.add(livechat_channel, data)
+        store.add(self._name, self._read_format(fields))
 
 
 class ImLivechatChannelRule(models.Model):

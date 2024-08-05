@@ -4,7 +4,8 @@ export class LivechatChannel extends Record {
     static _name = "im_livechat.channel";
     static id = "id";
 
-    hasSelfAsMember = false;
+    /** @type {boolean} */
+    are_you_inside;
     /** @type {number} */
     id;
     /** @type {string} */
