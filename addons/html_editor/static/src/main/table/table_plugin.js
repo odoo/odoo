@@ -247,10 +247,22 @@ export class TablePlugin extends Plugin {
     }
     moveRow({ position, row }) {
         const selectionToRestore = this.shared.getEditableSelection();
+        let adjustedRow;
         if (position === "up") {
             row.previousElementSibling?.before(row);
+            adjustedRow = row;
         } else {
             row.nextElementSibling?.after(row);
+            adjustedRow = row.previousElementSibling;
+        }
+
+        // If the moved row becomes the first row, copy the widths of its td
+        // elements from the previous first row, as td widths are only applied
+        // to the first row.
+        if (!adjustedRow.previousElementSibling) {
+            adjustedRow.childNodes.forEach((cell, index) => {
+                cell.style.width = adjustedRow.nextElementSibling.childNodes[index].style.width;
+            });
         }
         this.shared.setSelection(selectionToRestore);
     }
