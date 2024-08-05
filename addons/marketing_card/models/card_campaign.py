@@ -254,7 +254,7 @@ class CardCampaign(models.Model):
                 try:
                     m = record.mapped(self['content_' + el + '_path'])
                     result[el] = m and m[0] or False
-                except:
+                except AttributeError:
                     # for generic image, or if field incorrect, return name of field
                     result[el] = self['content_' + el + '_path']
         return result
