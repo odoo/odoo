@@ -170,6 +170,11 @@
             <cbc:LineExtensionAmount
                 t-att-currencyID="vals.get('currency_id')"
                 t-out="vals.get('line_extension_amount')" />
+            <cac:AllowanceCharge t-if="vals.get('allowance_charge_vals')">
+                <t t-call="purchase_edi_ubl_bis3.bis3_AllowanceChargeType">
+                    <t t-set="vals" t-value="vals.get('allowance_charge_vals')"/>
+                </t>
+            </cac:AllowanceCharge>
             <cac:Price>
                 <t t-set="price_vals" t-value="vals.get('price')" />
                 <cbc:PriceAmount
@@ -178,11 +183,6 @@
                 <cbc:BaseQuantity
                     t-att-unitCode="price_vals.get('base_quantity_unit_code')"
                     t-out="price_vals.get('base_quantity')" />
-                <cac:AllowanceCharge t-if="price_vals.get('allowance_charge_vals')">
-                    <t t-call="purchase_edi_ubl_bis3.bis3_AllowanceChargeType">
-                        <t t-set="vals" t-value="price_vals.get('allowance_charge_vals')" />
-                    </t>
-                </cac:AllowanceCharge>
             </cac:Price>
             <cac:Item>
                 <t t-call="purchase_edi_ubl_bis3.bis3_ItemType">
@@ -229,7 +229,7 @@
             </cac:PaymentTerms>
             <cac:AllowanceCharge>
                 <t t-call="purchase_edi_ubl_bis3.bis3_AllowanceChargeType">
-                    <t t-set="vals" t-value="vals.get('allowance_charge_vals')" />
+                    <t t-set="vals" t-value="vals.get('allowance_charge_vals', {})" />
                 </t>
             </cac:AllowanceCharge>
             <cac:TaxTotal>
