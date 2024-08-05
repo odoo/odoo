@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_afip_tabla_ganancias_alicuotasymontos_tree" model="ir.ui.view">
+        <field name="name">afip.tabla_ganancias.alicuotasymontos.tree</field>
+        <field name="model">afip.tabla_ganancias.alicuotasymontos</field>
+        <field name="arch" type="xml">
+            <tree string="AFIP tax" editable="top">
+                <field name="codigo_de_regimen"/>
+                <field name="anexo_referencia"/>
+                <field name="concepto_referencia"/>
+                <field name="porcentaje_inscripto"/>
+                <field name="porcentaje_no_inscripto"/>
+                <field name="montos_no_sujetos_a_retencion"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_afip_tabla_ganancias_alicuotasymontos">
+        <field name="name">AFIP tax</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">afip.tabla_ganancias.alicuotasymontos</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem name="Alicuotas y Montos Ganancias" action="act_afip_tabla_ganancias_alicuotasymontos" id="menu_action_afip_tabla_ganancias_alicuotasymontos" sequence="95" parent="l10n_ar.menu_afip_config"/>
+
+</odoo>

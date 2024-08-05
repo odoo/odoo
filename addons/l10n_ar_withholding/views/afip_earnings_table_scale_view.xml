@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_afip_earnings_table_scale_tree" model="ir.ui.view">
+        <field name="name">afip.earnings_table.scale.tree</field>
+        <field name="model">afip.earnings_table.scale</field>
+        <field name="arch" type="xml">
+            <tree string="AFIP tax" editable="top">
+                <field name="importe_desde"/>
+                <field name="importe_hasta"/>
+                <field name="importe_fijo"/>
+                <field name="porcentaje"/>
+                <field name="importe_excedente"/>
+                <field name="codigo_de_regimen"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_afip_earnings_table_scale">
+        <field name="name">AFIP tax</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">afip.earnings_table.scale</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem name="Earnings Scale" action="act_afip_earnings_table_scale" id="menu_action_afip_earnings_table_scale" sequence="95" parent="l10n_ar.menu_afip_config"/>
+
+</odoo>

@@ -11,7 +11,6 @@ class AccountTax(models.Model):
         compute="_compute_l10n_ar_withholding_payment_type", store=True, readonly=False)
     l10n_ar_tax_type = fields.Selection(string='Argentinean Tax Type', selection=[
         ('earnings_withholding', 'Earnings Withholding'),
-        ('earnings_withholding_scale', 'Earnings Withholding Scale'),
         ('iibb_withholding', 'IIBB Withholding'),
     ],
         compute="_compute_l10n_ar_tax_type", store=True, readonly=False)

@@ -33,11 +33,3 @@ def _l10n_ar_withholding_post_init(env):
 
             if env.ref('base.module_l10n_ar_withholding').demo:
                 env['account.chart.template']._post_load_demo_data(company)
-
-    # Add earnings scales to earnings withholding groups.
-    companies = env['res.company'].search([('l10n_ar_afip_responsibility_type_id.code', '=', '1'), ('chart_template', '=', 'ar_ri')])
-    for company in companies:
-        env['account.chart.template']._add_wh_scales(company)
-
-    if companies:
-        _logger.info("Earnings scales were added to earnings withholding groups. %s." % ', '.join(companies.mapped('name')))
