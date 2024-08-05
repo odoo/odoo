@@ -170,7 +170,7 @@ patch(mailDataHelpers, {
         if (livechat_channels) {
             store.add(
                 this.env["im_livechat.channel"].search([]),
-                makeKwArgs({ fields: ["hasSelfAsMember", "name"] })
+                makeKwArgs({ fields: ["are_you_inside", "name"] })
             );
         }
         return store;
