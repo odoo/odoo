@@ -53,8 +53,9 @@ class ResCompany(models.Model):
             else:
                 record.l10n_in_pan_type = False
 
-    def create(self, vals):
-        res = super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
         # Update Fiscal Positions for new branch
         res._update_l10n_in_fiscal_position()
         return res

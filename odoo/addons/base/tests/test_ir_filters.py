@@ -27,8 +27,7 @@ class FiltersCase(TransactionCaseWithUserDemo):
 
     def build(self, model, *args):
         Model = self.env[model].with_user(ADMIN_USER_ID)
-        for vals in args:
-            Model.create(vals)
+        Model.create(args)
 
 
 class TestGetFilters(FiltersCase):
