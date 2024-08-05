@@ -138,7 +138,7 @@
     </record>
 
     <record id="journal_group_comp_rule" model="ir.rule">
-        <field name="name">Journal Group multi-company</field>
+        <field name="name">Multi-ledger multi-company</field>
         <field name="model_id" ref="model_account_journal_group"/>
         <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
     </record>
