@@ -18,15 +18,19 @@
         <field name="reward_target_url">https://www.odoo.com/</field>
         <field name="user_id" ref="base.user_admin"/>
 
+        <field name="request_title">Share the news with your community</field>
+        <field name="request_description">That will help us</field>
+
         <field name="content_header_dyn" eval="True"/>
         <field name="content_header_path">name</field>
         <field name="content_header_color">#1F1881</field>
         <field name="content_sub_header">Welcome to Odoo</field>
         <field name="content_section">This section is static</field>
         <field name="content_sub_section1_dyn" eval="True"/>
-        <field name="content_sub_section1">city</field>
+        <field name="content_sub_section1_path">city</field>
         <field name="content_sub_section2_dyn" eval="True"/>
-        <field name="content_sub_section2">country_id.name</field>
+        <field name="content_sub_section2_path">country_id.name</field>
+        <field name="content_button">join me</field>
 
     </record>
 </odoo>

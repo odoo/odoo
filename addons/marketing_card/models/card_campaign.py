@@ -96,7 +96,7 @@ class CardCampaign(models.Model):
                 campaign.card_click_count += card_count
             campaign.card_count += card_count
 
-    @api.depends('body_html', 'content_background', 'content_image1', 'content_image2', 'content_button', 'content_header',
+    @api.depends('preview_record_ref', 'body_html', 'content_background', 'content_image1', 'content_image2', 'content_button', 'content_header',
         'content_header_dyn', 'content_header_path', 'content_header_color', 'content_sub_header',
         'content_sub_header_dyn', 'content_sub_header_path', 'content_section', 'content_section_dyn',
         'content_section_path', 'content_sub_section1', 'content_sub_section1_dyn', 'content_sub_header_color',
@@ -251,8 +251,12 @@ class CardCampaign(models.Model):
             if not self['content_' + el + '_dyn']:
                 result[el] = self['content_' + el]
             else:
-                m = record.mapped(self['content_' + el + '_path'])
-                result[el] = m and m[0] or False
+                try:
+                    m = record.mapped(self['content_' + el + '_path'])
+                    result[el] = m and m[0] or False
+                except:
+                    # for generic image, or if field incorrect, return name of field
+                    result[el] = self['content_' + el + '_path']
         return result
 
     def _get_url_from_res_id(self, res_id, suffix='preview'):
