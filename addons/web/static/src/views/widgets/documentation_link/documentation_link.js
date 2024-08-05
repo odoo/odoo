@@ -13,6 +13,7 @@ export class DocumentationLink extends Component {
         path: { type: String },
         label: { type: String, optional: 1 },
         icon: { type: String, optional: 1 },
+        alertLink: { type: Boolean, optional: 1 },
     };
 
     get url() {
@@ -28,16 +29,25 @@ export class DocumentationLink extends Component {
             return "https://www.odoo.com/documentation/" + serverVersion + this.props.path;
         }
     }
+
+    get classes() {
+        let classes = "o_doc_link me-2";
+        if (this.props.alertLink){
+            classes += " alert-link";
+        }
+        return classes;
+    }
 }
 
 export const documentationLink = {
     component: DocumentationLink,
     extractProps: ({ attrs }) => {
-        const { path, label, icon } = attrs;
+        const { path, label, icon, alert_link } = attrs;
         return {
             path,
             label,
             icon,
+            alertLink: Boolean(alert_link),
         };
     },
     additionalClasses: ["d-inline"],
