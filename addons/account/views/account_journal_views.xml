@@ -263,7 +263,7 @@
             <field name="model">account.journal.group</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <form string="Journal Groups">
+                <form string="Multi-ledger">
                     <sheet>
                         <group>
                             <field name="company_id" invisible="1"/>
@@ -278,14 +278,15 @@
         </record>
 
         <record id="action_account_journal_group_list" model="ir.actions.act_window">
-            <field name="name">Journal Groups</field>
+            <field name="name">Multi-ledger</field>
             <field name="res_model">account.journal.group</field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Add a journal group
-              </p><p>
-                Journal group are used in reporting to display relevant data together.
-              </p>
+                <p class="o_view_nocontent_multi_ledger"/>
+                <h2 class="d-md-block">Ledger group allows managing multiple accounting standards.</h2>
+                <p>
+                    Create as many ledger groups as needed to maintain separate ledgers for local GAAP, IFRS, or fiscal
+                    adjustments, ensuring compliance with diverse regulations.
+                </p>
             </field>
         </record>
 

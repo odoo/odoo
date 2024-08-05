@@ -17,14 +17,14 @@ class AccountJournalGroup(models.Model):
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
-    name = fields.Char("Journal Group", required=True, translate=True)
+    name = fields.Char("Ledger group", required=True, translate=True)
     company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
     excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals",
         check_company=True)
     sequence = fields.Integer(default=10)
 
     _sql_constraints = [
-        ('uniq_name', 'unique(company_id, name)', 'A journal group name must be unique per company.'),
+        ('uniq_name', 'unique(company_id, name)', 'A Ledger group name must be unique per company.'),
     ]
 
 class AccountJournal(models.Model):
@@ -204,7 +204,7 @@ class AccountJournal(models.Model):
 
     journal_group_ids = fields.Many2many('account.journal.group',
         check_company=True,
-        string="Journal Groups")
+        string="Ledger Group")
 
     available_payment_method_ids = fields.Many2many(
         comodel_name='account.payment.method',
