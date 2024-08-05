@@ -59,6 +59,10 @@ patch(Navbar.prototype, {
     showTabs() {
         return !this.pos.selectedTable;
     },
+    getFloatingOrders() {
+        const draftOrders = super.getFloatingOrders() || [];
+        return draftOrders.filter((o) => !o.table_id);
+    },
     get showTableIcon() {
         return typeof this.getTable()?.table_number === "number" && this.pos.showBackButton();
     },
