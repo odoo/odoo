@@ -12,6 +12,8 @@ import { KioskGreetings } from "@hr_attendance/components/greetings/greetings";
 import { KioskPinCode } from "@hr_attendance/components/pin_code/pin_code";
 import { KioskBarcodeScanner } from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
 import { browser } from "@web/core/browser/browser";
+import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
+import { session } from "@web/session";
 
 class kioskAttendanceApp extends Component{
     static template = "hr_attendance.public_kiosk_app";
@@ -23,6 +25,7 @@ class kioskAttendanceApp extends Component{
         KioskGreetings,
         KioskPinCode,
         MainComponentsContainer,
+        DocumentationLink,
     };
 
     setup() {
@@ -178,6 +181,7 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
     await whenReady();
     const env = makeEnv();
     await startServices(env);
+    session.server_version_info = kiosk_backend_info.server_version_info;
     const app = new App(kioskAttendanceApp, {
         getTemplate,
         env: env,

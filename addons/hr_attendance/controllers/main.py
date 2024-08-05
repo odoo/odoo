@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.service.common import exp_version
 from odoo import http, _
 from odoo.http import request
 from odoo.tools import float_round, SQL
@@ -111,6 +111,7 @@ class HrAttendance(http.Controller):
                 kiosk_mode = "settings"
             else:
                 kiosk_mode = company.attendance_kiosk_mode
+            version_info = exp_version()
             return request.render(
                 'hr_attendance.public_kiosk_mode',
                 {
@@ -124,7 +125,8 @@ class HrAttendance(http.Controller):
                         'from_trial_mode': from_trial_mode,
                         'barcode_source': company.attendance_barcode_source,
                         'lang': company.partner_id.lang,
-                    }
+                        'server_version_info': version_info.get('server_version_info'),
+                    },
                 }
             )
 
