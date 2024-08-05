@@ -60,7 +60,7 @@ def get_video_source_data(video_url):
     return None
 
 
-def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=False, hide_fullscreen=False, hide_yt_logo=False, hide_dm_logo=False, hide_dm_share=False):
+def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=False, hide_fullscreen=False, hide_dm_logo=False, hide_dm_share=False):
     """ Computes the platform name, the embed_url, the video id and the video params of the given URL
         (or error message in case of invalid URL).
     """
@@ -91,8 +91,6 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
             params['playlist'] = video_id
         if hide_fullscreen:
             params['fs'] = 0
-        if hide_yt_logo:
-            params['modestbranding'] = 1
         embed_url = f'//www.youtube-nocookie.com/embed/{video_id}'
     elif platform == 'vimeo':
         params['autoplay'] = autoplay and 1 or 0
