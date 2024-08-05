@@ -58,6 +58,15 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 tai 49098576"
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXXXX [9 numeroa] ja sen on noudatettava Luhnin algoritmin "
+"tarkistussummaa"
+
+#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
@@ -202,9 +211,21 @@ msgstr "ALV-numero %s ei läpäissy VIES VAT tarkistusta."
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
-msgstr "Maa, johon tämä ALV-numero viittaa ei täsmää sen verokantaan."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
+msgstr ""
+"Tämän ulkomaisen ALV-numeron kohdalla havaittu maa ei vastaa mitään maata, "
+"joka muodostaa tämän verokannan maaryhmän."
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"Ulkomaisen ALV-numeron maata ei voitu havaita. Määritä maa verokannalle tai "
+"aseta maaryhmä"
 
 #. module: base_vat
 #. odoo-python

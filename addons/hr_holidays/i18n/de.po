@@ -3464,6 +3464,17 @@ msgid "Sick Time Off"
 msgstr "Krankheit"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
+#, python-format
+msgid ""
+"Some of the accrual plans you're trying to delete are linked to an existing "
+"allocation. Delete or cancel them first."
+msgstr ""
+"Einige der Rückstellungspläne, die Sie zu löschen versuchen, sind mit einem "
+"bestehenden Urlaubsanspruch verbunden. Löschen oder stornieren Sie diese "
+"zuerst."
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
 msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
@@ -4688,6 +4699,8 @@ msgid ""
 "a public holiday that previously covered this leave has been cancelled or "
 "amended."
 msgstr ""
+"ein gesetzlicher Feiertag, der diesen Urlaub zuvor abgedeckt hat, wurde "
+"storniert oder geändert."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form

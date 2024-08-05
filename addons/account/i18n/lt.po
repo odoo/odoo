@@ -15,7 +15,6 @@
 # Donatas F <osourcem@gmail.com>, 2022
 # Rolandas <info@paninfo.lt>, 2022
 # Rolandas <panauto1@gmail.com>, 2022
-# Gailius Kazlauskas <gailius@vialaurea.lt>, 2022
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2022
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
@@ -39,6 +38,8 @@
 # Martin Trigaux, 2024
 # Donatas <donatasvaliulis16@gmail.com>, 2024
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
+# Greta Šeštokė, 2024
 # 
 msgid ""
 msgstr ""
@@ -46,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024\n"
+"Last-Translator: Greta Šeštokė, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -350,7 +351,7 @@ msgstr ""
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr "21 dieną"
+msgstr "21 diena"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
@@ -816,6 +817,9 @@ msgid ""
 "                                        Taxes\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Mokesčiai\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -1201,7 +1205,7 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "A fiscal position with a foreign VAT already exists in this region."
-msgstr ""
+msgstr "Šiame regione jau egzistuoja mokestinė aplinka su užsienio PVM."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -2781,14 +2785,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post
 msgid "Auto-post"
-msgstr ""
+msgstr "Automatinis paskelbimas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post_until
 msgid "Auto-post until"
-msgstr ""
+msgstr "Automatinis paskelbimas iki"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -3274,6 +3278,9 @@ msgid ""
 "By default, we always unfold the lines that can be. If this is checked, the "
 "line won't be unfolded by default, and a folding button will be displayed."
 msgstr ""
+"Pagal numatytuosius nustatymus mes visada išskleidžiame linijas, kurios gali"
+" būti išskleidžiamos. Jei tai pažymėta, pagal numatytuosius nustatymus "
+"linija nebus išskleidžiama ir bus rodomas išskleidimo mygtukas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -3777,6 +3784,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence on payments and "
 "bank transactions posted on this journal"
 msgstr ""
+"Pažymėkite šį laukelį, jei nenorite bendrinti tos pačios sekos mokėjimams ir"
+" banko operacijoms, paskelbtoms šiame žurnale."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -3784,6 +3793,8 @@ msgid ""
 "Check this box to negate the absolute value of the balance of the lines "
 "associated with this tag in tax report computation."
 msgstr ""
+"Pažymėkite šį laukelį, jei norite panaikinti su šia žyma susijusių eilučių "
+"likučio absoliučią vertę mokesčių ataskaitos skaičiavime."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -6040,6 +6051,8 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
+"Pagal numatytuosius nustatymus ateityje įrašai bus paskelbti automatiškai. "
+"Pažymėkite šį žymimąjį laukelį, kad paskelbtumėte juos dabar."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6427,7 +6440,7 @@ msgstr "Finansiniai metai"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "Fiscal position"
-msgstr ""
+msgstr "Mokestinė aplinka"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
@@ -6438,6 +6451,9 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"Mokestinės pozicijos naudojamos pritaikyti mokesčius ir sąskaitas tam "
+"tikriems klientams arba pardavimo užsakymams/sąskaitoms faktūroms. "
+"Numatytoji reikšmė gaunama iš kliento kortelės."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -7168,6 +7184,9 @@ msgid ""
 "related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
+"Jei šis žymimasis laukelis yra pažymėtas, tai reiškia, kad vartotojas nebuvo"
+" tikras dėl visos susijusios informacijos perkėlimo sukūrimo metu ir kad "
+"perkėlimas turi būti patikrintas dar kartą."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7326,7 +7345,7 @@ msgstr "Neaktyvus"
 #: model:ir.model.fields,field_description:account.field_account_move__inalterable_hash
 #: model:ir.model.fields,field_description:account.field_account_payment__inalterable_hash
 msgid "Inalterability Hash"
-msgstr ""
+msgstr "Neredaguojamas raktas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -8947,6 +8966,10 @@ msgid ""
 "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Rankinis: gaukite mokėjimą bet kokiu būdu ne „Odoo“..\n"
+"Mokėjimo Tiekėjai: Kiekvienas mokėjimo tiekėjas turi savo mokėjimo būdą. Pateikite operaciją kortele naudodami mokėjimo žetoną, kurį partneris išsaugo pirkimo ar prenumeratos metu internete.\n"
+"Grupinis Depozitas: Surinkite kelis klientų čekius vienu metu, generuodami ir pateikdami grupinį depozitą savo bankui. Reikalingas modulis account_batch_payment.\n"
+"SEPA Tiesioginis Debetas: Gaukite mokėjimus SEPA zonoje dėka mandato, kurį jūsų partneris jums suteiks. Reikalingas modulis account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -8955,6 +8978,9 @@ msgid ""
 "Check: Pay bills by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 msgstr ""
+"Rankinis: mokėkite bet kokiu būdu ne „Odoo“.\n"
+"Patikrinkite: apmokėkite sąskaitas čekiu ir atsispausdinkite iš „Odoo“.\n"
+"SEPA kredito pervedimas: mokėkite SEPA zonoje pateikę savo bankui SEPA kredito pervedimo failą. Modulis account_sepa yra būtinas.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_method_line_id
@@ -8967,6 +8993,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Rankinis: gaukite mokėjimą bet kokiu būdu ne „Odoo“.\n"
+"Mokėjimo Tiekėjai: Kiekvienas mokėjimo tiekėjas turi savo mokėjimo būdą. Pateikite operaciją kortele naudodami mokėjimo žetoną, kurį partneris išsaugo pirkimo ar prenumeratos metu internete.\n"
+"Čekis: Apmokėkite sąskaitas čekiu ir atsispausdinkite jį iš Odoo.\n"
+"Grupinis Depozitas: Surinkite kelis klientų čekius vienu metu, generuodami ir pateikdami grupinį depozitą savo bankui. Reikalingas modulis account_batch_payment.\n"
+"SEPA Kreditinis Pervedimas: Atlikite mokėjimus SEPA zonoje pateikdami SEPA Kreditinio Pervedimo failą savo bankui. Reikalingas modulis account_sepa.\n"
+"SEPA Tiesioginis Debetas: Gaukite mokėjimus SEPA zonoje naudodamiesi mandatu, kurį jums suteikė jūsų partneris. Reikalingas modulis account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -11278,7 +11310,7 @@ msgstr "Gauta"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
 #: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
 msgid "Recipient Bank"
-msgstr ""
+msgstr "Bankas gavėjas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
@@ -12246,7 +12278,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Send the invoice and check what the customer will receive."
-msgstr ""
+msgstr "Išsiųskite sąskaitą faktūrą ir patikrinkite, ką klientas gaus."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -13662,6 +13694,14 @@ msgid "The company this distribution line belongs to."
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
 msgstr ""
@@ -13679,6 +13719,8 @@ msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
 msgstr ""
+"Šalis, nustatyta užsienio PVM mokestinėje pozicijoje, turi sutapti su "
+"ataskaitoje nurodyta šalimi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id
@@ -13862,7 +13904,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this external value is made."
-msgstr ""
+msgstr "Užsienio mokestinė aplinka, kuriai skirtas šis išorinis vertinimas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -14064,6 +14106,8 @@ msgid ""
 "The recipient bank account linked to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
+"Su šia sąskaita faktūra susieta gavėjo banko sąskaita yra archyvuojama.\n"
+"Taigi, negalite patvirtinti sąskaitos faktūros."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -14351,6 +14395,8 @@ msgstr ""
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
 msgstr ""
+"Jūsų įmonės mokesčių identifikavimo numeris regione, kuris priskirtas šiai "
+"mokestinei aplinkai."
 
 #. module: account
 #. odoo-python
@@ -14688,6 +14734,7 @@ msgstr ""
 #, python-format
 msgid "This move is configured to be auto-posted on %s"
 msgstr ""
+"Šis perkėlimas sukonfigūruotas taip, kad būtų paskelbtas automatiškai %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14844,7 +14891,7 @@ msgstr " Į"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "To Check"
-msgstr ""
+msgstr "Patikrinti"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -15636,7 +15683,7 @@ msgstr "Įspėjimas sąskaitoje"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Warning: this bill might be a duplicate of"
-msgstr ""
+msgstr "Įspėjimas: gali būti, kad tokia tiekėjo sąskaita faktūra jau įvesta: "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16086,9 +16133,19 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"Negalite sukurti mokestinės aplinkos su užsienio PVM savo mokestinėje šalyje"
+" nepriskirdami jai valstybės."
 
 #. module: account
 #. odoo-python
@@ -16098,6 +16155,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country."
 msgstr ""
+"Negalite sukurti mokestinės aplinkos su užsienio PVM savo mokestinėje "
+"šalyje."
 
 #. module: account
 #. odoo-python
@@ -16107,6 +16166,8 @@ msgid ""
 "You cannot create a fiscal position within your fiscal country with the same"
 " VAT number as the main one set on your company."
 msgstr ""
+"Negalite sukurti mokestinės aplinkos savo mokestinėje šalyje su tokiu pačiu "
+"PVM kodu, koks yra nustatytas jūsų įmonėje."
 
 #. module: account
 #. odoo-python
@@ -16356,6 +16417,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
+"Negalite pašalinti/deaktyvuoti sąskaitų \"%s\" kurios yra nustatytos "
+"mokestinės aplinkos sąskaitų susiejime."
 
 #. module: account
 #. odoo-python
@@ -16556,7 +16619,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "[FURN_8999] Three-Seat Sofa"
-msgstr ""
+msgstr "[FURN_8999] Trivietė sofa"
 
 #. module: account
 #. odoo-python
@@ -16595,7 +16658,7 @@ msgstr "priskirti sąskaitai faktūrai"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "auto-posting enabled. Next accounting date:"
-msgstr ""
+msgstr "automatinis paskelbimas įjungtas. Kita apskaitos data:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16673,6 +16736,7 @@ msgstr ""
 msgid ""
 "for this customer. You can allocate them to mark this credit note as paid."
 msgstr ""
+"iš šio kliento. Kad sąskaitą matytumėte kaip apmokėtą, sudenkite juos."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16684,13 +16748,15 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this vendor. You can allocate them to mark this bill as paid."
-msgstr ""
+msgstr "šiam tiekėjui. Kad sąskaitą matytumėte kaip apmokėtą, sudenkite juos."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this vendor. You can allocate them to mark this credit note as paid."
 msgstr ""
+"šiam tiekėjui. Kad kreditinę sąskaitą matytumėte kaip apmokėtą, sudenkite "
+"juos."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16763,7 +16829,7 @@ msgstr "nuo"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "one of those bills"
-msgstr ""
+msgstr "patikrinkite tarp šių įrašų"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16773,7 +16839,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
-msgstr "neatlikti debetai"
+msgstr "nesudengtų mokėjimų"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

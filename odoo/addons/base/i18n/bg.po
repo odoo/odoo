@@ -20,6 +20,7 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Albena Mincheva <albena_vicheva@abv.bg>, 2024
 # Igor Sheludko <igor.sheludko@gmail.com>, 2024
+# Rumena Georgieva <rumena.georgieva@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Igor Sheludko <igor.sheludko@gmail.com>, 2024\n"
+"Last-Translator: Rumena Georgieva <rumena.georgieva@gmail.com>, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17569,6 +17570,11 @@ msgid "France - Accounting Reports"
 msgstr "Франция - счетоводни отчети"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
+msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC Export"
 msgstr ""
@@ -25137,7 +25143,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
 msgid "Payment Providers"
-msgstr ""
+msgstr "Доставчици на плащания"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -27507,6 +27513,12 @@ msgstr "Планирани действия"
 #: model:ir.actions.act_window,name:base.ir_cron_trigger_action
 #: model:ir.ui.menu,name:base.ir_cron_trigger_menu
 msgid "Scheduled Actions Triggers"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
 msgstr ""
 
 #. module: base
@@ -30677,6 +30689,14 @@ msgid "Those modules cannot be uninstalled: %s"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "Разделител за хиляди"
@@ -33009,6 +33029,15 @@ msgstr ""
 #: code:addons/base/models/ir_config_parameter.py:0
 #, python-format
 msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
 msgstr ""
 
 #. module: base

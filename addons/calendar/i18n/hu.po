@@ -10,17 +10,17 @@
 # Tamás Dombos, 2022
 # Kisrobert <kisrobi@gmail.com>, 2022
 # Martin Trigaux, 2022
-# gezza <geza.nagy@oregional.hu>, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # krnkris, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: krnkris, 2023\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,7 +115,7 @@ msgid ""
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"EEEE\", lang_code=object.env.lang) or \"\"'>Tuesday</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>May 2021</t>\n"
@@ -143,7 +143,7 @@ msgid ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Every 1 Weeks, for 3 events</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -245,7 +245,7 @@ msgid ""
 "                            </li>\n"
 "                        </t>\n"
 "                        <t t-if=\"recurrent\">\n"
-"                            <li>When: <t t-out=\"object.recurrence_id.name or ''\"></t></li>\n"
+"                            <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\"></t></li>\n"
 "                        </t>\n"
 "                        <t t-if=\"not object.allday and object.duration\">\n"
 "                            <li>Duration:\n"
@@ -314,7 +314,7 @@ msgid ""
 "                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''\">Tuesday</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
 "                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
@@ -345,7 +345,7 @@ msgid ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Every 1 Weeks, for 3 events</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -412,7 +412,7 @@ msgid ""
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"EEEE\", lang_code=object.env.lang) or \"\"'>Tuesday</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>May 2021</t>\n"
@@ -440,7 +440,7 @@ msgid ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Every 1 Weeks, for 3 events</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -1089,7 +1089,108 @@ msgstr "Esemény ideje"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
-msgid "Every %(count)s %(period)s"
+msgid "Every %(interval)s Days"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Days for %(count)s events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Days until %(until)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months day %(day)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months day %(day)s for %(count)s events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months day %(day)s until %(until)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid ""
+"Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
+"events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid ""
+"Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Weeks on %(days)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Years"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Years for %(count)s events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Years until %(until)s"
 msgstr ""
 
 #. module: calendar
@@ -1183,13 +1284,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
 msgstr "Csoportosítás"
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_event.py:0
-#, python-format
-msgid "Grouping by %s is not allowed on private events."
-msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -1578,7 +1672,7 @@ msgstr "Hibák száma"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
@@ -1677,13 +1771,6 @@ msgstr "Adatvédelem"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Private"
 msgstr "Privát"
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_event.py:0
-#, python-format
-msgid "Private Event Excluded"
-msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
@@ -2184,44 +2271,9 @@ msgid "You have to choose at least one day in the week"
 msgstr "Ki kell választania legalább egy napot a héten"
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "day %s"
-msgstr ""
-
-#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr "Pl: Üzleti ebéd"
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "for %s events"
-msgstr ""
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "on %s"
-msgstr ""
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "on the %(position)s %(weekday)s"
-msgstr ""
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "until %s"
-msgstr ""
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder

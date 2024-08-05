@@ -14246,6 +14246,16 @@ msgid "The company this distribution line belongs to."
 msgstr "La société à laquelle appartient cette ligne de distribution."
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"Le pays pour ce numéro de TVA étranger n'a pas pu être détecté. Veuillez "
+"attribuer un pays à la position fiscale ou définir un groupe de pays."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
 msgstr "Le pays pour lequel ce groupe de taxes s'applique."
@@ -16911,6 +16921,16 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
+"Vous ne pouvez pas créer de position fiscale avec un pays qui ne fait pas "
+"partie du groupe de pays sélectionné."
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
@@ -17360,7 +17380,7 @@ msgstr "Vous n'avez pas les droits d'accès pour poster une facture."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "You have"
-msgstr "Vous avez"
+msgstr "Vous avez des"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -17593,8 +17613,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this vendor. You can allocate them to mark this bill as paid."
 msgstr ""
-"pour ce fournisseur. Vous ne pouvez pas les allouer pour marquer cette "
-"facture fournisseur commme payée."
+"pour ce fournisseur. Vous pouvez les allouer pour marquer cette facture "
+"fournisseur commme payée."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

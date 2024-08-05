@@ -10,6 +10,7 @@
 # Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2022
 # Martin Trigaux, 2022
 # hrvoje sić <hrvoje.sic@gmail.com>, 2022
+# Kristina Palaš, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: hrvoje sić <hrvoje.sic@gmail.com>, 2022\n"
+"Last-Translator: Kristina Palaš, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,8 @@ msgid ""
 "<span class=\"o_stat_value\">1</span>\n"
 "                        <span class=\"o_stat_text\">Employee</span>"
 msgstr ""
+"<span class=\"o_stat_value\">1</span>\n"
+"                        <span class=\"o_stat_text\">Zaposlenik</span>"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
@@ -43,7 +46,7 @@ msgstr "Privitci"
 #: code:addons/hr_fleet/models/employee.py:0
 #, python-format
 msgid "Cannot remove address from employees with linked cars."
-msgstr ""
+msgstr "Ne može se ukloniti adresa zaposlenika kojem je pridruženo vozilo"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
@@ -64,7 +67,7 @@ msgstr "Trenutni vozač"
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
 msgid "Current Driver (Employee)"
-msgstr ""
+msgstr "Trenutačni vozač (zaposlenik)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
@@ -84,7 +87,7 @@ msgstr "Vozač"
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
 msgid "Driver (Employee)"
-msgstr ""
+msgstr "Vozač (zaposlenik)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
@@ -110,7 +113,7 @@ msgstr ""
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
 msgid "Future Driver (Employee)"
-msgstr ""
+msgstr "Budući vozač (zaposlenik)"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_filter
@@ -144,12 +147,12 @@ msgstr "Javni djelatnik"
 #: code:addons/hr_fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "Related Employee"
-msgstr ""
+msgstr "Povezani zaposlenik"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
 msgid "Release Company Car"
-msgstr ""
+msgstr "Oslobodite službeni automobil"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
@@ -181,4 +184,4 @@ msgstr "Ugovor o vozilu"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
 msgid "Vehicles (private)"
-msgstr ""
+msgstr "Vozila (privatna)"

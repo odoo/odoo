@@ -13,8 +13,8 @@
 # 764374359f7a865bd0df682e21e54552_335e00f <6548f6be8d222d7d28a3e8d58aa819d1_1128047>, 2023
 # Wil Odoo, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# Junko Augias, 2024
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13704,6 +13704,14 @@ msgid "The company this distribution line belongs to."
 msgstr "このディストリビューションが属する会社。"
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
 msgstr "税金グループが適用される国。"
@@ -14414,7 +14422,7 @@ msgstr "余剰金合計の提案がこの金額・割合の下で計算書の明
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
-msgstr "この財政状況にマップされた地区での会社税ID。"
+msgstr "この財政状況にマップされた地区での会社登録番号。"
 
 #. module: account
 #. odoo-python
@@ -16124,6 +16132,14 @@ msgstr "仕訳で銀行勘定として設定されている勘定の種類を受
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""

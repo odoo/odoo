@@ -8,7 +8,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import format_time
+from odoo.tools import clean_context, format_time
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -186,7 +186,7 @@ class HrEmployeeBase(models.AbstractModel):
     def _inverse_work_contact_details(self):
         for employee in self:
             if not employee.work_contact_id:
-                employee.work_contact_id = self.env['res.partner'].sudo().create({
+                employee.work_contact_id = self.env['res.partner'].sudo().with_context(clean_context(self._context)).create({
                     'email': employee.work_email,
                     'mobile': employee.mobile_phone,
                     'name': employee.name,

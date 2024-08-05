@@ -24,8 +24,8 @@
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # Tautvydas M, 2024
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Tautvydas M, 2024\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2431,9 +2431,11 @@ msgstr "Įmonės"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/composer_view.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -4869,7 +4871,7 @@ msgstr "Yra sekėjas"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
 msgid "Is Member"
-msgstr ""
+msgstr "yra narys"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
@@ -10577,6 +10579,14 @@ msgid ""
 msgstr ""
 "Jūs galite prisegti failus prie šio šablono ir jie bus prisegami prie "
 "kiekvieno laiško, kuriamo pagal šį šabloną"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"You may not unlink or modify the content of attachments from other people's "
+"messages"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript

@@ -34,12 +34,12 @@
 # NumerSpiral HBG, 2024
 # Wil Odoo, 2024
 # Arxi, 2024
-# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # Samuel Afonso, 2024
 # Rita Bastos, 2024
 # Vasco Rodrigues, 2024
 # Maitê Dietze, 2024
 # Antonio Daniel, 2024
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # 
 msgid ""
 msgstr ""
@@ -47,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Antonio Daniel, 2024\n"
+"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2324,7 +2324,7 @@ msgstr "Afeta Impostos Seguintes"
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #, python-format
 msgid "After"
-msgstr "Ao fim de"
+msgstr "Depois"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__aggregation
@@ -3310,7 +3310,7 @@ msgstr "Pagamentos em Lote"
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #, python-format
 msgid "Before"
-msgstr "Antes de"
+msgstr "Antes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -6544,7 +6544,7 @@ msgstr "Índice de primeira linha"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
-msgstr "Primeira nova sequência"
+msgstr "O Primeiro da Nova Sequência"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
@@ -7405,9 +7405,9 @@ msgid ""
 "related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
-"Se esta caixa de seleção estiver marcada, significa que o usuário não tinha "
-"certeza de todas as informações relacionadas no momento da criação da "
-"movimentação e que a movimentação precisa ser verificada novamente."
+"Se este quadrículo estiver marcado, significa que o utilizador não tinha "
+"certeza sobre todas as informações relacionadas no momento da criação do "
+"movimento e que o movimento precisa de ser verificado novamente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7841,7 +7841,7 @@ msgid ""
 "used in international transactions."
 msgstr ""
 "International Commercial Terms são uma série de condições comerciais pré-"
-"definidos utilizados em transações internacionais."
+"definidas utilizadas em transações internacionais."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_intrastat
@@ -8652,7 +8652,7 @@ msgstr "Gráfico do Painel Kanban"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
 msgid "Keep current order"
-msgstr "Manter ordem atual"
+msgstr "Manter a ordenação atual"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -10341,7 +10341,7 @@ msgstr ""
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Or send a bill to %s@%s"
-msgstr "ou envia a conta para %s@%s"
+msgstr "Ou envia a conta para %s@%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -10436,9 +10436,9 @@ msgid ""
 "timeframe is indicated on either the invoice or the order. In the event of "
 "non-payment by the due date,"
 msgstr ""
-"Nossas faturas devem ser pagas em até 21 dias úteis, a menos que outro prazo"
-" de pagamento seja indicado na fatura ou no pedido. Em caso de não pagamento"
-" até a data de vencimento,"
+"As nossas faturas devem ser pagas em até 21 dias úteis, a menos que outro "
+"prazo de pagamento seja indicado na fatura ou no pedido. Em caso de não "
+"pagamento até a data de vencimento,"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__outbound
@@ -11347,7 +11347,7 @@ msgstr "Pré-visualizar dados"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Preview Modifications"
-msgstr "Visualizar modificações"
+msgstr "Pré-visualizar Modificações"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__preview_move_data
@@ -11821,7 +11821,7 @@ msgstr "Modelo de Renderização"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__date
 msgid "Reorder by accounting date"
-msgstr "Reordenar por data contábil"
+msgstr "Reordenar por data contabilística"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__invoice_repartition_line_ids
@@ -14072,6 +14072,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "A empresa à qual esta linha de distribuição pertence."
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -16515,6 +16523,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""

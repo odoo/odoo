@@ -4,13 +4,12 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Iran Villalobos López, 2023
 # David Ramia, 2023
 # Ana Sanjuán, 2023
 # Larissa Manderfeld, 2023
-# Wil Odoo, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,14 +35,14 @@ msgstr "#{timesheet.employee_id.name}"
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "%(name)s's Timesheets"
-msgstr "Partes de horas de %(name)s"
+msgstr "Hojas de asistencia de %(name)s"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "%s Spent"
-msgstr "%s Utilizado"
+msgstr "%s dedicadas"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -69,7 +68,8 @@ msgstr "(incl."
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
 msgstr ""
-"<b class=\"tip_title\">Truco: Registre sus hojas de trabajo más rápido</b>"
+"<b class=\"tip_title\">Consejo: registre sus hojas de asistencia más "
+"rápido</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -107,7 +107,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
-msgstr "<span class=\"o_stat_text\">Partes de horas</span>"
+msgstr "<span class=\"o_stat_text\">Hojas de asistencia</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -200,7 +200,7 @@ msgstr "Todos"
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
 msgid "All Timesheets"
-msgstr "Todos los partes de horas"
+msgstr "Todas las hojas de asistencia"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -218,7 +218,7 @@ msgstr "Horas asignadas"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
 msgid "Allow timesheets"
-msgstr "Permitir partes de horas"
+msgstr "Permitir hojas de asistencia"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__amount
@@ -255,10 +255,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus partes de horas. \n"
+"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus hojas de asistencia. \n"
 "Lleve el seguimiento de los costes e ingresos de su proyecto al establecer esta cuenta analítica en sus documentos relacionados (por ejemplo, pedidos de venta, facturas, pedidos de compra, facturas de proveedor, gastos, etc.).\n"
 "Esta cuenta analítica se puede cambiar en cada tarea de forma individual si es necesario.\n"
-"Se necesita una cuenta analítica para usar partes de horas."
+"Se necesita una cuenta analítica para usar hojas de asistencia."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
@@ -269,7 +269,7 @@ msgid ""
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
 "Analice los proyectos y tareas en las que sus empleados utilizan su tiempo.<br>\n"
-"                Evalúe qué parte se puede facturar y qué costws representa."
+"                Evalúe qué parte se puede facturar y qué costes representa."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__ancestor_task_id
@@ -287,7 +287,7 @@ msgstr "Apple App Store"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
 msgid "Associated Timesheets"
-msgstr "Partes de horas relacionados"
+msgstr "Hojas de asistencia relacionadas"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_synchro
@@ -332,7 +332,7 @@ msgstr "Compañía"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
@@ -375,8 +375,8 @@ msgstr "Días registrados en las subtareas: "
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
-"Valor predeterminado del proyecto para el parte de horas generado a partir "
-"de las ausencias."
+"Valor por defecto del proyecto para la hoja de asistencia generada a partir "
+"del tipo de ausencia."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
@@ -451,7 +451,7 @@ msgstr "Recordatorio para empleados"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__encode_uom_in_days
 msgid "Encode Uom In Days"
-msgstr "Codificar Uom en días"
+msgstr "Codificar UdM en días"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
@@ -461,7 +461,7 @@ msgstr "Unidad de codificación"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__encoding_uom_id
 msgid "Encoding Uom"
-msgstr "Codificación de UdM"
+msgstr "UdM de la codificación"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -487,7 +487,7 @@ msgstr "Agrupar por"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
 msgid "HTTP Routing"
-msgstr "Ruta HTTP "
+msgstr "Enrutamiento HTTP "
 
 #. module: hr_timesheet
 #. odoo-python
@@ -563,7 +563,7 @@ msgstr "Valor no válido: %s"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
 msgid "Is Encode Uom Days"
-msgstr "Está codificado en días Uom"
+msgstr "La UdM está codificada en días"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_internal_project
@@ -623,7 +623,7 @@ msgstr "Registrar el tiempo en las tareas"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
 msgid "Manager"
-msgstr "Responsable"
+msgstr "Gerente"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_manager_allow
@@ -703,7 +703,7 @@ msgstr "Actualizaciones de mi equipo"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
 msgid "My Timesheets"
-msgstr "Mi parte de horas"
+msgstr "Mis hojas de asistencia"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -717,7 +717,7 @@ msgstr "Más reciente"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No data yet!"
-msgstr "No hay información aún"
+msgstr "¡Todavía no hay información!"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -735,18 +735,18 @@ msgstr "Ninguno"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
 msgid "Number of allocated hours minus the number of hours spent."
-msgstr "Número de horas asignadas menos el número de horas utilizadas."
+msgstr "Número de horas asignadas menos el número de horas dedicadas."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
 msgid "Overtime"
-msgstr "Horas extras"
+msgstr "Horas extraordinarias"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__partner_id
 msgid "Partner"
-msgstr "Empresa"
+msgstr "Contacto"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_planned
@@ -770,7 +770,7 @@ msgstr "Unidad de medida del producto"
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__progress
 #, python-format
 msgid "Progress"
-msgstr "En proceso"
+msgstr "Progreso"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -796,12 +796,12 @@ msgstr "Unidad de tiempo del proyecto"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_project_overtime
 msgid "Project in Overtime"
-msgstr "Proyecto en horas extras"
+msgstr "Proyecto con horas extraordinarias"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr "Partes de horas del proyecto"
+msgstr "Hojas de asistencia del proyecto"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_project_filter_inherit_timesheet
@@ -824,8 +824,8 @@ msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
 msgstr ""
-"Registre los partes de horas en un instante pulsando May. + la tecla rápida "
-"correspondiente para añadir 15 minutos a los proyectos."
+"Registre sus hojas de asistencia al instante, presione Shift + la tecla "
+"rápida correspondiente para agregar 15 minutos a sus proyectos."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -880,14 +880,14 @@ msgstr "Buscar en todos"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Description"
-msgstr "Busca en la descripción"
+msgstr "Buscar en descripción"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Employee"
-msgstr "Busca en empleado"
+msgstr "Buscar en empleado"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -901,7 +901,7 @@ msgstr "Buscar en proyecto"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Task"
-msgstr "Busca en tarea"
+msgstr "Buscar en tarea"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -909,7 +909,7 @@ msgstr "Busca en tarea"
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "See timesheet entries"
-msgstr "Ver entradas en el parte de horas"
+msgstr "Ver entradas en la hoja de asistencia"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -958,12 +958,12 @@ msgstr "Tarea"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
 msgid "Task's Timesheets"
-msgstr "Parte de horas de la tarea"
+msgstr "Hojas de asistencia de la tarea"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr "Análisis tareas"
+msgstr "Análisis de tareas"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_project_task_view_search_inherit_timesheet
@@ -988,7 +988,7 @@ msgstr "El proyecto interno de una empresa debe estar en esa empresa."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "There are no timesheets."
-msgstr "No hay parte de horas."
+msgstr "No hay hoja de asistencia."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -998,8 +998,8 @@ msgid ""
 "These projects have some timesheet entries referencing them. Before removing"
 " these projects, you have to remove these timesheet entries."
 msgstr ""
-"Estos proyectos tienen entradas de parte de horas relacionadas. Antes de "
-"eliminar los proyectos, elimine estas entradas de parte de horas."
+"Estos proyectos tienen entradas de hoja de asistencia relacionadas. Antes de"
+" eliminar los proyectos, elimine estas entradas de hoja de asistencia."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1009,8 +1009,8 @@ msgid ""
 "These tasks have some timesheet entries referencing them. Before removing "
 "these tasks, you have to remove these timesheet entries."
 msgstr ""
-"Estas tareas tienen entradas de parte de horas relacionadas. Antes de "
-"eliminar las tareas, elimine las entradas de parte de horas."
+"Estas tareas tienen entradas de hoja de asistencia relacionadas. Antes de "
+"eliminar las tareas, elimine las entradas de hoja de asistencia."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1041,8 +1041,8 @@ msgid ""
 "This project has some timesheet entries referencing it. Before removing this"
 " project, you have to remove these timesheet entries."
 msgstr ""
-"Este proyecto tiene entradas de parte de horas relacionadas. Antes de "
-"eliminar este proyecto, elimine esas entradas de parte de horas."
+"Este proyecto tiene entradas de hoja de asistencia relacionadas. Antes de "
+"eliminar este proyecto, elimine esas entradas de hoja de asistencia."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1052,8 +1052,8 @@ msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
 msgstr ""
-"Esta tarea tienen entradas de parte de horas relacionadas. Antes de eliminar"
-" la tarea, elimine estas entradas de parte de horas."
+"Esta tarea tienen entradas de hoja de asistencia relacionadas. Antes de "
+"eliminar la tarea, elimine estas entradas de hoja de asistencia."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1081,7 +1081,7 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
 "Permite fijar la unidad de medida utilizada en proyectos y tareas.\n"
-"Si utiliza parte de horas relacionados con proyectos, no olvide configurar la unidad de medida correcta para sus empleados."
+"Si utiliza hoja de asistencia relacionados con proyectos, no olvide configurar la unidad de medida correcta para sus empleados."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1104,7 +1104,7 @@ msgstr "Ausencias"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
-msgstr "Tiempo dedicado en sub-tareas (y sus sub-tareas) de esta tarea."
+msgstr "Tiempo dedicado en subtareas (y sus subtareas) de esta tarea."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
@@ -1116,7 +1116,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time unit used to record your timesheets"
 msgstr ""
-"Unidad de tiempo utilizada para registrar tiempo en los partes de horas."
+"Unidad de tiempo utilizada para registrar tiempo en los hojas de asistencia."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -1125,14 +1125,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_my
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet"
-msgstr "Parte de horas"
+msgstr "Hoja de asistencia"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheet Activities"
-msgstr "Actividades del parte de horas"
+msgstr "Actividades de la hoja de asistencia"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_graph_employee
@@ -1147,7 +1147,7 @@ msgstr "Actividades del parte de horas"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr "Costes del parte de horas"
+msgstr "Costes de hojas de asistencia"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_count
@@ -1158,7 +1158,7 @@ msgstr "Recuento de parte de horas"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Unidad de introducción del parte de horas"
+msgstr "Unidad de codificación de hoja de asistencia"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -1202,51 +1202,51 @@ msgstr "Parte de horas por fecha"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #, python-format
 msgid "Timesheets"
-msgstr "Partes de horas"
+msgstr "Hojas de asistencia"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "Timesheets - %s"
-msgstr "Partes de horas - %s"
+msgstr "Hojas de asistencia - %s"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_employee
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_project
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_task
 msgid "Timesheets Analysis"
-msgstr "Análisis de hoja de horas"
+msgstr "Análisis de hoja de asistencia"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr "Reporte de análisis de hoja de horas"
+msgstr "Informe de análisis de hoja de asistencia"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Timesheets Control"
-msgstr "Control de partes de horas"
+msgstr "Control de hojas de asistencia"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Timesheets by Employee"
-msgstr "Partes de horas por empleado"
+msgstr "Hojas de asistencia por empleado"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets by Project"
-msgstr "Partes de horas por proyecto"
+msgstr "Hojas de asistencia por proyecto"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
 msgid "Timesheets by Task"
-msgstr "Partes de horas por tarea"
+msgstr "Hojas de asistencia por tarea"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
-msgstr "Se pueden registrar partes de horas en esta tarea."
+msgstr "Se pueden registrar hojas de asistencia en esta tarea."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1262,7 +1262,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
-msgstr "Truco: Registre sus partes de hora más rápido"
+msgstr "Consejo: Registre sus hojas de asistencia más rápido"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1280,19 +1280,19 @@ msgstr "Total"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Days"
-msgstr "Días totales"
+msgstr "Total de días"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Hours"
-msgstr "Horas totales"
+msgstr "Total de horas"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total Timesheet Time"
-msgstr "Tiempo total del parte de horas"
+msgstr "Tiempo total de la hoja de asistencia"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
@@ -1300,8 +1300,8 @@ msgid ""
 "Total number of time (in the proper UoM) recorded in the project, rounded to"
 " the unit."
 msgstr ""
-"Tiempo total (en UoM adecuado) registrado en este proyecto, redondeado de "
-"acuerdo a la unidad."
+"Tiempo total (en la UdM adecuada) registrado en este proyecto, redondeado a "
+"la unidad."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1321,15 +1321,15 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
 msgstr ""
-"Da seguimiento a las horas que dedicas por proyecto todos los días y factura"
-" este tiempo a tus clientes."
+"Lleve el seguimiento de las horas que utiliza por proyecto todos los días y "
+"facture este tiempo a sus clientes."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 #, python-format
 msgid "Training"
-msgstr "Capacitación"
+msgstr "Formación"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1340,12 +1340,12 @@ msgstr "Usuario"
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
 msgid "User: all timesheets"
-msgstr "Usuario: todos los parte de horas"
+msgstr "Usuario: todas las hojas de asistencia"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "User: own timesheets only"
-msgstr "Usuario: solo los partes de horas propios"
+msgstr "Usuario: solo las hojas de asistencia propias"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
@@ -1357,7 +1357,7 @@ msgstr "Widget"
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "You cannot access timesheets that are not yours."
-msgstr "No se puede acceder a partes de horas que no son propios"
+msgstr "No se puede acceder a hojas de asistencia que no son propias"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1395,9 +1395,10 @@ msgid ""
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
 msgstr ""
-"No puede registrar partes de horas en este proyecto, ya que está vinculado a"
-" una cuenta analítica inactiva. Por favor, cambie de cuenta, o reactive la "
-"cuenta actual para registrar partes de horas en este proyecto."
+"No puede registrar hojas de asistencia en este proyecto, ya que está "
+"vinculado a una cuenta analítica inactiva. Por favor, cambie de cuenta, o "
+"reactive la cuenta actual para registrar hojas de asistencia en este "
+"proyecto."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1405,14 +1406,15 @@ msgstr ""
 #, python-format
 msgid "You cannot set an archived employee to the existing timesheets."
 msgstr ""
-"No puede establecer un empleado archivado en los partes de horas existentes."
+"No puede establecer un empleado archivado en los hojas de asistencia "
+"existentes."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "You cannot use timesheets without an analytic account."
-msgstr "No puede usar partes de horas sin una cuenta analítica."
+msgstr "No puede usar hojas de asistencia sin una cuenta analítica."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1430,7 +1432,7 @@ msgstr "para"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_project_task_page
 msgid "for the"
-msgstr "para el"
+msgstr "para"
 
 #. module: hr_timesheet
 #. odoo-python

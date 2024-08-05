@@ -18,6 +18,7 @@
 # Tomáš Píšek, 2024
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2024
 # Wil Odoo, 2024
+# Jakub Krkoška, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jakub Krkoška, 2024\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,7 +117,7 @@ msgstr "%(action)s pre denník %(journal)s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr ""
+msgstr "%(amount)s splatné dňa %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13759,6 +13760,14 @@ msgid "The company this distribution line belongs to."
 msgstr "Spoločnosť, ktorej táto distribučná linka patrí."
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
 msgstr "Krajina, pre ktorú platí táto daňová skupina."
@@ -16281,6 +16290,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""

@@ -32,6 +32,7 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2024
 # Ayhan Kızıltan, 2024
+# Mehmet YAYLA, 2024
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ayhan Kızıltan, 2024\n"
+"Last-Translator: Mehmet YAYLA, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7864,6 +7865,9 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"Geçersiz \"Posta Aralığı\", Posta aralığı için hem \"Kimden\" hem de "
+"\"Kime\" değerlerini yapılandırmanız gerekir ve \"Kime\" değeri \"Kimden\" "
+"değerinden büyük olmalıdır."
 
 #. module: account
 #. odoo-python
@@ -7871,6 +7875,8 @@ msgstr ""
 #, python-format
 msgid "Invalid domain for expression '%s' of line '%s': %s"
 msgstr ""
+"geçersiz alan adı ifadesi '%s' stırında '%s': %s\n"
+" "
 
 #. module: account
 #. odoo-python
@@ -10744,7 +10750,7 @@ msgstr "İş Ortakları"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr ""
+msgstr "Karma girişlerde kullanılan ortaklar birleştirilemez."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14087,6 +14093,14 @@ msgid "The company this distribution line belongs to."
 msgstr "Bu dağıtım satırının ait olduğu şirket."
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
 msgstr "Bu vergi grubunun geçerli olduğu ülke."
@@ -16707,6 +16721,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""

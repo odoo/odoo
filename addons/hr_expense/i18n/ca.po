@@ -28,6 +28,7 @@
 # Martin Trigaux, 2024
 # Óscar Fonseca <tecnico@pyming.com>, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
+# Eugeni Chafer <eugeni@chafer.cat>, 2024
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2024\n"
+"Last-Translator: Eugeni Chafer <eugeni@chafer.cat>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +49,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%(date_from)s - %(date_to)s"
-msgstr ""
+msgstr "%(date_from)s - %(date_to)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -116,12 +117,12 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "<span class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
-msgstr ""
+msgstr "<span class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "<span class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
-msgstr ""
+msgstr "<span class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -378,7 +379,7 @@ msgstr "Adjunts"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
 msgid "Attachments of expenses"
-msgstr ""
+msgstr "Adjunts de despeses"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
@@ -1343,7 +1344,7 @@ msgstr "Nou informe de despeses"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Report, paid by %(paid_by)s"
-msgstr ""
+msgstr "Nou informe de despesa, pagat per %(paid_by)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -1890,7 +1891,7 @@ msgstr "Divideix possible"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
 msgid "Standard Price Update Warning"
-msgstr ""
+msgstr "Avís d'actualització de preu estàndard"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -2056,6 +2057,8 @@ msgid ""
 "The private address of the employee is required to post the expense report. "
 "Please add it on the employee form."
 msgstr ""
+"Cal l'adreça privada de l'empleat per a publicar un informe de despeses. Si "
+"us plau, afegeix-la a la fitxa de l'empleat. "
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2086,6 +2089,9 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
+"Hi ha despeses pendents d'enviar vinculades en aquesta categoria. "
+"Actualitzar el cost de la categoria canviarà les quantitats de la despesa. "
+"Assegura't que és això el que vols fer."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2403,6 +2409,7 @@ msgstr "No pots rebutjar les teves pròpies despeses"
 #, python-format
 msgid "You cannot report expenses for different companies in the same report."
 msgstr ""
+"No pots incloure despeses de diferents companyies en el mateix informe."
 
 #. module: hr_expense
 #. odoo-python
