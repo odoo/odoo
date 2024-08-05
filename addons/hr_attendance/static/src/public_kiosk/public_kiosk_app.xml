@@ -156,7 +156,7 @@
                         <div class="alert alert-info">
                             <div class="d-flex flex-row justify-content-between">
                                 <div>Connect an RFID reader, and scan a token.
-                                    <DocumentationLink path="'/applications/hr/attendances/hardware.html'" label="'Documentation'"/>
+                                    <DocumentationLink path="'/applications/hr/attendances/hardware.html'" label="'Documentation'" alertLink="true"/>
                                 </div>
                                 <button  t-on-click="removeDemoMessage" type="button" class="btn-close ms-2" title="Close"/>
                             </div>
@@ -165,7 +165,7 @@
                     <t t-else="">
                         <div class="alert alert-info col-6 flex-row justify-content-between align-self-center" style="min-width: fit-content;">
                             Connect an RFID reader, and scan a token.
-                            <DocumentationLink path="'/applications/hr/attendances/hardware.html'" label="'Documentation'"/>
+                            <DocumentationLink path="'/applications/hr/attendances/hardware.html'" label="'Documentation'" alertLink="true"/>
                             <button t-on-click="removeDemoMessage" type="button" class="btn-close float-end ms-2" title="Close"/>
                         </div>
                     </t>
