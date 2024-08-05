@@ -53,7 +53,7 @@ test("simple chatter on a record", async () => {
     await contains(".o-mail-Chatter-topbar");
     await contains(".o-mail-Thread");
     await assertSteps([
-        `/mail/thread/data - {"request_list":["followers","attachments","suggestedRecipients"],"thread_id":${partnerId},"thread_model":"res.partner"}`,
+        `/mail/thread/data - {"request_list":["activities","followers","attachments","suggestedRecipients"],"thread_id":${partnerId},"thread_model":"res.partner"}`,
         `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","limit":30}`,
     ]);
 });
