@@ -68,8 +68,7 @@ class PosSession(models.Model):
         if domain_str == "null":
             return domain_str
 
-        domain = ast.literal_eval(domain_str)
-
+        domain = json.loads(domain_str)
         for index, condition in enumerate(domain):
             if isinstance(condition, (list, tuple)) and len(condition) == 3:
                 field_name, operator, value = condition
