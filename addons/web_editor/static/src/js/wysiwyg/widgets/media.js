@@ -1308,7 +1308,6 @@ var VideoWidget = MediaWidget.extend({
             this.$('input#o_video_hide_controls').prop('checked', src.indexOf('controls=0') >= 0);
             this.$('input#o_video_loop').prop('checked', src.indexOf('loop=1') >= 0);
             this.$('input#o_video_hide_fullscreen').prop('checked', src.indexOf('fs=0') >= 0);
-            this.$('input#o_video_hide_yt_logo').prop('checked', src.indexOf('modestbranding=1') >= 0);
             this.$('input#o_video_hide_dm_logo').prop('checked', src.indexOf('ui-logo=0') >= 0);
             this.$('input#o_video_hide_dm_share').prop('checked', src.indexOf('sharing-enable=0') >= 0);
 
@@ -1451,7 +1450,6 @@ var VideoWidget = MediaWidget.extend({
             'hide_controls': this.isForBgVideo || this.$('input#o_video_hide_controls').is(':checked'),
             'loop': this.isForBgVideo || this.$('input#o_video_loop').is(':checked'),
             'hide_fullscreen': this.isForBgVideo || this.$('input#o_video_hide_fullscreen').is(':checked'),
-            'hide_yt_logo': this.isForBgVideo || this.$('input#o_video_hide_yt_logo').is(':checked'),
             'hide_dm_logo': this.isForBgVideo || this.$('input#o_video_hide_dm_logo').is(':checked'),
             'hide_dm_share': this.isForBgVideo || this.$('input#o_video_hide_dm_share').is(':checked'),
         });
@@ -1475,8 +1473,8 @@ var VideoWidget = MediaWidget.extend({
 
         if (query.type === 'youtube') {
             // Youtube only: If 'hide controls' is checked, hide 'fullscreen'
-            // and 'youtube logo' options too
-            this.$('input#o_video_hide_fullscreen, input#o_video_hide_yt_logo').closest('div').toggleClass('d-none', this.$('input#o_video_hide_controls').is(':checked'));
+            // options too.
+            this.$('input#o_video_hide_fullscreen').closest('div').toggleClass('d-none', this.$('input#o_video_hide_controls').is(':checked'));
         }
 
         this.error = false;
@@ -1576,14 +1574,13 @@ var VideoWidget = MediaWidget.extend({
         if (matches.youtube && matches.youtube[2].length === 11) {
             const fullscreen = options.hide_fullscreen ? '&fs=0' : '';
             const ytLoop = loop ? loop + `&playlist=${encodeURIComponent(matches.youtube[2])}` : '';
-            const logo = options.hide_yt_logo ? '&modestbranding=1' : '';
             // The youtube js api is needed for autoplay on mobile. Note: this
             // was added as a fix, old customers may have autoplay videos
             // without this, which will make their video autoplay on desktop
             // but not in mobile (so no behavior change was done in stable,
             // this should not be migrated).
             const enablejsapi = options.autoplay ? '&enablejsapi=1' : '';
-            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${encodeURIComponent(matches.youtube[2])}${autoplay}${enablejsapi}&rel=0${ytLoop}${controls}${fullscreen}${logo}`;
+            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${encodeURIComponent(matches.youtube[2])}${autoplay}${enablejsapi}&rel=0${ytLoop}${controls}${fullscreen}`;
             type = 'youtube';
         } else if (matches.instagram && matches.instagram[2].length) {
             embedURL = `//www.instagram.com/p/${encodeURIComponent(matches.instagram[2])}/embed/`;
