@@ -54,7 +54,7 @@ class LoyaltyReward(models.Model):
         if domain_str == "null":
             return domain_str
 
-        domain = ast.literal_eval(domain_str)
+        domain = json.loads(domain_str)
 
         for index, condition in self._parse_domain(domain).items():
             field_name, operator, value = condition
