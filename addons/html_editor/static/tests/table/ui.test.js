@@ -674,6 +674,41 @@ test("move row above operation", async () => {
     );
 });
 
+test("preserve table rows width on move row above operation", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td style="width: 100px;" class="a">1[]</td><td style="width: 200px;" class="b">2</td></tr>
+                <tr><td style="width: 150px;" class="c">3</td><td style="width: 150px;" class="d">4</td></tr>
+                <tr><td style="width: 150px;" class="e">5</td><td style="width: 150px;" class="f">6</td></tr>
+            </tbody>
+        </table>`)
+    );
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    // hover on td to show row ui
+    hover(el.querySelector("td.c"));
+    await waitFor("[data-type='row'].o-we-table-menu");
+
+    // click on it to open dropdown
+    click("[data-type='row'].o-we-table-menu");
+    await waitFor("div[name='move_up']");
+
+    // move row up
+    click("div[name='move_up']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td style="width: 100px;" class="c">3</td><td style="width: 200px;" class="d">4</td></tr>
+                <tr><td style="width: 100px;" class="a">1[]</td><td style="width: 200px;" class="b">2</td></tr>
+                <tr><td style="width: 150px;" class="e">5</td><td style="width: 150px;" class="f">6</td></tr>
+            </tbody>
+        </table>`)
+    );
+});
+
 test("move row below operation", async () => {
     const { el } = await setupEditor(
         unformat(`
@@ -702,6 +737,41 @@ test("move row below operation", async () => {
             <tbody>
             <tr><td class="c">3</td><td class="d">4</td></tr>
             <tr><td class="a">1[]</td><td class="b">2</td></tr>
+            </tbody>
+        </table>`)
+    );
+});
+
+test("preserve table rows width on move row below operation", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td style="width: 100px;" class="a">1[]</td><td style="width: 200px;" class="b">2</td></tr>
+                <tr><td style="width: 150px;" class="c">3</td><td style="width: 150px;" class="d">4</td></tr>
+                <tr><td style="width: 150px;" class="e">5</td><td style="width: 150px;" class="f">6</td></tr>
+            </tbody>
+        </table>`)
+    );
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    // hover on td to show row ui
+    hover(el.querySelector("td.a"));
+    await waitFor("[data-type='row'].o-we-table-menu");
+
+    // click on it to open dropdown
+    click("[data-type='row'].o-we-table-menu");
+    await waitFor("div[name='move_down']");
+
+    // move row below
+    click("div[name='move_down']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td style="width: 100px;" class="c">3</td><td style="width: 200px;" class="d">4</td></tr>
+                <tr><td style="width: 100px;" class="a">1[]</td><td style="width: 200px;" class="b">2</td></tr>
+                <tr><td style="width: 150px;" class="e">5</td><td style="width: 150px;" class="f">6</td></tr>
             </tbody>
         </table>`)
     );
