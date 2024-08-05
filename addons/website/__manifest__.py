@@ -58,6 +58,7 @@
         'views/snippets/s_social_media.xml',
         'views/snippets/s_rating.xml',
         'views/snippets/s_hr.xml',
+        'views/snippets/s_closer_look.xml',
         'views/snippets/s_facebook_page.xml',
         'views/snippets/s_image_gallery.xml',
         'views/snippets/s_countdown.xml',
