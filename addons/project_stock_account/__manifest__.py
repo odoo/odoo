@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Project Stock Account',
+    'name': 'Project Stock Analytics',
     'version': '1.0',
-    'summary': 'Handle analytics in Stock pickings with Project',
+    'summary': 'Generate analytic costs for stock pickings linked to your projects',
     'category': 'Services/Project',
     'depends': ['stock_account', 'project_stock'],
     'data': [

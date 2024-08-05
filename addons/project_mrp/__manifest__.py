@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': "MRP Project",
+    'name': 'Project Manufacturing',
     'version': '1.0',
-    'summary': "Monitor MRP using project",
+    'summary': 'Link the manufacturing orders to your projects.',
     'category': 'Services/Project',
     'depends': ['mrp', 'project'],
     'data': [
