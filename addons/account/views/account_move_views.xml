@@ -909,7 +909,7 @@
                                        invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')"/>
                                 <label for="partner_id" string="Vendor" style="font-weight:bold;"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
-                                <div class="o_col">
+                                <div class="o_col" invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt')">
                                     <field name="partner_id" widget="res_partner_many2one" nolabel="1"
                                            context="{
                                             'res_partner_search_mode': (context.get('default_move_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
