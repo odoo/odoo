@@ -1688,7 +1688,15 @@ Please change the quantity done or the rounding precision of your unit of measur
             if line.result_package_id or line.product_id.tracking == 'serial':
                 continue
             candidate_lines[line.location_id, line.lot_id, line.package_id, line.owner_id] = line
-        for reserved_quant, quantity in quants:
+        move_line_vals = []
+        grouped_quants = {}
+        # Handle quants duplication
+        for quant, quantity in quants:
+            if (quant.location_id, quant.lot_id, quant.package_id, quant.owner_id) not in grouped_quants:
+                grouped_quants[quant.location_id, quant.lot_id, quant.package_id, quant.owner_id] = [quant, quantity]
+            else:
+                grouped_quants[quant.location_id, quant.lot_id, quant.package_id, quant.owner_id][1] += quantity
+        for reserved_quant, quantity in grouped_quants.values():
             taken_quantity += quantity
             to_update = candidate_lines.get((reserved_quant.location_id, reserved_quant.lot_id, reserved_quant.package_id, reserved_quant.owner_id))
             if to_update:
@@ -1701,9 +1709,11 @@ Please change the quantity done or the rounding precision of your unit of measur
                 if self.product_id.tracking == 'serial' and (self.picking_type_id.use_create_lots or self.picking_type_id.use_existing_lots):
                     vals_list = self._add_serial_move_line_to_vals_list(reserved_quant, quantity)
                     if vals_list:
-                        self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(vals_list)
+                        move_line_vals += vals_list
                 else:
-                    self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
+                    move_line_vals.append(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
+        if move_line_vals:
+            self.env['stock.move.line'].create(move_line_vals)
         return taken_quantity
 
     def _add_serial_move_line_to_vals_list(self, reserved_quant, quantity):

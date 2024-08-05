@@ -343,7 +343,7 @@ class StockMoveLine(models.Model):
             else:
                 create_move(move_line)
 
-        move_to_recompute_state = self.env['stock.move']
+        move_to_recompute_state = set()
         for move_line in mls:
             if move_line.state == 'done':
                 continue
@@ -359,8 +359,8 @@ class StockMoveLine(models.Model):
                     product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
 
                 if move:
-                    move_to_recompute_state |= move
-        move_to_recompute_state._recompute_state()
+                    move_to_recompute_state.add(move.id)
+        self.env['stock.move'].browse(move_to_recompute_state)._recompute_state()
 
         for ml, vals in zip(mls, vals_list):
             if ml.state == 'done':
