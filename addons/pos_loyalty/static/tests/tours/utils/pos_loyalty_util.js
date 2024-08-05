@@ -21,7 +21,7 @@ export function selectRewardLine(rewardName) {
 }
 export function enterCode(code) {
     return [
-        ProductScreen.clickControlButton("Enter Code"),
+        ...ProductScreen.clickControlButton("Enter Code"),
         TextInputPopup.inputText(code),
         Dialog.confirm(),
     ];
@@ -31,7 +31,7 @@ export function clickEWalletButton(text = "eWallet") {
 }
 export function claimReward(rewardName) {
     return [
-        ProductScreen.clickControlButton("Reward"),
+        ...ProductScreen.clickControlButton("Reward"),
         {
             // There should be description because a program always has a name.
             trigger: ".selection-item span:nth-child(2)",
@@ -48,6 +48,7 @@ export function unselectPartner() {
 }
 export function clickDiscountButton() {
     return [
+        ...ProductScreen.clickControlButtonMore(),
         {
             content: "click discount button",
             trigger: ".js_discount",
@@ -68,6 +69,7 @@ export function orderTotalIs(total_str) {
 }
 export function isRewardButtonHighlighted(isHighlighted) {
     return [
+        ...ProductScreen.clickControlButtonMore(),
         {
             trigger: isHighlighted
                 ? '.control-buttons button.highlight:contains("Reward")'
@@ -77,6 +79,7 @@ export function isRewardButtonHighlighted(isHighlighted) {
 }
 export function eWalletButtonState({ highlighted, text = "eWallet" }) {
     return [
+        ...ProductScreen.clickControlButtonMore(),
         {
             trigger: highlighted
                 ? `.control-buttons button.highlight:contains("${text}")`

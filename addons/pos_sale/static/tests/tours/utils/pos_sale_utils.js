@@ -6,7 +6,7 @@ import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 
 function selectNthOrder(n) {
     return [
-        ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation/Order"),
         {
             content: `select nth order`,
             trigger: `.modal:not(.o_inactive_modal) table.o_list_table tbody tr.o_data_row:nth-child(${n}) td`,
@@ -44,7 +44,7 @@ export function downPaymentFirstOrder() {
 
 export function checkOrdersListEmpty() {
     return [
-        ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation/Order"),
         {
             content: "Check that the orders list is empty",
             trigger: "p:contains(No record found)",

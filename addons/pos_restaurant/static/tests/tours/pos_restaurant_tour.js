@@ -183,7 +183,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ProductScreen.totalAmountIs("4.40"),
 
             // Test transfering an order
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
 
@@ -206,7 +205,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             FloorScreen.clickTable("2"),
             ProductScreen.isShown(),
             ProductScreen.orderIsEmpty(),
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),

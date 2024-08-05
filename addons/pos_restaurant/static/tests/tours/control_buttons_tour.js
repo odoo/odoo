@@ -17,7 +17,6 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             Dialog.confirm("Open session"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
             ProductScreen.back(),
@@ -27,11 +26,10 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             FloorScreen.clickTable("4"),
 
             // Test SplitBillButton
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickBack(),
 
-            ProductScreen.clickControlButton("Internal Note"),
+            ProductScreen.clickInternalNoteButton(),
             TextInputPopup.inputText("test note"),
             Dialog.confirm(),
             Order.hasLine({

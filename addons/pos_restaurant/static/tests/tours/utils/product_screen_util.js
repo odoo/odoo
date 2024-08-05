@@ -27,6 +27,7 @@ export function orderlineIsToSkip(name) {
 }
 export function guestNumberIs(num) {
     return [
+        ...ProductScreen.clickControlButtonMore(),
         {
             content: `guest number is ${num}`,
             trigger: ProductScreen.controlButtonTrigger("Guests") + `:contains(${num})`,
