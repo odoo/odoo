@@ -188,7 +188,6 @@ test("Message delete notification", async () => {
     });
     await start();
     await openDiscuss();
-    await click("[title='Expand']");
     await click("[title='Mark as Todo']");
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });

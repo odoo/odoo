@@ -2,6 +2,7 @@ import { Component } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
+import { discussComponentRegistry } from "./discuss_component_registry";
 
 export class MessageConfirmDialog extends Component {
     static components = { Dialog };
@@ -10,7 +11,6 @@ export class MessageConfirmDialog extends Component {
         "confirmColor?",
         "confirmText?",
         "message",
-        "messageComponent",
         "prompt",
         "size?",
         "title?",
@@ -24,8 +24,14 @@ export class MessageConfirmDialog extends Component {
     };
     static template = "mail.MessageConfirmDialog";
 
+    get messageComponent() {
+        return discussComponentRegistry.get("Message");
+    }
+
     onClickConfirm() {
         this.props.onConfirm();
         this.props.close();
     }
 }
+
+discussComponentRegistry.add("MessageConfirmDialog", MessageConfirmDialog);

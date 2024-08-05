@@ -9,6 +9,17 @@
     &.o-highlighted {
         transform: translateY(-#{map-get($spacers, 3)});
     }
+    &.o-longTouching {
+        background-color: rgba($o-action, .075);
+        outline: 1px solid rgba($o-action, .1);
+        outline-offset: -1px;
+    }
+
+    &.o-actionMenuMobileOpen {
+        background-color: rgba($o-action, .1);
+        outline: 1px solid rgba($o-action, .15);
+        outline-offset: -1px;
+    }
 }
 
 .o-mail-Message-date {
@@ -82,7 +93,6 @@
     }
 }
 
-
 .o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
     flex-direction: row-reverse;
 
@@ -111,6 +121,10 @@
 
 .o-mail-Message-moreMenu {
     z-index: $o-mail-NavigableList-zIndex;
+}
+
+.o-mail-Message-openActionMobile:active {
+    opacity: 75% !important;
 }
 
 .o-mail-Message-pendingProgress {

@@ -127,9 +127,10 @@ export async function loadEmoji() {
 }
 
 export const EMOJI_PER_ROW = 9;
+export const EMOJI_PICKER_PROPS = ["close?", "onClose?", "onSelect", "state?", "storeScroll?"];
 
 export class EmojiPicker extends Component {
-    static props = ["close?", "onClose?", "onSelect", "state?", "storeScroll?"];
+    static props = EMOJI_PICKER_PROPS;
     static template = "web.EmojiPicker";
 
     categories = null;

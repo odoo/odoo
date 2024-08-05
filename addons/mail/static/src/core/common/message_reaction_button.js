@@ -9,7 +9,7 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class MessageReactionButton extends Component {
     static template = "mail.MessageReactionButton";
-    static props = ["message", "classNames?"];
+    static props = ["message", "classNames?", "action"];
 
     setup() {
         super.setup();
