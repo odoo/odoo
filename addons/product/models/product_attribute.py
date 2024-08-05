@@ -20,6 +20,10 @@ class ProductAttribute(models.Model):
     ]
 
     name = fields.Char(string="Attribute", required=True, translate=True)
+    active = fields.Boolean(
+        default=True,
+        help="If unchecked, it will allow you to hide the attribute without removing it.",
+    )
     create_variant = fields.Selection(
         selection=[
             ('always', 'Instantly'),
@@ -72,7 +76,7 @@ class ProductAttribute(models.Model):
         res = {
             attribute.id: count
             for attribute, count in self.env['product.template.attribute.line']._read_group(
-                domain=[('attribute_id', 'in', self.ids)],
+                domain=[('attribute_id', 'in', self.ids), ('product_tmpl_id.active', '=', 'True')],
                 groupby=['attribute_id'],
                 aggregates=['__count'],
             )
@@ -133,6 +137,14 @@ class ProductAttribute(models.Model):
 
     # === ACTION METHODS === #
 
+    def action_archive(self):
+        for attribute in self:
+            if attribute.number_related_products:
+                raise UserError(_(
+                    "You cannot archive this attribute as there are still products linked to it",
+                ))
+        return super().action_archive()
+
     def action_open_product_template_attribute_lines(self):
         self.ensure_one()
         return {
@@ -140,7 +152,7 @@ class ProductAttribute(models.Model):
             'name': _("Products"),
             'res_model': 'product.template.attribute.line',
             'view_mode': 'tree,form',
-            'domain': [('attribute_id', '=', self.id)],
+            'domain': [('attribute_id', '=', self.id), ('product_tmpl_id.active', '=', 'True')],
         }
 
     # === TOOLING === #
