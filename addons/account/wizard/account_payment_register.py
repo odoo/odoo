@@ -51,6 +51,10 @@ class AccountPaymentRegister(models.TransientModel):
     )
     company_currency_id = fields.Many2one('res.currency', string="Company Currency",
         related='company_id.currency_id')
+    qr_code = fields.Html(
+        string="QR Code URL",
+        compute="_compute_qr_code",
+    )
 
     # == Fields given through the context ==
     line_ids = fields.Many2many('account.move.line', 'account_payment_register_move_line_rel', 'wizard_id', 'line_id',
@@ -612,6 +616,31 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_hide_writeoff_section(self):
         for wizard in self:
             wizard.hide_writeoff_section = wizard.early_payment_discount_mode
+
+    @api.depends('partner_bank_id', 'amount', 'currency_id', 'payment_method_line_id', 'payment_type', 'communication')
+    def _compute_qr_code(self):
+        for pay in self:
+            qr_html = False
+            if pay.partner_bank_id \
+               and pay.partner_bank_id.allow_out_payment \
+               and pay.payment_method_line_id.code == 'manual' \
+               and pay.payment_type == 'outbound' \
+               and pay.amount \
+               and pay.currency_id:
+                b64_qr = pay.partner_bank_id.build_qr_code_base64(
+                    amount=pay.amount,
+                    free_communication=pay.communication,
+                    structured_communication=pay.communication,
+                    currency=pay.currency_id,
+                    debtor_partner=pay.partner_id,
+                )
+                if b64_qr:
+                    qr_html = f'''
+                        <img class="border border-dark rounded" src="{b64_qr}"/>
+                        <br/>
+                        <strong>{_('Scan me with your banking app.')}</strong>
+                    '''
+            pay.qr_code = qr_html
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
