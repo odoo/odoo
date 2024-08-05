@@ -656,7 +656,7 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('partner_id', 'amount', 'payment_date', 'payment_type', 'line_ids')
     def _compute_duplicate_moves(self):
         for wizard in self:
-            if wizard.can_edit_wizard:
+            if wizard.can_edit_wizard and wizard.journal_id:
                 wizard.duplicate_move_ids = self._fetch_duplicate_reference()
             else:
                 wizard.duplicate_move_ids = self.env['account.move']
