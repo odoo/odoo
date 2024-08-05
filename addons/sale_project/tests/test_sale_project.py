@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests.common import new_test_user
+from odoo.tests import Form, HttpCase, new_test_user, tagged
+
 from .common import TestSaleProjectCommon
-from odoo.tests import Form, HttpCase
-from odoo.tests.common import tagged
+
 
 @tagged('post_install', '-at_install')
 class TestSaleProject(HttpCase, TestSaleProjectCommon):
@@ -908,3 +908,46 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
                 project_form.reinvoiced_sale_order_id, sale_order_1,
                 "Project's sale order shouldn't have change as it was already set.",
             )
+
+    def test_task_compute_sale_order_id(self):
+        """
+        Check whether a task's sale_order_id is set iff its partner_id matches
+        the SO's partner_id, partner_invoice_id, or partner_shipping_id fields.
+        """
+        project_user = new_test_user(
+            self.env,
+            name='Project user',
+            login='Project user',
+            groups='project.group_project_user',
+        )
+        partners = [
+            self.partner,    # partner_id
+            self.partner_a,  # partner_invoice_id
+            self.partner_b,  # partner_shipping_id
+            self.env['res.partner'].create({'name': "unrelated partner"}),
+        ]
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': partners[0].id,
+            'partner_invoice_id': partners[1].id,
+            'partner_shipping_id': partners[2].id,
+            'order_line': [Command.create({'product_id': self.product_order_service1.id})],
+        })
+        sale_order.action_confirm()
+
+        task0, task1, task2, task3 = self.env['project.task'].with_user(project_user).create([{
+            'name': f"Task {i}",
+            'sale_line_id': sale_order.order_line.id,
+            'project_id': self.project_global.id,
+            'partner_id': partner.id,
+        } for i, partner in enumerate(partners)])
+
+        self.assertEqual(task0.sale_order_id, sale_order, "Task matches SO's partner_id")
+        self.assertEqual(task1.sale_order_id, sale_order, "Task matches SO's partner_invoice_id")
+        self.assertEqual(task2.sale_order_id, sale_order, "Task matches SO's partner_shipping_id")
+        self.assertFalse(task3.sale_order_id, "Task partner doesn't match any of the SO partners")
+
+        task3.with_user(project_user).write({
+            'partner_id': self.partner.id,
+            'sale_line_id': sale_order.order_line.id,
+        })
+        self.assertEqual(task3.sale_order_id, sale_order, "Task matches SO's partner_id")
