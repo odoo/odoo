@@ -264,3 +264,24 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         # timesheet should be unlinked to the timeoff, and be able to delete it
         timesheets.with_user(SUPERUSER_ID).unlink()
         self.assertFalse(timesheets.exists(), 'Timesheet should be deleted')
+
+    @freeze_time('2018-02-01 08:00:00')
+    def test_timesheet_when_archiving_employee(self):
+        number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
+        holiday = self.Requests.with_user(self.user_employee).create({
+            'name': 'Leave 1',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'date_from': self.leave_start_datetime,
+            'date_to': self.leave_end_datetime,
+            'number_of_days': number_of_days,
+        })
+        holiday.with_user(SUPERUSER_ID).action_validate()
+
+        wizard = self.env['hr.departure.wizard'].create({
+            'employee_id': self.empl_employee.id,
+            'departure_date': datetime(2018, 1, 30, 12),
+            'archive_allocation': False,
+        })
+        wizard.action_register_departure()
+        self.assertEqual(len(holiday.timesheet_ids), 0, 'Timesheets related to the archived employee should have been deleted')
