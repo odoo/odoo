@@ -318,7 +318,7 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.depends('product_qty', 'product_uom', 'company_id')
+    @api.depends('product_qty', 'product_uom', 'company_id', 'order_id.partner_id')
     def _compute_price_unit_and_date_planned_and_name(self):
         for line in self:
             if not line.product_id or line.invoice_lines or not line.company_id:
