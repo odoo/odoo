@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_move_reversal_inherit_l10n_pk_edi" model="ir.ui.view">
+        <field name="name">view.account.move.reversal.inherit.l10n.pk.edi</field>
+        <field name="inherit_id" ref="account.view_account_move_reversal"/>
+        <field name="model">account.move.reversal</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_type']" position="after">
+                <field name="country_code" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='reason']" position="attributes">
+                <attribute name='required'>country_code == 'PK'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
