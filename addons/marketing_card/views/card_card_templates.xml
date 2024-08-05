@@ -245,7 +245,7 @@
             />
         </div>
         <div class="title">
-            <h1 class="header" t-out="values['header']"/>
+            <h1 class="header" t-out="values['header']" t-att-style="'color: %s;' % card_campaign.content_header_color"/>
             <h2 class="subheader" t-out="values['sub_header']" t-att-style="'color: %s;' % card_campaign.content_sub_header_color"/>
         </div>
         <div class="footer">
