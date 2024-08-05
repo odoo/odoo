@@ -10,7 +10,7 @@ const livechatChannelPatch = {
             compute() {
                 return {
                     extraClass: "o-mail-DiscussSidebarCategory-livechat",
-                    hideWhenEmpty: !this.hasSelfAsMember,
+                    hideWhenEmpty: !this.are_you_inside,
                     id: `im_livechat.category_${this.id}`,
                     name: this.name,
                     sequence: 22,

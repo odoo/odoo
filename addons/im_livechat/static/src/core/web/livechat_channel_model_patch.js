@@ -15,7 +15,7 @@ const livechatChannelPatch = {
         this.threads = Record.many("Thread", { inverse: "livechatChannel" });
     },
     async join({ notify = true } = {}) {
-        this.hasSelfAsMember = true;
+        this.are_you_inside = true;
         if (notify) {
             this.store.env.services.notification.add(_t("You joined %s.", this.name), {
                 type: "info",
@@ -29,7 +29,7 @@ const livechatChannelPatch = {
         return sprintf(_t("Join %s"), this.name);
     },
     async leave({ notify = true } = {}) {
-        this.hasSelfAsMember = false;
+        this.are_you_inside = false;
         if (notify) {
             this.store.env.services.notification.add(_t("You left %s.", this.name), {
                 type: "info",

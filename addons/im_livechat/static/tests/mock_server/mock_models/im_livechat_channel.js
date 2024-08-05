@@ -17,7 +17,7 @@ export class LivechatChannel extends models.ServerModel {
             "mail.record/insert",
             new mailDataHelpers.Store(
                 this.browse(id),
-                makeKwArgs({ fields: ["hasSelfAsMember", "name"] })
+                makeKwArgs({ fields: ["are_you_inside", "name"] })
             ).get_result()
         );
     }
@@ -31,7 +31,7 @@ export class LivechatChannel extends models.ServerModel {
             "mail.record/insert",
             new mailDataHelpers.Store(
                 this.browse(id),
-                makeKwArgs({ fields: ["hasSelfAsMember", "name"] })
+                makeKwArgs({ fields: ["are_you_inside", "name"] })
             ).get_result()
         );
     }
@@ -102,11 +102,11 @@ export class LivechatChannel extends models.ServerModel {
         for (const livechatChannel of this.browse(ids)) {
             const [res] = this.read(
                 [livechatChannel.id],
-                fields.filter((field) => field !== "hasSelfAsMember"),
+                fields.filter((field) => field !== "are_you_inside"),
                 false
             );
-            if (fields.includes("hasSelfAsMember")) {
-                res.hasSelfAsMember = livechatChannel.user_ids.includes(this.env.user.id);
+            if (fields.includes("are_you_inside")) {
+                res.are_you_inside = livechatChannel.user_ids.includes(this.env.user.id);
             }
             store.add(this.browse(livechatChannel.id), res);
         }
