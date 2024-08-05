@@ -18,7 +18,7 @@ class GoogleCalendarController(CalendarController):
             this URL for authorization for example
         """
         if model == 'calendar.event':
-            base_url = request.env['ir.config_parameter'].get_param('web.base.url')
+            base_url = request.env['ir.config_parameter'].get_param('web.base.url').strip().strip('/')
             GoogleCal = GoogleCalendarService(request.env['google.service'].with_context(base_url=base_url))
 
             # Checking that admin have already configured Google API for google synchronization !
