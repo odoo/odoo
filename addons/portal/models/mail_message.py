@@ -97,7 +97,7 @@ class MailMessage(models.Model):
             if 'author_avatar_url' in properties_names:
                 if options and options.get("token"):
                     values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?access_token={options["token"]}'
-                elif options and options.get("_hash") and options.get("pid"):
+                elif options and options.get("hash") and options.get("pid"):
                     values['author_avatar_url'] = f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={options["hash"]}&pid={options["pid"]}'
                 else:
                     values['author_avatar_url'] = f'/web/image/mail.message/{message.id}/author_avatar/50x50'
