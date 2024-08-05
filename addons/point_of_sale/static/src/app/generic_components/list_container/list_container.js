@@ -24,10 +24,16 @@ class ListContainerDialog extends ListContainerPopover {
 export class ListContainer extends Component {
     static props = {
         items: Array,
+        onClickPlus: { type: Function, optional: true },
         slots: { type: Object },
+        class: { type: String, optional: true },
+        forceSmall: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        class: "",
     };
     static template = xml`
-        <div class="overflow-hidden d-flex">
+        <div class="overflow-hidden d-flex" t-attf-class="{{props.class}}">
             <!-- it's important that the parent of the 'container' div not be the parent of the 'view more' div -->
             <!-- otherwise the appearance and disappearance of the 'view more' div will retrigger the resizeObserver, -->
             <!-- which will cause a glitch-->
@@ -40,12 +46,15 @@ export class ListContainer extends Component {
                     gap: 0.5rem;
                     height: {{popover.isOpen ? '0' : 'auto'}};
                 ">
-                    <t t-if="!ui.isSmall" t-foreach="props.items" t-as="item" t-key="item_index">
+                    <t t-if="!props.forceSmall" t-foreach="props.items" t-as="item" t-key="item_index">
                         <t t-slot="default" item="item"/>
                     </t>
                 </div>
             </div>
-            <button t-if="(isLarger() or ui.isSmall) and props.items.length" t-on-click="toggle"
+            <button t-if="props.onClickPlus" class="btn btn-light btn-lg" t-on-click="props.onClickPlus">
+                <i class="fa fa-fw fa-lg fa-plus-circle" aria-hidden="true"/>
+            </button>
+            <button t-if="isLarger() or props.forceSmall" t-on-click="toggle"
                 class="btn btn-secondary ms-2"
                 t-attf-class="fa {{popover.isOpen ? 'fa-caret-up' : 'fa-caret-down'}}"/>
         </div>
@@ -56,9 +65,10 @@ export class ListContainer extends Component {
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.popover = useReactivePopover(ListContainerPopover, {
-            position: "top-fit",
+            position: "bottom-fit",
             arrow: false,
             animation: false,
+            popoverClass: "mh-50 overflow-y-auto overflow-x-hidden",
             closeOnClickAway: (target) => !target.classList.contains("fa-caret-up"),
         });
     }
