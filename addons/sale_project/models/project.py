@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
 import json
 from collections import defaultdict
-from datetime import date
 
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
@@ -846,16 +844,20 @@ class ProjectTask(models.Model):
             if not task.allow_billable:
                 task.sale_order_id = False
                 continue
-            sale_order_id = task.sale_order_id or self.env["sale.order"]
-            if task.sale_line_id:
-                sale_order_id = task.sale_line_id.sudo().order_id
-            elif task.project_id.sale_order_id:
-                sale_order_id = task.project_id.sale_order_id
-            if task.partner_id.commercial_partner_id != sale_order_id.partner_id.commercial_partner_id:
-                sale_order_id = False
-            if sale_order_id and not task.partner_id:
-                task.partner_id = sale_order_id.partner_id
-            task.sale_order_id = sale_order_id
+            sale_order = (
+                task.sale_line_id.order_id
+                or task.project_id.sale_order_id
+                or task.sale_order_id
+            )
+            so_partners = (
+                sale_order.partner_id
+                | sale_order.partner_invoice_id
+                | sale_order.partner_shipping_id
+            )
+            if task.partner_id.commercial_partner_id in so_partners.commercial_partner_id:
+                task.sale_order_id = sale_order
+            else:
+                task.sale_order_id = False
 
     @api.depends('allow_billable')
     def _compute_partner_id(self):
