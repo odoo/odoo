@@ -90,8 +90,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     'company_id': endpoint,
                     'company_id_attrs': {'schemeID': scheme},
                 })
-            if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
-                vals['company_id'] = partner.l10n_lu_peppol_identifier
+            if partner.country_id.code == "LU":
+                if 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
+                    vals['company_id'] = partner.l10n_lu_peppol_identifier
+                elif partner.company_registry:
+                    vals['company_id'] = partner.company_registry
             if partner.country_id.code == 'DK':
                 # DK-R-014: For Danish Suppliers it is mandatory to specify schemeID as "0184" (DK CVR-number) when
                 # PartyLegalEntity/CompanyID is used for AccountingSupplierParty
