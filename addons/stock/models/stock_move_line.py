@@ -380,6 +380,9 @@ class StockMoveLine(models.Model):
                 next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
                 next_moves._do_unreserve()
                 next_moves._action_assign()
+        move_done = mls.filtered(lambda m: m.state == "done").move_id
+        if move_done:
+            move_done._check_quantity()
         return mls
 
     def write(self, vals):
@@ -469,6 +472,9 @@ class StockMoveLine(models.Model):
                 # Log a note
                 if ml.picking_id:
                     ml._log_message(ml.picking_id, ml, 'stock.track_move_template', vals)
+            move_done = mls.move_id
+            if move_done:
+                move_done._check_quantity()
 
         # update the date when it seems like (additional) quantities are "done" and the date hasn't been manually updated
         if 'date' not in vals and ('product_uom_id' in vals or 'quantity' in vals or vals.get('picked', False)):

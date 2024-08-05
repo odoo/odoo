@@ -1945,6 +1945,13 @@ Please change the quantity done or the rounding precision of your unit of measur
         return self.is_inventory or self.move_dest_ids and any(m.location_id._child_of(self.location_dest_id) for m in self.move_dest_ids) or\
             self.location_final_id and self.location_final_id._child_of(self.location_dest_id)
 
+    def _check_quantity(self):
+        return self.env['stock.quant'].search([
+            ('product_id', 'in', self.product_id.ids),
+            ('location_id', 'child_of', self.location_dest_id.ids),
+            ('lot_id', 'in', self.lot_ids.ids)
+        ]).check_quantity()
+
     def _action_done(self, cancel_backorder=False):
         moves = self.filtered(
             lambda move: move.state == 'draft'
@@ -2007,6 +2014,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             backorder = picking._create_backorder()
             if any([m.state == 'assigned' for m in backorder.move_ids]):
                 backorder._check_entire_pack()
+        if moves_todo:
+            moves_todo._check_quantity()
         return moves_todo
 
     def _create_backorder(self):

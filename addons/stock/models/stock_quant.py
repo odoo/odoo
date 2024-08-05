@@ -594,15 +594,15 @@ class StockQuant(models.Model):
         if any(not elem.product_id.is_storable for elem in self):
             raise ValidationError(_('Quants cannot be created for consumables or services.'))
 
-    @api.constrains('quantity')
     def check_quantity(self):
         sn_quants = self.filtered(lambda q: q.product_id.tracking == 'serial' and q.location_id.usage != 'inventory' and q.lot_id)
         if not sn_quants:
             return
-        domain = expression.OR([
-            [('product_id', '=', q.product_id.id), ('location_id', '=', q.location_id.id), ('lot_id', '=', q.lot_id.id)]
-            for q in sn_quants
-        ])
+        domain = [
+            ('product_id', 'in', sn_quants.product_id.ids),
+            ('location_id', 'child_of', sn_quants.location_id.ids),
+            ('lot_id', 'in', sn_quants.lot_id.ids)
+        ]
         groups = self._read_group(
             domain,
             ['product_id', 'location_id', 'lot_id'],
