@@ -30,23 +30,18 @@ test("Toggle display of original/translated version of chatter message", async (
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("button[title='Expand']");
-    await contains("span[title='Translate']");
-    await contains("span[title='Revert']", { count: 0 });
+    await contains("[title='Translate']");
+    await contains("[title='Revert']", { count: 0 });
     // Click acts as a toogle affecting its appearence and the actual message content displayed.
-    await click("span[title='Translate']");
-    await click("button[title='Expand']");
+    await click("[title='Translate']");
     await contains(".o-mail-Message-body", {
         text: "To bad weather, good face.(Translated from: Spanish)",
     });
-    await contains("span[title='Translate']", { count: 0 });
-    await contains("span[title='Revert']");
-    await click("span[title='Revert']");
-    await click("button[title='Expand']");
-    await contains(".o-mail-Message", {
-        text: "Al mal tiempo, buena cara.",
-    });
-    await click("span[title='Translate']");
+    await contains("[title='Translate']", { count: 0 });
+    await contains("[title='Revert']");
+    await click("[title='Revert']");
+    await contains(".o-mail-Message", { text: "Al mal tiempo, buena cara." });
+    await click("[title='Translate']");
     // The translation button should not trigger more than one external request for a single message.
     await assertSteps(["Request"]);
 });

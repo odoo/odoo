@@ -14,6 +14,7 @@ import { user } from "@web/core/user";
 import { omit } from "@web/core/utils/objects";
 import { url } from "@web/core/utils/urls";
 import { stateToUrl } from "@web/core/browser/router";
+import { toRaw } from "@odoo/owl";
 
 const { DateTime } = luxon;
 export class Message extends Record {
@@ -260,6 +261,13 @@ export class Message extends Record {
         return url(stateToUrl({ model: this.thread.model, resId: this.thread.id }));
     }
 
+    isTranslatable(thread) {
+        return (
+            this.store.hasMessageTranslationFeature &&
+            !["discuss.channel", "mail.box"].includes(thread?.model)
+        );
+    }
+
     get editDate() {
         return this.write_date !== this.create_date ? this.write_date : false;
     }
@@ -338,6 +346,28 @@ export class Message extends Record {
         return this.scheduledDatetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
             locale: user.lang?.replace("_", "-"),
         });
+    }
+
+    get canToggleStar() {
+        return Boolean(!this.is_transient && this.thread && this.store.self.type === "partner");
+    }
+
+    /** @param {import("models").Thread} thread the thread where the message is shown */
+    canAddReaction(thread) {
+        return Boolean(!this.is_transient && this.thread);
+    }
+
+    /** @param {import("models").Thread} thread the thread where the message is shown */
+    canReplyTo(thread) {
+        return (
+            ["discuss.channel", "mail.box"].includes(thread.model) &&
+            this.message_type !== "user_notification"
+        );
+    }
+
+    /** @param {import("models").Thread} thread the thread where the message is shown */
+    canUnfollow(thread) {
+        return Boolean(this.thread?.selfFollower && thread?.model === "mail.box");
     }
 
     async copyLink() {
@@ -426,6 +456,19 @@ export class Message extends Record {
         return this.thread.membersThatCanSeen.filter(
             (m) => m.hasSeen(this) && m.persona.notEq(this.author)
         );
+    }
+
+    /** @param {import("models").Thread} thread the thread where the message is shown */
+    onClickMarkAsUnread(thr) {
+        const message = toRaw(this);
+        const thread = toRaw(thr);
+        if (!thread.selfMember || thread.selfMember?.new_message_separator === message.id) {
+            return;
+        }
+        return rpc("/discuss/channel/mark_as_unread", {
+            channel_id: message.thread.id,
+            message_id: message.id,
+        });
     }
 }
 

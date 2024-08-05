@@ -46,7 +46,6 @@ const EDIT_CLICK_TYPE = {
  * @property {string} [className]
  * @property {function} [onDiscardCallback]
  * @property {function} [onPostCallback]
- * @property {Component} [messageComponent]
  * @property {number} [autofocus]
  * @property {import("@web/core/utils/hooks").Ref} [dropzoneRef]
  * @extends {Component<Props, Env>}
@@ -75,7 +74,6 @@ export class Composer extends Component {
         "placeholder?",
         "dropzoneRef?",
         "messageEdition?",
-        "messageComponent?",
         "className?",
         "sidebar?",
         "type?",
@@ -652,7 +650,6 @@ export class Composer extends Component {
         } else {
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: composer.message,
-                messageComponent: this.props.messageComponent,
                 onConfirm: () => this.message.remove(),
                 prompt: _t("Are you sure you want to delete this message?"),
             });
