@@ -26,7 +26,7 @@ class MailComposeMessage(models.TransientModel):
 
                 def fill_card_preview_url(match):
                     card = self.env['card.card'].browse(int(match[2]))
-                    return 'href="'+card._get_path('preview') + '"'
+                    return 'href="' + card._get_path('preview') + '"'
 
                 body = re.sub(CARD_IMAGE_URL, fill_card_image_url, body)
                 body = re.sub(CARD_PREVIEW_URL, fill_card_preview_url, body)
