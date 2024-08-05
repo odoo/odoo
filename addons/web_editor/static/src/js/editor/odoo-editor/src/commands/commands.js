@@ -648,12 +648,15 @@ export const editorCommands = {
             !descendants(block).some(descendant => selectedBlocks.includes(descendant))
         ));
         for (const node of deepestSelectedBlocks) {
-            if (node.nodeType === Node.TEXT_NODE && isWhitespace(node) && closestElement(node).isContentEditable) {
+            let nodeToToggle = closestBlock(node);
+            if (
+                ![...paragraphRelatedElements, 'LI'].includes(nodeToToggle.nodeName) &&
+                node.nodeType === Node.TEXT_NODE && isWhitespace(node) && closestElement(node).isContentEditable
+            ) {
                 node.remove();
             } else {
                 // Ensure nav-item lists are excluded from toggling
                 const isNavItemList = node => node.nodeName === 'LI' && node.classList.contains('nav-item');
-                let nodeToToggle = closestBlock(node);
                 nodeToToggle = isNavItemList(nodeToToggle) ? node : nodeToToggle;
                 if (!['OL', 'UL'].includes(nodeToToggle.tagName) && (nodeToToggle.isContentEditable || nodeToToggle.nodeType === Node.TEXT_NODE)) {
                     const closestLi = closestElement(nodeToToggle, 'li');
