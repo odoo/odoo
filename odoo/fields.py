@@ -4452,7 +4452,7 @@ class One2many(_RelationalMulti):
         inverse_field = comodel._fields[inverse]
 
         # optimization: fetch the inverse and active fields with search()
-        domain = self.get_domain_list(records) + [(inverse, 'in', records.ids)]
+        domain = [(inverse, 'in', records.ids)]
         field_names = [inverse]
         if comodel._active_name:
             field_names.append(comodel._active_name)
@@ -4827,9 +4827,8 @@ class Many2many(_RelationalMulti):
         comodel = records.env[self.comodel_name].with_context(**context)
 
         # make the query for the lines
-        domain = self.get_domain_list(records)
-        comodel._flush_search(domain, order=comodel._order)
-        query = comodel._where_calc(domain)
+        comodel._flush_search([], order=comodel._order)
+        query = comodel._where_calc([])
         comodel._apply_ir_rules(query, 'read')
         query.order = comodel._order_to_sql(comodel._order, query)
 
