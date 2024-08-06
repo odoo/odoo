@@ -168,6 +168,11 @@ def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
                 # if no discriminant or no discriminant matches, return
                 # primary mime type
                 return entry.mimetype
+    try:
+        if all(c >= " " or c in "\t\n\r" for c in bin_data[:1024].decode()):
+            return 'text/plain'
+    except ValueError:
+        pass
     return default
 
 
