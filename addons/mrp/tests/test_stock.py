@@ -487,3 +487,28 @@ class TestKitPicking(common.TestMrpCommon):
         aggregate_kit_values = delivery.move_line_ids._get_aggregated_product_quantities(kit_name=bom_kit.product_id.name)
         self.assertEqual(len(aggregate_kit_values.keys()), 2)
         self.assertTrue(all('Component' in val for val in aggregate_kit_values), 'Only kit products should be included')
+
+    def test_reservation_dynamic_changes_multi_step_routes(self):
+        """ Having two MOs requiring the same component, using 2-step manufacturing, with only
+        enough on-hand quantity for one of the orders, the pick-picking created for the first order
+        should be able to affect the MO's `components_availability` by having its own quantity
+        un-reserved.
+        """
+        self.warehouse_1.manufacture_steps = 'pbm'
+
+        final_product = self.product_6
+        comp_product = self.product_1
+        comp_product.type = 'product'
+        self.env['stock.quant']._update_available_quantity(comp_product, self.stock_location_components, quantity=1)
+
+        production_1, production_2 = self.env['mrp.production'].create([{
+            'product_id': final_product.id,
+            'product_qty': 1,
+            'bom_id': self.bom_6.id,
+        } for _ in (1, 2)])
+        (production_1 | production_2).action_confirm()
+
+        # Looks like: 'Exp {fmt/date/vals}'
+        self.assertTrue('Exp' in production_1.components_availability)
+        production_1.picking_ids.do_unreserve()
+        self.assertEqual(production_1.components_availability, 'Not Available')

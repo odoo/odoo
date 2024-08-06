@@ -485,7 +485,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         product_moves = (self - not_product_moves)
 
-        outgoing_unreserved_moves_per_warehouse = defaultdict(set)
+        outgoing_unreserved_moves_per_location = defaultdict(set)
         now = fields.Datetime.now()
 
         def key_virtual_available(move, incoming=False):
@@ -513,18 +513,18 @@ Please change the quantity done or the rounding precision of your unit of measur
                     # for move _is_consuming and in draft -> the forecast_availability > 0 if in stock
                     move.forecast_availability = virtual_available_dict[key_virtual_available(move)][move.product_id.id] - move.product_qty
                 elif move.state in ('waiting', 'confirmed', 'partially_available'):
-                    outgoing_unreserved_moves_per_warehouse[move.location_id.warehouse_id].add(move.id)
+                    outgoing_unreserved_moves_per_location[move.location_id].add(move.id)
             elif move.picking_type_id.code == 'incoming':
                 forecast_availability = virtual_available_dict[key_virtual_available(move, incoming=True)][move.product_id.id]
                 if move.state == 'draft':
                     forecast_availability += move.product_qty
                 move.forecast_availability = forecast_availability
 
-        for warehouse, moves_ids in outgoing_unreserved_moves_per_warehouse.items():
-            if not warehouse:  # No prediction possible if no warehouse.
+        for location, moves_ids in outgoing_unreserved_moves_per_location.items():
+            if not location.warehouse_id:  # No prediction possible if no warehouse.
                 continue
             moves = self.browse(moves_ids)
-            forecast_info = moves._get_forecast_availability_outgoing(warehouse)
+            forecast_info = moves.with_context(narrow_forecast_location=location)._get_forecast_availability_outgoing(location.warehouse_id)
             for move in moves:
                 move.forecast_availability, move.forecast_expected_date = forecast_info[move]
 
@@ -2221,10 +2221,12 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         ids_in_self = set(self.ids)
         product_ids = self.product_id
-        wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
+        wh_location = warehouse.view_location_id
+        location_ids = self.env.context.get('narrow_forecast_location', wh_location).ids
+        location_query = self.env['stock.location']._search([('id', 'child_of', location_ids)])
 
         in_domain, out_domain = self.env['report.stock.report_product_product_replenishment']._move_confirmed_domain(
-            None, product_ids.ids, wh_location_query
+            None, product_ids.ids, location_query
         )
         outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
         reserved_outs = self.env['stock.move'].search(
@@ -2235,7 +2237,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         (outs - self).read(['product_id', 'product_uom', 'product_qty', 'state'], load=False)  # remove self because data is already fetch
         ins.read(['product_id', 'product_qty', 'date', 'move_dest_ids'], load=False)
 
-        currents = product_ids.with_context(warehouse=warehouse.id)._get_only_qty_available()
+        currents = product_ids.with_context(location=location_ids)._get_only_qty_available()
 
         outs_per_product = defaultdict(list)
         reserved_outs_per_product = defaultdict(list)
@@ -2246,7 +2248,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             reserved_outs_per_product[out.product_id.id].append(out)
         for in_ in ins:
             ins_per_product[in_.product_id.id].append({
-                'qty': in_.product_qty,
+                'qty': in_.product_qty if in_.location_id not in wh_location.child_ids else in_.reserved_availability,
                 'move_date': in_.date,
                 'move_dests': in_._rollup_move_dests(set())
             })
@@ -2270,6 +2272,9 @@ Please change the quantity done or the rounding precision of your unit of measur
                     reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 demand = out.product_qty - reserved
 
+                if not float_is_zero(demand, precision_rounding=product_rounding):
+                    demand = _reconcile_out_with_ins(result, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=True)
+
                 if float_is_zero(demand, precision_rounding=product_rounding):
                     continue
                 current = currents[product.id]
@@ -2282,8 +2287,6 @@ Please change the quantity done or the rounding precision of your unit of measur
 
                 # Reconcile with the ins.
                 # The while loop will finish because it will pop from ins_per_product or decrease the demand until zero
-                if not float_is_zero(demand, precision_rounding=product_rounding):
-                    demand = _reconcile_out_with_ins(result, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=True)
                 if not float_is_zero(demand, precision_rounding=product_rounding):
                     unreconciled_outs.append((demand, out))
 
