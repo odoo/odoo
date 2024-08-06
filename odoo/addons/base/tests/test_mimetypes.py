@@ -58,6 +58,10 @@ XML = b"""<?xml version='1.0' encoding='utf-8'?>
 </Document>
 """
 
+TXT = b"""\
+Hello world!
+"""
+
 class test_guess_mimetype(BaseCase):
 
     def test_default_mimetype_empty(self):
@@ -122,6 +126,10 @@ class test_guess_mimetype(BaseCase):
     def test_mimetype_xml(self):
         mimetype = guess_mimetype(XML, default='test')
         self.assertEqual(mimetype, 'application/xml')
+
+    def test_mimetype_txt(self):
+        mimetype = guess_mimetype(TXT, default='test')
+        self.assertEqual(mimetype, 'text/plain')
 
     def test_mimetype_get_extension(self):
         self.assertEqual(get_extension('filename.Abc'), '.abc')

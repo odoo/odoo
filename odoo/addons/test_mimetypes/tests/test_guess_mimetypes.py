@@ -66,5 +66,5 @@ class TestMimeGuessing(BaseCase):
     def test_unknown(self):
         self.assertEqual(
             guess_mimetype(contents('csv')),
-            'application/octet-stream'
+            'text/plain'
         )

@@ -168,6 +168,11 @@ def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
                 # if no discriminant or no discriminant matches, return
                 # primary mime type
                 return entry.mimetype
+    try:
+        if bin_data and all(c >= ' ' or c in '\t\n\r' for c in bin_data[:1024].decode()):
+            return 'text/plain'
+    except ValueError:
+        pass
     return default
 
 
@@ -238,7 +243,6 @@ def fix_filename_extension(filename, mimetype):
     :returns: the same filename if its extension matches the detected
         mimetype, otherwise the same filename with the mimetype's
         extension added at the end.
-
     """
     if mimetypes.guess_type(filename)[0] == mimetype:
         return filename
