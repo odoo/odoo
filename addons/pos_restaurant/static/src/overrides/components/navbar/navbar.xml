@@ -23,7 +23,7 @@
                         <img t-else="" src="/pos_restaurant/static/img/plan.svg" class="navbar-icon" alt="Floor Plan"/>
                     </button>
                     <button class="table-free-order-label btn btn-lg lh-lg" t-att-class="{'btn-primary': screen === 'ProductScreen' or pos.orderToTransferUuid}" t-on-click="() => this.onClickTableTab()">
-                        <span t-if="getOrderToDisplay()" t-esc="getOrderToDisplay()?.getOrderName().slice(0, 7)"/>
+                        <span t-if="getOrderToDisplay()" t-esc="getOrderToDisplay().getName().slice(0, 7)"/>
                         <span t-elif="!ui.isSmall">Table</span>
                         <img t-else="" src="/pos_restaurant/static/img/table.svg" class="navbar-icon" alt="Table Selector"/>
                     </button>

@@ -15,9 +15,7 @@ patch(PosOrder.prototype, {
         this.customerCount = Math.max(count, 0);
     },
     getTable() {
-        if (this.config.module_pos_restaurant) {
-            return this.table_id;
-        }
+        return this.table_id;
     },
     amountPerGuest(numCustomers = this.customerCount) {
         if (numCustomers === 0) {
@@ -35,7 +33,20 @@ patch(PosOrder.prototype, {
     setBooked(booked) {
         this.uiState.booked = booked;
     },
-    getOrderName() {
-        return this.table_id?.table_number.toString() || this.getFloatingOrderName() || "";
+    getName() {
+        if (this.config.module_pos_restaurant && this.getTable()) {
+            const table = this.getTable();
+            const child_tables = this.models["restaurant.table"].filter((t) => {
+                if (t.floor_id.id === table.floor_id.id) {
+                    return table.isParent(t);
+                }
+            });
+            let name = table.table_number.toString();
+            for (const child_table of child_tables) {
+                name += ` & ${child_table.table_number}`;
+            }
+            return name;
+        }
+        return super.getName(...arguments);
     },
 });

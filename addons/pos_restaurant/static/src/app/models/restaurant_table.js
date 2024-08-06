@@ -18,6 +18,9 @@ export class RestaurantTable extends Base {
     isParent(t) {
         return t.parent_id && (t.parent_id.id === this.id || this.isParent(t.parent_id));
     }
+    getParent() {
+        return this.parent_id?.getParent() || this;
+    }
     getParentSide() {
         if (!this.parent_id) {
             return;
