@@ -1221,7 +1221,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
-        txs_to_be_linked = self.transaction_ids.filtered(
+        txs_to_be_linked = self.transaction_ids.sudo().filtered(
             lambda tx: (
                 tx.state in ('pending', 'authorized')
                 or tx.state == 'done' and not (tx.payment_id and tx.payment_id.is_reconciled)
