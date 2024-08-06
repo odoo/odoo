@@ -318,6 +318,9 @@ class Survey(http.Controller):
                     next_page_or_question = survey_sudo._get_next_page_or_question(
                         answer_sudo,
                         answer_sudo.last_displayed_page_id.id if answer_sudo.last_displayed_page_id else 0)
+                    # fallback to skipped page so that there is a next_page_or_question otherwise this should be a submit
+                    if not next_page_or_question:
+                        next_page_or_question = answer_sudo._get_next_skipped_page_or_question()
 
                 if next_page_or_question:
                     if answer_sudo.survey_first_submitted:
