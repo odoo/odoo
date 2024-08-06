@@ -357,8 +357,12 @@ def load_manifest(module, mod_path=None):
     try:
         manifest['version'] = adapt_version(manifest['version'])
     except ValueError as e:
-        if manifest.get("installable", True):
+        if manifest['installable']:
             raise ValueError(f"Module {module}: invalid manifest") from e
+    if manifest['installable'] and not check_version(manifest['version'], should_raise=False):
+        _logger.warning("The module %s has an incompatible version, setting installable=False", module)
+        manifest['installable'] = False
+
     manifest['addons_path'] = normpath(opj(mod_path, os.pardir))
 
     return manifest
@@ -470,20 +474,33 @@ def get_modules_with_version():
     return res
 
 
-def adapt_version(version):
-    """Reformat the version of the module into a standard format."""
+def adapt_version(version: str) -> str:
+    """Reformat the version of the module into a canonical format."""
+    version_parts = version.split('.')
+    if not (2 <= len(version_parts) <= 5):
+        raise ValueError(f"Invalid version {version!r}, must have between 2 and 5 parts")
+    try:
+        version_parts = [int(v) for v in version_parts]
+    except ValueError as e:
+        raise ValueError(f"Invalid version {version!r}") from e
     serie = release.major_version
-    if version == serie or not version.startswith(serie + '.'):
-        base_version = version
-        version = '%s.%s' % (serie, version)
-    else:
-        base_version = version[len(serie) + 1:]
-
-    if not re.match(r"^[0-9]+\.[0-9]+(?:\.[0-9]+)?$", base_version):
-        raise ValueError(f"Invalid version {base_version!r}. Modules should have a version in format `x.y`, `x.y.z`,"
-                         f" `{serie}.x.y` or `{serie}.x.y.z`.")
-
+    if len(version_parts) <= 3 and not version.startswith(serie):
+        # prefix the version with serie
+        return f"{serie}.{version}"
     return version
+
+
+def check_version(version: str, should_raise: bool = True) -> bool:
+    """Check that the version is in a valid format for the current release."""
+    version = adapt_version(version)
+    serie = release.major_version
+    if version.startswith(serie + '.'):
+        return True
+    if should_raise:
+        raise ValueError(
+            f"Invalid version {version!r}. Modules should have a version in format"
+            f" `x.y`, `x.y.z`, `{serie}.x.y` or `{serie}.x.y.z`.")
+    return False
 
 
 current_test = False
