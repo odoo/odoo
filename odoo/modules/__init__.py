@@ -11,6 +11,7 @@ from . import module
 from .module import (
     adapt_version,
     check_manifest_dependencies,
+    check_version,
     get_module_path,
     get_module_resource,  # backward-compatibility
     get_modules,
