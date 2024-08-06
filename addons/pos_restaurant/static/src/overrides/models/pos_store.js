@@ -285,6 +285,9 @@ patch(PosStore.prototype, {
     async setTableFromUi(table, orderUuid = null) {
         try {
             this.tableSyncing = true;
+            if (table.parent_id) {
+                table = table.getParent();
+            }
             await this.setTable(table, orderUuid);
         } catch (e) {
             if (!(e instanceof ConnectionLostError)) {
