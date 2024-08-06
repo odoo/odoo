@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
 from odoo.tests import JsonRpcException
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
@@ -69,3 +67,22 @@ class TestWebsocketController(HttpCaseWithUserDemo):
                 'last': 0,
                 'is_first_poll': False,
             }, headers=headers)
+
+    def test_on_websocket_closed(self):
+        session = self.authenticate("demo", "demo")
+        headers = {"Cookie": f"session_id={session.sid};"}
+        self.env["bus.presence"]._update_presence(
+            inactivity_period=0, identity_field="user_id", identity_value=self.user_demo.id
+        )
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        self.env["bus.bus"].search([]).unlink()
+        self.make_jsonrpc_request("/websocket/on_closed", {}, headers=headers)
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        message = self.make_jsonrpc_request(
+            "/websocket/peek_notifications",
+            {"channels": [], "last": 0, "is_first_poll": True},
+            headers=headers,
+        )["notifications"][0]["message"]
+        self.assertEqual(message["type"], "bus.bus/im_status_updated")
+        self.assertEqual(message["payload"]["partner_id"], self.partner_demo.id)
+        self.assertEqual(message["payload"]["im_status"], "offline")
