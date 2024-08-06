@@ -154,7 +154,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             partner_shipping = invoice.partner_shipping_id or customer
 
             return [{
-                'actual_delivery_date': invoice.invoice_date,
+                'actual_delivery_date': invoice.delivery_date,
                 'delivery_location_vals': {
                     'delivery_address_vals': self._get_partner_address_vals(partner_shipping),
                 },
@@ -312,18 +312,23 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 vals['vals']['delivery_vals_list'][0], 'delivery_location_vals',
                 _("For intracommunity supply, the delivery address should be included.")
             ) if intracom_delivery else None,
+        }
 
+        if (
+            intracom_delivery and
+            vals['vals']['delivery_vals_list'] and
+            'actual_delivery_date' not in vals['vals']['delivery_vals_list'][0] and
+            (
+                vals['vals']['invoice_period_vals_list'] and
+                'start_date' not in vals['vals']['invoice_period_vals_list'][0] or
+                'end_date' not in vals['vals']['invoice_period_vals_list'][0]
+            )
+        ):
             # [BR-IC-11]-In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
             # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14)
             # shall not be blank.
-            'cen_en16931_delivery_date_invoicing_period': self._check_required_fields(
-                vals['vals']['delivery_vals_list'][0], 'actual_delivery_date',
-                _("For intracommunity supply, the actual delivery date or the invoicing period should be included.")
-            ) and self._check_required_fields(
-                vals['vals']['invoice_period_vals_list'][0], ['start_date', 'end_date'],
-                _("For intracommunity supply, the actual delivery date or the invoicing period should be included.")
-            ) if intracom_delivery else None,
-        }
+            constraints['cen_en16931_delivery_date_invoicing_period'] = _(
+                "For intracommunity supply, the actual delivery date or the invoicing period should be included.")
 
         for line_vals in vals['vals']['line_vals']:
             if not line_vals['item_vals'].get('name'):
