@@ -731,6 +731,7 @@ export class FloorScreen extends Component {
                 title: _t("Change table number?"),
                 placeholder: _t("Enter a table number"),
                 buttons: getButtons([{ ...DECIMAL, disabled: true }, ZERO, BACKSPACE]),
+                isValid: (x) => x,
                 getPayload: (newNumber) => {
                     if (parseInt(newNumber) !== this.selectedTables[0].table_number) {
                         this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {

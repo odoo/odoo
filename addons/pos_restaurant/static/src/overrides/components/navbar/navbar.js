@@ -67,7 +67,6 @@ patch(Navbar.prototype, {
             title: _t("Table Selector"),
             placeholder: _t("Enter a table number"),
             buttons: getButtons([{ ...DECIMAL, disabled: true }, ZERO, BACKSPACE]),
-            defaultPayload: { value: null },
         });
         if (!table_number) {
             return;
