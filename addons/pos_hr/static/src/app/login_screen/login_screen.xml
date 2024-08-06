@@ -4,10 +4,10 @@
         <div class="login-overlay o_attendance_background fixed-top w-100 h-100">
             <div class="screen-login-header d-flex justify-content-between px-4 pt-4 mb-0 w-100">
                 <div t-if="!ui.isSmall" class="screen-login-timer d-flex align-items-center">
-                    <div class="timer-hours d-flex align-items-center fs-1" t-esc="state.hours"> </div>
+                    <div class="timer-hours d-flex align-items-center fs-1" t-esc="time.hours"> </div>
                     <div class="timer-date-container flex-column justify-content-center ms-2 d-none d-lg-flex fs-6">
-                        <div class="timer-day d-flex align-items-center" t-esc="state.day"> </div>
-                        <div class="timer-date d-flex align-items-center" t-esc="state.date"> </div>
+                        <div class="timer-day d-flex align-items-center" t-esc="time.day"> </div>
+                        <div class="timer-date d-flex align-items-center" t-esc="time.date"> </div>
                     </div>
                 </div>
                 <div class="screen-login-logo ms-auto">
