@@ -4,10 +4,10 @@
         <div class="login-overlay o_attendance_background fixed-top w-100 h-100 p-4">
             <div class="screen-login-header d-flex justify-content-between">
                 <div t-if="!ui.isSmall" class="screen-login-timer d-flex align-items-center gap-2 bg-transparent">
-                    <div class="timer-hours fs-1" t-esc="state.hours"> </div>
+                    <div class="timer-hours fs-1" t-esc="time.hours"> </div>
                     <div class="timer-date-container d-flex flex-column smaller">
-                        <div class="timer-day" t-esc="state.day"> </div>
-                        <div class="timer-date" t-esc="state.date"> </div>
+                        <div class="timer-day" t-esc="time.day"> </div>
+                        <div class="timer-date" t-esc="time.date"> </div>
                     </div>
                 </div>
                 <div t-attf-class="screen-login-logo {{ ui.isSmall ? 'mx-auto' : 'ms-auto'}}">

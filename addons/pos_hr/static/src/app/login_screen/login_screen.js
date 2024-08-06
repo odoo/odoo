@@ -3,19 +3,18 @@
 import { useCashierSelector } from "@pos_hr/app/select_cashier_mixin";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, useEffect, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { useTime } from "@point_of_sale/app/utils/time_hook";
 
-const { DateTime } = luxon;
 export class LoginScreen extends Component {
     static template = "pos_hr.LoginScreen";
     static props = {};
     static storeOnOrder = false;
     setup() {
         this.pos = usePos();
-        this.state = useState({ hours: "", day: "", date: "" });
         this.notification = useService("notification");
         this.ui = useState(useService("ui"));
         this.selectCashier = useCashierSelector({
@@ -24,24 +23,7 @@ export class LoginScreen extends Component {
             },
             exclusive: true, // takes exclusive control on the barcode reader
         });
-        useEffect(
-            () => {
-                const interval = setInterval(() => this.setTime(), 500);
-
-                return () => {
-                    clearInterval(interval);
-                };
-            },
-            () => []
-        );
-        this.setTime();
-    }
-
-    setTime() {
-        const dateNow = DateTime.now();
-        this.state.hours = dateNow.toFormat("hh:mm:ss a");
-        this.state.day = dateNow.toFormat("cccc");
-        this.state.date = dateNow.toFormat("LLLL, dd, yyyy");
+        this.time = useTime();
     }
 
     async displayEnterPinPopup() {
