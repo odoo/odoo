@@ -639,10 +639,11 @@ export class FloorScreen extends Component {
         }
         if (this.selectedTables.length === 1) {
             this.dialog.add(NumberPopup, {
-                startingValue: parseInt(this.selectedTables[0].name) || false,
+                startingValue: parseInt(this.selectedTables[0].name) || "",
                 title: _t("Change table number?"),
                 placeholder: _t("Enter a table number"),
                 buttons: getButtons([{ ...DECIMAL, disabled: true }, ZERO, BACKSPACE]),
+                isValid: (x) => x,
                 getPayload: (newNumber) => {
                     if (newNumber !== this.selectedTables[0].name) {
                         this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
