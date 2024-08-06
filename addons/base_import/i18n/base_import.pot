@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"PO-Revision-Date: 2024-08-06 10:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -111,13 +111,15 @@ msgstr ""
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values (value: %s)"
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
 msgstr ""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values. Error in line %d: %s"
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
 msgstr ""
 
 #. module: base_import
@@ -127,8 +129,6 @@ msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Comma"
 msgstr ""
@@ -168,7 +168,6 @@ msgstr ""
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 msgid "Database ID"
 msgstr ""
 
@@ -199,7 +198,6 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 msgid "Dot"
 msgstr ""
 
@@ -219,13 +217,13 @@ msgstr ""
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Error Parsing Date [%s:L%d]: %s"
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
 msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Error at row %s: \"%s\""
+msgid "Error at row %(row)s: \"%(error)s\""
 msgstr ""
 
 #. module: base_import
@@ -240,8 +238,8 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %d entries while the first row has %d. You may need to change "
-"the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 
 #. module: base_import
@@ -264,7 +262,6 @@ msgstr ""
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
 msgstr ""
@@ -297,7 +294,6 @@ msgstr ""
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 msgid "File size exceeds configured maximum (%s bytes)"
 msgstr ""
@@ -336,12 +332,6 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Go to Import FAQ"
-msgstr ""
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Help"
 msgstr ""
 
@@ -368,6 +358,14 @@ msgid ""
 msgstr ""
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
@@ -378,12 +376,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Import"
-msgstr ""
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Import FAQ"
 msgstr ""
 
 #. module: base_import
@@ -507,6 +499,12 @@ msgstr ""
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Reimport"
 msgstr ""
@@ -591,7 +589,6 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
-#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Skip record"
 msgstr ""
 
@@ -615,7 +612,6 @@ msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Stop Import"
 msgstr ""
@@ -751,6 +747,14 @@ msgstr ""
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
 msgstr ""
 
 #. module: base_import

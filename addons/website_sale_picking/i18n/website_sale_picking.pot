@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-06 10:25+0000\n"
+"PO-Revision-Date: 2024-08-06 10:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,20 +43,6 @@ msgid "Customize Pickup Sites"
 msgstr ""
 
 #. module: website_sale_picking
-#. odoo-javascript
-#: code:addons/website_sale_picking/static/src/js/payment_form.js:0
-msgid ""
-"If you believe that it is an error, please contact the website "
-"administrator."
-msgstr ""
-
-#. module: website_sale_picking
-#. odoo-javascript
-#: code:addons/website_sale_picking/static/src/js/payment_form.js:0
-msgid "No suitable payment method could be found."
-msgstr ""
-
-#. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
 msgid "On Site"
 msgstr ""
@@ -70,6 +56,11 @@ msgstr ""
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
 #: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
 msgid "Pay in Store"
+msgstr ""
+
+#. module: website_sale_picking
+#: model:payment.method,name:website_sale_picking.payment_method_pay_on_site
+msgid "Pay on site"
 msgstr ""
 
 #. module: website_sale_picking
@@ -139,4 +130,10 @@ msgstr ""
 #. module: website_sale_picking
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
 msgid "[On Site Pick] My Shop 1"
+msgstr ""
+
+#. module: website_sale_picking
+#. odoo-python
+#: code:addons/website_sale_picking/models/payment_provider.py:0
+msgid "no onsite picking carriers available"
 msgstr ""

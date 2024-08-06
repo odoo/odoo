@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
-"PO-Revision-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"PO-Revision-Date: 2024-08-06 10:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,12 @@ msgstr ""
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "$5000"
+msgstr ""
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+msgid "%s - Labour"
 msgstr ""
 
 #. module: mrp_account
@@ -73,6 +79,11 @@ msgstr ""
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "<span>Unit of Measure</span>"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__account_move_line_id
+msgid "Account Move Line"
 msgstr ""
 
 #. module: mrp_account
@@ -178,6 +189,11 @@ msgid "Domain"
 msgstr ""
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__expense_account_id
+msgid "Expense Account"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Unit Cost"
 msgstr ""
@@ -198,6 +214,7 @@ msgid "MO Overview Report"
 msgstr ""
 
 #. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_production
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_applicability__business_domain__manufacturing_order
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
 msgid "Manufacturing Order"
@@ -246,11 +263,6 @@ msgid "Production Account"
 msgstr ""
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_mrp_production
-msgid "Production Order"
-msgstr ""
-
-#. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "REF123"
 msgstr ""
@@ -268,6 +280,14 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_rule
 msgid "Stock Rule"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
+msgid ""
+"The expense is accounted for when the manufacturing order is marked as done."
+" If not set, it is the expense account of the final product that will be "
+"used instead."
 msgstr ""
 
 #. module: mrp_account
@@ -326,6 +346,11 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
 msgid "Workcenter"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
+msgid "Workcenter Productivity Log"
 msgstr ""
 
 #. module: mrp_account
