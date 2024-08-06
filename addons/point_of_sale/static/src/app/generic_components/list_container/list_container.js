@@ -12,7 +12,7 @@ class ListContainerPopover extends Component {
     static template = xml`
         <div class="d-flex p-2 flex-wrap" style="gap: 0.5rem;">
             <t t-foreach="props.items" t-as="item" t-key="item_index">
-                <t t-slot="default" item="item" />
+                <t t-slot="default" item="item" t-on-click="props.close"/>
             </t>
         </div>
     `;
@@ -27,18 +27,32 @@ export class ListContainer extends Component {
         slots: { type: Object },
     };
     static template = xml`
-            <div t-ref="container" class="d-flex overflow-hidden" style="gap: 0.5rem;">
-                <t t-if="!ui.isSmall" t-foreach="props.items" t-as="item" t-key="item_index">
-                    <t t-slot="default" item="item"/>
-                </t>
+        <div class="overflow-hidden d-flex">
+            <!-- it's important that the parent of the 'container' div not be the parent of the 'view more' div -->
+            <!-- otherwise the appearance and disappearance of the 'view more' div will retrigger the resizeObserver, -->
+            <!-- which will cause a glitch-->
+            <div class="overflow-hidden">
+                <!-- the popover will position itself underneath the specified div, -->
+                <!-- but in this case we want it to be right on top of it; -->
+                <!-- in order to do this we set the height of our div to 0 for the -->
+                <!-- duration that the popover is shown. -->
+                <div t-ref="container" class="d-flex" t-attf-style="
+                    gap: 0.5rem;
+                    height: {{popover.isOpen ? '0' : 'auto'}};
+                ">
+                    <t t-if="!ui.isSmall" t-foreach="props.items" t-as="item" t-key="item_index">
+                        <t t-slot="default" item="item"/>
+                    </t>
+                </div>
             </div>
             <button t-if="(isLarger() or ui.isSmall) and props.items.length" t-on-click="toggle"
                 class="btn btn-secondary ms-2"
                 t-attf-class="fa {{popover.isOpen ? 'fa-caret-up' : 'fa-caret-down'}}"/>
+        </div>
     `;
     setup() {
-        this.isLarger = useIsChildLarger("container");
         this.container = useRef("container");
+        this.isLarger = useIsChildLarger(this.container);
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.popover = useReactivePopover(ListContainerPopover, {
@@ -46,9 +60,6 @@ export class ListContainer extends Component {
             arrow: false,
             animation: false,
             closeOnClickAway: (target) => !target.classList.contains("fa-caret-up"),
-            onClose: () => {
-                this.container.el.style.height = "auto";
-            },
         });
     }
     toggle() {
@@ -63,11 +74,6 @@ export class ListContainer extends Component {
             this.popover.close();
             return;
         }
-        // the popover will position itself underneath the specified div,
-        // but in this case we want it to be right on top of it;
-        // in order to do this we set the height of our div to 0 for the
-        // duration that the popover is shown.
-        this.container.el.style.height = 0;
         this.popover.open(this.container.el, {
             items: this.props.items,
             slots: this.props.slots,
