@@ -7,6 +7,14 @@ import json
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
+    def notify_model_changes(self, changes):
+        self.ensure_one()
+        floor_ids = self.config_id.floor_ids.ids
+        session_ids = self.env['pos.session'].search([('config_id.floor_ids', 'in', floor_ids), ('state', '=', 'opened'), ('id', '!=', self.id)])
+
+        for session_id in session_ids:
+            session_id.config_id._notify('ORDER_UPDATE', changes)
+
     @api.model
     def _load_pos_data_models(self, config_id):
         data = super()._load_pos_data_models(config_id)

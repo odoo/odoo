@@ -6,22 +6,23 @@ import { markRaw } from "@odoo/owl";
 import { batched } from "@web/core/utils/timing";
 import IndexedDB from "./utils/indexed_db";
 import { DataServiceOptions } from "./data_service_options";
-import { uuidv4 } from "@point_of_sale/utils";
+import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
-    static serviceDependencies = ["orm"];
+    static serviceDependencies = ["orm", "bus_service"];
 
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
 
-    async setup(env, { orm }) {
+    async setup(env, { orm, bus_service }) {
         this.orm = orm;
+        this.bus = bus_service;
         this.relations = [];
         this.custom = {};
         this.syncInProgress = false;
@@ -38,12 +39,20 @@ export class PosData extends Reactive {
 
         this.initIndexedDB();
         await this.initData();
+        this.initMultiPosData();
 
         effect(
             batched((records) => {
                 this.syncDataWithIndexedDB(records);
             }),
             [this.records]
+        );
+    }
+
+    initMultiPosData() {
+        this.onNotified = getOnNotified(
+            this.bus,
+            this.models["pos.config"].getFirst().access_token
         );
     }
 
@@ -67,6 +76,12 @@ export class PosData extends Reactive {
         this.indexedDB.delete(model, [{ uuid }]);
     }
 
+    dataFormatter(record) {
+        const serializedData = record.serialize();
+        const uiState = typeof record.uiState === "object" ? record.serializeState() : "{}";
+        return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
+    }
+
     syncDataWithIndexedDB(records) {
         // Will separate records to remove from indexedDB and records to add
         const dataSorter = (records, isFinalized, key) => {
@@ -79,7 +94,7 @@ export class PosData extends Reactive {
                             acc.remove.push(record[key]);
                         }
                     } else {
-                        acc.put.push(dataFormatter(record));
+                        acc.put.push(this.dataFormatter(record));
                     }
 
                     return acc;
@@ -89,11 +104,6 @@ export class PosData extends Reactive {
         };
 
         // This methods will add uiState to the serialized object
-        const dataFormatter = (record) => {
-            const serializedData = record.serialize();
-            const uiState = typeof record.uiState === "object" ? record.serializeState() : "{}";
-            return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
-        };
 
         for (const model of this.opts.databaseTable) {
             const nbrRecords = Object.values(records[model.name]).length;
@@ -216,7 +226,9 @@ export class PosData extends Reactive {
         const { models, records, indexedRecords } = createRelatedModels(
             relations,
             modelClasses,
-            this.opts.databaseIndex
+            this.opts.databaseIndex,
+            this.opts.trackedModels,
+            odoo.access_token
         );
 
         this.records = records;

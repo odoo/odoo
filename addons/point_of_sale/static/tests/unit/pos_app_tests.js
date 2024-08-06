@@ -184,14 +184,33 @@ export class MockPosData {
             },
         };
     }
+    async mockRPC(route, args) {
+        if (route === "/web/dataset/call_kw/res.partner/create") {
+            const error = new RPCError();
+            error.exceptionName = "odoo.exceptions.ValidationError";
+            error.code = 200;
+            throw error;
+        }
+        if (route === "/web/dataset/call_kw/pos.session/notify_model_changes") {
+            const error = new RPCError();
+            error.exceptionName = "odoo.exceptions.ValidationError";
+            error.code = 200;
+            throw error;
+        }
+    }
 }
 
 QUnit.test("mount the Chrome", async (assert) => {
-    const serverData = new MockPosData().data;
+    const mock = new MockPosData();
+    const mockData = mock.data;
+    const mockRPC = mock.mockRPC;
     const fixture = getFixture();
     assert.verifySteps([]);
     await mount(Chrome, fixture, {
-        env: await makeTestEnv({ serverData }),
+        env: await makeTestEnv({
+            serverData: mockData,
+            mockRPC,
+        }),
         test: true,
         props: { disableLoader: () => assert.step("disable loader") },
     });
@@ -200,19 +219,14 @@ QUnit.test("mount the Chrome", async (assert) => {
 });
 
 QUnit.test("test unsynch data error filtering", async (assert) => {
-    const serverData = new MockPosData().data;
+    const mock = new MockPosData();
+    const mockData = mock.data;
+    const mockRPC = mock.mockRPC;
     const fixture = getFixture();
     assert.verifySteps([]);
     const testEnv = await makeTestEnv({
-        serverData,
-        async mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/res.partner/create") {
-                const error = new RPCError();
-                error.exceptionName = "odoo.exceptions.ValidationError";
-                error.code = 200;
-                throw error;
-            }
-        },
+        serverData: mockData,
+        mockRPC,
     });
     await mount(Chrome, fixture, {
         env: testEnv,

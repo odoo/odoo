@@ -985,6 +985,7 @@ export class PosStore extends Reactive {
             const newData = {};
             for (const [model, records] of Object.entries(data)) {
                 const modelKey = this.data.opts.databaseTable.find((dt) => dt.name === model)?.key;
+                this.data.changePosOwner(model, records);
 
                 if (!modelKey) {
                     modelToAdd[model] = records;

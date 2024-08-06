@@ -203,6 +203,15 @@ patch(PosStore.prototype, {
         this.addPendingOrder([order.id]);
         return order;
     },
+    // There for override
+    preSyncAllOrders(orders) {
+        super.preSyncAllOrders(...arguments);
+        this.data.multiPosSyncBusy = true;
+    },
+    postSyncAllOrders(orders) {
+        super.postSyncAllOrders(...arguments);
+        this.data.multiPosSyncBusy = false;
+    },
     getSyncAllOrdersContext(orders) {
         const context = super.getSyncAllOrdersContext(...arguments);
         if (this.config.module_pos_restaurant && this.selectedTable) {

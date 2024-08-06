@@ -2,11 +2,11 @@ import { reactive, toRaw } from "@odoo/owl";
 
 const ID_CONTAINER = {};
 
-function uuid(model) {
+function uuid(model, accessToken) {
     if (!(model in ID_CONTAINER)) {
         ID_CONTAINER[model] = 1;
     }
-    return `${model}_${ID_CONTAINER[model]++}`;
+    return `${model}-${accessToken}_${ID_CONTAINER[model]++}`;
 }
 
 function getBackRef(model, fieldName) {
@@ -23,7 +23,7 @@ function mapObj(obj, fn) {
 
 const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
-const AVAILABLE_EVENT = ["create", "update", "delete"];
+const AVAILABLE_EVENT = ["create", "update", "delete", "sync"];
 const SERIALIZABLE_MODELS = [
     "pos.order",
     "pos.order.line",
@@ -33,6 +33,32 @@ const SERIALIZABLE_MODELS = [
     "event.registration", // FIXME should be overrided from pos_event
     "event.registration.answer",
 ];
+
+function createProxyNotifier(target) {
+    return new Proxy(target, {
+        set: function (target, prop, value, receiver) {
+            Reflect.set(target, prop, value, receiver);
+
+            // Only for primitive
+            if (typeof value !== "object") {
+                triggerSyncNotification("update", target.model, target.id, {
+                    [prop]: value,
+                });
+            }
+
+            return true;
+        },
+    });
+}
+
+const triggerSyncNotification = (event, model, recordId, vals) => {
+    model.triggerEvents("sync", {
+        id: recordId,
+        event,
+        model: model.modelName,
+        values: vals,
+    });
+};
 
 function processModelDefs(modelDefs) {
     modelDefs = clone(modelDefs);
@@ -174,8 +200,8 @@ export class Base {
     update(vals) {
         this.model.update(this, vals);
     }
-    delete() {
-        return this.model.delete(this);
+    delete(opts = {}) {
+        return this.model.delete(this, opts);
     }
     /**
      * @param {object} options
@@ -261,7 +287,13 @@ export class Base {
     }
 }
 
-export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) {
+export function createRelatedModels(
+    modelDefs,
+    modelClasses = {},
+    indexes = {},
+    trackedModels = {},
+    accessToken = ""
+) {
     const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
     const records = reactive(mapObj(processedModelDefs, () => reactive({})));
     const orderedRecords = reactive(mapObj(processedModelDefs, () => reactive([])));
@@ -381,13 +413,23 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
         delayedSetup = false
     ) {
         if (!("id" in vals)) {
-            vals["id"] = uuid(model);
+            vals["id"] = uuid(model, accessToken);
         }
 
         const Model = modelClasses[model] || Base;
-        const record = reactive(new Model({ models, records, model: models[model] }));
+        let record = new Model({ models, records, model: models[model] });
+
+        if (model in trackedModels) {
+            record = createProxyNotifier(record);
+        }
+
         const id = vals["id"];
         record.id = id;
+
+        if (!baseData[model][id]) {
+            baseData[model][id] = vals;
+        }
+
         record._raw = baseData[model][id];
         records[model][id] = record;
 
@@ -481,6 +523,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             record.setup(vals);
         }
 
+        const modelObj = models[model];
+        triggerSyncNotification("create", modelObj, record.id, vals);
         return record;
     }
 
@@ -543,10 +587,23 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 record[name] = vals[name];
             }
         }
+
+        triggerSyncNotification("update", models[model], record.id, vals);
     }
 
-    function delete_(model, record) {
+    function delete_(model, record, opts = {}) {
+        const protectedKeys = opts.protectedKeys || new Set();
         const id = record.id;
+        const data = {};
+
+        if (trackedModels[model]) {
+            const key = trackedModels[model].key;
+
+            if (key) {
+                data[key] = record[key];
+            }
+        }
+
         const fields = getFields(model);
         for (const name in fields) {
             const field = fields[name];
@@ -566,13 +623,18 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             const keyVal = record.raw[key];
             if (Array.isArray(keyVal)) {
                 for (const val of keyVal) {
+                    if (protectedKeys.has(val)) {
+                        continue;
+                    }
                     indexedRecords[model][key][val].delete(record.id);
                 }
-            } else {
+            } else if (!protectedKeys.has(keyVal)) {
                 delete indexedRecords[model][key][keyVal];
             }
         }
         models[model].triggerEvents("delete", id);
+
+        triggerSyncNotification("delete", models[model], record.id, data);
         return id;
     }
 
@@ -617,8 +679,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             update(record, vals) {
                 return update(model, record, vals);
             },
-            delete(record) {
-                return delete_(model, record);
+            delete(record, opts = {}) {
+                return delete_(model, record, opts);
             },
             deleteMany(records) {
                 const result = [];
