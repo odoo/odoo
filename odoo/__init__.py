@@ -72,9 +72,3 @@ from . import fields
 from . import api
 from odoo.tools.translate import _, _lt
 from odoo.fields import Command
-
-# ----------------------------------------------------------
-# Other imports, which may require stuff from above
-# ----------------------------------------------------------
-from . import cli
-from . import http
