@@ -705,12 +705,11 @@ class Channel(models.Model):
         ])
         if not message_to_update:
             return
-        message_to_update.flush_recordset(['pinned_at'])
-        # Use SQL because by calling write method, write_date is going to be updated, but we don't want pin/unpin
-        # a message changes the write_date
-        self.env.cr.execute("UPDATE mail_message SET pinned_at=%s WHERE id=%s",
-                            (fields.Datetime.now() if pinned else None, message_to_update.id))
-        message_to_update.invalidate_recordset(['pinned_at'])
+
+        with message_to_update.invalidate_recorset(outputs=["pinned_at"]):
+            # We don't want pin/unpin to change the write_date so bypass normal write
+            self.env.cr.execute("UPDATE mail_message SET pinned_at=%s WHERE id=%s",
+                                (fields.Datetime.now() if pinned else None, message_to_update.id))
 
         self._bus_send_store(message_to_update, {"pinned_at": message_to_update.pinned_at})
         if pinned:
@@ -984,16 +983,18 @@ class Channel(models.Model):
             if member.fetched_message_id.id == last_message_id:
                 # last message fetched by user is already up-to-date
                 return
-            # Avoid serialization error when multiple tabs are opened.
-            query = """
-                UPDATE discuss_channel_member
-                SET fetched_message_id = %s
-                WHERE id IN (
-                    SELECT id FROM discuss_channel_member WHERE id = %s
-                    FOR NO KEY UPDATE SKIP LOCKED
-                )
-            """
-            self.env.cr.execute(query, (last_message_id, member.id))
+
+            with member.modifying_recordset(outputs=["fetched_message_id"]):
+                # Avoid serialization error when multiple tabs are opened.
+                query = """
+                    UPDATE discuss_channel_member
+                    SET fetched_message_id = %s
+                    WHERE id IN (
+                        SELECT id FROM discuss_channel_member WHERE id = %s
+                        FOR NO KEY UPDATE SKIP LOCKED
+                    )
+                """
+                self.env.cr.execute(query, (last_message_id, member.id))
             channel._bus_send(
                 "discuss.channel.member/fetched",
                 {

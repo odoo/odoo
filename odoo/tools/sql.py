@@ -619,15 +619,19 @@ def reverse_order(order):
 
 
 def increment_fields_skiplock(records, *fields):
-    """
-        Increment 'friendly' the given `fields` of the current `records`.
-        If record is locked, we just skip the update.
-        It doesn't invalidate the cache since the update is not critical.
+    """ Increment 'friendly' the given `fields` of the current `records`: if
+    record is locked, we just skip the update.
 
-        :param records: recordset to update
-        :param fields: integer fields to increment
-        :returns: whether the specified fields were incremented on any record.
-        :rtype: bool
+    Ignore data consistency aside from database constraints:
+
+    - doesn't flush the cache, so ORM-level updates may be lost
+    - doesn't invalidate the cache, so computed fields may be wrong
+    - doesn't update dependent stored fields, so stored computed fields *will* be wrong
+
+    :param records: recordset to update
+    :param fields: integer fields to increment
+    :returns: whether the specified fields were incremented on any record.
+    :rtype: bool
     """
     if not records:
         return False
@@ -637,6 +641,7 @@ def increment_fields_skiplock(records, *fields):
 
     cr = records._cr
     tablename = records._table
+    # no flush or invalidation, update losses are OK
     cr.execute(SQL(
         """
         UPDATE %s
@@ -651,6 +656,7 @@ def increment_fields_skiplock(records, *fields):
         SQL.identifier(tablename),
         records.ids,
     ))
+    # no modified because we specifically want to ignore the update (or lack thereof)
     return bool(cr.rowcount)
 
 

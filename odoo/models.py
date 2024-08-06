@@ -32,6 +32,9 @@ import itertools
 import io
 import logging
 import operator
+from types import SimpleNamespace
+from typing import Iterator
+
 import pytz
 import re
 import uuid
@@ -6810,6 +6813,75 @@ class BaseModel(metaclass=MetaModel):
                 self.env[invf.model_name].flush_model([invf.name])
                 spec.append((invf, None))
         self.env.cache.invalidate(spec)
+
+    @contextlib.contextmanager
+    def modifying_recordset(self, *, outputs: Iterable[str], inputs: Iterable[str] = (), discard_inputs: bool = False) -> Iterator[SimpleNamespace]:
+        """Helper for manipulating caches & computes around SQL queries.
+
+        Only affects the current recordset.
+
+        :param outputs: the list of fields modified by the SQL query, these
+            fields will be both :meth:`~.invalidate_recordset` and :meth:`~.modified`
+        :param inputs: the list of fields the SQL query needs / reads, these
+            fields will be :meth:`~.flush_recordset` unless `discard_inputs` is
+            set (in which case they are only invalidated)
+        :param discard_inputs: whether pending updates to the ``inputs`` should
+            be discarded / ignored, or applied before the query. Defaults to
+            ``False`` (any pending change to an input field will be flushed)
+        :return: a simple object whose `records` attribute can be updated to
+            control how many records are :meth:`~.modified`, useful if only a
+            subset of the recordset got updated
+        """
+        inputs = tuple(inputs)
+        outputs = tuple(outputs)
+        if discard_inputs:
+            self.invalidate_recordset(inputs + outputs, flush=False)
+        else:
+            if inputs:
+                self.invalidate_recordset(inputs, flush=True)
+            self.invalidate_recordset([f for f in outputs if f not in inputs], flush=False)
+
+        # alternative: raise a specific exception?
+        obj = SimpleNamespace(records=self)
+        yield obj
+        obj.records.modified(outputs)
+
+    @contextlib.contextmanager
+    def modifying_model(self, outputs: Iterable[str], inputs: Iterable[str] = (), discard_inputs: bool = False) -> Iterator[SimpleNamespace]:
+        """Helper for manipulating caches & computes around SQL queries.
+
+        Affects the entire model. Performs less cache work than
+        :meth:`~.modifying_recordset` and doesn't need to know the subject
+        records upfront, but *must* be given the set of updated records via the
+        object it yields as tradeoff.
+
+        :param outputs: the list of fields modified by the SQL query, these
+            fields will be both :meth:`~.invalidate_model` and :meth:`~.modified`
+        :param inputs: the list of fields the SQL query needs / reads, these
+            fields will be :meth:`~.flush_model` unless `discard_inputs` is
+            set (in which case they are only invalidated)
+        :param discard_inputs: whether pending updates to the ``inputs`` should
+            be discarded / ignored, or applied before the query. Defaults to
+            ``False`` (any pending change to an input field will be flushed)
+        :return: a simple object whose `records` attribute *must* be set to
+            whichever records were updated and need to be :meth:`~.modified`,
+            the recordset can be empty if no records got updated.
+        """
+        inputs = tuple(inputs)
+        outputs = tuple(outputs)
+        if discard_inputs:
+            self.invalidate_model(inputs + outputs, flush=False)
+        else:
+            if inputs:
+                self.invalidate_model(inputs, flush=True)
+            self.invalidate_model([f for f in outputs if f not in inputs], flush=False)
+
+        # alternative: raise a specific exception?
+        obj = SimpleNamespace(records=None)
+        yield obj
+        if obj.records is None:
+            raise TypeError("Caller must set `records` to the modified records (use an empty recordset for none)")
+        obj.records.modified(outputs)
 
     def modified(self, fnames, create=False, before=False):
         """ Notify that fields will be or have been modified on ``self``. This

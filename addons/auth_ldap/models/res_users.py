@@ -61,9 +61,8 @@ class Users(models.Model):
         return super(Users, self).change_password(old_passwd, new_passwd)
 
     def _set_empty_password(self):
-        self.flush_recordset(['password'])
-        self.env.cr.execute(
-            'UPDATE res_users SET password=NULL WHERE id=%s',
-            (self.id,)
-        )
-        self.invalidate_recordset(['password'])
+        with self.modifying_recordset(outputs=['password']):
+            self.env.cr.execute(
+                'UPDATE res_users SET password=NULL WHERE id=%s',
+                [self.id],
+            )
