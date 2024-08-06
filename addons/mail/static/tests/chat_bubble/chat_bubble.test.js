@@ -386,3 +386,20 @@ test("Compacted chat hub shows badge with amount of hidden chats with important 
     await contains(".o-mail-ChatBubble i.fa.fa-commenting");
     await contains(".o-mail-ChatBubble .o-discuss-badge", { text: "9" });
 });
+
+test("Show IM status", async () => {
+    const pyEnv = await startServer();
+    const demoId = pyEnv["res.partner"].create({ name: "Demo User", im_status: "online" });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({
+                fold_state: "folded",
+                partner_id: serverState.partnerId,
+            }),
+            Command.create({ partner_id: demoId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await contains(".o-mail-ChatBubble .fa-circle.text-success[aria-label='User is online']");
+});
