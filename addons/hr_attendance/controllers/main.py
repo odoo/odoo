@@ -36,7 +36,7 @@ class HrAttendance(http.Controller):
             response = {
                 **HrAttendance._get_user_attendance_data(employee),
                 'employee_name': employee.name,
-                'employee_avatar': image_data_uri(employee.image_256),
+                'employee_avatar': employee.image_256 and image_data_uri(employee.image_256),
                 'total_overtime': float_round(employee.total_overtime, precision_digits=2),
                 'kiosk_delay': employee.company_id.attendance_kiosk_delay * 1000,
                 'attendance': {'check_in': employee.last_attendance_id.check_in,
