@@ -586,8 +586,11 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
     def test_create_landed_cost_from_bill_multi_currencies(self):
         # create a vendor bill in EUR where base currency in USD
         company = self.env.user.company_id
+        currency_grp = self.env.ref('base.group_multi_currency')
+        self.env.user.write({'groups_id': [(4, currency_grp.id)]})
         usd_currency = self.env.ref('base.USD')
         eur_currency = self.env.ref('base.EUR')
+        eur_currency.active = True
 
         company.currency_id = usd_currency
 
