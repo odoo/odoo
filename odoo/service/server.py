@@ -54,7 +54,7 @@ import odoo
 from odoo.modules import get_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
-from odoo.tools import config
+from odoo.tools import config, osutil
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import stripped_sys_argv, dumpstacks
 
@@ -1260,7 +1260,7 @@ Maybe you forgot to add those addons in your addons_path configuration."""
 
 def _reexec(updated_modules=None):
     """reexecute openerp-server process with (nearly) the same arguments"""
-    if odoo.tools.osutil.is_running_as_nt_service():
+    if osutil.is_running_as_nt_service():
         subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
     args = stripped_sys_argv()

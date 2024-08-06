@@ -23,7 +23,7 @@ from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessDenied
 from odoo.release import version_info
 from odoo.sql_db import db_connect
-from odoo.tools import SQL
+from odoo.tools import osutil, SQL
 from odoo.tools.misc import exec_pg_environ, find_pg_tool
 
 _logger = logging.getLogger(__name__)
@@ -272,10 +272,10 @@ def dump_db(db_name, stream, backup_format='zip'):
             cmd.insert(-1, '--file=' + os.path.join(dump_dir, 'dump.sql'))
             subprocess.run(cmd, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, check=True)
             if stream:
-                odoo.tools.osutil.zip_dir(dump_dir, stream, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
+                osutil.zip_dir(dump_dir, stream, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
             else:
                 t=tempfile.TemporaryFile()
-                odoo.tools.osutil.zip_dir(dump_dir, t, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
+                osutil.zip_dir(dump_dir, t, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
                 t.seek(0)
                 return t
     else:

@@ -4,11 +4,9 @@ import base64
 import io
 import json
 
-from PyPDF2 import PdfFileReader, PdfFileWriter
-from PyPDF2.generic import NameObject, NumberObject, createStringObject
-
 from odoo import _, api, models
 from odoo.tools import format_amount, format_date, format_datetime, pdf
+from odoo.tools.pdf import NameObject, NumberObject, PdfFileReader, PdfFileWriter, createStringObject
 
 
 class IrActionsReport(models.Model):
