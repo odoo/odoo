@@ -1587,6 +1587,26 @@ test("Can reply to chatter messages from history", async () => {
     await contains("button[title='Full composer']");
 });
 
+test("Can't reply to user notifications", async () => {
+    // User notifications are specific to a user
+    const pyEnv = await startServer();
+    const messageId = pyEnv["mail.message"].create({
+        body: "Dear Mitchell Admin, you have received a new rank",
+        message_type: "user_notification",
+        model: "res.partner",
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_type: "inbox",
+        is_read: true,
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss("mail.box_history");
+    await contains(".o-mail-Message-actions");
+    await contains(".o-mail-Message-actions [title='Reply']", { count: 0 });
+});
+
 test("Mark as unread", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
