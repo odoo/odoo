@@ -110,13 +110,6 @@ export class Store extends BaseStore {
     hasMessageTranslationFeature;
     imStatusTrackedPersonas = Record.many("Persona", {
         inverse: "storeAsTrackedImStatus",
-        /** @this {import("models").Store} */
-        onUpdate() {
-            this.env.services["im_status"].registerToImStatus(
-                "res.partner",
-                this.imStatusTrackedPersonas.map((p) => p.id)
-            );
-        },
     });
     hasLinkPreviewFeature = true;
     // messaging menu
@@ -648,7 +641,7 @@ export class Store extends BaseStore {
 Store.register();
 
 export const storeService = {
-    dependencies: ["bus_service", "im_status", "ui"],
+    dependencies: ["bus_service", "ui"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
