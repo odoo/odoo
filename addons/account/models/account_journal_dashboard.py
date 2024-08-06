@@ -807,7 +807,7 @@ class account_journal(models.Model):
                    SUM(amount_company_currency_signed) AS amount_total_company
               FROM account_payment payment
               JOIN account_move move ON move.payment_id = payment.id
-             WHERE (NOT payment.is_matched OR payment.is_matched IS NULL)
+             WHERE (NOT payment.is_matched OR payment.is_matched IS NULL OR payment.is_matched IS NOT TRUE)
                AND move.state = 'posted'
                AND payment.journal_id = ANY(%s)
                AND payment.company_id = ANY(%s)

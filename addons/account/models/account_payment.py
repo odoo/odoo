@@ -200,7 +200,7 @@ class AccountPayment(models.Model):
             indexname='account_payment_unmatched_idx',
             tablename='account_payment',
             expressions=['journal_id', 'company_id'],
-            where="NOT is_matched OR is_matched IS NULL"
+            where="NOT is_matched OR is_matched IS NULL OR is_matched IS NOT TRUE",
         )
 
     # -------------------------------------------------------------------------

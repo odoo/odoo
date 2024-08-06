@@ -3004,6 +3004,16 @@ class BaseModel(metaclass=MetaModel):
         is_char_field = field.type in ('char', 'text', 'html')
         sql_operator = expression.SQL_OPERATORS[operator]
 
+        if field.type == 'boolean' and operator in ('in', 'not in'):
+            values = {bool(v) for v in value}
+            if len(values) != 1:
+                return SQL("TRUE") if (operator == 'in') == bool(values) else SQL("FALSE")
+            value = next(iter(values))
+            operator = '=' if operator == 'in' else '!='
+        if field.type == 'boolean' and operator in ('=', '!='):
+            value = bool(value)
+            return SQL("(%s %s TRUE)", sql_field, SQL("IS") if (operator == '=') == value else SQL("IS NOT"))
+
         if operator in ('in', 'not in'):
             # Two cases: value is a boolean or a list. The boolean case is an
             # abuse and handled for backward compatibility.
@@ -3023,12 +3033,7 @@ class BaseModel(metaclass=MetaModel):
             elif isinstance(value, (list, tuple)):
                 params = [it for it in value if it is not False and it is not None]
                 check_null = len(params) < len(value)
-                if field.type == 'boolean':
-                    # just replace instead of casting, only truthy values remain
-                    params = [True] if any(params) else []
-                    if check_null:
-                        params.append(False)
-                elif is_number_field:
+                if is_number_field:
                     if check_null and 0 not in params:
                         params.append(0)
                     check_null = check_null or (0 in params)
@@ -3053,13 +3058,6 @@ class BaseModel(metaclass=MetaModel):
 
             else:  # Must not happen
                 raise ValueError(f"Invalid domain term {(fname, operator, value)!r}")
-
-        if field.type == 'boolean' and operator in ('=', '!=') and isinstance(value, bool):
-            value = (not value) if operator in expression.NEGATIVE_TERM_OPERATORS else value
-            if value:
-                return SQL("(%s = TRUE)", sql_field)
-            else:
-                return SQL("(%s IS NULL OR %s = FALSE)", sql_field, sql_field)
 
         # comparison with null
         # except for some basic types, where we need to check the empty value

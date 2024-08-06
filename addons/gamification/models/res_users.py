@@ -159,7 +159,7 @@ FROM (
         SELECT "res_users".id as user_id, COALESCE(SUM("tracking".new_value - "tracking".old_value), 0) as karma_gain_total
         FROM %s
         LEFT JOIN "gamification_karma_tracking" as "tracking"
-        ON "res_users".id = "tracking".user_id AND "res_users"."active" = TRUE
+        ON "res_users".id = "tracking".user_id AND "res_users"."active" IS TRUE
         WHERE %s %s %s
         GROUP BY "res_users".id
         ORDER BY karma_gain_total DESC

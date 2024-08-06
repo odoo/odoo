@@ -152,7 +152,7 @@ class AccountBankStatementLine(models.Model):
             indexname='account_bank_statement_line_unreconciled_idx',
             tablename='account_bank_statement_line',
             expressions=['journal_id', 'company_id', 'internal_index'],
-            where='NOT is_reconciled OR is_reconciled IS NULL',
+            where='NOT is_reconciled OR is_reconciled IS NULL OR is_reconciled IS NOT TRUE',
         )
         create_index(  # used for the dashboard
             self.env.cr,

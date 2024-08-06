@@ -656,7 +656,7 @@ class AccountMove(models.Model):
             indexname='account_move_made_gaps',
             tablename='account_move',
             expressions=['journal_id', 'company_id', 'date'],
-            where="made_sequence_gap = TRUE",
+            where="made_sequence_gap IS TRUE",
         )  # used in <account.journal>._query_has_sequence_holes
 
     # -------------------------------------------------------------------------
