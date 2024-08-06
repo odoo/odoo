@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-06 10:24+0000\n"
+"PO-Revision-Date: 2024-08-06 10:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,9 +20,9 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br>\n"
-"                    Please, take appropriate measures in order to carry out this work absence.<br>\n"
-"                    Do not hesitate to contact your manager or the human resource department.\n"
+"We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter.\n"
 "                    <br>Best Regards,<br><br>\n"
 "                </div>\n"
 "            "
@@ -90,16 +90,6 @@ msgid "Employees"
 msgstr ""
 
 #. module: hr_presence
-#. odoo-python
-#: code:addons/hr_presence/models/hr_employee.py:0
-#: model:sms.template,body:hr_presence.sms_template_data_hr_presence
-msgid ""
-"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.\n"
-"Please, take appropriate measures in order to carry out this work absence.\n"
-"Do not hesitate to contact your manager or the human resource department."
-msgstr ""
-
-#. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
 msgid "HR Presence: cron"
 msgstr ""
@@ -107,6 +97,14 @@ msgstr ""
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "HR: Employee Absence email"
+msgstr ""
+
+#. module: hr_presence
+#: model:sms.template,body:hr_presence.sms_template_data_hr_presence
+msgid ""
+"Hi, we noticed you're not at work and no time-off was submitted. If this is "
+"an oversight from us, we apologize. Please contact your manager or HR ASAP. "
+"Thanks"
 msgstr ""
 
 #. module: hr_presence
@@ -218,7 +216,14 @@ msgstr ""
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
-#: code:addons/hr_presence/models/hr_employee.py:0
+msgid ""
+"We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter."
+msgstr ""
+
+#. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr ""
