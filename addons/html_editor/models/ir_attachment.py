@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_quote
+from urllib.parse import quote
 
 from odoo import api, models, fields
 from odoo.tools.image import base64_to_image
@@ -47,7 +47,7 @@ class IrAttachment(models.Model):
                     # Local URL
                     attachment.image_src = attachment.url
                 else:
-                    name = url_quote(attachment.name)
+                    name = quote(attachment.name)
                     attachment.image_src = '/web/image/%s-redirect/%s' % (attachment.id, name)
             else:
                 # Adding unique in URLs for cache-control
@@ -58,7 +58,7 @@ class IrAttachment(models.Model):
                     separator = '&' if '?' in attachment.url else '?'
                     attachment.image_src = '%s%sunique=%s' % (attachment.url, separator, unique)
                 else:
-                    name = url_quote(attachment.name)
+                    name = quote(attachment.name)
                     attachment.image_src = '/web/image/%s-%s/%s' % (attachment.id, unique, name)
 
     @api.depends('datas')
