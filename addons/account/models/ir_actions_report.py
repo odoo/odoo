@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
 from zlib import error as zlib_error
-try:
-    from PyPDF2.errors import PdfStreamError, PdfReadError
-except ImportError:
-    from PyPDF2.utils import PdfStreamError, PdfReadError
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -38,7 +34,7 @@ class IrActionsReport(models.Model):
                     record = self.env[attachment.res_model].browse(attachment.res_id)
                     try:
                         stream = pdf.add_banner(stream, record.name, logo=True)
-                    except (ValueError, PdfStreamError, PdfReadError, TypeError, zlib_error, NotImplementedError):
+                    except (ValueError, pdf.PdfReadError, TypeError, zlib_error, NotImplementedError):
                         record._message_log(body=_(
                             "There was an error when trying to add the banner to the original PDF.\n"
                             "Please make sure the source file is valid."
