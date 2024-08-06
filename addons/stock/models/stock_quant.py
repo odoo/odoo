@@ -276,6 +276,10 @@ class StockQuant(models.Model):
                     quant = quant[0].sudo()
                 else:
                     quant = self.sudo().create(vals)
+                    if 'quants_cache' in self.env.context:
+                        self.env.context['quants_cache'][
+                            quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                        ] |= quant
                 if auto_apply:
                     quant.write({'inventory_quantity_auto_apply': inventory_quantity})
                 else:
@@ -286,6 +290,10 @@ class StockQuant(models.Model):
                 quants |= quant
             else:
                 quant = super().create(vals)
+                if 'quants_cache' in self.env.context:
+                    self.env.context['quants_cache'][
+                        quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                    ] |= quant
                 quants |= quant
                 if self._is_inventory_mode():
                     quant._check_company()
@@ -581,15 +589,15 @@ class StockQuant(models.Model):
         if any(elem.product_id.type != 'product' for elem in self):
             raise ValidationError(_('Quants cannot be created for consumables or services.'))
 
-    @api.constrains('quantity')
     def check_quantity(self):
         sn_quants = self.filtered(lambda q: q.product_id.tracking == 'serial' and q.location_id.usage != 'inventory' and q.lot_id)
         if not sn_quants:
             return
-        domain = expression.OR([
-            [('product_id', '=', q.product_id.id), ('location_id', '=', q.location_id.id), ('lot_id', '=', q.lot_id.id)]
-            for q in sn_quants
-        ])
+        domain = [
+            ('product_id', 'in', sn_quants.product_id.ids),
+            ('location_id', 'child_of', sn_quants.location_id.ids),
+            ('lot_id', 'in', sn_quants.lot_id.ids)
+        ]
         groups = self._read_group(
             domain,
             ['product_id', 'location_id', 'lot_id'],
@@ -775,14 +783,48 @@ class StockQuant(models.Model):
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
         domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
-        if self.ids:
-            sort_key = self._get_removal_strategy_sort_key(removal_strategy)
-            res = self.filtered_domain(domain).sorted(key=sort_key[0], reverse=sort_key[1])
+
+        quants_cache = self.env.context.get('quants_cache')
+        if quants_cache is not None and strict and removal_strategy != 'least_packages':
+            res = self.env['stock.quant']
+            if lot_id:
+                res |= quants_cache[product_id.id, location_id.id, lot_id.id, package_id.id, owner_id.id]
+            res |= quants_cache[product_id.id, location_id.id, False, package_id.id, owner_id.id]
         else:
             res = self.search(domain, order=order)
         if removal_strategy == "closest":
             res = res.sorted(lambda q: (q.location_id.complete_name, -q.id))
         return res.sorted(lambda q: not q.lot_id)
+
+    def _get_quants_cache_by_products_locations(self, product_ids, location_ids, extra_domain=False):
+        res = defaultdict(lambda: self.env['stock.quant'])
+        if product_ids and location_ids:
+            domain = [
+                ('product_id', 'in', product_ids.ids),
+                ('location_id', 'child_of', location_ids.ids)
+            ]
+            if extra_domain:
+                domain = expression.AND([domain, extra_domain])
+            needed_quants = self.env['stock.quant']._read_group(
+                domain,
+                ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
+                ['id:recordset'], order="lot_id"
+            )
+            for product, loc, lot, package, owner, quants in needed_quants:
+                res[product.id, loc.id, lot.id, package.id, owner.id] = quants
+        return res
+
+    @api.model
+    def _get_quants_by_products_locations(self, product_ids, location_ids):
+        quants_by_product = defaultdict(lambda: self.env['stock.quant'])
+        if product_ids and location_ids:
+            needed_quants = self.env['stock.quant']._read_group([('product_id', 'in', product_ids.ids),
+                                                                ('location_id', 'child_of', location_ids.ids)],
+                                                            ['product_id'],
+                                                            ['id:recordset'])
+            for product, quants in needed_quants:
+                quants_by_product[product.id] = quants
+        return quants_by_product
 
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
         """ Return the available quantity, i.e. the sum of `quantity` minus the sum of
@@ -862,7 +904,7 @@ class StockQuant(models.Model):
             quantity_move_uom = product_id.uom_id._compute_quantity(quantity, uom_id, rounding_method='DOWN')
             quantity = uom_id._compute_quantity(quantity_move_uom, product_id.uom_id, rounding_method='HALF-UP')
 
-        if self.product_id.tracking == 'serial':
+        if quants.product_id.tracking == 'serial':
             if float_compare(quantity, int(quantity), precision_rounding=rounding) != 0:
                 quantity = 0
 
@@ -998,18 +1040,6 @@ class StockQuant(models.Model):
         self.write({'inventory_diff_quantity': 0})
 
     @api.model
-    def _get_quants_by_products_locations(self, product_ids, location_ids):
-        quants_by_product = defaultdict(lambda: self.env['stock.quant'])
-        if product_ids and location_ids:
-            needed_quants = self.env['stock.quant']._read_group([('product_id', 'in', product_ids.ids),
-                                                                ('location_id', 'child_of', location_ids.ids)],
-                                                            ['product_id'],
-                                                            ['id:recordset'])
-            for product, quants in needed_quants:
-                quants_by_product[product.id] = quants
-        return quants_by_product
-
-    @api.model
     def _update_available_quantity(self, product_id, location_id, quantity=False, reserved_quantity=False, lot_id=None, package_id=None, owner_id=None, in_date=None):
         """ Increase or decrease `quantity` or 'reserved quantity' of a set of quants for a given set of
         product_id/location_id/lot_id/package_id/owner_id.
@@ -1108,8 +1138,8 @@ class StockQuant(models.Model):
                                                      AND user_id IS NULL;"""
         params = (precision_digits, precision_digits, precision_digits)
         self.env.cr.execute(query, params)
-        quant_ids = self.env['stock.quant'].browse([quant['id'] for quant in self.env.cr.dictfetchall()])
-        quant_ids.sudo().unlink()
+        quants = self.env['stock.quant'].browse([quant['id'] for quant in self.env.cr.dictfetchall()])
+        quants.sudo().unlink()
 
     @api.model
     def _merge_quants(self):
