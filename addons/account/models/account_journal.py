@@ -904,12 +904,14 @@ class AccountJournal(models.Model):
                 'move_type': move_type,
             })
 
-            invoice._extend_with_attachments(attachment, new=True)
+            invoice.with_context(
+                disable_onchange_name_predictive=True,
+            )._extend_with_attachments(attachment, new=True)
 
             all_invoices |= invoice
 
             invoice.with_context(
-                account_predictive_bills_disable_prediction=True,
+                disable_onchange_name_predictive=True,
                 no_new_invoice=True,
             ).message_post(attachment_ids=attachment.ids)
 
