@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
-"PO-Revision-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-08-06 10:23+0000\n"
+"PO-Revision-Date: 2024-08-06 10:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -9646,6 +9646,15 @@ msgid "Update Quantity"
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Updating the location of this transfer will result in unreservation of the currently assigned items. An attempt to reserve items at the new location will be made and the link with preceding transfers will be discarded.\n"
+"\n"
+"To avoid this, please discard the source location change before saving."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__priority__1
 msgid "Urgent"
@@ -9963,6 +9972,12 @@ msgid "Warning!"
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "Warning: change source location"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Warnings"
@@ -10264,15 +10279,15 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid "You can not delete moves linked to another operation"
+#: code:addons/stock/models/stock_orderpoint.py:0
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format
-msgid ""
-"You can not create a snoozed orderpoint that is not manually triggered."
+#: code:addons/stock/models/stock_move.py:0
+msgid "You can not delete moves linked to another operation"
 msgstr ""
 
 #. module: stock
@@ -10320,7 +10335,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
-#, python-format
 msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
