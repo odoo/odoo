@@ -1258,7 +1258,11 @@ class replace_exceptions(ContextDecorator):
 
     def __exit__(self, exc_type, exc_value, traceback):
         if exc_type is not None and issubclass(exc_type, self.exceptions):
-            raise self.by from exc_value
+            if isinstance(self.by, type) and exc_value.args:
+                # copy the message
+                raise self.by(exc_value.args[0]) from exc_value
+            else:
+                raise self.by from exc_value
 
 html_escape = markupsafe.escape
 
