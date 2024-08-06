@@ -673,8 +673,14 @@ class Project(models.Model):
         local_context = self.env.context | {
             'default_template_id': template.id if template else False,
             'default_email_layout_xmlid': 'mail.mail_notification_light',
+<<<<<<< saas-17.4
             'active_id': self.id,
             'active_model': 'project.project',
+||||||| ce5aedcf33791556b2f4c3da71ce6f1b142872c0
+=======
+            'active_model': 'project.project',
+            'active_id': self.id,
+>>>>>>> 050dc0c8160a9aba104bc7b29e1c0d011f1d4c9a
         }
         action = self.env["ir.actions.actions"]._for_xml_id("project.project_share_wizard_action")
         if self.env.context.get('default_access_mode'):
