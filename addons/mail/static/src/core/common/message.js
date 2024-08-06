@@ -290,7 +290,7 @@ export class Message extends Component {
     }
 
     get canReplyTo() {
-        return this.props.messageToReplyTo;
+        return this.props.messageToReplyTo && this.message.message_type !== "user_notification";
     }
 
     get canToggleStar() {
