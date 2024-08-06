@@ -9,7 +9,7 @@
                         <t t-call="discuss.CallActionList.actionButton" />
                     </t>
                     <Dropdown position="'top-end'" menuClass="'d-flex flex-column py-0'">
-                        <button t-att-class="`btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover ${ isSmall ? 'p-2' : 'p-3' }`" t-att-title="MORE">
+                        <button t-att-class="`btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover ${ isSmall ? 'p-2' : 'p-3' }`" t-att-title="MORE">
                             <div class="fa-stack">
                                 <i class="fa fa-ellipsis-v fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
                             </div>
@@ -25,7 +25,7 @@
                         </t>
                     </Dropdown>
                 </t>
-                <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="btn btn-danger d-flex m-1 border-0 rounded-circle shadow-none"
+                <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="btn smaller btn-danger d-flex m-1 border-0 rounded-circle shadow-none"
                     t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
                     aria-label="Reject"
                     title="Reject"
@@ -37,7 +37,7 @@
                 </button>
                 <t t-if="props.thread.eq(rtc.state.channel)" t-set="callText">Disconnect</t>
                 <t t-else="" t-set="callText">Join Call</t>
-                <button class="btn d-flex m-1 border-0 rounded-circle shadow-none"
+                <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none"
                     t-att-aria-label="callText"
                     t-att-class="{ 'btn-danger': isOfActiveCall, 'p-2': isSmall, 'p-3': !isSmall, 'btn-success': !isOfActiveCall }"
                     t-att-disabled="rtc.state.hasPendingRequest"
@@ -60,7 +60,7 @@
     </t>
 
     <t t-name="discuss.CallActionList.actionButton">
-        <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+        <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
             t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
             t-att-aria-label="action.name"
             t-att-title="action.name"
