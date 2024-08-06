@@ -51,6 +51,10 @@
                             <strong>Order</strong>
                             <div t-field="o.origin" class="m-0">S0001</div>
                         </div>
+                        <div t-if="o.picking_type_id.code == 'internal' and o.partner_id" class="col col-3 mw-100 mb-2" name="div_contact">
+                            <strong>Contact</strong>
+                            <div t-field="o.partner_id" class="m-0"/>
+                        </div>
                         <div t-if="o.state" class="col col-3 mw-100 mb-2" name="div_sched_date">
                             <strong>Shipping Date</strong>
                             <div t-if="o.state == 'done'" t-field="o.date_done" class="m-0"/>
