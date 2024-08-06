@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ImageDescription">
-        <button class="btn btn-light" title="Edit media description" t-on-click="openDescriptionDialog">
+        <button class="btn btn-light" t-att-title="props.name" t-on-click="openDescriptionDialog">
             Description
         </button>
     </t>

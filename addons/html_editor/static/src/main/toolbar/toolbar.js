@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, validate } from "@odoo/owl";
 
 export class Toolbar extends Component {
     static template = "html_editor.Toolbar";
@@ -9,8 +9,49 @@ export class Toolbar extends Component {
             shape: {
                 dispatch: Function,
                 getSelection: Function,
-                // TODO: more specific prop validation for buttons after its format has been defined.
-                buttonGroups: Array,
+                buttonGroups: {
+                    type: Array,
+                    element: {
+                        type: Object,
+                        shape: {
+                            id: String,
+                            sequence: Number,
+                            namespace: { type: String, optional: true },
+                            buttons: {
+                                type: Array,
+                                element: {
+                                    type: Object,
+                                    validate: (button) => {
+                                        const base = {
+                                            id: String,
+                                            category: String,
+                                            name: String,
+                                            inherit: { type: String, optional: true },
+                                        };
+                                        if (button.Component) {
+                                            validate(button, {
+                                                ...base,
+                                                Component: Function,
+                                                props: { type: Object, optional: true },
+                                            });
+                                        } else {
+                                            validate(button, {
+                                                ...base,
+                                                action: Function,
+                                                icon: { type: String, optional: true },
+                                                text: { type: String, optional: true },
+                                                isFormatApplied: { type: Function, optional: true },
+                                                hasFormat: { type: Function, optional: true },
+                                                isAvailable: { type: Function, optional: true },
+                                            });
+                                        }
+                                        return true;
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
                 state: {
                     type: Object,
                     shape: {
@@ -43,3 +84,9 @@ export class Toolbar extends Component {
         return this.props.toolbar.buttonGroups.filter((group) => group.namespace === undefined);
     }
 }
+
+export const toolbarButtonProps = {
+    name: String,
+    dispatch: Function,
+    getSelection: Function,
+};

@@ -319,6 +319,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
                         category: "test_group",
                         name: "Test Button",
                         icon: "fa-square",
+                        action: () => null,
                     },
                 ],
             };
@@ -339,13 +340,14 @@ test("toolbar correctly process inheritance buttons chain", async () => {
         static name = "TestPlugin";
         static resources(p) {
             return {
-                toolbarCategory: { id: "test_group" },
+                toolbarCategory: { id: "test_group", sequence: 24 },
                 toolbarItems: [
                     {
                         id: "test_btn",
                         category: "test_group",
                         name: "Test Button",
                         icon: "fa-square",
+                        action: () => null,
                     },
                     {
                         id: "test_btn2",
@@ -468,5 +470,13 @@ test("toolbar buttons should have rounded corners at the edges of a group", asyn
                 expect(borderRadius["bottom-right"]).toBe(0);
             }
         }
+    }
+});
+
+test("toolbar buttons should have title attribute", async () => {
+    await setupEditor("<ul><li>[abc]</li></ul>");
+    const toolbar = await waitFor(".o-we-toolbar");
+    for (const button of toolbar.querySelectorAll("button")) {
+        expect(button).toHaveAttribute("title");
     }
 });

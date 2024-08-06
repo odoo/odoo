@@ -54,6 +54,7 @@ export class ImagePlugin extends Plugin {
                 },
                 {
                     id: "image_description",
+                    name: _t("Edit media description"),
                     category: "image_description",
                     Component: ImageDescription,
                     props: {

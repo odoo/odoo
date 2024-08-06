@@ -115,6 +115,7 @@ export class FontPlugin extends Plugin {
             {
                 id: "font",
                 category: "font",
+                name: _t("Font style"),
                 Component: FontSelector,
                 props: {
                     getItems: () => fontItems,
@@ -124,6 +125,7 @@ export class FontPlugin extends Plugin {
             {
                 id: "font-size",
                 category: "font-size",
+                name: _t("Font size"),
                 Component: FontSelector,
                 props: {
                     getItems: () => p.fontSizeItems,
