@@ -37,6 +37,7 @@ patch(PosOrder.prototype, {
                 l10n_in_hsn_code: hsnCode,
                 price_unit: priceUnit,
                 quantity: line.get_quantity(),
+                discount: line.get_discount(),
                 uom: null,
                 ...getTaxesValues(
                     taxes,
