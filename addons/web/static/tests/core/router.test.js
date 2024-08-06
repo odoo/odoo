@@ -1376,7 +1376,7 @@ describe("pushState", () => {
     test("can lock keys", async () => {
         createRouter();
 
-        router.addLockedKey(["k1"]);
+        router.addLockedKey("k1");
 
         router.replaceState({ k1: 2 });
         await tick();
@@ -1398,7 +1398,7 @@ describe("pushState", () => {
     test("can re-lock keys in same final call", async () => {
         createRouter();
 
-        router.addLockedKey(["k1"]);
+        router.addLockedKey("k1");
 
         router.pushState({ k1: 2 });
         await tick();
@@ -1541,6 +1541,27 @@ describe("pushState", () => {
         await tick();
         expect(router.current).toEqual({ k1: 2, k2: 3 });
         expect(browser.location.href).toBe("https://www.hoot.test/odoo?k2=3");
+    });
+    test("different order of keys shouldn't push a new state", async () => {
+        redirect("/odoo?k1=2");
+        createRouter({
+            onPushState: () => expect.step("pushState"),
+        });
+
+        router.addLockedKey("z");
+        router.addLockedKey("a");
+
+        router.pushState({ z: 1, a: 2 });
+        await tick();
+        expect.verifySteps(["pushState"]);
+        expect(router.current).toEqual({ a: 2, z: 1, k1: 2 });
+        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k1=2&z=1&a=2");
+
+        router.pushState({ k1: 2 }, { replace: true });
+        await tick();
+        expect.verifySteps([]);
+        expect(router.current).toEqual({ a: 2, z: 1, k1: 2 });
+        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k1=2&z=1&a=2");
     });
 });
 
