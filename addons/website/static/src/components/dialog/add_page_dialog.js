@@ -1,4 +1,5 @@
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { ensureJQuery } from "@web/core/ensure_jquery";
 import { rpc } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
@@ -203,6 +204,7 @@ export class AddPageTemplatePreview extends Component {
                 imgEl.setAttribute("loading", "eager");
             }
             mainEl.appendChild(wrapEl);
+            await ensureJQuery();
             await wUtils.onceAllImagesLoaded($(wrapEl));
             // Restore image lazy loading.
             for (const imgEl of lazyLoadedImgEls) {
