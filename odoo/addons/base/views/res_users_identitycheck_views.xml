@@ -24,24 +24,5 @@
             </field>
         </record>
 
-        <record id="res_users_identitycheck_view_form_revokedevices" model="ir.ui.view">
-            <field name="name">Revoke All Devices</field>
-            <field name="model">res.users.identitycheck</field>
-            <field name="priority">40</field>
-            <field name="arch" type="xml">
-                <form string="Log out from all devices">
-                    <div>
-                        You are about to log out from all devices that currently have access to your account.<br/><br/>
-                        <strong>Type in your password to confirm :</strong>
-                        <field class="oe_inline o_field_highlight" name="password" password="True" required="True"/>
-                    </div>
-                    <footer>
-                        <button string="Log out from all devices" name="revoke_all_devices" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
-                    </footer>
-                </form>
-            </field>
-        </record>
-
     </data>
 </odoo>

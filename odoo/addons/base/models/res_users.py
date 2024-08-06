@@ -1111,17 +1111,14 @@ class Users(models.Model):
             'view_mode': 'form',
         }
 
+    @check_identity
     def action_revoke_all_devices(self):
-        ctx = dict(self.env.context, dialog_size='medium')
-        return {
-            'name': _('Log out from all devices?'),
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'res_model': 'res.users.identitycheck',
-            'view_mode': 'form',
-            'view_id': self.env.ref('base.res_users_identitycheck_view_form_revokedevices').id,
-            'context': ctx,
-        }
+        return self._action_revoke_all_devices()
+
+    def _action_revoke_all_devices(self):
+        devices = self.env["res.device"].search([("user_id", "=", self.id)])
+        devices.filtered(lambda d: not d.is_current)._revoke()
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     def has_groups(self, group_spec: str) -> bool:
         """ Return whether user ``self`` satisfies the given group restrictions
@@ -2134,12 +2131,6 @@ class CheckIdentity(models.TransientModel):
         method = getattr(self.env(context=ctx)[model].browse(ids), method)
         assert getattr(method, '__has_check_identity', False)
         return method(*args, **kwargs)
-
-    def revoke_all_devices(self):
-        self._check_identity()
-        self.env.user._change_password(self.password)
-        self.sudo().unlink()
-        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
 #----------------------------------------------------------
 # change password wizard
