@@ -31,3 +31,5 @@ def patch_all():
     patch_werkzeug()
     from .zeep import patch_zeep
     patch_zeep()
+    from .win32 import patch_win32
+    patch_win32()
