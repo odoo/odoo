@@ -71,7 +71,7 @@ class WebsiteSnippetFilter(models.Model):
         search_domain = context.get('search_domain')
         limit = context.get('limit')
         domain = expression.AND([
-            [('website_published', '=', True)] if self.env.user._is_public() else [],
+            [('website_published', '=', True)] if self.env.user._is_public() or self.env.user._is_portal() else [],
             website.website_domain(),
             [('company_id', 'in', [False, website.company_id.id])],
             search_domain or [],
