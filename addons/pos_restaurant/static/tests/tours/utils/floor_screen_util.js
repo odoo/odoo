@@ -1,4 +1,6 @@
 import { queryOne } from "@odoo/hoot-dom";
+import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
+import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 
 export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
     let trigger = `.floor-map .table${withClass}`;
@@ -51,6 +53,17 @@ export function clickSaveEditButton() {
             trigger: '.edit-buttons button:contains("Save")',
             run: "click",
         },
+    ];
+}
+export function goTo(name) {
+    return [
+        {
+            content: `click on Go To button`,
+            trigger: `.navbar-menu .btn:contains("Table")`,
+            run: "click",
+        },
+        ...NumberPopup.enterValue(name),
+        Dialog.confirm(),
     ];
 }
 export function selectedFloorIs(name) {
