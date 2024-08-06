@@ -66,6 +66,19 @@ patch(Navbar.prototype, {
     get showTableIcon() {
         return this.getTable()?.name && this.pos.showBackButton();
     },
+    getTableName() {
+        const table = this.getTable();
+        const child_tables = this.pos.models["restaurant.table"].filter((t) => {
+            if (t.floor_id.id === table.floor_id.id) {
+                return table.isParent(t);
+            }
+        });
+        let name = table.name;
+        for (const child_table of child_tables) {
+            name += ` & ${child_table.name}`;
+        }
+        return name;
+    },
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";
         localStorage.setItem("floorPlanStyle", mode);
