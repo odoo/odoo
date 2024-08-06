@@ -13,6 +13,7 @@ import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { isCSSColor } from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
 import { reactive } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 export class ColorPlugin extends Plugin {
     static name = "color";
@@ -28,6 +29,7 @@ export class ColorPlugin extends Plugin {
             {
                 id: "forecolor",
                 category: "color",
+                name: _t("Font Color"),
                 Component: ColorSelector,
                 props: {
                     type: "foreground",
@@ -38,6 +40,7 @@ export class ColorPlugin extends Plugin {
             {
                 id: "backcolor",
                 category: "color",
+                name: _t("Background Color"),
 
                 Component: ColorSelector,
                 props: {

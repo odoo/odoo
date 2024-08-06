@@ -7,7 +7,11 @@
                     <t t-foreach="buttonGroup.buttons" t-as="button" t-key="button.id">
                         <t t-if="state.buttonsAvailableState[button.id]">
                             <t t-if="button.Component">
-                                <t t-component="button.Component" t-props="button.props" dispatch.bind="props.toolbar.dispatch" getSelection.bind="props.toolbar.getSelection"/>
+                                <t t-component="button.Component"
+                                    t-props="button.props"
+                                    name="button.name"
+                                    dispatch.bind="props.toolbar.dispatch"
+                                    getSelection.bind="props.toolbar.getSelection"/>
                             </t>
                             <button t-else=""
                                 class="btn btn-light"

@@ -218,6 +218,7 @@ export class HtmlField extends Component {
                 toolbarItems: {
                     id: "codeview",
                     category: "codeview",
+                    name: _t("Code view"),
                     icon: "fa-code",
                     action: () => {
                         this.toggleCodeView();
