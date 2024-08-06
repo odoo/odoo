@@ -221,7 +221,7 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             if workorder.qty_producing != 0 and workorder.production_id.qty_producing != workorder.qty_producing:
                 workorder.production_id.qty_producing = workorder.qty_producing
-                workorder.production_id._set_qty_producing()
+                workorder.production_id._set_qty_producing(False)
 
     # Both `date_start` and `date_finished` are related fields on `leave_id`. Let's say
     # we slide a workorder on a gantt view, a single call to write is made with both
