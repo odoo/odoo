@@ -5091,11 +5091,21 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @override
      */
     async _computeWidgetVisibility(widgetName, params) {
+        // TODO: in master, refactor parent class check with Link
+        const parentClassList = this.$target[0].parentNode.classList;
+        const isParentLinkButton =
+            parentClassList.contains("s_website_form_send") ||
+            parentClassList.contains("o_submit");
+
         if (widgetName === 'media_link_opt') {
             if (this.$target[0].matches('img')) {
                 return isImageSupportedForStyle(this.$target[0]);
             }
-            return !this.$target[0].classList.contains('media_iframe_video');
+            return (
+                !this.$target[0].classList.contains("media_iframe_video") && !isParentLinkButton
+            );
+        } else if (["media_url_opt", "media_link_target_blank_opt"].includes(widgetName)) {
+            return !isParentLinkButton;
         }
         return this._super(...arguments);
     },

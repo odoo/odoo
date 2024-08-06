@@ -34,12 +34,32 @@ tour.register('newsletter_block_edition', {
         trigger: '.s_newsletter_block .js_subscribe_btn',
     },
     {
+        content: "Cannot remove Subscribe button link",
+        trigger: ".popover",
+        run() {
+            const removeLinkAction = this.$anchor[0].querySelector(".o_we_remove_link");
+            if (!removeLinkAction.classList.contains("d-none")) {
+                throw new Error("Subscribe button link should not be removable.");
+            }
+        },
+    },
+    {
         content: 'Toggle the option to display the Thanks button',
         trigger: 'we-button[data-toggle-thanks-button] we-checkbox',
     },
     {
         content: 'Click on the Thanks button',
         trigger: '.s_newsletter_block .js_subscribed_btn',
+    },
+    {
+        content: "Cannot remove Thanks button link",
+        trigger: ".popover",
+        run() {
+            const removeLinkAction = this.$anchor[0].querySelector(".o_we_remove_link");
+            if (!removeLinkAction.classList.contains("d-none")) {
+                throw new Error("Thanks button link should not be removable.");
+            }
+        },
     },
     {
         content: 'Click on the link style button',

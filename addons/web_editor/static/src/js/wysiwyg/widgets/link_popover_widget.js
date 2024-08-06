@@ -50,7 +50,20 @@ const LinkPopoverWidget = Widget.extend({
         this.$previewFaviconImg = this.$('.o_we_preview_favicon img');
         this.$previewFaviconFa = this.$('.o_we_preview_favicon .fa');
         this.$copyLink = this.$('.o_we_copy_link');
+        this.$removeLink = this.$(".o_we_remove_link");
         this.$fullUrl = this.$('.o_we_full_url');
+
+        // Don't allow removing the link on submit buttons
+        // TODO: in master, refactor fallback class check with Link
+        const linkTools = this.options.wysiwyg.linkTools;
+        if (
+            linkTools
+                ? linkTools.isButton
+                : this.target.classList.contains("s_website_form_send") ||
+                  this.target.classList.contains("o_submit")
+        ) {
+            this.$removeLink.toggleClass("d-none", true);
+        }
 
         // Use the right ClipboardJS with respect to the prototype of this.el
         // since, starting with Firefox 109, a widget element prototype that is

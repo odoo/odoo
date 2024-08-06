@@ -1119,5 +1119,82 @@ odoo.define('website.tour.form_editor', function (require) {
         },
     ]);
 
+    tour.register(
+        "website_form_link_popover",
+        {
+            test: true,
+        },
+        [
+            {
+                content: "Enter edit mode",
+                trigger: "a[data-action=edit]",
+            },
+            {
+                content: "Check that we are in edit mode",
+                trigger: "#oe_snippets.o_loaded",
+                run: () => null,
+            },
+            {
+                content: "Drop the form snippet",
+                trigger: "#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail",
+                run: "drag_and_drop #wrap",
+            },
+            {
+                content: "Click on 'Submit'",
+                trigger: "a.s_website_form_send",
+            },
+            {
+                content: "Cannot remove submit button link",
+                trigger: ".popover",
+                run() {
+                    const removeLinkAction = this.$anchor[0].querySelector(".o_we_remove_link");
+                    if (!removeLinkAction.classList.contains("d-none")) {
+                        throw new Error("Submit button link should not be removable.");
+                    }
+                },
+            },
+            {
+                content: "Click on insert media",
+                trigger: "#media-insert",
+            },
+            {
+                content: "Click on Pictogram tab",
+                trigger: "#editor-media-icon-tab",
+            },
+            {
+                content: "Click on envelope icon",
+                trigger: '[data-id="fa-envelope-o"]',
+            },
+            {
+                content: "Click on submit button image",
+                trigger: "a.s_website_form_send .fa",
+            },
+            {
+                content: "Cannot remove submit button link via media",
+                trigger: ".snippet-option-ReplaceMedia",
+                run() {
+                    const toggleImageOption = this.$anchor[0].querySelector(
+                        '[data-name="media_link_opt"]'
+                    );
+                    if (!toggleImageOption.classList.contains("d-none")) {
+                        throw new Error("Submit button link should not be removable via media.");
+                    }
+                },
+            },
+            {
+                content: "Cannot modify link via media",
+                trigger: ".snippet-option-ReplaceMedia",
+                run() {
+                    const toggleImageOption = this.$anchor[0].querySelector(
+                        '[data-name="media_url_opt"]'
+                    );
+                    if (!toggleImageOption.classList.contains("d-none")) {
+                        throw new Error("Submit button link should not be modifiable via media.");
+                    }
+                },
+            },
+        ]
+    );
+
     return {};
 });
