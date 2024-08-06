@@ -1117,6 +1117,7 @@ class Users(models.Model):
 
     def action_revoke_all_devices(self):
         ctx = dict(self.env.context, dialog_size='medium')
+        ctx['default_auth_method'] = 'password'
         return {
             'name': _('Log out from all devices?'),
             'type': 'ir.actions.act_window',
