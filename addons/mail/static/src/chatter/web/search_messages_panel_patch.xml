@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.SearchMessagesPanel" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='searchBar']" position="after">
+            <p t-if="ACTIVITIES_FOUND" class="o-mail-SearchMessagesPanel-title py-1 pb-2 mb-0 fw-bolder text-center text-uppercase text-700">
+                <t t-out="ACTIVITIES_FOUND"/>
+            </p>
+            <div class="card mb-2" t-foreach="state.activities" t-as="activity" t-key="activity.id">
+                <div class="card-body py-2">
+                    <Activity activity="activity" onActivityChanged="env.onActivityChanged" reloadParentView="env.reloadParentView" messageSearch="messageSearch" />
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

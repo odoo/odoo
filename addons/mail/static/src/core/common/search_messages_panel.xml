@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.SearchMessagesPanel">
         <ActionPanel title="env.inChatter ? undefined : title">
-            <div class="d-flex pb-2">
+            <div class="d-flex pb-2" t-ref='searchBar'>
                 <div class="input-group">
                     <div class="o_searchview form-control d-flex align-items-center py-1" role="search" aria-autocomplete="list">
                         <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
@@ -18,7 +18,7 @@
                     <i class="o_searchview_icon oi oi-close cursor-pointer" role="img" aria-label="Close search" title="close"/>
                 </button>
             </div>
-            <p t-if="MESSAGES_FOUND" class="o-mail-SearchMessagesPanel-title py-1 mb-0 fw-bolder text-center text-uppercase text-700">
+            <p t-if="MESSAGES_FOUND" class="o-mail-SearchMessagesPanel-title py-1 pb-2 mb-0 fw-bolder text-center text-uppercase text-700">
                 <t t-out="MESSAGES_FOUND"/>
             </p>
             <MessageCardList messages="messageSearch.messages" thread="props.thread" mode="'search'" messageSearch="messageSearch" showEmpty="messageSearch.messages.length === 0 and messageSearch.searched" onClickJump="() => this.props.onClickJump?.()" loadMore="messageSearch.loadMore" onLoadMoreVisible="onLoadMoreVisible"/>
