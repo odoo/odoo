@@ -15,14 +15,12 @@ class TestHrContractHistoryGroupby(TransactionCase):
             LEFT JOIN (
                     SELECT res_id,
                         CASE
-                            WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %s AT TIME ZONE COALESCE(res_partner.tz, %s))))) > 0 THEN 'planned'
-                            WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %s AT TIME ZONE COALESCE(res_partner.tz, %s))))) < 0 THEN 'overdue'
-                            WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %s AT TIME ZONE COALESCE(res_partner.tz, %s))))) = 0 THEN 'today'
+                            WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %s AT TIME ZONE COALESCE(mail_activity.user_tz, %s))))) > 0 THEN 'planned'
+                            WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %s AT TIME ZONE COALESCE(mail_activity.user_tz, %s))))) < 0 THEN 'overdue'
+                            WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %s AT TIME ZONE COALESCE(mail_activity.user_tz, %s))))) = 0 THEN 'today'
                             ELSE null
                         END AS activity_state
                         FROM mail_activity
-                        JOIN res_users ON (res_users.id = mail_activity.user_id)
-                        JOIN res_partner ON (res_partner.id = res_users.partner_id)
                         WHERE res_model = %s AND mail_activity.active = TRUE
                         GROUP BY res_id
                     ) AS "hr_contract__last_activity_state"
