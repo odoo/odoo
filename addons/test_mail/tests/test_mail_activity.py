@@ -965,47 +965,48 @@ class TestORM(TestActivityCommon):
         # Don't mistake fields date and date_deadline:
         # * date is just a random value
         # * date_deadline defines activity_state
-        self.env['mail.test.activity'].create({
-            'date': '2021-05-02',
-            'name': "Yesterday, all my troubles seemed so far away",
-        }).activity_schedule(
-            'test_mail.mail_act_test_todo',
-            summary="Make another test super asap (yesterday)",
-            date_deadline=fields.Date.context_today(MailTestActivityCtx) - timedelta(days=7),
-        )
-        self.env['mail.test.activity'].create({
-            'date': '2021-05-09',
-            'name': "Things we said today",
-        }).activity_schedule(
-            'test_mail.mail_act_test_todo',
-            summary="Make another test asap",
-            date_deadline=fields.Date.context_today(MailTestActivityCtx),
-        )
-        self.env['mail.test.activity'].create({
-            'date': '2021-05-16',
-            'name': "Tomorrow Never Knows",
-        }).activity_schedule(
-            'test_mail.mail_act_test_todo',
-            summary="Make a test tomorrow",
-            date_deadline=fields.Date.context_today(MailTestActivityCtx) + timedelta(days=7),
-        )
+        with freeze_time("2024-09-24 10:00:00"):
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-02',
+                'name': "Yesterday, all my troubles seemed so far away",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make another test super asap (yesterday)",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx) - timedelta(days=7),
+            )
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-09',
+                'name': "Things we said today",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make another test asap",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx),
+            )
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-16',
+                'name': "Tomorrow Never Knows",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make a test tomorrow",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx) + timedelta(days=7),
+            )
 
-        domain = [('date', "!=", False)]
-        groupby = "date:week"
-        progress_bar = {
-            'field': 'activity_state',
-            'colors': {
-                "overdue": 'danger',
-                "today": 'warning',
-                "planned": 'success',
+            domain = [('date', "!=", False)]
+            groupby = "date:week"
+            progress_bar = {
+                'field': 'activity_state',
+                'colors': {
+                    "overdue": 'danger',
+                    "today": 'warning',
+                    "planned": 'success',
+                }
             }
-        }
 
-        # call read_group to compute group names
-        groups = MailTestActivityCtx.read_group(domain, fields=['date'], groupby=[groupby])
-        progressbars = MailTestActivityCtx.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
-        self.assertEqual(len(groups), 3)
-        self.assertEqual(len(progressbars), 3)
+            # call read_group to compute group names
+            groups = MailTestActivityCtx.read_group(domain, fields=['date'], groupby=[groupby])
+            progressbars = MailTestActivityCtx.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
+            self.assertEqual(len(groups), 3)
+            self.assertEqual(len(progressbars), 3)
 
         # format the read_progress_bar result to get a dictionary under this
         # format: {activity_state: group_name}; the original format
