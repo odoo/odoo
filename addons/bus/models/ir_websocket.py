@@ -41,6 +41,10 @@ class IrWebsocket(models.AbstractModel):
                 identity_value=self.env.uid
             )
 
+    def _on_websocket_closed(self, cookies):
+        if self.env.user and not self.env.user._is_public():
+            self.env["bus.presence"].search([("user_id", "=", self.env.uid)]).unlink()
+
     @classmethod
     def _authenticate(cls):
         if wsrequest.session.uid is not None:

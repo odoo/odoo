@@ -59,3 +59,12 @@ class IrWebsocket(models.AbstractModel):
                 identity_field="guest_id",
                 identity_value=guest.id,
             )
+
+    def _on_websocket_closed(self, cookies):
+        super()._on_websocket_closed(cookies)
+        if self.env.user and not self.env.user._is_public():
+            return
+        token = cookies.get(self.env["mail.guest"]._cookie_name, "")
+        if guest := self.env["mail.guest"]._get_guest_from_token(token):
+            # sudo - bus.presence: guests can delete their presences
+            self.env["bus.presence"].sudo().search([("guest_id", "=", guest.id)]).unlink()

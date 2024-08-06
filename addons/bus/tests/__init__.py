@@ -1,5 +1,6 @@
 from . import common
 from . import test_assetsbundle
+from . import test_bus_presence
 from . import test_health
 from . import test_ir_model
 from . import test_ir_websocket
