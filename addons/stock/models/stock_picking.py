@@ -469,7 +469,7 @@ class Picking(models.Model):
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
-        required=True, readonly=True, index=True,
+        required=True, index=True,
         default=_default_picking_type_id)
     picking_type_code = fields.Selection(
         related='picking_type_id.code',
