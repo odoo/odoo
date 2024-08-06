@@ -118,6 +118,7 @@
         'web_editor.backend_assets_wysiwyg': [
             'mass_mailing/static/src/js/mass_mailing_wysiwyg.js',
             'mass_mailing/static/src/scss/mass_mailing.wysiwyg.scss',
+            'mass_mailing/static/src/js/Powerbox.js',
         ],
         'web.assets_backend': [
             'mass_mailing/static/src/scss/mailing_filter_widget.scss',

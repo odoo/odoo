@@ -68,8 +68,11 @@ export class Powerbox {
                 [document, 'mousedown', this._boundClose],
             );
         }
-
+        this.setup();
     }
+
+    setup() {}
+
     destroy() {
         if (this.isOpen) {
             this.close();
