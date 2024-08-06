@@ -8,8 +8,9 @@ from pathlib import Path
 
 import odoo
 from odoo.modules.registry import Registry
+from odoo.service import server
 from odoo.tools import config
-from . import Command
+from . import Command, server as cli_server
 
 _logger = logging.getLogger(__name__)
 
@@ -57,8 +58,8 @@ class Shell(Command):
     def init(self, args):
         config.parser.prog = f'{Path(sys.argv[0]).name} {self.name}'
         config.parse_config(args, setup_logging=True)
-        odoo.cli.server.report_configuration()
-        odoo.service.server.start(preload=[], stop=True)
+        cli_server.report_configuration()
+        server.start(preload=[], stop=True)
         signal.signal(signal.SIGINT, raise_keyboard_interrupt)
 
     def console(self, local_vars):
