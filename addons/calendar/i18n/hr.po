@@ -12,6 +12,8 @@
 # Martin Trigaux, 2020
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
 # Bole <bole@dajmi5.com>, 2021
+# 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2021
+# Matej Mijoč, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
-"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
+"Last-Translator: Matej Mijoč, 2022\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -44,12 +46,14 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"%(date_start)su%(time_start)sdo\n"
+"%(date_end)su%(time_end)s(%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)su (%(start)s do %(end)s) (%(timezone)s) "
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -309,7 +313,7 @@ msgstr "<span> sati</span>"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_contacts_user_id_partner_id_unique
 msgid "A user cannot have the same contact twice."
-msgstr ""
+msgstr "Korisnik ne može imati isti kontakt dvaput."
 
 #. module: calendar
 #. openerp-web
@@ -377,7 +381,7 @@ msgstr "Cijeli dan"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
-msgstr ""
+msgstr "Cijeli dan, %(day)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
@@ -488,6 +492,8 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
+"Odaberite što želite napraviti s ostalim događajima u recidivu. Ažuriranje "
+"svih događaja nije dozvoljeno kada su izmijenjeni datumi ili vremena."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
@@ -634,7 +640,7 @@ msgstr "Naziv modela dokumenta"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
 msgid "Dtstart"
-msgstr ""
+msgstr "Dtstart"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
@@ -695,7 +701,7 @@ msgstr "Završni datum"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
 msgid "End Type"
-msgstr ""
+msgstr "Vrsta kraja"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -726,7 +732,7 @@ msgstr "Vrsta sastanka"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
-msgstr ""
+msgstr "Pravilo recidiva događaja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -736,8 +742,8 @@ msgstr "Vrijeme događaja"
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
-msgid "Every %(count)s %(period)s, "
-msgstr ""
+msgid "Every %(count)s %(period)s"
+msgstr "Svaki%(count)s%(period)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
@@ -765,7 +771,7 @@ msgstr "Navedite datum pozivnice"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
 msgid "Follow Recurrence"
-msgstr ""
+msgstr "Pratite recidiv"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
@@ -830,7 +836,7 @@ msgstr "Grupiraj po"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Grouping by %s is not allowed."
-msgstr ""
+msgstr "Grupiranje po %s nije dozvoljeno."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -1015,6 +1021,8 @@ msgstr "Sastanak"
 msgid ""
 "Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
 msgstr ""
+"Sastanak '%(name)s' počinje '%(start_datetime)s' i završava "
+"'%(end_datetime)s'"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1120,7 +1128,7 @@ msgstr "Ne, ne dolazim."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No feedback yet"
-msgstr ""
+msgstr "Još nema povratne informacije"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1239,7 +1247,7 @@ msgstr "Ponavljanje"
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
 msgid "Recurrence Rule"
-msgstr ""
+msgstr "Pravilo ponavljanja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
@@ -1249,7 +1257,7 @@ msgstr "Prekid ponavljanja"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
 msgid "Recurrence Update"
-msgstr ""
+msgstr "Ažuriranje ponavljanja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
@@ -1259,7 +1267,7 @@ msgstr "Ponavljajući"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrency
 msgid "Recurrent Event"
-msgstr ""
+msgstr "Ažuriranje ponavljanja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
@@ -1311,17 +1319,17 @@ msgstr "Odgovoran"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Responsible Contact"
-msgstr ""
+msgstr "Odgovorni kontakt"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule
 msgid "Rrule"
-msgstr ""
+msgstr "Rrule"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule_type
 msgid "Rrule Type"
-msgstr ""
+msgstr "Rrule tip"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__sa
@@ -1411,7 +1419,7 @@ msgstr "Status prisustvovanja sudionika"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Status:"
-msgstr ""
+msgstr "Status:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
@@ -1457,7 +1465,7 @@ msgstr "Oznake"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Tentative"
-msgstr ""
+msgstr "Okvirno"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__th
@@ -1493,7 +1501,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr ""
+msgstr "Dan mora biti između 1 i 31"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
@@ -1513,13 +1521,13 @@ msgstr "Datum završetka ne može biti prije datuma početka."
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "The interval cannot be negative."
-msgstr ""
+msgstr "Interval ne može biti negativan."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "The number of repetitions cannot be negative."
-msgstr ""
+msgstr "Broj ponavljanja ne može biti negativan."
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -1533,7 +1541,7 @@ msgstr "Treći"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 #, python-format
 msgid "This and following events"
-msgstr ""
+msgstr "Ovaj i sljedeći događaj"
 
 #. module: calendar
 #. openerp-web
@@ -1625,6 +1633,9 @@ msgid ""
 "Updating All Events is not allowed when dates or time is modified. You can "
 "only update one particular event and following events."
 msgstr ""
+"Ažuriranje svih događaja nije dozvoljeno kada su datumi ili vrijeme "
+"izmijenjeni. Moguće je ažurirati samo jedan odrađeni događaj i događaje koji"
+" slijede."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -1634,7 +1645,7 @@ msgstr "Korisnici"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__we
 msgid "We"
-msgstr ""
+msgstr "Mi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__we
@@ -1680,13 +1691,13 @@ msgstr "Ne možete duplicirati kalendar sudionika."
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "You have to choose at least one day in the week"
-msgstr ""
+msgstr "Morate odabrati barem jedan dan u tjednu"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
-msgid "day %s, "
-msgstr ""
+msgid "day %s"
+msgstr "dan %s"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1697,22 +1708,22 @@ msgstr "npr. Poslovni ručak"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "for %s events"
-msgstr ""
+msgstr "za %s događaje"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
-msgid "on %s,"
-msgstr ""
+msgid "on %s"
+msgstr "na%s"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
-msgid "on the %(position)s %(weekday)s, "
-msgstr ""
+msgid "on the %(position)s %(weekday)s"
+msgstr "na%(position)s%(weekday)s"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "until %s"
-msgstr ""
+msgstr "do %s"

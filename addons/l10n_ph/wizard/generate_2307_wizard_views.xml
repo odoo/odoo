@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ph_2307_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_ph_2307.wizard.form</field>
+        <field name="model">l10n_ph_2307.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate BIR 2307 Report">
+                This will export a XLS file for BIR 2307.
+                <group>
+                    <field name="moves_to_export" nolabel="1" readonly="1">
+                        <tree>
+                            <field name="name" optional="show"/>
+                            <field name="invoice_partner_display_name" string="Vendor"/>
+                            <field name="invoice_date" string="Bill Date"/>
+                            <field name="invoice_date_due"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide" modifiers="{'readonly':true}" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_total_signed" string="Total" sum="Total" decoration-bf="1" optional="show" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show" on_change="1" modifiers="{'readonly':true, 'required':true}"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Generate" type="object" name="action_generate" class="btn btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" special="cancel" data-hotkey="z" class="btn btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="view_l10n_ph_2307_wizard_act_window" model="ir.actions.act_window">
+        <field name="name">BIR 2307 Report</field>
+        <field name="res_model">l10n_ph_2307.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

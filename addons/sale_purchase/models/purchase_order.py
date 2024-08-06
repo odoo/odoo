@@ -71,4 +71,4 @@ class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     sale_order_id = fields.Many2one(related='sale_line_id.order_id', string="Sale Order", store=True, readonly=True)
-    sale_line_id = fields.Many2one('sale.order.line', string="Origin Sale Item", index=True)
+    sale_line_id = fields.Many2one('sale.order.line', string="Origin Sale Item", index=True, copy=False)

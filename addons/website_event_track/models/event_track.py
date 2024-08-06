@@ -5,7 +5,7 @@ from datetime import timedelta
 from pytz import utc
 from random import randint
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.osv import expression
 from odoo.tools.mail import is_html_empty
@@ -322,11 +322,13 @@ class Track(models.Model):
         tracks = super(Track, self).create(vals_list)
 
         for track in tracks:
+            email_values = {} if self.env.user.email else {'email_from': self.env.company.catchall_formatted}
             track.event_id.message_post_with_view(
                 'website_event_track.event_track_template_new',
                 values={'track': track},
                 subject=track.name,
                 subtype_id=self.env.ref('website_event_track.mt_event_track').id,
+                **email_values,
             )
             track._synchronize_with_stage(track.stage_id)
 
@@ -392,13 +394,18 @@ class Track(models.Model):
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
             # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.partner_email)
+            email_normalized = tools.email_normalize(self.partner_email)
+            new_partner = message.partner_ids.filtered(
+                lambda partner: partner.email == self.partner_email or (email_normalized and partner.email_normalized == email_normalized)
+            )
             if new_partner:
+                if new_partner[0].email_normalized:
+                    email_domain = ('partner_email', 'in', [new_partner[0].email, new_partner[0].email_normalized])
+                else:
+                    email_domain = ('partner_email', '=', new_partner[0].email)
                 self.search([
-                    ('partner_id', '=', False),
-                    ('partner_email', '=', new_partner.email),
-                    ('stage_id.is_cancel', '=', False),
-                ]).write({'partner_id': new_partner.id})
+                    ('partner_id', '=', False), email_domain, ('stage_id.is_cancel', '=', False),
+                ]).write({'partner_id': new_partner[0].id})
         return super(Track, self)._message_post_after_hook(message, msg_vals)
 
     # ------------------------------------------------------------

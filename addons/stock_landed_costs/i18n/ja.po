@@ -6,24 +6,25 @@
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # kent_ocean <ke.tanabe@gmail.com>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2020
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2020
 # Hau Dao <hau@quartile.co>, 2020
-# Ryoko Tsuda <ryoko@quartile.co>, 2020
 # Noma Yuki, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -42,7 +43,7 @@ msgstr " すでに出荷"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
 msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
@@ -93,7 +94,7 @@ msgstr "活動種別アイコン"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Additional Costs"
-msgstr ""
+msgstr "追加コスト"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
@@ -103,7 +104,7 @@ msgstr "追加仕入諸掛"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__allowed_picking_ids
 msgid "Allowed Picking"
-msgstr ""
+msgstr "許可されたピッキング"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
@@ -201,7 +202,7 @@ msgstr "コストの調整項目が一致していません。あなたはおそ
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 msgid "Create Landed Costs"
-msgstr ""
+msgstr "仕入諸掛を作成"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
@@ -239,19 +240,19 @@ msgstr "日付"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Default Journal"
-msgstr ""
+msgstr "デフォルト仕訳帳"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "デフォルトの分割方法"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "仕入諸掛用に使用される際のデフォルトの分割方法"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -263,6 +264,7 @@ msgstr "説明"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
@@ -338,6 +340,7 @@ msgstr "グループ化"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
@@ -383,7 +386,7 @@ msgstr "フォロー中　"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
 msgid "Is Landed Costs Line"
-msgstr ""
+msgstr "仕入諸掛項目か"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
@@ -445,7 +448,7 @@ msgstr "仕入諸掛"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr ""
+msgstr "仕入諸掛表示"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -456,6 +459,7 @@ msgstr "仕入諸掛検証済"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template____last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost____last_update
@@ -487,7 +491,7 @@ msgstr "遅れた活動"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
 msgid "Lc Journal"
-msgstr ""
+msgstr "Lc仕訳帳"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_main_attachment_id
@@ -521,7 +525,7 @@ msgstr "新規"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
 msgid "New Value"
-msgstr ""
+msgstr "新しい値"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
@@ -589,7 +593,7 @@ msgstr "製品：%s の在庫経費勘定を設定してください。"
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "これらの追加原価が適用される%sを定義して下さい。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -611,6 +615,11 @@ msgstr "プロダクトテンプレート"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__product_type
 msgid "Product Type"
 msgstr "プロダクトタイプ"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "購買オーダ明細"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__quantity
@@ -668,7 +677,7 @@ msgstr "在庫仕入諸掛"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "在庫仕入諸掛項目"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
@@ -679,7 +688,7 @@ msgstr "在庫移動"
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "在庫評価レイヤ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -733,7 +742,7 @@ msgstr "評価"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "評価調整項目"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -771,6 +780,13 @@ msgstr "重量"
 #, python-format
 msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
-"applied for products with automated inventory valuation and FIFO or average "
-"costing method."
-msgstr ""
+"applied for products with FIFO or average costing method."
+msgstr "選択した%sに仕入諸掛を適用することはできません。仕入諸掛を適用できるのは、先入先出法または平均原価計算法のプロダクトのみです。"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/product.py:0
+#, python-format
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
+msgstr "そのプロダクトが会計仕訳明細で使用されているため、プロダクトタイプを変更したり、仕入諸掛オプションを無効にしたりすることはできません。"

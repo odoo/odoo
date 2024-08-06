@@ -2,13 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* sale_mrp
 # 
+# Translators:
+# Mari Khomeriki <mari.khomeriki@maxinai.com>, 2021
+# Martin Trigaux, 2021
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
+"Last-Translator: Martin Trigaux, 2021\n"
+"Language-Team: Georgian (https://app.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,6 +28,14 @@ msgstr ""
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.mrp_production_form_view_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr ""
+
+#. module: sale_mrp
+#: code:addons/sale_mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"As long as there are some sale order lines that must be delivered/invoiced and are related to these bills of materials, you can not remove them.\n"
+"The error concerns these products: %s"
 msgstr ""
 
 #. module: sale_mrp
@@ -41,7 +54,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "სახელი"
 
 #. module: sale_mrp
 #: model:ir.model.fields,field_description:sale_mrp.field_account_move_line__id
@@ -49,7 +62,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line__id
 msgid "ID"
-msgstr ""
+msgstr "იდენტიფიკატორი/ID"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_account_move_line
@@ -62,7 +75,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order____last_update
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "ბოლოს განახლებულია"
 
 #. module: sale_mrp
 #: code:addons/sale_mrp/models/sale.py:0
@@ -78,12 +91,12 @@ msgstr ""
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "გაყიდვის ორდერი"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "გაყიდვის ორდერის ხაზი"
 
 #. module: sale_mrp
 #: code:addons/sale_mrp/models/mrp_production.py:0

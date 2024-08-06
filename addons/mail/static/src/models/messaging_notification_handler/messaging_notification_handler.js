@@ -106,10 +106,8 @@ function factory(dependencies) {
         async _handleNotificationChannel(channelId, data) {
             const {
                 info,
-                is_typing,
                 last_message_id,
                 partner_id,
-                partner_name,
             } = data;
             switch (info) {
                 case 'channel_fetched':
@@ -122,15 +120,31 @@ function factory(dependencies) {
                         last_message_id,
                         partner_id,
                     });
+                case 'delete':
+                    return this._handleNotificationChannelDelete(channelId);
                 case 'typing_status':
-                    return this._handleNotificationChannelTypingStatus(channelId, {
-                        is_typing,
-                        partner_id,
-                        partner_name,
-                    });
+                    return this._handleNotificationChannelTypingStatus(channelId, data);
                 default:
                     return this._handleNotificationChannelMessage(channelId, data);
             }
+        }
+
+        /**
+         * @private
+         * @param {integer} channelId
+         * @param {Object} param1
+         * @param {integer} param1.partner_id
+         * @param {string} param1.partner_name
+         */
+        async _handleNotificationChannelDelete(channelId) {
+            const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+                id: channelId,
+                model: 'mail.channel',
+            });
+            if (!channel) {
+                return;
+            }
+            channel.delete();
         }
 
         /**
@@ -241,6 +255,10 @@ function factory(dependencies) {
                 channel.mass_mailing &&
                 this.env.session.notification_type === 'email'
             ) {
+                this._handleNotificationChannelSeen(channelId, {
+                    last_message_id: messageData.id,
+                    partner_id: this.env.messaging.currentPartner.id,
+                });
                 return;
             }
             // In all other cases: update counter and notify if necessary
@@ -265,8 +283,8 @@ function factory(dependencies) {
                     // on `channel` channels for performance reasons
                     channel.markAsFetched();
                 }
-                // (re)open chat on receiving new message
-                if (channel.channel_type !== 'channel' && !this.env.messaging.device.isMobile) {
+                // open chat on receiving new message if it was not already opened or folded
+                if (channel.channel_type !== 'channel' && !this.env.messaging.device.isMobile && !channel.chatWindow) {
                     this.env.messaging.chatWindowManager.openThread(channel);
                 }
             }
@@ -746,7 +764,9 @@ function factory(dependencies) {
                     notificationTitle = owl.utils.escape(authorName);
                 }
             }
-            const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);
+            const notificationContent = owl.utils.escape(
+                htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE)
+            );
             this.env.services['bus_service'].sendNotification(notificationTitle, notificationContent);
             messaging.update({ outOfFocusUnreadMessageCounter: increment() });
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1

@@ -11,22 +11,22 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
-# walther_b <wba@miracle.dk>, 2020
+# Walther Barnett <walther@gundogpro.dk>, 2020
 # Joe Hansen <joedalton2@yahoo.dk>, 2020
-# Martin Trigaux, 2020
 # jonas jensen <j.jensen@tcomp.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# Martin Trigaux, 2020
+# Mads Søndergaard, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
-"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
+"Last-Translator: Mads Søndergaard, 2021\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -606,8 +606,8 @@ msgstr "Indeholdt kvantitet"
 #. module: product
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
-msgid "Corner Desk Black"
-msgstr "Hjørne skrivebord sort"
+msgid "Corner Desk Left Sit"
+msgstr "Hjørne Skrivebord Venstre Sid"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -856,6 +856,7 @@ msgstr "Rabatter"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
 #: model:ir.model.fields,field_description:product.field_res_partner__display_name
+#: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
@@ -1085,6 +1086,7 @@ msgstr "Timer"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
 #: model:ir.model.fields,field_description:product.field_res_partner__id
+#: model:ir.model.fields,field_description:product.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
 
@@ -1191,14 +1193,10 @@ msgstr "Importer skabelon for forhandler prislister"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
-"I standard pris & AVCO: Produktets værdi (udregnes automatisk i AVCO).\n"
-"        I FIFO: Værdien på sidste enhed der forlod lageret (udregnet automatisk).\n"
-"        Brugt til at værdisætte produktet, når købs prisen er ukendt (f.eks. inventar justering).\n"
-"         Brugt til at udregne marginer på salgs ordre."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1308,6 +1306,7 @@ msgstr "Stort mødebord"
 #: model:ir.model.fields,field_description:product.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:product.field_res_country_group____last_update
 #: model:ir.model.fields,field_description:product.field_res_partner____last_update
+#: model:ir.model.fields,field_description:product.field_uom_uom____last_update
 msgid "Last Modified on"
 msgstr "Sidst ændret den"
 
@@ -1938,6 +1937,11 @@ msgid "Product Type"
 msgstr "Produkttype"
 
 #. module: product
+#: model:ir.model,name:product.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Vareenhed"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
@@ -2218,11 +2222,9 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Angiv det faste beløb for tillæg eller fratræk (negativ) til beløbet "
-"beregnet efter rabatten."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2382,6 +2384,12 @@ msgid "The product template is archived so no combination is possible."
 msgstr "Produkt skabelonen er arkiveret, så ingen kombination er mulig."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2431,6 +2439,15 @@ msgid "This comes from the product form."
 msgstr "Dette kommer fra vare-skærmbilledet."
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "Dette er summen af ekstra pris på alle egenskaber"
@@ -2454,6 +2471,18 @@ msgid ""
 msgstr ""
 "Denne prisliste anvendes i stedet for standardprislisten ved salg til den "
 "aktuelle kunde"
+
+#. module: product
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+"Denne afrundings præcision er højere end Decimalpræcisionen (%s cifre).\n"
+"Dette kan forårsage uoverensstemmelser i udregninger.\n"
+"Vær venlig at angive en præcision mellem %s og 1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2781,6 +2810,13 @@ msgid "Volume unit of measure label"
 msgstr "Volumen måleenhed mærkat"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Advarsel!"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
 msgstr "Advarsler"
@@ -2812,6 +2848,20 @@ msgstr "Vægtens måleenhed for mærkat"
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "Hvid"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
+"Du angiver en Decimalpræcision som er mindre præcis end Måleenhedens:\n"
+"%s\n"
+"Dette kan forårsage uoverensstemmelser i udregninger.\n"
+"Vær venlig at forøge afrundingen for de måleenheder, eller for antal cifre i denne Decimalpræcision."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2900,9 +2950,28 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
+"%s\n"
+"If the value has been associated to a product in the past, you will not be able to delete it."
+msgstr ""
+"Du kan ikke slette værdien %s fordi den anvendes i følgende produkter:\n"
+"%s\n"
+"Hvis værdien er blevet associeret med et produkt før, vil ud ikke være i stand til at slette den."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"Du kan ikke slette værdien %s fordi den blev anvendt i visse produkter."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n"
 "%s"
 msgstr ""
-"Du kan ikke slette værdien %s fordi den anvendes på følgende produkter:\n"
+"Du kan ikke slette denne prisliste (%s), da den anvendes i andre prisliste(r): \n"
 "%s"
 
 #. module: product
@@ -2920,6 +2989,14 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr "Du kan ikke flytte egenskaben %s fra produktet %s til produktet %s."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

@@ -121,6 +121,7 @@ odoo.define('mail/static/src/component_hooks/use_should_update_based_on_props/us
 'use strict';
 
 const { Component } = owl;
+const { onPatched } = owl.hooks;
 
 /**
  * Compares `a` and `b` up to the given `compareDepth`.
@@ -174,7 +175,11 @@ function isEqual(a, b, compareDepth) {
  */
 function useShouldUpdateBasedOnProps({ compareDepth = {} } = {}) {
     const component = Component.current;
+    let forceRender = false;
     component.shouldUpdate = nextProps => {
+        if (forceRender) {
+            return true;
+        }
         const allNewProps = Object.assign({}, nextProps);
         const defaultProps = component.constructor.defaultProps;
         for (const key in defaultProps) {
@@ -182,8 +187,10 @@ function useShouldUpdateBasedOnProps({ compareDepth = {} } = {}) {
                 allNewProps[key] = defaultProps[key];
             }
         }
-        return !isEqual(component.props, allNewProps, compareDepth);
+        forceRender = !isEqual(component.props, allNewProps, compareDepth);
+        return forceRender;
     };
+    onPatched(() => forceRender = false);
 }
 
 return useShouldUpdateBasedOnProps;

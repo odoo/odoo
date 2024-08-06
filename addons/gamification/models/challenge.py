@@ -232,32 +232,25 @@ class Challenge(models.Model):
         return records._update_all()
 
     def _update_all(self):
-        """Update the challenges and related goals
-
-        :param list(int) ids: the ids of the challenges to update, if False will
-        update only challenges in progress."""
+        """Update the challenges and related goals."""
         if not self:
             return True
 
         Goals = self.env['gamification.goal']
 
         # include yesterday goals to update the goals that just ended
-        # exclude goals for users that did not connect since the last update
+        # exclude goals for portal users that did not connect since the last update
         yesterday = fields.Date.to_string(date.today() - timedelta(days=1))
         self.env.cr.execute("""SELECT gg.id
-                        FROM gamification_goal as gg,
-                             gamification_challenge as gc,
-                             res_users as ru,
-                             res_users_log as log
-                       WHERE gg.challenge_id = gc.id
-                         AND gg.user_id = ru.id
-                         AND ru.id = log.create_uid
-                         AND gg.write_date < log.create_date
+                        FROM gamification_goal as gg
+                        JOIN res_users_log as log ON gg.user_id = log.create_uid
+                        JOIN res_users ru on log.create_uid = ru.id
+                       WHERE (gg.write_date < log.create_date OR ru.share IS NOT TRUE)
+                         AND ru.active IS TRUE
                          AND gg.closed IS NOT TRUE
-                         AND gc.id IN %s
+                         AND gg.challenge_id IN %s
                          AND (gg.state = 'inprogress'
-                              OR (gg.state = 'reached'
-                                  AND (gg.end_date >= %s OR gg.end_date IS NULL)))
+                              OR (gg.state = 'reached' AND gg.end_date >= %s))
                       GROUP BY gg.id
         """, [tuple(self.ids), yesterday])
 
@@ -360,7 +353,7 @@ class Challenge(models.Model):
                 participant_user_ids = set(challenge.user_ids.ids)
                 user_squating_challenge_ids = user_with_goal_ids - participant_user_ids
                 if user_squating_challenge_ids:
-                    # users that used to match the challenge 
+                    # users that used to match the challenge
                     Goals.search([
                         ('challenge_id', '=', challenge.id),
                         ('user_id', 'in', list(user_squating_challenge_ids))
@@ -451,7 +444,7 @@ class Challenge(models.Model):
             'action': <{True,False}>,
             'display_mode': <{progress,boolean}>,
             'target': <challenge line target>,
-            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,                                
+            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,
             'completeness': <percentage>,
             'current': <current value>,
         }

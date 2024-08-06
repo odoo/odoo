@@ -410,7 +410,7 @@ class Goal(models.Model):
         If the current value is changed and the report frequency is set to On
         change, a report is generated
         """
-        vals['last_update'] = fields.Date.today()
+        vals['last_update'] = fields.Date.context_today(self)
         result = super(Goal, self).write(vals)
         for goal in self:
             if goal.state != "draft" and ('definition_id' in vals or 'user_id' in vals):

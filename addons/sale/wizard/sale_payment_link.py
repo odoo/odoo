@@ -17,7 +17,7 @@ class SalePaymentLink(models.TransientModel):
             record = self.env[res['res_model']].browse(res['res_id'])
             res.update({
                 'description': record.name,
-                'amount': record.amount_total - sum(record.invoice_ids.mapped('amount_total')),
+                'amount': record.amount_total - sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_total')),
                 'currency_id': record.currency_id.id,
                 'partner_id': record.partner_id.id,
                 'amount_max': record.amount_total

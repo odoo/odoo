@@ -274,7 +274,7 @@ var InputField = DebouncedField.extend({
             inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });
             inputVal = this.value || '';
         } else {
-            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'none'});
+            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'off'});
             inputVal = this._formatValue(this.value);
         }
 
@@ -628,6 +628,8 @@ var FieldDateRange = InputField.extend({
                 autoUpdateInput: false,
                 timePickerIncrement: 5,
                 locale: {
+                    applyLabel: _t('Apply'),
+                    cancelLabel: _t('Cancel'),
                     format: this.isDateField ? time.getLangDateFormat() : time.getLangDatetimeFormat(),
                 },
             }
@@ -647,6 +649,31 @@ var FieldDateRange = InputField.extend({
         }
         this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Field widget is valid if value entered can convered to date/dateime value
+     * while parsing input value to date/datetime throws error then widget considered
+     * invalid
+     *
+     * @override
+     */
+    isValid: function () {
+        const value = this.mode === "readonly" ? this.value : this.$input.val();
+        try {
+            return field_utils.parse[this.formatType](value, this.field, { timezone: true }) || true;
+        } catch (error) {
+            return false;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Return the date written in the input, in UTC.
      *
@@ -654,7 +681,14 @@ var FieldDateRange = InputField.extend({
      * @returns {Moment|false}
      */
     _getValue: function () {
-        return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        try {
+            // user may enter manual value in input and it may not be parsed as date/datetime value
+            this.removeInvalidClass();
+            return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        } catch (error) {
+            this.setInvalidClass();
+            return false;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -701,16 +735,7 @@ var FieldDateRange = InputField.extend({
     _renderEdit: function () {
         this._super.apply(this, arguments);
         var self = this;
-        var startDate;
-        var endDate;
-        if (this.relatedEndDate) {
-            startDate = this._formatValue(this.value);
-            endDate = this._formatValue(this.recordData[this.relatedEndDate]);
-        }
-        if (this.relatedStartDate) {
-            startDate = this._formatValue(this.recordData[this.relatedStartDate]);
-            endDate = this._formatValue(this.value);
-        }
+        const [startDate, endDate] = this._getDateRangeFromInputField();
         this.dateRangePickerOptions.startDate = startDate || moment();
         this.dateRangePickerOptions.endDate = endDate || moment();
 
@@ -751,16 +776,39 @@ var FieldDateRange = InputField.extend({
     },
     /**
      * Bind the scroll event handle when the daterangepicker is open.
+     * Update the begin and end date with the dates from the input values
      *
      * @private
      */
     _onDateRangePickerShow() {
+        const daterangepicker = this.$el.data('daterangepicker');
         this._onScroll = ev => {
             if (!config.device.isMobile && !this.$pickerContainer.get(0).contains(ev.target)) {
-                this.$el.data('daterangepicker').hide();
+                daterangepicker.hide();
             }
         };
         window.addEventListener('scroll', this._onScroll, true);
+        const [startDate, endDate] = this._getDateRangeFromInputField();
+        daterangepicker.setStartDate(startDate? startDate.utcOffset(session.getTZOffset(startDate)): moment());
+        daterangepicker.setEndDate(endDate? endDate.utcOffset(session.getTZOffset(endDate)): moment());
+        daterangepicker.updateView();
+    },
+    /**
+     * Get the startDate and endDate of the daterangepicker from the input fields
+     * @returns [Date (moment object), Date (moment object)]
+     * @private
+     */
+    _getDateRangeFromInputField() {
+        let startDate, endDate;
+        if (this.relatedEndDate) {
+            startDate = this._getValue();
+            endDate = field_utils.parse[this.formatType](this.recordData[this.relatedEndDate]);
+        }
+        if (this.relatedStartDate) {
+            startDate = field_utils.parse[this.formatType](this.recordData[this.relatedStartDate]);
+            endDate = this._getValue();
+        }
+        return [startDate, endDate];
     },
 });
 
@@ -888,6 +936,7 @@ var FieldDate = InputField.extend({
 
     /**
      * Confirm the value on hit enter and re-render
+     * It will also remove the offset to get the UTC value
      *
      * @private
      * @override
@@ -896,7 +945,14 @@ var FieldDate = InputField.extend({
     async _onKeydown(ev) {
         this._super(...arguments);
         if (ev.which === $.ui.keyCode.ENTER) {
-            await this._setValue(this.$input.val());
+            let value = this.$input.val();
+            try {
+                value = this._parseValue(value);
+                if (this.datewidget.type_of_date === "datetime") {
+                    value.add(-this.getSession().getTZOffset(value), "minutes");
+                }
+            } catch (err) {}
+            await this._setValue(value);
             this._render();
         }
     },
@@ -986,8 +1042,8 @@ const RemainingDays = AbstractField.extend({
         // timezone), to get a meaningful delta for the user
         const nowUTC = moment().utc();
         const nowUserTZ = nowUTC.clone().add(session.getTZOffset(nowUTC), 'minutes');
-        const valueUserTZ = this.value.clone().add(session.getTZOffset(this.value), 'minutes');
-        const diffDays = valueUserTZ.startOf('day').diff(nowUserTZ.startOf('day'), 'days');
+        const fieldValue = this.field.type == "datetime" ? this.value.clone().add(session.getTZOffset(this.value), 'minutes') : this.value;
+        const diffDays = fieldValue.startOf('day').diff(nowUserTZ.startOf('day'), 'days');
         let text;
         if (Math.abs(diffDays) > 99) {
             text = this._formatValue(this.value, 'date');
@@ -1718,7 +1774,7 @@ var AbstractFieldBinary = AbstractField.extend({
         this._super.apply(this, arguments);
         this.fields = record.fields;
         this.useFileAPI = !!window.FileReader;
-        this.max_upload_size = 64 * 1024 * 1024; // 64Mo
+        this.max_upload_size = session.max_file_upload_size || 128 * 1024 * 1024;
         this.accepted_file_extensions = (this.nodeOptions && this.nodeOptions.accepted_file_extensions) || this.accepted_file_extensions || '*';
         if (!this.useFileAPI) {
             var self = this;
@@ -1892,10 +1948,18 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         if (width) {
             $img.attr('width', width);
             $img.css('max-width', width + 'px');
+            if (!height) {
+                $img.css('height', 'auto');
+                $img.css('max-height', '100%');
+            }
         }
         if (height) {
             $img.attr('height', height);
             $img.css('max-height', height + 'px');
+            if (!width) {
+                $img.css('width', 'auto');
+                $img.css('max-width', '100%');
+            }
         }
         this.$('> img').remove();
         this.$el.prepend($img);
@@ -1994,10 +2058,18 @@ var CharImageUrl = AbstractField.extend({
             if (width) {
                 $img.attr('width', width);
                 $img.css('max-width', width + 'px');
+                if (!height) {
+                    $img.css('height', 'auto');
+                    $img.css('max-height', '100%');
+                }
             }
             if (height) {
                 $img.attr('height', height);
                 $img.css('max-height', height + 'px');
+                if (!width) {
+                    $img.css('width', 'auto');
+                    $img.css('max-width', '100%');
+                }
             }
             this.$('> img').remove();
             this.$el.prepend($img);
@@ -2056,22 +2128,13 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         this.filename_value = this.recordData[this.attrs.filename];
     },
     _renderReadonly: function () {
-        this.do_toggle(!!this.value);
-        if (this.value) {
-            this.$el.empty().append($("<span/>").addClass('fa fa-download'));
-            if (this.recordData.id) {
-                this.$el.css('cursor', 'pointer');
-            } else {
-                this.$el.css('cursor', 'not-allowed');
-            }
-            if (this.filename_value) {
-                this.$el.append(" " + this.filename_value);
-            }
-        }
-        if (!this.res_id) {
-            this.$el.css('cursor', 'not-allowed');
-        } else {
-            this.$el.css('cursor', 'pointer');
+        var visible = !!(this.value && this.res_id);
+        this.$el.empty().css('cursor', 'not-allowed');
+        this.do_toggle(visible);
+        if (visible) {
+            this.$el.css('cursor', 'pointer')
+                    .text(this.filename_value || '')
+                    .prepend($('<span class="fa fa-download"/>'), ' ');
         }
     },
     _renderEdit: function () {
@@ -2625,8 +2688,20 @@ var BooleanToggle = FieldBoolean.extend({
      */
     _onClick: function (event) {
         event.stopPropagation();
-        this._setValue(!this.value);
+        if (!this.$input.prop('disabled')) {
+            this._setValue(!this.value);
+        }
     },
+
+    /**
+     * The boolean_toggle should only be disabled when there is a readonly modifier
+     * not when the view is in readonly mode
+     */
+    _render: function() {
+        this._super.apply(this, arguments);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly || false;
+        this.$input.prop('disabled', isReadonly);
+    }
 });
 
 var StatInfo = AbstractField.extend({
@@ -2963,6 +3038,8 @@ var FieldToggleBoolean = AbstractField.extend({
         this.$('i')
             .toggleClass('o_toggle_button_success', !!this.value)
             .toggleClass('text-muted', !this.value);
+        var isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
+        this.$el.prop('disabled', isReadonly);
         var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
         this.$el.attr('title', title);
         this.$el.attr('aria-pressed', this.value);

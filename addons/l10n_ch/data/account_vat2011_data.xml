@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <!--
-        #  TVA - Taxe sur la Valeur Ajoutée
+        #  TVA - Taxe sur la Valeur Ajoutée (pre-2024 rates change)
         -->
         <record model="account.tax.template" id="vat_25">
             <field name="name">TVA due a 2.5% (TR)</field>
@@ -677,6 +677,26 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
 
         <record model="account.tax.template" id="vat_100_import">
@@ -756,7 +776,7 @@
             <field name="amount_type">percent</field>
             <field name="sequence" eval="0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
-            <field name="type_tax_use">purchase</field>
+            <field name="type_tax_use">none</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -845,12 +865,20 @@
                     'repartition_type': 'base',
                     'plus_report_line_ids': [ref('account_tax_report_line_chtax_900')],
                 }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_line_ids': [ref('account_tax_report_line_chtax_900')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
                 }),
             ]"/>
         </record>
@@ -869,12 +897,20 @@
                     'repartition_type': 'base',
                     'plus_report_line_ids': [ref('account_tax_report_line_chtax_910')],
                 }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_line_ids': [ref('account_tax_report_line_chtax_910')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
                 }),
             ]"/>
         </record>

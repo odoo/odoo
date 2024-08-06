@@ -125,7 +125,11 @@ class AccountBankStatement(models.Model):
     # won't be called and therefore the other field will have a value of 0 and we don't want that.
     @api.depends('previous_statement_id', 'previous_statement_id.balance_end_real')
     def _compute_starting_balance(self):
-        for statement in self:
+        # When a bank statement is inserted out-of-order several fields needs to be recomputed.
+        # As the records to recompute are ordered by id, it may occur that the first record
+        # to recompute start a recursive recomputation of field balance_end_real
+        # To avoid this we sort the records by date
+        for statement in self.sorted(key=lambda s: s.date):
             if statement.previous_statement_id.balance_end_real != statement.balance_start:
                 statement.balance_start = statement.previous_statement_id.balance_end_real
             else:
@@ -207,16 +211,16 @@ class AccountBankStatement(models.Model):
             # will find the record itself, so we have to add a condition in the search to ignore self.id
             if not isinstance(st.id, models.NewId):
                 domain.extend(['|', '&', ('id', '<', st.id), ('date', '=', st.date), '&', ('id', '!=', st.id), ('date', '!=', st.date)])
-            previous_statement = self.search(domain, limit=1)
+            previous_statement = self.search(domain, limit=1, order='date desc, id desc')
             st.previous_statement_id = previous_statement.id
 
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True)
     reference = fields.Char(string='External Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True, help="Used to hold the reference of the external mean that created this statement (name of imported file, reference of online synchronization...)")
     date = fields.Date(required=True, states={'confirm': [('readonly', True)]}, index=True, copy=False, default=fields.Date.context_today)
     date_done = fields.Datetime(string="Closed On")
-    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, compute='_compute_starting_balance', readonly=False, store=True)
-    balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]}, compute='_compute_ending_balance', readonly=False, store=True)
-    state = fields.Selection(string='Status', required=True, readonly=True, copy=False, selection=[
+    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, compute='_compute_starting_balance', readonly=False, store=True, tracking=True)
+    balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]}, compute='_compute_ending_balance', readonly=False, store=True, tracking=True)
+    state = fields.Selection(string='Status', required=True, readonly=True, copy=False, tracking=True, selection=[
             ('open', 'New'),
             ('posted', 'Processing'),
             ('confirm', 'Validated'),
@@ -297,42 +301,58 @@ class AccountBankStatement(models.Model):
             st_line.currency_id = self.journal_id.currency_id or self.company_id.currency_id
 
     def _check_balance_end_real_same_as_computed(self):
-        ''' Check the balance_end_real (encoded manually by the user) is equals to the balance_end (computed by odoo).
-        In case of a cash statement, the different is set automatically to a profit/loss account.
-        '''
-        for stmt in self:
-            if not stmt.currency_id.is_zero(stmt.difference):
-                if stmt.journal_type == 'cash':
-                    st_line_vals = {
-                        'statement_id': stmt.id,
-                        'journal_id': stmt.journal_id.id,
-                        'amount': stmt.difference,
-                        'date': stmt.date,
-                    }
+        """ Check the balance_end_real (encoded manually by the user) is equals to the balance_end (computed by odoo). """
+        return self._check_cash_balance_end_real_same_as_computed() and self._check_bank_balance_end_real_same_as_computed()
 
-                    if stmt.difference < 0.0:
-                        if not stmt.journal_id.loss_account_id:
-                            raise UserError(_('Please go on the %s journal and define a Loss Account. This account will be used to record cash difference.', stmt.journal_id.name))
+    def _check_cash_balance_end_real_same_as_computed(self):
+        """ Check the balance_end_real (encoded manually by the user) is equals to the balance_end (computed by odoo).
+            For a cash statement, if there is a difference, the different is set automatically to a profit/loss account.
+        """
+        for statement in self.filtered(lambda stmt: stmt.journal_type == 'cash'):
+            if not statement.currency_id.is_zero(statement.difference):
+                st_line_vals = {
+                    'statement_id': statement.id,
+                    'journal_id': statement.journal_id.id,
+                    'amount': statement.difference,
+                    'date': statement.date,
+                }
 
-                        st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)")
-                        st_line_vals['counterpart_account_id'] = stmt.journal_id.loss_account_id.id
-                    else:
-                        # statement.difference > 0.0
-                        if not stmt.journal_id.profit_account_id:
-                            raise UserError(_('Please go on the %s journal and define a Profit Account. This account will be used to record cash difference.', stmt.journal_id.name))
+                if statement.currency_id.compare_amounts(statement.difference, 0.0) < 0.0:
+                    if not statement.journal_id.loss_account_id:
+                        raise UserError(_(
+                            "Please go on the %s journal and define a Loss Account. "
+                            "This account will be used to record cash difference.",
+                            statement.journal_id.name
+                        ))
 
-                        st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
-                        st_line_vals['counterpart_account_id'] = stmt.journal_id.profit_account_id.id
-
-                    self.env['account.bank.statement.line'].create(st_line_vals)
+                    st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)")
+                    st_line_vals['counterpart_account_id'] = statement.journal_id.loss_account_id.id
                 else:
-                    balance_end_real = formatLang(self.env, stmt.balance_end_real, currency_obj=stmt.currency_id)
-                    balance_end = formatLang(self.env, stmt.balance_end, currency_obj=stmt.currency_id)
-                    raise UserError(_(
-                        'The ending balance is incorrect !\nThe expected balance (%(real_balance)s) is different from the computed one (%(computed_balance)s).',
-                        real_balance=balance_end_real,
-                        computed_balance=balance_end
-                    ))
+                    # statement.difference > 0.0
+                    if not statement.journal_id.profit_account_id:
+                        raise UserError(_(
+                            "Please go on the %s journal and define a Profit Account. "
+                            "This account will be used to record cash difference.",
+                            statement.journal_id.name
+                        ))
+
+                    st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
+                    st_line_vals['counterpart_account_id'] = statement.journal_id.profit_account_id.id
+
+                self.env['account.bank.statement.line'].create(st_line_vals)
+        return True
+
+    def _check_bank_balance_end_real_same_as_computed(self):
+        """ Check the balance_end_real (encoded manually by the user) is equals to the balance_end (computed by odoo). """
+        for statement in self.filtered(lambda stmt: stmt.journal_type == 'bank'):
+            if not statement.currency_id.is_zero(statement.difference):
+                balance_end_real = formatLang(self.env, statement.balance_end_real, currency_obj=statement.currency_id)
+                balance_end = formatLang(self.env, statement.balance_end, currency_obj=statement.currency_id)
+                raise UserError(_(
+                    'The ending balance is incorrect !\nThe expected balance (%(real_balance)s) is different from the computed one (%(computed_balance)s).',
+                    real_balance=balance_end_real,
+                    computed_balance=balance_end
+                ))
         return True
 
     def unlink(self):
@@ -399,7 +419,7 @@ class AccountBankStatement(models.Model):
         if any(statement.state != 'open' for statement in self):
             raise UserError(_("Only new statements can be posted."))
 
-        self._check_balance_end_real_same_as_computed()
+        self._check_cash_balance_end_real_same_as_computed()
 
         for statement in self:
             if not statement.name:
@@ -507,6 +527,7 @@ class AccountBankStatementLine(models.Model):
     # == Business fields ==
     move_id = fields.Many2one(
         comodel_name='account.move',
+        auto_join=True,
         string='Journal Entry', required=True, readonly=True, ondelete='cascade',
         check_company=True)
     statement_id = fields.Many2one(
@@ -584,7 +605,7 @@ class AccountBankStatementLine(models.Model):
         statement = self.statement_id
         journal = statement.journal_id
         company_currency = journal.company_id.currency_id
-        journal_currency = journal.currency_id if journal.currency_id != company_currency else False
+        journal_currency = journal.currency_id or company_currency
 
         if self.foreign_currency_id and journal_currency:
             currency_id = journal_currency.id
@@ -661,7 +682,7 @@ class AccountBankStatementLine(models.Model):
             if balance_to_reconcile is None else balance_to_reconcile
 
         if 'currency_id' in counterpart_vals:
-            currency_id = counterpart_vals['currency_id'] or company_currency.id
+            currency_id = counterpart_vals['currency_id'] or foreign_currency.id
         elif move_line:
             currency_id = move_line.currency_id.id or company_currency.id
         else:
@@ -714,7 +735,7 @@ class AccountBankStatementLine(models.Model):
             **counterpart_vals,
             'name': counterpart_vals.get('name', move_line.name if move_line else ''),
             'move_id': self.move_id.id,
-            'partner_id': self.partner_id.id or (move_line.partner_id.id if move_line else False),
+            'partner_id': self.partner_id.id or counterpart_vals.get('partner_id', move_line.partner_id.id if move_line else False),
             'currency_id': currency_id,
             'account_id': counterpart_vals.get('account_id', move_line.account_id.id if move_line else False),
             'debit': balance if balance > 0.0 else 0.0,
@@ -780,6 +801,7 @@ class AccountBankStatementLine(models.Model):
     # -------------------------------------------------------------------------
 
     @api.depends('journal_id', 'currency_id', 'amount', 'foreign_currency_id', 'amount_currency',
+                 'move_id.to_check',
                  'move_id.line_ids.account_id', 'move_id.line_ids.amount_currency',
                  'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.currency_id',
                  'move_id.line_ids.matched_debit_ids', 'move_id.line_ids.matched_credit_ids')
@@ -852,6 +874,12 @@ class AccountBankStatementLine(models.Model):
             if 'date' not in vals:
                 vals['date'] = statement.date
 
+            # Avoid having the same foreign_currency_id as currency_id.
+            journal_currency = journal.currency_id or journal.company_id.currency_id
+            if vals.get('foreign_currency_id') == journal_currency.id:
+                vals['foreign_currency_id'] = None
+                vals['amount_currency'] = 0.0
+
             # Hack to force different account instead of the suspense account.
             counterpart_account_ids.append(vals.pop('counterpart_account_id', None))
 
@@ -899,7 +927,7 @@ class AccountBankStatementLine(models.Model):
             st_line_vals_to_write = {}
 
             if 'state' in changed_fields:
-                if (st_line.state == 'open' and move.state != 'draft') or (st_line.state == 'posted' and move.state != 'posted'):
+                if (st_line.state == 'open' and move.state != 'draft') or (st_line.state in ('posted', 'confirm') and move.state != 'posted'):
                     raise UserError(_(
                         "You can't manually change the state of journal entry %s, as it has been created by bank "
                         "statement %s."
@@ -989,7 +1017,7 @@ class AccountBankStatementLine(models.Model):
             company_currency = st_line.journal_id.company_id.currency_id
             journal_currency = st_line.journal_id.currency_id if st_line.journal_id.currency_id != company_currency else False
 
-            line_vals_list = self._prepare_move_line_default_vals()
+            line_vals_list = st_line._prepare_move_line_default_vals()
             line_ids_commands = [(1, liquidity_lines.id, line_vals_list[0])]
 
             if suspense_lines:
@@ -1047,7 +1075,7 @@ class AccountBankStatementLine(models.Model):
         reconciliation_overview = []
 
         total_balance = liquidity_lines.balance
-        total_amount_currency = liquidity_lines.amount_currency
+        total_amount_currency = -self._prepare_move_line_default_vals()[1]['amount_currency']
 
         # Step 1: Split 'lines_vals_list' into two batches:
         # - The existing account.move.lines that need to be reconciled with the statement line.
@@ -1267,8 +1295,8 @@ class AccountBankStatementLine(models.Model):
         if not self.partner_id:
             rec_overview_partners = set(overview['counterpart_line'].partner_id.id
                                         for overview in reconciliation_overview
-                                        if overview.get('counterpart_line') and overview['counterpart_line'].partner_id)
-            if len(rec_overview_partners) == 1:
+                                        if overview.get('counterpart_line'))
+            if len(rec_overview_partners) == 1 and rec_overview_partners != {False}:
                 self.line_ids.write({'partner_id': rec_overview_partners.pop()})
 
         # Refresh analytic lines.

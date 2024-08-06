@@ -36,6 +36,9 @@ class ResConfigSettings(models.TransientModel):
 
     def action_setup_token(self):
         self.ensure_one()
+        if self.env['google.drive.config']._module_deprecated():
+            return
+
         template = self.env.ref('google_drive.google_drive_auth_code_wizard')
         return {
             'name': _('Set up refresh token'),

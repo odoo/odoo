@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import re
 from datetime import datetime, timedelta
+from freezegun import freeze_time
 
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import Form, tagged
 
 
+@freeze_time("2021-01-14 09:12:15")
 @tagged('post_install', '-at_install')
 class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
@@ -38,6 +40,19 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                     'date_planned': datetime.today().replace(hour=9).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })],
         }
+
+    def test_update_price_unit(self):
+        self.po_vals["order_line"] = [self.po_vals["order_line"][0]]
+        # we only need one purchase line for this test
+        po = self.env['purchase.order'].create(self.po_vals)
+        pol = po.order_line[0]
+        po.button_confirm()
+        self.assertEqual(len(pol.move_ids), 1)
+        self.assertEqual(pol.move_ids[0].price_unit, 500)
+        pol.price_unit = 1
+        self.assertEqual(pol.price_unit, 1)
+        # line below shouldn't fail
+        self.assertEqual(pol.move_ids[0].price_unit, 1)
 
     def test_00_purchase_order_flow(self):
         # Ensure product_id_2 doesn't have res_partner_1 as supplier
@@ -330,3 +345,117 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po_on_time_rate = po.on_time_rate
         # 4. Check both are equals.
         self.assertEqual(partner_on_time_rate, po_on_time_rate)
+
+    def test_04_multi_uom(self):
+        yards_uom = self.env['uom.uom'].create({
+            'category_id': self.env.ref('uom.uom_categ_length').id,
+            'name': 'Yards',
+            'factor_inv': 0.9144,
+            'uom_type': 'bigger',
+        })
+        self.product_id_2.write({
+            'uom_id': self.env.ref('uom.product_uom_meter').id,
+            'uom_po_id': yards_uom.id,
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_id_2.name,
+                    'product_id': self.product_id_2.id,
+                    'product_qty': 4.0,
+                    'product_uom': self.product_id_2.uom_po_id.id,
+                    'price_unit': 1.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                })
+            ],
+        })
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        picking.move_line_ids.write({'qty_done': 3.66})
+        picking.button_validate()
+        self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')
+
+    def test_message_qty_already_received(self):
+        _product = self.env['product.product'].create({
+            'name': 'TempProduct',
+            'type': 'consu',
+            'company_id': self.env.user.company_id.id,
+        })
+
+        _purchase_order = self.env['purchase.order'].create({
+            'company_id': self.env.user.company_id.id,
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': _product.name,
+                    'product_id': _product.id,
+                    'product_qty': 25.0,
+                    'price_unit': 250.0,
+                })],
+        })
+
+        _purchase_order.button_confirm()
+
+        first_picking = _purchase_order.picking_ids[0]
+        first_picking.move_lines.quantity_done = 5
+        backorder_wizard_dict = first_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        second_picking = _purchase_order.picking_ids[1]
+        second_picking.move_lines.quantity_done = 5
+        backorder_wizard_dict = second_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        third_picking = _purchase_order.picking_ids[2]
+        third_picking.move_lines.quantity_done = 5
+        backorder_wizard_dict = third_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        _message_content = _purchase_order.message_ids.mapped("body")[0]
+        self.assertIsNotNone(re.search(r"Received Quantity: 5.0 -&gt; 10.0", _message_content), "Already received quantity isn't correctly taken into consideration")
+
+    def test_pol_description(self):
+        """
+        Suppose a product with several sellers, all with the same partner. On the purchase order, the product
+        description should be based on the correct seller
+        """
+        self.env.user.write({'company_id': self.company_data['company'].id})
+
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'seller_ids': [(0, 0, {
+                'name': self.partner_a.id,
+                'min_qty': 1,
+                'price': 10,
+                'product_code': 'C01',
+                'product_name': 'Name01',
+                'sequence': 1,
+            }), (0, 0, {
+                'name': self.partner_a.id,
+                'min_qty': 20,
+                'price': 2,
+                'product_code': 'C02',
+                'product_name': 'Name02',
+                'sequence': 2,
+            })]
+        })
+
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = product
+        orderpoint_form.product_min_qty = 1
+        orderpoint_form.product_max_qty = 0.000
+        order_point = orderpoint_form.save()
+
+        self.env['procurement.group'].run_scheduler()
+
+        pol = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(pol.name, "[C01] Name01")
+
+        with Form(pol.order_id) as po_form:
+            with po_form.order_line.edit(0) as pol_form:
+                pol_form.product_qty = 25
+        self.assertEqual(pol.name, "[C02] Name02")

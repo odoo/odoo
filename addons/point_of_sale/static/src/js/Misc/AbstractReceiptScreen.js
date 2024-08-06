@@ -25,7 +25,7 @@ odoo.define('point_of_sale.AbstractReceiptScreen', function (require) {
                 } else {
                     const { confirmed } = await this.showPopup('ConfirmPopup', {
                         title: printResult.message.title,
-                        body: 'Do you want to print using the web printer?',
+                        body: this.env._t('Do you want to print using the web printer?'),
                     });
                     if (confirmed) {
                         // We want to call the _printWeb when the popup is fully gone
@@ -39,13 +39,9 @@ odoo.define('point_of_sale.AbstractReceiptScreen', function (require) {
                 return await this._printWeb();
             }
         }
-        /**
-         * https://stackoverflow.com/questions/21285902/printing-a-part-of-webpage-with-javascript
-         */
         async _printWeb() {
             try {
-                const isPrinted = document.execCommand('print', false, null);
-                if (!isPrinted) window.print();
+                window.print();
                 return true;
             } catch (err) {
                 await this.showPopup('ErrorPopup', {

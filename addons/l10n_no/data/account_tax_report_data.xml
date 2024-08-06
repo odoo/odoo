@@ -6,12 +6,6 @@
         <field name="country_id" ref="base.no"/>
     </record>
 
-    <record id="account_tax_report_line_sum_avgiftsgrunnlag" model="account.tax.report.line">
-        <field name="name">Sum avgiftsgrunnlag</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="1"/>
-    </record>
-
     <record id="account_tax_report_line_samlet_omsetning" model="account.tax.report.line">
         <field name="name">A. Samlet omsetning, uttak og innførsel</field>
         <field name="sequence" eval="1"/>
@@ -38,7 +32,7 @@
 
     <record id="account_tax_report_line_innenlands_omsetning" model="account.tax.report.line">
         <field name="name">B. Innenlands omsetning og uttak</field>
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="2"/>
         <field name="report_id" ref="tax_report"/>
     </record>
 
@@ -116,7 +110,7 @@
 
     <record id="account_tax_report_line_utforsel" model="account.tax.report.line">
         <field name="name">C. Utførsel</field>
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="3"/>
         <field name="report_id" ref="tax_report"/>
     </record>
 
@@ -131,7 +125,7 @@
 
     <record id="account_tax_report_line_innforsel_av_varer" model="account.tax.report.line">
         <field name="name">D. Innførsel av varer</field>
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="4"/>
         <field name="report_id" ref="tax_report"/>
     </record>
 
@@ -182,7 +176,7 @@
 
     <record id="account_tax_report_line_kjop_med_omvendt_avgiftsplikt" model="account.tax.report.line">
         <field name="name">E. Kjøp med omvendt avgiftsplikt</field>
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="5"/>
         <field name="report_id" ref="tax_report"/>
     </record>
 
@@ -224,7 +218,7 @@
 
     <record id="account_tax_report_line_fradragsberettigen_innenlands" model="account.tax.report.line">
         <field name="name">F. Fradragsberettiget innenlands inngående avgift</field>
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="6"/>
         <field name="report_id" ref="tax_report"/>
     </record>
 
@@ -257,7 +251,7 @@
 
     <record id="account_tax_report_line_fradragsberettiget_innforselsmerverdiavgift" model="account.tax.report.line">
         <field name="name">G. Fradragsberettiget innførselsmerverdiavgift</field>
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="7"/>
         <field name="report_id" ref="tax_report"/>
     </record>
 
@@ -281,7 +275,7 @@
 
     <record id="account_tax_report_line_sum" model="account.tax.report.line">
         <field name="name">H. Sum</field>
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="8"/>
         <field name="report_id" ref="tax_report"/>
     </record>
 

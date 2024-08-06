@@ -5,6 +5,7 @@ import datetime
 from datetime import datetime, timedelta, time
 
 from odoo import fields
+from odoo.tests import Form
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 import pytz
 import re
@@ -185,6 +186,20 @@ class TestCalendar(SavepointCaseWithUserDemo):
             else:
                 self.assertEqual(d.hour, 15)
             self.assertEqual(d.minute, 30)
+
+    def test_recurring_ny(self):
+        self.env.user.tz = 'US/Eastern'
+        f = Form(self.CalendarEvent.with_context(tz='US/Eastern'))
+        f.name = 'test'
+        f.start = '2022-07-07 01:00:00'  # This is in UTC. In NY, it corresponds to the 6th of july at 9pm.
+        f.recurrency = True
+        self.assertEqual(f.weekday, 'WE')
+        self.assertEqual(f.event_tz, 'US/Eastern', "The value should correspond to the user tz")
+        self.assertEqual(f.count, 1, "The default value should be displayed")
+        self.assertEqual(f.interval, 1, "The default value should be displayed")
+        self.assertEqual(f.month_by, "date", "The default value should be displayed")
+        self.assertEqual(f.end_type, "count", "The default value should be displayed")
+        self.assertEqual(f.rrule_type, "weekly", "The default value should be displayed")
 
     def test_event_activity_timezone(self):
         activty_type = self.env['mail.activity.type'].create({

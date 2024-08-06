@@ -13,7 +13,7 @@ import psycopg2
 
 from odoo import models, fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger, float_repr
 from odoo.tools.date_utils import add, subtract, start_of, end_of
@@ -618,6 +618,33 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.bar3, 'C')
         self.assertCountEqual(log, ['compute'])
 
+        # corner case: write on a field that is marked to compute
+        log.clear()
+        # writing on 'foo' marks 'bar1', 'bar2', 'bar3' to compute
+        record.write({'foo': '1/2/3'})
+        self.assertCountEqual(log, [])
+        # writing on 'bar3' must force the computation before updating
+        record.write({'bar3': 'X'})
+        self.assertCountEqual(log, ['compute', 'inverse23'])
+        self.assertEqual(record.foo, '1/2/X')
+        self.assertEqual(record.bar1, '1')
+        self.assertEqual(record.bar2, '2')
+        self.assertEqual(record.bar3, 'X')
+        self.assertCountEqual(log, ['compute', 'inverse23'])
+
+        log.clear()
+        # writing on 'foo' marks 'bar1', 'bar2', 'bar3' to compute
+        record.write({'foo': 'A/B/C'})
+        self.assertCountEqual(log, [])
+        # writing on 'bar1', 'bar2', 'bar3' discards the computation
+        record.write({'bar1': 'X', 'bar2': 'Y', 'bar3': 'Z'})
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+        self.assertEqual(record.foo, 'X/Y/Z')
+        self.assertEqual(record.bar1, 'X')
+        self.assertEqual(record.bar2, 'Y')
+        self.assertEqual(record.bar3, 'Z')
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+
     def test_13_inverse_access(self):
         """ test access rights on inverse fields """
         foo = self.env['test_new_api.category'].create({'name': 'Foo'})
@@ -903,6 +930,23 @@ class TestFields(TransactionCaseWithUserDemo):
             'line_ids': [(2, record.line_ids.id), (0, 0, {'subtotal': 1.0})],
         })
         check(1.0)
+
+    def test_20_monetary_related(self):
+        """ test value rounding with related currency """
+        currency = self.env.ref('base.USD')
+        monetary_base = self.env['test_new_api.monetary_base'].create({
+            'base_currency_id': currency.id
+        })
+        monetary_related = self.env['test_new_api.monetary_related'].create({
+            'monetary_id': monetary_base.id,
+            'total': 1/3,
+        })
+        self.env.cr.execute(
+            "SELECT total FROM test_new_api_monetary_related WHERE id=%s",
+            monetary_related.ids,
+        )
+        [total] = self.env.cr.fetchone()
+        self.assertEqual(total, .33)
 
     def test_20_like(self):
         """ test filtered_domain() on char fields. """
@@ -1195,6 +1239,23 @@ class TestFields(TransactionCaseWithUserDemo):
         discussion_field = discussion.fields_get(['name'])['name']
         self.assertEqual(message_field['help'], discussion_field['help'])
 
+    def test_25_related_attributes(self):
+        """ test the attributes of related fields """
+        text = self.registry['test_new_api.foo'].text
+        self.assertFalse(text.trim, "The target field is defined with trim=False")
+
+        # trim=True is the default on the field's class
+        self.assertTrue(type(text).trim, "By default, a Char field has trim=True")
+
+        # the parameter 'trim' is not set in text1's definition, so the field
+        # retrieves its value from text.trim
+        text1 = self.registry['test_new_api.bar'].text1
+        self.assertFalse(text1.trim, "The related field retrieves trim=False from target")
+
+        # text2 is defined with trim=True, so it should get that value
+        text2 = self.registry['test_new_api.bar'].text2
+        self.assertTrue(text2.trim, "The related field was defined with trim=True")
+
     def test_25_related_single(self):
         """ test related fields with a single field in the path. """
         record = self.env['test_new_api.related'].create({'name': 'A'})
@@ -1407,6 +1468,131 @@ class TestFields(TransactionCaseWithUserDemo):
         company_records = self.env['test_new_api.company'].search([('foo', '=', 'DEF')])
         self.assertEqual(len(company_records), 1)
 
+    def test_28_company_dependent_search(self):
+        """ Test the search on company-dependent fields in all corner cases.
+            This assumes that filtered_domain() correctly filters records when
+            its domain refers to company-dependent fields.
+        """
+        Property = self.env['ir.property']
+        Model = self.env['test_new_api.company']
+
+        # create 4 records for all cases: two with explicit truthy values, one
+        # with an explicit falsy value, and one without an explicit value
+        records = Model.create([{}] * 4)
+
+        # For each field, we assign values to the records, and test a number of
+        # searches.  The search cases are given by comparison operators, and for
+        # each operator, we test a number of possible operands.  Every search()
+        # returns a subset of the records, and we compare it to an equivalent
+        # search performed by filtered_domain().
+
+        def test_field(field_name, truthy_values, operations):
+            # set ir.properties to all records except the last one
+            Property._set_multi(
+                field_name, Model._name,
+                {rec.id: val for rec, val in zip(records, truthy_values + [False])},
+                # Using this sentinel for 'default_value' forces the method to
+                # create 'ir.property' records for the value False. Without it,
+                # no property would be created because False is the default
+                # value.
+                default_value=object(),
+            )
+
+            # test without default value
+            test_cases(field_name, operations)
+
+            # set default value to False
+            Property._set_default(field_name, Model._name, False)
+            Property.flush()
+            Property.invalidate_cache()
+            test_cases(field_name, operations, False)
+
+            # set default value to truthy_values[0]
+            Property._set_default(field_name, Model._name, truthy_values[0])
+            Property.flush()
+            Property.invalidate_cache()
+            test_cases(field_name, operations, truthy_values[0])
+
+        def test_cases(field_name, operations, default=None):
+            for operator, values in operations.items():
+                for value in values:
+                    domain = [(field_name, operator, value)]
+                    with self.subTest(domain=domain, default=default):
+                        search_result = Model.search([('id', 'in', records.ids)] + domain)
+                        filter_result = records.filtered_domain(domain)
+                        self.assertEqual(
+                            search_result, filter_result,
+                            f"Got values {[r[field_name] for r in search_result]} "
+                            f"instead of {[r[field_name] for r in filter_result]}",
+                        )
+
+        # boolean fields
+        test_field('truth', [True, True], {
+            '=': (True, False),
+            '!=': (True, False),
+        })
+        # integer fields
+        test_field('count', [10, -2], {
+            '=': (10, -2, 0, False),
+            '!=': (10, -2, 0, False),
+            '<': (10, -2, 0),
+            '>=': (10, -2, 0),
+            '<=': (10, -2, 0),
+            '>': (10, -2, 0),
+        })
+        # float fields
+        test_field('phi', [1.61803, -1], {
+            '=': (1.61803, -1, 0, False),
+            '!=': (1.61803, -1, 0, False),
+            '<': (1.61803, -1, 0),
+            '>=': (1.61803, -1, 0),
+            '<=': (1.61803, -1, 0),
+            '>': (1.61803, -1, 0),
+        })
+        # char fields
+        test_field('foo', ['qwer', 'azer'], {
+            'like': ('qwer', 'azer'),
+            'ilike': ('qwer', 'azer'),
+            'not like': ('qwer', 'azer'),
+            'not ilike': ('qwer', 'azer'),
+            '=': ('qwer', 'azer', False),
+            '!=': ('qwer', 'azer', False),
+            'not in': (['qwer', 'azer'], ['qwer', False], [False], []),
+            'in': (['qwer', 'azer'], ['qwer', False], [False], []),
+        })
+        # date fields
+        date1, date2 = date(2021, 11, 22), date(2021, 11, 23)
+        test_field('date', [date1, date2], {
+            '=': (date1, date2, False),
+            '!=': (date1, date2, False),
+            '<': (date1, date2),
+            '>=': (date1, date2),
+            '<=': (date1, date2),
+            '>': (date1, date2),
+        })
+        # datetime fields
+        moment1, moment2 = datetime(2021, 11, 22), datetime(2021, 11, 23)
+        test_field('moment', [moment1, moment2], {
+            '=': (moment1, moment2, False),
+            '!=': (moment1, moment2, False),
+            '<': (moment1, moment2),
+            '>=': (moment1, moment2),
+            '<=': (moment1, moment2),
+            '>': (moment1, moment2),
+        })
+        # many2one fields
+        tag1, tag2 = self.env['test_new_api.multi.tag'].create([{'name': 'one'}, {'name': 'two'}])
+        test_field('tag_id', [tag1.id, tag2.id], {
+            'like': (tag1.name, tag2.name),
+            'ilike': (tag1.name, tag2.name),
+            'not like': (tag1.name, tag2.name),
+            'not ilike': (tag1.name, tag2.name),
+            '=': (tag1.id, tag2.id, False),
+            '!=': (tag1.id, tag2.id, False),
+            'in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
+            'not in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
+        })
+
     def test_30_read(self):
         """ test computed fields as returned by read(). """
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -1437,6 +1623,57 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(cat2.parent, cat1)
         with self.assertRaises(AccessError):
             cat1.name
+
+    def test_32_prefetch_missing_error(self):
+        """ Test that prefetching non-column fields works in the presence of deleted records. """
+        Discussion = self.env['test_new_api.discussion']
+
+        # add an ir.rule that forces reading field 'name'
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get(Discussion._name).id,
+            'groups': [self.env.ref('base.group_user').id],
+            'domain_force': "[('name', '!=', 'Super Secret discution')]",
+        })
+
+        records = Discussion.with_user(self.user_demo).create([
+            {'name': 'EXISTING'},
+            {'name': 'MISSING'},
+        ])
+
+        # unpack to keep the prefetch on each recordset
+        existing, deleted = records
+        self.assertEqual(existing._prefetch_ids, records._ids)
+
+        # this invalidates the caches but the prefetching remains the same
+        deleted.unlink()
+
+        # this should not trigger a MissingError
+        existing.categories
+
+        # invalidate 'categories' for the assertQueryCount
+        existing.invalidate_cache(['categories'])
+        with self.assertQueryCount(4):
+            # <categories>.__get__(existing)
+            #  -> records._fetch_field(['categories'])
+            #      -> records._read(['categories'])
+            #          -> records.check_access_rule('read')
+            #              -> records._filter_access_rules_python('read')
+            #                  -> records.filtered_domain(...)
+            #                      -> <name>.__get__(existing)
+            #                          -> records._fetch_field(['name'])
+            #                              -> records._read(['name', ...])
+            #                                  -> ONE QUERY to read ['name', ...] of records
+            #                                  -> ONE QUERY for deleted.exists() / code: forbidden = missing.exists()
+            #          -> ONE QUERY for records.exists() / code: self = self.exists()
+            #          -> ONE QUERY to read the many2many of existing
+            existing.categories
+
+        # this one must trigger a MissingError
+        with self.assertRaises(MissingError):
+            deleted.categories
+
+        # special case: should not fail
+        Discussion.browse([None]).read(['categories'])
 
     def test_40_real_vs_new(self):
         """ test field access on new records vs real records. """
@@ -1677,6 +1914,22 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertTrue(new_disc.participants)
         self.assertNotEqual(new_disc.participants, disc.participants)
         self.assertEqual(new_disc.participants._origin, disc.participants)
+
+        # provide many2one field as a dict of values; the value is a new record
+        # with the given 'id' as origin (if given, of course)
+        new_msg = disc.messages.new({
+            'discussion': {'name': disc.name},
+        })
+        self.assertTrue(new_msg.discussion)
+        self.assertFalse(new_msg.discussion.id)
+        self.assertFalse(new_msg.discussion._origin)
+
+        new_msg = disc.messages.new({
+            'discussion': {'name': disc.name, 'id': disc.id},
+        })
+        self.assertTrue(new_msg.discussion)
+        self.assertFalse(new_msg.discussion.id)
+        self.assertEqual(new_msg.discussion._origin, disc)
 
         # check convert_to_write
         tag = self.env['test_new_api.multi.tag'].create({'name': 'Foo'})
@@ -1926,6 +2179,34 @@ class TestFields(TransactionCaseWithUserDemo):
         moves = self.env['test_new_api.move'].search([('line_ids', 'in', line.id)])
         self.assertEqual(moves, move2)
 
+    def test_73_relational_inverse(self):
+        """ Check the consistency of relational fields with inverse(s). """
+        discussion1, discussion2 = self.env['test_new_api.discussion'].create([
+            {'name': "discussion1"}, {'name': "discussion2"},
+        ])
+        category1, category2 = self.env['test_new_api.category'].create([
+            {'name': "category1"}, {'name': "category2"},
+        ])
+
+        # assumption: category12 and category21 are in different order, but are
+        # in the same order when put in a set()
+        category12 = category1 + category2
+        category21 = category2 + category1
+        self.assertNotEqual(category12.ids, category21.ids)
+        self.assertEqual(list(set(category12.ids)), list(set(category21.ids)))
+
+        # make sure discussion1.categories is in cache; the write() below should
+        # update the cache of discussion1.categories by appending category12.ids
+        discussion1.categories
+        category12.write({'discussions': [(4, discussion1.id)]})
+        self.assertEqual(discussion1.categories.ids, category12.ids)
+
+        # make sure discussion2.categories is in cache; the write() below should
+        # update the cache of discussion2.categories by appending category21.ids
+        discussion2.categories
+        category21.write({'discussions': [(4, discussion2.id)]})
+        self.assertEqual(discussion2.categories.ids, category21.ids)
+
     def test_80_copy(self):
         Translations = self.env['ir.translation']
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -2144,7 +2425,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
 
         # test create inverse no store
-        record = self.env['test_new_api.model_image'].create({
+        record = self.env['test_new_api.model_image'].with_context(image_no_postprocess=True).create({
             'name': 'image',
             'image_256': image_w,
         })
@@ -2314,6 +2595,24 @@ class TestFields(TransactionCaseWithUserDemo):
         # ensure ir.rule is applied even when reading m2m
         with self.assertRaises(AccessError):
             record_user.read(['tags'])
+
+    def test_98_unlink_recompute(self):
+        move = self.env['test_new_api.move'].create({
+            'line_ids': [(0, 0, {'quantity': 42})],
+        })
+        line = move.line_ids
+        self.assertEqual(move.quantity, 42)
+
+        # create an ir.rule for lines that uses move.quantity
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get(line._name).id,
+            'domain_force': "[('move_id.quantity', '>=', 0)]",
+        })
+
+        # unlink the line, and check the recomputation of move.quantity
+        user = self.env.ref('base.user_demo')
+        line.with_user(user).unlink()
+        self.assertEqual(move.quantity, 0)
 
 
 class TestX2many(common.TransactionCase):
@@ -2553,12 +2852,12 @@ class TestX2many(common.TransactionCase):
         result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', [])])
         self.assertEqual(result, recs)
 
-        # these cases are weird
+        # test 'not in' where the lines contain NULL values
         result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', (line1 + line0).ids)])
-        self.assertEqual(result, recs.browse())
+        self.assertEqual(result, recs - recX)
 
         result = recs.search([('id', 'in', recs.ids), ('lines', 'not in', line0.ids)])
-        self.assertEqual(result, recs.browse())
+        self.assertEqual(result, recs)
 
         # special case: compare with False
         result = recs.search([('id', 'in', recs.ids), ('lines', '=', False)])
@@ -2586,6 +2885,145 @@ class TestX2many(common.TransactionCase):
             'store': False,
         })
         self.assertTrue(field.unlink())
+
+    def test_custom_m2m_related(self):
+        # this checks the ondelete of a related many2many field
+        model_id = self.env['ir.model']._get_id('res.partner')
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_foo',
+            'field_description': 'Foo',
+            'model_id': model_id,
+            'ttype': 'many2many',
+            'relation': 'res.partner.category',
+            'related': 'category_id',
+            'readonly': True,
+            'store': True,
+        })
+        self.assertTrue(field.unlink())
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    @common.users('portal')
+    def test_sudo_commands(self):
+        """Test manipulating a x2many field using Commands with `sudo` or with another user (`with_user`)
+        is not allowed when the destination model is flagged `_allow_sudo_commands = False` and the transaction user
+        does not have the required access rights.
+
+        This test asserts an AccessError is raised
+        when a user attempts to pass Commands to a One2many and Many2many field
+        targeting a model flagged with `_allow_sudo_commands = False`
+        while using an environment with `sudo()` or `with_user(admin_user)`.
+
+        The `with_user` are edge cases in some business codes, where a more-priviledged user is used temporary
+        to perform an action, such as:
+        - `Documents.with_user(share.create_uid)`
+        - `request.env['sign.request'].with_user(contract.hr_responsible_id).sudo()`
+        """
+
+        admin_user = self.env.ref('base.user_admin')
+        my_user = self.env.user.sudo(False)
+
+        # 1. one2many field `res.partner.user_ids`
+        # Sanity checks
+        # `res.partner` must be flagged as `_allow_sudo_commands = False` otherwise the test is pointless
+        self.assertEqual(self.env['res.users']._allow_sudo_commands, False)
+        # in case the type of `res.partner.user_ids` changes in a future release.
+        # if `res.partner.user_ids` is no longer a one2many, this test must be adapted.
+        self.assertEqual(self.env['res.partner']._fields['user_ids'].type, 'one2many')
+        my_partner = my_user.partner_id
+
+        for Partner, my_partner in [
+            (self.env['res.partner'].with_user(admin_user), my_partner.with_user(admin_user)),
+            (self.env['res.partner'].sudo(), my_partner.sudo()),
+        ]:
+            # 1.0 Command.CREATE
+            # Case: a public/portal user creating a new users with arbitrary values
+            with self.assertRaisesRegex(AccessError, "not allowed to create 'Users'"):
+                Partner.create({
+                    'name': 'foo',
+                    'user_ids': [(0, 0, {
+                        'login': 'foo',
+                        'password': 'foo',
+                    })],
+                })
+            # 1.1 Command.UPDATE
+            # Case: a public/portal updating his user to add himself a group
+            with self.assertRaisesRegex(AccessError, "not allowed to modify 'Users'"):
+                my_partner.write({
+                    'user_ids': [(1, my_partner.user_ids[0].id, {
+                        'groups_id': [self.env.ref('base.group_system').id],
+                    })],
+                })
+            # 1.2 Command.DELETE
+            # Case: a public user deleting the public user to mess with the database
+            with self.assertRaisesRegex(AccessError, "not allowed to delete 'Users'"):
+                my_partner.write({
+                    'user_ids': [(2, my_partner.user_ids[0].id)],
+                })
+            # 1.3 Command.UNLINK
+            # Case: a public user unlinking the public partner and the public user to mess with the database
+            with self.assertRaisesRegex(AccessError, "not allowed to modify 'Users'"):
+                my_partner.write({
+                    'user_ids': [(3, my_partner.user_ids[0].id)],
+                })
+            # 1.4 Command.LINK
+            # Case: a public/portal user changing the `partner_id` of an admin,
+            # to change the email address of the user and ask for a reset password.
+            with self.assertRaisesRegex(AccessError, "not allowed to modify 'Users'"):
+                my_partner.write({
+                    'user_ids': [(4, admin_user.id)],
+                })
+            # 1.5 Command.CLEAR
+            # Case: a public user unlinking the public partner and the public user just to mess with the database
+            with self.assertRaisesRegex(AccessError, "not allowed to modify 'Users'"):
+                my_partner.write({
+                    'user_ids': [(5,)],
+                })
+            # 1.6 Command.SET
+            # Case: a public/portal user changing the `partner_id` of an admin,
+            # to change the email address of the user and ask for a reset password.
+            with self.assertRaisesRegex(AccessError, "not allowed to modify 'Users'"):
+                my_partner.write({
+                    'user_ids': [(6, 0, [admin_user.id])],
+                })
+
+        # 2. many2many field `test_new_api.discussion.participants`
+        # Sanity checks
+        # `test_new_api.user` must be flagged as `_allow_sudo_commands = False` otherwise the test is pointless
+        self.assertEqual(self.env['test_new_api.group']._allow_sudo_commands, False)
+        # in case the type of `test_new_api.discussion.participants` changes in a future release.
+        # if `test_new_api.discussion.participants` is no longer a many2many, this test must be adapted.
+        self.assertEqual(self.env['test_new_api.user']._fields['group_ids'].type, 'many2many')
+        public_group = self.env['test_new_api.group'].with_user(admin_user).create({
+            'name': 'public'
+        }).with_user(self.env.user)
+        my_user = self.env['test_new_api.user'].with_user(admin_user).create({
+            'name': 'foo',
+            'group_ids': [public_group.id],
+        }).with_user(self.env.user)
+
+        for User, my_user in [
+            (self.env['test_new_api.user'].with_user(admin_user), my_user.with_user(admin_user)),
+            (self.env['test_new_api.user'].sudo(), my_user.sudo()),
+        ]:
+            # 2.0 Command.CREATE
+            # Case: a public/portal user creating a new users with arbitrary values
+            with self.assertRaisesRegex(AccessError, "not allowed to create 'test_new_api.group'"):
+                User.create({
+                    'name': 'foo',
+                    'group_ids': [(0, 0, {})],
+                })
+            # 2.1 Command.UPDATE
+            # Case: a public/portal updating his user to add himself a group
+            with self.assertRaisesRegex(AccessError, "not allowed to modify 'test_new_api.group'"):
+                my_user.write({
+                    'group_ids': [(1, my_user.group_ids[0].id, {})],
+                })
+            # 2.2 Command.DELETE
+            # Case: a public user deleting the public user to mess with the database
+            with self.assertRaisesRegex(AccessError, "not allowed to delete 'test_new_api.group'"):
+                my_user.write({
+                    'group_ids': [(2, my_user.group_ids[0].id)],
+                })
 
 
 class TestHtmlField(common.TransactionCase):
@@ -2843,6 +3281,24 @@ class TestParentStore(common.TransactionCase):
         """ Move multiple nodes to create a cycle. """
         with self.assertRaises(UserError):
             self.cats(1, 3).write({'parent': self.cats(9).id})
+
+    def test_compute_depend_parent_path(self):
+        self.assertEqual(self.cats(7).depth, 3)
+        self.assertEqual(self.cats(8).depth, 3)
+        self.assertEqual(self.cats(9).depth, 3)
+
+        # change parent of node to have 2 parents
+        self.cats(7).parent = self.cats(2)
+        self.assertEqual(self.cats(7).depth, 2)
+
+        # change parent of node to root
+        self.cats(7).parent = False
+        self.assertEqual(self.cats(7).depth, 0)
+
+        # change grand-parent of nodes
+        self.cats(6).parent = self.cats(0)
+        self.assertEqual(self.cats(8).depth, 2)
+        self.assertEqual(self.cats(9).depth, 2)
 
 
 class TestRequiredMany2one(common.TransactionCase):

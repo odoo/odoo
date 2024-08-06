@@ -735,9 +735,17 @@ var ActionManager = Widget.extend({
         var controller = this.controllers[controllerID];
         if (controller) {
             var action = this.actions[controller.actionID];
-            if (action.target === 'new' || action.pushState === false) {
-                // do not push state for actions in target="new" or for actions
-                // that have been explicitly marked as not pushable
+            if (action.target === 'new') {
+                // do not push state for actions in target="new"
+                return;
+            }
+            if (action.pushState === false) {
+                // do not push state for actions that have been explicitly
+                // marked as not pushable but trigger the title change
+                this.trigger_up('set_title_part', {
+                    part: "action",
+                    title: controller.widget.getTitle()
+                });
                 return;
             }
             state = _.extend({}, state, this._getControllerState(controller.jsID));

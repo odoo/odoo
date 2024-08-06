@@ -8,8 +8,11 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# trendspotter, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Jiří Podhorecký, 2021
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Tomáš Píšek, 2023
+# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,8 +20,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Katerina Horylova, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -304,6 +307,13 @@ msgid "Amount Max"
 msgstr "Max částka"
 
 #. module: payment
+#: code:addons/payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"An acquirer is using this journal. Only bank and cash types are allowed."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "An error occured during the processing of this payment"
@@ -390,17 +400,17 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr ""
+msgstr "Model dokumentu zpětného volání"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Hash zpětného volání"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr ""
+msgstr "metoda zpětného volání"
 
 #. module: payment
 #. openerp-web
@@ -841,7 +851,7 @@ msgstr "Generovat platební odkaz"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Generovat odkaz na prodejní platbu"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_invoice_order_generate_link
@@ -953,7 +963,7 @@ msgstr "Instalovat"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_state
 msgid "Installation State"
-msgstr ""
+msgstr "Stav instalace"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
@@ -976,13 +986,7 @@ msgstr "Interní chyba serveru"
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
-
-#. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Nalezen neplatný token! Nabyvatel tokenu %s != %s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -1096,7 +1100,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "ID účtu obchodníka"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -1338,7 +1342,7 @@ msgstr "Tok plateb"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Followup"
-msgstr ""
+msgstr "Sledování plateb"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1370,7 +1374,7 @@ msgstr "Deník plateb"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr ""
+msgstr "Odkaz na platbu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__payment_method
@@ -1386,7 +1390,7 @@ msgstr "Platební podmínky"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
 msgid "Payment Ref"
-msgstr ""
+msgstr "Platební reference"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1793,6 +1797,14 @@ msgid "The transaction %s with %s for %s is pending."
 msgstr ""
 
 #. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "The value of the payment amount must be positive."
@@ -2042,6 +2054,14 @@ msgstr "bankovní převod"
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
 msgstr "Kliknutím zde můžete být přesměrováni na stránku s potvrzením."
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot delete the payment acquirer %s; disable it or uninstall it "
+"instead."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0

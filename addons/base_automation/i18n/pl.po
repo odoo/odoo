@@ -12,11 +12,13 @@
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2020
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2020
 # Karol Rybak <karolrybak85@gmail.com>, 2020
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2020
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2020
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2020
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2020
 # Paweł Wodyński <pw@myodoo.pl>, 2020
 # Maksym <ms@myodoo.pl>, 2020
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,8 +26,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2020\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -168,12 +170,12 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzył(a)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
 msgid "Created on"
-msgstr "Utworzono"
+msgstr "Data utworzenia"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__day
@@ -206,7 +208,7 @@ msgstr "Typ opóźnienia"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
-msgstr ""
+msgstr "Wyłącz akcję"
 
 #. module: base_automation
 #. openerp-web
@@ -239,7 +241,7 @@ msgstr "Rodzaj terminu"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
-msgstr ""
+msgstr "Edytuj akcję"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -426,7 +428,7 @@ msgstr "Odpowiedzialny"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
-msgstr "Numeracja"
+msgstr "Sekwencja"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -450,7 +452,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Skonfiguruj nową automatyzację"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -479,6 +481,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"\"%(trigger_value)s\"  %(trigger_label)s może być użyty tylko z typem akcji "
+"\"%(state_value)s\"."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -566,6 +570,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Używaj automatycznych akcji do automatycznego wyzwalania akcji dla\n"
+"różnych ekranów. Przykład: sygnał utworzony przez określonego użytkownika może\n"
+"może zostać automatycznie przypisany do określonego zespołu sprzedaży, lub\n"
+"szansa, która nadal ma status oczekującej po 14 dniach, może\n"
+"wyzwolić automatyczną wiadomość e-mail z przypomnieniem."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
@@ -632,6 +641,8 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
+"Możesz poprosić administratora o wyłączenie lub poprawienie tej "
+"automatycznej akcji."
 
 #. module: base_automation
 #. openerp-web
@@ -639,3 +650,5 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
+"Możesz wyłączyć tę automatyczną akcję lub edytować ją, aby rozwiązać "
+"problem."

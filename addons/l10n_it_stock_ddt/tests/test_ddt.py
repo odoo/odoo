@@ -13,12 +13,16 @@ class TestDDT(TestSaleCommon):
         cls.company_data['company'].write({
                         'vat':"IT12345670017",
                         'country_id': cls.env.ref('base.it'),
-                        'l10n_it_codice_fiscale': '0123456789987654',
+                        'l10n_it_codice_fiscale': '01234560157',
                         'l10n_it_tax_system': 'RF01',
                         'street': 'Via Giovanni Maria Platina 66',
                         'zip': '26100',
                         'city': 'Cremona',
                         })
+        bank_account = cls.env['res.partner.bank'].create({
+            'acc_number': 'IT60X0542811101000000123456',
+            'partner_id': cls.company_data['company'].partner_id.id,
+        })
         cls.partner_a.write({
             'street': 'Piazza Guglielmo Marconi 5',
             'zip': '26100',
@@ -27,6 +31,12 @@ class TestDDT(TestSaleCommon):
             'vat': 'IT12345670124'
         })
 
+    @classmethod
+    def setup_company_data(cls, company_name, **kwargs):
+        return super().setup_company_data(company_name, **{
+            **kwargs,
+            'country_id': cls.env.ref('base.it').id,
+        })
 
     def test_ddt_flow(self):
         """
@@ -84,3 +94,49 @@ class TestDDT(TestSaleCommon):
         self.inv2 = self.so._create_invoices()
         self.inv2.action_post()
         self.assertEqual(self.inv2.l10n_it_ddt_ids.ids, (pickx1 | pickx2).ids, 'DDTs should be linked to the invoice')
+
+    def test_ddt_flow_2(self):
+        """
+            Test that the link between the invoice lines and the deliveries linked to the invoice
+            through the link with the sale order is calculated correctly.
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                                   'product_id': self.product_a.id,
+                                   'product_uom_qty': 3,
+                                   'product_uom': self.product_a.uom_id.id,
+                                   'price_unit': self.product_a.list_price,
+                                   'tax_id': self.company_data['default_tax_sale']
+                                   }
+                            )],
+            'pricelist_id': self.company_data['default_pricelist'].id,
+            'picking_policy': 'direct',
+        })
+        so.action_confirm()
+
+        # deliver partially
+        picking_1 = so.picking_ids
+        picking_1.move_lines.write({'quantity_done': 1})
+        wiz_act = picking_1.button_validate()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
+        wiz.process()
+
+        invoice_1 = so._create_invoices()
+        invoice_form = Form(invoice_1)
+        with invoice_form.invoice_line_ids.edit(0) as line:
+            line.quantity = 1.0
+        invoice_1 = invoice_form.save()
+        invoice_1.action_post()
+
+        picking_2 = so.picking_ids.filtered(lambda p: p.state != 'done')
+        picking_2.move_lines.write({'quantity_done': 2})
+        picking_2.button_validate()
+
+        invoice_2 = so._create_invoices()
+        invoice_2.action_post()
+
+        # Invalidate the cache to ensure the lines will be fetched in the right order.
+        picking_2.invalidate_cache()
+        self.assertEqual(invoice_1.l10n_it_ddt_ids.ids, picking_1.ids, 'DDT picking_1 should be linked to the invoice_1')
+        self.assertEqual(invoice_2.l10n_it_ddt_ids.ids, picking_2.ids, 'DDT picking_2 should be linked to the invoice_2')

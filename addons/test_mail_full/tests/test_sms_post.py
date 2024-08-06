@@ -91,7 +91,7 @@ class TestSMSPost(TestMailFullCommon, TestRecipients):
 
     def test_message_sms_model_w_partner_only(self):
         with self.with_user('employee'):
-            record = self.env['mail.test.sms.partner'].create({'partner_id': self.partner_1.id})
+            record = self.env['mail.test.sms.partner'].create({'customer_id': self.partner_1.id})
 
             with self.mockSMSGateway():
                 messages = record._message_sms(self._test_body)
@@ -100,13 +100,31 @@ class TestSMSPost(TestMailFullCommon, TestRecipients):
 
     def test_message_sms_model_w_partner_only_void(self):
         with self.with_user('employee'):
-            record = self.env['mail.test.sms.partner'].create({'partner_id': False})
+            record = self.env['mail.test.sms.partner'].create({'customer_id': False})
 
             with self.mockSMSGateway():
                 messages = record._message_sms(self._test_body)
 
         # should not crash but have a failed notification
         self.assertSMSNotification([{'partner': self.env['res.partner'], 'number': False, 'state': 'exception', 'failure_type': 'sms_number_missing'}], self._test_body, messages)
+
+    def test_message_sms_model_w_partner_m2m_only(self):
+        with self.with_user('employee'):
+            record = self.env['mail.test.sms.partner.2many'].create({'customer_ids': [(4, self.partner_1.id)]})
+
+            with self.mockSMSGateway():
+                messages = record._message_sms(self._test_body)
+
+        self.assertSMSNotification([{'partner': self.partner_1}], self._test_body, messages)
+
+        # TDE: should take first found one according to partner ordering
+        with self.with_user('employee'):
+            record = self.env['mail.test.sms.partner.2many'].create({'customer_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]})
+
+            with self.mockSMSGateway():
+                messages = record._message_sms(self._test_body)
+
+        self.assertSMSNotification([{'partner': self.partner_2}], self._test_body, messages)
 
     def test_message_sms_on_field_w_partner(self):
         with self.with_user('employee'), self.mockSMSGateway():
@@ -390,7 +408,7 @@ class TestSMSApi(TestMailFullCommon):
                 self.env['mail.test.sms'].browse(self.records.ids)._message_sms_schedule_mass(body=self._test_body, mass_keep_log=False)
 
         for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, self._test_body)
+            self.assertSMSOutgoing(record.customer_id, None, content=self._test_body)
 
     def test_message_schedule_sms_w_log(self):
         with self.with_user('employee'):
@@ -398,7 +416,7 @@ class TestSMSApi(TestMailFullCommon):
                 self.env['mail.test.sms'].browse(self.records.ids)._message_sms_schedule_mass(body=self._test_body, mass_keep_log=True)
 
         for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, self._test_body)
+            self.assertSMSOutgoing(record.customer_id, None, content=self._test_body)
             self.assertSMSLogged(record, self._test_body)
 
     def test_message_schedule_sms_w_template(self):
@@ -407,7 +425,7 @@ class TestSMSApi(TestMailFullCommon):
                 self.env['mail.test.sms'].browse(self.records.ids)._message_sms_schedule_mass(template=self.sms_template, mass_keep_log=False)
 
         for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
+            self.assertSMSOutgoing(record.customer_id, None, content='Dear %s this is an SMS.' % record.display_name)
 
     def test_message_schedule_sms_w_template_and_log(self):
         with self.with_user('employee'):
@@ -415,5 +433,5 @@ class TestSMSApi(TestMailFullCommon):
                 self.env['mail.test.sms'].browse(self.records.ids)._message_sms_schedule_mass(template=self.sms_template, mass_keep_log=True)
 
         for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
+            self.assertSMSOutgoing(record.customer_id, None, content='Dear %s this is an SMS.' % record.display_name)
             self.assertSMSLogged(record, 'Dear %s this is an SMS.' % record.display_name)

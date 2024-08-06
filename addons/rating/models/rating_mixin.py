@@ -193,7 +193,7 @@ class RatingMixin(models.AbstractModel):
             if hasattr(self, 'message_post'):
                 feedback = tools.plaintext2html(feedback or '')
                 self.message_post(
-                    body="<img src='/rating/static/src/img/rating_%s.png' alt=':%s/10' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
+                    body="<img src='/rating/static/src/img/rating_%s.png' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
                     % (rate, rate, feedback),
                     subtype_xmlid=subtype_xmlid or "mail.mt_comment",
                     author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py

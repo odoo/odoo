@@ -3,24 +3,26 @@
 # 	* crm_iap_lead
 # 
 # Translators:
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Andrius Laukavičius <andrius@focusate.eu>, 2019
-# Edgaras Kriukonis <edgaras@focusate.eu>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Martin Trigaux, 2021
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2021
+# Silvija Butko <silvija.butko@gmail.com>, 2021
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2021
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2021
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2021
+# Andrius Laukavičius <andrius@focusate.eu>, 2021
+# Edgaras Kriukonis <edgaras@focusate.eu>, 2021
+# Linas Versada <linaskrisiukenas@gmail.com>, 2021
+# Jonas Zinkevicius <jozi@odoo.com>, 2023
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
-"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024\n"
+"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -31,34 +33,19 @@ msgstr ""
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "%d credits will be consumed to find %d companies."
-msgstr ""
+msgstr "%d kreditas(-ai ) bus sunaudoti rasti %d įmonę(-es)."
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "(Time Now)"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "<b>Contacts</b>"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "<b>Phone :</b>"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "<b>Timezone : </b>"
-msgstr ""
+msgstr "<b>Kontaktai</b>"
 
 #. module: crm_iap_lead
 #: model:mail.template,body_html:crm_iap_lead.lead_generation_no_credits
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
-"    <p>There is no more credits on your IAP Lead Generation account.<br/>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
 "    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
@@ -85,6 +72,11 @@ msgid ""
 "        </p><p>\n"
 "            No opportunities could be generated according to your search criteria\n"
 "        </p>"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -135,19 +127,18 @@ msgstr ""
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__search_type__companies
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Companies"
 msgstr "Įmonės"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__search_type__people
 msgid "Companies and their Contacts"
-msgstr ""
+msgstr "Įmonės ir jų kontaktai"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__company_size_max
 msgid "Company Size Max"
-msgstr ""
+msgstr "Maksimalus įmonės dydis"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_167
@@ -173,11 +164,6 @@ msgstr ""
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_33
 msgid "Consumer Staples"
 msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Contacts"
-msgstr "Kontaktai"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__country_ids
@@ -209,11 +195,22 @@ msgid "Created on"
 msgstr "Sukurta"
 
 #. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Default Tags"
+msgstr "Žymos pagal nutylėjimą"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_lead_label
+msgid "Display Lead Label"
+msgstr ""
+
+#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
@@ -245,7 +242,7 @@ msgid "Draft"
 msgstr "Juodraštis"
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Email"
 msgstr "El. paštas"
 
@@ -289,9 +286,10 @@ msgstr "Nuo"
 #. module: crm_iap_lead
 #. openerp-web
 #: code:addons/crm_iap_lead/static/src/xml/leads_tree_generate_leads_views.xml:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 #, python-format
 msgid "Generate Leads"
-msgstr ""
+msgstr "Kurti iniciatyvas"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
@@ -335,6 +333,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__id
 msgid "ID"
 msgstr "ID"
 
@@ -351,7 +350,7 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__industry_ids
 msgid "Industries"
-msgstr ""
+msgstr "Pramonės šakos"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
@@ -369,6 +368,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
@@ -391,11 +391,6 @@ msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__lead
-msgid "Lead"
-msgstr "Iniciatyva"
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
 msgstr ""
@@ -408,12 +403,7 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:ir.ui.menu,name:crm_iap_lead.crm_menu_lead_generation
 msgid "Lead Generation"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Lead Information"
-msgstr ""
+msgstr "Iniciatyvų Kūrimas"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__lead_mining_request_id
@@ -438,15 +428,17 @@ msgid "Lead/Opportunity"
 msgstr "Iniciatyva/Galimybė"
 
 #. module: crm_iap_lead
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Leads"
 msgstr "Iniciatyvos"
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. openerp-web
+#: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
 msgid ""
-"Make sure you know if you have to be GDPR compliant for storing personal "
-"data."
+"Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
 msgstr ""
 
 #. module: crm_iap_lead
@@ -461,7 +453,7 @@ msgstr ""
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__name
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Name"
 msgstr "Vardas"
 
@@ -480,32 +472,37 @@ msgid "New"
 msgstr "Naujas"
 
 #. module: crm_iap_lead
+#. openerp-web
+#: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Now, just let the magic happen!"
+msgstr ""
+
+#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_number
 msgid "Number of Contacts"
 msgstr "Kontaktų skaičius"
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__leads_count
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_count
 msgid "Number of Generated Leads"
-msgstr ""
+msgstr "Sukurtų iniciatyvų skaičius"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_number
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_tree
 msgid "Number of Leads"
 msgstr ""
 
 #. module: crm_iap_lead
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__opportunity
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Opportunities"
 msgstr "Pardavimo galimybės"
 
 #. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__opportunity
-msgid "Opportunity"
-msgstr "Pardavimo galimybė"
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#, python-format
 msgid "Opportunity created by Odoo Lead Generation"
 msgstr ""
 
@@ -530,7 +527,7 @@ msgid "Pharmaceuticals, Biotechnology & Life Sciences"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Phone"
 msgstr "Telefonas"
 
@@ -543,11 +540,6 @@ msgstr ""
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_114
 msgid "Real Estate"
 msgstr "Nekilnojamas turtas"
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Request"
-msgstr "Užklausa"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__name
@@ -572,11 +564,6 @@ msgid "Reveal"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__reveal_id
-msgid "Reveal ID"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__role
 msgid "Role"
 msgstr "Vaidmuo"
@@ -584,7 +571,7 @@ msgstr "Vaidmuo"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__name
 msgid "Role Name"
-msgstr ""
+msgstr "Rolės pavadinimas"
 
 #. module: crm_iap_lead
 #: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_role_name_uniq
@@ -665,11 +652,6 @@ msgid "Technology Hardware & Equipment"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "Technology Used :"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_149
 msgid "Telecommunication Services"
 msgstr ""
@@ -681,7 +663,7 @@ msgid "This makes a total of %d credits for this request."
 msgstr ""
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Title"
 msgstr "Pavadinimas"
 
@@ -707,6 +689,18 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138
 msgid "Utilities"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "What do you need ?"
+msgstr ""
+
+#. module: crm_iap_lead
+#. openerp-web
+#: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Which Industry do you want to target?"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -837,7 +831,7 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_22
 msgid "sale"
-msgstr ""
+msgstr "pardvimas"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form

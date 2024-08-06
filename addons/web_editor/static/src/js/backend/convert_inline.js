@@ -273,6 +273,8 @@ function classToStyle($editable) {
         var $target = $(node);
         var css = getMatchedCSSRules(node);
         var style = $target.attr('style') || '';
+        // Outlook doesn't support inline !important
+        style = style.replace(/!important/g,'');
         _.each(css, function (v,k) {
             if (!(new RegExp('(^|;)\s*' + k).test(style))) {
                 style = k+':'+v+';'+style;
@@ -417,7 +419,7 @@ FieldHtml.include({
      */
     _toInline: function () {
         var $editable = this.wysiwyg.getEditable();
-        var html = this.wysiwyg.getValue();
+        var html = this.wysiwyg.getValue({'style-inline': true});
         $editable.html(html);
 
         attachmentThumbnailToLinkImg($editable);

@@ -9,11 +9,12 @@
 # falexandresilva <falexandresilva@gmail.com>, 2020
 # Marcos Abreu <marcoos.abreu@gmail.com>, 2020
 # Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2020
+# Silmar <pinheirosilmar@gmail.com>, 2020
 # Diego Bittencourt <diegomb86@gmail.com>, 2020
 # Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
 # renato sabo <renato.sabo@bradootech.com>, 2020
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
+# Rodrigo de Almeida Sottomaior Macedo <sottomaiormacedotec@gmail.com>, 2020
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # Maicon Grahl <maicongrahl@hotmail.com>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
@@ -27,12 +28,13 @@
 # Martin Trigaux, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
-# Silmar <pinheirosilmar@gmail.com>, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
 # Luis Malta <luiso.malta@gmail.com>, 2020
-# grazziano <gra.negocia@gmail.com>, 2020
-# Éder Brito <britoederr@gmail.com>, 2021
+# grazziano <grazziano.do+transifex@gmail.com>, 2020
 # Maurício Liell <mauricio@liell.com.br>, 2021
+# Éder Brito <britoederr@gmail.com>, 2021
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
@@ -40,13 +42,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Maurício Liell <mauricio@liell.com.br>, 2021\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Maitê Dietze, 2024\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web
 #. openerp-web
@@ -186,7 +188,7 @@ msgstr "(alterar)"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "(count)"
-msgstr "(contagem)"
+msgstr "(total)"
 
 #. module: web
 #. openerp-web
@@ -520,7 +522,7 @@ msgstr "Adicionar %s"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add Custom Filter"
-msgstr "Adicionar Filtro Personalizado"
+msgstr "Adicionar filtro personalizado"
 
 #. module: web
 #. openerp-web
@@ -557,7 +559,7 @@ msgstr "Adicionar uma linha"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add branch"
-msgstr "Adicionar filial"
+msgstr "Adicionar ramificação"
 
 #. module: web
 #. openerp-web
@@ -618,7 +620,7 @@ msgstr "Adicionar: "
 #: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt Your Signature"
-msgstr "Escolhe a sua assinatura"
+msgstr "Escolher a sua assinatura"
 
 #. module: web
 #. openerp-web
@@ -693,7 +695,7 @@ msgstr "Entre os/as"
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "An error occurred"
-msgstr "Ocorreu um error"
+msgstr "Houve um erro"
 
 #. module: web
 #. openerp-web
@@ -734,6 +736,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -832,7 +835,7 @@ msgstr "Você tem certeza que quer fazer o update em"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Ascending"
-msgstr "Ascendente"
+msgstr "Crescente"
 
 #. module: web
 #. openerp-web
@@ -997,6 +1000,7 @@ msgstr "A visão de calendário não definiu o atributo 'date_start'"
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
@@ -1169,7 +1173,7 @@ msgstr "Layout do Documento da Empresa"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo
 msgid "Company Logo"
-msgstr "Logo da Empresa"
+msgstr "Logo da empresa"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__name
@@ -1179,7 +1183,7 @@ msgstr "Nome da Empresa"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__report_header
 msgid "Company Tagline"
-msgstr "Slogan da Empresa"
+msgstr "Slogan da empresa"
 
 #. module: web
 #. openerp-web
@@ -1296,7 +1300,7 @@ msgstr "Copiar para Área de Transferência"
 #: code:addons/web/static/src/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
-msgstr "Não pôde connectar ao servidor"
+msgstr "Não foi possível conectar ao servidor"
 
 #. module: web
 #. openerp-web
@@ -1340,7 +1344,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Count"
-msgstr "Contar"
+msgstr "Total"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
@@ -1468,7 +1472,7 @@ msgstr "Roxo escuro"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Database"
-msgstr "Banco de Dados"
+msgstr "Base de dados"
 
 #. module: web
 #. openerp-web
@@ -1559,7 +1563,7 @@ msgstr "Excluir linha"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Descending"
-msgstr "Descendente"
+msgstr "Decrescente"
 
 #. module: web
 #. openerp-web
@@ -2169,7 +2173,7 @@ msgstr "Imagem"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "In %s days"
-msgstr "Em %s dia(s)"
+msgstr "Em %s dias"
 
 #. module: web
 #. openerp-web
@@ -2660,7 +2664,7 @@ msgstr "Novo"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "New %s"
-msgstr ""
+msgstr "Novo %s"
 
 #. module: web
 #. openerp-web
@@ -2974,6 +2978,13 @@ msgstr "Somente eu"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools"
+msgstr "Abrir Ferramentas de Desenvolvedor"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open Developer Tools#{widget.debug_mode_help}"
 msgstr "Abrir Ferramentas de Desenvolvedor#{widget.debug_mode_help}"
 
@@ -3022,6 +3033,13 @@ msgstr "Abrir a visualização de lista"
 #, python-format
 msgid "Open: "
 msgstr "Aberto: "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr "Colunas opcionais"
 
 #. module: web
 #. openerp-web
@@ -3956,7 +3974,7 @@ msgstr "Espere uns minutos, pegue um café, <br /> porque está carregando..."
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__vat
 msgid "Tax ID"
-msgstr "ID do Imposto"
+msgstr "CPF/CNPJ"
 
 #. module: web
 #. openerp-web
@@ -4340,7 +4358,7 @@ msgstr "Desvincular linha"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Unnamed"
-msgstr "Anônimo"
+msgstr "Sem nome"
 
 #. module: web
 #. openerp-web
@@ -4362,7 +4380,7 @@ msgstr "Atualizar para:"
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #, python-format
 msgid "Upgrade now"
-msgstr "Atualizar agora"
+msgstr "Fazer upgrade agora"
 
 #. module: web
 #. openerp-web
@@ -4376,21 +4394,21 @@ msgstr "Upgrade para Enterprise"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Upgrade to future versions"
-msgstr "Atualize para versões futuras"
+msgstr "Upgrade para versões futuras"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Upload and Set"
-msgstr "Enviar e Definir"
+msgstr "Carregar e Definir"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/file_upload_progress_bar.js:0
 #, python-format
 msgid "Upload cancelled"
-msgstr "Upload Cancelado"
+msgstr "Carregamento cancelado"
 
 #. module: web
 #. openerp-web
@@ -4398,7 +4416,7 @@ msgstr "Upload Cancelado"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Upload your file"
-msgstr "Faça upload de seu arquivo"
+msgstr "Carregue o arquivo"
 
 #. module: web
 #. openerp-web
@@ -4547,6 +4565,7 @@ msgstr "Alternador de Visualização"
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/action_manager_report.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
+#: code:addons/web/static/src/js/control_panel/favorite_menu.js:0
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
@@ -4659,6 +4678,12 @@ msgstr "Sim"
 #, python-format
 msgid "Yesterday"
 msgstr "Ontem"
+
+#. module: web
+#: code:addons/web/controllers/main.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "Você não tem permissão para enviar um anexo aqui."
 
 #. module: web
 #. openerp-web

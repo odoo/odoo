@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-
+from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.exceptions import UserError
+from odoo.osv.expression import AND
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
@@ -17,7 +19,7 @@ class StockMove(models.Model):
     purchase_line_id = fields.Many2one('purchase.order.line',
         'Purchase Order Line', ondelete='set null', index=True, readonly=True)
     created_purchase_line_id = fields.Many2one('purchase.order.line',
-        'Created Purchase Order Line', ondelete='set null', readonly=True, copy=False)
+        'Created Purchase Order Line', ondelete='set null', readonly=True, copy=False, index=True)
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
@@ -35,12 +37,15 @@ class StockMove(models.Model):
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
-        if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
+        if not self.origin_returned_move_id and self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
+            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
             line = self.purchase_line_id
             order = line.order_id
             price_unit = line.price_unit
             if line.taxes_id:
-                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_void']
+                qty = line.product_qty or 1
+                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=qty)['total_void']
+                price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
             if line.product_uom.id != line.product_id.uom_id.id:
                 price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
             if order.currency_id != order.company_id.currency_id:
@@ -62,13 +67,22 @@ class StockMove(models.Model):
         if self.purchase_line_id:
             purchase_currency = self.purchase_line_id.currency_id
             if purchase_currency != self.company_id.currency_id:
-                # Do not use price_unit since we want the price tax excluded. And by the way, qty
-                # is in the UOM of the product, not the UOM of the PO line.
-                purchase_price_unit = (
-                    self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
-                    if self.purchase_line_id.product_uom_qty
-                    else self.purchase_line_id.price_unit
-                )
+                if(self.purchase_line_id.product_id.cost_method == 'standard'):
+                    purchase_price_unit = self.purchase_line_id.product_id.cost_currency_id._convert(
+                        self.purchase_line_id.product_id.standard_price,
+                        purchase_currency,
+                        self.company_id,
+                        self.date,
+                        round=False,
+                    )
+                else:
+                    # Do not use price_unit since we want the price tax excluded. And by the way, qty
+                    # is in the UOM of the product, not the UOM of the PO line.
+                    purchase_price_unit = (
+                        self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
+                        if self.purchase_line_id.product_uom_qty
+                        else self.purchase_line_id.price_unit
+                    )
                 currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
                 rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
                 rslt['credit_line_vals']['currency_id'] = purchase_currency.id
@@ -85,6 +99,13 @@ class StockMove(models.Model):
         vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
+
+    def _prepare_procurement_values(self):
+        proc_values = super()._prepare_procurement_values()
+        if self.restrict_partner_id:
+            proc_values['supplierinfo_name'] = self.restrict_partner_id
+            self.restrict_partner_id = False
+        return proc_values
 
     def _clean_merged(self):
         super(StockMove, self)._clean_merged()
@@ -105,9 +126,39 @@ class StockMove(models.Model):
         rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         return rslt
 
+
     def _get_source_document(self):
         res = super()._get_source_document()
         return self.purchase_line_id.order_id or res
+
+    def _get_valuation_price_and_qty(self, related_aml, to_curr):
+        valuation_price_unit_total = 0
+        valuation_total_qty = 0
+        for val_stock_move in self:
+            # In case val_stock_move is a return move, its valuation entries have been made with the
+            # currency rate corresponding to the original stock move
+            valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
+            svl = val_stock_move.with_context(active_test=False).mapped('stock_valuation_layer_ids').filtered(
+                lambda l: l.quantity)
+            layers_qty = sum(svl.mapped('quantity'))
+            layers_values = sum(svl.mapped('value'))
+            valuation_price_unit_total += related_aml.company_currency_id._convert(
+                layers_values, to_curr, related_aml.company_id, valuation_date, round=False,
+            )
+            valuation_total_qty += layers_qty
+        if float_is_zero(valuation_total_qty, precision_rounding=related_aml.product_uom_id.rounding or related_aml.product_id.uom_id.rounding):
+            raise UserError(
+                _('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % related_aml.product_id.display_name)
+        return valuation_price_unit_total, valuation_total_qty
+
+    def _is_purchase_return(self):
+        self.ensure_one()
+        return self.location_dest_id.usage == "supplier" or (
+                self.location_dest_id.usage == "internal"
+                and self.location_id.usage != "supplier"
+                and self.warehouse_id
+                and self.location_dest_id not in self.env["stock.location"].search([("id", "child_of", self.warehouse_id.view_location_id.id)])
+        )
 
 
 class StockWarehouse(models.Model):
@@ -183,7 +234,7 @@ class Orderpoint(models.Model):
         'product.supplierinfo', string='Vendor', check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
 
-    @api.depends('product_id.purchase_order_line_ids', 'product_id.purchase_order_line_ids.state')
+    @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state')
     def _compute_qty(self):
         """ Extend to add more depends values """
         return super()._compute_qty()
@@ -213,9 +264,10 @@ class Orderpoint(models.Model):
 
     def _get_replenishment_order_notification(self):
         self.ensure_one()
-        order = self.env['purchase.order.line'].search([
-            ('orderpoint_id', 'in', self.ids)
-        ], limit=1).order_id
+        domain = [('orderpoint_id', 'in', self.ids)]
+        if self.env.context.get('written_after'):
+            domain = AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
+        order = self.env['purchase.order.line'].search(domain, limit=1).order_id
         if order:
             action = self.env.ref('purchase.action_rfq_form')
             return {
@@ -281,3 +333,20 @@ class ProductionLot(models.Model):
         action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
         action['context'] = dict(self._context, create=False)
         return action
+
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    @api.model
+    def run(self, procurements, raise_user_error=True):
+        wh_by_comp = dict()
+        for procurement in procurements:
+            routes = procurement.values.get('route_ids')
+            if routes and any(r.action == 'buy' for r in routes.rule_ids):
+                company = procurement.company_id
+                if company not in wh_by_comp:
+                    wh_by_comp[company] = self.env['stock.warehouse'].search([('company_id', '=', company.id)])
+                wh = wh_by_comp[company]
+                procurement.values['route_ids'] |= wh.reception_route_id
+        return super().run(procurements, raise_user_error=raise_user_error)

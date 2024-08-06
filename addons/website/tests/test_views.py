@@ -736,7 +736,7 @@ class TestCowViewSaving(TestViewSavingCommon):
             when copying them on the new specific tree.
             Correct order is the same as the one when applying view arch:
             PRIORITY, ID
-            And not the default one from ir.ui.view (NAME, PRIORIRTY, ID).
+            And not the default one from ir.ui.view (NAME, PRIORITY, ID).
         """
         self.inherit_view.copy({
             'name': 'alphabetically before "Extension"',
@@ -745,6 +745,34 @@ class TestCowViewSaving(TestViewSavingCommon):
         })
         # Next line should not crash, COW loop on inherit_children_ids should be sorted correctly
         self.base_view.with_context(website_id=1).write({'name': 'Product (W1)'})
+
+    def test_write_order_vs_cow_inherit_children_order(self):
+        """ When both a specific inheriting view and a non-specific base view
+            are written simultaneously, the specific inheriting base view
+            must be updated even though its id will change during the COW of
+            the base view.
+        """
+        View = self.env['ir.ui.view']
+        self.inherit_view.with_context(website_id=1).write({'name': 'Specific Inherited View Changed First'})
+        specific_view = View.search([('name', '=', 'Specific Inherited View Changed First')])
+        views = View.browse([self.base_view.id, specific_view.id])
+        views.with_context(website_id=1).write({'active': False})
+        new_specific_view = View.search([('name', '=', 'Specific Inherited View Changed First')])
+        self.assertTrue(specific_view.id != new_specific_view.id, "Should have a new id")
+        self.assertFalse(new_specific_view.active, "Should have been deactivated")
+
+    def test_write_order_vs_cow_inherit_children_order_alt(self):
+        """ Same as the previous test, but requesting the update in the
+            opposite order.
+        """
+        View = self.env['ir.ui.view']
+        self.inherit_view.with_context(website_id=1).write({'name': 'Specific Inherited View Changed First'})
+        specific_view = View.search([('name', '=', 'Specific Inherited View Changed First')])
+        views = View.browse([specific_view.id, self.base_view.id])
+        views.with_context(website_id=1).write({'active': False})
+        new_specific_view = View.search([('name', '=', 'Specific Inherited View Changed First')])
+        self.assertTrue(specific_view.id != new_specific_view.id, "Should have a new id")
+        self.assertFalse(new_specific_view.active, "Should have been deactivated")
 
     def test_module_new_inherit_view_on_parent_already_forked(self):
         """ If a generic parent view is copied (COW) and that another module
@@ -1130,9 +1158,7 @@ class Crawler(HttpCase):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         # Simulate website 2 (that use only generic views)
-        url = base_url + '/website/force_website'
-        json = {'params': {'website_id': website_2.id}}
-        self.opener.post(url=url, json=json)
+        self.url_open(base_url + '/website/force/%s' % website_2.id)
 
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
@@ -1170,9 +1196,7 @@ class Crawler(HttpCase):
         #       | Filter By Country
 
         # Simulate website 1 (that has specific views)
-        url = base_url + '/website/force_website'
-        json = {'params': {'website_id': website_1.id}}
-        self.opener.post(url=url, json=json)
+        self.url_open(base_url + '/website/force/%s' % website_1.id)
 
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
@@ -1345,9 +1369,7 @@ class Crawler(HttpCase):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         # Simulate website 2
-        url = base_url + '/website/force_website'
-        json = {'params': {'website_id': website_2.id}}
-        self.opener.post(url=url, json=json)
+        self.url_open(base_url + '/website/force/%s' % website_2.id)
 
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
@@ -1358,9 +1380,7 @@ class Crawler(HttpCase):
         self.assertEqual(response.json()['result'][0]['key'], '_theme_kea_sale.products', "Only '_theme_kea_sale.products' should be returned")
 
         # Simulate website 1
-        url = base_url + '/website/force_website'
-        json = {'params': {'website_id': website_1.id}}
-        self.opener.post(url=url, json=json)
+        self.url_open(base_url + '/website/force/%s' % website_1.id)
 
         # Test controller
         url = base_url + '/website/get_switchable_related_views'

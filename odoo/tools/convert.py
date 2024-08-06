@@ -143,7 +143,7 @@ def _eval_xml(self, node, env):
 
         data = node.text
         if node.get('file'):
-            with file_open(node.get('file'), 'rb') as f:
+            with file_open(node.get('file'), 'rb', env=env) as f:
                 data = f.read()
 
         if t == 'base64':
@@ -737,7 +737,7 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
             raise ValueError("Can't load unknown file type %s.", filename)
 
 def convert_sql_import(cr, fp):
-    cr.execute(fp.read())
+    cr.execute(fp.read()) # pylint: disable=sql-injection
 
 def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         noupdate=False):

@@ -6,7 +6,6 @@
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
 # Rafael H L Moretti <rafael.moretti@gmail.com>, 2020
 # danimaribeiro <danimaribeiro@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020
@@ -17,10 +16,12 @@
 # Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
-# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
 # Tiago Rigo <tiagomrigo@gmail.com>, 2020
 # grazziano <gra.negocia@gmail.com>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -28,19 +29,25 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr " (Custo Estimado: %s )"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Frete grátis"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -193,6 +200,7 @@ msgstr ""
 "empresa."
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "Arquivado"
@@ -517,7 +525,7 @@ msgstr "Obter Taxa e Criar Remessa"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_product__hs_code
@@ -933,8 +941,8 @@ msgid ""
 "Standardized code for international shipping and goods declaration. At the "
 "moment, only used for the FedEx shipping provider."
 msgstr ""
-"Código padronizado para envio internacional e declaração de mercadorias. No "
-"momento, usado apenas para a transportadora FedEx."
+"Código harmonizado - padronizado para envio internacional e declaração de "
+"mercadorias. No momento, usado apenas para a transportadora FedEx."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -1152,6 +1160,20 @@ msgstr "Largura"
 #: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
 msgid "Width must be positive"
 msgstr "Largura deve ser um número positivo"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
+"Você não pode atualizar os custos de entrega em um pedido que já foi faturado!\n"
+"\n"
+"As seguintes linhas da entrega (produto, quantidade faturada e preço) já foram processadas:\n"
+"\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

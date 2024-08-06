@@ -10,19 +10,21 @@
 # Antoine Gilard <ang@odoo.com>, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Cas Vissers <casvissers@brahoo.nl>, 2020
-# Martin Trigaux, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Lukas Van Cauter <cvl@odoo.com>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-04 15:13+0000\n"
+"POT-Creation-Date: 2022-01-07 14:40+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -45,8 +47,34 @@ msgstr "\" waarschuwing met een"
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
+msgid "\"URL from\" can not be empty."
+msgstr "\"URL van\" mag niet leeg zijn."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "\"URL naar\" kan niet leeg zijn."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
+msgstr ""
+"\"URL naar\" mag geen parameter %s bevatten die niet wordt gebruikt in \"URL"
+" van\"."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" is invalid: %s"
+msgstr "\"URL naar\" is ongeldig: %s"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
+msgstr "\"URL naar\" moet parameter %s bevatten die wordt gebruikt in \"URL van\"."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -102,17 +130,6 @@ msgid "&amp;lt;head&amp;gt;"
 msgstr "&amp;lt;head&amp;gt;"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
-#: model_terms:ir.ui.view,arch_db:website.sitemap_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
@@ -164,8 +181,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "+1 (650) 691-3277"
-msgstr "+1 (650) 691-3277"
+msgid "+1 (650) 555-0111"
+msgstr "+1 (650) 555-0111"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -196,11 +213,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "...and switch the timeline contents to fit your needs."
 msgstr "... en wissel de tijdslijn inhoud naar uw vereisten."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_csv
-msgid "1,2,3"
-msgstr "1,2,3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -360,7 +372,6 @@ msgstr "<b>Voeg </b> de geselecteerde afbeelding toe"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -379,17 +390,6 @@ msgstr "<b>Klik op een snippet</b> om het optiemenu te openen."
 #, python-format
 msgid "<b>Click on a text</b> to start editing it."
 msgstr "<b>Klik op een tekst</b> om deze te bewerken."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"<b>Click on a text</b> to start editing it. <i>It's that easy to edit your "
-"content!</i>"
-msgstr ""
-"<b>Klik op een tekst</b> om het te bewerken. <i>Het is zo makkelijk om de "
-"inhoud te bewerken!</i>"
 
 #. module: website
 #. openerp-web
@@ -499,28 +499,13 @@ msgid "<b>Slide</b> this button to change the column size."
 msgstr "<b>Verschuif</b> deze knop om de kolomgrootte te wijzigen."
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"<b>That's it!</b><p>Your page is all set to go live. Click the "
-"<b>Publish</b> button to publish it on the website.</p>"
-msgstr ""
-"<b>Dat is alles!</b><p>Uw pagina is klaar om live te gaan. Klik op "
-"de<b>Publiceer</b>knop om de pagina te publiceren op de website.</p>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
 "<br/><br/>\n"
-"                    Voorbeeld van een regel:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
+"                    Voorbeeld van regel:<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -746,31 +731,6 @@ msgid "<i>Instant setup, satisfied or reimbursed.</i>"
 msgstr "<i>Directe opzet, tevreden of geld terug.</i>"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "<p><b>Click here</b> to create a new page.</p>"
-msgstr "<p><b>Klik hier</b> om een nieuwe pagina aan te maken.</p>"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"<p><b>Your homepage is live.</b></p><p>Let's add a new page for your "
-"site.</p>"
-msgstr ""
-"<p><b>Uw homepagina is nu live.</b></p><p>Laten we een nieuwe pagina "
-"toevoegen aan uw website.</p>"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "<p>Enter a title for the page.</p>"
-msgstr "<p>Geef een titel in voor deze pagina.</p>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_header_magazine_oe_structure_header_magazine_1
 msgid "<small class=\"s_share_title d-none\"><b>Follow us</b></small>"
 msgstr "<small class=\"s_share_title d-none\"><b>Volg ons</b></small>"
@@ -906,6 +866,15 @@ msgid ""
 msgstr ""
 "<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
 "plus-circle\"/> Afbeeldingen toevoegen</span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.layout
+msgid ""
+"<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
+"name</span>"
+msgstr ""
+"<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; "
+"Bedrijfsnaam</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1072,6 +1041,17 @@ msgid "A Chart Title"
 msgstr "Een grafiektitel"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"A Google Map error occurred. Make sure to read the key configuration popup "
+"carefully."
+msgstr ""
+"Er is een Google Map-fout opgetreden. Zorg ervoor dat je de pop-up voor de "
+"sleutelconfiguratie zorgvuldig leest."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "A Section Subtitle"
 msgstr "Een sectie ondertitel"
@@ -1208,6 +1188,13 @@ msgid "Action"
 msgstr "Actie"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Activate anyway"
+msgstr "Toch activeren"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
@@ -1341,15 +1328,6 @@ msgstr "Adres"
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Advertising &amp; Marketing"
 msgstr "Adverteren &amp; Marketing"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "After having checked how it looks on mobile, <b>close the preview</b>."
-msgstr ""
-"Als u gecontroleerd heeft hoe het er mobiel uit ziet <b> sluit de "
-"voorbeeldweergave</b>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -1594,6 +1572,15 @@ msgstr "Auteur"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Auto"
 msgstr "Auto"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid ""
+"Automatically opens the pop-up if the user stays on a page longer than the "
+"specified time."
+msgstr ""
+"Opent automatisch de pop-up als de gebruiker langer dan de opgegeven tijd op"
+" een pagina blijft."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
@@ -2019,6 +2006,13 @@ msgid "Check your configuration."
 msgstr "Controleer uw configuratie."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Check your connection and try again"
+msgstr "Controleer je verbinding en probeer het opnieuw"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Cheese Onion Rings"
 msgstr "Kaas uienringen"
@@ -2109,24 +2103,9 @@ msgid "Click on"
 msgstr "Klik op"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Click on <b>Continue</b> to create the page."
-msgstr "Klik op <b>Verdergaan</b> om de pagina aan te maken."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Click on the icon to adapt it <br/>to your purpose."
 msgstr "Klik op het icoon om het te wijzigen <br/> aan uw doel."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Click the <b>Save</b> button."
-msgstr "Klik op de <b>Opslaan</b> knop."
 
 #. module: website
 #. openerp-web
@@ -2289,6 +2268,7 @@ msgstr "Contact"
 #. module: website
 #: code:addons/website/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website.s_banner
 #: model_terms:ir.ui.view,arch_db:website.template_header_boxed_oe_structure_header_boxed_2
 #: model_terms:ir.ui.view,arch_db:website.template_header_default_oe_structure_header_default_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_1
@@ -2436,7 +2416,10 @@ msgid "Countdown is over - Firework"
 msgstr "Aftellen is voorbij - vuurwerk"
 
 #. module: website
+#: code:addons/website/models/website.py:0
 #: model:ir.filters,name:website.dynamic_snippet_country_filter
+#: model:website.snippet.filter,name:website.dynamic_snippet_data_source_country
+#, python-format
 msgid "Countries"
 msgstr "Landen"
 
@@ -2625,17 +2608,6 @@ msgstr "Wijzigen"
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__customize_show
 msgid "Customize Show"
 msgstr "Personaliseer tonen"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"Customize any block through this menu. Try to change the background color of"
-" this block."
-msgstr ""
-"Personaliseer elk blok via dit menu. Probeer de achtergrondkleur van dit "
-"blok te wijzigen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -3021,9 +2993,11 @@ msgid "Display this website when users visit this domain"
 msgstr "Toon de website wanneer de bezoeker dit domein bezoekt"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_banner
-msgid "Do something"
-msgstr "Doe iets"
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Do not activate"
+msgstr "Niet activeren"
 
 #. module: website
 #. openerp-web
@@ -3090,32 +3064,11 @@ msgstr "Donut"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Drag another block in your page, below the cover."
-msgstr "Sleep nog een blok in uw pagina, onder de cover."
-
-#. module: website
-#. openerp-web
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid ""
-"Drag the <b>%s</b> building block and drop it at the bottom of your page."
-msgstr "Versleep de bouwsteen <b>%s</b> en zet deze onder aan uw pagina neer."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Drag the <i>Cover</i> block and drop it in your page."
-msgstr "Sleep het <i>Omslag</i> block en laat ze los op uw pagina."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Drag the block and drop it in your new page."
-msgstr "Sleep dit blok en laat het los op uw nieuwe pagina."
+"Drag the <b>%s</b> building block and drop it at the bottom of the page."
+msgstr "Sleep de bouwsteen <b>%s</b> en zet deze onderaan de pagina neer."
 
 #. module: website
 #. openerp-web
@@ -3305,6 +3258,20 @@ msgstr "Lege veldnaam in %r"
 #, python-format
 msgid "Enable billing on your Google Project"
 msgstr "Facturering op uw Google-project mogelijk maken"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Enable the right google map APIs in your google account"
+msgstr "Schakel de juiste Google Map API's in je Google-account in"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Enter an API Key"
+msgstr "Voer een API-sleutel in"
 
 #. module: website
 #. openerp-web
@@ -3766,13 +3733,6 @@ msgstr "Ga naar pagina"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Go back to the blocks menu."
-msgstr "Ga terug naar het blokken menu."
-
-#. module: website
-#. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Go to"
@@ -3805,17 +3765,6 @@ msgstr "Ga naar website"
 #, python-format
 msgid "Go to the Options tab"
 msgstr "Ga naar het opties tabblad"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"Good Job! You have designed your homepage. Let's check how this page looks "
-"like on <b>mobile devices</b>."
-msgstr ""
-"Goed gedaan! U heeft uw homepagina ontworpen. Laten we kijken hoe deze "
-"pagina eruit ziet op <b>mobiele devices</b>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -3911,6 +3860,23 @@ msgstr "Google Maps API sleutel"
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
 msgid "Google Search Console"
 msgstr "Google Search console"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+"Google zal zowel hun \"Universal Analytics\" als \"Google Sign-In\" APIs "
+"stopzetten. Dit betekent dat enkel accounts en keys aangemaakt voor 2020 hun"
+" Analytics dashboard nog zullen kunnen integreren in Odoo (of op andere "
+"websites). Dit zal enkel nog mogelijk zijn tot midden 2023. Nadien zullen "
+"deze diensten helemaal niet meer werken."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -4561,11 +4527,6 @@ msgid "Installing \"%s\""
 msgstr "\"%s\" installeren"
 
 #. module: website
-#: model_terms:ir.actions.act_window,help:website.website_visitors_action
-msgid "Interact with them by sending them messages."
-msgstr "Ga interactie met hen aan door berichten te versturen."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Interaction History"
 msgstr "Interactiegeschiedenis"
@@ -4574,6 +4535,13 @@ msgstr "Interactiegeschiedenis"
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Intuitive system"
 msgstr "Intuïtief systeem"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Invalid API Key. The following error was returned by Google:"
+msgstr "Ongeldige API-sleutel. De volgende fout is geretourneerd door Google:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -4665,17 +4633,6 @@ msgstr ""
 #, python-format
 msgid "It looks like your file is being called by"
 msgstr "Het lijkt erop dat uw bestand wordt opgeroepen door"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:0
-#, python-format
-msgid ""
-"It might be possible to edit the relevant items or fix the issue in <a "
-"href=\"%s\">the classic Odoo interface</a>"
-msgstr ""
-"Het is wellicht mogelijk om de relevante items te bewerken of het probleem "
-"te verhelpen in <a href=\"%s\">de klassiek Odoo interface</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -5139,6 +5096,32 @@ msgid "Main actions"
 msgstr "Belangrijkste acties"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure billing is enabled"
+msgstr "Zorg ervoor dat facturering is ingeschakeld"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Make sure to wait if errors keep being shown: sometimes enabling an API "
+"allows to use it immediately but Google keeps triggering errors for a while"
+msgstr ""
+"Zorg ervoor dat je wacht als er fouten blijven worden weergegeven: soms kun "
+"je een API inschakelen om deze onmiddellijk te gebruiken, maar Google blijft"
+" een tijdje fouten genereren"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure your settings are properly configured:"
+msgstr "Zorg ervoor dat uw instellingen correct zijn geconfigureerd:"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
 msgstr "Beheer pagina's"
@@ -5157,6 +5140,20 @@ msgstr "Beheer uw website pagina's"
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Manage this page"
 msgstr "Beheer deze pagina"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps JavaScript API"
+msgstr "Maps JavaScript API"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps Static API"
+msgstr "Maps Static API"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -5268,6 +5265,13 @@ msgid "Middle"
 msgstr "Midden"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Min-Height"
+msgstr "Min-Hoogte"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Minimalist"
@@ -5286,6 +5290,13 @@ msgstr "Minuten"
 #, python-format
 msgid "Mobile"
 msgstr "Mobiel"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Mobile Alignment"
+msgstr "Mobiel uitlijnen"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
@@ -5455,6 +5466,17 @@ msgstr "Afmeldingspagina voor Network Advertising Initiative"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "New"
 msgstr "Nieuw"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
+"Nieuwe Google Analytics accounts en keys gebruiken nu Google Analytics 4. "
+"Deze kunnen, voorlopig, niet geïntegreerd worden in externe websites."
 
 #. module: website
 #. openerp-web
@@ -5986,6 +6008,13 @@ msgid "Pills"
 msgstr "Pillen"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Places API"
+msgstr "Places API"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Plain"
 msgstr "Kaal"
@@ -6323,7 +6352,7 @@ msgstr "Verwijder thema"
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
 msgid "Rename Page To:"
-msgstr "Hernoem pagina naar:"
+msgstr "Wijzig paginanaam naar:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -6584,6 +6613,11 @@ msgstr ""
 "paar klikken de perfecte foto te krijgen."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_search_box
+msgid "Search..."
+msgstr "Zoek..."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid "Second Feature"
 msgstr "Tweede optie"
@@ -6709,6 +6743,13 @@ msgstr "Aparte link"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
 msgstr "Reeks"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Serve font from Google servers"
+msgstr "Lever lettertype vanaf Google-servers"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -7508,6 +7549,27 @@ msgstr ""
 "Handig om (zachte) resets van een kapotte weergave te doen."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"This font already exists, you can only add it as a local font to replace the"
+" server version."
+msgstr ""
+"Dit lettertype bestaat al, je kan het enkel toevoegen als een lokaal "
+"lettertype om de server versie te vervangen."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "This font is hosted and served to your visitors by Google servers"
+msgstr ""
+"Dit lettertype wordt door Google-servers gehost en aan je bezoekers "
+"aangeboden"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "This is a \""
@@ -7526,6 +7588,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "This page"
 msgstr "Deze pagina"
+
+#. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr "Deze operator is niet ondersteund"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -7558,6 +7626,17 @@ msgstr ""
 "Deze waarde wordt geëscaped om compatibel te zijn met alle belangrijke "
 "browsers en wordt gebruikt in url. Laat het leeg om de standaardnaam van het"
 " record te gebruiken."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
+"Deze accounts moeten nu hun Analytics dashboard rechtstreeks op het Google "
+"platform raadplegen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -7763,6 +7842,13 @@ msgstr "Overgang"
 #, python-format
 msgid "Translate Attribute"
 msgstr "Vertaal attribuut"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
+#, python-format
+msgid "Translate Selection Option"
+msgstr "Selectieoptie vertaling"
 
 #. module: website
 #. openerp-web
@@ -9163,6 +9249,11 @@ msgid "https://fonts.google.com/specimen/Roboto"
 msgstr "https://fonts.google.com/specimen/Roboto"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "https://www.odoo.com"
+msgstr "https://www.odoo.com"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "im_livechat_previous_operator_pid (Odoo)<br/>\n"
@@ -9365,11 +9456,6 @@ msgid "website"
 msgstr "website"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "www.odoo.com"
-msgstr "www.odoo.com"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "yes"
 msgstr "ja"
@@ -9510,3 +9596,10 @@ msgstr "⌙ Video"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Width"
 msgstr "⌙ Breedte"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "└ Height"
+msgstr "└ Hoogte"

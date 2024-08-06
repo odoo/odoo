@@ -4,7 +4,7 @@ import base64
 import random
 import re
 
-from odoo import api, fields, models, modules
+from odoo import api, fields, models, modules, _
 
 
 class ImLivechatChannel(models.Model):
@@ -29,10 +29,11 @@ class ImLivechatChannel(models.Model):
     # attribute fields
     name = fields.Char('Name', required=True, help="The name of the channel")
     button_text = fields.Char('Text of the Button', default='Have a Question? Chat with us.',
-        help="Default text displayed on the Livechat Support Button")
+        help="Default text displayed on the Livechat Support Button", translate=True)
     default_message = fields.Char('Welcome Message', default='How may I help you?',
-        help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.")
-    input_placeholder = fields.Char('Chat Input Placeholder', help='Text that prompts the user to initiate the chat.')
+        help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.",
+        translate=True)
+    input_placeholder = fields.Char('Chat Input Placeholder', help='Text that prompts the user to initiate the chat.', translate=True)
     header_background_color = fields.Char(default="#875A7B", help="Default background color of the channel header once open")
     title_color = fields.Char(default="#FFFFFF", help="Default title color of the channel once open")
     button_background_color = fields.Char(default="#878787", help="Default background color of the Livechat button")
@@ -225,6 +226,8 @@ class ImLivechatChannel(models.Model):
     def get_livechat_info(self, username='Visitor'):
         self.ensure_one()
 
+        if username == 'Visitor':
+            username = _('Visitor')
         info = {}
         info['available'] = len(self._get_available_users()) > 0
         info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')

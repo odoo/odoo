@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
+from xmlrpc.client import Binary
 
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import _request_stack
@@ -45,6 +46,15 @@ class TestXMLRPC(common.HttpCase):
             'res.partner', 'name_search', "admin"
         )
 
+    def test_xmlrpc_frozendict_marshalling(self):
+        """ Test that the marshalling of a frozendict object works properly over XMLRPC """
+        ctx = self.xmlrpc_object.execute(
+            common.get_db_name(), self.admin_uid, 'admin',
+            'res.users', 'context_get',
+        )
+        self.assertEqual(ctx['lang'], 'en_US')
+        self.assertEqual(ctx['tz'], 'Europe/Brussels')
+
     def test_jsonrpc_read_group(self):
         self._json_call(
             common.get_db_name(), self.admin_uid, 'admin',
@@ -70,6 +80,13 @@ class TestXMLRPC(common.HttpCase):
                 'args': args
             }
         })
+
+    def test_xmlrpc_attachment_raw(self):
+        ids = self.env['ir.attachment'].create({'name': 'n', 'raw': b'\x01\02\03'}).ids
+        [att] = self.xmlrpc_object.execute(
+            common.get_db_name(), self.admin_uid, 'admin',
+            'ir.attachment', 'read', ids, ['raw'])
+        self.assertEqual(att['raw'], '', "actual binary data should be blanked out on read")
 
 # really just for the test cursor
 @common.tagged('post_install', '-at_install')

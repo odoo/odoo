@@ -8,13 +8,13 @@
 # falexandresilva <falexandresilva@gmail.com>, 2020
 # Eduardo Aparicio <eduardo.caparica@gmail.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
+# Rodrigo de Almeida Sottomaior Macedo <sottomaiormacedotec@gmail.com>, 2020
 # Thiago Alves Cavalcante <thiagoalcav@gmail.com>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
 # Clemilton Clementino <clemylton@hotmail.com>, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Adriel Kotviski <kotviski@gmail.com>, 2020
-# grazziano <gra.negocia@gmail.com>, 2020
+# grazziano <grazziano.do+transifex@gmail.com>, 2020
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # Silmar <pinheirosilmar@gmail.com>, 2020
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2020
@@ -26,6 +26,8 @@
 # Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
 # Martin Trigaux, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
+# Kevilyn Rosa, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,13 +35,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -581,8 +583,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Um dicionário python que será avaliado para gerar valores padrão quando "
-"forem criados novos registros para este apelido."
+"Um dicionário python que será avaliado para fornecer valores padrões ao "
+"criar novos registros para este alias."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -801,7 +803,7 @@ msgstr "Candidaturas com o mesmo e-mail"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
 msgid "Applied Job"
-msgstr "Trabalho aplicado"
+msgstr "Cargo requerido"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
@@ -848,7 +850,7 @@ msgstr "Disponibilidade"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
-msgstr "Bacharel"
+msgstr "Bacharelado"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1324,7 +1326,7 @@ msgstr "Salário Extra Esperado"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Extended Filters"
-msgstr "Filtros Ampliados"
+msgstr "Filtros avançados"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1461,8 +1463,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID do registro pai segurando o apelido (exemplo: projeto segurando o apelido"
-" de criação de tarefa)"
+"ID do registro primário que detém o alias (exemplo: projeto detém o alias da"
+" criação de tarefa)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_icon
@@ -1621,7 +1623,7 @@ msgstr "Especificação de trabalho"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Jobs"
-msgstr "Oportunidades de Emprego"
+msgstr "Oportunidades de emprego"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1798,7 +1800,7 @@ msgstr "Mestrado"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__medium_id
 msgid "Medium"
-msgstr "Médio"
+msgstr "Meio"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_count
@@ -2028,9 +2030,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Id opcional de um tópico (registro) ao qual todas as mensagens recebidas "
-"serão anexadas, a não ser que elas não sejam respostas a este. Se definido, "
-"ele desabilitará a criação de novos registros completamente."
+"ID opcional de uma thread (registro) à qual todas as mensagens recebidas "
+"serão anexadas, até mesmo quando não sejam respostas à thread. Se definido, "
+"isso desabilitará totalmente a criação de novos registros."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -2057,7 +2059,7 @@ msgstr "Modelo Principal"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID de Registro Pai da Linha"
+msgstr "ID da thread do registro primário"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_model_id
@@ -2066,9 +2068,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modelo de pai segurando o alias. O modelo segurando a referência de alias\n"
-"não é necessariamente o modelo dado por alias_model_id\n"
-"(example: project (parent_model) and task (model))"
+"Modelo primário que contém o alias. O modelo que contém a referência de "
+"alias não é necessariamente o modelo dado por alias_model_id (exemplo: "
+"projeto (parent_model) e tarefa (model))"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
@@ -2088,9 +2090,9 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Política para enviar uma mensagem sobre o documento usando o MailGateway.\n"
-"- Todos: Qualquer um pode escrever\n"
-"- Parceiros: somente parceiros autenticados\n"
+"Política para publicar uma mensagem no documento usando o MailGateway.\n"
+"- Todos: qualquer um pode escrever\n"
+"- Usuários: somente usuários autenticados\n"
 "- Seguidores: apenas seguidores do documento relacionado ou membros dos seguintes canais\n"
 
 #. module: hr_recruitment
@@ -2506,9 +2508,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"O modelo (Odoo Documento Tipo), ao qual este apelido corresponde. Qualquer "
-"e-mails recebidos que não responde a um registro existente fará com que a "
-"criação de um novo registro desse modelo (e.g. a Project Task)"
+"O modelo (tipo de documento do Odoo) ao qual esse alias corresponde. "
+"Qualquer e-mail recebido que não responda a um registro existente causará a "
+"criação de um novo registro desse modelo (ex.: uma tarefa de projeto)"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq
@@ -2521,8 +2523,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"O nome do alias de e-mail, por exemplo, 'empregos' se você quer pegar "
-"e-mails para <empregos@suaempresa.com.br>"
+"O nome do alias de e-mail, por exemplo, 'empregos', se desejar receber "
+"e-mails enviados a <empregos@suaempresa.com.br>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_user_id
@@ -2532,11 +2534,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"O proprietário dos registros criados após o recebimento de e-mails neste "
-"apelido. Se este campo não estiver definido, o sistema tentará encontrar o "
-"proprietário correto baseado no endereço do remetente (De), ou utilizará a "
-"conta do Administrador se não for encontrado um usuário do sistema para este"
-" endereço."
+"O proprietário dos registros criados ao receber e-mails com este alias. Se "
+"este campo não estiver definido, o sistema tentará encontrar o proprietário "
+"correto baseado no endereço do remetente (De), ou utilizará a conta do "
+"Administrador se não for encontrado um usuário do sistema para este "
+"endereço."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id

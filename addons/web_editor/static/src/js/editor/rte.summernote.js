@@ -286,6 +286,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="resizefa"][data-value="4"]').toggleClass("active", $(oStyle.image).hasClass("fa-4x"));
             $container.find('button[data-event="resizefa"][data-value="5"]').toggleClass("active", $(oStyle.image).hasClass("fa-5x"));
             $container.find('button[data-event="resizefa"][data-value="1"]').toggleClass("active", !$container.find('.active[data-event="resizefa"]').length);
+            $container.find('button[data-event="cropImage"]').addClass('d-none');
 
             $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
@@ -293,6 +294,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
         } else {
             $container.find('.d-none:not(.only_fa, .note-recent-color)').removeClass('d-none');
+            $container.find('button[data-event="cropImage"]').removeClass('d-none');
             $container.find('.only_fa').addClass('d-none');
             var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
             if (width) {
@@ -367,7 +369,9 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
         oStyle.anchor = false;
     }
 
-    if (oStyle.image || oStyle.anchor || (oStyle.range && !$(oStyle.range.sc).closest('.note-editable').length)) {
+    if (oStyle.image || oStyle.anchor || (oStyle.range
+        && (!$(oStyle.range.sc).closest('.note-editable').length
+        || !$(oStyle.range.sc).parent().is(':o_editable')))) {
         $airPopover.hide();
     } else {
         $airPopover.show();
@@ -427,9 +431,9 @@ eventHandler.modules.editor.floatMe = function ($editable, sValue) {
     var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     switch (sValue) {
-        case 'center': $target.toggleClass('d-block mx-auto').removeClass('float-right float-left'); break;
-        case 'left': $target.toggleClass('float-left').removeClass('float-right d-block mx-auto'); break;
-        case 'right': $target.toggleClass('float-right').removeClass('float-left d-block mx-auto'); break;
+        case 'center': $target.toggleClass('d-block mx-auto').removeClass('float-right float-left ml-auto'); break;
+        case 'left': $target.toggleClass('float-left').removeClass('float-right d-block mx-auto ml-auto'); break;
+        case 'right': $target.toggleClass('ml-auto float-right').removeClass('float-left d-block mx-auto'); break;
     }
 };
 eventHandler.modules.editor.imageShape = function ($editable, sValue) {

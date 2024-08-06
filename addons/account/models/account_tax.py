@@ -18,7 +18,7 @@ TYPE_TAX_USE = [
 class AccountTaxGroup(models.Model):
     _name = 'account.tax.group'
     _description = 'Tax Group'
-    _order = 'sequence asc'
+    _order = 'sequence asc, id'
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
@@ -132,6 +132,12 @@ class AccountTax(models.Model):
     @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids')
     def _validate_repartition_lines(self):
         for record in self:
+            # if the tax is an aggregation of its sub-taxes (group) it can have no repartition lines
+            if record.amount_type == 'group' and \
+                    not record.invoice_repartition_line_ids and \
+                    not record.refund_repartition_line_ids:
+                continue
+
             invoice_repartition_line_ids = record.invoice_repartition_line_ids.sorted()
             refund_repartition_line_ids = record.refund_repartition_line_ids.sorted()
             record._check_repartition_lines(invoice_repartition_line_ids)
@@ -139,6 +145,10 @@ class AccountTax(models.Model):
 
             if len(invoice_repartition_line_ids) != len(refund_repartition_line_ids):
                 raise ValidationError(_("Invoice and credit note distribution should have the same number of lines."))
+
+            if not invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax') or \
+                    not refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax'):
+                raise ValidationError(_("Invoice and credit note repartition should have at least one tax repartition line."))
 
             index = 0
             while index < len(invoice_repartition_line_ids):
@@ -183,7 +193,9 @@ class AccountTax(models.Model):
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        default = dict(default or {}, name=_("%s (Copy)", self.name))
+        default = dict(default or {})
+        if 'name' not in default:
+            default['name'] = _("%s (Copy)") % self.name
         return super(AccountTax, self).copy(default=default)
 
     def name_get(self):
@@ -280,6 +292,8 @@ class AccountTax(models.Model):
         # <=> new_base * (1 - tax_amount) = base
         if self.amount_type == 'division' and price_include:
             return base_amount - (base_amount * (self.amount / 100))
+        # default value for custom amount_type
+        return 0.0
 
     def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, is_refund=False):
         """ Called by the reconciliation to compute taxes on writeoff during bank reconciliation
@@ -293,9 +307,14 @@ class AccountTax(models.Model):
 
         # We first need to find out whether this tax computation is made for a refund
         tax_type = self and self[0].type_tax_use
-        is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
 
-        rslt = self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
+        if self._context.get('manual_reco_widget'):
+            is_refund = is_refund or (tax_type == 'sale' and price_unit > 0) or (tax_type == 'purchase' and price_unit < 0)
+        else:
+            is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
+
+        rslt = self.with_context(caba_no_transition_account=True)\
+                   .compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
 
         # The reconciliation widget calls this function to generate writeoffs on bank journals,
         # so the sign of the tags might need to be inverted, so that the tax report
@@ -484,7 +503,7 @@ class AccountTax(models.Model):
                     elif tax.amount_type == 'division':
                         incl_division_amount += tax.amount * sum_repartition_factor
                     elif tax.amount_type == 'fixed':
-                        incl_fixed_amount += quantity * tax.amount * sum_repartition_factor
+                        incl_fixed_amount += abs(quantity) * tax.amount * sum_repartition_factor
                     else:
                         # tax.amount_type == other (python)
                         tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner) * sum_repartition_factor
@@ -522,7 +541,7 @@ class AccountTax(models.Model):
             price_include = self._context.get('force_price_include', tax.price_include)
 
             #compute the tax_amount
-            if not skip_checkpoint and price_include and total_included_checkpoints.get(i):
+            if not skip_checkpoint and price_include and total_included_checkpoints.get(i) is not None and sum_repartition_factor != 0:
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
@@ -534,7 +553,7 @@ class AccountTax(models.Model):
             tax_amount = round(tax_amount, precision_rounding=prec)
             factorized_tax_amount = round(tax_amount * sum_repartition_factor, precision_rounding=prec)
 
-            if price_include and not total_included_checkpoints.get(i):
+            if price_include and total_included_checkpoints.get(i) is None:
                 cumulated_tax_included_amount += factorized_tax_amount
 
             # If the tax affects the base of subsequent taxes, its tax move lines must
@@ -571,7 +590,9 @@ class AccountTax(models.Model):
                     'amount': sign * line_amount,
                     'base': round(sign * base, precision_rounding=prec),
                     'sequence': tax.sequence,
-                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
+                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' \
+                                                                             and not self._context.get('caba_no_transition_account')\
+                                                                          else repartition_line.account_id.id,
                     'analytic': tax.analytic,
                     'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,

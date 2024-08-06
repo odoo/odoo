@@ -323,7 +323,7 @@ class test_m2o(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
 
     def test_basic(self):
         """ Exported value is the name_get of the related object
@@ -384,7 +384,7 @@ class test_o2m(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
 
     def test_single(self):
         self.assertEqual(
@@ -499,16 +499,16 @@ class test_o2m_multiple(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(child1=False, child2=False),
-            [[False, False]])
+            [['', '']])
 
     def test_single_per_side(self):
         self.assertEqual(
             self.export(child1=False, child2=[(0, False, {'value': 42})]),
-            [[False, u'export.one2many.child.2:42']])
+            [['', u'export.one2many.child.2:42']])
 
         self.assertEqual(
             self.export(child1=[(0, False, {'value': 43})], child2=False),
-            [[u'export.one2many.child.1:43', False]])
+            [[u'export.one2many.child.1:43', '']])
 
         self.assertEqual(
             self.export(child1=[(0, False, {'value': 43})],
@@ -520,12 +520,12 @@ class test_o2m_multiple(CreatorCase):
         self.assertEqual(
             self.export(child1=False, child2=[(0, False, {'value': 42})],
                         fields=fields),
-            [[36, False, 42]])
+            [[36, '', 42]])
 
         self.assertEqual(
             self.export(child1=[(0, False, {'value': 43})], child2=False,
                         fields=fields),
-            [[36, 43, False]])
+            [[36, 43, '']])
 
         self.assertEqual(
             self.export(child1=[(0, False, {'value': 43})],
@@ -546,7 +546,7 @@ class test_o2m_multiple(CreatorCase):
         self.assertEqual(
             self.export(child1=child1, child2=False, fields=fields),
             [
-                [36, 4, False],
+                [36, 4, ''],
                 ['', 42, ''],
                 ['', 36, ''],
                 ['', 4, ''],
@@ -555,7 +555,7 @@ class test_o2m_multiple(CreatorCase):
         self.assertEqual(
             self.export(child1=False, child2=child2, fields=fields),
             [
-                [36, False, 8],
+                [36, '', 8],
                 ['', '', 12],
                 ['', '', 8],
                 ['', '', 55],
@@ -595,7 +595,7 @@ class test_m2m(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
 
     def test_single(self):
         self.assertEqual(

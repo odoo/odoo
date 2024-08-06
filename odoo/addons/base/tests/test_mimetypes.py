@@ -1,8 +1,13 @@
 import base64
 import unittest
 
+try:
+    import magic
+except ImportError:
+    magic = None
+
 from odoo.tests.common import BaseCase
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.mimetypes import guess_mimetype, get_extension
 
 PNG = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
 GIF = b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
@@ -65,14 +70,30 @@ class test_guess_mimetype(BaseCase):
         content = base64.b64decode(SVG)
         mimetype = guess_mimetype(content, default='test')
         self.assertTrue(mimetype.startswith('image/svg'))
-        # Tests that whitespace padded SVG are not detected as SVG
-        mimetype = guess_mimetype(b"   " + content, default='test')
-        self.assertNotIn("svg", mimetype)
+        # Tests that whitespace padded SVG are not detected as SVG in odoo implementation
+        if not magic:
+            mimetype = guess_mimetype(b"   " + content, default='test')
+            self.assertNotIn("svg", mimetype)
+
 
     def test_mimetype_zip(self):
         content = base64.b64decode(ZIP)
         mimetype = guess_mimetype(content, default='test')
         self.assertEqual(mimetype, 'application/zip')
+
+
+    def test_mimetype_get_extension(self):
+        self.assertEqual(get_extension('filename.Abc'), '.abc')
+        self.assertEqual(get_extension('filename.scss'), '.scss')
+        self.assertEqual(get_extension('filename.torrent'), '.torrent')
+        self.assertEqual(get_extension('.htaccess'), '.htaccess')
+        # enough to suppose that extension is present and don't suffix the filename
+        self.assertEqual(get_extension('filename.tar.gz'), '.gz')
+        self.assertEqual(get_extension('filename'), '')
+        self.assertEqual(get_extension('filename.'), '')
+        self.assertEqual(get_extension('filename.not_alnum'), '')
+        self.assertEqual(get_extension('filename.with space'), '')
+        self.assertEqual(get_extension('filename.notAnExtension'), '')
 
 
 

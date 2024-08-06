@@ -4,9 +4,12 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Ermin Trevisan <trevi@twanda.com>, 2020
 # Leon Grill <leg@odoo.com>, 2020
-# Chris Egal <sodaswed@web.de>, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2021
+# Robert Förster <hello@suppliot.eu>, 2021
+# Chris Egal <sodaswed@web.de>, 2021
+# jufeodoo, 2022
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2020\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -119,7 +122,7 @@ msgstr ""
 "                                <li>${invited_user}</li>\n"
 "                            % endfor\n"
 "                        </ul>\n"
-"                        Faßen Sie bei den Benutzern nach, damit sie auf die Datenbank zugreifen und mit Ihnen zusammenarbeiten können.\n"
+"                        Fragen Sie bei den Benutzern nach, damit sie auf die Datenbank zugreifen und mit Ihnen zusammenarbeiten können.\n"
 "                        <br/><br/>\n"
 "                        Wir wünschen Ihnen einen schönen Tag!<br/>\n"
 "                        --<br/>Das ${object.company_id.name}-Team\n"
@@ -749,7 +752,7 @@ msgstr "Anzeigename"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr "Existiert kein Benutzer?"
+msgstr "Noch kein Benutzerkonto?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
@@ -793,6 +796,12 @@ msgstr "Zuletzt geändert am"
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr "Kunden können sich einloggen, um ihre Dokumente zu sehen"
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this email"
+msgstr "Mehrere Konten für diese E-Mail gefunden"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
@@ -851,7 +860,7 @@ msgstr "Passwort zurücksetzen: Falscher Benutzername oder E-Mail"
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset Instructions"
-msgstr ""
+msgstr "Sende Passwortwiederherstellungs-Anleitung"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -986,6 +995,7 @@ msgstr "Willkommen bei ${object.company_id.name}!"
 #, python-format
 msgid "You cannot perform this action on an archived user."
 msgstr ""
+"Sie können diese Aktion nicht für einen archivierten Benutzer durchführen."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

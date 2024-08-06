@@ -12,16 +12,17 @@
 # Pauline Thiry <pth@odoo.com>, 2020
 # Florian <fll@odoo.com>, 2020
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2020
+# fr trans <e2ffr05@hotmail.com>, 2020
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2020
 # f5f0a0dac17dde787a1d812a6989680e, 2020
-# Rémi CAZENAVE, 2020
 # Jonathan Castillo <jcs@odoo.com>, 2020
 # jwy_odoo <jwy@odoo.com>, 2020
+# Celia Tydgat <cty@odoo.com>, 2020
 # bb76cd9ac0cb7e20167a14728edb858b, 2020
 # 31c77b784710e4a287a92d851a40e039, 2020
 # Moka Tourisme <hello@mokatourisme.fr>, 2020
 # Frédéric LIETART <stuff@tifred.fr>, 2020
-# Antoine Lorence <antoine.lorence@gmail.com>, 2020
+# Antoine Lorence <alorence@flokod.com>, 2020
 # Richard Mathot <rim@odoo.com>, 2020
 # Lucas Deliege <lud@odoo.com>, 2020
 # Melanie Bernard <mbe@odoo.com>, 2020
@@ -31,11 +32,9 @@
 # Olivier ANDRE <frsw194@gmail.com>, 2020
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2020
 # gdp Odoo <gdp@odoo.com>, 2020
-# Celia Tydgat <cty@odoo.com>, 2020
 # Vincent Luba <vincent@biz-4-africa.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
-# fr trans <e2ffr05@hotmail.com>, 2020
 # Florian Hatat, 2020
 # Fabri Yohann <psn@fabri.pw>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
@@ -51,34 +50,40 @@
 # edc <edc@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Nancy Bolognesi <nb@microcom.ca>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Christophe Ricevuto <cri@nalios.be>, 2021
 # Benjamin Stienon <tsb@odoo.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
 # Pierre Delacroix <pde@odoo.com>, 2021
+# Alexandra Jubert, 2021
+# Alexis de Lattre <alexis@via.ecp.fr>, 2021
+# Jérôme JEK <jek@odoo.com>, 2021
+# Rémi CAZENAVE, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
+# Camille Dantinne <cmd@odoo.com>, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Données Récupérées"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -112,6 +117,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
 "${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Devis') or 'Commande'} (Ref "
+"${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -150,14 +158,14 @@ msgstr "160x80cm, avec des pieds larges."
 #, python-format
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr ""
+msgstr "<b>Envoyez-vous le devis</b> et vérifiez ce que le client recevra."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "<b>Set a price</b>."
-msgstr ""
+msgstr "<b>Configurer un prix</b>."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -540,18 +548,18 @@ msgstr ""
 "        % if ctx.get('proforma'):\n"
 "            Facture Pro forma pour ${doc_name} <strong>${object.name}</strong>\n"
 "            % if object.origin:\n"
-"                (avec la référence: ${object.origin} )\n"
+"                (avec la référence : ${object.origin} )\n"
 "            % endif\n"
 "            d'un montant de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> est disponible.\n"
 "        % else:\n"
 "            ${doc_name} <strong>${object.name}</strong>\n"
 "            % if object.origin:\n"
-"                (avec la référence: ${object.origin} )\n"
+"                (avec la référence : ${object.origin} )\n"
 "            % endif\n"
-"            d'un montant de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> est prêt pour révision.\n"
+"            d'un montant de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> est prête pour révision.\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        N'hésitez pas à nous contacter si vous avez des questions..\n"
+"        N'hésitez pas à nous contacter si vous avez des questions.\n"
 "        <br/>\n"
 "    </p>\n"
 "</div>\n"
@@ -627,6 +635,7 @@ msgstr "<i class=\"fa fa-times\"/> Rejeter "
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires on</b></small>"
 msgstr ""
+"<small><b class=\"text-muted\">Cette offre est valide jusqu'au</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -671,7 +680,7 @@ msgstr "<span class=\"o_form_label\">Email de confirmation</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payments</span>"
-msgstr "Acomptes"
+msgstr "<span class=\"o_form_label\">Acomptes</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -852,7 +861,7 @@ msgstr "Un bon de commande confirmé nécessite une date de confirmation."
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "A journal must be specified for the acquirer %s."
-msgstr ""
+msgstr "Un journal doit être configuré pour cet intermédiaire %s."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -918,12 +927,12 @@ msgstr "Acceptez &amp; Payez le devis"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr "Accepter et signer"
+msgstr "Accepter & Signer"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Sign Quotation"
-msgstr "Acceptez &amp; Signez le devis"
+msgstr "Accepter &amp; Signer le devis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -968,7 +977,7 @@ msgstr "Activités"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Activité exception décoration"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -1048,6 +1057,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "                ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Une commande est à faire monter en gamme quand les quantités livrées\n"
+"                sont supérieurs aux quantités commandées initialement, et la politique de facturation est basée sur les quantités commandées."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -1101,6 +1112,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "                to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Par exemple, si vous vendez des heures pré-payées, Odoo recommande de\n"
+"                vendre les heures supplémentaires quand toutes les heures commandées ont été réalisées."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1536,12 +1549,12 @@ msgstr "Personnalisez le look de vos devis."
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
-msgstr ""
+msgstr "Personnalisez vos devis et commandes."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
-msgstr "Connecteur DHL USA"
+msgid "DHL Express Connector"
+msgstr "Connecteur DHL Express"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1618,7 +1631,7 @@ msgstr "Qté livrée"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Delivered Quantity: %s"
-msgstr ""
+msgstr "Quantités livrées : %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
@@ -1686,7 +1699,7 @@ msgstr "Description"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Disc.%"
-msgstr "Disc.%"
+msgstr "Rem.%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -1729,7 +1742,7 @@ msgstr "Montant de la réduction"
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
@@ -1741,7 +1754,7 @@ msgstr "Type d'affichage"
 #: code:addons/sale/static/src/js/sale_order_view.js:0
 #, python-format
 msgid "Do you want to apply this discount to all order lines?"
-msgstr ""
+msgstr "Voulez-vous appliquer cette réduction sur toutes les lignes ?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1769,7 +1782,7 @@ msgstr "Montant de l'acompte"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "Montant de l'acompte (fixe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
@@ -1840,7 +1853,7 @@ msgstr "Connecteur Easypost"
 #: code:addons/sale/static/src/js/product_configurator_widget.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr "Editer la configuration"
+msgstr "Modifier la configuration"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__digital_signature
@@ -2022,7 +2035,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
-msgstr ""
+msgstr "Beau travail, continuons."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2044,7 +2057,7 @@ msgstr "Regrouper par"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
-msgstr ""
+msgstr "A une modification de Liste de Prix"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -2191,7 +2204,7 @@ msgstr "Adresse de facturation"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
 msgid "Invoice Alert"
-msgstr ""
+msgstr "Alerte sur la Facture"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
@@ -2259,7 +2272,7 @@ msgstr "Quantité facturée"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
-msgstr ""
+msgstr "Quantité facturée : %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2454,14 +2467,14 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
-msgstr ""
+msgstr "Envoyons le devis."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
-msgstr ""
+msgstr "Conservons la signature électronique pour le moment."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2627,7 +2640,7 @@ msgstr "Nouveau devis"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Date limite de l'Activité à Venir"
+msgstr "Date limite de la prochaine activité"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_summary
@@ -2664,7 +2677,7 @@ msgstr "Pas de commandes à facturer trouvées"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "Aucune commande à faire monter en gamme."
 
 #. module: sale
 #. openerp-web
@@ -2697,7 +2710,7 @@ msgstr "Rien à facturer"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr ""
+msgstr "Maintenant, nous allons créer un devis d'exemple."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -2813,7 +2826,7 @@ msgstr ""
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
-"Ouvrer l'application Vente pour envoyer votre premier devis en quelques "
+"Ouvrez l'application Vente pour envoyer votre premier devis en quelques "
 "clics."
 
 #. module: sale
@@ -2892,7 +2905,7 @@ msgstr "Commande à facturer"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "Quantité Commandée : %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -3154,7 +3167,7 @@ msgstr "Modèle d'article"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "UdM de l'Article en Lecture seule"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
@@ -3172,6 +3185,8 @@ msgstr "Variantes d'article"
 #, python-format
 msgid "Product prices have been recomputed according to pricelist <b>%s<b> "
 msgstr ""
+"Les prix des articles ont été recalculés sur base de la liste de vente "
+"<b>%s<b> "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3233,7 +3248,7 @@ msgstr "Quantité"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_qty_configurator
 msgid "Quantity visible in configurator"
-msgstr ""
+msgstr "Quantité affichée dans le configurateur"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3352,7 +3367,7 @@ msgstr "Politique de refacturation visible"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "Recalculer les prix à partir de cette lise de prix"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3750,7 +3765,7 @@ msgstr "Envoyer la facture PRO FORMA"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
-msgstr "Envoyer un email spécifique quand la facture est payée"
+msgstr "Envoyer un email spécifique quand la facture est validée"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3847,7 +3862,7 @@ msgstr "Signer &amp; Payer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr "Signer &amp; payer le devis"
+msgstr "Signer &amp; Payer le devis"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -4016,6 +4031,8 @@ msgid ""
 "Technical Field, True if the pricelist was changed;\n"
 " this will then display a recomputation button"
 msgstr ""
+"Champ Technique, Vrai si la liste de prix est modifiée;\n"
+"dans ce cas un bouton pour recalculer sera affiché"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
@@ -4217,10 +4234,16 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
+"Il n'y a rien à facturer !\n"
+"\n"
+"Les motifs de ce comportement pourraient être :\n"
+"- Vous devez livrer vos produits avant de les facturer.\n"
+"- Vous devez modifier la politique de facturation de votre produit : Ouvrez le produit, allez à l'onglet \"Ventes\" et changez la politique de facturation de \"quantités livrées\" en \"quantités commandées\".\n"
+"        "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4319,6 +4342,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr ""
+"Cela mettre à jour tous les prix unitaires à partir de la liste de prix "
+"sélectionnée."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -4358,6 +4383,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"Pour accélérer la confirmation des bons de commande, nous pouvons activer "
+"les signatures électroniques ou les paiements."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4516,7 +4543,7 @@ msgstr "UdM"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
-msgstr ""
+msgstr "Mettre à jour les prix"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4602,7 +4629,7 @@ msgstr "Historique de communication du site web"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write <b>your own email address</b> here in order to test the flow."
-msgstr ""
+msgstr "Ecrivez ici <b> votre adresse email </b> pour tester le flux"
 
 #. module: sale
 #. openerp-web
@@ -4652,6 +4679,17 @@ msgstr ""
 "Vous pouvez définir le type de communication qui apparaitra sur les bons de "
 "commande. La communication sera donnée au client quand il choisira la "
 "méthode de paiement."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"Vous ne pouvez pas modifier le type de produit car il est déjà utilisé dans "
+"les commandes client."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

@@ -510,8 +510,8 @@ class TestCustomFields(common.TransactionCase):
         })
         query_count = self.cr.sql_log_count - query_count
 
-        # create the related field, and assert it only takes 3 extra queries
-        with self.assertQueryCount(query_count + 3):
+        # create the related field, and assert it only takes 1 extra queries
+        with self.assertQueryCount(query_count + 1):
             self.env['ir.model.fields'].create({
                 'model_id': self.env['ir.model']._get_id('res.partner'),
                 'name': 'x_oh_boy',

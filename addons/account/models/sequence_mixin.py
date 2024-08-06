@@ -21,8 +21,8 @@ class SequenceMixin(models.AbstractModel):
     _sequence_field = "name"
     _sequence_date_field = "date"
     _sequence_index = False
-    _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>(0[1-9]|1[0-2]))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((20|21)?\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+    _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>(0[1-9]|1[0-2]))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+    _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)?\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
     _sequence_fixed_regex = r'^(?P<prefix1>.*?)(?P<seq>\d{0,9})(?P<suffix>\D*?)$'
 
     sequence_prefix = fields.Char(compute='_compute_split_sequence', store=True)
@@ -46,7 +46,7 @@ class SequenceMixin(models.AbstractModel):
                 ))
 
     def __init__(self, pool, cr):
-        api.constrains(self._sequence_field, self._sequence_date_field)(type(self)._constrains_date_sequence)
+        api.constrains(self._sequence_field, self._sequence_date_field)(pool[self._name]._constrains_date_sequence)
         return super().__init__(pool, cr)
 
     def _constrains_date_sequence(self):
@@ -132,7 +132,7 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         return "00000000"
 
-    def _get_last_sequence(self, relaxed=False):
+    def _get_last_sequence(self, relaxed=False, lock=True):
         """Retrieve the previous sequence.
 
         This is done by taking the number with the greatest alphabetical value within
@@ -156,24 +156,26 @@ class SequenceMixin(models.AbstractModel):
         if self._sequence_field not in self._fields or not self._fields[self._sequence_field].store:
             raise ValidationError(_('%s is not a stored field', self._sequence_field))
         where_string, param = self._get_last_sequence_domain(relaxed)
-        if self.id or self.id.origin:
+        if self._origin.id:
             where_string += " AND id != %(id)s "
-            param['id'] = self.id or self.id.origin
+            param['id'] = self._origin.id
 
-        query = """
-            UPDATE {table} SET write_date = write_date WHERE id = (
-                SELECT id FROM {table}
+        query = f"""
+                SELECT {{field}} FROM {self._table}
                 {where_string}
-                AND sequence_prefix = (SELECT sequence_prefix FROM {table} {where_string} ORDER BY id DESC LIMIT 1)
+                AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
                 ORDER BY sequence_number DESC
                 LIMIT 1
+        """
+        if lock:
+            query = f"""
+            UPDATE {self._table} SET write_date = write_date WHERE id = (
+                {query.format(field='id')}
             )
-            RETURNING {field};
-        """.format(
-            table=self._table,
-            where_string=where_string,
-            field=self._sequence_field,
-        )
+            RETURNING {self._sequence_field};
+            """
+        else:
+            query = query.format(field=self._sequence_field)
 
         self.flush([self._sequence_field, 'sequence_number', 'sequence_prefix'])
         self.env.cr.execute(query, param)

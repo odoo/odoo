@@ -14,7 +14,7 @@ class Http(models.AbstractModel):
         obj = None
         if xmlid:
             obj = self._xmlid_to_obj(self.env, xmlid)
-            if obj._name != 'slide.slide':
+            if obj and obj._name != 'slide.slide':
                 obj = None
         elif id and model == 'slide.slide':
             obj = self.env[model].browse(int(id))

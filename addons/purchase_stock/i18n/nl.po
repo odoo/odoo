@@ -5,8 +5,9 @@
 # Translators:
 # Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
-# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -98,7 +99,7 @@ msgstr "<strong>Incoterm:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Verzendadres:</strong>"
+msgstr "<strong>Afleveradres:</strong>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
@@ -287,6 +288,18 @@ msgstr "Foutmelding(en) zijn opgetreden op de inkooporder(s):"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
 msgstr "Foutmelding(en):"
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
+"Voor het product %s is het magazijn van het bewerkingstype (%s) niet "
+"consistent met de locatie (%s) van de aanvulregel (%s). Wijzig het type "
+"bewerking of annuleer de offerteaanvraag."
 
 #. module: purchase_stock
 #. openerp-web
@@ -637,13 +650,13 @@ msgstr "Geef leverancierkolom wer"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Voorraadverplaatsting"
+msgstr "Voorraadverplaatsing"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
-msgstr "Voorraadverplaatstingen"
+msgstr "Voorraadverplaatsingen"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_product_product_replenishment
@@ -787,10 +800,12 @@ msgstr ""
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need."
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
 msgstr ""
-"Wanneer producten benodigd zijn in <b>%s</b>, <br/> wordt een "
-"inkooporderaanvraag aangemaakt om dit mogelijk te maken."
+"Wanneer producten nodig zijn in <b>%s</b>, <br/> wordt een offerteaanvraag "
+"aangemaakt om in de behoefte te voorzien.<br/>Opgelet: Deze regel wordt "
+"gebruikt in combinatie met de regels<br/>van de ontvangstroute(s)"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0

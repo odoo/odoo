@@ -34,6 +34,13 @@ class StockRule(models.Model):
     _order = "sequence, id"
     _check_company_auto = True
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'company_id' in fields_list and not res['company_id']:
+            res['company_id'] = self.env.company.id
+        return res
+
     name = fields.Char(
         'Name', required=True, translate=True,
         help="This field will fill the packing origin and the name of its moves")
@@ -47,14 +54,14 @@ class StockRule(models.Model):
     group_id = fields.Many2one('procurement.group', 'Fixed Procurement Group')
     action = fields.Selection(
         selection=[('pull', 'Pull From'), ('push', 'Push To'), ('pull_push', 'Pull & Push')], string='Action',
-        required=True)
+        required=True, index=True)
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
         default=lambda self: self.env.company,
-        domain="[('id', '=?', route_company_id)]")
-    location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
+        domain="[('id', '=?', route_company_id)]", index=True)
+    location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True, index=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
-    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
+    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade', index=True)
     route_company_id = fields.Many2one(related='route_id.company_id', string='Route Company')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
@@ -78,7 +85,7 @@ class StockRule(models.Model):
     propagate_cancel = fields.Boolean(
         'Cancel Next Move', default=False,
         help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.")
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True)
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True, index=True)
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
         help="The warehouse to propagate on the created move/procurement, which can be different of the warehouse this rule is for (e.g for resupplying rules from another warehouse)")
@@ -286,6 +293,15 @@ class StockRule(models.Model):
         if not self.location_id.should_bypass_reservation():
             move_dest_ids = values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or []
 
+        # when create chained moves for inter-warehouse transfers, set the warehouses as partners
+        if not partner and move_dest_ids:
+            move_dest = values['move_dest_ids']
+            if location_id == company_id.internal_transit_location_id:
+                partners = move_dest.location_dest_id.get_warehouse().partner_id
+                if len(partners) == 1:
+                    partner = partners
+                move_dest.partner_id = self.location_src_id.get_warehouse().partner_id or self.company_id.partner_id
+
         move_values = {
             'name': name[:2000],
             'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_id.company_id.id or company_id.id,
@@ -325,7 +341,10 @@ class StockRule(models.Model):
         :rtype: tuple
         """
         delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
-        delay_description = ''.join(['<tr><td>%s %s</td><td class="text-right">+ %d %s</td></tr>' % (_('Delay on'), html_escape(rule.name), rule.delay, _('day(s)')) for rule in self if rule.action in ['pull', 'pull_push'] and rule.delay])
+        if self.env.context.get('bypass_delay_description'):
+            delay_description = ""
+        else:
+            delay_description = ''.join(['<tr><td>%s %s</td><td class="text-right">+ %d %s</td></tr>' % (_('Delay on'), html_escape(rule.name), rule.delay, _('day(s)')) for rule in self if rule.action in ['pull', 'pull_push'] and rule.delay])
         return delay, delay_description
 
 
@@ -456,7 +475,7 @@ class ProcurementGroup(models.Model):
         """ Find a pull rule for the location_id, fallback on the parent
         locations if it could not be found.
         """
-        result = False
+        result = self.env['stock.rule']
         location = location_id
         while (not result) and location:
             domain = self._get_rule_domain(location, values)
@@ -511,7 +530,7 @@ class ProcurementGroup(models.Model):
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain(company_id)
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
-            order='priority desc, date asc')
+            order='priority desc, date asc, id asc')
         for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
             if use_new_cursor:
@@ -534,6 +553,9 @@ class ProcurementGroup(models.Model):
                 self = self.with_env(self.env(cr=cr))  # TDE FIXME
 
             self._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
+        except Exception:
+            _logger.error("Error during stock scheduler", exc_info=True)
+            raise
         finally:
             if use_new_cursor:
                 try:

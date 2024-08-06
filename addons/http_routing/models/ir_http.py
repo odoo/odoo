@@ -16,10 +16,10 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, models, registry, exceptions, tools
+from odoo import api, models, registry, exceptions, tools, http
 from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
 from odoo.addons.base.models.qweb import QWebException
-from odoo.http import request
+from odoo.http import request, HTTPRequest
 from odoo.osv import expression
 from odoo.tools import config, ustr, pycompat
 
@@ -133,7 +133,7 @@ def unslug_url(s):
 def url_lang(path_or_uri, lang_code=None):
     ''' Given a relative URL, make it absolute and add the required lang or
         remove useless lang.
-        Nothing will be done for absolute URL.
+        Nothing will be done for absolute or invalid URL.
         If there is only one language installed, the lang will not be handled
         unless forced with `lang` parameter.
 
@@ -143,9 +143,13 @@ def url_lang(path_or_uri, lang_code=None):
     Lang = request.env['res.lang']
     location = pycompat.to_text(path_or_uri).strip()
     force_lang = lang_code is not None
-    url = werkzeug.urls.url_parse(location)
+    try:
+        url = werkzeug.urls.url_parse(location)
+    except ValueError:
+        # e.g. Invalid IPv6 URL, `werkzeug.urls.url_parse('http://]')`
+        url = False
     # relative URL with either a path or a force_lang
-    if not url.netloc and not url.scheme and (url.path or force_lang):
+    if url and not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
         lang_url_codes = [url_code for _, url_code, *_ in Lang.get_available()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
@@ -171,7 +175,7 @@ def url_lang(path_or_uri, lang_code=None):
 
 def url_for(url_from, lang_code=None, no_rewrite=False):
     ''' Return the url with the rewriting applied.
-        Nothing will be done for absolute URL, or short URL from 1 char.
+        Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.
 
         :param url_from: The URL to convert.
         :param lang_code: Must be the lang `code`. It could also be something
@@ -392,7 +396,7 @@ class IrHttp(models.AbstractModel):
             if nearest_lang:
                 lang = Lang._lang_get(nearest_lang)
             else:
-                nearest_ctx_lg = not is_a_bot and cls.get_nearest_lang(request.env.context['lang'])
+                nearest_ctx_lg = not is_a_bot and cls.get_nearest_lang(request.env.context.get('lang'))
                 nearest_ctx_lg = nearest_ctx_lg in lang_codes and nearest_ctx_lg
                 preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg)
                 lang = preferred_lang or cls._get_default_lang()
@@ -515,6 +519,10 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def reroute(cls, path):
+        if isinstance(path, str):
+            path = path.encode("utf-8")
+        path = path.decode("latin1", "replace")
+
         if not hasattr(request, 'rerouting'):
             request.rerouting = [request.httprequest.path]
         if path in request.rerouting:
@@ -522,11 +530,8 @@ class IrHttp(models.AbstractModel):
         request.rerouting.append(path)
         if len(request.rerouting) > cls.rerouting_limit:
             raise Exception("Rerouting limit exceeded")
-        request.httprequest.environ['PATH_INFO'] = path
-        # void werkzeug cached_property. TODO: find a proper way to do this
-        for key in ('path', 'full_path', 'url', 'base_url'):
-            request.httprequest.__dict__.pop(key, None)
-
+        environ = dict(request.httprequest._HTTPRequest__environ, PATH_INFO=path)
+        request.httprequest = HTTPRequest(environ)
         return cls._dispatch()
 
     @classmethod
@@ -568,7 +573,7 @@ class IrHttp(models.AbstractModel):
         elif isinstance(exception, QWebException):
             values.update(qweb_exception=exception)
 
-            if type(exception.error) == exceptions.AccessError:
+            if isinstance(exception.error, exceptions.AccessError):
                 code = 403
 
         elif isinstance(exception, werkzeug.exceptions.HTTPException):
@@ -653,14 +658,14 @@ class IrHttp(models.AbstractModel):
     @tools.ormcache('path')
     def url_rewrite(self, path):
         new_url = False
-        req = request.httprequest
-        router = req.app.get_db_router(request.db).bind('')
+        router = http.root.get_db_router(request.db).bind('')
         try:
             _ = router.match(path, method='POST')
         except werkzeug.exceptions.MethodNotAllowed:
             _ = router.match(path, method='GET')
         except werkzeug.routing.RequestRedirect as e:
-            new_url = e.new_url[7:]  # remove scheme
+            # get path from http://{path}?{current query string}
+            new_url = e.new_url.split('?')[0][7:]
         except werkzeug.exceptions.NotFound:
             new_url = path
         except Exception as e:
@@ -672,7 +677,7 @@ class IrHttp(models.AbstractModel):
     @api.model
     @tools.cache('path', 'query_args')
     def _get_endpoint_qargs(self, path, query_args=None):
-        router = request.httprequest.app.get_db_router(request.db).bind('')
+        router = http.root.get_db_router(request.db).bind('')
         endpoint = False
         try:
             endpoint = router.match(path, method='POST', query_args=query_args)

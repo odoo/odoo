@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import api, models
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tools import mute_logger
 from odoo.exceptions import AccessError
@@ -210,6 +210,15 @@ class TestAPI(SavepointCaseWithUserDemo):
         # demo user can no longer access partner data
         with self.assertRaises(AccessError):
             demo_partner.company_id.name
+
+    def test_56_environment_uid_origin(self):
+        """Check the expected behavior of `env.uid_origin`"""
+        user_demo = self.env.ref('base.user_demo')
+        user_admin = self.env.ref('base.user_admin')
+        self.assertEqual(self.env.uid_origin, None)
+        self.assertEqual(self.env['base'].with_user(user_demo).env.uid_origin, user_demo.id)
+        self.assertEqual(self.env['base'].with_user(user_demo).with_user(user_admin).env.uid_origin, user_demo.id)
+        self.assertEqual(self.env['base'].with_user(user_admin).with_user(user_demo).env.uid_origin, user_admin.id)
 
     @mute_logger('odoo.models')
     def test_60_cache(self):
@@ -520,3 +529,14 @@ class TestAPI(SavepointCaseWithUserDemo):
         # sort by inverse name, with a field name
         by_name_ids = [p.id for p in sorted(ps, key=lambda p: p.name, reverse=True)]
         self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)
+
+
+class TestExternalAPI(SavepointCaseWithUserDemo):
+
+    def test_call_kw(self):
+        """kwargs is not modified by the execution of the call"""
+        partner = self.env['res.partner'].create({'name': 'MyPartner1'})
+        args = (partner.ids, ['name'])
+        kwargs = {'context': {'test': True}}
+        api.call_kw(self.env['res.partner'], 'read', args, kwargs)
+        self.assertEqual(kwargs, {'context': {'test': True}})

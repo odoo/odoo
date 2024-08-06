@@ -61,6 +61,10 @@ class AccountAnalyticLine(models.Model):
     def _compute_so_line(self):
         for timesheet in self._get_not_billed():  # Get only the timesheets are not yet invoiced
             timesheet.so_line = timesheet.project_id.allow_billable and timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id, timesheet.project_id)
+    
+    @api.depends('timesheet_invoice_id.state')
+    def _compute_partner_id(self):
+        super(AccountAnalyticLine, self._get_not_billed())._compute_partner_id()
 
     def _get_not_billed(self):
         return self.filtered(lambda t: not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
@@ -90,7 +94,7 @@ class AccountAnalyticLine(models.Model):
             task = self.env['project.task'].browse(values.get('task_id'))
             if task.analytic_account_id:
                 values['account_id'] = task.analytic_account_id.id
-                values['company_id'] = task.analytic_account_id.company_id.id
+                values['company_id'] = task.analytic_account_id.company_id.id or task.company_id.id
         values = super(AccountAnalyticLine, self)._timesheet_preprocess(values)
         return values
 

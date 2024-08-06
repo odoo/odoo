@@ -22,6 +22,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         edition: 'community',
     }, {
         trigger: '.o-kanban-button-new',
+        extra_trigger: '.oe_kanban_mass_mailing',
         content: _t("Start by creating your first <b>Mailing</b>."),
         position: 'bottom',
     }, {

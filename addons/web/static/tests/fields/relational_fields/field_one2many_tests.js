@@ -14,6 +14,9 @@ var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
 var fieldUtils = require('web.field_utils');
 
+const AbstractFieldOwl = require('web.AbstractFieldOwl');
+const fieldRegistryOwl = require('web.field_registry_owl');
+
 const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
 const { FieldOne2Many } = relationalFields;
@@ -1707,7 +1710,7 @@ QUnit.module('fields', {}, function () {
             var positions = [
                 [6, 0, 'top', ['3', '6', '1', '2', '5', '7', '4']], // move the last to the first line
                 [5, 1, 'top', ['7', '6', '1', '2', '5']], // move the penultimate to the second line
-                [2, 5, 'center', ['1', '2', '5', '6']], // move the third to the penultimate line
+                [2, 5, 'bottom', ['1', '2', '5', '6']], // move the third to the penultimate line
             ];
             async function dragAndDrop() {
                 var pos = positions.shift();
@@ -5918,7 +5921,6 @@ QUnit.module('fields', {}, function () {
             // click all buttons
             await testUtils.dom.click(form.$(btn1Disabled));
             await testUtils.dom.click(form.$(btn1Warn));
-            await testUtils.dom.click(form.$(btn2Disabled));
             await testUtils.dom.click(form.$(btn2Warn));
 
             // save the form
@@ -9887,6 +9889,188 @@ QUnit.module('fields', {}, function () {
 
             form.destroy();
             delete fieldRegistry.map.my_relational_field;
+        });
+
+        QUnit.test('reordering embedded one2many with handle widget starting with same sequence', async function (assert) {
+            assert.expect(3);
+
+            this.data.turtle = {
+                fields: {turtle_int: {string: "int", type: "integer", sortable: true}},
+                records: [
+                    {id: 1, turtle_int: 1},
+                    {id: 2, turtle_int: 1},
+                    {id: 3, turtle_int: 1},
+                    {id: 4, turtle_int: 2},
+                    {id: 5, turtle_int: 3},
+                    {id: 6, turtle_int: 4},
+                ],
+            };
+            this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form string="Partners">
+                        <sheet>
+                            <notebook>
+                                <page string="P page">
+                                    <field name="turtles">
+                                        <tree default_order="turtle_int">
+                                            <field name="turtle_int" widget="handle"/>
+                                            <field name="id"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </sheet>
+                    </form>`,
+                res_id: 1,
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "123456", "default should be sorted by id");
+
+            // Drag and drop the fourth line in first position
+            await testUtils.dom.dragAndDrop(
+                form.$('.ui-sortable-handle').eq(3),
+                form.$('tbody tr').first(),
+                {position: 'top'}
+            );
+            assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "412356", "should still have the 6 rows in the correct order");
+
+            await testUtils.form.clickSave(form);
+
+            assert.deepEqual(_.map(this.data.turtle.records, function (turtle) {
+                return _.pick(turtle, 'id', 'turtle_int');
+            }), [
+                {id: 1, turtle_int: 2},
+                {id: 2, turtle_int: 3},
+                {id: 3, turtle_int: 4},
+                {id: 4, turtle_int: 1},
+                {id: 5, turtle_int: 5},
+                {id: 6, turtle_int: 6},
+            ], "should have saved the updated turtle_int sequence");
+
+            form.destroy();
+        });
+
+        QUnit.test("add_record in an o2m with an OWL field: wait mounted before success", async function (assert) {
+            assert.expect(7);
+
+            let testInst = 0;
+            class TestField extends AbstractFieldOwl {
+                setup() {
+                    super.setup();
+                    const ID = testInst++;
+                    owl.hooks.onMounted(() => {
+                        assert.step(`mounted ${ID}`);
+                    });
+
+                    owl.hooks.onWillUnmount(() => {
+                        assert.step(`willUnmount ${ID}`);
+                    });
+                }
+                activate() {
+                    return true;
+                }
+            }
+
+            TestField.template = owl.tags.xml`<span>test</span>`;
+            fieldRegistryOwl.add('test_field', TestField);
+
+            const def = testUtils.makeTestPromise();
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                debug: 1,
+                data: this.data,
+                arch: `<form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="name" widget="test_field"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            const list = form.renderer.allFieldWidgets[form.handle][0];
+
+            list.trigger_up('add_record', {
+                context: [{
+                    default_name: 'this is a test',
+                }],
+                allowWarning: true,
+                forceEditable: 'bottom',
+                onSuccess: function () {
+                    assert.step("onSuccess");
+                    def.resolve();
+                }
+            });
+
+            await testUtils.nextTick();
+            await def;
+            assert.verifySteps(["mounted 0", "willUnmount 0", "mounted 1", "onSuccess"]);
+            form.destroy();
+            assert.verifySteps(["willUnmount 1"]);
+        });
+
+        QUnit.test('nested one2manys, multi page, onchange', async function (assert) {
+            assert.expect(5);
+
+            this.data.partner.records[2].int_field = 5;
+            this.data.partner.records[0].p = [2, 4]; // limit 1 -> record 4 will be on second page
+            this.data.partner.records[1].turtles = [1];
+            this.data.partner.records[2].turtles = [2];
+            this.data.turtle.records[0].turtle_int = 1;
+            this.data.turtle.records[1].turtle_int = 2;
+
+            this.data.partner.onchanges.int_field = function (obj) {
+               assert.step('onchange')
+               obj.p = [[5]]
+               obj.p.push([1, 2, { turtles: [[5], [1, 1, { turtle_int: obj.int_field }]] }]);
+               obj.p.push([1, 4, { turtles: [[5], [1, 2, { turtle_int: obj.int_field }]] }]);
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form string="Partner">' +
+                    '<field name="int_field"/>' +
+                    '<field name="p">' +
+                    '<tree editable="bottom" limit="1" default_order="display_name">' +
+                        '<field name="display_name" />' +
+                        '<field name="int_field" />' +
+                        '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_int"/>' +
+                        '</tree>' +
+                        '</field>' +
+                    '</tree>' +
+                    '</field>' +
+                    '</form>',
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            await testUtils.fields.editInput(form.$('[name="int_field"]'), '5');
+            assert.verifySteps(['onchange'])
+
+            await testUtils.form.clickSave(form);
+
+            assert.strictEqual(this.data.partner.records[0].int_field, 5, 'Value should have been updated')
+            assert.strictEqual(this.data.turtle.records[1].turtle_int, 5, 'Shown data should have been updated');
+            assert.strictEqual(this.data.turtle.records[0].turtle_int, 5, 'Hidden data should have been updated');
+
+            form.destroy();
         });
     });
 });

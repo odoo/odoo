@@ -9,7 +9,7 @@
 # palica <pavol.cupka@gmail.com>, 2020
 # Robert Kirschner <robertkirschner@yahoo.com>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
-# Rastislav Brenčič <rastislav.brencic99@gmail.com>, 2020
+# rastislav Brencic <rastislav.brencic99@gmail.com>, 2020
 # Peter Dovicovic <dovicovic@gmail.com>, 2020
 # Nicolas Galler <ngaller@gmail.com>, 2020
 # Martin Trigaux, 2020
@@ -20,16 +20,17 @@
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Viktor Dicer, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
-"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2022\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,7 +40,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Dáta načítané"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -1006,7 +1007,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose between electronic signatures or online payments."
-msgstr ""
+msgstr "Vyberte si medzi elektronickým podpisom alebo online platbami."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
@@ -1325,7 +1326,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
+msgid "DHL Express Connector"
 msgstr ""
 
 #. module: sale
@@ -1628,7 +1629,7 @@ msgstr "Upraviť konfiguráciu"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__digital_signature
 msgid "Electronic signature"
-msgstr ""
+msgstr "Elektronický podpis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_email_account
@@ -2234,7 +2235,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
-msgstr ""
+msgstr "Zachovajme si zatiaľ elektronický podpis."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -3599,7 +3600,7 @@ msgstr "Zobraziť marže na objednávkach"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr "Podpisať &amp; Platbu"
+msgstr "Podpisať &amp; Platba"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -3969,7 +3970,7 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
@@ -4108,6 +4109,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"Na urýchlenie potvrdenia objednávky môžeme aktivovať elektronické podpisy "
+"alebo platby."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4401,6 +4404,15 @@ msgstr ""
 "objednávke. Komunikácia poslúži zákazníkovi pri výbere platobnej metódy."
 
 #. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid ""
@@ -4453,6 +4465,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Vaša cenová ponuka obsahuje produkty od spoločnosti %(product_company)s zatiaľ čo vaša cenová ponuka patrí spoločnosti %(quote_company)s. \n"
+" Zmeňte prosím spoločnosť svojej cenovej ponuky alebo odstráňte produkty od iných spoločností (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

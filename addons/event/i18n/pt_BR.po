@@ -3,13 +3,12 @@
 # 	* event
 # 
 # Translators:
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
+# Rodrigo de Almeida Sottomaior Macedo <sottomaiormacedotec@gmail.com>, 2020
 # danimaribeiro <danimaribeiro@gmail.com>, 2020
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # Raphael Rodrigues <raphael0608@gmail.com>, 2020
 # Marcelo Costa <marcelo@comdesk.com.br>, 2020
 # Diego Bittencourt <diegomb86@gmail.com>, 2020
-# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
 # Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
 # Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
@@ -26,12 +25,14 @@
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020
 # Adriel Kotviski <kotviski@gmail.com>, 2020
-# grazziano <gra.negocia@gmail.com>, 2020
+# grazziano <grazziano.do+transifex@gmail.com>, 2020
 # Yannick Belot <yannickbh@gmail.com>, 2020
 # Munique Shih <muniqueshih@hotmail.com>, 2020
 # mariana rodrigues <mariana12v@gmail.com>, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
@@ -39,13 +40,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Maitê Dietze, 2024\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
@@ -308,8 +309,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Os valores definidos aqui são"
+" específicos por empresa.\" groups=\"base.group_multi_company\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1351,7 +1352,7 @@ msgstr "Frequência"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended"
-msgstr "Frequentou"
+msgstr "Compareceu"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
@@ -1451,7 +1452,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
 msgid "Barcode"
-msgstr "Código de barras"
+msgstr "Código de Barras"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
@@ -2277,7 +2278,7 @@ msgstr "Rótulo Kanban Cinza"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -2619,7 +2620,7 @@ msgstr "Agendadores de E-mails"
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr "Agendamento de e-mail na Categoria de Evento"
+msgstr "Agendamento de e-mail na categoria de evento"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -2682,7 +2683,7 @@ msgstr "Assentos Máximos"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
 msgid "Medium"
-msgstr "Médio"
+msgstr "Meio"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
@@ -3139,7 +3140,7 @@ msgstr "Escaneie os crachás para confirmar as presenças"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr "Programação & Faixas"
+msgstr "Programação e Sessões"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -3520,7 +3521,7 @@ msgstr "Ticket"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ticket Type"
-msgstr "Tipo de Ticket"
+msgstr "Tipo de chamado"
 
 #. module: event
 #. openerp-web

@@ -26,9 +26,7 @@ setup(
         'babel >= 1.0',
         'decorator',
         'docutils',
-        'feedparser',
         'gevent',
-        'html2text',
         'idna',
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/

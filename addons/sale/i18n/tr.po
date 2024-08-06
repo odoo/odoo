@@ -7,14 +7,12 @@
 # tanerhasret <tanerhasret@gmail.com>, 2020
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
 # Hakan ıı, 2020
-# Levent Karakaş <levent@mektup.at>, 2020
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2020
 # Saban Yildiz <sabany@projetgrup.com>, 2020
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
 # Mehmet Demirel <mdemirell@gmail.com>, 2020
 # Erdem Keskin <erdemkeskines@gmail.com>, 2020
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2020
-# Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
 # Martin Trigaux, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
@@ -27,17 +25,20 @@
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2020
 # Yedigen, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
-# Ediz Duman <neps1192@gmail.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2021
+# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
+# Levent Karakaş <levent@mektup.at>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Levent Karakaş <levent@mektup.at>, 2022\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -52,12 +53,12 @@ msgstr "Alınan Veriler"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
 msgid "# of Lines"
-msgstr "Satır Sayısı"
+msgstr "Satır Adedi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr "# Satış Siparişleri"
+msgstr "Satış Sipariş Adedi"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -72,8 +73,8 @@ msgid ""
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
-"'bekleyen') ve 'Bekleyen sipariş' veya 'Sipariş'} (Ref ${object.name or "
-"'n/a' })"
+"'bekleyen') and 'Bekleyen sipariş' or 'Sipariş'} (Ref ${object.name or 'n/a'"
+" })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -82,6 +83,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
 "${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
+"${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -92,7 +96,7 @@ msgstr "&amp;nbsp;"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
-msgstr "&amp;nbsp; <span>Üzerinden</span>&amp;nbsp;"
+msgstr "&amp;nbsp; <span>matrah</span>&amp;nbsp;"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
@@ -577,7 +581,7 @@ msgstr "<strong class=\"text-muted\">Satış Temsilcisi</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Expiration Date:</strong>"
-msgstr "<Strong>Geçerlilik Tarihi:</strong>"
+msgstr "<strong>Geçerlilik Tarihi:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -711,12 +715,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr "Kabull Et &amp; Öde"
+msgstr "Kabul Et &amp; Öde"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Pay Quotation"
-msgstr "Kabull Et &amp; Teklifli Öde"
+msgstr "Kabul Et &amp; Teklifli Öde"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -907,8 +911,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "                to sell extra hours when all ordered hours have been consumed."
 msgstr ""
-"As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
-"                to sell extra hours when all ordered hours have been consumed."
+"Örnek olarak, eğer önceden ödenmiş hizmet saati satıyorsanız, Odoo size\n"
+"                tüm sipariş edilen saatler tüketildiğinde ekstra saat satmanızı önerir. "
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1347,8 +1351,8 @@ msgstr "Tekliflerinizi ve siparişlerinizi özelleştirin."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
-msgstr "DHL USA Connector"
+msgid "DHL Express Connector"
+msgstr "DHL Ekspres Bağlayıcı"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1834,7 +1838,7 @@ msgstr "Satış sipariş satırlarında indirim uygulayın"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
 msgid "Gross Weight"
-msgstr "Bürüt Ağırlık"
+msgstr "Brüt Ağırlık"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2463,7 +2467,7 @@ msgstr "Faturalanacak sipariş bulunamadı"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "Satış için sipariş bulunamadı"
 
 #. module: sale
 #. openerp-web
@@ -2621,7 +2625,7 @@ msgstr "Sipariş"
 #: model:ir.model.fields,field_description:sale.field_sale_report__order_id
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
-msgstr "Sipariş Sayısı"
+msgstr "Sipariş #"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -2843,7 +2847,7 @@ msgstr "Lütfen %s (%s) şirketi için bir muhasebe satış günlüğü tanımla
 #: code:addons/sale/static/src/js/sale.js:0
 #, python-format
 msgid "Please enter an integer value"
-msgstr "Please enter an integer value"
+msgstr "Lütfen tam sayı giriniz"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -2948,7 +2952,7 @@ msgstr "Ürün Şablonu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr "Product Uom Readonly"
+msgstr "Ürün Uom Saltokunur"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
@@ -3027,7 +3031,7 @@ msgstr "Miktar"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_qty_configurator
 msgid "Quantity visible in configurator"
-msgstr "Quantity visible in configurator"
+msgstr "Konfigüratörde görülen miktar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4003,15 +4007,10 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
-"Faturalandırılacak bir şey yok!\n"
-"\n"
-"Bu davranışın nedenleri şunlar olabilir:\n"
-"- Ürünlerinizi faturalandırmadan önce teslim etmelisiniz: \"Kamyon\" simgesine (ekranınızın sağ üst köşesinde) tıklayın ve talimatları izleyin.\n"
-"- Ürününüzün faturalama politikasını değiştirmelisiniz: Ürünü açın, \"Satış sekmesine\" gidin ve faturalama politikasını \"teslim edilen miktarlardan\" \"sipariş edilen miktarlara\" değiştirin."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4432,8 +4431,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "                or check every order and invoice them one by one."
 msgstr ""
-"Tüm siparişleri seçebilirsiniz ve tümünü faturalandırabilirsiniz yada her "
-"bir siparişi birer birer seçip faturalandırabilirsiniz."
+" Tüm siparişleri seçebilirsiniz ve tümünü faturalandırabilirsiniz,<br>\n"
+"          yada her bir siparişi teker teker seçip faturalandırabilirsiniz."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
@@ -4445,6 +4444,17 @@ msgstr ""
 "Burada satış siparişlerinde görünecek olan iletişim türünü "
 "belirleyebilirsiniz.Ödeme yöntemini seçtiklerinde müşteriye iletişim bilgisi"
 " verilecektir."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"Satış siparişlerinde zaten kullanıldığı için ürünün türünü "
+"değiştiremezsiniz."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

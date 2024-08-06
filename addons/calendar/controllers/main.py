@@ -66,6 +66,7 @@ class CalendarController(http.Controller):
         timezone = attendee.partner_id.tz
         lang = attendee.partner_id.lang or get_lang(request.env).code
         event = request.env['calendar.event'].with_context(tz=timezone, lang=lang).sudo().browse(int(id))
+        company = event.user_id and event.user_id.company_id or event.create_uid.company_id
 
         # If user is internal and logged, redirect to form view of event
         # otherwise, display the simplifyed web page with event informations
@@ -78,6 +79,7 @@ class CalendarController(http.Controller):
         #   request.render())
         response_content = request.env['ir.ui.view'].with_context(lang=lang)._render_template(
             'calendar.invitation_page_anonymous', {
+                'company': company,
                 'event': event,
                 'attendee': attendee,
             })

@@ -8,11 +8,6 @@ from odoo.exceptions import ValidationError
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    @api.depends('amount_total')
-    def _compute_amount_total_words(self):
-        for invoice in self:
-            invoice.amount_total_words = invoice.currency_id.amount_to_text(invoice.amount_total)
-
     amount_total_words = fields.Char("Total (In Words)", compute="_compute_amount_total_words")
     l10n_in_gst_treatment = fields.Selection([
             ('regular', 'Registered Business - Regular'),
@@ -22,7 +17,7 @@ class AccountMove(models.Model):
             ('overseas', 'Overseas'),
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export')
-        ], string="GST Treatment", readonly=True, states={'draft': [('readonly', False)]})
+        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False)
     l10n_in_state_id = fields.Many2one('res.country.state', string="Location of supply")
     l10n_in_company_country_code = fields.Char(related='company_id.country_id.code', string="Country code")
     l10n_in_gstin = fields.Char(string="GSTIN")
@@ -32,12 +27,15 @@ class AccountMove(models.Model):
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', states={'draft': [('readonly', False)]})
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller", readonly=True, states={'draft': [('readonly', False)]})
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        """Use journal type to define document type because not miss state in any entry including POS entry"""
-        if self.l10n_in_company_country_code == 'IN':
-            self.l10n_in_gst_treatment = self.partner_id.l10n_in_gst_treatment
-        return super()._onchange_partner_id()
+    @api.depends('amount_total')
+    def _compute_amount_total_words(self):
+        for invoice in self:
+            invoice.amount_total_words = invoice.currency_id.amount_to_text(invoice.amount_total)
+
+    @api.depends('partner_id')
+    def _compute_l10n_in_gst_treatment(self):
+        for record in self:
+            record.l10n_in_gst_treatment = record.partner_id.l10n_in_gst_treatment
 
     @api.model
     def _l10n_in_get_indian_state(self, partner):
@@ -58,6 +56,7 @@ class AccountMove(models.Model):
         res = super()._get_tax_grouping_key_from_tax_line(tax_line)
         if tax_line.move_id.journal_id.company_id.country_id.code == 'IN':
             res['product_id'] = tax_line.product_id.id
+            res['product_uom_id'] = tax_line.product_uom_id.id
         return res
 
     @api.model
@@ -66,14 +65,17 @@ class AccountMove(models.Model):
         res = super()._get_tax_grouping_key_from_base_line(base_line, tax_vals)
         if base_line.move_id.journal_id.company_id.country_id.code == 'IN':
             res['product_id'] = base_line.product_id.id
+            res['product_uom_id'] = base_line.product_uom_id.id
         return res
 
     @api.model
     def _get_tax_key_for_group_add_base(self, line):
+        # DEPRECATED: TO BE REMOVED IN MASTER
         tax_key = super(AccountMove, self)._get_tax_key_for_group_add_base(line)
 
         tax_key += [
             line.product_id.id,
+            line.product_uom_id.id,
         ]
         return tax_key
 
@@ -101,7 +103,7 @@ class AccountMove(models.Model):
                     company_name=company_unit_partner.name,
                     company_id=company_unit_partner.id
                 ))
-            elif self.journal_id.type == 'purchase':
+            elif move.journal_id.type == 'purchase':
                 move.l10n_in_state_id = company_unit_partner.state_id
 
             shipping_partner = move._l10n_in_get_shipping_partner()
@@ -115,7 +117,7 @@ class AccountMove(models.Model):
                     partner_id=shipping_partner.id,
                     name=gst_treatment_name_mapping.get(move.l10n_in_gst_treatment)
                 ))
-            if self.journal_id.type == 'sale':
+            if move.journal_id.type == 'sale':
                 move.l10n_in_state_id = self._l10n_in_get_indian_state(shipping_partner)
                 if not move.l10n_in_state_id:
                     move.l10n_in_state_id = self._l10n_in_get_indian_state(move.partner_id)

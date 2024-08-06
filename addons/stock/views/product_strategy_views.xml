@@ -92,7 +92,7 @@
         <field name="name">Putaway Rules</field>
         <field name="res_model">stock.putaway.rule</field>
         <field name="context">{'fixed_location': True}</field>
-        <field name="domain">[('location_in_id', '=', active_id)]</field>
+        <field name="domain">['|', ('location_out_id', '=', active_id), ('location_in_id', '=', active_id)]</field>
     </record>
 
     <menuitem id="menu_putaway" name="Putaway Rules" parent="stock.menu_warehouse_config"

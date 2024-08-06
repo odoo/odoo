@@ -27,6 +27,10 @@ body.o_connected_user {
 
         &.editor_enable.editor_has_snippets {
             padding-right: 0 !important;
+
+            .modal:not(.o_technical_modal) {
+                right: 0;
+            }
         }
         #oe_main_menu_navbar, #web_editor-top-edit {
             transform: translateY(-100%);
@@ -510,4 +514,21 @@ body .modal {
             background-color: $o-we-bg-lighter;
         }
     }
+}
+
+// Page Properties
+.o_redirect_old_url {
+    @include media-breakpoint-down(sm) {
+        // Because o_technical_modal class class has a higher z-index than $zindex-modal.
+        z-index: $o-we-technical-modal-zindex + ($zindex-popover - $zindex-modal);
+    }
+    .popover-body {
+        overflow-y: auto;
+        max-height: 14.2rem;
+    }
+}
+
+// Post Submit Links
+.post_link:not(.o_post_link_js_loaded) {
+    pointer-events: none;
 }

@@ -38,17 +38,25 @@
                     </div>
                 </xpath>
                 <xpath expr="//div[@name='journal_div']" position="after">
-                    <field name="edi_document_ids" invisible="1" />
                     <field name="edi_state" attrs="{'invisible': ['|', ('edi_state', '=', False), ('state', '=', 'draft')]}"/>
                 </xpath>
                 <xpath expr="//page[@id='other_tab']" position="after">
-                    <page id="edi_documents" string="EDI Documents" groups="base.group_no_one" attrs="{'invisible': [('edi_document_ids', '=', [])]}">
-                        <field name="edi_document_ids">
+                    <page id="edi_documents"
+                          string="EDI Documents"
+                          groups="base.group_no_one"
+                          attrs="{'invisible': [('edi_document_ids', '=', [])]}">
+                        <field name="edi_document_ids" options="{'no_open': '1'}">
                             <tree create="false" delete="false" edit="false" decoration-danger="error">
                                 <field name="name"/>
                                 <field name="edi_format_name"/>
                                 <field name="state"/>
                                 <field name="error" invisible="1"/>
+                                <button name="action_export_xml"
+                                        type="object"
+                                        class="oe_link oe_inline"
+                                        string="Download"
+                                        groups="base.group_no_one"
+                                        attrs="{'invisible': [('error', '=', False)]}"/>
                             </tree>
                         </field>
                     </page>

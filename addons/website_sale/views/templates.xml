@@ -263,7 +263,7 @@
                 <a t-att-href="product_href" class="d-block h-100" itemprop="url">
                     <t t-set="image_holder" t-value="product._get_image_holder()"/>
                     <span t-field="image_holder.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': 'image_1024' if product_image_big else 'image_256'}"
+                        t-options="{'widget': 'image', 'preview_image': 'image_1024' if product_image_big else 'image_256', 'itemprop': 'image'}"
                         class="d-flex h-100 justify-content-center align-items-center"/>
                 </a>
             </div>
@@ -535,6 +535,7 @@
                 <form class="js_attributes mb-2" method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
+                    <input type="hidden" name="order" t-att-value="order"/>
                     <ul class="nav nav-pills flex-column">
                         <t t-foreach="attributes" t-as="a">
                             <li t-if="a.value_ids and len(a.value_ids) &gt; 1" class="nav-item">
@@ -630,8 +631,10 @@
                             <t t-call="website_sale.shop_product_carousel"/>
                         </div>
                         <div class="col-md-6 col-xl-4" id="product_details">
+                            <t t-set="base_url" t-value="product.get_base_url()"/>
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                            <span itemprop="url" style="display:none;" t-esc="product.website_url"/>
+                            <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
+                            <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
                             <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product js_main_product">
@@ -1021,7 +1024,7 @@
                         </td>
                         <td class="text-center td-price" name="price">
                             <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
-                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination)"/>
+                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id)"/>
 
                             <t t-set="list_price_converted" t-value="website.currency_id._convert(combination_info['list_price'], website_sale_order.currency_id, website_sale_order.company_id, date)"/>
                             <t groups="account.group_show_line_subtotals_tax_excluded" t-if="(website_sale_order.pricelist_id.discount_policy == 'without_discount' and website_sale_order.currency_id.compare_amounts(list_price_converted, line.price_reduce_taxexcl) == 1) or website_sale_order.currency_id.compare_amounts(line.price_unit, line.price_reduce) == 1" name="order_line_discount">
@@ -1138,7 +1141,7 @@
         </t>
     </template>
 
-    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Alternative Products in my cart">
+    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Accessory Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
             <h5 class='text-muted js_cart_lines' t-if="suggested_products">Suggested Accessories:</h5>
             <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
@@ -1461,7 +1464,7 @@
                     <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="company_name_not_editable_message if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                 </div>
                 <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat">
-                    <label class="col-form-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
+                    <label class="col-form-label font-weight-normal label-optional" for="vat">VAT</label>
                     <t t-set="vat_not_editable_message">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</t>
                     <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="vat_not_editable_message if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                 </div>
@@ -1525,6 +1528,10 @@
                                     <t t-set="back_button_class" t-value="'btn btn-secondary'"/>
                                     <t t-set="back_button_link" t-value="'/shop/cart'"/>
                                 </t>
+                            </div>
+                            <div t-if="not (acquirers or tokens)" class="alert alert-warning">
+                                <strong>No suitable payment option could be found.</strong><br/>
+                                If you believe that it is an error, please contact the website administrator.
                             </div>
 
                             <div t-if="not acquirers" class="mt-2">
@@ -1665,13 +1672,14 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="order.get_portal_last_transaction().acquirer_id.name" />
+                                                <t t-set="last_transaction" t-value="order.get_portal_last_transaction()"/>
+                                                <t t-esc="last_transaction.acquirer_id.display_as or last_transaction.acquirer_id.name" />
                                             </td>
                                             <td class="text-right" width="100">
                                                 <strong>Total:</strong>
                                             </td>
                                             <td class="text-right" width="100">
-                                                <strong t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
+                                                <strong t-field="last_transaction.amount" t-options="{'widget': 'monetary', 'display_currency': last_transaction.currency_id}" />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1783,7 +1791,7 @@
                 </div>
 
                 <div t-if="payment_tx_id.acquirer_id.qr_code and (payment_tx_id.acquirer_id.provider == 'transfer')">
-                    <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
+                    <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_base64(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
                     <div class="card-body" t-if="qr_code">
                         <h3>Or scan me with your banking app.</h3>
                         <img class="border border-dark rounded" t-att-src="qr_code"/>
@@ -1876,7 +1884,7 @@
                             <div t-if="product_image._name == 'product.image' and product_image.embed_code" class="d-flex align-items-center justify-content-center h-100 embed-responsive embed-responsive-16by9">
                                 <t t-raw="product_image.embed_code"/>
                             </div>
-                            <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920", "itemprop": "image"}'/>
+                            <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'/>
                         </div>
                     </t>
                 </div>
@@ -1911,7 +1919,7 @@
                     <field name="shop_extra_field_ids" context="{'default_website_id': active_id}">
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
-                            <field name="field_id"/>
+                            <field name="field_id" required="1"/>
                         </tree>
                     </field>
                 </page>

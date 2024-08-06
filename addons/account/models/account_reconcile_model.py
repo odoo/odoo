@@ -30,7 +30,7 @@ class AccountReconcileModelPartnerMapping(models.Model):
                     re.compile(record.payment_ref_regex)
                 if record.narration_regex:
                     current_regex = record.narration_regex
-                    re.compile(record.narration_regex) 
+                    re.compile(record.narration_regex)
             except re.error:
                 raise ValidationError(_("The following regular expression is invalid to create a partner mapping: %s") % current_regex)
 
@@ -218,7 +218,7 @@ class AccountReconcileModel(models.Model):
     match_partner_category_ids = fields.Many2many('res.partner.category', string='Restrict Partner Categories to',
         help='The reconciliation model will only be applied to the selected customer/vendor categories.')
 
-    line_ids = fields.One2many('account.reconcile.model.line', 'model_id')
+    line_ids = fields.One2many('account.reconcile.model.line', 'model_id', copy=True)
     partner_mapping_line_ids = fields.One2many(string="Partner Mapping Lines",
                                                comodel_name='account.reconcile.model.partner.mapping',
                                                inverse_name='model_id',
@@ -276,17 +276,30 @@ class AccountReconcileModel(models.Model):
         '''
         self.ensure_one()
         balance = base_line_dict['balance']
+        tax_type = tax.type_tax_use
+        is_refund = (tax_type == 'sale' and balance > 0) or (tax_type == 'purchase' and balance < 0)
 
-        res = tax.compute_all(balance)
+        res = tax.compute_all(balance, is_refund=is_refund)
+
+        if (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund):
+            base_tags = self.env['account.account.tag'].browse(res['base_tags'])
+            res['base_tags'] = self.env['account.move.line']._revert_signed_tags(base_tags).ids
+
+            for tax_result in res['taxes']:
+                tax_tags = self.env['account.account.tag'].browse(tax_result['tag_ids'])
+                tax_result['tag_ids'] = self.env['account.move.line']._revert_signed_tags(tax_tags).ids
 
         new_aml_dicts = []
         for tax_res in res['taxes']:
+            if self.company_id.currency_id.is_zero(tax_res['amount']):
+                continue
             tax = self.env['account.tax'].browse(tax_res['id'])
             balance = tax_res['amount']
-
+            name = ' '.join([x for x in [base_line_dict.get('name', ''), tax_res['name']] if x])
             new_aml_dicts.append({
                 'account_id': tax_res['account_id'] or base_line_dict['account_id'],
-                'name': tax_res['name'],
+                'journal_id': base_line_dict.get('journal_id', False),
+                'name': name,
                 'partner_id': base_line_dict.get('partner_id'),
                 'balance': balance,
                 'debit': balance > 0 and balance or 0,
@@ -336,8 +349,12 @@ class AccountReconcileModel(models.Model):
                 match = re.search(line.amount_string, st_line.payment_ref)
                 if match:
                     sign = 1 if residual_balance > 0.0 else -1
-                    extracted_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.'))
-                    balance = copysign(extracted_balance * sign, residual_balance)
+                    try:
+                        extracted_match_group = re.sub(r'[^\d' + self.decimal_separator + ']', '', match.group(1))
+                        extracted_balance = float(extracted_match_group.replace(self.decimal_separator, '.'))
+                        balance = copysign(extracted_balance * sign, residual_balance)
+                    except ValueError:
+                        balance = 0
                 else:
                     balance = 0
             else:
@@ -353,13 +370,15 @@ class AccountReconcileModel(models.Model):
                 'analytic_account_id': line.analytic_account_id.id,
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'reconcile_model_id': self.id,
+                'journal_id': line.journal_id.id,
+                'tax_ids': [],
             }
             lines_vals_list.append(writeoff_line)
 
             residual_balance -= balance
 
             if line.tax_ids:
-                writeoff_line['tax_ids'] = [(6, None, line.tax_ids.ids)]
+                writeoff_line['tax_ids'] += [(6, None, line.tax_ids.ids)]
                 tax = line.tax_ids
                 # Multiple taxes with force_tax_included results in wrong computation, so we
                 # only allow to set the force_tax_included field if we have one tax selected
@@ -391,18 +410,23 @@ class AccountReconcileModel(models.Model):
         :return: A list of dictionary to be passed to the account.bank.statement.line's 'reconcile' method.
         '''
         self.ensure_one()
+        journal = st_line.journal_id
+        company_currency = journal.company_id.currency_id
+        foreign_currency = st_line.foreign_currency_id or journal.currency_id or company_currency
+
         liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
 
         if st_line.to_check:
             st_line_residual = -liquidity_lines.balance
+            st_line_residual_currency = st_line._prepare_move_line_default_vals()[1]['amount_currency']
         elif suspense_lines.account_id.reconcile:
             st_line_residual = sum(suspense_lines.mapped('amount_residual'))
+            st_line_residual_currency = sum(suspense_lines.mapped('amount_residual_currency'))
         else:
             st_line_residual = sum(suspense_lines.mapped('balance'))
+            st_line_residual_currency = sum(suspense_lines.mapped('amount_currency'))
 
-        partner = partner or st_line.partner_id
-
-        has_full_write_off= any(rec_mod_line.amount == 100.0 for rec_mod_line in self.line_ids)
+        has_full_write_off = any(rec_mod_line.amount == 100.0 for rec_mod_line in self.line_ids)
 
         lines_vals_list = []
         amls = self.env['account.move.line'].browse(aml_ids)
@@ -414,18 +438,30 @@ class AccountReconcileModel(models.Model):
             if aml.balance * st_line_residual > 0:
                 # Meaning they have the same signs, so they can't be reconciled together
                 assigned_balance = -aml.amount_residual
+                assigned_amount_currency = -aml.amount_residual_currency
             elif has_full_write_off:
                 assigned_balance = -aml.amount_residual
-                st_line_residual -= min(-aml.amount_residual, st_line_residual, key=abs)
+                assigned_amount_currency = -aml.amount_residual_currency
+                st_line_residual -= min(assigned_balance, st_line_residual, key=abs)
+                st_line_residual_currency -= min(assigned_amount_currency, st_line_residual_currency, key=abs)
             else:
                 assigned_balance = min(-aml.amount_residual, st_line_residual, key=abs)
+                assigned_amount_currency = min(-aml.amount_residual_currency, st_line_residual_currency, key=abs)
                 st_line_residual -= assigned_balance
+                st_line_residual_currency -= assigned_amount_currency
 
-            lines_vals_list.append({
-                'id': aml.id,
-                'balance': assigned_balance,
-                'currency_id': st_line.move_id.company_id.currency_id.id,
-            })
+            if aml.currency_id == foreign_currency:
+                lines_vals_list.append({
+                    'id': aml.id,
+                    'balance': assigned_amount_currency,
+                    'currency_id': foreign_currency.id,
+                })
+            else:
+                lines_vals_list.append({
+                    'id': aml.id,
+                    'balance': assigned_balance,
+                    'currency_id': company_currency.id,
+                })
 
         write_off_amount = max(aml_total_residual, -st_line_residual_before, key=abs) + st_line_residual_before + st_line_residual
 
@@ -435,12 +471,24 @@ class AccountReconcileModel(models.Model):
 
         for line_vals in writeoff_vals_list:
             st_line_residual -= st_line.company_currency_id.round(line_vals['balance'])
+            line_vals['currency_id'] = st_line.company_currency_id.id
 
         # Check we have enough information to create an open balance.
         if open_balance_vals and not open_balance_vals.get('account_id'):
             return []
 
         return lines_vals_list + writeoff_vals_list
+
+    def _prepare_widget_writeoff_vals(self, st_line_id, write_off_vals):
+        counterpart_vals = st_line_id._prepare_counterpart_move_line_vals({
+                **write_off_vals,
+                'currency_id': st_line_id.company_id.currency_id.id,
+            })
+        return {
+            **counterpart_vals,
+            'balance': counterpart_vals['amount_currency'],
+            'reconcile_model_id': self.id,
+        }
 
     ####################################################
     # RECONCILIATION CRITERIA
@@ -533,7 +581,7 @@ class AccountReconcileModel(models.Model):
             or (self.match_amount == 'between' and (abs(st_line.amount) > self.match_amount_max or abs(st_line.amount) < self.match_amount_min))
             or (self.match_partner and not partner)
             or (self.match_partner and self.match_partner_ids and partner not in self.match_partner_ids)
-            or (self.match_partner and self.match_partner_category_ids and partner.category_id not in self.match_partner_category_ids)
+            or (self.match_partner and self.match_partner_category_ids and not (partner.category_id & self.match_partner_category_ids))
         ):
             return False
 
@@ -562,18 +610,37 @@ class AccountReconcileModel(models.Model):
         """
         self.ensure_one()
 
+        # On big databases, it is possible that some setups will create huge queries when trying to apply reconciliation models.
+        # In such cases, this query might take a very long time to run, essentially eating up all the available CPU, and proof
+        # impossible to kill, because of the type of operations ran by SQL. To alleviate that, we introduce the config parameter below,
+        # which essentially allows cutting the list of statement lines to match into slices, and running the matching in multiple queries.
+        # This way, we avoid server overload, giving the ability to kill the process if takes too long.
+        slice_size = len(st_lines_with_partner)
+        slice_size_param = self.env['ir.config_parameter'].sudo().get_param('account.reconcile_model_forced_slice_size')
+        if slice_size_param:
+            converted_param = int(slice_size_param)
+            if converted_param > 0:
+                slice_size = converted_param
+
+        treatment_slices = []
+        slice_start = 0
+        while slice_start < len(st_lines_with_partner):
+            slice_end = slice_start + slice_size
+            treatment_slices.append(st_lines_with_partner[slice_start:slice_end])
+            slice_start = slice_end
+
         treatment_map = {
-            'invoice_matching': lambda x: x._get_invoice_matching_query(st_lines_with_partner, excluded_ids),
-            'writeoff_suggestion': lambda x: x._get_writeoff_suggestion_query(st_lines_with_partner, excluded_ids),
+            'invoice_matching': lambda rec_model, slice: rec_model._get_invoice_matching_query(slice, excluded_ids),
+            'writeoff_suggestion': lambda rec_model, slice: rec_model._get_writeoff_suggestion_query(slice, excluded_ids),
         }
-
-        query_generator = treatment_map[self.rule_type]
-        query, params = query_generator(self)
-        self._cr.execute(query, params)
-
         rslt = defaultdict(lambda: [])
-        for candidate_dict in self._cr.dictfetchall():
-            rslt[candidate_dict['id']].append(candidate_dict)
+        for treatment_slice in treatment_slices:
+            query_generator = treatment_map[self.rule_type]
+            query, params = query_generator(self, treatment_slice)
+            self._cr.execute(query, params)
+
+            for candidate_dict in self._cr.dictfetchall():
+                rslt[candidate_dict['id']].append(candidate_dict)
 
         return rslt
 
@@ -612,11 +679,13 @@ class AccountReconcileModel(models.Model):
         LEFT JOIN account_move move             ON move.id = aml.move_id AND move.state = 'posted'
         LEFT JOIN account_account account       ON account.id = aml.account_id
         LEFT JOIN res_partner aml_partner       ON aml.partner_id = aml_partner.id
+        LEFT JOIN account_payment payment       ON payment.move_id = move.id
         WHERE
             aml.company_id = st_line_move.company_id
             AND move.state = 'posted'
             AND account.reconcile IS TRUE
             AND aml.reconciled IS FALSE
+            AND (account.internal_type NOT IN ('receivable', 'payable') OR aml.payment_id IS NULL)
         '''
 
         # Add conditions to handle each of the statement lines we want to match
@@ -634,30 +703,42 @@ class AccountReconcileModel(models.Model):
             if partner:
                 st_line_subquery += r" AND aml.partner_id = %s" % partner.id
             else:
-                st_line_subquery += r"""
-                    AND
-                    (
-                        substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                        AND
-                        (
-                            (""" + self._get_select_communication_flag() + """)
-                            OR
-                            (""" + self._get_select_payment_reference_flag() + """)
-                        )
-                    )
-                    OR
-                    (
-                        /* We also match statement lines without partners with amls
-                        whose partner's name's parts (splitting on space) are all present
-                        within the payment_ref, in any order, with any characters between them. */
+                st_line_fields_consideration = [
+                    (self.match_text_location_label, 'st_line.payment_ref'),
+                    (self.match_text_location_note, 'st_line_move.narration'),
+                    (self.match_text_location_reference, 'st_line_move.ref'),
+                ]
 
-                        aml_partner.name IS NOT NULL
-                        AND """ + unaccent("st_line.payment_ref") + r""" ~* ('^' || (
-                            SELECT string_agg(concat('(?=.*\m', chunk[1], '\M)'), '')
-                              FROM regexp_matches(""" + unaccent("aml_partner.name") + r""", '\w{3,}', 'g') AS chunk
-                        ))
-                    )
-                """
+                no_partner_query = " OR ".join([
+                    r"""
+                        (
+                            substring(REGEXP_REPLACE(""" + sql_field + """, '[^0-9\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                            AND
+                            (
+                                (""" + self._get_select_communication_flag() + """)
+                                OR
+                                (""" + self._get_select_payment_reference_flag() + """)
+                            )
+                        )
+                        OR
+                        (
+                            /* We also match statement lines without partners with amls
+                            whose partner's name's parts (splitting on space) are all present
+                            within the payment_ref, in any order, with any characters between them. */
+
+                            aml_partner.name IS NOT NULL
+                            AND """ + unaccent(sql_field) + r""" ~* ('^' || (
+                                SELECT string_agg(concat('(?=.*\m', chunk[1], '\M)'), '')
+                                  FROM regexp_matches(""" + unaccent("aml_partner.name") + r""", '\w{3,}', 'g') AS chunk
+                            ))
+                        )
+                    """
+                    for consider_field, sql_field in st_line_fields_consideration
+                    if consider_field
+                ])
+
+                if no_partner_query:
+                    st_line_subquery += " AND " + no_partner_query
 
             st_lines_queries.append(r"st_line.id = %s AND (%s)" % (st_line.id, st_line_subquery))
 
@@ -669,12 +750,12 @@ class AccountReconcileModel(models.Model):
         # to the query to only search on move lines that are younger than this limit.
         if self.past_months_limit:
             date_limit = fields.Date.context_today(self) - relativedelta(months=self.past_months_limit)
-            query += "AND aml.date >= %(aml_date_limit)s"
+            query += " AND aml.date >= %(aml_date_limit)s"
             params['aml_date_limit'] = date_limit
 
         # Filter out excluded account.move.line.
         if excluded_ids:
-            query += 'AND aml.id NOT IN %(excluded_aml_ids)s'
+            query += ' AND aml.id NOT IN %(excluded_aml_ids)s'
             params['excluded_aml_ids'] = tuple(excluded_ids)
 
         if self.matching_order == 'new_first':
@@ -725,9 +806,11 @@ class AccountReconcileModel(models.Model):
             st_ref_list += ['st_line_move.ref']
         if not st_ref_list:
             return "FALSE"
-        return r'''(move.payment_reference IS NOT NULL AND ({}))'''.format(
+
+        # payment_reference is not used on account.move for payments; ref is used instead
+        return r'''((move.payment_reference IS NOT NULL OR (payment.id IS NOT NULL AND move.ref IS NOT NULL)) AND ({}))'''.format(
             ' OR '.join(
-                rf"regexp_replace(move.payment_reference, '\s+', '', 'g') = regexp_replace({st_ref}, '\s+', '', 'g')"
+                rf"regexp_replace(CASE WHEN payment.id IS NULL THEN move.payment_reference ELSE move.ref END, '\s+', '', 'g') = regexp_replace({st_ref}, '\s+', '', 'g')"
                 for st_ref in st_ref_list
             )
         )
@@ -881,8 +964,8 @@ class AccountReconcileModel(models.Model):
         # Statement line amount is equal to the total residual.
         if line_currency.is_zero(line_residual_after_reconciliation):
             return True
-
-        reconciled_percentage = (abs(line_residual) - abs(line_residual_after_reconciliation)) / abs(line_residual) * 100
+        residual_difference = line_residual - line_residual_after_reconciliation
+        reconciled_percentage = 100 - abs(line_residual_after_reconciliation) / abs(residual_difference) * 100 if (residual_difference != 0) else 0
         return reconciled_percentage >= self.match_total_amount_param
 
     def _filter_candidates(self, candidates, aml_ids_to_exclude, reconciled_amls_ids):

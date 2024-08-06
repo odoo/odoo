@@ -75,19 +75,14 @@ class CrmTeam(models.Model):
 
         query = '''
             SELECT
-                move.team_id         AS team_id,
-                SUM(-line.balance)   AS amount_untaxed_signed
+                move.team_id AS team_id,
+                SUM(move.amount_untaxed_signed) AS amount_untaxed_signed
             FROM account_move move
-            JOIN account_move_line line ON line.move_id = move.id
-            JOIN account_account account ON account.id = line.account_id
-            WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')
+            WHERE move.move_type IN ('out_invoice', 'out_refund', 'out_receipt')
             AND move.payment_state IN ('in_payment', 'paid', 'reversed')
             AND move.state = 'posted'
             AND move.team_id IN %s
             AND move.date BETWEEN %s AND %s
-            AND line.tax_line_id IS NULL
-            AND line.display_type IS NULL
-            AND account.internal_type NOT IN ('receivable', 'payable')
             GROUP BY move.team_id
         '''
         today = fields.Date.today()

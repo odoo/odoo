@@ -46,7 +46,6 @@
                     </group>
                     <group>
                         <group string="Availability">
-                            <field name="tz" groups="base.group_no_one"/>
                             <field name="recurrency_monday"/>
                             <field name="recurrency_tuesday"/>
                             <field name="recurrency_wednesday"/>
@@ -62,6 +61,7 @@
                             <field name="send_by" widget="radio"/>
                             <label for="automatic_email_time" attrs="{'invisible': [('send_by', '!=', 'mail')]}"/>
                             <div class="o_row" attrs="{'invisible': [('send_by', '!=', 'mail')]}"><field name="automatic_email_time" widget="float_time"/> <field name="moment"/></div>
+                            <field name="tz" groups="base.group_no_one"/>
                         </group>
                     </group>
                 </sheet>

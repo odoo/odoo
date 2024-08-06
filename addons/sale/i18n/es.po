@@ -3,29 +3,32 @@
 # 	* sale
 # 
 # Translators:
-# gabriumaa <gabriel.umana@delfixcr.com>, 2020
+# Gabriel Umaña <gabriel.umana@delfixcr.com>, 2020
 # Erick Herrera <erick.herrera@jarsa.com.mx>, 2020
 # Jon Perez <jop@odoo.com>, 2020
 # VivianMontana23 <vivianpvm@gmail.com>, 2020
-# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Osiris Anael Roman Eras <osiris.roman@yachaytech.edu.ec>, 2020
 # Martin Trigaux, 2020
-# jabelchi <jabelchi@gmail.com>, 2021
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2021
+# Josep Anton Belchi, 2021
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
+# Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
+# Jose Carmona <jrcarmona@gmail.com>, 2021
+# Xabi Spacebiker <xabispacebiker@gmail.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
@@ -55,7 +58,7 @@ msgid ""
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
-"'pendiente') and 'Pedido pendiente' or 'Pedido'} (Ref ${object.name or 'no "
+"'pending') and 'Pedido pendiente' or 'Pedido'} (Ref ${object.name or 'no "
 "aplica' })"
 
 #. module: sale
@@ -66,7 +69,7 @@ msgid ""
 "${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or ‘Presupuesto’) or ‘Pedido’} (Ref "
+"(ctx.get('proforma') and 'Proforma' or 'Presupuesto') or 'Pedido'} (Ref "
 "${object.name or 'n/a' })"
 
 #. module: sale
@@ -505,7 +508,7 @@ msgstr ""
 "            % if object.origin:\n"
 "                (con referencia: ${object.origin} )\n"
 "            % endif\n"
-"            por un importe de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> está lista para su revisión.\n"
+"            por un importe de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> está listo para su revisión.\n"
 "        % endif\n"
 "        <br/><br/>\n"
 "        No dude en ponerse en contacto con nosotros si tiene alguna pregunta.\n"
@@ -537,7 +540,9 @@ msgstr "<i class=\"fa fa-download\"/> Descargar"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Done"
-msgstr "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Listo"
+msgstr ""
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
+"title=\"Done\"/>Bloqueado"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -586,7 +591,7 @@ msgstr "<small><b class=\"text-muted\">Esta oferta vence el</b></small>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr "<small><b class=\"text-muted\">Su ventaja </b></small>"
+msgstr "<small><b class=\"text-muted\">Precio original</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -650,7 +655,7 @@ msgid ""
 "                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Importe</span>\n"
-"                                 <span groups=\"account.group_show_line_subtotals_tax_included\">Precio Total </span>"
+"                                 <span groups=\"account.group_show_line_subtotals_tax_included\">Precio total</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -659,7 +664,7 @@ msgid ""
 "                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Importe</span>\n"
-"                                 <span groups=\"account.group_show_line_subtotals_tax_included\">Precio Total </span>"
+"                                 <span groups=\"account.group_show_line_subtotals_tax_included\">Precio total</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -722,7 +727,7 @@ msgstr "<strong class=\"mr16\">Subtotal</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr "<strong class=\"text-muted\">Vendedor</strong>"
+msgstr "<strong class=\"text-muted\">Comercial</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -856,8 +861,9 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Posibilidad de seleccionar un tipo de paquete en pedidos de venta y forzar "
-"una cantidad que es un múltiplo de la cantidad de unidades por paquete."
+"Posibilidad de seleccionar un tipo de empaquetado en pedidos de venta y "
+"forzar una cantidad que es un múltiplo de la cantidad de unidades por "
+"empaquetado."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1499,8 +1505,8 @@ msgstr "Personalice sus presupuestos y pedidos."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
-msgstr "Conector de DHL USA"
+msgid "DHL Express Connector"
+msgstr "Conector DHL Express"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1935,9 +1941,9 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Desde este reporte, puede obtener una vista general de la cantidad facturada"
+"Desde este informe, puede obtener una vista general de la cantidad facturada"
 " a su cliente. La herramienta de búsqueda también puede ser usada para "
-"personalizar su reporte de Facturas y de esa forma, alinearse a sus "
+"personalizar su informe de Facturas y de esa forma, alinearse a sus "
 "necesidades."
 
 #. module: sale
@@ -3216,7 +3222,7 @@ msgstr "Presupuesto / Pedido"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr "Recuento de presupuestos"
+msgstr "Nº de presupuestos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -3256,7 +3262,7 @@ msgstr "Presupuesto enviado"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr "Cita vista por el cliente %s"
+msgstr "Presupuesto visto por el cliente %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3685,7 +3691,7 @@ msgstr "Vender y comprar productos en diferentes unidades de medida"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
-msgstr "Vender productos por múltiplo de unidad # por paquete"
+msgstr "Vender productos por múltiplo de nº de unidades por empaquetado"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3937,7 +3943,7 @@ msgstr "Subtotal"
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
-msgstr "Categorías"
+msgstr "Etiquetas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4172,16 +4178,15 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
 "¡No hay nada que facturar!\n"
 "\n"
-"Los motivos de este comportamiento pueden ser:\n"
-"- Debe entregar sus productos antes de facturarlos: haga clic en el icono \"camión\" (arriba a la derecha de su pantalla) y siga las instrucciones.\n"
-"- Debe modificar la política de facturación de su producto: Abra el producto, vaya a la pestaña \"Ventas\" y modifique la política de facturación de \"cantidades entregadas\" a \"cantidades pedidas\".\n"
-"        "
+"La razón de esto puede ser:\n"
+"- Debe entregar sus productos antes de facturarlos.\n"
+"- O debe modificar la política de facturación de su producto: Abra el producto, vaya a la pestaña \"Ventas\", y modifique la política de facturación de \"cantidades entregadas\" a \"cantidades pedidas\". Sin efecto retroactivo."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4473,7 +4478,7 @@ msgstr "Base imponible facturada"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
-msgstr "Total libre de impuestos"
+msgstr "Base imponible"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4619,6 +4624,17 @@ msgstr ""
 "Puede establecer aquí el tipo de comunicación que aparecerá en los pedidos "
 "de venta. La comunicación se le dará al cliente cuando elija el método de "
 "pago."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"No puede cambiar el tipo de producto porque ya se está utilizando en algún "
+"pedido de venta."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

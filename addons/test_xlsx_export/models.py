@@ -34,3 +34,14 @@ class GroupOperatorO2M(models.Model):
 
     parent_id = fields.Many2one('export.group_operator')
     value = fields.Integer()
+
+class ComputedBinary(models.Model):
+    _name = 'export.computed.binary'
+    _description = 'Export computed binary'
+
+    binary_field = fields.Binary(compute='_compute_binary_field')
+
+    def _compute_binary_field(self):
+        # This kind of computed binary field is obviously a bad idea,
+        # but since the ORM supports it, the export also needs to handle it.
+        self.binary_field = ["computed value"]

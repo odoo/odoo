@@ -64,14 +64,20 @@ class BaseModel(models.AbstractModel):
             recipient_ids, email_to, email_cc = [], False, False
             if 'partner_id' in record and record.partner_id:
                 recipient_ids.append(record.partner_id.id)
-            elif 'email_normalized' in record and record.email_normalized:
-                email_to = record.email_normalized
-            elif 'email_from' in record and record.email_from:
-                email_to = record.email_from
-            elif 'partner_email' in record and record.partner_email:
-                email_to = record.partner_email
-            elif 'email' in record and record.email:
-                email_to = record.email
+            else:
+                found_email = False
+                if 'email_from' in record and record.email_from:
+                    found_email = record.email_from
+                elif 'partner_email' in record and record.partner_email:
+                    found_email = record.partner_email
+                elif 'email' in record and record.email:
+                    found_email = record.email
+                elif 'email_normalized' in record and record.email_normalized:
+                    found_email = record.email_normalized
+                if found_email:
+                    email_to = ','.join(tools.email_normalize_all(found_email))
+                if not email_to:  # keep value to ease debug / trace update
+                    email_to = found_email
             res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
         return res
 
@@ -98,7 +104,8 @@ class BaseModel(models.AbstractModel):
         :param records: DEPRECATED, self should be a valid record set or an
           empty recordset if a generic reply-to is required;
         :param company: used to compute company name part of the from name; provide
-          it if already known, otherwise fall back on user company;
+          it if already known, otherwise use records company it they all belong to the same company
+          and fall back on user's company in mixed companies environments;
         :param doc_names: dict(res_id, doc_name) used to compute doc name part of
           the from name; provide it if already known to avoid queries, otherwise
           name_get on document will be performed;
@@ -123,6 +130,9 @@ class BaseModel(models.AbstractModel):
                 if not doc_names:
                     doc_names = dict((rec.id, rec.display_name) for rec in _records)
 
+                if not company and 'company_id' in self and len(self.company_id) == 1:
+                    company = self.company_id
+
                 mail_aliases = self.env['mail.alias'].sudo().search([
                     ('alias_parent_model_id.model', '=', model),
                     ('alias_parent_thread_id', 'in', res_ids),
@@ -138,17 +148,47 @@ class BaseModel(models.AbstractModel):
                 if catchall:
                     result_email.update(dict((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids))
 
-            # compute name of reply-to - TDE tocheck: quotes and stuff like that
-            company_name = company.name if company else self.env.company.name
             for res_id in result_email:
-                name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
-                result[res_id] = tools.formataddr((name, result_email[res_id]))
+                result[res_id] = self._notify_get_reply_to_formatted_email(
+                    result_email[res_id],
+                    doc_names.get(res_id) or '',
+                    company
+                )
 
         left_ids = set(_res_ids) - set(result_email)
         if left_ids:
             result.update(dict((res_id, default) for res_id in left_ids))
 
         return result
+
+    def _notify_get_reply_to_formatted_email(self, record_email, record_name, company):
+        """ Compute formatted email for reply_to and try to avoid refold issue
+        with python that splits the reply-to over multiple lines. It is due to
+        a bad management of quotes (missing quotes after refold). This appears
+        therefore only when having quotes (aka not simple names, and not when
+        being unicode encoded).
+
+        To avoid that issue when formataddr would return more than 78 chars we
+        return a simplified name/email to try to stay under 78 chars. If not
+        possible we return only the email and skip the formataddr which causes
+        the issue in python. We do not use hacks like crop the name part as
+        encoding and quoting would be error prone.
+        """
+        # address itself is too long for 78 chars limit: return only email
+        if len(record_email) >= 78:
+            return record_email
+
+        company_name = company.name if company else self.env.company.name
+
+        # try company_name + record_name, or record_name alone (or company_name alone)
+        name = f"{company_name} {record_name}" if record_name else company_name
+
+        formatted_email = tools.formataddr((name, record_email))
+        if len(formatted_email) > 78:
+            formatted_email = tools.formataddr((record_name or company_name, record_email))
+        if len(formatted_email) > 78:
+            formatted_email = record_email
+        return formatted_email
 
     # ------------------------------------------------------------
     # ALIAS MANAGEMENT

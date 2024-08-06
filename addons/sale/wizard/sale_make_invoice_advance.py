@@ -97,7 +97,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'tax_ids': [(6, 0, so_line.tax_id.ids)],
                 'sale_line_ids': [(6, 0, [so_line.id])],
                 'analytic_tag_ids': [(6, 0, so_line.analytic_tag_ids.ids)],
-                'analytic_account_id': order.analytic_account_id.id or False,
+                'analytic_account_id': order.analytic_account_id.id if not so_line.display_type and order.analytic_account_id.id else False,
             })],
         }
 
@@ -128,7 +128,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
         if order.fiscal_position_id:
             invoice_vals['fiscal_position_id'] = order.fiscal_position_id.id
-        invoice = self.env['account.move'].sudo().create(invoice_vals).with_user(self.env.uid)
+
+        invoice = self.env['account.move'].with_company(order.company_id)\
+            .sudo().create(invoice_vals).with_user(self.env.uid)
         invoice.message_post_with_view('mail.message_origin_link',
                     values={'self': invoice, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)

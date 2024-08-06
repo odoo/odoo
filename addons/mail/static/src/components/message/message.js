@@ -112,6 +112,21 @@ class Message extends Component {
          * regular time.
          */
         this._intervalId = undefined;
+        /**
+         * States the index of the last "read more" that was inserted.
+         * Useful to remember the state for each "read more" even if their DOM
+         * is re-rendered.
+         */
+        this._lastReadMoreIndex = 0;
+        /**
+         * Determines whether each "read more" is opened or closed. The keys are
+         * index, which is determined by their order of appearance in the DOM.
+         * If body changes so that "read more" count is different, their default
+         * value will be "wrong" at the next render but this is an acceptable
+         * limitation. It's more important to save the state correctly in a
+         * typical non-changing situation.
+         */
+        this._isReadMoreByIndex = new Map();
         this._constructor();
     }
 
@@ -132,12 +147,7 @@ class Message extends Component {
      * @returns {string}
      */
     get avatar() {
-        if (
-            this.message.author &&
-            this.message.author === this.env.messaging.partnerRoot
-        ) {
-            return '/mail/static/src/img/odoobot.png';
-        } else if (this.message.author) {
+        if (this.message.author) {
             // TODO FIXME for public user this might not be accessible. task-2223236
             // we should probably use the correspondig attachment id + access token
             // or create a dedicated route to get message image, checking the access right of the message
@@ -404,6 +414,7 @@ class Message extends Component {
         }
 
         for (const group of groups) {
+            const index = this._lastReadMoreIndex++;
             // Insert link just before the first node
             const $readMoreLess = $('<a>', {
                 class: 'o_Message_readMoreLess',
@@ -412,16 +423,23 @@ class Message extends Component {
             }).insertBefore(group[0]);
 
             // Toggle All next nodes
-            let isReadMore = true;
-            $readMoreLess.click(e => {
-                e.preventDefault();
-                isReadMore = !isReadMore;
+            if (!this._isReadMoreByIndex.has(index)) {
+                this._isReadMoreByIndex.set(index, true);
+            }
+            const updateFromState = () => {
+                const isReadMore = this._isReadMoreByIndex.get(index);
                 for (const $child of group) {
                     $child.hide();
                     $child.toggle(!isReadMore);
                 }
                 $readMoreLess.text(isReadMore ? READ_MORE : READ_LESS);
+            };
+            $readMoreLess.click(e => {
+                e.preventDefault();
+                this._isReadMoreByIndex.set(index, !this._isReadMoreByIndex.get(index));
+                updateFromState();
             });
+            updateFromState();
         }
     }
 
@@ -443,6 +461,7 @@ class Message extends Component {
             for (const el of [...this._contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
                 el.remove();
             }
+            this._lastReadMoreIndex = 0;
             this._insertReadMoreLess($(this._contentRef.el));
             this.env.messagingBus.trigger('o-component-message-read-more-less-inserted', {
                 message: this.message,

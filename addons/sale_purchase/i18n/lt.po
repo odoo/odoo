@@ -3,18 +3,20 @@
 # 	* sale_purchase
 # 
 # Translators:
-# Martin Trigaux, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Martin Trigaux, 2021
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2021
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2021
+# Linas Versada <linaskrisiukenas@gmail.com>, 2021
+# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
-"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
+"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -30,6 +32,25 @@ msgid ""
 msgstr ""
 ".\n"
 "            Gali reikėti rankinių veiksmų."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "<span class=\"o_stat_text\">Purchase</span>"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr "<span class=\"o_stat_text\">Pardavimas</span>"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -55,6 +76,15 @@ msgid "Generated Purchase Lines"
 msgstr "Sugeneruotos pirkimo eilutės"
 
 #. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__id
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__id
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
 msgid ""
@@ -64,13 +94,27 @@ msgid ""
 msgstr ""
 
 #. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order____last_update
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line____last_update
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line____last_update
+msgid "Last Modified on"
+msgstr "Paskutinį kartą keista"
+
+#. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Manual actions may be needed."
 msgstr "Gali reikėti rankinio veiksmo."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
-msgid "Number of Purchase Order"
+msgid "Number of Purchase Order Generated"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
+msgid "Number of Source Sale"
 msgstr ""
 
 #. module: sale_purchase
@@ -116,9 +160,10 @@ msgid "Purchase Order Line"
 msgstr "Pirkimo užsakymo eilutė "
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
-msgid "Purchase Orders"
-msgstr "Pirkimų užsakymai"
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -148,6 +193,12 @@ msgstr "Pardavimo užsakymas"
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Pardavimo užsakymo eilutė"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/purchase_order.py:0
+#, python-format
+msgid "Sources Sale Orders %s"
+msgstr ""
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0

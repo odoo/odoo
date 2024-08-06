@@ -6,14 +6,18 @@
 # Panupong Jantapoon <panupong.jtp@gmail.com>, 2020
 # monchai7 <montchye@gmail.com>, 2020
 # gsong <gsong2014@foxmail.com>, 2020
-# Somchart Jabsung <jabsung.s@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Seksan Poltree <seksan.poltree@gmail.com>, 2020
 # Prawit Boonthue <prawit.boonthue@gmail.com>, 2020
 # Potsawat Manuthamathorn <firmpotsawat@hotmail.com>, 2020
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2020
-# Odoo Thaidev <odoothaidev@gmail.com>, 2020
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
+# Odoo Thaidev <odoothaidev@gmail.com>, 2021
+# Jirapong Pansak <tangpansak@gmail.com>, 2021
+# kittipot anuwet <pipemsn1@gmail.com>, 2021
+# Wichanon Jamwutthipreecha, 2022
+# Somchart Jabsung <jabsung.s@gmail.com>, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,8 +25,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -43,16 +47,26 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - กลุ่มภาษี: ภาษีคือชุดของภาษีย่อย\n"
+"    - คงที่: จำนวนภาษียังคงเท่าเดิมไม่ว่าจะมีราคาเท่าใดก็ตาม\n"
+"    - เปอร์เซ็นต์ของราคา: จำนวนภาษีคือ % ของราคา:\n"
+"        เช่น 100 * (1 + 10%) = 110 (ไม่รวมราคา)\n"
+"        เช่น 110 / (1 + 10%) = 100 (ราคารวม)\n"
+"    - เปอร์เซ็นต์ของภาษีราคารวม: จำนวนภาษีเป็นส่วนหนึ่งของราคา:\n"
+"        เช่น 180 / (1 - 10%) = 200 (ไม่รวมราคา)\n"
+"        เช่น 200 * (1 - 10%) = 180 (รวมราคา)\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr ""
+msgstr "# กระทบยอดบิล"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr ""
+msgstr "# ใบแจ้งหนี้ที่กระทบยอด"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
@@ -62,18 +76,18 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
-msgstr "# ของตัวเลข"
+msgstr "จำนวนของตัวเลข"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__number
 msgid "#Coins/Bills"
-msgstr "#เหรียญ/ธนบัตร"
+msgstr "จำนวนของเหรียญ/ธนบัตร"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "#Created by: %s"
-msgstr ""
+msgstr "สร้างโดย: %s"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -98,13 +112,13 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "%(action)s for journal %(journal)s"
-msgstr ""
+msgstr "%(action)s สำหรับบันทึกประจำวัน %(journal)s"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "%d moves"
-msgstr ""
+msgstr "การเคลื่อนย้าย%dที"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -132,7 +146,7 @@ msgstr "%s (การปัดเศษ)"
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
-msgstr ""
+msgstr "%sไม่ใช่เป็นข้อมูลที่จัดเก็บในระบบปัจจุบัน"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -148,13 +162,13 @@ msgstr "-> กระทบยอดแล้ว"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ""
+msgstr "คุณอาจต้องการใส่ตัวเลขที่สูงกว่านี้"
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "... (%s other)"
-msgstr ""
+msgstr "... (%s อื่น)"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -269,7 +283,7 @@ msgstr "<em> ใบแจ้งหนี้ฉบับร่าง</em>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<i class=\"fa fa-calendar\"/> From"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\"/>จากวันที่:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -335,6 +349,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
 "'/')]}\">Draft</span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
+"'/')]}\">เอกสารร่าง</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -357,6 +373,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Bill</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Bills</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">ใบแจ้งหนี้</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">ใบแจ้งหนี้</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -364,6 +382,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_invoices_count','&gt;', 1)]}\">Invoice</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}\">Invoices</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reconciled_invoices_count','&gt;', 1)]}\">ใบแจ้งหนี้</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}\">ใบแจ้งหนี้</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -376,12 +396,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
-" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> Waiting for Payment</span></span>"
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none "
+"d-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
-" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> รอการชำระเงิน</span></span>"
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none "
+"d-md-inline\"> รอการชำระเงิน</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -411,7 +431,7 @@ msgid ""
 msgstr ""
 "<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
 "remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
-"class=\"d-none d-md-inline\"> ยกเลิก</span></span>"
+"class=\"d-none d-md-inline\"> ยกเลิกแล้ว</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -440,6 +460,9 @@ msgid ""
 "('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> or "
 "</span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': ['|', "
+"('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', "
+"False)]}\">หรือ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -582,6 +605,8 @@ msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
 msgstr ""
+"<span title=\"Outstanding "
+"Payments/Receipts\">ยอดค้างชำระ/ใบเสร็จค้างชำระ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -684,6 +709,8 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
+"<span>รายการนี้ถูกสร้างขึ้นผ่านแอป ใบแจ้งหนี้ ก่อนการติดตั้งการบัญชี "
+"มีการนำเข้ายอดคงเหลือที่แยกต่างหาก</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -698,7 +725,7 @@ msgstr "<span>อัพโหลดใบแจ้งหนี้</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload</span>"
-msgstr ""
+msgstr "<span>อัพโหลด</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -729,6 +756,11 @@ msgstr "<strong>บริษัท:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr "<strong>วันที่ของใบลดหนี้:</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>รหัสลูกค้า:</strong>"
 
@@ -740,7 +772,12 @@ msgstr "<strong>ลูกค้า:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>ลูกค้า</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>วันที่</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -760,7 +797,7 @@ msgstr "<strong>เรียงลำดับรายการโดย:</stro
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm: </strong>"
-msgstr ""
+msgstr "<strong>Incoterm: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -799,6 +836,11 @@ msgstr "<strong>สินค้า</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>วันที่ได้รับ:</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong>"
 msgstr "<strong>อ้างอิง:</strong>"
 
@@ -828,6 +870,8 @@ msgid ""
 "<strong>This currency has already been used to generate accounting entries.</strong> <br/>\n"
 "                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
 msgstr ""
+"<strong>สกุลเงินนี้ถูกใช้เพื่อสร้างรายการทางบัญชีแล้ว</strong> <br/>\n"
+"                        การเปลี่ยนปัจจัยการปัดเศษในตอนนี้จะไม่เปลี่ยนการปัดเศษในรายการที่ทำก่อนหน้า ซึ่งอาจทำให้ไม่สอดคล้องกับรายการใหม่"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -849,7 +893,7 @@ msgstr "<strong>ผู้ขาย: </strong>"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "@From: %(email)s"
-msgstr ""
+msgstr "@จาก: %(email)s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -915,6 +959,13 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"บรรทัดของการย้ายนี้กำลังใช้บัญชีที่ถูกเลิกใช้แล้ว คุณไม่สามารถทำการโพสต์ได้"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "A modification has been operated on the line %s."
 msgstr ""
 
@@ -922,7 +973,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
-msgstr ""
+msgstr "การชำระเงินต้องเป็นของธนาคารหรือสมุดรายวันเงินสดเสมอ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -996,6 +1047,8 @@ msgid ""
 "Account %s does not allow reconciliation. First change the configuration of "
 "this account to allow it."
 msgstr ""
+"บัญชี %s ไม่อนุญาตให้มีการกระทบยอด ก่อนอื่น "
+"ให้เปลี่ยนการกำหนดค่าของบัญชีนี้เพื่ออนุญาตให้มีการกระทบยอด"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -1039,7 +1092,7 @@ msgstr "กลุ่มบัญชี"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Account Groups with the same granularity can't overlap"
-msgstr ""
+msgstr "กลุ่มบัญชีที่มีระดับเดียวกันไม่สามารถซ้อนทับกันได้"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -1090,7 +1143,7 @@ msgstr "การโอนกลับบัญชี"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 msgid "Account Name"
-msgstr ""
+msgstr "ชื่อบัญชี"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_acc_number
@@ -1102,7 +1155,7 @@ msgstr "หมายเลขบัญชี"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Account Options"
-msgstr ""
+msgstr "ตัวเลือกบัญชี"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
@@ -1267,7 +1320,7 @@ msgstr "รายงานบัญชีที่มีรายการชํ
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
 msgid "Account report without payment lines"
-msgstr ""
+msgstr "รายงานบัญชีที่ไม่มีบรรทัดการชำระเงิน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
@@ -1292,17 +1345,17 @@ msgstr "บัญชีที่จะใช้แทน"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "Account to transfer to."
-msgstr ""
+msgstr "บัญชีที่ต้องการโอนเข้า"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
 msgid "Account tour upload bill"
-msgstr ""
+msgstr "บัญชีค่าอัปโหลดของคุณ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill_email_confirm
 msgid "Account tour upload bill email confirm"
-msgstr ""
+msgstr "บัญชีอีเมลยืนยันการเรียกเก็บเงินการอัปโหลดของคุณ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__revenue_accrual_account
@@ -1355,7 +1408,7 @@ msgstr "บัญชี"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr ""
+msgstr "แดชบอร์ดการบัญชี"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1382,7 +1435,7 @@ msgstr "รอบระยะเวลาบัญชี"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Accounting information"
-msgstr ""
+msgstr "ข้อมูลทางบัญชี"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1444,7 +1497,7 @@ msgstr "เปิดใช้งานสกุลเงินอื่นๆ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create purchase receipt"
-msgstr ""
+msgstr "เปิดใช้งานเพื่อสร้างใบเสร็จการซื้อ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
@@ -1463,7 +1516,7 @@ msgstr "เปิดใช้งาน"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Active Account"
-msgstr ""
+msgstr "เปิดใช้งานบัญชี"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__active_domain
@@ -1503,7 +1556,7 @@ msgstr "สถานะกิจกรรม"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_note
 msgid "Activity Summary"
-msgstr ""
+msgstr "สรุปกิจกรรม"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_type_icon
@@ -1511,12 +1564,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "ไอคอนประเภทกิจกรรม"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_user_id
 msgid "Activity User"
-msgstr ""
+msgstr "ผู้ใช้กิจกรรม"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_type_id
@@ -1524,6 +1577,8 @@ msgid ""
 "Activity will be automatically scheduled on payment due date, improving "
 "collection process."
 msgstr ""
+"กิจกรรมจะถูกกำหนดโดยอัตโนมัติในวันที่ครบกำหนดการชำระเงิน "
+"เพื่อปรับปรุงขั้นตอนการเก็บเงิน"
 
 #. module: account
 #. openerp-web
@@ -1555,6 +1610,8 @@ msgid ""
 "Add a QR-code to your invoices so that your customers can pay instantly with"
 " their mobile banking application."
 msgstr ""
+"เพิ่มรหัส QR "
+"ในใบแจ้งหนี้ของคุณเพื่อให้ลูกค้าสามารถชำระเงินได้ทันทีด้วยแอปพลิเคชันธนาคารบนมือถือ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
@@ -1581,7 +1638,7 @@ msgstr "เพิ่มรายการ"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Add a line to your invoice"
-msgstr ""
+msgstr "เพิ่มบรรทัดในใบแจ้งหนี้ของคุณ"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -1596,7 +1653,7 @@ msgstr "เพิ่มโน้ต"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add a payment QR-code to your invoices"
-msgstr ""
+msgstr "เพิ่มรหัส QR การชําระเงินลงในใบแจ้งหนี้ของคุณ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
@@ -1635,7 +1692,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Adjusting Amount"
-msgstr ""
+msgstr "ปรับจำนวนเงิน"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -1652,7 +1709,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry"
-msgstr ""
+msgstr "การปรับรายการ"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -1716,7 +1773,7 @@ msgstr "ภาษี"
 #: code:addons/account/static/src/xml/account_resequence.xml:0
 #, python-format
 msgid "After"
-msgstr ""
+msgstr "หลังจาก"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_name
@@ -1759,7 +1816,7 @@ msgstr "รายการที่ลงรายการบัญชีทั
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "All accounts on the lines must be of the same type."
-msgstr ""
+msgstr "บัญชีทั้งหมดในบรรทัดต้องเป็นประเภทเดียวกัน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_bill_step
@@ -1813,7 +1870,7 @@ msgstr "อนุญาตให้กำหนดค่าภาษีโดย
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
 msgid "Allowed Journals"
-msgstr ""
+msgstr "สมุดรายวันที่ได้รับอนุญาต"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__type_control_ids
@@ -1823,7 +1880,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
 msgid "Allowed accounts"
-msgstr ""
+msgstr "บัญชีที่ได้รับอนุญาต"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1841,6 +1898,7 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the company "
 "currency."
 msgstr ""
+"จำนวนเงินที่เป็นค่าบวกที่เกี่ยวข้องกับการจับคู่นี้จะแสดงเป็นสกุลเงินของบริษัทเสมอ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__credit_amount_currency
@@ -1848,6 +1906,7 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the credit "
 "line foreign currency."
 msgstr ""
+"จำนวนเงินที่เป็นค่าบวกที่เกี่ยวข้องกับการจับคู่นี้จะแสดงเป็นสกุลเงินตราต่างประเทศของวงเงินเครดิตเสมอ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__debit_amount_currency
@@ -1855,6 +1914,7 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the debit "
 "line foreign currency."
 msgstr ""
+"จำนวนเงินที่เป็นค่าบวกที่เกี่ยวข้องกับการจับคู่นี้จะแสดงเป็นสกุลเงินต่างประเทศของรายการเดบิตเสมอ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount
@@ -1958,12 +2018,12 @@ msgstr "ยอดเงินในสกุลเงิน"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount
 msgid "Amount to Pay (company currency)"
-msgstr ""
+msgstr "จำนวนเงินที่ต้องชำระ (สกุลเงินของบริษัท)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount_currency
 msgid "Amount to Pay (foreign currency)"
-msgstr ""
+msgstr "จำนวนเงินที่ต้องชำระ (สกุลเงินต่างประเทศ)"
 
 #. module: account
 #. openerp-web
@@ -2186,13 +2246,13 @@ msgstr "ประเภทผู้เสียภาษี"
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
 msgid "Apply only if delivery country matches the group."
-msgstr ""
+msgstr "ใช้เมื่อประเทศที่จัดส่งตรงกับกลุ่มเท่านั้น"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_id
 msgid "Apply only if delivery country matches."
-msgstr ""
+msgstr "ใช้เมื่อประเทศที่จัดส่งตรงกันเท่านั้น"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
@@ -2316,7 +2376,7 @@ msgstr "เติมข้อความอัตโนมัติจากก
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
 msgid "Auto-generated Payments"
-msgstr ""
+msgstr "การชำระเงินที่สร้างขึ้นโดยอัตโนมัติ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -2343,7 +2403,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__automatic_entry_default_journal_id
 msgid "Automatic Entry Default Journal"
-msgstr ""
+msgstr "สมุดรายวันเริ่มต้นรายการอัตโนมัติ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2353,13 +2413,13 @@ msgstr "นําเข้าอัตโนมัติ"
 #. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
-msgstr ""
+msgstr "ลำดับอัตโนมัติ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__available_payment_method_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_payment_method_ids
 msgid "Available Payment Method"
-msgstr ""
+msgstr "วิธีการชำระเงินที่ใช้ได้"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -2535,7 +2595,7 @@ msgstr "ใบแจ้งยอดจากธนาคาร"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Bank Suspense Account"
-msgstr ""
+msgstr "บัญชีพักของธนาคาร"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -2561,6 +2621,7 @@ msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
 msgstr ""
+"ธุรกรรมใบแจ้งยอดจากธนาคารจะถูกโพสต์ในบัญชีที่ต้องสงสัยจนกว่าจะมีการกระทบยอดขั้นสุดท้ายเพื่อให้ค้นหาบัญชีที่ถูกต้อง"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -2642,12 +2703,12 @@ msgstr "การชำระ"
 #: code:addons/account/static/src/xml/account_resequence.xml:0
 #, python-format
 msgid "Before"
-msgstr ""
+msgstr "ก่อนหน้า"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
 msgid "Bic"
-msgstr ""
+msgstr "Bic"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2668,7 +2729,7 @@ msgstr "รายการบิลแบบดิจิตอล"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Bill Reference"
-msgstr ""
+msgstr "การอ้างอิงบิล"
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
@@ -2823,12 +2884,12 @@ msgstr "ลูกค้า"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
 msgid "Can Edit Wizard"
-msgstr ""
+msgstr "สามารถแก้ไขโปรแกรมได้"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_group_payments
 msgid "Can Group Payments"
-msgstr ""
+msgstr "สามารถชำระเงินแบบกลุ่มได้"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__visible
@@ -2927,7 +2988,7 @@ msgstr "เงินสด"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
-msgstr ""
+msgstr "บัญชีเงินสด"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -2972,7 +3033,7 @@ msgstr "Cash Difference Expense Account"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Difference Gain"
-msgstr ""
+msgstr "กำไรส่วนต่างเงินสด"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
@@ -2984,7 +3045,7 @@ msgstr "Cash Difference Income Account"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Difference Loss"
-msgstr ""
+msgstr "ยอดขาดทุนส่วนต่างเงินสด"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -3019,13 +3080,13 @@ msgstr "งบเงินสด"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Cash difference observed during the counting (Loss)"
-msgstr ""
+msgstr "ผลต่างของเงินสดที่สังเกตได้ในระหว่างการนับ (ขาดทุน)"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Cash difference observed during the counting (Profit)"
-msgstr ""
+msgstr "ผลต่างของเงินสดที่สังเกตได้ในระหว่างการนับ (กำไร)"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3066,13 +3127,13 @@ msgstr "ประเภทของบัญชีรายได้"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__action__change_account
 msgid "Change Account"
-msgstr ""
+msgstr "เปลี่ยนบัญชี"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__action__change_period
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Change Period"
-msgstr ""
+msgstr "เปลี่ยนระยะเวลา"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__writeoff_label
@@ -3273,13 +3334,13 @@ msgstr "อักษรนำ"
 #: model:ir.model.fields,field_description:account.field_account_group__code_prefix_end
 #: model:ir.model.fields,field_description:account.field_account_group_template__code_prefix_end
 msgid "Code Prefix End"
-msgstr ""
+msgstr "สิ้นสุดคำนำหน้ารหัส"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__code_prefix_start
 #: model:ir.model.fields,field_description:account.field_account_group_template__code_prefix_start
 msgid "Code Prefix Start"
-msgstr ""
+msgstr "รหัสคำนำหน้าเริ่มต้น"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__coin_value
@@ -3512,7 +3573,7 @@ msgstr "Congratulations! You are all set."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Connect"
-msgstr ""
+msgstr "เชื่อมต่อ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
@@ -3645,7 +3706,7 @@ msgstr "สร้าง"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr ""
+msgstr "สร้างรายการอัตโนมัติ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
@@ -3660,12 +3721,12 @@ msgstr "สร้างใบวางบิล"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create Invoices upon Emails"
-msgstr ""
+msgstr "สร้างใบแจ้งหนี้เมื่ออีเมล"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Create Journal Entries"
-msgstr ""
+msgstr "สร้างรายการสมุดรายวัน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -3767,7 +3828,7 @@ msgstr "เงินสด"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_create_invoice
 msgid "Create first invoice"
-msgstr ""
+msgstr "สร้างใบแจ้งหนี้แรก"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3797,7 +3858,7 @@ msgstr "เงินสด"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create your first invoice."
-msgstr ""
+msgstr "สร้างใบแจ้งหนี้ใบแรกของคุณ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_uid
@@ -3936,7 +3997,7 @@ msgstr "เครดิต"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_amount_currency
 msgid "Credit Amount Currency"
-msgstr ""
+msgstr "จำนวนเงินเครดิตสกุลเงิน"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_credit_card
@@ -3989,13 +4050,13 @@ msgstr "Credit journal items that are matched with this journal item."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
 msgid "Cumulated Balance"
-msgstr ""
+msgstr "ยอดสะสม"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__cumulated_balance
 msgid ""
 "Cumulated balance depending on the domain and the order chosen in the view."
-msgstr ""
+msgstr "ยอดสะสมขึ้นอยู่กับโดเมนและลำดับที่เลือกในมุมมอง"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -4029,12 +4090,12 @@ msgstr "สกุลเงิน"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__display_currency_helper
 msgid "Currency Conversion Helper"
-msgstr ""
+msgstr "ตัวช่วยแปลงสกุลเงิน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_exchange_journal_id
 msgid "Currency Exchange Journal"
-msgstr ""
+msgstr "สมุดรายวันการแลกเปลี่ยนสกุลเงิน"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4054,17 +4115,17 @@ msgstr ""
 #: code:addons/account/models/res_bank.py:0
 #, python-format
 msgid "Currency must always be provided in order to generate a QR-code"
-msgstr ""
+msgstr "ต้องระบุสกุลเงินเสมอเพื่อสร้างรหัส QR"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_currency_id
 msgid "Currency of the credit journal item."
-msgstr ""
+msgstr "สกุลเงินของรายการเครดิตสมุดรายวัน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_currency_id
 msgid "Currency of the debit journal item."
-msgstr ""
+msgstr "สกุลเงินของรายการสมุดรายวันเดบิต"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -4152,7 +4213,7 @@ msgstr "เลขที่เอกสารของลูกค้า"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Customer Reimbursement"
-msgstr ""
+msgstr "การคืนเงินลูกค้า"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
@@ -4197,12 +4258,12 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Customize your layout."
-msgstr ""
+msgstr "ปรับแต่งเค้าโครงของคุณ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cut-Off"
-msgstr ""
+msgstr "ตัดออก"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -4212,7 +4273,7 @@ msgstr "สถานที่ของการเสนอราคา"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
 msgid "DELIVERED AT PLACE UNLOADED"
-msgstr ""
+msgstr "จัดส่งในสถานที่ที่ไม่ได้โหลด"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
@@ -4264,7 +4325,7 @@ msgstr "วันที่"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_resequence_wizard__first_date
 msgid "Date (inclusive) from which the numbers are resequenced."
-msgstr ""
+msgstr "วันที่ (รวม) ที่มีการเรียงลำดับตัวเลขใหม่"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_resequence_wizard__end_date
@@ -4272,11 +4333,13 @@ msgid ""
 "Date (inclusive) to which the numbers are resequenced. If not set, all "
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
+"วันที่ (รวม) ที่มีการเรียงลำดับตัวเลขใหม่ หากไม่ได้ตั้งค่า "
+"รายการสมุดรายวันทั้งหมดจนถึงสิ้นงวดจะถูกจัดลำดับใหม่"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date_mode
 msgid "Date Mode"
-msgstr ""
+msgstr "โหมดวันที่"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__opening_date
@@ -4329,7 +4392,7 @@ msgstr "เดบิต"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_amount_currency
 msgid "Debit Amount Currency"
-msgstr ""
+msgstr "สกุลเงินของจำนวนเงินเดบิต"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_move_id
@@ -4365,22 +4428,22 @@ msgstr "ใบลดหนี้"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
 msgid "Default Account"
-msgstr ""
+msgstr "บัญชีเริ่มต้น"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_type
 msgid "Default Account Type"
-msgstr ""
+msgstr "ประเภทบัญชีเริ่มต้น"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Expense Account"
-msgstr ""
+msgstr "บัญชีค่าใช้จ่ายเริ่มต้น"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Income Account"
-msgstr ""
+msgstr "บัญชีรายได้เริ่มต้น"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4466,6 +4529,8 @@ msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
 msgstr ""
+"กำหนดว่าบัญชีนี้สามารถใช้สมุดรายวันใดได้บ้าง "
+"ถ้าว่างเปล่าก็สามารถใช้ได้ในทุกสมุดรายวัน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4719,22 +4784,22 @@ msgstr "ชื่อที่ใช้แสดง"
 #: model:ir.model.fields,field_description:account.field_account_move__display_qr_code
 #: model:ir.model.fields,field_description:account.field_account_payment__display_qr_code
 msgid "Display QR-code"
-msgstr ""
+msgstr "แสดง QR-code"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__qr_code
 msgid "Display QR-code on invoices"
-msgstr ""
+msgstr "แสดงรหัส QR บนใบแจ้งหนี้"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_currency__display_rounding_warning
 msgid "Display Rounding Warning"
-msgstr ""
+msgstr "แสดงคำเตือนการปัดเศษ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__qr_code
 msgid "Display SEPA QR-code"
-msgstr ""
+msgstr "แสดงรหัส QR ของ SEPA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__display_type
@@ -4755,22 +4820,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Invoices"
-msgstr ""
+msgstr "การกระจายสำหรับใบแจ้งหนี้"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution for Refund Invoices"
-msgstr ""
+msgstr "การกระจายสำหรับใบแจ้งหนี้การคืนเงิน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
-msgstr ""
+msgstr "การกระจายเมื่อใช้ภาษีในการขอคืน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
 msgid "Distribution when the tax is used on an invoice"
-msgstr ""
+msgstr "การกระจายเมื่อใช้ภาษีในใบแจ้งหนี้"
 
 #. module: account
 #: code:addons/account/models/digest.py:0
@@ -4954,7 +5019,7 @@ msgstr "แก้ไข"
 #: model:ir.model.fields,help:account.field_account_move__amount_by_group
 #: model:ir.model.fields,help:account.field_account_payment__amount_by_group
 msgid "Edit Tax amounts if you encounter rounding issues."
-msgstr ""
+msgstr "แก้ไขจำนวนภาษีหากคุณประสบปัญหากับการปัดเศษ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_email
@@ -5046,6 +5111,8 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
+"รายการในอนาคตจะถูกตั้งค่าให้โพสต์อัตโนมัติตามค่าเริ่มต้น "
+"ให้ทำเครื่องหมายที่ช่องนี้เพื่อโพสต์ทันที"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5056,7 +5123,7 @@ msgstr "รายการที่ต้องตรวจทาน"
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "Entries: %(account)s"
-msgstr ""
+msgstr "รายการ: %(account)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__move_line_ids
@@ -5187,7 +5254,7 @@ msgstr "Factor Ratio"
 msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line"
-msgstr ""
+msgstr "ปัจจัยที่จะใช้กับรายการย้ายบัญชีที่สร้างจากรายการการกระจายนี้"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -5196,6 +5263,7 @@ msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line, in percents"
 msgstr ""
+"ปัจจัยที่จะใช้กับรายการย้ายบัญชีที่สร้างจากรายการการกระจายนี้เป็นเปอร์เซ็นต์"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -5217,10 +5285,8 @@ msgstr "Federal States"
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
-msgid ""
-"Fill in the details of the line.<br><i>Tip: all the details can be set "
-"automatically if you configure your <b>products</b>.</i>"
-msgstr ""
+msgid "Fill in the details of the line."
+msgstr "กรอกรายละเอียดในบรรทัด"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -5236,12 +5302,12 @@ msgstr "ป้ายกำกับการเงิน"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
 msgid "Find Text in Label"
-msgstr ""
+msgstr "ค้นหาข้อความในป้ายกำกับ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__narration_regex
 msgid "Find Text in Notes"
-msgstr ""
+msgstr "ค้นหาข้อความในโน้ต"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_bill_step
@@ -5251,7 +5317,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_date
 msgid "First Date"
-msgstr ""
+msgstr "วันแรก"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -5266,12 +5332,12 @@ msgstr "แฮชแรก"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
-msgstr ""
+msgstr "ลำดับใหม่ครั้งแรก"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "First invoice sent!"
-msgstr ""
+msgstr "ส่งใบแจ้งหนี้ครั้งแรกแล้ว!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_fiscal_country_id
@@ -5279,7 +5345,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tax_fiscal_country_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_tax_fiscal_country_id
 msgid "Fiscal Country"
-msgstr ""
+msgstr "การคลังของประเทศ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -5389,12 +5455,12 @@ msgstr "สินทรัพย์ถาวร"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__amount
 msgid "Float Amount"
-msgstr ""
+msgstr "จำนวนเงินลอยตัว"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Follow Customer Payments"
-msgstr ""
+msgstr "ติดตามการชำระเงินของลูกค้า"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_follower_ids
@@ -5429,7 +5495,7 @@ msgstr "ผู้ติดตาม (คู่ค้า)"
 #: model:ir.model.fields,help:account.field_account_move__activity_type_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "ไอคอนแบบอักษรที่ยอดเยี่ยมเช่น fa-tasks"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -5446,7 +5512,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__force_post
 msgid "Force"
-msgstr ""
+msgstr "ผลักดัน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__force_tax_included
@@ -5555,7 +5621,7 @@ msgstr "กิจกรรมในอนาคต"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_currency_exchange_account_id
 msgid "Gain Account"
-msgstr ""
+msgstr "บัญชีกำไร"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__income_currency_exchange_account_id
@@ -5650,7 +5716,7 @@ msgstr "ลูกหนี้ดี"
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_scope__consu
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Goods"
-msgstr ""
+msgstr "สินค้า"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__group_id
@@ -5675,7 +5741,7 @@ msgstr "จัดกลุ่มตาม"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__group_payment
 msgid "Group Payments"
-msgstr ""
+msgstr "การชำระเงินแบบกลุ่ม"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
@@ -5737,7 +5803,7 @@ msgstr "เงินสด"
 #: model:ir.model.fields,field_description:account.field_account_move__highest_name
 #: model:ir.model.fields,field_description:account.field_account_payment__highest_name
 msgid "Highest Name"
-msgstr ""
+msgstr "ชื่อสูงสุด"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -5941,6 +6007,9 @@ msgid ""
 "related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
+"หากทำเครื่องหมายที่ช่องนี้ "
+"แสดงว่าผู้ใช้ไม่แน่ใจเกี่ยวกับข้อมูลที่เกี่ยวข้องทั้งหมดในขณะที่สร้างการย้าย"
+" และการย้ายนั้นจำเป็นต้องได้รับการตรวจสอบอีกครั้ง"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -6071,7 +6140,7 @@ msgstr "Belgium - Import Bank CODA Statements"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Import your first bill"
-msgstr ""
+msgstr "นำเข้าบิลครั้งแรกของคุณ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__in_payment
@@ -6122,7 +6191,7 @@ msgstr "ขาเข้า"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_ids
 msgid "Inbound Payment Methods"
-msgstr ""
+msgstr "วิธีการชำระเงินขาเข้า"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
@@ -6161,7 +6230,7 @@ msgstr "บัญชีรายได้"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Incoming Payments"
-msgstr ""
+msgstr "การชำระเงินที่เข้ามา"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_debit_account_id
@@ -6364,7 +6433,7 @@ msgstr "ใบกำกับสินค้า/ใบแจ้งหนี้"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoice Analysis"
-msgstr ""
+msgstr "การวิเคราะห์ใบแจ้งหนี้"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -6457,14 +6526,23 @@ msgstr "ภาษีใบแจ้วงหนี้"
 msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
+msgstr "การกระจายใบแจ้งหนี้และใบลดหนี้ควรมีหนึ่งบรรทัดสำหรับฐาน"
+
+#. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
 msgstr ""
+"การแบ่งใบแจ้งหนี้และใบลดหนี้ควรมีบรรทัดการแบ่งภาษีอย่างน้อยหนึ่งรายการ"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
-msgstr ""
+msgstr "การกระจายใบแจ้งหนี้และใบลดหนี้ควรมีจำนวนบรรทัดเท่ากัน"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6473,6 +6551,8 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
+"การกระจายใบแจ้งหนี้และใบลดหนี้ควรตรงกัน "
+"(ทั้งเปอร์เซ็นต์เดียวกันและในลำดับเดียวกัน)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -6596,7 +6676,7 @@ msgstr "การออกใบแจ้งหนี้"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
 msgid "Invoicing App Legacy"
-msgstr ""
+msgstr "การออกใบแจ้งหนี้แอปมรดก"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
@@ -6633,14 +6713,14 @@ msgstr "ต่ํากว่า"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_matched
 msgid "Is Matched With a Bank Statement"
-msgstr ""
+msgstr "ตรงกับรายการเดินบัญชีธนาคาร"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_move_sent
 #: model:ir.model.fields,field_description:account.field_account_move__is_move_sent
 #: model:ir.model.fields,field_description:account.field_account_payment__is_move_sent
 msgid "Is Move Sent"
-msgstr ""
+msgstr "ส่งการย้ายแล้ว"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__is_off_balance
@@ -6656,7 +6736,7 @@ msgstr "พิมพ์แล้ว"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_reconciled
 #: model:ir.model.fields,field_description:account.field_account_payment__is_reconciled
 msgid "Is Reconciled"
-msgstr ""
+msgstr "กระทบยอดแล้ว"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_rounding_line
@@ -6694,6 +6774,12 @@ msgid ""
 msgstr ""
 "It seems that the taxes have been modified since the creation of the journal"
 " entry. You should create the credit note manually instead."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "It was previously '%(previous)s' and it is now '%(now)s'."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6742,7 +6828,7 @@ msgstr "สมุดรายวัน"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__currency_id
 msgid "Journal Currency"
-msgstr ""
+msgstr "สกุลเงินสมุดรายวัน"
 
 #. module: account
 #. openerp-web
@@ -6847,7 +6933,7 @@ msgstr "ชื่อสมุดรายวัน"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_suspense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
 msgid "Journal Suspense Account"
-msgstr ""
+msgstr "บัญชีพักของสมุดรายวัน"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -6857,7 +6943,7 @@ msgstr "กลุ่มสมุดรายวันใช้ในการร
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__line_ids
 msgid "Journal items"
-msgstr ""
+msgstr "รายการสมุดรายวัน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6879,7 +6965,7 @@ msgstr "สมุดรายวันที่มีการลงรายก
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
 msgid "Journal where to create the entry."
-msgstr ""
+msgstr "สมุดรายวันที่จะสร้างรายการ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -6944,7 +7030,7 @@ msgstr "แดชบอร์ด"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
 msgid "Keep current order"
-msgstr ""
+msgstr "เก็บลำดับปัจจุบันไว้"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -7258,7 +7344,7 @@ msgstr "ใบกำกับสินค้า/ใบแจ้งหนี้"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
 msgid "Leave empty to assign the Salesperson of the invoice."
-msgstr ""
+msgstr "เว้นว่างไว้เพื่อกำหนดพนักงานขายให้กับใบแจ้งหนี้"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -7291,7 +7377,7 @@ msgstr "ให้ลูกค้าของคุณชำระใบแจ้
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Let's send the invoice."
-msgstr ""
+msgstr "เริ่มการส่งใบแจ้งหนี้"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_bill_step
@@ -7384,7 +7470,7 @@ msgstr "บันทึกหมายเหตุภายใน"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Looks good. Let's continue."
-msgstr ""
+msgstr "ดูดี ไปต่อกันเลย"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
@@ -7505,12 +7591,12 @@ msgstr "การวิเคราะห์ Invoice"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Mark as Sent"
-msgstr ""
+msgstr "ทำเครื่องหมายว่าส่งแล้ว"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
-msgstr ""
+msgstr "ทำเครื่องหมายว่าชำระแล้ว"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -7531,19 +7617,19 @@ msgstr "Match Regex"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_text_location_label
 msgid "Match Text Location Label"
-msgstr ""
+msgstr "จับคู่ป้ายกำกับตำแหน่งข้อความ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_note
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_text_location_note
 msgid "Match Text Location Note"
-msgstr ""
+msgstr "จับคู่บันทึกตำแหน่งโน๊ต"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_reference
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_text_location_reference
 msgid "Match Text Location Reference"
-msgstr ""
+msgstr "จับคู่การอ้างอิงตำแหน่งข้อความ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
@@ -7590,7 +7676,7 @@ msgstr "การจับคู่ #"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__matching_order
 msgid "Matching Order"
-msgstr ""
+msgstr "คำสั่งที่ตรงกัน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
@@ -7598,6 +7684,8 @@ msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the"
 " name of the full reconcile if it exists."
 msgstr ""
+"จับคู่หมายเลขสำหรับบรรทัดนี้ 'P' หากมีการกระทบยอดเพียงบางส่วน "
+"หรือชื่อของการกระทบยอดทั้งหมดหากมีอยู่"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -7665,7 +7753,7 @@ msgstr "ข้อความ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Methods"
-msgstr ""
+msgstr "วิธีการ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__minus_report_line_ids
@@ -7693,13 +7781,13 @@ msgstr "เบ็ดเตล็ด"
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "Missing 'active_model' in context."
-msgstr ""
+msgstr "ไม่มี 'active_model' ในบริบท"
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
 #, python-format
 msgid "Missing foreign currencies on partials having ids: %s"
-msgstr ""
+msgstr "ไม่มีสกุลเงินต่างประเทศในบางส่วนที่มีรหัส: %s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
@@ -7734,7 +7822,7 @@ msgstr "ย้าย"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_data
 msgid "Move Data"
-msgstr ""
+msgstr "ย้ายข้อมูล"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_line_ids
@@ -7816,23 +7904,23 @@ msgstr "ชื่อสมุดรายวันใหม่"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__new_move_ids
 msgid "New Move"
-msgstr ""
+msgstr "การย้ายใหม่"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Transaction"
-msgstr ""
+msgstr "ธุรกรรมใหม่"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
 msgid "New Values"
-msgstr ""
+msgstr "ค่าใหม่"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
-msgstr ""
+msgstr "ใหม่สุดก่อน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -7881,6 +7969,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
+"ไม่พบสมุดรายวันในบริษัท %(company_name)s สำหรับประเภทใดประเภทหนึ่งเหล่านี้: "
+"%(journal_types)s"
 
 #. module: account
 #: code:addons/account/models/ir_actions_report.py:0
@@ -7896,7 +7986,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "No possible action found with the selected lines."
-msgstr ""
+msgstr "ไม่พบการดำเนินการที่เป็นไปได้กับบรรทัดที่เลือก"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__no_auto_thread
@@ -8049,7 +8139,7 @@ msgstr "พฤศจิกายน"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Now, we'll create your first invoice."
-msgstr ""
+msgstr "ตอนนี้ เราจะสร้างใบแจ้งหนี้ใบแรกของคุณ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account
@@ -8116,7 +8206,7 @@ msgstr "จํานวนข้อความที่มีข้อผิด
 msgid ""
 "Number of months in the past to consider entries from when applying this "
 "model."
-msgstr ""
+msgstr "จำนวนเดือนที่ผ่านมาในการพิจารณารายการเมื่อใช้โมเดลนี้"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread_counter
@@ -8155,6 +8245,8 @@ msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
+"Odoo ช่วยให้คุณสามารถกระทบยอดบรรทัดใบแจ้งยอดโดยตรง\n"
+"                กับใบแจ้งหนี้การขายหรือการซื้อที่เกี่ยวข้อง"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -8182,7 +8274,7 @@ msgstr "รายการนอกงบดุล"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
-msgstr ""
+msgstr "เก่าที่สุดก่อน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -8192,14 +8284,14 @@ msgstr "On the"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "Once done, press continue."
-msgstr ""
+msgstr "เมื่อเสร็จแล้ว ให้กดดำเนินการต่อ"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once everything is as you want it, validate."
-msgstr ""
+msgstr "เมื่อทุกอย่างเป็นไปตามที่คุณต้องการแล้ว ให้ตรวจสอบความถูกต้อง"
 
 #. module: account
 #. openerp-web
@@ -8209,6 +8301,8 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
+"เมื่อตั้งค่าทุกอย่างเรียบร้อยแล้ว คุณก็พร้อมที่จะดำเนินการต่อ "
+"คุณจะสามารถแก้ไขได้ในภายหลังในเมนู <b>ลูกค้า</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8224,7 +8318,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, press CONFIRM."
-msgstr ""
+msgstr "เมื่อใบแจ้งหนี้ของคุณพร้อมแล้ว ให้กดยืนยัน"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -8297,7 +8391,7 @@ msgstr "ยอดตั้งต้นสำหรับรอบบัญชี
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_credit
 msgid "Opening Credit"
-msgstr ""
+msgstr "เปิดเครดิต"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_date
@@ -8307,12 +8401,12 @@ msgstr "วันที่เริ่มต้น"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_debit
 msgid "Opening Debit"
-msgstr ""
+msgstr "เปิดเดบิต"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_date
 msgid "Opening Entry"
-msgstr ""
+msgstr "เปิดรายการ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_journal_id
@@ -8400,12 +8494,12 @@ msgstr "ตัวเลือก"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Or send a bill to %s@%s"
-msgstr ""
+msgstr "หรือส่งบิลมาได้ที่ %s@%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
-msgstr ""
+msgstr "การสั่งซื้อ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_origin
@@ -8440,7 +8534,7 @@ msgstr "เงินดาวน์"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
 msgid "Originator Statement Line"
-msgstr ""
+msgstr "บรรทัดคำสั่งของผู้สร้าง"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
@@ -8451,7 +8545,7 @@ msgstr "ภาษีตั้งต้น"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
 msgid "Originator Tax Distribution Line"
-msgstr ""
+msgstr "สายการแจกจ่ายภาษีของผู้สร้าง"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_group_id
@@ -8483,12 +8577,12 @@ msgstr "ขาออก"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_ids
 msgid "Outbound Payment Methods"
-msgstr ""
+msgstr "วิธีการชำระเงินขาออก"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outgoing Payments"
-msgstr ""
+msgstr "การชำระเงินขาออก"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
@@ -8516,7 +8610,7 @@ msgstr "Output Account for Stock Valuation"
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr ""
+msgstr "การชำระเงินคงค้าง"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_credit_account_id
@@ -8527,7 +8621,7 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Receipts"
-msgstr ""
+msgstr "รายรับคงค้าง"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_debit_account_id
@@ -8573,7 +8667,7 @@ msgstr "ชำระเงินแล้ว"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Paid Bills"
-msgstr ""
+msgstr "บิลที่ชำระแล้ว"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -8637,7 +8731,7 @@ msgstr "คืนเงินบางส่วน"
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__partial
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Partially Paid"
-msgstr ""
+msgstr "ชำระบางส่วน"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -8688,12 +8782,12 @@ msgstr "สมุดบัญชีแยกประเภทคู่ค้า
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr ""
+msgstr "การทำแผนที่พาร์ทเนอร์"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr ""
+msgstr "การจับคู่บรรทัดของพาร์ทเนอร์"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -8709,7 +8803,7 @@ msgstr "ประเภทคู่ค้า"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr ""
+msgstr "การจับคู่พาร์ทเนอร์เพื่อจำลองโมเดลการกระทบยอด"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__past_months_limit
@@ -8761,7 +8855,7 @@ msgstr "การชำระเงิน"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Communications"
-msgstr ""
+msgstr "การสื่อสารการชำระเงิน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_date
@@ -8810,7 +8904,7 @@ msgstr "วิธีการชำระเงิน"
 #: model:ir.model.fields,field_description:account.field_account_move__qr_code_method
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code_method
 msgid "Payment QR-code"
-msgstr ""
+msgstr "QR-code การชำระเงิน"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_payment_receipt
@@ -8895,7 +8989,7 @@ msgstr "เงื่อนไขการชําระเงิน: 30 วั�
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment terms: 30% Advance End of Following Month"
-msgstr ""
+msgstr "เงื่อนไขการชำระเงิน: ล่วงหน้า 30% สิ้นเดือนถัดไป"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
@@ -8995,7 +9089,7 @@ msgstr "เปอร์เซ็นต์ของยอดดุล"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__percentage
 msgid "Percentage of each line to execute the action on."
-msgstr ""
+msgstr "เปอร์เซ็นต์ของแต่ละบรรทัดในการดำเนินการ"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -9038,6 +9132,8 @@ msgid ""
 "Please go on the %s journal and define a Loss Account. This account will be "
 "used to record cash difference."
 msgstr ""
+"โปรดไปที่สมุดรายวัน %s และกำหนดบัญชีการสูญเสีย "
+"บัญชีนี้จะใช้ในการบันทึกผลต่างเงินสด"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -9046,6 +9142,8 @@ msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
 msgstr ""
+"โปรดไปที่สมุดรายวัน %s และกำหนดบัญชีกำไร "
+"บัญชีนี้จะใช้ในการบันทึกผลต่างเงินสด"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -9069,6 +9167,7 @@ msgstr "Please set a strictly positive rounding value."
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
+"โปรดตั้งค่าข้อความที่ตรงกันอย่างน้อยหนึ่งข้อความเพื่อสร้างการจับคู่พาร์ทเนอร์"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -9145,7 +9244,7 @@ msgstr "ลงบันทึก"
 #: model:ir.model.fields,field_description:account.field_account_move__posted_before
 #: model:ir.model.fields,field_description:account.field_account_payment__posted_before
 msgid "Posted Before"
-msgstr ""
+msgstr "โพสต์ก่อน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -9211,17 +9310,17 @@ msgstr "ดูตัวอย่าง"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Preview Modifications"
-msgstr ""
+msgstr "ดูตัวอย่างการปรับเปลี่ยน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__preview_move_data
 msgid "Preview Move Data"
-msgstr ""
+msgstr "ดูตัวอย่างการย้ายข้อมูล"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__preview_moves
 msgid "Preview Moves"
-msgstr ""
+msgstr "ดูตัวอย่างการย้าย"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -9270,7 +9369,7 @@ msgstr "พิมพ์เช็คที่จะชําระเงินใ
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__posted
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Processing"
-msgstr ""
+msgstr "กำลังดำเนินการ"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
@@ -9374,7 +9473,7 @@ msgstr "Purchase Receipt Created"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Purchase Representative"
-msgstr ""
+msgstr "Purchase Representative"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9415,12 +9514,12 @@ msgstr "QIF Import"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
 msgid "QR Code"
-msgstr ""
+msgstr "รหัส QR โค้ด"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "QR Codes"
-msgstr ""
+msgstr "รหัส QR โค้ด"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__qr_code
@@ -9448,7 +9547,7 @@ msgstr "จำนวน:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
-msgstr ""
+msgstr "ลำดับใหม่"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -9502,7 +9601,7 @@ msgstr "รับเงิน"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
 #: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
 msgid "Recipient Bank"
-msgstr ""
+msgstr "ธนาคารผู้รับ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
@@ -9518,7 +9617,7 @@ msgstr "ผู้รับ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Recognition Date"
-msgstr ""
+msgstr "วันที่ได้รับการยอมรับ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__recompute_tax_line
@@ -9544,7 +9643,7 @@ msgstr "กระทบยอดแล้ว"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
-msgstr ""
+msgstr "กระทบยอดบิล"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9577,6 +9676,12 @@ msgstr "แบบการกระทบยอด"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
 msgstr "การพิสูจน์ยอด"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9692,12 +9797,12 @@ msgstr "รูปแบบเอกสารที่เกี่ยวข้อ
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr ""
+msgstr "สร้างลำดับของรายการสมุดรายวันใหม่"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__date
 msgid "Reorder by accounting date"
-msgstr ""
+msgstr "จัดลำดับใหม่ตามวันที่ลงบัญชี"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__invoice_repartition_line_ids
@@ -9791,7 +9896,7 @@ msgstr "คู่ค้า"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
 msgid "Resequence"
-msgstr ""
+msgstr "จัดลำดับใหม่"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -9864,7 +9969,7 @@ msgstr "Restrict Partners to"
 #: model:ir.model.fields,help:account.field_account_tax__tax_scope
 #: model:ir.model.fields,help:account.field_account_tax_template__tax_scope
 msgid "Restrict the use of taxes to a type of product."
-msgstr ""
+msgstr "จำกัดการใช้ภาษีเฉพาะสินค้าประเภทหนึ่ง"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
@@ -9894,7 +9999,7 @@ msgstr "บัญชีรายได้/ค่าใช้จ่าย"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reversal Date"
-msgstr ""
+msgstr "วันที่กลับรายการ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_id
@@ -9919,7 +10024,7 @@ msgstr "Reversal of"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reversal of: %(move_name)s, %(reason)s"
-msgstr ""
+msgstr "การกลับรายการของ: %(move_name)s, %(reason)s"
 
 #. module: account
 #: code:addons/account/models/account_full_reconcile.py:0
@@ -9959,7 +10064,7 @@ msgstr "รายการที่บันทึกในสมุดบัญ
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr ""
+msgstr "ย้อนหลัง"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -10020,7 +10125,7 @@ msgstr "มุมมองต้นไม้"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
-msgstr ""
+msgstr "กฎสำหรับโมเดลการกระทบยอด"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -10051,7 +10156,7 @@ msgstr "การขาย"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_sale_receipts
 #: model:res.groups,name:account.group_sale_receipts
 msgid "Sale Receipt"
-msgstr ""
+msgstr "Sale Receipt"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_sales
@@ -10144,12 +10249,12 @@ msgstr "Save this page and come back here to set up the feature."
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Scan me with your banking app."
-msgstr ""
+msgstr "สแกนตรงนี้ด้วยแอปธนาคารของคุณ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_type_id
 msgid "Schedule Activity"
-msgstr ""
+msgstr "กำหนดการกิจกรรม"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -10213,12 +10318,14 @@ msgstr "ค้นหาภาษี"
 msgid ""
 "Search in the Statement's Label to find the Invoice/Payment's reference"
 msgstr ""
+"ค้นหาในป้ายกำกับของใบแจ้งยอดเพื่อค้นหาการอ้างอิงของ ใบแจ้งหนี้/การชำระเงิน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_note
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_text_location_note
 msgid "Search in the Statement's Note to find the Invoice/Payment's reference"
 msgstr ""
+"ค้นหาในโน๊ตของรายการเดินบัญชีเพื่อค้นหาการอ้างอิงของ ใบแจ้งหนี้/การชำระเงิน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_reference
@@ -10226,6 +10333,8 @@ msgstr ""
 msgid ""
 "Search in the Statement's Reference to find the Invoice/Payment's reference"
 msgstr ""
+"ค้นหาในการอ้างอิงรายการเดินบัญชีเพื่อค้นหาการอ้างอิงของ "
+"ใบแจ้งหนี้/การชำระเงิน"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
@@ -10324,7 +10433,7 @@ msgstr "บิลค่าใช้จ่าย"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Select first partner"
-msgstr ""
+msgstr "เลือกพาร์ทเนอร์รายแรก"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -10402,7 +10511,7 @@ msgstr "ส่งใบแจ้งหนี้ และติดตามก�
 #, python-format
 msgid ""
 "Send invoices to your customers in no time with the <b>Invoicing app</b>."
-msgstr ""
+msgstr "ส่งใบแจ้งหนี้ให้กับลูกค้าของคุณอย่างรวดเร็วด้วย <b>แอปใบแจ้งหนี้</b>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -10413,6 +10522,11 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"ส่งอีเมลแยกต่างหากสำหรับแต่ละใบแจ้งหนี้\n"
+"\n"
+"นามสกุลไฟล์ใดก็ตามจะได้รับการยอมรับ\n"
+"\n"
+"Odoo จะตีความเฉพาะไฟล์ PDF และ XML เท่านั้น"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -10429,12 +10543,12 @@ msgstr "Send receipts by email"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Send the invoice and check what the customer will receive."
-msgstr ""
+msgstr "ส่งใบแจ้งหนี้และตรวจสอบสิ่งที่ลูกค้าจะได้รับ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "Send your email to"
-msgstr ""
+msgstr "ส่งอีเมลของคุณไปที่"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -10482,12 +10596,12 @@ msgstr "เลขลำดับ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__sequence_number_reset
 msgid "Sequence Number Reset"
-msgstr ""
+msgstr "รีเซ็ตหมายเลขลำดับ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence_override_regex
 msgid "Sequence Override Regex"
-msgstr ""
+msgstr "ลำดับแทนที่ Regex"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__sequence_prefix
@@ -10496,7 +10610,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__sequence_prefix
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_prefix
 msgid "Sequence Prefix"
-msgstr ""
+msgstr "คำนำหน้าลำดับ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__sequence
@@ -10530,7 +10644,7 @@ msgstr "บริการ"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Set a price"
-msgstr ""
+msgstr "ตั้งราคา"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -10577,7 +10691,7 @@ msgstr "ตั้งค่า"
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
 msgid "Setup"
-msgstr ""
+msgstr "ตั้งค่า"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
@@ -10614,16 +10728,18 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also"
 " be named using this prefix by default."
 msgstr ""
+"ชื่อที่สั้นกว่าที่ใช้สำหรับแสดง "
+"รายการบันทึกประจำวันของสมุดรายวันนี้จะถูกตั้งชื่อโดยใช้คำนำหน้านี้ตามค่าเริ่มต้น"
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
-msgstr ""
+msgstr "แสดงฟีเจอร์ระบบบัญชี - อ่านอย่างเดียว"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
 msgid "Show Decimal Separator"
-msgstr ""
+msgstr "แสดงตัวคั่นทศนิยม"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
@@ -10640,7 +10756,7 @@ msgstr "Show Full Accounting Features"
 #: model:ir.model.fields,field_description:account.field_account_move__show_name_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__show_name_warning
 msgid "Show Name Warning"
-msgstr ""
+msgstr "แสดงคำแจ้งเตือนชื่อ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__show_partner_bank_account
@@ -10653,13 +10769,13 @@ msgstr "แสดงบัญชีธนาคารของคู่ค้า
 #: model:ir.model.fields,field_description:account.field_account_move__show_reset_to_draft_button
 #: model:ir.model.fields,field_description:account.field_account_payment__show_reset_to_draft_button
 msgid "Show Reset To Draft Button"
-msgstr ""
+msgstr "แสดงปุ่มรีเซ็ตเป็นแบบร่าง"
 
 #. module: account
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show Unreconciled Bank Statement Line"
-msgstr ""
+msgstr "แสดงบรรทัดรายการเดินบัญชีธนาคารที่ไม่กระทบยอด"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10707,7 +10823,7 @@ msgstr "Show standard terms &amp; conditions on invoices/orders"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show unposted entries"
-msgstr ""
+msgstr "แสดงรายการที่ยังไม่ได้โพสต์"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
@@ -10729,6 +10845,8 @@ msgid ""
 "Some journal items already exist in this journal but with other accounts "
 "than the allowed ones."
 msgstr ""
+"รายการสมุดรายวันบางรายการมีอยู่แล้วในสมุดรายวันนี้ "
+"แต่มีบัญชีอื่นนอกเหนือจากรายการที่อนุญาต"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -10737,6 +10855,8 @@ msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
 msgstr ""
+"มีรายการสมุดรายวันบางรายการอยู่ในบัญชีนี้แล้ว "
+"แต่อยู่ในสมุดรายวันอื่นที่ไม่ใช่รายการที่อนุญาต"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -10746,7 +10866,7 @@ msgstr "Sometimes called BIC or Swift."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_currency_id
 msgid "Source Currency"
-msgstr ""
+msgstr "สกุลเงินต้นทาง"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
@@ -10764,7 +10884,7 @@ msgstr "อีเมลต้นทาง"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__custom
 msgid "Specific"
-msgstr ""
+msgstr "เฉพาะ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -10793,7 +10913,7 @@ msgstr "วันที่เริ่ม"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr ""
+msgstr "เริ่มต้นด้วยการตรวจสอบข้อมูลบริษัทของคุณ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -10997,7 +11117,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__suitable_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__suitable_journal_ids
 msgid "Suitable Journal"
-msgstr ""
+msgstr "สมุดรายวันที่เหมาะสม"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
@@ -11008,7 +11128,7 @@ msgstr "Supplier Rank"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr ""
+msgstr "บัญชีพัก"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -11126,7 +11246,7 @@ msgstr "เงินสด"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__use_in_tax_closing
 msgid "Tax Closing Entry"
-msgstr ""
+msgstr "รายการปิดภาษี"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
@@ -11275,7 +11395,7 @@ msgstr "รูปแบบภาษี"
 #: model:ir.model.fields,field_description:account.field_account_tax_template__type_tax_use
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Type"
-msgstr ""
+msgstr "ประเภทของภาษี"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_by_group
@@ -11324,7 +11444,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
 msgid ""
 "Tax distribution line that caused the creation of this move line, if any"
-msgstr ""
+msgstr "บรรทัดการกระจายภาษีที่ทำให้เกิดการสร้างบรรทัดการย้ายนี้ ถ้ามี"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -11554,6 +11674,10 @@ msgid ""
 "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
+"ฟิลด์ทางเทคนิคใช้เพื่อบังคับใช้องค์ประกอบลำดับที่ซับซ้อนที่ระบบมักจะเข้าใจผิด\n"
+"นี่คือ regex ที่สามารถรวมกลุ่มการจับภาพต่อไปนี้ทั้งหมด: คำนำหน้า 1, ปี, คำนำหน้า 2, เดือน, คำนำหน้า 3, seq, คำต่อท้าย\n"
+"กลุ่มคำนำหน้า* คือตัวคั่นระหว่างปี เดือน และหมายเลขลำดับที่เพิ่มขึ้นจริง (seq)\n"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__exclude_from_invoice_tab
@@ -11761,7 +11885,7 @@ msgstr "เงื่อนไขและข้อกำหนด"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr ""
+msgstr "นั่นคือวันที่เปิดรายการ"
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -11796,6 +11920,13 @@ msgstr ""
 " for vendor/customer accounts."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
+"ต้องระบุวันที่ การเรียกเก็บเงิน/คืนเงิน เพื่อตรวจสอบความถูกต้องของเอกสารนี้"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
 #: model:ir.model.fields,help:account.field_account_journal__country_code
@@ -11809,6 +11940,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"โค้ดประเทศ ISO ในสองตัวอักษร\n"
+"คุณสามารถใช้ช่องนี้เพื่อการค้นหาอย่างรวดเร็ว"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11831,6 +11964,18 @@ msgstr ""
 #, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "The account %s (%s) is deprecated."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"This account is configured in %(journal_names)s journal(s) (ids "
+"%(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
+msgstr ""
+"บัญชีนี้ได้รับการกำหนดค่าใน %(journal_names)s สมุดรายวัน (ids "
+"%(journal_ids)s) เป็นบัญชีเดบิตการชำระเงินหรือเครดิต "
+"ซึ่งหมายความว่าประเภทบัญชีนี้สามารถปรับยอดได้"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -11894,6 +12039,9 @@ msgid ""
 "same as the one from the company, this amount must strictly be equal to the "
 "balance."
 msgstr ""
+"จำนวนเงินที่แสดงในสกุลเงินรองต้องมีค่าเป็นบวกเมื่อถูกหักบัญชี "
+"และมีค่าเป็นลบเมื่อถูกเครดิต หากสกุลเงินตรงกับสกุลเงินของบริษัท "
+"จำนวนนี้จะต้องเท่ากับยอดคงเหลือเท่านั้น"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -11907,7 +12055,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a number"
-msgstr ""
+msgstr "จำนวนเงินไม่ใช่ตัวเลข"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -11991,13 +12139,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
-msgstr ""
+msgstr "บริษัทของสายการจำหน่ายนี้เป็นของ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_tax_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr ""
+msgstr "ประเทศที่จะใช้รายงานภาษีสำหรับบริษัทนี้"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -12027,7 +12175,7 @@ msgstr "หน่วยเงินตราที่ใช้ในงบกา
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The current highest number is"
-msgstr ""
+msgstr "จำนวนสูงสุดในปัจจุบันคือ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__state
@@ -12104,7 +12252,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr ""
+msgstr "รายการสมุดรายวันต่อไปนี้จะถูกสร้างขึ้น"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
@@ -12113,6 +12261,8 @@ msgid ""
 "The following error prevented '%s' QR-code to be generated though it was "
 "detected as eligible: "
 msgstr ""
+"ข้อผิดพลาดต่อไปนี้ทำให้ไม่สามารถสร้าง '%s' รหัส QR-โค้ด "
+"แม้ว่าจะตรวจพบว่ามีสิทธิ์:"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -12130,6 +12280,7 @@ msgstr ""
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
 msgstr ""
+"ตัวสั่งงานทั่วไปต่อไปนี้ไม่ถูกต้องในการสร้างการจับคู่กับพาร์ทเนอร์: %s"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12144,7 +12295,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr ""
+msgstr "สกุลเงินต่างประเทศจะต้องแตกต่างจากสมุดรายวัน: %s"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12153,6 +12304,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
+"สกุลเงินต่างประเทศที่ตั้งค่าในสมุดรายวัน '%(journal)s' และบัญชี "
+"'%(account)s' จะต้องเหมือนกัน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -12174,13 +12327,13 @@ msgstr "The holder of a journal's bank account must be the company (%s)."
 #, python-format
 msgid ""
 "The invoice already contains lines, it was not updated from the attachment."
-msgstr ""
+msgstr "ใบแจ้งหนี้มีบรรทัดอยู่แล้ว ไม่ได้รับการอัปเดตจากสิ่งที่แนบมา"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The invoice is not a draft, it was not updated from the attachment."
-msgstr ""
+msgstr "ใบแจ้งหนี้ไม่ใช่แบบร่าง ไม่ได้รับการอัปเดตจากไฟล์แนบ"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12189,6 +12342,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
+"รายการสมุดรายวัน %s มีสถานะไม่ถูกต้องเกี่ยวกับบรรทัดคำสั่งที่เกี่ยวข้อง\n"
+"เพื่อให้สอดคล้องกัน รายการสมุดรายวันต้องมีหนึ่งรายการสมุดรายวันที่เกี่ยวข้องกับบัญชีธนาคาร/เงินสดเสมอ"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12242,7 +12397,7 @@ msgstr ""
 msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
-msgstr ""
+msgstr "รายการสมุดรายวันที่ได้สร้างรายการสมุดรายวันตามเกณฑ์เงินสดภาษีนี้"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12285,7 +12440,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_group_check_length_prefix
 msgid "The length of the starting and the ending code prefix must be the same"
-msgstr ""
+msgstr "ความยาวของคำนำหน้ารหัสเริ่มต้นและสิ้นสุดต้องเท่ากัน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__partner_mapping_line_ids
@@ -12295,6 +12450,17 @@ msgid ""
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
+"การแมปใช้ตัวสั่งงานทั่วไป\n"
+"- หากต้องการจับคู่ข้อความที่ขึ้นต้นบรรทัด (ในป้ายกำกับหรือโน๊ต) เพียงกรอกข้อความของคุณ\n"
+"- หากต้องการจับคู่ข้อความที่ใดก็ได้ (ในป้ายกำกับหรือโน๊ต) ให้ใส่ข้อความของคุณระหว่าง .*\n"
+"  เช่น: .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr "ไม่สามารถโพสต์การย้ายได้เนื่องจากเหตุผลต่อไปนี้:%(error_message)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -12349,6 +12515,9 @@ msgid ""
 " to work properly, invoice distribution lines should be arranged in the same"
 " order as the credit note distribution lines they correspond to."
 msgstr ""
+"ลำดับการแสดงที่จับคู่สายของการแจกจ่าย เพื่อให้การคืนเงินทำงานได้อย่างถูกต้อง"
+" "
+"ควรจัดเรียงรายการการกระจายใบแจ้งหนี้ในใบสั่งเดียวกันกับรายการการกระจายใบลดหนี้ที่เกี่ยวข้อง"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
@@ -12388,7 +12557,7 @@ msgstr "The payment reference to set on journal items."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
 msgid "The payment that created this entry"
-msgstr ""
+msgstr "การชำระเงินที่สร้างรายการนี้"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
@@ -12396,6 +12565,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 #: model:ir.model.fields,help:account.field_account_payment_register__source_currency_id
 msgid "The payment's currency."
+msgstr "สกุลเงินของการชำระเงิน"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The recipient bank account link to this invoice is archived.\n"
+"So you cannot confirm the invoice."
 msgstr ""
 
 #. module: account
@@ -12502,7 +12679,7 @@ msgstr "รูปแบบการกระทบยอดจะพร้อม
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The regex is not valid"
-msgstr ""
+msgstr "regex ไม่ถูกต้อง"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -12511,6 +12688,8 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
+"โปรแกรมการชำระเงินลงทะเบียนควรถูกเรียกใช้ในบันทึก account.move หรือ "
+"account.move.line เท่านั้น"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__tax_report_line_id
@@ -12539,6 +12718,8 @@ msgid ""
 "The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
+"บัญชีปลายทางที่เลือกถูกตั้งค่าให้ใช้สกุลเงินเฉพาะ ทุกรายการที่โอนไปจะถูกแปลงเป็นสกุลเงินนี้ทำให้\n"
+"                        สูญเสียจำนวนสกุลเงินต่างประเทศที่มีอยู่ก่อน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -12551,12 +12732,54 @@ msgstr ""
 "applied."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The sequence format has changed."
+msgstr "รูปแบบลำดับได้มีการเปลี่ยนแปลง"
+
+#. module: account
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
+"ลำดับ regex อย่างน้อยควรมีคีย์การจัดกลุ่ม seq ตัวอย่างเช่น:\n"
+"^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"ลำดับจะไม่เริ่มต้นใหม่\n"
+"จำนวนที่เพิ่มขึ้นในกรณีนี้คือ '%(formatted_seq)s'."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"ลำดับจะเริ่มต้นใหม่อีกครั้งที่ 1 ทุกต้นเดือน\n"
+"ปีที่ตรวจพบที่นี่คือ '%(year)s' และเดือนคือ '%(month)s'.\n"
+"จำนวนที่เพิ่มขึ้นในกรณีนี้คือ '%(formatted_seq)s'."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"ลำดับจะเริ่มต้นใหม่อีกครั้งที่ 1 ในช่วงต้นปีทุกปี\n"
+"ปีที่ตรวจพบที่นี่คือ '%(year)s'.\n"
+"จำนวนที่เพิ่มขึ้นในกรณีนี้คือ '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -12565,6 +12788,8 @@ msgid ""
 "The sequences of this journal are different for Invoices and Refunds but you"
 " selected some of both types."
 msgstr ""
+"ลำดับของสมุดรายวันนี้แตกต่างกันสำหรับใบแจ้งหนี้และการคืนเงิน "
+"แต่คุณเลือกทั้งสองประเภทในบางส่วน"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -12582,7 +12807,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
-msgstr ""
+msgstr "บรรทัดข้อความที่สร้างรายการนี้"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_total_amount_param
@@ -12684,6 +12909,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
+"ยังคงมีบรรทัดรายการเดินบัญชีจากธนาคารที่ยังไม่ได้กระทบยอดในรอบระยะเวลาที่คุณต้องการล็อก"
+" คุณควรกระทบยอดหรือลบออกก่อน"
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -12692,6 +12919,8 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"ไม่มีสมุดรายวันพื้นฐานเงินสดภาษีที่กำหนดไว้สำหรับบริษัท '%s'\n"
+"กำหนดค่าใน ระบบบัญชี/การกำหนดค่า/การตั้งค่า"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -12854,7 +13083,7 @@ msgstr "This journal is not in strict mode."
 msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
-msgstr ""
+msgstr "กฎการจับคู่นี้ ใช้เมื่อผู้ใช้ไม่แน่ใจในข้อมูลทั้งหมดของคู่สัญญา"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12867,12 +13096,13 @@ msgstr "This move is configured to be auto-posted on %s"
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
 msgstr ""
+"การย้ายนี้ได้รับการกำหนดค่าให้ผ่านรายการโดยอัตโนมัติ ณ วันที่ทางบัญชี:"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
-msgstr ""
+msgstr "การย้ายนี้จะถูกผ่านรายการ ณ วันที่ทางบัญชี: %(date)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -12882,6 +13112,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"ตัวเลือกนี้จะลบการติดตามอีเมลหลังจากถูกส่งอย่างถาวร "
+"รวมถึงจากเมนูทางเทคนิคในการตั้งค่า "
+"เพื่อรักษาพื้นที่จัดเก็บข้อมูลของฐานข้อมูล Odoo ของคุณ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__chart_template_id
@@ -12926,10 +13159,20 @@ msgstr ""
 "เงื่อนไขการชำระเงินนี้จะถูกตั้งเป็นค่าเริ่มต้นสำหรับใบสั่งขายและใบแจ้งหนี้ลูกค้า"
 
 #. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+"สินค้านี้ถูกใช้ในรายการสมุดรายวันที่โพสต์แล้ว\n"
+"หากคุณต้องการเปลี่ยนหน่วยวัด โปรดเก็บถาวรสินค้านี้และสร้างสินค้าใหม่"
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
-msgstr ""
+msgstr "โมเดลการกระทบยอดนี้ยังไม่ได้สร้างรายการใดเลย"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -12963,6 +13206,7 @@ msgstr ""
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
 msgstr ""
+"เคล็ดลับ: ไม่จำเป็นต้องพิมพ์ออกมาเพื่อใส่ซองและส่งรายการใบแจ้งหนี้ของคุณ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -13013,7 +13257,7 @@ msgstr "ยอดรวม"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Total Balance"
-msgstr ""
+msgstr "ยอดคงเหลือทั้งหมด"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
@@ -13062,7 +13306,7 @@ msgstr "Total Signed"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
 msgid "Total amount impacted by the automatic entry."
-msgstr ""
+msgstr "จำนวนเงินทั้งหมดที่ได้รับผลกระทบจากรายการอัตโนมัติ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -13118,19 +13362,19 @@ msgstr "การโอน"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Transfer Date"
-msgstr ""
+msgstr "วันที่โอน"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer counterpart"
-msgstr ""
+msgstr "โอนรายการคู่"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer entry to %s"
-msgstr ""
+msgstr "โอนรายการไปที่ %s"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13155,7 +13399,7 @@ msgstr "โอนย้าย"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Try a sample vendor bill"
-msgstr ""
+msgstr "ลองใช้ตัวอย่างใบเรียกเก็บเงินของผู้ขาย"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
@@ -13192,6 +13436,8 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
+"ประเภทของรหัส QR ที่จะสร้างสำหรับการชำระใบแจ้งหนี้นี้เมื่อมีการสั่งพิมพ์ "
+"หากเว้นว่างไว้ ระบบจะใช้วิธีแรกที่ใช้ได้และจะถูกใช้"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_exception_decoration
@@ -13262,7 +13508,7 @@ msgstr "หน่วยวัด"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Unmark as Sent"
-msgstr ""
+msgstr "ยกเลิกการทำเครื่องหมายว่าส่งแล้ว"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -13274,6 +13520,12 @@ msgstr "ใบแจ้งหนี้ที่ยังไม่ได้ชํ
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "ยังไม่ได้ลงรายการ"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr "รายการที่ยังไม่ได้โพสต์"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -13362,7 +13614,7 @@ msgstr "อัพโหลด"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Upload your own bill"
-msgstr ""
+msgstr "อัปโหลดใบเรียกเก็บเงินของคุณเอง"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -13419,6 +13671,10 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
+"ใช้ตัวเลือก “<i>ส่งทางไปรษณีย์</i>” เพื่อผ่านรายการใบแจ้งหนี้โดยอัตโนมัติ "
+"สำหรับค่าแสตมป์ในพื้นที่เราจะดำเนินการให้ทั้งหมด: "
+"ใบแจ้งหนี้ของคุณจะถูกพิมพ์ในประเทศที่ถูกต้อง ใส่ซอง และส่งทางไปรษณีย์ "
+"ใช้ฟีเจอร์นี้จากมุมมองรายการเพื่อผ่านรายการใบแจ้งหนี้หลายร้อยรายการแบบเป็นกลุ่ม"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
@@ -13527,7 +13783,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Validate."
-msgstr ""
+msgstr "ตรวจสอบความถูกต้อง"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__confirm
@@ -13552,6 +13808,13 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
+"มูลค่าสำหรับจำนวนของบรรทัดการตัดจ่าย\n"
+"* เปอร์เซ็นต์: เปอร์เซ็นต์ของยอดคงเหลือระหว่าง 0 ถึง 100\n"
+"* แก้ไข: ค่าคงที่ของการตัดจำหน่าย จำนวนเงินจะนับเป็นเดบิตหากมีค่าเป็นลบ และจะนับเป็นเครดิตหากมีค่าเป็นบวก\n"
+"* จากป้ายกำกับ: ไม่จำเป็นต้องมีตัวคั่น regex ต้องใช้เฉพาะ regex เท่านั้น เช่น หากคุณต้องการดึงจำนวนเงินออกมา\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"คุณสามารถกรอก\n"
+"บีอาร์ที: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__supplier
@@ -13617,7 +13880,7 @@ msgstr "การชําระเงินให้แก่ผู้ขาย
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Vendor Reimbursement"
-msgstr ""
+msgstr "การคืนเงินของผู้จำหน่าย"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -13687,6 +13950,9 @@ msgid ""
 "We process bills automatically so that you only have to validate them. "
 "Choose how you want to test our artificial intelligence engine:"
 msgstr ""
+"เราประมวลผลใบเรียกเก็บเงินโดยอัตโนมัติ "
+"เพื่อให้คุณเพียงแค่ตรวจสอบความถูกต้องเท่านั้น "
+"เลือกวิธีที่คุณต้องการทดสอบเครื่องมือ AI ของเรา:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__website_message_ids
@@ -13761,14 +14027,14 @@ msgstr "ด้วยภาษี"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write a company name to <b>create one</b> or <b>see suggestions</b>."
-msgstr ""
+msgstr "เขียนชื่อบริษัทเพื่อ <b>สร้าง</b> หรือ <b>ดูข้อเสนอแนะ</b>"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr ""
+msgstr "เขียน <b>ที่อยู่อีเมลของคุณ</b>ที่นี่เพื่อทดสอบโฟลว์"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -13800,6 +14066,24 @@ msgstr ""
 "is the Odoo reference."
 
 #. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not archive a journal containing draft journal entries.\n"
+"\n"
+"To proceed:\n"
+"1/ click on the top-right button 'Journal Entries' from this journal form\n"
+"2/ then filter on 'Draft' entries\n"
+"3/ select them all and post or delete them through the action menu"
+msgstr ""
+"คุณไม่สามารถเก็บถาวรสมุดรายวันที่มีรายการฉบับร่างได้\n"
+"\n"
+"เพื่อดำเนินการต่อ:\n"
+"1/ คลิกที่ปุ่มขวาบน 'รายการสมุดรายวัน' จากแบบฟอร์มบันทึกนี้\n"
+"2/ จากนั้นกรองรายการ 'ฉบับร่าง'\n"
+"3/ เลือกทั้งหมดแล้วโพสต์หรือลบผ่านเมนูการทำงาน"
+
+#. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid ""
@@ -13814,7 +14098,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
-msgstr ""
+msgstr "คุณไม่สามารถเรียงลำดับใหม่ตามวันที่ได้ เมื่อสมุดรายวันถูกล็อคด้วยแฮช"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -13823,12 +14107,15 @@ msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
 msgstr ""
+"คุณสามารถเปลี่ยนรอบ ระยะเวลา/บัญชี สำหรับรายการที่ยังไม่ได้กระทบยอดเท่านั้น"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
 msgstr ""
+"คุณสามารถเปลี่ยนแปลงได้เฉพาะ รอบระยะเวลา/บัญชี "
+"สำหรับรายการสมุดรายวันที่โพสต์แล้วเท่านั้น"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13840,25 +14127,26 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr ""
+msgstr "คุณสามารถกระทบยอดเฉพาะรายการที่โพสต์เท่านั้น"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
 msgstr ""
+"คุณสามารถลงทะเบียนการชำระเงินสำหรับรายการสมุดรายวันที่ถูกโพสต์รายการแล้วเท่านั้น"
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "You can only resequence items from the same journal"
-msgstr ""
+msgstr "คุณสามารถจัดลำดับรายการใหม่ได้จากสมุดรายวันเดียวกันเท่านั้น"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr ""
+msgstr "คุณสามารถย้อนกลับการเคลื่อนไหวที่โพสต์เท่านั้น"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -13942,6 +14230,8 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
+"คุณไม่สามารถสร้างบรรทัดรายการเดินบัญชีใหม่ได้หากไม่มีบัญชีพักที่ได้ตั้งค่าไว้ใน"
+" %s สมุดรายวัน"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -13949,7 +14239,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can't create payments for entries belonging to different companies."
-msgstr ""
+msgstr "คุณไม่สามารถชำระเงินสำหรับรายการที่เป็นของบริษัทอื่นได้"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13966,6 +14256,7 @@ msgid ""
 "You can't open the register payment wizard without at least one "
 "receivable/payable line."
 msgstr ""
+"คุณไม่สามารถเปิดโปรแกรมการชำระเงินของการลงทะเบียนได้โดยไม่มีบรรทัดลูกหนี้/เจ้าหนี้อย่างน้อยหนึ่งรายการ"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13974,6 +14265,7 @@ msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign"
 " currency."
 msgstr ""
+"คุณไม่สามารถระบุจำนวนเงินเป็นสกุลเงินต่างประเทศ โดยไม่ระบุสกุลเงินต่างประเทศ"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -13982,6 +14274,8 @@ msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
 msgstr ""
+"คุณไม่สามารถลงทะเบียนการชำระเงินได้ "
+"เนื่องจากไม่มีอะไรเหลือให้ชำระในรายการสมุดรายวันที่เลือก"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -13990,6 +14284,7 @@ msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
 msgstr ""
+"คุณไม่สามารถลงทะเบียนการชำระเงินสำหรับรายการสมุดรายวันที่เป็นขาเข้าทั้งหมดหรือขาออกทั้งหมดก็ได้"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -14038,6 +14333,12 @@ msgid ""
 msgstr ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr "โปรดติดต่อนักบัญชีของคุณเพื่อพิมพ์ผลลัพธ์ความสมบูรณ์ของแฮช"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -14096,11 +14397,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"คุณไม่สามารถแก้ไขฟิลด์ต่อไปนี้ได้: %s.\n"
+"รายการต่อไปนี้ถูกแฮชแล้ว:\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14109,6 +14412,8 @@ msgid ""
 "You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
 msgstr ""
+"คุณไม่สามารถแก้ไขสมุดรายวันของการย้ายบัญชีได้ "
+"หากมีการกำหนดหมายเลขลำดับไว้แล้ว"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14200,6 +14505,7 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr ""
+"คุณไม่สามารถลดจำนวนตำแหน่งทศนิยมของสกุลเงินที่ใช้ในการสร้างรายการทางบัญชีได้"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14214,6 +14520,7 @@ msgid ""
 "You cannot remove/deactivate the account %s which is set on a customer or "
 "vendor."
 msgstr ""
+"คุณไม่สามารถ ลบ/ปิดใช้งาน บัญชี %s ที่ได้ตั้งค่าไว้ในลูกค้าหรือผู้ขายได้"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14266,6 +14573,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
 msgstr ""
+"คุณไม่สามารถใช้บัญชีนี้ (%s) ในสมุดรายวันนี้ได้ ตรวจสอบฟิลด์ "
+"'สมุดรายวันที่อนุญาต' ในบัญชีที่เกี่ยวข้อง"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14274,6 +14583,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the section "
 "'Control-Access' under tab 'Advanced Settings' on the related journal."
 msgstr ""
+"คุณไม่สามารถใช้บัญชีนี้ (%s) ในสมุดรายวันนี้ได้ ตรวจสอบในส่วน "
+"'การควบคุม-การเข้าถึง' ใต้แท็บ 'การตั้งค่าขั้นสูง' ในสมุดรายวันที่เกี่ยวข้อง"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14281,7 +14592,7 @@ msgstr ""
 msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
-msgstr ""
+msgstr "คุณไม่สามารถใช้โปรแกรมนี้กับรายการสมุดรายวันของบริษัทอื่นได้"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14319,6 +14630,12 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "You need to add a line before posting."
 msgstr "You need to add a line before posting."
 
@@ -14339,6 +14656,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"คุณควรกำหนดค่า 'บัญชีอัตราแลกเปลี่ยนที่ได้รับ' ในการตั้งค่าบริษัทของคุณ "
+"เพื่อจัดการการจองรายการบัญชีที่เกี่ยวข้องกับความแตกต่างระหว่างอัตราแลกเปลี่ยนโดยอัตโนมัติ"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14348,6 +14667,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"คุณควรกำหนดค่า 'บัญชีอัตราแลกเปลี่ยนที่ขาดทุน' ในการตั้งค่าบริษัทของคุณ "
+"เพื่อจัดการการจองรายการบัญชีที่เกี่ยวข้องกับความแตกต่างระหว่างอัตราแลกเปลี่ยนโดยอัตโนมัติ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -14372,14 +14693,14 @@ msgstr "ช่วงรหัสไปรษณีย์ถึง"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
-msgstr ""
+msgstr "[ไม่ได้ตั้งค่า]"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/grouped_view_widget.xml:0
 #, python-format
 msgid "are not shown in the preview"
-msgstr ""
+msgstr "จะไม่แสดงในการแสดงตัวอย่าง"
 
 #. module: account
 #. openerp-web
@@ -14422,7 +14743,7 @@ msgstr "ธนาคาร"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g GEBABEBB"
-msgstr ""
+msgstr "เช่น GEBABEBB"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -14437,7 +14758,7 @@ msgstr "เช่น GAAP, IFRS, ..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Give a phone call, check with others , ..."
-msgstr ""
+msgstr "เช่น การโทรออก ตรวจสอบกับผู้อื่น ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14449,6 +14770,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this vendor. You can allocate them to mark this bill as paid."
 msgstr ""
+"สำหรับผู้ขายรายนี้ "
+"คุณสามารถจัดสรรเพื่อทำเครื่องหมายใบเรียกเก็บเงินให้เป็นชำระแล้ว"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
@@ -14522,6 +14845,15 @@ msgid "the parent company"
 msgstr "บริษัทแม่"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+"หน่วยวัด '%s' ที่คุณเลือกสำหรับสินค้า '%s', เข้ากันไม่ได้กับหมวดหมู่: %s."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "to"
@@ -14535,9 +14867,32 @@ msgstr "เพื่อตรวจสอบ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
-msgstr ""
+msgstr "โดยมีไฟล์ pdf ของใบแจ้งหนี้เป็นไฟล์แนบ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ จำนวนไฟล์แนบ"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""

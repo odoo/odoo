@@ -53,13 +53,15 @@ class MailThread(models.AbstractModel):
         """
         partners = self.env['res.partner']
         for fname in self._sms_get_partner_fields():
-            partners |= self.mapped(fname)
+            partners = partners.union(*self.mapped(fname))  # ensure ordering
         return partners
 
     def _sms_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to
         send an SMS on a record. """
-        return ['mobile']
+        if 'mobile' in self:
+            return ['mobile']
+        return []
 
     def _sms_get_recipients_info(self, force_field=False, partner_fallback=True):
         """" Get SMS recipient information on current record set. This method

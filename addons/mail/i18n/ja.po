@@ -15,12 +15,15 @@
 # Kawakami Taro <ratorin@gmail.com>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
-# 江口 和志 <k_eguchi@enzantrades.co.jp>, 2020
+# 江口和志 <k_eguchi@enzantrades.co.jp>, 2020
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
-# Noma Yuki, 2020
 # Martin Trigaux, 2021
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2021
 # Kakurai Ai <ai@quartile.co>, 2021
+# Noma Yuki, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Andy Yiu, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -28,8 +31,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Kakurai Ai <ai@quartile.co>, 2021\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -51,19 +54,19 @@ msgstr "${object.partner_id.lang}"
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
-msgstr "%(activity_name)s:あなたに割り当てられた%(summary)s"
+msgstr "%(activity_name)s:%(summary)sがあなたに割り当てられました"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
-msgstr "%(user_name)sは、%(document)sドキュメントをフォローするように招待しました:%(title)s"
+msgstr "%(user_name)sは、%(document)sのドキュメント:%(title)sをフォローすべくあなたを招待しました"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr "%(user_name)sは、新しいドキュメントをフォローするようにあなたを招待しました。"
+msgstr "%(user_name)sは、新しいドキュメントをフォローすべくあなたを招待しました。"
 
 #. module: mail
 #. openerp-web
@@ -205,9 +208,10 @@ msgid ""
 "            Type <b>:shortcut</b> to insert a canned response in your message.<br>"
 msgstr ""
 "<br><br>\n"
-"<b>@username</b>と入力して誰かに言及し、メンションします。<br> \n"
-"<b>#channel</b>と入力して、チャネルにメンションします。<br> \n"
-"<b>/command</b>と<b>入力</b>して、<b>コマンド</b>を実行します。<br> <b>:shortcut</b>と入力して、返信定型文をメッセージに挿入します。<br>"
+"           <b>@username</b>と入力してメンションし注意をひきます。<br> \n"
+"           <b>#channel</b>と入力して、チャネルにメンションします。<br> \n"
+"           <b>/command</b>と入力してコマンドを発行します。<br>\n"
+"           <b>:shortcut</b>と入力して、定型返信文をメッセージに挿入します。<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -217,9 +221,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">%(作成者)が%(new_partner)を<a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-"
-"id=\"%(channel_id)s\">＃%(channel_name)に</a>招待しました</div>"
+"<div class=\"o_mail_notification\">%(author)sが%(new_partner)sを右記へ招待しました<a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">＃%(channel_name)s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -662,6 +666,7 @@ msgstr "絵文字を追加する"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/composer/composer.xml:0
+#: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Add attachment"
 msgstr "添付を追加"
@@ -855,6 +860,13 @@ msgid ""
 msgstr "%sメール配信の失敗を破棄してもよろしいですか?これらのメールを後で再送信することはできません。"
 
 #. module: mail
+#: code:addons/mail/models/mail_blacklist.py:0
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Email Address?"
+msgstr "本当にこのメールアドレスのブラックリストを解除しますか？"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/xml/activity.xml:0
@@ -904,6 +916,7 @@ msgstr "アタッチメントカウンターローディング..."
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
+#: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__attachment_ids
@@ -984,14 +997,6 @@ msgstr "自動化されたアクティビティ"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify
 msgid "Automatic notification"
 msgstr "自動通知"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/follower/follower.xml:0
-#: code:addons/mail/static/src/components/message/message.xml:0
-#, python-format
-msgid "Avatar"
-msgstr "アバター"
 
 #. module: mail
 #. openerp-web
@@ -1102,6 +1107,12 @@ msgstr "通話"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
 msgid "Can Write"
 msgstr "書ける"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr "通知のメッセージまたは受信者を更新できません。"
 
 #. module: mail
 #. openerp-web
@@ -1619,12 +1630,6 @@ msgid "Customer is required for inbox / email notification"
 msgstr "受信トレイ/電子メール通知には顧客が必要です"
 
 #. module: mail
-#: code:addons/mail/models/mail_notification.py:0
-#, python-format
-msgid "Can not update the message or recipient of a notification."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
 #: model:ir.model.fields,field_description:mail.field_mail_message__date
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -1755,6 +1760,13 @@ msgid "Delivery Failed"
 msgstr "配信失敗"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "Delivery failure"
+msgstr "配送失敗"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__description
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__description
@@ -1818,6 +1830,7 @@ msgstr "選択したメッセージを破棄する"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/widgets/discuss/discuss.js:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -1977,6 +1990,8 @@ msgstr "完了 & 次をスケジュール"
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment/attachment.xml:0
 #: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment/attachment.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -2064,6 +2079,7 @@ msgstr "のサブスクリプションを編集する"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/follower/follower.xml:0
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Edit subscription"
@@ -2231,6 +2247,13 @@ msgid "Emails"
 msgstr "Eメール"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "Emojis"
+msgstr "絵文字"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_internal
 #: model:ir.model.fields,field_description:mail.field_mail_message__is_internal
 msgid "Employee Only"
@@ -2246,7 +2269,7 @@ msgstr "順序付き追跡を有効にする"
 #: code:addons/mail/static/src/components/notification_request/notification_request.xml:0
 #, python-format
 msgid "Enable desktop notifications to chat."
-msgstr "チャットするデスクトップ通知を有効にします。"
+msgstr "チャットのためのデスクトップ通知を有効にします。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -2280,7 +2303,7 @@ msgstr "パブリッシャー保証サーバーとの通信中にエラーが発
 msgid ""
 "Error without exception. Probably due do concurrent access update of "
 "notification records. Please see with an administrator."
-msgstr "例外なくエラー。おそらく、通知レコードの同時アクセス更新が原因です。管理者にご確認ください。"
+msgstr "例外なしエラー。通知レコードの同時アクセス更新が原因と思われます。管理者へご確認ください。"
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:0
@@ -2468,6 +2491,8 @@ msgid "Follow"
 msgstr "フォロー"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/follower_list_menu/follower_list_menu.xml:0
 #: model:ir.actions.act_window,name:mail.action_view_followers
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_follower_ids
@@ -2478,6 +2503,7 @@ msgstr "フォロー"
 #: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
+#, python-format
 msgid "Followers"
 msgstr "フォロワー"
 
@@ -2528,7 +2554,7 @@ msgid "Following"
 msgstr "フォロー中"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:778
+#: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Following invites are invalid as user groups do not match: %s"
 msgstr ""
@@ -2554,10 +2580,11 @@ msgstr "フォーマット済Eメール"
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_from
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_from
 msgid "From"
-msgstr "移動元"
+msgstr "From"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Full composer"
@@ -2996,13 +3023,6 @@ msgstr "式が無効です。リテラルPython辞書定義でなければなり
 #, python-format
 msgid "Invalid primary email field on model %s"
 msgstr "モデル%sのプライマリメールフィールドが無効です"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Invitation"
-msgstr "招待"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -3537,6 +3557,7 @@ msgstr "完了とする"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message/message.xml:0
+#: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
 #: code:addons/mail/static/src/components/thread_preview/thread_preview.xml:0
 #, python-format
@@ -3545,6 +3566,7 @@ msgstr "既読にする"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Mark as Todo"
@@ -3587,12 +3609,15 @@ msgid "Merged with the following partners:"
 msgstr "次の連絡先とともに統合"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model,name:mail.model_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_notification__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__message
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
+#, python-format
 msgid "Message"
 msgstr "メッセージ"
 
@@ -3918,6 +3943,13 @@ msgid "Months"
 msgstr "月"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_partner__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_users__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "活動の締切"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__name
 #: model:ir.model.fields,field_description:mail.field_mail_followers__name
@@ -4031,13 +4063,6 @@ msgstr "新規メッセージ"
 #, python-format
 msgid "New messages appear here."
 msgstr "新規メッセージはここに表示されます。"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js:0
-#, python-format
-msgid "New people"
-msgstr "新しい人"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4196,10 +4221,13 @@ msgid "Normalized Email"
 msgstr "正規化された電子メール"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_note
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_note
 #: model:ir.model.fields,field_description:mail.field_mail_activity__note
 #: model:mail.message.subtype,name:mail.mt_note
+#, python-format
 msgid "Note"
 msgstr "ノート"
 
@@ -4408,7 +4436,7 @@ msgstr "オンライン"
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Only administrators are allowed to export mail message"
-msgstr ""
+msgstr "管理者のみがメールメッセージをエクスポートできます。"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -4825,7 +4853,7 @@ msgstr "優先応答アドレス"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
 msgid "Preferred response address (placeholders may be used here)"
-msgstr "好ましい応答アドレス"
+msgstr "優先返信先アドレス（プレースホルダー使用可能）"
 
 #. module: mail
 #. openerp-web
@@ -5107,6 +5135,8 @@ msgstr "関連項目"
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment/attachment.xml:0
 #: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment/attachment.xml:0
 #, python-format
 msgid "Remove"
 msgstr "削除"
@@ -5138,6 +5168,7 @@ msgstr "関連するドキュメントでこのテンプレートを使用する
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/follower/follower.xml:0
+#: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Remove this follower"
 msgstr "このフォロワーを削除"
@@ -5151,6 +5182,7 @@ msgstr "会話の名前を変更する"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
@@ -5431,7 +5463,10 @@ msgid ""
 msgstr "各メールにつきアクションを選択し、必要に応じてEメールアドレスを修正してください。修正されたアドレスは取引先に保存されます。"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__groups
+#, python-format
 msgid "Selected group of users"
 msgstr "選択されたグループ"
 
@@ -5564,7 +5599,7 @@ msgstr "左にシフト"
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #, python-format
 msgid "Shift right"
-msgstr "右シフト"
+msgstr "右にシフト"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
@@ -5767,8 +5802,11 @@ msgid "System Parameter"
 msgstr "システムパラメタ"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/message/message.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__notification
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__notification
+#, python-format
 msgid "System notification"
 msgstr "システム通知"
 
@@ -5948,6 +5986,13 @@ msgid "The shortcut which must be replaced in the Chat Messages"
 msgstr "チャットメッセージで置換が必要なショートカット"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/follower/follower.js:0
+#, python-format
+msgid "The subscription preferences were successfully applied."
+msgstr "サブスクリプション設定が正常に適用されました。"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
 #: model:ir.model.fields,help:mail.field_mail_template_preview__model_id
 msgid "The type of document this template can be used with"
@@ -6018,6 +6063,12 @@ msgid "This record has an exception activity."
 msgstr "このレコードには例外アクティビティがあります。"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "This user can not be added in this channel"
+msgstr "このユーザはこのチャンネルに追加することができません。"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "スレッド"
@@ -6034,7 +6085,7 @@ msgstr "スレッド画像"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_to
 msgid "To"
-msgstr "移動先"
+msgstr "宛先"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_to
@@ -6062,6 +6113,7 @@ msgstr "To:"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
@@ -6311,13 +6363,6 @@ msgid "Unstar all messages"
 msgstr "すべてのメッセージのスターを解除する"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Unsubscribed"
-msgstr "未購読"
-
-#. module: mail
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Unsupported report type %s found."
@@ -6471,6 +6516,16 @@ msgstr ""
 " mycompany.odoo.com)の恩恵を受けています。"
 
 #. module: mail
+#: code:addons/mail/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"mail.catchall.domain.allowed`の値が検証できません。\n"
+"コンマで区切られたドメインのリストでなければなりません。例えば、example.com,example.orgなどです。"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -6509,6 +6564,13 @@ msgstr "%sを見る"
 #: model:ir.model.fields,field_description:mail.field_ir_ui_view__type
 msgid "View Type"
 msgstr "ビュータイプ"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#, python-format
+msgid "View image"
+msgstr "画像を見る"
 
 #. module: mail
 #. openerp-web
@@ -6678,6 +6740,12 @@ msgid ""
 msgstr "メッセージに「スター付き」のマークを付けると、この受信箱に表示されます。"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/user/user.js:0
 #, python-format
@@ -6730,6 +6798,14 @@ msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address."
 msgstr "エイリアスアドレスには、アクセントのないラテン文字以外は使用できません。"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread_blacklist.py:0
+#, python-format
+msgid ""
+"You do not have the access right to unblacklist emails. Please contact your "
+"administrator."
+msgstr "あなたには、Eメールのブラックリストを解除するアクセス権がありません。管理者にお問い合わせ下さい。"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -6801,7 +6877,7 @@ msgstr "君は:"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Your"
-msgstr "君の"
+msgstr "あなたの"
 
 #. module: mail
 #. openerp-web
@@ -6891,7 +6967,7 @@ msgstr "ボードミーティング"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "by"
-msgstr "により"
+msgstr "by"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -6901,6 +6977,13 @@ msgid ""
 msgstr ""
 "処理できません。このアドレスは\n"
 "返信の収集に使用され、直接連絡するために使用しないでください"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "channel"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
@@ -6913,6 +6996,7 @@ msgid "days"
 msgstr "日"
 
 #. module: mail
+#. openerp-web
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
@@ -7113,6 +7197,12 @@ msgstr "を閉じる"
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
+msgid "unknown error"
+msgstr "不明なエラー"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
 msgid "unknown target model %s"
 msgstr "不明なターゲットモデル %s"
 
@@ -7132,17 +7222,3 @@ msgstr "値"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "週"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/follower/follower.js:0
-#, python-format
-msgid "The subscription preferences were successfully applied."
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/message/message.xml:0
-#, python-format
-msgid "channel"
-msgstr ""

@@ -12,7 +12,7 @@
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,13 +20,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2024\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: project
 #. openerp-web
@@ -324,11 +324,11 @@ msgstr ""
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            % if partner.name:\n"
-"                Spett.le ${partner.name},<br/><br/>\n"
+"                Buongiorno ${partner.name},<br/><br/>\n"
 "            % else:\n"
 "                Buongiorno,<br/><br/>\n"
 "            % endif\n"
-"            La preghiamo di dedicare qualche minuto per valutare i nostri servizi relativi al lavoro \"<strong>${object.name}</strong>\"\n"
+"            Le chiediamo cortesemente di dedicare qualche minuto alla valutazione dei nostri servizi, in relazione al lavoro \"<strong>${object.name}</strong>\"\n"
 "            % if object.rating_get_rated_partner_id().name:\n"
 "                assegnato a <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
 "            % else:\n"
@@ -365,7 +365,7 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            Apprezziamo la sua opinione, aiuta a migliorarci continuamente.\n"
+"            La ringraziamo per la sua opinione, ci aiuta a migliorare continuamente.\n"
 "            % if object.project_id.rating_status == 'stage':\n"
 "                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Questo sondaggio clienti è stato inviato perché il lavoro è passato allo stato <b>${object.stage_id.name}</b></span>\n"
 "            % endif\n"
@@ -410,7 +410,9 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Gestisci\"/>"
+msgstr ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Gestisci\" "
+"title=\"Gestisci\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -418,7 +420,7 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Alias dominio\" "
 "title=\"Alias dominio\"/>"
 
 #. module: project
@@ -427,8 +429,8 @@ msgid ""
 "<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
 "satisfaction\" title=\"Percentage of satisfaction\"/>"
 msgstr ""
-"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
-"satisfaction\" title=\"Percentuale di soddisfazione\"/>"
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentuale di "
+"soddisfazione\" title=\"Percentuale di soddisfazione\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -467,7 +469,7 @@ msgstr "<span class=\"fa fa-check-circle\"/> Prossime occorrenze:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
-msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Lavori\"/>"
+msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Lavori\" title=\"Lavori\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -921,22 +923,24 @@ msgid ""
 "By saving this change, the customer email and phone number will also be "
 "updated."
 msgstr ""
-"Il salvataggio della modifica aggiornerà anche l'e-mail e il numero di "
-"telefono del cliente."
+"Con il salvataggio della modifica vengono aggiornati anche e-mail e numero "
+"di telefono del cliente."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "By saving this change, the customer email will also be updated."
-msgstr "Il salvataggio della modifica aggiornerà anche l'e-mail del cliente."
+msgstr ""
+"Con il salvataggio della modifica viene aggiornata anche l'e-mail del "
+"cliente."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "By saving this change, the customer phone number will also be updated."
 msgstr ""
-"Il salvataggio della modifica aggiornerà anche il numero di telefono del "
-"cliente."
+"Con il salvataggio della modifica viene aggiornato anche il numero di "
+"telefono del cliente."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -951,7 +955,8 @@ msgstr "Annullato"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__partner_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr "Selezionare se il contatto è un'azienda, diversamente è una persona"
+msgstr ""
+"Selezionare se il contatto è un'azienda, in caso contrario è una persona"
 
 #. module: project
 #. openerp-web
@@ -1006,7 +1011,7 @@ msgstr "Indice colore"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Ente commerciale"
+msgstr "Entità commerciale"
 
 #. module: project
 #. openerp-web
@@ -1071,7 +1076,7 @@ msgstr "Contatto"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Copywriting"
-msgstr "Stesura"
+msgstr "Stesura testi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
@@ -1107,7 +1112,7 @@ msgstr "Creare lavori inviando una e-mail a"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__create_uid
@@ -1128,7 +1133,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:project.field_project_task_type__create_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -1231,8 +1236,8 @@ msgid ""
 "made status messages for each step of the workflow. It helps to document "
 "your workflow: what should be done at which step."
 msgstr ""
-"Personalizzare il nome dei lavori in base al progetto e creare messaggi di "
-"stato su misura per ciascuna fase del flusso. Ciò aiuta a documentare il "
+"Personalizza il nome da dare ai lavori in base al progetto e crea messaggi "
+"di stato su misura per ciascuna fase del flusso. Ciò aiuta a documentare il "
 "flusso stesso: cosa deve essere fatto e in quale fase."
 
 #. module: project
@@ -1312,17 +1317,25 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited internal users: employees may only see the followed project and tasks.\n"
-"- All internal users: employees may see all project and tasks.\n"
-"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following."
 msgstr ""
-"Definisce la visibilità dei lavori del progetto:\n"
-"- Utenti interni invitati: i dipendenti possono vedere solo i progetti e i lavori seguiti.\n"
-"- Tutti gli utenti interni: i dipendenti possono vedere tutti i progetti e i lavori.\n"
-"- Utenti portale invitati e tutti gli utenti interni: i dipendenti possono vedere tutti i progetti e i lavori, gli utenti del portale solo quelli\n"
-"   seguiti da loro o da qualcuno dell'azienda."
+"Persone per le quali sarà visibile il progetto e i relativi lavori.\n"
+"\n"
+"- Utenti interni invitati: quando seguono un progetto, gli utenti interni avranno accesso a tutti i suoi lavori senza distinzione. Diversamente accedono solo a quelli specifici che stanno seguendo.\n"
+" Un utente con diritti di accesso Progetto → Amministratore può tuttavia accedere al progetto e ai suoi lavori anche se non fa esplicitamente parte di chi sta seguendo.\n"
+"\n"
+"- Tutti gli utenti interni: tutti gli utenti interni possono accedere al progetto e a tutti i relativi lavori senza distinzione.\n"
+"\n"
+"- Utenti portale invitati e tutti gli utenti interni: tutti gli utenti interni possono accedere al progetto e a tutti i relativi lavori senza distinzione.\n"
+"Quando seguono un progetto, gli utenti portale avranno accesso a tutti i suoi lavori senza distinzione. Diversamente accedono solo a quelli specifici che stanno seguendo."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1638,19 +1651,19 @@ msgstr "Lavori seguiti"
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_follower_ids
 msgid "Followers"
-msgstr "Chi sta seguendo"
+msgstr "Seguito da"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_channel_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Chi sta seguendo (canali)"
+msgstr "Seguito da (canali)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Chi sta seguendo (partner)"
+msgstr "Seguito da (partner)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
@@ -1734,9 +1747,9 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea. %s"
 msgstr ""
-"Gestisci le idee raccolte all'interno del nuovo progetto discutendole nella "
-"chat dei lavori. Utilizza %s e %s per segnalare lo stato corrente dell'idea."
-" %s"
+"Gestisci le idee raccolte all'interno del nuovo progetto discutendole nel "
+"registro comunicazioni dei lavori. Utilizza %s e %s per segnalare lo stato "
+"corrente dell'idea. %s"
 
 #. module: project
 #. openerp-web
@@ -1779,7 +1792,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "I take it"
-msgstr "Me ne occupo io"
+msgstr "Accetta"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__id
@@ -1814,7 +1827,7 @@ msgstr "Icona"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare una eccezione attività."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: project
 #. openerp-web
@@ -1875,7 +1888,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
-"Se il campo attivo è impostato a Falso, consente di nascondere il progetto "
+"Se il campo Attivo è impostato a falso, consente di nascondere il progetto "
 "senza rimuoverlo."
 
 #. module: project
@@ -2604,7 +2617,7 @@ msgstr "Modello principale"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID discussione record genitore"
+msgstr "ID discussione record principale"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2771,7 +2784,7 @@ msgstr "Procedura di eliminazione progetto"
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr "Responsabile di progetto"
+msgstr "Responsabile progetto"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2917,7 +2930,7 @@ msgstr "Frequenza valutazione"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Opinione ultima valutazione"
+msgstr "Ultimo riscontro valutazione"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
@@ -3286,7 +3299,7 @@ msgstr "Sequenza"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr "Imposta foto"
+msgstr "Imposta copertina"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3330,7 +3343,7 @@ msgstr "Sviluppo software"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
-msgstr "Impossibile impostare un lavoro come genitore di se stesso."
+msgstr "Impossibile impostare un lavoro come dipendente da se stesso."
 
 #. module: project
 #. openerp-web
@@ -3510,7 +3523,7 @@ msgstr "Etichette"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Tags are perfect to categorize your tasks."
-msgstr "Le etichetta sono perfette per organizzare i lavori."
+msgstr "Le etichette sono perfette per classificare i lavori."
 
 #. module: project
 #. openerp-web
@@ -3698,8 +3711,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Il nome dell’alias e-mail, es. “lavori” per intercettare le e-mail a "
-"<lavori@esempio.odoo.com>"
+"Nome dell’alias e-mail, es. “lavori”, per intercettare le e-mail a "
+"<lavori@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -3709,10 +3722,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Proprietario dei record creati al ricevimento di e-mail per questo alias. Se"
-" questo campo non è impostato, il sistema proverà a cercare il proprietario "
-"in base al mittente (campo \"Da\"). Se all'indirizzo non è associato alcun "
-"utente di sistema verrà usato l'account amministratore."
+"Proprietario dei record creati al ricevimento di e-mail per l'alias. Se il "
+"campo non è impostato, il sistema prova a cercare il proprietario in base al"
+" mittente (campo \"Da\"). Se all'indirizzo non è associato alcun utente di "
+"sistema, viene usato l'account amministratore."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3884,7 +3897,7 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
-"Per portare a termine i compiti, usa le attività e lo stato dei lavori.<br>\n"
+"Per portare a termine le operazioni, usa le attività e lo stato dei lavori.<br>\n"
 "                    Per collaborare in modo efficiente comunica in tempo reale via chat o tramite e-mail."
 
 #. module: project
@@ -3907,7 +3920,7 @@ msgstr "Monitora la soddisfazione cliente sui lavori"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr "Tiene traccia dei tempi dedicati a progetti e lavori"
+msgstr "Monitora i tempi dedicati a progetti e lavori"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue
@@ -3929,7 +3942,7 @@ msgstr "Bimestrale"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di eccezione attività sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -4009,7 +4022,7 @@ msgid ""
 "Use this chatter to <b>send emails</b> and communicate efficently with your customers. \n"
 "    Add new people in the followers list to make them aware about the main changes about this task."
 msgstr ""
-"Usa il chatter per <b>inviare e-mail</b> e comunicare in modo efficiente con i clienti. \n"
+"Usa il registro comunicazioni per <b>inviare e-mail</b> e comunicare in modo efficiente con i clienti. \n"
 "    Aggiungi nuove persone all'elenco di chi segue per informarle sui cambiamenti principali che riguardano il lavoro."
 
 #. module: project

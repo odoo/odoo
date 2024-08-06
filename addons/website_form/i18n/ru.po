@@ -6,7 +6,7 @@
 # Максим Дронь <dronmax@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Collex100, 2020
-# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2020
 # Алексей <noosvet@gmail.com>, 2020
 # Amaro Vita <vita.amaro@gmail.com>, 2020
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
@@ -14,15 +14,17 @@
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Gennady Marchenko <gennadym@gmail.com>, 2020
 # Viktor Pogrebniak <vp@aifil.ru>, 2020
+# alenafairy, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 06:08+0000\n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>, 2020\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -44,6 +46,11 @@ msgid "'%s' is not a correct datetime"
 msgstr "'%s' некорректные дата и время"
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid ", .s_website_form"
+msgstr ", .s_website_form"
+
+#. module: website_form
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "<p>Attached files : </p>"
@@ -56,11 +63,15 @@ msgid ""
 "<span class=\"fa fa-check-circle\"/>\n"
 "                                            <span>Your message has been sent <b>successfully</b></span>"
 msgstr ""
+"<span class=\"fa fa-check-circle\"/>\n"
+"                                            <span>Ваше сообщение <b>успешно</b> отправлено</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Email To</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Отправить по электронной "
+"почте</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -72,7 +83,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Номер телефона</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -80,11 +91,13 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Subject</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Тема</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Ваша компания</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -92,6 +105,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Your Name</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Ваше имя</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -101,12 +116,12 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Add a new field after this one"
-msgstr ""
+msgstr "Добавьте новое поле после этого"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Add a new field at the end"
-msgstr ""
+msgstr "Добавьте новое поле в конце"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
@@ -133,7 +148,7 @@ msgstr "Черный в веб-формах"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Button Position"
-msgstr ""
+msgstr "Положение кнопки"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -148,7 +163,7 @@ msgstr "Чекбокс"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Custom field"
-msgstr ""
+msgstr "Настраиваемое поле"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -180,7 +195,7 @@ msgstr "Отображаемое имя"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Edit Message"
-msgstr ""
+msgstr "Редактировать сообщение"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -237,7 +252,7 @@ msgstr "Скрытый"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Hide"
-msgstr ""
+msgstr "Скрыть"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -256,12 +271,12 @@ msgstr "Идентификатор"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "In the meantime we invite you to visit our"
-msgstr ""
+msgstr "Тем временем мы приглашаем вас посетить наш"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Input Aligned"
-msgstr ""
+msgstr "Вход выровнен"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -271,7 +286,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Input Type"
-msgstr ""
+msgstr "Тип ввода"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -291,7 +306,7 @@ msgstr "Метка для форм действия"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Labels Width"
-msgstr ""
+msgstr "Ширина подписей"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model____last_update
@@ -313,12 +328,12 @@ msgstr "Длинный текст"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Mark Text"
-msgstr ""
+msgstr "Отметить текст"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Marked Fields"
-msgstr ""
+msgstr "Отмеченные поля"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -352,7 +367,7 @@ msgstr "Ничего"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Nothing"
-msgstr ""
+msgstr "Ничего"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -362,7 +377,7 @@ msgstr "Номер"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "On Success"
-msgstr ""
+msgstr "Об успехе"
 
 #. module: website_form
 #. openerp-web
@@ -370,7 +385,7 @@ msgstr ""
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Option 1"
-msgstr ""
+msgstr "Опция 1"
 
 #. module: website_form
 #. openerp-web
@@ -378,7 +393,7 @@ msgstr ""
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Option 2"
-msgstr ""
+msgstr "Опция 2"
 
 #. module: website_form
 #. openerp-web
@@ -386,25 +401,25 @@ msgstr ""
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Option 3"
-msgstr ""
+msgstr "Опция 3"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Optional"
-msgstr ""
+msgstr "По желанию"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Other Information:"
-msgstr ""
+msgstr "Другая информация:"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Our team will message you back as soon as possible."
-msgstr ""
+msgstr "Наши сотрудники ответят вам как можно скорее."
 
 #. module: website_form
 #. openerp-web
@@ -423,7 +438,7 @@ msgstr "Переключатели \"Radio Buttons\""
 #: code:addons/website_form/static/src/js/website_form_editor_registry.js:0
 #, python-format
 msgid "Recipient Email"
-msgstr ""
+msgstr "Электронная почта получателя"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -450,17 +465,17 @@ msgstr "Выбор"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Separate email addresses with a comma."
-msgstr ""
+msgstr "Разделяйте адреса электронной почты запятой."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Show Message"
-msgstr ""
+msgstr "Показать сообщение"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Show reCaptcha Policy"
-msgstr ""
+msgstr "Показать политику reCaptcha"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
@@ -488,12 +503,12 @@ msgstr "Удача"
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Suspicious activity detected by Google reCaptcha."
-msgstr ""
+msgstr "Подозрительная активность, обнаруженная Google reCaptcha."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Telephone"
-msgstr ""
+msgstr "Телефон"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -505,13 +520,13 @@ msgstr "Текст"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Thank You For Your Feedback"
-msgstr ""
+msgstr "Спасибо за ваши отзывы"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
 #: model_terms:website.page,arch_db:website_form.contactus_thanks
 msgid "Thank You!"
-msgstr ""
+msgstr "Спасибо!"
 
 #. module: website_form
 #. openerp-web
@@ -524,13 +539,13 @@ msgstr "Форма успешно отправлена."
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "The form's specified model does not exist"
-msgstr ""
+msgstr "Указанная модель формы не существует"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "This message has been posted on your website!"
-msgstr ""
+msgstr "Это сообщение было размещено на вашем сайте!"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -555,7 +570,7 @@ msgstr "Url"
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
 msgid "Used in FormBuilder Registry"
-msgstr ""
+msgstr "Используется в реестре FormBuilder"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -576,7 +591,7 @@ msgstr "Веб-сайт"
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_key
 msgid "Website Form Key"
-msgstr ""
+msgstr "Ключ формы сайта"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.ir_model_view
@@ -595,7 +610,7 @@ msgstr ""
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't duplicate the submit button of the form."
-msgstr ""
+msgstr "Вы не можете дублировать кнопку отправки формы."
 
 #. module: website_form
 #. openerp-web
@@ -609,12 +624,12 @@ msgstr ""
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't remove the submit button of the form"
-msgstr ""
+msgstr "Вы не можете удалить кнопку отправки формы"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "rows"
-msgstr ""
+msgstr "ряды"
 
 #. module: website_form
 #. openerp-web

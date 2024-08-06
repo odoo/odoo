@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.osv import expression
 
@@ -76,5 +78,38 @@ class AccountMoveLine(models.Model):
         return [
             ('so_line', 'in', sale_line_delivery.ids),
             ('project_id', '!=', False),
-            '|', ('timesheet_invoice_id', '=', False), ('timesheet_invoice_id.state', '=', 'cancel')
+            '|', '|',
+                ('timesheet_invoice_id', '=', False),
+                ('timesheet_invoice_id.state', '=', 'cancel'),
+                ('timesheet_invoice_id.payment_state', '=', 'reversed')
         ]
+
+    def unlink(self):
+        move_line_read_group = self.env['account.move.line'].search_read([
+            ('move_id.move_type', '=', 'out_invoice'),
+            ('move_id.state', '=', 'draft'),
+            ('sale_line_ids.product_id.invoice_policy', '=', 'delivery'),
+            ('sale_line_ids.product_id.service_type', '=', 'timesheet'),
+            ('id', 'in', self.ids)],
+            ['move_id', 'sale_line_ids'])
+
+        sale_line_ids_per_move = defaultdict(lambda: self.env['sale.order.line'])
+        for move_line in move_line_read_group:
+            sale_line_ids_per_move[move_line['move_id'][0]] += self.env['sale.order.line'].browse(move_line['sale_line_ids'])
+
+        timesheet_read_group = self.sudo().env['account.analytic.line'].read_group([
+            ('timesheet_invoice_id.move_type', '=', 'out_invoice'),
+            ('timesheet_invoice_id.state', '=', 'draft'),
+            ('timesheet_invoice_id', 'in', self.move_id.ids)], 
+            ['timesheet_invoice_id', 'so_line', 'ids:array_agg(id)'], 
+            ['timesheet_invoice_id', 'so_line'], 
+            lazy=False)
+
+        timesheet_ids = []
+        for timesheet in timesheet_read_group:
+            move_id = timesheet['timesheet_invoice_id'][0]
+            if timesheet['so_line'][0] in sale_line_ids_per_move[move_id].ids:
+                timesheet_ids += timesheet['ids']
+
+        self.sudo().env['account.analytic.line'].browse(timesheet_ids).write({'timesheet_invoice_id': False})
+        return super().unlink()

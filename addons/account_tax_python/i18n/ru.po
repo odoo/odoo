@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# ILMIR <karamov@it-projects.info>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
+# ILMIR <karamov@it-projects.info>, 2021
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -35,6 +36,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Группа налогов: налог представляет собой вложенный набор налогов.\n"
+"- Фиксированный: сумма налога остается неизменной независимо от цены.\n"
+"- Процент от цены: сумма налога составляет % от цены:\n"
+"например, 100 * (1 + 10%) = 110 (не включая цену)\n"
+"например, 110 / (1 + 10%) = 100 (включая цену)\n"
+"- Процент от включенной суммы налога: Сумма налога представляет собой деление цены:\n"
+"например, 180 / (1-10%) = 200 (не включая цену)\n"
+"например, 200 * (1-10%) = 180 (включая цену)"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -159,3 +169,16 @@ msgstr "Расчет Налога"
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
 msgstr "Шаблоны для налогов"
+
+#. module: account_tax_python
+#: code:addons/account_tax_python/models/account_tax.py:0
+#: code:addons/account_tax_python/models/account_tax.py:0
+#, python-format
+msgid ""
+"You entered invalid code %r in %r taxes\n"
+"\n"
+"Error : %s"
+msgstr ""
+"Вы ввели неверный код %r в %r налогов\n"
+"\n"
+"Ошибка : %s"

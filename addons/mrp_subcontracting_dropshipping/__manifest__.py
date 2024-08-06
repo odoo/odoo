@@ -12,4 +12,5 @@
     'depends': ['mrp_subcontracting', 'stock_dropshipping'],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

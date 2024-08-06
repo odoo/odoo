@@ -21,4 +21,5 @@
         'data/slide_demo.xml',
         'data/sale_order_demo.xml',
     ],
+    'license': 'LGPL-3',
 }

@@ -136,13 +136,15 @@ function changePaddingSize(direction) {
     return {
         trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
         content: _.str.sprintf(_t("<b>Slide</b> this button to change the %s padding"), direction),
+        consumeEvent: 'mousedown',
         position: position,
     };
 }
 
 /**
  * Click on the top right edit button
- * @param {*} position Where the purple arrow will show up
+ *
+ * @deprecated use `clickOnEditAndWaitEditMode` instead to avoid race condition
  */
 function clickOnEdit(position = "bottom") {
     return {
@@ -151,6 +153,23 @@ function clickOnEdit(position = "bottom") {
         extra_trigger: ".homepage",
         position: position,
     };
+}
+
+/**
+ * Click on the top right edit button and wait for the edit mode
+ *
+ * @param {string} position Where the purple arrow will show up
+ */
+function clickOnEditAndWaitEditMode(position = "bottom") {
+    return [{
+        content: _t("<b>Click Edit</b> to start designing your homepage."),
+        trigger: "a[data-action=edit]",
+        position: position,
+    }, {
+        content: "Check that we are in edit mode",
+        trigger: '#oe_snippets.o_loaded',
+        run: () => null, // it's a check
+    }];
 }
 
 /**
@@ -204,7 +223,9 @@ function dragNDrop(snippet, position = "bottom") {
         moveTrigger: '.oe_drop_zone',
         content: _.str.sprintf(_t("Drag the <b>%s</b> building block and drop it at the bottom of the page."), snippet.name),
         position: position,
-        run: "drag_and_drop #wrap",
+        // Normally no main snippet can be dropped in the default footer but
+        // targeting it allows to force "dropping at the end of the page".
+        run: "drag_and_drop #wrapwrap > footer",
     };
 }
 
@@ -275,6 +296,7 @@ return {
     changeOption,
     changePaddingSize,
     clickOnEdit,
+    clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
     clickOnText,

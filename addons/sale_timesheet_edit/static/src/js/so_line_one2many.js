@@ -10,6 +10,7 @@ const SoLineOne2Many = FieldOne2Many.extend({
             ev.data.changes &&
             ev.data.changes.hasOwnProperty('timesheet_ids') &&
             ev.data.changes.timesheet_ids.operation === 'UPDATE' &&
+            ev.data.changes.timesheet_ids.data &&
             ev.data.changes.timesheet_ids.data.hasOwnProperty('so_line')) {
             const line = this.value.data.find(line => {
                 return line.id === ev.data.changes.timesheet_ids.id;

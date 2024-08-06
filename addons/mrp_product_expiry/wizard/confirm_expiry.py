@@ -33,8 +33,12 @@ class ConfirmExpiry(models.TransientModel):
             super(ConfirmExpiry, self)._compute_descriptive_fields()
 
     def confirm_produce(self):
-        return self.production_ids.with_context(skip_expired=True).button_mark_done()
+        ctx = dict(self._context, skip_expired=True)
+        ctx.pop('default_lot_ids')
+        return self.production_ids.with_context(ctx).button_mark_done()
 
     def confirm_workorder(self):
-        return self.workorder_id.with_context(skip_expired=True).record_production()
+        ctx = dict(self._context, skip_expired=True)
+        ctx.pop('default_lot_ids')
+        return self.workorder_id.with_context(ctx).record_production()
 

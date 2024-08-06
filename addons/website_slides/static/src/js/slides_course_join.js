@@ -34,8 +34,8 @@ var CourseJoinWidget = publicWidget.Widget.extend({
         this.channel = options.channel;
         this.isMember = options.isMember;
         this.publicUser = options.publicUser;
-        this.joinMessage = options.joinMessage || _t('Join Course'),
-        this.beforeJoin = options.beforeJoin || Promise.resolve();
+        this.joinMessage = options.joinMessage || _t('Join Course');
+        this.beforeJoin = options.beforeJoin || function () {return Promise.resolve();};
         this.afterJoin = options.afterJoin || function () {document.location.reload();};
     },
 
@@ -123,7 +123,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                     if (signupAllowed) {
                         message = _t('Please <a href="/web/signup?redirect=%s">create an account</a> to join this course');
                     }
-                    self._popoverAlert(self.$el, _.str.sprintf(message, (document.URL)));
+                    self._popoverAlert(self.$el, _.str.sprintf(message, encodeURIComponent(document.URL)));
                 } else if (data.error === 'join_done') {
                     self._popoverAlert(self.$el, _t('You have already joined this channel'));
                 } else {

@@ -14,10 +14,13 @@
 # Tim Siu Lai <tl@roomsfor.hk>, 2020
 # Martin Trigaux, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
-# Noma Yuki, 2020
 # Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2021
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2021
+# Noma Yuki, 2021
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Tatsuki Kanda, 2023
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,8 +28,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2021\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1528,6 +1531,12 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"ロック日を不可逆にします：\n"
+"\n"
+"　*アドバイザには、ユーザよりも厳しい制限を設定することはできません。したがって、全ユーザロック日は請求書ロック日よりも前（または同じ）でなければなりません。\n"
+"　*まだ終了していない期間はロックできません。したがって、すべてのユーザーのロック日は、前月の最終日より前（または同じ）である必要があります。\n"
+"　* 新しい全てのユーザーのロック日は、前の日付より後（または同じ）である必要があります。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -3420,7 +3429,9 @@ msgid ""
 "\n"
 "Create Credit Notes from Helpdesk tickets\n"
 "    "
-msgstr "ヘルプデスクチケットからクレジットノートを作成する"
+msgstr ""
+"\n"
+"ヘルプデスクチケットからクレジットノートを作成する"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -3470,7 +3481,9 @@ msgid ""
 "\n"
 "Create Sales order with timesheets and products from tasks\n"
 "    "
-msgstr "タスクのタイムシートと製品を使用して販売注文を作成する"
+msgstr ""
+"\n"
+"タスクのタイムシートと製品を使用して販売注文を作成する"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey
@@ -3825,7 +3838,9 @@ msgstr ""
 msgid ""
 "\n"
 "Easily access your documents from your employee profile.\n"
-msgstr "従業員のプロファイルからドキュメントに簡単にアクセスできます。"
+msgstr ""
+"\n"
+"従業員のプロファイルからドキュメントに簡単にアクセスできます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports_electronic
@@ -5416,7 +5431,7 @@ msgstr ""
 "リソース管理モジュール。\n"
 "===================\n"
 "\n"
-"リソースとは、スケジューリング可能なもの(タスクの開発者または製造オーダーの作業区)を表します。 このモジュールは、すべてのリソースに関連付けられたリソースカレンダーを管理します。 また、すべてのリソースの枝葉を管理します。"
+"リソースとは、スケジューリング可能なもの(タスクの開発者または製造オーダの作業区)を表します。 このモジュールは、すべてのリソースに関連付けられたリソースカレンダーを管理します。 また、すべてのリソースの枝葉を管理します。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail
@@ -5614,6 +5629,7 @@ msgid ""
 "creation of the Financial Accounting records).\n"
 "    "
 msgstr ""
+"\n"
 "OFX銀行取引明細書をインポートするモジュール。\n"
 "======================================\n"
 "このモジュールを使用すると、マシンで読み取り可能なOFXファイルをインポートできます。\n"
@@ -5637,16 +5653,21 @@ msgid ""
 "Because of the QIF format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
 "QIF銀行取引明細書をインポートするモジュール。\n"
 "======================================\n"
+"\n"
 "このモジュールを使用すると、機械可読QIFファイルを次の場所にインポートできます。 \n"
-"Odoo:それらは解析され、会計\\銀行および現金\\銀行取引明細書に人間が読める形式で保存されます。\n"
+"Odoo:それらは解析され、\n"
+"会計\\銀行および現金\\銀行取引明細書\n"
+"に人間が読める形式で保存されます。\n"
+"\n"
 "\n"
 "重要な注意事項\n"
 "--------------------------------------------- \n"
 "QIF形式の制限により、同じトランザクションが複数回インポートされたり、\n"
 "複数通貨を処理したりしないようにすることはできません。\n"
-"可能な限り、OFXなどのより適切なファイル形式を使用する必要があります。"
+"可能な限り、OFXなどのより適切なファイル形式を使用する必要があります。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_onsip
@@ -8200,7 +8221,7 @@ msgstr ""
 "\n"
 "次の日付を追跡できます：\n"
 "-------------------------------\n"
-"- 人生の終わり\n"
+"- 廃棄\n"
 "- 賞味期限\n"
 "- 除去日\n"
 "- アラート日\n"
@@ -8592,6 +8613,9 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールを使用すると、ユーザーは銀行の仕訳を自分のオンライン銀行口座(サポートされている銀行機関用)にリンク、および銀行取引明細書を定期的かつ自動同期できるようになります。\n"
+"このモジュールは2020年末に追加され、最新のプロバイダと連動するため作られました。以前のaccount_online_syncモジュール上で使用する必要があります。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_sips
@@ -9148,22 +9172,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
-"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">会社アドレス</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">請求アドレス</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">配送アドレス</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'other')]}\">その他アドレス</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'private')]}\">個人アドレス</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', False)]}\">アドレス</b>\n"
-"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -9494,6 +9510,78 @@ msgid ""
 "\n"
 ".. figure:: static/description/invoice_custom_xml.png\n"
 msgstr ""
+"==========================================\n"
+"Odooメキシコローカライゼーション 在庫/陸揚用\n"
+"==========================================\n"
+"\n"
+"このモジュールは、メキシコ・ローカライゼーションの機能を拡張し、\n"
+"電子請求書を作成する際に、陸揚原価に関連する通関番号を\n"
+"サポートします。\n"
+"\n"
+"使用\n"
+"=====\n"
+"\n"
+"このモジュールを使用するには以下が必要です:\n"
+"\n"
+"* 海外からのプロダクトの新規購買オーダを生成します。陸揚原価は\n"
+"'先入先出法'原価計算方法の'自動'評価で設定されたプロダクト\n"
+"に対してのみ可能です。原価計算方法は\n"
+"プロダクトカテゴリで設定します。\n"
+"\n"
+".. figure:: static/description/purchase_order_new.png\n"
+"\n"
+"* 購買オーダのプロダクトを受け取ります。\n"
+"\n"
+".. figure:: static/description/picking_done_purchase.png\n"
+"\n"
+"* 在庫 -> 在庫コントロール -> 陸揚原価に行きます。\n"
+"\n"
+"* 購買オーダのピッキングと通関情報の数字(pedimento)を示す新しい陸揚原価を作成します。陸揚原価は\n"
+" 実勢価格原価計算法を用いてリアルタイム評価で設定されたプロダクトに対してのみ可能です。 原価計算法はプロダクトカテゴリ\n"
+"で設定されます。\n"
+"\n"
+".. figure:: static/description/landed_cost_picking.png\n"
+"\n"
+"* Start by creating specific products to indicate your various Landed\n"
+"  Costs, such as freight, insurance or custom duties.\n"
+"\n"
+"  Go to Inventory -> Configuration -> Landed Cost types. Landed costs are\n"
+"  only possible for products configured in real time valuation with real\n"
+"  price costing method. The costing method is configured on the product\n"
+"  category.\n"
+"\n"
+".. figure:: static/description/product_landed_cost.png\n"
+"\n"
+"* Click the Compute button to see how the landed costs will be split across\n"
+"  the picking lines.\n"
+"\n"
+".. figure:: static/description/compute_landed_cost.png\n"
+"\n"
+"* To confirm the landed costs attribution, click on the Validate button.\n"
+"\n"
+".. figure:: static/description/validate_landed_cost.png\n"
+"\n"
+"* Create a sales order for the product purchased from abroad\n"
+"\n"
+".. figure:: static/description/sale_order_new.png\n"
+"\n"
+"* Delivery the product related to the sales order\n"
+"\n"
+".. figure:: static/description/picking_done_sale.png\n"
+"\n"
+"* Create and validate a new invoice associated with the sales order\n"
+"\n"
+".. figure:: static/description/validate_invoice_customs.png\n"
+"\n"
+"* The customs information is found in the lines of the invoice associated\n"
+"  with each product.\n"
+"\n"
+".. figure:: static/description/invoice_custom_pedimento.png\n"
+"\n"
+"* Check the electronic invoice associated with the product where the node\n"
+"  of the customs information is displayed\n"
+"\n"
+".. figure:: static/description/invoice_custom_xml.png\n"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -9722,7 +9810,7 @@ msgstr "アクセス"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__model_access
 msgid "Access Controls"
-msgstr "アクセスコントロール"
+msgstr "アクセス管理"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -10397,6 +10485,71 @@ msgid ""
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
 msgstr ""
+"LDAPサーバによる認証のサポートを追加。===============================================\n"
+"このモジュールはユーザがLDAPユーザ名とパスワードでログインすることを許可し\n"
+"その場で自動的にOdooユーザを作成します。\n"
+"\n"
+"**メモ:** このモジュールは Python's ``python-ldap``モジュールがインストールされている場合にのみ機能します。\n"
+"\n"
+"設定:\n"
+"--------------\n"
+"このモジュールをインストールした後、一般設定メニューでLDAPパラメータを\n"
+"設定する必要があります。異なる会社は、一意のユーザ名を持っている限り、異なる\n"
+"LDAPサーバを持つことが可能です。 (ユーザ名はたとえ複数の会社にまたがっていても、\n"
+"Odoo内で一意である必要があります)\n"
+"\n"
+"Anonymous LDAP binding is also supported (for LDAP servers that allow it), by\n"
+"simply keeping the LDAP user and password empty in the LDAP configuration.\n"
+"This does not allow anonymous authentication for users, it is only for the master\n"
+"LDAP account that is used to verify if a user exists before attempting to\n"
+"authenticate it.\n"
+"\n"
+"Securing the connection with STARTTLS is available for LDAP servers supporting\n"
+"it, by enabling the TLS option in the LDAP configuration.\n"
+"\n"
+"For further options configuring the LDAP settings, refer to the ldap.conf\n"
+"manpage: manpage:`ldap.conf(5)`.\n"
+"\n"
+"Security Considerations:\n"
+"------------------------\n"
+"Users' LDAP passwords are never stored in the Odoo database, the LDAP server\n"
+"is queried whenever a user needs to be authenticated. No duplication of the\n"
+"password occurs, and passwords are managed in one place only.\n"
+"\n"
+"Odoo does not manage password changes in the LDAP, so any change of password\n"
+"should be conducted by other means in the LDAP directory directly (for LDAP users).\n"
+"\n"
+"It is also possible to have local Odoo users in the database along with\n"
+"LDAP-authenticated users (the Administrator account is one obvious example).\n"
+"\n"
+"Here is how it works:\n"
+"---------------------\n"
+"    * The system first attempts to authenticate users against the local Odoo\n"
+"      database;\n"
+"    * if this authentication fails (for example because the user has no local\n"
+"      password), the system then attempts to authenticate against LDAP;\n"
+"\n"
+"As LDAP users have blank passwords by default in the local Odoo database\n"
+"(which means no access), the first step always fails and the LDAP server is\n"
+"queried to do the authentication.\n"
+"\n"
+"Enabling STARTTLS ensures that the authentication query to the LDAP server is\n"
+"encrypted.\n"
+"\n"
+"User Template:\n"
+"--------------\n"
+"In the LDAP configuration on the General Settings, it is possible to select a *User\n"
+"Template*. If set, this user will be used as template to create the local users\n"
+"whenever someone authenticates for the first time via LDAP authentication. This\n"
+"allows pre-setting the default groups and menus of the first-time users.\n"
+"\n"
+"**Warning:** if you set a password for the user template, this password will be\n"
+"         assigned as local password for each new LDAP user, effectively setting\n"
+"         a *master password* for these users (until manually changed). You\n"
+"         usually do not want this. One easy way to setup a template user is to\n"
+"         login once with a valid LDAP user, let Odoo create a blank local\n"
+"         user with the same login (and a blank password), then rename this new\n"
+"         user to a username that does not exist in LDAP, and setup its groups\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -12737,6 +12890,12 @@ msgid "Compute"
 msgstr "集計"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "計算メソッドはフィールド 'id' に依存できません。"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
 msgid "Compute scores and assign leads automatically"
 msgstr "スコアを計算し、リードを自動的に割り当てます"
@@ -14663,7 +14822,7 @@ msgstr "ドロップダウンメニュー"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_dropshipping
 msgid "Dropship and Subcontracting Management"
-msgstr "ドロップシップおよび下請け管理"
+msgstr "直送および外注管理"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -14849,6 +15008,45 @@ msgid ""
 "* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
 "* Luis Torres <luis_t@vauxoo.com> (Developer)\n"
 msgstr ""
+"メキシコ用電子会計と財務レポート\n"
+"===================================================\n"
+"\n"
+"メキシコ電子請求に会計レポートを追加\n"
+"\n"
+"- COA\n"
+"- 残高試算表\n"
+"- 仕訳帳項目\n"
+"\n"
+"DIOTのような他の業務レポートを追加\n"
+"\n"
+"- DIOT\n"
+"\n"
+"既知の機能漏れ:\n"
+"\n"
+"- 宣言された文書の履歴を利用できるように生成されたxmlを保存。\n"
+"-このモジュールのカバレッジを高め、将来的なリグレッションを回避するためのユニットテスト。\n"
+"\n"
+"メモ:\n"
+"------\n"
+"\n"
+"  - In the taxes could be set the account `Base Tax Received Account` that is the\n"
+"    account that will be set on lines created in cash basis journal entry and\n"
+"    used to keep track of the tax base amount, this account is not considered in\n"
+"    the Mexican reports.\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"To configure this module, it is strongly recommended your chart of account depends of the l10n_mx data and structure,\n"
+"you can set this afterwards if you CoA do not depends of what l10n_mx does, but you will need extra manual work.\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"**Contributors**\n"
+"\n"
+"* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
+"* Luis Torres <luis_t@vauxoo.com> (Developer)\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_edi
@@ -15055,6 +15253,18 @@ msgstr "エラー"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "制約に違反するとエラーメッセージが返されます。"
+
+#. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+"ビューの解析中のエラー:\n"
+"\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -16183,7 +16393,7 @@ msgstr "金曜"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_from
 msgid "From"
-msgstr "移動元"
+msgstr "From"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
@@ -18015,6 +18225,18 @@ msgid "Invalid 'group by' parameter"
 msgstr "無効な グループ化 パラメーター"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr "xpath %r の解析中に無効な式が発生しました。"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "デフォルト値フィールド内での無効なJSONフォーマット"
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -18082,6 +18304,12 @@ msgstr "無効なキー:QWebビューにはキーが必要です"
 #, python-format
 msgid "Invalid model name %r in action definition."
 msgstr "無効なモデル名 %r がアクションの定義にあります。"
+
+#. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr "多対多フィールドは参照によって評価できません。"
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -18455,8 +18683,8 @@ msgstr "LGPL Version 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT-会計レポート"
+msgid "Lithuania - Accounting Reports"
+msgstr "リトアニア - 会計レポート"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -19246,7 +19474,7 @@ msgstr "IoTによる品質管理のためのMRP機能"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_stock
 msgid "MTO Sale <-> Purchase"
-msgstr "MTOセール&lt;-&gt;購入"
+msgstr "MTO販売 <-> 購買"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -23651,7 +23879,7 @@ msgstr "プロダクトEメールテンプレート"
 #: model:ir.module.category,name:base.module_category_manufacturing_product_lifecycle_management_(plm)
 #: model:ir.module.module,shortdesc:base.module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
-msgstr "プロダクトライフサイクル管理(PLM)"
+msgstr "プロダクトライフサイクルマネジメント (PLM)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_matrix
@@ -23989,7 +24217,7 @@ msgstr "購買依頼在庫"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
-msgstr "株式を購入する"
+msgstr "在庫購買管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_stock_enterprise
@@ -24280,7 +24508,7 @@ msgstr "読出権限"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
-msgstr "読出のみ"
+msgstr "読み取り専用"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_4
@@ -24903,7 +25131,7 @@ msgstr "SMTPサーバ"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase_stock
 msgid "SO/PO relation in case of MTO"
-msgstr "MTOの場合のSO /PO関係"
+msgstr "MTOの場合の販売オーダ/購買オーダの関係"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__order
@@ -25493,6 +25721,14 @@ msgstr "Fedexを介して配送を送信し、オンラインで追跡します"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr "UPSを介して出荷を送信し、オンラインで追跡します"
 
@@ -26577,7 +26813,7 @@ msgstr "タスクログ"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "税ID"
+msgstr "事業者登録番号"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -26839,8 +27075,8 @@ msgstr "その `%s` モジュールは現時点では利用できないようで
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "'base'モジュールはアンインストールできません"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "これらのモジュールはアンインストールできません:%s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -27011,7 +27247,7 @@ msgstr "この連絡先を担当する内部ユーザー。"
 #: code:addons/base/models/res_country.py:106
 #, python-format
 msgid "The layout contains an invalid format key"
-msgstr ""
+msgstr "レイアウトは無効なフォーマットキーを含んでいます。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
@@ -27719,7 +27955,7 @@ msgstr "タイトル"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_to
 msgid "To"
-msgstr "移動先"
+msgstr "To"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_todo__state__open
@@ -28149,6 +28385,11 @@ msgstr "UNSPSC 製品コード"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr "UPS配送 (レガシー)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "UPS輸送"
 
@@ -28299,7 +28540,7 @@ msgstr "モジュールをアンインストール"
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_dependency__state__uninstallable
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_exclusion__state__uninstallable
 msgid "Uninstallable"
-msgstr "インストール不能"
+msgstr "インストール不可能"
 
 #. module: base
 #: model:res.country,name:base.ae
@@ -29639,8 +29880,8 @@ msgstr "スーパーユーザーをアクティブ化することはできませ
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "ユーザに紐つける連絡先をアーカイブすることはできません。"
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -29667,14 +29908,20 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "現在ログインしているユーザを無効にすることはできません。"
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr "%sレコードを削除することはできません。"
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
 "You cannot delete the language which is Active!\n"
 "Please de-activate the language first."
 msgstr ""
-"あなたは、アクティブである言語を削除することはできません！\n"
-"まず、その言語を非アクティブにしてください。"
+"有効な言語を削除することはできません！\n"
+"先にその言語を無効にして下さい。"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -29687,6 +29934,12 @@ msgstr "ユーザーの優先言語である言語を削除することはでき
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "連絡先を親の1つにマージすることはできません。"
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr "キー%sで設定パラメータの名前を変更することはできません。"
 
 #. module: base
 #: code:addons/models.py:0
@@ -29864,7 +30117,7 @@ msgstr "バイナリ"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
 msgid "boolean"
-msgstr "ブーリアン"
+msgstr "ブール値"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
@@ -30096,7 +30349,7 @@ msgstr "mail_bot_hr"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
-msgstr "多2多"
+msgstr "多対多"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one
@@ -30366,3 +30619,9 @@ msgstr "はい"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "オーランド諸島"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
+msgstr ""

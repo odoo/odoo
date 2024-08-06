@@ -207,6 +207,8 @@ class TestPoSStock(TestPoSCommon):
         Test order via POS a product having stock owner.
         """
 
+        group_owner = self.env.ref('stock.group_tracking_owner')
+        self.env.user.write({'groups_id': [(4, group_owner.id)]})
         self.product4 = self.create_product('Product 3', self.categ_basic, 30.0, 15.0)
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory adjustment'
@@ -245,3 +247,30 @@ class TestPoSStock(TestPoSCommon):
 
         # close the session
         self.pos_session.action_pos_session_validate()
+
+    def test_04_order_refund(self):
+        self.categ4 = self.env['product.category'].create({
+            'name': 'Category 4',
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time',
+        })
+        self.product4 = self.create_product('Product 4', self.categ4, 30.0, 15.0)
+
+        self.open_new_session()
+        orders = []
+        orders.append(self.create_ui_order_data([(self.product4, 1)]))
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        refund_action = self.env['pos.order'].browse(order[0]['id']).refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.cash_pm.id,
+        })
+        refund_payment.with_context(**payment_context).check()
+
+        self.pos_session.action_pos_session_validate()
+        expense_account_move_line = self.env['account.move.line'].search([('account_id', '=', self.expense_account.id)])
+        self.assertEqual(expense_account_move_line.balance, 0.0, "Expense account should be 0.0")

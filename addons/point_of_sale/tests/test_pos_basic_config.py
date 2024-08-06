@@ -294,6 +294,34 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertTrue(invoice_receivable_line.reconciled)
         self.assertTrue(receivable_line.reconciled)
 
+    def test_return_order_invoiced(self):
+        self.open_new_session()
+
+        # create order
+        orders = [
+            self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_pm, 100)], customer=self.customer,
+                                      is_invoiced=True, uid='666-666-666')]
+        self.env['pos.order'].create_from_ui(orders)
+        order = self.pos_session.order_ids.filtered(lambda order: '666-666-666' in order.pos_reference)
+
+        # refund
+        order.refund()
+        refund_order = self.pos_session.order_ids.filtered(lambda order: order.state == 'draft')
+
+        # pay the refund
+        context_make_payment = {"active_ids": [refund_order.id], "active_id": refund_order.id}
+        make_payment = self.env['pos.make.payment'].with_context(context_make_payment).create({
+            'payment_method_id': self.cash_pm.id,
+            'amount': -100,
+        })
+        make_payment.check()
+
+        # invoice refund
+        refund_order.action_pos_order_invoice()
+
+        # close the session -- just verify, that there are no errors
+        self.pos_session.action_pos_session_validate()
+
     def test_return_order(self):
         """ Test return order
 
@@ -534,3 +562,398 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         rounding_line = session_account_move.line_ids.filtered(lambda line: line.name == 'Rounding line')
         self.assertAlmostEqual(rounding_line.credit, 0.03, msg='The credit should be equals to 0.03')
+
+    def test_correct_partner_on_invoice_receivables(self):
+        self.open_new_session()
+
+        # create orders
+        # each order with total amount of 100.
+        orders = []
+        # from 1st to 8th order: use the same customer (self.customer) but varies with is_invoiced and payment method.
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0001'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0002'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_split_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0003'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_split_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0004'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_pm, 100)], customer=self.customer, uid='00100-010-0005'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.customer, uid='00100-010-0006'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_split_pm, 100)], customer=self.customer, uid='00100-010-0007'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_split_pm, 100)], customer=self.customer, uid='00100-010-0008'))
+        # 9th and 10th orders for self.other_customer, both invoiced and paid by bank
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.other_customer, is_invoiced=True, uid='00100-010-0009'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.other_customer, is_invoiced=True, uid='00100-010-0010'))
+        # 11th order: invoiced to self.customer with bank payment method
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0011'))
+
+        # sync orders
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        # close the session
+        self.pos_session.action_pos_session_validate()
+
+        # self.customer's bank split payments
+        customer_pos_receivable_bank = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.customer and 'Split (Bank) PM' in line.name)
+        self.assertEqual(len(customer_pos_receivable_bank), 2, msg='there are 2 bank split payments from self.customer')
+        self.assertEqual(bool(customer_pos_receivable_bank.full_reconcile_id), False, msg="the pos (bank) receivable lines shouldn't be reconciled")
+
+        # self.customer's cash split payments
+        customer_pos_receivable_cash = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.customer and 'Split (Cash) PM' in line.name)
+        self.assertEqual(len(customer_pos_receivable_cash), 2, msg='there are 2 cash split payments from self.customer')
+        self.assertEqual(bool(customer_pos_receivable_cash.full_reconcile_id), True, msg="cash pos (cash) receivable lines should be reconciled")
+
+        # self.customer's invoice receivable counterpart
+        customer_invoice_receivable_counterpart = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.customer and 'From invoiced orders' in line.name)
+        self.assertEqual(len(customer_invoice_receivable_counterpart), 1, msg='there should one aggregated invoice receivable counterpart for self.customer')
+        self.assertEqual(bool(customer_invoice_receivable_counterpart.full_reconcile_id), True, msg='the aggregated receivable for self.customer should be reconciled')
+        self.assertEqual(customer_invoice_receivable_counterpart.balance, -500, msg='aggregated balance should be -500')
+
+        # self.other_customer also made invoiced orders
+        # therefore, it should also have aggregated receivable counterpart in the session's account_move
+        other_customer_invoice_receivable_counterpart = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.other_customer and 'From invoiced orders' in line.name)
+        self.assertEqual(len(other_customer_invoice_receivable_counterpart), 1, msg='there should one aggregated invoice receivable counterpart for self.other_customer')
+        self.assertEqual(bool(other_customer_invoice_receivable_counterpart.full_reconcile_id), True, msg='the aggregated receivable for self.other_customer should be reconciled')
+        self.assertEqual(other_customer_invoice_receivable_counterpart.balance, -200, msg='aggregated balance should be -200')
+
+    def test_cash_register_if_no_order(self):
+        # Process one order with product3
+        self.open_new_session()
+        session = self.pos_session
+        orders = []
+        order_data = self.create_ui_order_data([(self.product3, 1)])
+        amount_paid = order_data['data']['amount_paid']
+        self.env['pos.order'].create_from_ui([order_data])
+        session.action_pos_session_closing_control()
+
+        cash_register = session.cash_register_id
+        self.assertEqual(cash_register.balance_start, 0)
+        self.assertEqual(cash_register.balance_end_real, amount_paid)
+
+        # Open/Close session without any order
+        self.open_new_session()
+        session = self.pos_session
+        session.action_pos_session_closing_control()
+        cash_register = session.cash_register_id
+        self.assertEqual(cash_register.balance_start, amount_paid)
+        self.assertEqual(cash_register.balance_end_real, amount_paid)
+        self.assertEqual(self.config.last_session_closing_cash, amount_paid)
+
+        # Open/Close session with cash control and without any order
+        self.config.cash_control = True
+        self.open_new_session()
+        session = self.pos_session
+        session.set_cashbox_pos(amount_paid, False)
+        session.action_pos_session_closing_control()
+        self.env['account.bank.statement.cashbox'].create([{
+            'start_bank_stmt_ids': [],
+            'end_bank_stmt_ids': [(4, session.cash_register_id.id,)],
+            'cashbox_lines_ids': [(0, 0, {'number': 1, 'coin_value': amount_paid})],
+            'is_a_template': False
+        }])
+        session.action_pos_session_validate()
+        self.assertEqual(cash_register.balance_start, amount_paid)
+        self.assertEqual(cash_register.balance_end_real, amount_paid)
+        self.assertEqual(self.config.last_session_closing_cash, amount_paid)
+
+    def test_start_balance_with_two_pos(self):
+        """ When having several POS with cash control, this tests ensures that each POS has its correct opening amount """
+
+        def open_and_check(pos_data):
+            self.config = pos_data['config']
+            self.open_new_session()
+            session = self.pos_session
+            self.assertEqual(session.cash_register_id.balance_start, pos_data['amount_paid'])
+            session.set_cashbox_pos(pos_data['amount_paid'], False)
+
+        self.config.cash_control = True
+        pos01_config = self.config
+        pos02_config = pos01_config.copy()
+        pos01_data = {'config': pos01_config, 'p_qty': 1, 'amount_paid': 0}
+        pos02_data = {'config': pos02_config, 'p_qty': 3, 'amount_paid': 0}
+
+        for pos_data in [pos01_data, pos02_data]:
+            open_and_check(pos_data)
+            session = self.pos_session
+
+            order_data = self.create_ui_order_data([(self.product3, pos_data['p_qty'])])
+            pos_data['amount_paid'] += order_data['data']['amount_paid']
+            self.env['pos.order'].create_from_ui([order_data])
+
+            session.action_pos_session_closing_control()
+            self.env['account.bank.statement.cashbox'].create([{
+                'start_bank_stmt_ids': [],
+                'end_bank_stmt_ids': [(4, session.cash_register_id.id,)],
+                'cashbox_lines_ids': [(0, 0, {'number': 1, 'coin_value': pos_data['amount_paid']})],
+                'is_a_template': False
+            }])
+            session.action_pos_session_validate()
+
+        open_and_check(pos01_data)
+        open_and_check(pos02_data)
+
+    def test_refund_customer_reconcile(self):
+        """ Test return invoiced order
+
+                2 orders
+                - 2nd order is returned
+
+                Orders
+                ======
+                +------------------+----------+-----------+----------+-----+-------+
+                | order            | payments | invoiced? | product  | qty | total |
+                +------------------+----------+-----------+----------+-----+-------+
+                | order 1          | bank     | yes       | product1 |   3 |    30 |
+                |                  |          |           | product2 |   2 |    40 |
+                |                  |          |           | product3 |   1 |    30 |
+                +------------------+----------+-----------+----------+-----+-------+
+                | order 2          | bank     | yes       | product1 |   3 |    30 |
+                |                  |          |           | product2 |   2 |    40 |
+                |                  |          |           | product3 |   1 |    30 |
+                +------------------+----------+-----------+----------+-----+-------+
+                | order 3 (return) | bank     | yes       | product1 |  -3 |   -30 |
+                |                  |          |           | product2 |  -2 |   -40 |
+                |                  |          |           | product3 |  -1 |   -30 |
+                +------------------+----------+-----------+----------+-----+-------+
+
+                Expected Result
+                ===============
+                +---------------------+---------+
+                | account             | balance |
+                +---------------------+---------+
+                | receivable          |    -100 |
+                | pos receivable bank |     100 |
+                +---------------------+---------+
+                | Total balance       |     0.0 |
+                +---------------------+---------+
+                """
+        start_qty_available = {
+            self.product1: self.product1.qty_available,
+            self.product2: self.product2.qty_available,
+            self.product3: self.product3.qty_available,
+        }
+
+        self.open_new_session()
+
+        # create orders
+        orders = []
+        orders.append(self.create_ui_order_data(
+            [(self.product1, 3), (self.product2, 2), (self.product3, 1)],
+            payments=[(self.bank_pm, 100)],
+            is_invoiced=True,
+            uid='12346-123-1234',
+            customer=self.customer
+        ))
+        orders.append(self.create_ui_order_data(
+            [(self.product1, 3), (self.product2, 2), (self.product3, 1)],
+            payments=[(self.bank_pm, 100)],
+            uid='12345-123-1234',
+            is_invoiced=True,
+            customer=self.customer
+        ))
+
+        # sync orders
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        # check values before closing the session
+        self.assertEqual(2, self.pos_session.order_count)
+        orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
+        self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount,
+                               msg='Total order amount should be equal to the total payment amount.')
+
+        # return order
+        order_to_return = self.pos_session.order_ids.filtered(
+            lambda order: '12345-123-1234' in order.pos_reference)
+        order_to_return.refund()
+        refund_order = self.pos_session.order_ids.filtered(
+            lambda order: order.state == 'draft')
+
+        # check if amount to pay
+        self.assertAlmostEqual(refund_order.amount_total - refund_order.amount_paid,
+                               -100)
+
+        # pay the refund
+        context_make_payment = {"active_ids": [refund_order.id],
+                                "active_id": refund_order.id}
+        make_payment = self.env['pos.make.payment'].with_context(
+            context_make_payment).create({
+            'payment_method_id': self.bank_pm.id,
+            'amount': -100,
+        })
+        make_payment.check()
+        self.assertEqual(refund_order.state, 'paid',
+                         'Payment is registered, order should be paid.')
+        self.assertAlmostEqual(refund_order.amount_paid, -100.0,
+                               msg='Amount paid for return order should be negative.')
+        refund_order.action_pos_order_invoice()
+        self.assertTrue(refund_order.account_move)
+        # check product qty_available after syncing the order
+        self.assertEqual(
+            self.product1.qty_available + 3,
+            start_qty_available[self.product1],
+        )
+        self.assertEqual(
+            self.product2.qty_available + 2,
+            start_qty_available[self.product2],
+        )
+        self.assertEqual(
+            self.product3.qty_available + 1,
+            start_qty_available[self.product3],
+        )
+
+        # picking and stock moves should be in done state
+        # no exception of return orders
+        for order in self.pos_session.order_ids:
+            self.assertEqual(
+                order.picking_ids[0].state,
+                'done',
+                'Picking should be in done state.'
+            )
+            move_lines = order.picking_ids[0].move_lines
+            self.assertEqual(
+                move_lines.mapped('state'),
+                ['done'] * len(move_lines),
+                'Move Lines should be in done state.'
+            )
+
+        # close the session
+        self.pos_session.action_pos_session_validate()
+
+        # check values after the session is closed
+        session_move = self.pos_session.move_id
+
+        sale_lines = session_move.line_ids.filtered(
+            lambda line: line.account_id == self.sale_account)
+        self.assertEqual(len(sale_lines), 0,
+                         msg='There should be no lines as all is invoiced.')
+        self.assertEqual(
+            sum(session_move.line_ids.filtered(
+                lambda line: line.partner_id == self.customer
+            ).mapped("balance")),
+            -100
+        )
+        receivable_line_bank = session_move.line_ids.filtered(
+            lambda line: self.bank_pm.name in line.name)
+        self.assertAlmostEqual(receivable_line_bank.balance, 100.0)
+        for order in self.pos_session.order_ids:
+            self.assertEqual(0, order.account_move.amount_residual)
+
+    def test_multiple_customers_reconcile(self):
+        """ Test return invoiced order from another customer
+
+                2 actions
+                - 1st order from one customer
+                - 2nd order is a refund from another customer
+
+                Orders
+                ======
+                +------------------+----------+-----------+----------+-----+-------+
+                | order            | payments | invoiced? | product  | qty | total |
+                +------------------+----------+-----------+----------+-----+-------+
+                | order 1          | bank     | yes       | product1 |   3 |    30 |
+                |                  |          | customer  | product2 |   2 |    40 |
+                |                  |          |           | product3 |   1 |    30 |
+                +------------------+----------+-----------+----------+-----+-------+
+                | order 2 (return) | bank     | yes       | product1 |  -3 |   -30 |
+                |                  |          | other     | product2 |  -2 |   -40 |
+                |                  |          | customer  | product3 |  -1 |   -30 |
+                +------------------+----------+-----------+----------+-----+-------+
+
+                Expected Result
+                ===============
+                +---------------------------+---------+
+                | account                   | balance |
+                +---------------------------+---------+
+                | receivable customer       |    -100 |
+                | receivable other customer |     100 |
+                | pos receivable bank       |       0 |
+                +---------------------------+---------+
+                | Total balance             |     0.0 |
+                +---------------------------+---------+
+                """
+        start_qty_available = {
+            self.product1: self.product1.qty_available,
+            self.product2: self.product2.qty_available,
+            self.product3: self.product3.qty_available,
+        }
+
+        self.open_new_session()
+
+        # create orders
+        orders = []
+        orders.append(self.create_ui_order_data(
+            [(self.product1, 3), (self.product2, 2), (self.product3, 1)],
+            payments=[(self.bank_pm, 100)],
+            is_invoiced=True,
+            uid='12346-123-1234',
+            customer=self.customer
+        ))
+        orders.append(self.create_ui_order_data(
+            [(self.product1, -3), (self.product2, -2), (self.product3, -1)],
+            payments=[(self.bank_pm, -100)],
+            uid='12345-123-1234',
+            is_invoiced=True,
+            customer=self.other_customer
+        ))
+
+        # sync orders
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        # check values before closing the session
+        self.assertEqual(2, self.pos_session.order_count)
+        orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
+        self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount,
+                               msg='Total order amount should be equal to the total payment amount.')
+        self.assertEqual(
+            self.product1.qty_available,
+            start_qty_available[self.product1],
+        )
+        self.assertEqual(
+            self.product2.qty_available,
+            start_qty_available[self.product2],
+        )
+        self.assertEqual(
+            self.product3.qty_available,
+            start_qty_available[self.product3],
+        )
+
+        # picking and stock moves should be in done state
+        # no exception of return orders
+        for order in self.pos_session.order_ids:
+            self.assertEqual(
+                order.picking_ids[0].state,
+                'done',
+                'Picking should be in done state.'
+            )
+            move_lines = order.picking_ids[0].move_lines
+            self.assertEqual(
+                move_lines.mapped('state'),
+                ['done'] * len(move_lines),
+                'Move Lines should be in done state.'
+            )
+
+        # close the session
+        self.pos_session.action_pos_session_validate()
+
+        # check values after the session is closed
+        session_move = self.pos_session.move_id
+
+        sale_lines = session_move.line_ids.filtered(
+            lambda line: line.account_id == self.sale_account)
+        self.assertEqual(len(sale_lines), 0,
+                         msg='There should be no lines as all is invoiced.')
+
+        self.assertEqual(
+            session_move.line_ids.filtered(
+                lambda line: line.partner_id == self.customer
+            ).balance,
+            -100
+        )
+        self.assertEqual(
+            session_move.line_ids.filtered(
+                lambda line: line.partner_id == self.other_customer
+            ).balance,
+            100
+        )
+        receivable_line_bank = session_move.line_ids.filtered(
+            lambda line: self.bank_pm.name in line.name)
+        self.assertAlmostEqual(receivable_line_bank.balance, 0.0)
+        for order in self.pos_session.order_ids:
+            self.assertEqual(0, order.account_move.amount_residual)

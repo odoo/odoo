@@ -76,7 +76,7 @@ class SaleOrder(models.Model):
         for order in self:
             pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
             dates_list = [date for date in pickings.mapped('date_done') if date]
-            order.effective_date = min(dates_list).date() if dates_list else False
+            order.effective_date = fields.Date.context_today(order, min(dates_list)) if dates_list else False
 
     @api.depends('picking_policy')
     def _compute_expected_date(self):
@@ -119,10 +119,13 @@ class SaleOrder(models.Model):
 
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for order in self:
                 to_log = {}
                 for order_line in order.order_line:
-                    if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), order_line.product_uom.rounding) < 0:
+                    if order_line.display_type:
+                        continue
+                    if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), precision_rounding=order_line.product_uom.rounding or rounding) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
@@ -162,7 +165,8 @@ class SaleOrder(models.Model):
     @api.onchange('user_id')
     def onchange_user_id(self):
         super().onchange_user_id()
-        self.warehouse_id = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
+        if self.state in ['draft','sent']:
+            self.warehouse_id = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
 
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):
@@ -206,7 +210,7 @@ class SaleOrder(models.Model):
         action['context'] = dict(self._context, default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
         return action
 
-    def action_cancel(self):
+    def _action_cancel(self):
         documents = None
         for sale_order in self:
             if sale_order.state == 'sale' and sale_order.order_line:
@@ -221,7 +225,7 @@ class SaleOrder(models.Model):
                         continue
                 filtered_documents[(parent, responsible)] = rendering_context
             self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
-        return super(SaleOrder, self).action_cancel()
+        return super()._action_cancel()
 
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
@@ -437,6 +441,14 @@ class SaleOrderLine(models.Model):
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
+        def check_moves_state(moves):
+            # All moves states are either 'done' or 'cancel', and there is at least one 'done'
+            at_least_one_done = False
+            for move in moves:
+                if move.state not in ['done', 'cancel']:
+                    return False
+                at_least_one_done = at_least_one_done or move.state == 'done'
+            return at_least_one_done
         super(SaleOrderLine, self)._compute_invoice_status()
         for line in self:
             # We handle the following specific situation: a physical product is partially delivered,
@@ -448,7 +460,7 @@ class SaleOrderLine(models.Model):
                     and line.product_id.type in ['consu', 'product']\
                     and line.product_id.invoice_policy == 'delivery'\
                     and line.move_ids \
-                    and all(move.state in ['done', 'cancel'] for move in line.move_ids):
+                    and check_moves_state(line.move_ids):
                 line.invoice_status = 'invoiced'
 
     @api.depends('move_ids')
@@ -487,6 +499,8 @@ class SaleOrderLine(models.Model):
                 'message' : _('You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed.'),
             }
             return {'warning': warning_mess}
+        if self.product_packaging:
+            return self._check_package()
         return {}
 
     def _prepare_procurement_values(self, group_id=False):
@@ -507,8 +521,9 @@ class SaleOrderLine(models.Model):
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
-            'product_description_variants': self._get_sale_order_line_multiline_description_variants(),
+            'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
+            'sequence': self.sequence,
         })
         return values
 
@@ -586,7 +601,7 @@ class SaleOrderLine(models.Model):
             procurements.append(self.env['procurement.group'].Procurement(
                 line.product_id, product_qty, procurement_uom,
                 line.order_id.partner_shipping_id.property_stock_customer,
-                line.name, line.order_id.name, line.order_id.company_id, values))
+                line.product_id.display_name, line.order_id.name, line.order_id.company_id, values))
         if procurements:
             self.env['procurement.group'].run(procurements)
         return True

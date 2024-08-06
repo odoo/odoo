@@ -259,20 +259,27 @@ class StockWarehouse(models.Model):
         data = super(StockWarehouse, self)._get_picking_type_update_values()
         data.update({
             'pbm_type_id': {
-                'active': self.manufacture_to_resupply and self.manufacture_steps in ('pbm', 'pbm_sam'),
+                'active': self.manufacture_to_resupply and self.manufacture_steps in ('pbm', 'pbm_sam') and self.active,
                 'barcode': self.code.replace(" ", "").upper() + "-PC",
             },
             'sam_type_id': {
-                'active': self.manufacture_to_resupply and self.manufacture_steps == 'pbm_sam',
+                'active': self.manufacture_to_resupply and self.manufacture_steps == 'pbm_sam' and self.active,
                 'barcode': self.code.replace(" ", "").upper() + "-SFP",
             },
             'manu_type_id': {
-                'active': self.manufacture_to_resupply,
+                'active': self.manufacture_to_resupply and self.active,
                 'default_location_src_id': self.manufacture_steps in ('pbm', 'pbm_sam') and self.pbm_loc_id.id or self.lot_stock_id.id,
                 'default_location_dest_id': self.manufacture_steps == 'pbm_sam' and self.sam_loc_id.id or self.lot_stock_id.id,
             },
         })
         return data
+
+    def _create_missing_locations(self, vals):
+        super()._create_missing_locations(vals)
+        for company_id in self.company_id:
+            location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', company_id.id)], limit=1)
+            if not location:
+                company_id._create_production_location()
 
     def write(self, vals):
         if any(field in vals for field in ('manufacture_steps', 'manufacture_to_resupply')):

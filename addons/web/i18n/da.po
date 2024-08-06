@@ -14,12 +14,12 @@
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
 # JonathanStein <jstein@image.dk>, 2020
-# Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
-# Mads Søndergaard, 2020
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2021
-# Mads Søndergaard <mads@vkdata.dk>, 2021
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2021
+# Mads Søndergaard, 2022
+# Sanne Kristensen <sanne@vkdata.dk>, 2022
+# Mads Søndergaard, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,8 +27,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
-"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
+"Last-Translator: Mads Søndergaard, 2023\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -326,7 +326,7 @@ msgstr "<span>Beløb</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Description</span>"
-msgstr "<span>Deres ref.</span>"
+msgstr "<span>Beskrivelse</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -720,6 +720,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -985,6 +986,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
@@ -2959,6 +2961,13 @@ msgstr "Kun dig"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools"
+msgstr "Åbn udviklings værktøj"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open Developer Tools#{widget.debug_mode_help}"
 msgstr "Åben Udvikler værktøjer#{widget.debug_mode_help}"
 
@@ -3007,6 +3016,13 @@ msgstr "Åbn op til listevisning"
 #, python-format
 msgid "Open: "
 msgstr "Åbn: "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr "Valgfrie kolonner"
 
 #. module: web
 #. openerp-web
@@ -3135,7 +3151,7 @@ msgstr "Pivot"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Pivot settings"
-msgstr "Dreje indstillinger"
+msgstr "Pivot indstillinger"
 
 #. module: web
 #. openerp-web
@@ -4529,6 +4545,7 @@ msgstr "Vis switcher"
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/action_manager_report.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
+#: code:addons/web/static/src/js/control_panel/favorite_menu.js:0
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
@@ -4641,6 +4658,12 @@ msgstr "Ja"
 #, python-format
 msgid "Yesterday"
 msgstr "I går"
+
+#. module: web
+#: code:addons/web/controllers/main.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "Du kan ikke uploade en vedhæftning her."
 
 #. module: web
 #. openerp-web

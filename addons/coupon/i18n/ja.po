@@ -12,6 +12,9 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # Noma Yuki, 2020
+# Andy Yiu, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +22,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -85,6 +88,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\"> Days</span> <span "
 "class=\"oe_grey\">if 0, infinite use</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\"> 日</span> <span "
+"class=\"oe_grey\">0の時、無制限</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -97,21 +102,23 @@ msgid ""
 "<span> Orders</span>\n"
 "                    <span class=\"oe_grey\"> if 0, infinite use</span>"
 msgstr ""
+"<span> オーダ</span>\n"
+"                    <span class=\"oe_grey\"> 0の時、無制限</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Minimum purchase of</span>"
-msgstr ""
+msgstr "<span>最低購入金額</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Valid for purchase above</span>"
-msgstr ""
+msgstr "<span>以下の金額以上の購入で有効:</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>products</span>"
-msgstr ""
+msgstr "<span>プロダクト</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -263,12 +270,12 @@ msgstr "値引適用"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_current_order
 msgid "Apply On Current Order"
-msgstr ""
+msgstr "現在のオーダに適用"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Apply on First"
-msgstr ""
+msgstr "適用対象(はじめから)"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -280,7 +287,7 @@ msgstr "アーカイブ済"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__no_code_needed
 msgid "Automatically Applied"
-msgstr ""
+msgstr "自動適用"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__promo_code_usage
@@ -298,13 +305,13 @@ msgstr "バーコード"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_partners_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_partners_domain
 msgid "Based on Customers"
-msgstr ""
+msgstr "対象顧客"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_products_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_products_domain
 msgid "Based on Products"
-msgstr ""
+msgstr "対象プロダクト"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
@@ -316,7 +323,7 @@ msgstr ""
 #. module: coupon
 #: model:coupon.program,name:coupon.3_cabinets_plus_1_free
 msgid "Buy 3 large cabinets, get one for free"
-msgstr ""
+msgstr "大型キャビネット3台購入で1台無料"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -337,7 +344,7 @@ msgstr "コード"
 #. module: coupon
 #: model:coupon.program,name:coupon.10_percent_auto_applied
 msgid "Code for 10% on orders"
-msgstr ""
+msgstr "注文の10%割引コード"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__company_id
@@ -358,7 +365,7 @@ msgstr "条件"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Congratulations"
-msgstr ""
+msgstr "おめでとうございます"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_coupon
@@ -373,14 +380,14 @@ msgstr "クーポンコード"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_count
 msgid "Coupon Count"
-msgstr ""
+msgstr "クーポン数"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_program
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__coupon_program
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Coupon Program"
-msgstr ""
+msgstr "クーポンプログラム"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -395,7 +402,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
 msgid "Coupon Programs"
-msgstr ""
+msgstr "クーポンプログラム"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
@@ -438,7 +445,7 @@ msgstr ""
 #: model:ir.cron,cron_name:coupon.expire_coupon_cron
 #: model:ir.cron,name:coupon.expire_coupon_cron
 msgid "Coupon: expire coupon based on date"
-msgstr ""
+msgstr "クーポン：日付に基づいてクーポンを期限切れにする"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_action
@@ -513,7 +520,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_apply_on
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_apply_on
 msgid "Discount Apply On"
-msgstr ""
+msgstr "値引適用対象"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_max_amount
@@ -525,7 +532,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_type
 msgid "Discount Type"
-msgstr ""
+msgstr "値引タイプ"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
@@ -582,26 +589,26 @@ msgstr "固定金額"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__partner_id
 msgid "For Customer"
-msgstr ""
+msgstr "顧客"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_id
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__reward_type__product
 msgid "Free Product"
-msgstr ""
+msgstr "無料プロダクト"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "Free Product - %s"
-msgstr ""
+msgstr "無料プロダクト - %s"
 
 #. module: coupon
 #: model:product.product,name:coupon.product_product_free_large_cabinet
 #: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
 msgid "Free Product - Large Cabinet"
-msgstr ""
+msgstr "無料プロダクト - キャビネット大"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -612,12 +619,12 @@ msgstr "作成"
 #: model:ir.model,name:coupon.model_coupon_generate_wizard
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Generate Coupon"
-msgstr ""
+msgstr "クーポンを生成"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Generate Coupons"
-msgstr ""
+msgstr "クーポンを生成"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
@@ -629,12 +636,12 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_ids
 msgid "Generated Coupons"
-msgstr ""
+msgstr "作成されたクーポン"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__generation_type
 msgid "Generation Type"
-msgstr ""
+msgstr "生成タイプ"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__has_partner_email
@@ -644,7 +651,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Here is your reward from"
-msgstr ""
+msgstr "お客様のリワードです。"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
@@ -694,7 +701,7 @@ msgstr "ロゴ"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Max Discount Amount"
-msgstr ""
+msgstr "最大値引金額"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__maximum_use_number
@@ -715,7 +722,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Minimum Purchase Of"
-msgstr ""
+msgstr "最少購買"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_min_quantity
@@ -756,32 +763,32 @@ msgstr "名称"
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__nbr_coupons
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_coupon
 msgid "Number of Coupons"
-msgstr ""
+msgstr "クーポン数"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_generate_action
 msgid "Number of Coupons To Generate"
-msgstr ""
+msgstr "生成するクーポン数"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_customer
 msgid "Number of Selected Customers"
-msgstr ""
+msgstr "選択された顧客数"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_generate_wizard__nbr_coupons
 msgid "Number of coupons"
-msgstr ""
+msgstr "クーポン数"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__cheapest_product
 msgid "On Cheapest Product"
-msgstr ""
+msgstr "最も安いプロダクト"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__on_order
 msgid "On Order"
-msgstr ""
+msgstr "オーダ"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_apply_on
@@ -801,7 +808,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__specific_products
 msgid "On Specific Products"
-msgstr ""
+msgstr "特定のプロダクト"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__reserved
@@ -824,7 +831,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_coupon__discount_line_product_id
 msgid "Product used in the sales order to apply the discount."
-msgstr ""
+msgstr "値引を適用するために販売オーダで使用されているプロダクト"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_line_product_id
@@ -851,22 +858,22 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__program_id
 msgid "Program"
-msgstr ""
+msgstr "プログラム"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
 msgid "Program Type"
-msgstr ""
+msgstr "プログラムタイプ"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code_usage
 msgid "Promo Code Usage"
-msgstr ""
+msgstr "プロモコード使用"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code
 msgid "Promotion Code"
-msgstr ""
+msgstr "プロモーションコード"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -881,12 +888,12 @@ msgstr ""
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_promo_program
 msgid "Promotion Programs"
-msgstr ""
+msgstr "プロモーションプログラム"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__promotion_program
 msgid "Promotional Program"
-msgstr ""
+msgstr "プロモーションプログラム"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_quantity
@@ -912,7 +919,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_line_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_line_product_id
 msgid "Reward Line Product"
-msgstr ""
+msgstr "報奨明細プロダクト"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_id
@@ -924,7 +931,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr ""
+msgstr "リワードタイプ"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
@@ -967,12 +974,12 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select product"
-msgstr ""
+msgstr "プロダクトを選択"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select products"
-msgstr ""
+msgstr "プロダクトを選択"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -982,7 +989,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
-msgstr ""
+msgstr "クーポンを送付"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
@@ -1025,12 +1032,12 @@ msgstr "税抜"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_included
 msgid "Tax Included"
-msgstr ""
+msgstr "税込"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Thank you,"
-msgstr ""
+msgstr "ありがとうございます。"
 
 #. module: coupon
 #: model:ir.model.constraint,message:coupon.constraint_coupon_coupon_unique_coupon_code
@@ -1078,12 +1085,12 @@ msgstr "個"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed
 msgid "Use a code"
-msgstr ""
+msgstr "コードを使用"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Use this promo code before"
-msgstr ""
+msgstr "このプロモコードの使用期限："
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
@@ -1104,12 +1111,12 @@ msgstr "有効期間"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__validity_duration
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Validity Duration"
-msgstr ""
+msgstr "有効期間"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__validity_duration
 msgid "Validity duration for a coupon after its generation"
-msgstr ""
+msgstr "生成後のクーポン有効期間"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_program.py:0
@@ -1150,4 +1157,4 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "on your next order"
-msgstr ""
+msgstr "次回注文時"

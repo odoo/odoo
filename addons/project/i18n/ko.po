@@ -8,6 +8,8 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2020
 # Linkup <link-up@naver.com>, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
+# Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -244,6 +246,9 @@ msgid ""
 "    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
 "    or # <b>mentions</b> to reach an entire team."
 msgstr ""
+"내부 커뮤니케이션을 위하여 <b>메모를 기록</b>합니다 <i>(이 작업을 팔로우하는 경우에는 특별히 태그를\n"
+"    지정하지 않는 한 메모에 대한 알림을 받지 않습니다)</i>. @로 <b>멘션</b>하여 동료에게 연락하거나\n"
+"    #로 <b>멘션</b>하여 전체 팀에게 전달할 수 있습니다."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -693,7 +698,7 @@ msgstr "이 단계를 삭제 하시겠습니까?"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr ""
+msgstr "조립"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1012,7 +1017,7 @@ msgstr "메일을 보내어 작업 생성"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by sending an email to"
-msgstr ""
+msgstr "다음으로 메일을 발송하여 작업을 생성합니다."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1216,11 +1221,15 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited internal users: employees may only see the followed project and tasks.\n"
-"- All internal users: employees may see all project and tasks.\n"
-"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following."
 msgstr ""
 
 #. module: project
@@ -1624,7 +1633,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Handoff"
-msgstr ""
+msgstr "전달"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1739,7 +1748,7 @@ msgstr "프로젝트의 등급 환경 설정이 '단계 변경 시 평가하기'
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
-msgstr ""
+msgstr "설정하면, 권한이 없는 사용자에게 기본 메시지 대신 이 내용을 전송합니다. "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -2018,7 +2027,7 @@ msgstr "작업을 시작합니다."
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "Let's wait for your customers to manifest themselves."
-msgstr ""
+msgstr "고객이 분명히 의사 표시를 할 때까지 기다려봅니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2121,7 +2130,7 @@ msgstr "메시지"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Mixing"
-msgstr ""
+msgstr "혼합"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__mon
@@ -2197,7 +2206,7 @@ msgstr "중립적인 얼굴"
 #: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "New"
-msgstr "새로운"
+msgstr "신규"
 
 #. module: project
 #. openerp-web
@@ -2384,7 +2393,7 @@ msgstr "확인"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Old Completed Sprint"
-msgstr ""
+msgstr "예전에 완료된 스프린트"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -2525,7 +2534,7 @@ msgstr "삭제할 계정에 연결된 프로젝트에서 기존 작업을 제거
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Podcast and Video Production"
-msgstr ""
+msgstr "팟캐스트 및 동영상 제작"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_contact
@@ -2626,7 +2635,7 @@ msgstr "프로젝트 이름"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr ""
+msgstr "프로젝트 단계 삭제 마법사"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -2719,7 +2728,7 @@ msgstr "게시 됨"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Publishing"
-msgstr ""
+msgstr "게시"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
@@ -2869,7 +2878,7 @@ msgstr "반복"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_update
 msgid "Recurrence Update"
-msgstr ""
+msgstr "반복 갱신"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task
@@ -2881,7 +2890,7 @@ msgstr "반복"
 #: model:ir.model.fields,field_description:project.field_project_task__allow_recurring_tasks
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
 msgid "Recurring Tasks"
-msgstr ""
+msgstr "반복되는 작업"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
@@ -2921,7 +2930,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Repeat On"
-msgstr ""
+msgstr "반복"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_month
@@ -2959,7 +2968,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_unit
 msgid "Repeat Unit"
-msgstr ""
+msgstr "반복되는 단위"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_week
@@ -2971,7 +2980,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_number
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_number
 msgid "Repetitions"
-msgstr ""
+msgstr "바놉ㄱ"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -3248,7 +3257,7 @@ msgstr "단계"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr ""
+msgstr "활성화된 단계"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
@@ -3652,7 +3661,7 @@ msgstr "이 작업"
 msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
-msgstr ""
+msgstr "이렇게 하면 다음의 프로젝트에 해당하는 단계 및 전체 작업이 보관 처리됩니다:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -3815,7 +3824,7 @@ msgstr "작업을 다음과 같이 사용"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Project"
-msgstr ""
+msgstr "내 프로젝트에 사용하기"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
@@ -4011,13 +4020,14 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
+"단계에 프로젝트가 포함되어 있는 경우에는 삭제할 수 없습니다. 프로젝트를 보관 처리하거나 먼저 모든 프로젝트를 삭제하시기 바랍니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
-msgstr ""
+msgstr "단계에 작업이 포함되어 있는 경우에는 삭제할 수 없습니다. 먼저 모든 작업을 삭제하시기 바랍니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -4027,7 +4037,7 @@ msgstr "예 : 사무실 파티"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr ""
+msgstr "예: 오피스 파티"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks

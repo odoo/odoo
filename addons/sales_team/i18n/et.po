@@ -11,9 +11,11 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2020
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Helen Sulaoja <helen@avalah.ee>, 2020
-# Algo Kärp <algokarp@gmail.com>, 2020
 # Piia Paurson <piia@avalah.ee>, 2020
-# atriine <triine@avalah.ee>, 2020
+# Algo Kärp <algokarp@gmail.com>, 2021
+# Triine Aavik <triine@avalah.ee>, 2021
+# Leaanika Randmets, 2022
+# JanaAvalah, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,8 +23,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: atriine <triine@avalah.ee>, 2020\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Last-Translator: JanaAvalah, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -32,7 +34,7 @@ msgstr ""
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -106,13 +108,13 @@ msgstr "Big Pretty Button :)"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "CRM silt"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "Vaikimisi meeskonda \"%s\" ei saa kustutada"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
@@ -196,7 +198,7 @@ msgstr "Töölaua graafilised andmed"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Define a new sales team"
-msgstr ""
+msgstr "Määrake uus müügimeeskond"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor5
@@ -284,6 +286,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
+"Kui see on määratud, kasutatakse seda müügimeeskonda selle partneriga seotud"
+" müügi ja ülesannetele määramiseks."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -291,6 +295,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"Kui aktiivne väli on seatud väärtusele Väär, võimaldab see müügimeeskonna "
+"peita ilma seda eemaldamata."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -398,6 +404,8 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a Sales "
 "Team through the inverse one2many"
 msgstr ""
+"Müügimeeskond, mille alla kasutaja kuulub. Kasutatud Müügimeeskondade "
+"liikmete arvutamiseks pöörd- one2many kaudu."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
@@ -478,7 +486,7 @@ msgstr "Treening"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "Müügimeeskonna määratlemata graafiku mudel: %s"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
@@ -498,6 +506,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Kasutage oma müügiosakondade organiseerimiseks müügimeeskondi.\n"
+"                Iga meeskond töötab eraldi müügitoruga."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
@@ -527,7 +537,7 @@ msgstr "Veebileht"
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
 msgid "eBay"
-msgstr ""
+msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads

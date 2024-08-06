@@ -11,12 +11,12 @@
 # Martin Trigaux, 2020
 # Simone Bernini <simone@aperturelabs.it>, 2020
 # Paolo Valier, 2020
-# Manuela Feliciani <mfeliciani@alice.it>, 2020
+# 8134700ffe6f094973390ef07e124667_c4b4c74 <a062e38b537f13861df3b0ab06eb350c_672863>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Federico Zanuttini <fza@odoo.com>, 2020
 # Fabio Benedetti <benedetti.fabio@gmail.com>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,13 +24,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allocation_type
@@ -43,8 +43,8 @@ msgstr ""
 "\tNessun limite: nessuna assegnazione predefinita, gli utenti posso "
 "richiedere ferie liberamente; \tConsentire richieste dipendenti: assegnate "
 "dalle RU, gli utenti possono richiedere ferie e assegnazioni; \tImpostata da"
-" responsabile ferie: assegnate dalle RU, non possono essere aggirate; gli "
-"utenti possono richiedere ferie;"
+" addetto ferie: assegnate dalle RU, non possono essere aggirate; gli utenti "
+"possono richiedere ferie;"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
@@ -238,13 +238,13 @@ msgstr "23:30"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__0
 msgid "12:00 AM"
-msgstr "12:00"
+msgstr "00:00"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__12
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__12
 msgid "12:00 PM"
-msgstr "00:00"
+msgstr "12:00"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0_5
@@ -516,7 +516,7 @@ msgid ""
 "<span class=\"fa fa-plane text-success\" role=\"img\" aria-label=\"Present but on leave\" title=\"Present but on leave\" name=\"presence_absent_active\">\n"
 "                    </span>"
 msgstr ""
-"<span class=\"fa fa-plane text-success\" role=\"img\" aria-label=\"Present but on leave\" title=\"Presente ma in permesso\" name=\"presence_absent_active\">\n"
+"<span class=\"fa fa-plane text-success\" role=\"img\" aria-label=\"Presente ma in permesso\" title=\"Presente ma in permesso\" name=\"presence_absent_active\">\n"
 "                    </span>"
 
 #. module: hr_holidays
@@ -526,8 +526,8 @@ msgid ""
 "<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"To "
 "define\" title=\"On Leave\"/>"
 msgstr ""
-"<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"To "
-"define\" title=\"In permesso\"/>"
+"<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"Da "
+"definire\" title=\"In permesso\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1121,7 +1121,7 @@ msgstr "Per supervisore dipendente"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Manager and Time Off Officer"
-msgstr "Per supervisore dipendente e responsabile ferie"
+msgstr "Per supervisore dipendente e addetto ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1136,7 +1136,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "Per responsabile ferie"
+msgstr "Per addetto ferie"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1266,7 +1266,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__create_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_state
@@ -1558,19 +1558,19 @@ msgstr "Prima approvazione"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_follower_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_follower_ids
 msgid "Followers"
-msgstr "Chi sta seguendo"
+msgstr "Seguito da"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_channel_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Chi sta seguendo (canali)"
+msgstr "Seguito da (canali)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_partner_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Chi sta seguendo (partner)"
+msgstr "Seguito da (partner)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
@@ -1655,7 +1655,7 @@ msgstr "Mezza giornata"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_report_hr_holidays_report_holidayssummary
 msgid "Holidays Summary Report"
-msgstr "Resoconto di sintesi delle vacanze"
+msgstr "Resoconto di sintesi per festività"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_home_working
@@ -1690,7 +1690,7 @@ msgstr "Ora/e"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__hr_icon_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__hr_icon_display
 msgid "Hr Icon Display"
-msgstr "Icona RU visualizzata"
+msgstr "Visualizzazione icona RU"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__id
@@ -1721,7 +1721,7 @@ msgstr "Icona"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare una eccezione attività."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
@@ -1768,7 +1768,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the time off "
 "type without removing it."
 msgstr ""
-"Se il campo attivo è impostato a Falso, consente di nascondere la tipologia "
+"Se il campo Attivo è impostato a falso, consente di nascondere la tipologia "
 "di ferie senza rimuoverla."
 
 #. module: hr_holidays
@@ -1998,7 +1998,7 @@ msgstr "Scopri la bacheca ferie."
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__meeting_id
 msgid "Meeting"
-msgstr "Appuntamento"
+msgstr "Incontro"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
@@ -2342,8 +2342,8 @@ msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
 msgstr ""
-"Solo un responsabile ferie o un supervisore può approvare o respingere le "
-"richieste."
+"Solo un addetto/responsabile ferie o un supervisore può approvare o "
+"respingere le richieste."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2379,7 +2379,7 @@ msgstr "Aspettativa retribuita"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__parent_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__parent_id
 msgid "Parent"
-msgstr "Padre"
+msgstr "Principale"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
@@ -2452,7 +2452,7 @@ msgstr "Assegnazione normale"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Nome utente collegato per gestire l'accesso alla risorsa."
+msgstr "Nome utente correlato per gestire l'accesso alla risorsa."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
@@ -2607,7 +2607,7 @@ msgstr "Sequenza"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed
 msgid "Set by Time Off Officer"
-msgstr "Impostata da responsabile ferie"
+msgstr "Impostata da addetto ferie"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2777,9 +2777,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 msgid ""
 "This area is automatically filled by the user who validate the time off"
-msgstr ""
-"Questa sezione viene compilata automaticamente dall'utente che valida le "
-"ferie"
+msgstr "Sezione compilata automaticamente dall'utente che valida le ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
@@ -2787,17 +2785,15 @@ msgid ""
 "This area is automatically filled by the user who validate the time off with"
 " second level (If time off type need second validation)"
 msgstr ""
-"Questa sezione viene compilata automaticamente dall'utente che valida le "
-"ferie con secondo livello (se per la tipologia è necessaria una seconda "
-"convalida)"
+"Sezione compilata automaticamente dall'utente che valida le ferie con "
+"secondo livello (se per la tipologia è necessaria una seconda convalida)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__first_approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
 msgstr ""
-"Questa sezione viene compilata automaticamente dall'utente che valida "
-"l'assegnazione"
+"Sezione compilata automaticamente dall'utente che valida l'assegnazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -2805,9 +2801,8 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
-"Questa sezione viene compilata automaticamente dall'utente che valida "
-"l'assegnazione con secondo livello (se per la tipologia è necessaria una "
-"seconda convalida)"
+"Sezione compilata automaticamente dall'utente che valida l'assegnazione con "
+"secondo livello (se per la tipologia è necessaria una seconda convalida)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2837,8 +2832,8 @@ msgid ""
 " and Time Off Officer'"
 msgstr ""
 "Utente responsabile dell'approvazione di questo tipo di ferie. Viene "
-"utilizzato solo se la convalida è \"Per responsabile ferie\" o \"Per "
-"supervisore dipendente e responsabile ferie\""
+"utilizzato solo se la convalida è \"Per addetto ferie\" o \"Per supervisore "
+"dipendente e addetto ferie\""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -2928,8 +2923,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
-"I responsabili assegnano i giorni di ferie ai dipendenti (es. aspettativa retribuita).<br>\n"
-"                I dipendenti avanzano richieste di assegnazione ai responsabili ferie (es. giorni di riposo)."
+"Gli addetti assegnano i giorni di ferie ai dipendenti (es. aspettativa retribuita).<br>\n"
+"                I dipendenti avanzano richieste di assegnazione agli addetti ferie (es. giorni di riposo)."
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
@@ -3121,7 +3116,7 @@ msgstr "Da inviare"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 msgid "To:"
-msgstr "A:"
+msgstr "Al:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3174,7 +3169,7 @@ msgstr "Tipo"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_decoration
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di eccezione attività sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz
@@ -3314,8 +3309,8 @@ msgstr "Grano"
 msgid ""
 "Whether this should be computed as a holiday or as work time (eg: formation)"
 msgstr ""
-"Indica se deve essere calcolato come vacanza o come orario lavorativo (es. "
-"formazione)"
+"Indica se deve essere calcolato come festività o come orario lavorativo (es."
+" formazione)"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__interval_unit__years
@@ -3396,6 +3391,8 @@ msgstr ""
 "un supervisore ferie"
 
 #. module: hr_holidays
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""

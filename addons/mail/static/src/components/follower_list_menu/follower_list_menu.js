@@ -6,6 +6,7 @@ const components = {
 };
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const { isEventHandled } = require('mail/static/src/utils/utils.js');
 
 const { Component } = owl;
 const { useRef, useState } = owl.hooks;
@@ -133,6 +134,9 @@ class FollowerListMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickFollower(ev) {
+        if (isEventHandled(ev, 'Follower.clickRemove')) {
+            return;
+        }
         this._hide();
     }
 }

@@ -8,6 +8,12 @@ $-seen-urls: ();
     @if $-url and index($-seen-urls, $-url) == null {
         $-seen-urls: append($-seen-urls, $-url);
         @import url("https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap");
+    } @else {
+        $-name: o-get-font-info($alias, 'name');
+        $-attachment: o-get-font-info($alias, 'attachment');
+        @if $-attachment {
+            @import url("/web/content/#{$-attachment}/google-font-#{unquote($-name)}");
+        }
     }
 }
 
@@ -25,7 +31,18 @@ $-seen-urls: ();
 
     // 2) The values in the $theme-colors map are already printed by Bootstrap.
 
-    // 3) The values in the $colors map are also printed by Bootstrap.
+    // 3) The values in the $colors map are also printed by Bootstrap. However,
+    // we have color variables which can contain a reference to a color
+    // combination and that is the info we want in that case. As a stable fix,
+    // we'll leave the original variable untouched but print a prefixed version
+    // of the variable with the correct reference value.
+    // TODO adapt in master
+    @each $key in ('menu', 'header-boxed', 'footer', 'copyright') {
+        $-value: map-get($o-color-palette, $key);
+        @if type-of($-value) == 'number' {
+            @include print-variable('bugfixed-#{$key}', $-value);
+        }
+    }
 
     // 4) The Odoo values map, $o-website-values, must be printed.
     @each $key, $value in $o-website-values {
@@ -176,6 +193,23 @@ $-seen-urls: ();
     }
 }
 
+body:not(.o_fullscreen) {
+    #oe_main_menu_navbar:not(.o_hidden) + #wrapwrap {
+        .o_header_affixed, .modal {
+            // For these elements, in #wrapwrap, position top should be size of
+            // the navbar.
+            top: $o-navbar-height;
+        }
+        .modal {
+            // As the default bootstrap style no longer uses 'bottom: 0' and
+            // added 'height: 100%' since the V4.2 because of a bug on Android.
+            // We have to adapt the height of the modal by removing the height
+            // of the navbar.
+            height: calc(100vh - #{$o-navbar-height});
+        }
+    }
+}
+
 .navbar {
 
     .navbar-collapse {
@@ -246,6 +280,10 @@ $-header-nav-link-height: $nav-link-height;
 
     .o_footer_copyright {
         @include o-apply-colors('copyright', $background: o-color('footer'));
+    }
+    .s_popup {
+        // The colors of the footer must not impact the "all pages" popup.
+        @include o-apply-colors(1);
     }
 }
 
@@ -388,7 +426,7 @@ font[class*='bg-'] {
 
 // Probably outdated
 // Disable fixed height
-@media (max-width: 400px) {
+@include media-breakpoint-down(sm) {
     section,
     .parallax,
     .row,
@@ -718,7 +756,16 @@ $-transition-duration: 200ms;
     display: block;
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    background: $light;
+
+    // TODO remove me in master, the $light color makes no sense as is visible
+    // if the header uses rounded corners but is impossible to edit / remove.
+    // As a stable fix, it was decided to not remove it if the header uses a
+    // transparent color, in which case mixing it with $light actually alters
+    // the whole menu color.
+    $-menu-color: o-color('menu');
+    @if $-menu-color and alpha($-menu-color) < 0.95 {
+        background: $light;
+    }
 
     &:not(.o_header_no_transition) {
         transition: transform $-transition-duration;
@@ -761,9 +808,6 @@ $-transition-duration: 200ms;
             }
         }
     }
-}
-#oe_main_menu_navbar + #wrapwrap .o_header_affixed {
-    top: $o-navbar-height;
 }
 
 // Navbar
@@ -836,6 +880,12 @@ header {
         max-height: 80vh;
         overflow-y: auto;
         overflow-x: hidden; // Needed because of container in container having 0px padding... TODO improve
+
+        @include media-breakpoint-down(md) {
+            .nav-link, .dropdown-item {
+                white-space: normal;
+            }
+        }
     }
 
     &:not(.o_header_is_scrolled) {
@@ -853,14 +903,17 @@ header {
     #top_menu_container {
         flex-direction: inherit;
     }
-    @if $-hamburger-center {
-        .collapsing, .show {
-            #top_menu {
-                @if not $-off-canvas-hamburger {
+
+    .collapsing, .show {
+        #top_menu {
+            @if $-hamburger-center {
+                @if not $-off-canvas-hamburger and not o-website-value('header-template') == 'magazine' {
                     padding-top: 15vh;
                     padding-bottom: 15vh;
                 }
                 text-align: center;
+            } @else if $-hamburger-right {
+                text-align: right;
             }
         }
     }
@@ -887,11 +940,8 @@ header {
     #top_menu_collapse {
 
         &.collapsing, &.show {
-            // Note: position relatively to the header instead of the viewport
-            // because fixed position cannot work inside an element whose CSS
-            // transform is different to none, which the header element is
-            // because of header effects.
             @include o-position-absolute(0, 0, 0, 0);
+            position: fixed;
             z-index: $zindex-sticky;
             height: 100vh;
             max-height: 100vh;
@@ -925,9 +975,13 @@ header {
                 @if $-hamburger-center {
                     width: 100%;
                     max-width: none;
+                    text-align: center !important;
                 } @else {
                     max-width: 560px;
                     text-align: left !important;
+                    @media (max-width: 560px) {
+                        max-width: 100%;
+                    }
                 }
                 min-width: 250px;
                 margin: 0 !important;
@@ -978,10 +1032,27 @@ header {
                     padding-right: .5em;
                 }
             }
-
-            .o_connected_user:not(.editor_has_snippets) header & {
-                top: -$o-navbar-height;
+            @if o-website-value('header-template') == 'vertical' {
+                .oe_structure_solo {
+                    // Hide the "oe_structure_solo" because it is outside the
+                    // menu when the off-canvas menu is open.
+                    display: none;
+                }
+            }
+            .o_connected_user:not(.editor_has_snippets):not(.o_fullscreen) header & {
                 padding-top: $o-navbar-height;
+            }
+            // The "off-canvas" navbar has a "fixed" position (therefore
+            // relative to the viewport). But when the header is "affixed", the
+            // "fixed" position of the navbar is no longer relative to the
+            // viewport but it is relative to the header (this is due to
+            // "transform" CSS rule of the "affixed" header.
+            .o_connected_user:not(.editor_has_snippets):not(.o_fullscreen) header.o_header_affixed & {
+                top: -$o-navbar-height;
+            }
+            .editor_has_snippets:not(.o_fullscreen) header:not(.o_header_affixed) &.collapsing,
+            .editor_has_snippets:not(.o_fullscreen) header:not(.o_header_affixed) &.show {
+                right: $o-we-sidebar-width;
             }
         }
         &.collapsing #top_menu {
@@ -1026,12 +1097,27 @@ header {
 } @else if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         #wrapwrap {
-            // Hack: padding is used by layout option (boxed, etc) so use
-            // border here to be able to combine the effect.
+            // Hack: padding is also used by layout option (boxed, etc), need to
+            // combine both options/effects...
             @if $-hamburger-right {
                 border-right: o-website-value('sidebar-width') solid transparent;
             } @else {
                 border-left: o-website-value('sidebar-width') solid transparent;
+            }
+            // ... but don't use it on Safari, it doesn't work, the menu is
+            // somehow broken and not visible.
+            &.o_safari_browser {
+                $padding-size: o-website-value('sidebar-width');
+                @if o-website-value('layout') != 'full' {
+                    $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
+                }
+                @if $-hamburger-right {
+                    padding-right: $padding-size;
+                    border-right: none;
+                } @else {
+                    padding-left: $padding-size;
+                    border-left: none;
+                }
             }
 
             > header {
@@ -1073,8 +1159,15 @@ header {
                 }
             }
         }
-        body.o_connected_user:not(.editor_has_snippets) #wrapwrap > header {
-            top: $o-navbar-height;
+        body.o_connected_user:not(.o_fullscreen) {
+            &:not(.editor_has_snippets) #wrapwrap > header {
+                top: $o-navbar-height;
+            }
+            &.editor_has_snippets #wrapwrap > header {
+                @if $-hamburger-right {
+                    right: $o-we-sidebar-width;
+                }
+            }
         }
     }
 } @else if o-website-value('header-template') == 'boxed' {
@@ -1094,8 +1187,9 @@ header {
                 $o-hamburger-full-navbar-height: $o-theme-navbar-logo-height + ($navbar-padding-y * 2);
                 > header {
                     .navbar-collapse {
+                        max-height: 100vh;
                         > .container {
-                            height: calc(100vh - #{$o-navbar-height} - #{$o-hamburger-full-navbar-height});
+                            height: calc(100vh - #{$o-hamburger-full-navbar-height});
                             transition: height .3s ease;
                         }
                         .nav-link {
@@ -1128,9 +1222,13 @@ header {
     }
 }
 .o_mega_menu_container_size {
-    @include media-breakpoint-up(md) {
-        left: 50%;
-        transform: translateX(-50%);
+    $-header-template: o-website-value('header-template');
+    @if not index(('sidebar', 'hamburger', 'magazine'), $-header-template) {
+        $bp: if($-header-template == 'minimalist', md, lg);
+        @include media-breakpoint-up($bp) {
+            left: 50%;
+            transform: translateX(-50%);
+        }
     }
 
     $-mm-max-widths: ();
@@ -1143,7 +1241,7 @@ header {
 }
 
 #wrapwrap.o_header_overlay {
-    > header:not(.o_header_affixed):not(.o_top_menu_collapse_shown) {
+    > header:not(.o_header_affixed):not(.o_top_menu_collapse_shown):not(.o_header_sidebar) {
         @include o-position-absolute(0, 0, auto, 0);
         z-index: 1000;
 
@@ -1220,9 +1318,28 @@ header {
 
 @if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
     @include media-breakpoint-up(lg) {
-        #wrapwrap.o_footer_effect_enable {
+        // This effect is disabled when a modal is opened. This is the easiest
+        // and probably most stable solution for this problem:
+        // - Add a popup in your page and select it to be for "All pages"
+        //   => In that case it ends up in the footer of your page
+        // - Enable the "Slide Hover" effect for your footer
+        //
+        // => In that case, when the popup opens, it is not visible because of
+        // the footer z-index ("Slide Hover" effect) and it actually also
+        // prevents the user to scroll.
+        //
+        // TODO in master, we may want to put such popups elsewhere than in the
+        // footer. When the footer is hidden, this is also a problem: the popup
+        // for all pages cannot be visible ever. This is considered a limitation
+        // in stable versions though.
+        body:not(.modal-open) #wrapwrap.o_footer_effect_enable {
             > main {
-                background-color: $body-bg;
+                @if o-website-value('layout') == 'full' {
+                    // Ensure a transparent snippet at the end of the content
+                    // still appears with the same background when hovering the
+                    // footer during the scroll effect.
+                    background-color: $body-bg;
+                }
                 @if o-website-value('footer-effect') == 'slideout_shadow' {
                     box-shadow: $box-shadow;
                 }
@@ -1236,10 +1353,14 @@ header {
 }
 
 // Language selector
-.js_language_selector {
-    .dropdown-menu {
-        min-width: 0;
+#wrapwrap:not(.o_rtl) {
+    .js_language_selector {
+        .dropdown-menu {
+            min-width: 0;
+        }
     }
+}
+.js_language_selector {
     a.list-inline-item {
         padding: 3px 0;
 
@@ -1253,6 +1374,7 @@ header {
     height: 1.5em;
     margin-right: 0.2em;
     border-radius: $rounded-pill;
+    object-fit: cover;
 }
 span.list-inline-item.o_add_language:last-child {
     display: none !important; // Hide the separator if it is the last list item
@@ -1260,6 +1382,10 @@ span.list-inline-item.o_add_language:last-child {
 
 // Footer scrolltop button
 @if o-website-value('footer-scrolltop') {
+    #o_footer_scrolltop_wrapper {
+        position: relative;
+        z-index: 1;
+    }
     #o_footer_scrolltop {
         $-footer-color: o-color('footer');
         $-copyright-color: o-color('copyright');
@@ -1392,6 +1518,13 @@ $ribbon-padding: 100px;
     :not(.o_cookies_popup) {
         bottom: 0;
     }
+    .o_cookies_discrete {
+        .js_close_popup.o_cookies_bar_text_button, .o_cookies_bar_text_policy {
+            @include media-breakpoint-down(md) {
+                margin-bottom: 1rem;
+            }
+        }
+    }
 }
 
 .o_website_btn_loading {
@@ -1409,4 +1542,40 @@ $ribbon-padding: 100px;
     // value of "align-self" is "strech". We put this code here to
     // avoid having to create a new scss file in a stable version.
     align-self: flex-start;
+}
+
+// Bottom fixed element (e.g. livechat button)
+.modal-open .o_bottom_fixed_element, .o_bottom_fixed_element_hidden {
+    // Prevent bottom fixed elements from hidding buttons and
+    // hide them if a modal is open.
+    display: none !important;
+}
+// On translation editor, inputs & textareas with translatable "placeholder"
+// will get HTML content as translation value for the attribute. The goal here
+// is to hide these values until the editor's code sets the right ones on the
+// elements.
+[placeholder*="data-oe-translation-id"] {
+    &::-webkit-input-placeholder{ /* WebKit */
+        color: transparent;
+        opacity: 0;
+    }
+    &::-moz-placeholder { /* Firefox */
+        color: transparent;
+        opacity: 0;
+    }
+}
+[data-oe-translation-id] {
+    > .o_translation_select {
+        border: $input-border-width solid $input-border-color;
+        @include border-radius($input-border-radius, 0);
+
+        // Hide translatable `<select/>`s since we use `.o_translation_select`
+        // elements to handle translations.
+        & + select {
+            display: none !important;
+        }
+        > div:not(:last-child) {
+            border-bottom: inherit;
+        }
+    }
 }

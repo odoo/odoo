@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
@@ -17,8 +17,9 @@ class MassMailingList(models.Model):
     contact_ids = fields.Many2many(
         'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
         string='Mailing Lists')
-    subscription_ids = fields.One2many('mailing.contact.subscription', 'list_id',
-        string='Subscription Information')
+    subscription_ids = fields.One2many(
+        'mailing.contact.subscription', 'list_id', string='Subscription Information',
+        depends=['contact_ids'])
     is_public = fields.Boolean(default=True, help="The mailing list can be accessible by recipient in the unsubscription"
                                                   " page to allows him to update his subscription preferences.")
 
@@ -42,7 +43,7 @@ class MassMailingList(models.Model):
             ''', (tuple(self.ids), ))
             data = dict(self.env.cr.fetchall())
             for mailing_list in self:
-                mailing_list.contact_nbr = data.get(mailing_list.id, 0)
+                mailing_list.contact_nbr = data.get(mailing_list._origin.id, 0)
         else:
             self.contact_nbr = 0
 

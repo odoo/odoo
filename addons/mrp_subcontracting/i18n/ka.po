@@ -2,13 +2,21 @@
 # This file contains the translation of the following modules:
 # 	* mrp_subcontracting
 # 
+# Translators:
+# Mari Khomeriki <mari.khomeriki@maxinai.com>, 2021
+# Saba Khmaladze <skhmaladze@uglt.org>, 2021
+# Martin Trigaux, 2021
+# Temur, 2021
+# Gvantsa Gvinianidze <gvantsa@live.com>, 2021
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
+"Last-Translator: Gvantsa Gvinianidze <gvantsa@live.com>, 2021\n"
+"Language-Team: Georgian (https://app.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,7 +47,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "კომპანიები"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
@@ -49,12 +57,12 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "კონტაქტი"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
 msgid "Continue"
-msgstr ""
+msgstr "გაგრძელება"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__move_line_raw_ids
@@ -64,7 +72,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
 msgid "Discard"
-msgstr ""
+msgstr "გაუქმება"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_action_record_components
@@ -84,7 +92,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "სახელი"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__id
@@ -99,7 +107,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__id
 msgid "ID"
-msgstr ""
+msgstr "იდენტიფიკატორი/ID"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom____last_update
@@ -114,7 +122,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule____last_update
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "ბოლოს განახლებულია"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -303,11 +311,23 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "ტრანსფერი"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
 msgid "Warehouse"
+msgstr "საწყობი"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_bom.py:0
+#, python-format
+msgid "You can not set a Bill of Material with operations as subcontracting."
+msgstr ""
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "You must enter a serial number for %s"
 msgstr ""
 
 #. module: mrp_subcontracting

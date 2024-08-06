@@ -69,6 +69,41 @@ var AttributeTranslateDialog = Dialog.extend({
     }
 });
 
+// Used to translate the text of `<select/>` options since it should not be
+// possible to interact with the content of `.o_translation_select` elements.
+const SelectTranslateDialog = Dialog.extend({
+    /**
+     * @constructor
+     */
+    init: function (parent, options) {
+        this._super(parent, {
+            ...options,
+            title: _t("Translate Selection Option"),
+            buttons: [
+                {text: _t("Close"), click: this.save}
+            ],
+        });
+        this.optionEl = this.options.targetEl;
+        this.translationObject = this.optionEl.closest('[data-oe-translation-id]');
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        const inputEl = document.createElement('input');
+        inputEl.className = 'form-control my-3';
+        inputEl.value = this.optionEl.textContent;
+        inputEl.addEventListener('keyup', () => {
+            this.optionEl.textContent = inputEl.value;
+            const translationUpdated = inputEl.value !== this.optionEl.dataset.initialTranslationValue;
+            this.translationObject.classList.toggle('o_dirty', translationUpdated);
+            this.optionEl.classList.toggle('oe_translated', translationUpdated);
+        });
+        this.el.appendChild(inputEl);
+        return this._super(...arguments);
+    },
+});
+
 var WysiwygTranslate = WysiwygMultizone.extend({
     custom_events: _.extend({}, WysiwygMultizone.prototype.custom_events || {}, {
         ready_to_save: '_onSave',
@@ -101,8 +136,9 @@ var WysiwygTranslate = WysiwygMultizone.extend({
         return promise.then(function () {
             self._relocateEditorBar();
             var attrs = ['placeholder', 'title', 'alt'];
+            const $editable = self._getEditableArea();
             _.each(attrs, function (attr) {
-                self._getEditableArea().filter('[' + attr + '*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img').each(function () {
+                $editable.filter('[' + attr + '*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img').each(function () {
                     var $node = $(this);
                     var translation = $node.data('translation') || {};
                     var trans = $node.attr(attr);
@@ -123,6 +159,25 @@ var WysiwygTranslate = WysiwygMultizone.extend({
                     }
                     $node.addClass('o_translatable_attribute').data('translation', translation);
                 });
+            });
+
+            // Hack: we add a temporary element to handle option's text
+            // translations from the linked <select/>. The final values are
+            // copied to the original element right before save.
+            $editable.filter('[data-oe-translation-id] > select').each((index, select) => {
+                // Keep the default width of the translation `<span/>`.
+                select.parentElement.classList.remove('o_is_inline_editable');
+                const selectTranslationEl = document.createElement('div');
+                selectTranslationEl.className = 'o_translation_select';
+                const optionNames = [...select.options].map(option => option.text);
+                optionNames.forEach(option => {
+                    const optionEl = document.createElement('div');
+                    optionEl.textContent = option;
+                    optionEl.dataset.initialTranslationValue = option;
+                    optionEl.className = 'o_translation_select_option';
+                    selectTranslationEl.appendChild(optionEl);
+                });
+                select.before(selectTranslationEl);
             });
 
             self.translations = [];
@@ -221,7 +276,12 @@ var WysiwygTranslate = WysiwygMultizone.extend({
             $p.after($p.html()).remove();
         });
         var trans = this._getTranlationObject($node[0]);
-        $node.toggleClass('o_dirty', trans.value !== $node.html().replace(/[ \t\n\r]+/, ' '));
+        const updated = trans.value !== $node.html().replace(/[ \t\n\r]+/, ' ');
+        $node.toggleClass('o_dirty', updated);
+        const $target = $node.data('$node');
+        if ($target) {
+            $target.toggleClass('oe_translated', updated);
+        }
     },
     /**
      * Returns a translation object.
@@ -270,22 +330,30 @@ var WysiwygTranslate = WysiwygMultizone.extend({
             _.each(translation, function (node, attr) {
                 var trans = self._getTranlationObject(node);
                 trans.value = (trans.value ? trans.value : $node.html() ).replace(/[ \t\n\r]+/, ' ');
+                trans.state = node.dataset.oeTranslationState;
                 $node.attr('data-oe-translation-state', (trans.state || 'to_translate'));
             });
         });
 
-        this.$editables_attr.prependEvent('mousedown.translator click.translator mouseup.translator', function (ev) {
-            if (ev.ctrlKey) {
-                return;
-            }
-            ev.preventDefault();
-            ev.stopPropagation();
-            if (ev.type !== 'mousedown') {
-                return;
-            }
+        this.$editables_attr
+            .add(this._getEditableArea().filter('.o_translation_select_option'))
+            .prependEvent('mousedown.translator click.translator mouseup.translator', function (ev) {
+                if (ev.ctrlKey) {
+                    return;
+                }
+                ev.preventDefault();
+                ev.stopPropagation();
+                if (ev.type !== 'mousedown') {
+                    return;
+                }
 
-            new AttributeTranslateDialog(self, {}, ev.target).open();
-        });
+                const targetEl = ev.target;
+                if (targetEl.closest('.o_translation_select')) {
+                    new SelectTranslateDialog(self, {size: 'medium', targetEl}).open();
+                } else {
+                    new AttributeTranslateDialog(self, {}, targetEl).open();
+                }
+            });
     },
 
     //--------------------------------------------------------------------------
@@ -294,6 +362,19 @@ var WysiwygTranslate = WysiwygMultizone.extend({
 
     _onSave: function (ev) {
         ev.stopPropagation();
+        // Adapt translation values for `select` > `options`s and remove all
+        // temporary `.o_translation_select` elements.
+        for (const optionsEl of this.el.querySelectorAll('.o_translation_select')) {
+            const selectEl = optionsEl.nextElementSibling;
+            const translatedOptions = optionsEl.children;
+            const selectOptions = selectEl.tagName === 'SELECT' ? [...selectEl.options] : [];
+            if (selectOptions.length === translatedOptions.length) {
+                selectOptions.map((option, i) => {
+                    option.text = translatedOptions[i].textContent;
+                });
+            }
+            optionsEl.remove();
+        }
     },
 });
 

@@ -10,6 +10,9 @@
 # Bülent Tiknas <btiknas@googlemail.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
 # Tobias Arndt, 2020
+# Robert Förster <hello@suppliot.eu>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,8 +20,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:11+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Tobias Arndt, 2020\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,7 +32,7 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr " Produktkosten aktualisiert von %(previous)s zu %(new_cost)s."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -37,6 +40,8 @@ msgstr ""
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
 msgstr ""
+"%(user)s hat die Kosten für %(product)s von %(previous)s in %(new_price)s "
+"verändert"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -46,6 +51,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
 "%(product)s"
 msgstr ""
+"%(user)s hat die Bestandsbewertung von %(previous)s auf %(new_value)s - "
+"%(product)s geändert"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -53,11 +60,13 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 font-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 font-italic\">Use a negative added value to record a decrease in the product value</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>Bestimmen Sie andere Eingabe-/Ausgabekonten für bestimmte</b>"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -94,23 +103,24 @@ msgstr "Buchungsinformation"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Add Manual Valuation"
-msgstr ""
+msgstr "Manuelle Bewertung hinzufügen"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
+"Fügen Sie zusätzliche Kosten (Transport, Zoll, ...) zum Produktwert hinzu."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr ""
+msgstr "Mehrwert"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr ""
+msgstr "Mehrwert"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -119,6 +129,8 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
+"Berücksichtigung der Wareneinstandspreise bei Empfangsvorgängen und deren "
+"Aufteilung auf die Produkte, um deren Selbstkosten zu aktualisieren."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
@@ -201,7 +213,7 @@ msgstr "Kalkulationsverfahren"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "Änderung der Kostenrechnung für Produktkategorie %s:  von %s zu %s. "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -214,6 +226,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"Die Gegenbuchungen für alle eingehenden Bestandsbewegungen werden auf diesem Konto verbucht, es sei denn, es ist ein spezielles Bewertungskonto\n"
+"                für den Ursprungsstandort festgelegt. Dies ist der Standardwert für alle Produkte in dieser Kategorie. Er kann auch direkt für jedes Produkt festgelegt werden."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -237,7 +251,7 @@ msgstr "Währung"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
 msgid "Current Quantity"
-msgstr ""
+msgstr "Aktuelle Menge"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
@@ -257,6 +271,9 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
+"Datum, zu dem die Buchungseinträge im Falle einer automatischen "
+"Bestandsbewertung erstellt werden. Wenn leer, wird das Inventurdatum "
+"verwendet."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -304,6 +321,8 @@ msgid ""
 "                                has changed for product template %s: from %s"
 " to %s."
 msgstr ""
+"Aufgrund einer Änderung der Produktkategorie (von %s zu %s) hat sich die "
+"Kostenrechnung für die Produktvorlage %s von %s zu %s geändert."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -371,7 +390,7 @@ msgstr "Inventur Bewertung"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Is Anglo Saxon Line"
-msgstr ""
+msgstr "Ist angelsächsische Zeile"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -432,7 +451,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr ""
+msgstr "Verknüpft mit"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -443,13 +462,13 @@ msgstr "Manuell"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
-msgstr ""
+msgstr "Manuelle Bestandsbewertung: %s."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr ""
+msgstr "Manuelle Bestandsbewertung: Ohne Angabe von Gründen."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -467,17 +486,17 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
 msgid "New value"
-msgstr ""
+msgstr "Neuer Wert"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
-msgstr ""
+msgstr "Neuer Wert nach Menge"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
 msgid "On Hand Value"
-msgstr ""
+msgstr "Vorhandener Wert"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -515,7 +534,7 @@ msgstr "Produktbewegungen (Lagerbewegung)"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
 msgid "Product Revaluation"
-msgstr ""
+msgstr "Produkt Neubewertung"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -527,7 +546,7 @@ msgstr "Produktvorlage"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "Produktwert manuell geändert (von %s zu %s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -538,7 +557,7 @@ msgstr "Menge"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 msgid "Quantity Svl"
-msgstr ""
+msgstr "Menge der Bestandsbewertungsstufe"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -553,12 +572,12 @@ msgstr "Grund"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr ""
+msgstr "Gründe für Neubewertung"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr ""
+msgstr "Verwandtes Produkt"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -578,18 +597,18 @@ msgstr "Rücklieferschein"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Retourenkommissionierungslinie"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
-msgstr ""
+msgstr "Neubewertung von %s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr ""
+msgstr "Neubewertung"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
@@ -678,12 +697,12 @@ msgstr "Lagerbewertungskonto (Ausgehend)"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Bestandsbewertungsebene"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Technical field used to retrieve the anglo-saxon lines."
-msgstr ""
+msgstr "Technisches Feld für den Abruf der angelsächsischen Zeilen."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -692,6 +711,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
+"Die Bestandseingangs- und/oder -ausgangskonten können nicht mit dem "
+"Bestandsbewertungskonto identisch sein."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -701,12 +722,14 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
+"Die Aktion führt zur Erstellung eines Journaleintrags, für den Sie keine "
+"Zugriffsrechte haben."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr ""
+msgstr "Der Mehrwert hat keinen Einfluss auf die Bewertung der Aktie"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -715,6 +738,8 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
+"Die Bewegungszeilen sind nicht in einem einheitlichen Zustand: einige gehen "
+"im Unternehmen ein und andere gehen aus."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -744,6 +769,9 @@ msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
 msgstr ""
+"Es gibt keine Bewertungsebenen. Bewertungsebenen werden erstellt, wenn "
+"einige Produktbewegungen gibt, die sich auf die Bestandsbewertung auswirken "
+"könnten."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -769,7 +797,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
 msgid "Unit Value"
-msgstr ""
+msgstr "Wert der Einheit"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
@@ -781,7 +809,7 @@ msgstr "Mengeneinheit"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "Mengen auf Kundenaufträgen/Bestellungen aktualisieren"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -824,7 +852,7 @@ msgstr "Bewertung"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "Bewertungsmethode für Produktkategorie %s geändert: von %s zu %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -834,7 +862,7 @@ msgstr "Wert"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
-msgstr ""
+msgstr "Value Svl"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -848,6 +876,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Wenn die automatische Bestandsbewertung für ein Produkt aktiviert ist, "
+"enthält dieses Konto den aktuellen Wert der Produkte."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -856,6 +886,9 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"Bei der automatischen Bestandsbewertung werden die Gegenbuchungsposten für alle ausgehenden Lagerbewegungen auf diesem Konto gebucht,\n"
+"es sei denn, es ist ein spezielles Bewertungskonto für den Bestimmungsort festgelegt. Dies ist der Standardwert für alle Produkte in dieser Kategorie.\n"
+"Er kann auch direkt für jedes Produkt eingestellt werden."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -863,23 +896,28 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"Bei der automatischen Bestandsbewertung ist dies das Buchhaltungsjournal, in"
+" dem automatisch Buchungen vorgenommen werden, wenn Lagerbewegungen "
+"verarbeitet werden."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
 msgstr ""
+"Assistentenmodell zur Neubewertung eines Lagerbestands für ein Produkt"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr ""
+msgstr "Sie können Produkte mit Standardkostenverfahren nicht neu bewerten."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
 msgstr ""
+"Sie können ein Produkt ohne oder mit negativem Bestand nicht neu bewerten."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -889,6 +927,9 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
+"Sie können die Kosten eines Produkts in der automatischen Bewertung nicht "
+"aktualisieren, da dies zur Erstellung einer Journalbuchung führt, für die "
+"Sie keine Zugriffsrechte haben."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -897,6 +938,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Sie haben für Ihre Produktkategorie kein Eingabebewertungskonto definiert. "
+"Sie müssen eines definieren, bevor Sie diesen Vorgang ausführen können."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -905,6 +948,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
+"Sie haben kein Lagerjournal für Ihre Produktkategorie definiert. Überprüfen "
+"Sie, ob Sie einen Kontenplan installiert haben."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -923,7 +968,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."
-msgstr ""
+msgstr "Sie müssen ein Gegenkonto für Ihre Produktkategorie einrichten."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -938,4 +983,14 @@ msgstr "für"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
+msgstr "Standorte"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid ""
+"'The value of a stock valuation layer cannot be negative. Landed cost could "
+"be use to correct a specific transfer."
 msgstr ""
+"'Der Wert einer Bestandsbewertungsschicht kann nicht negativ sein. Die "
+"Einstandskosten können verwendet werden, um einen bestimmten Transfer zu "
+"korrigieren."

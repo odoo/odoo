@@ -3,9 +3,8 @@
 # 	* pos_adyen
 # 
 # Translators:
-# Lorenzo Battistini <lb@takobi.online>, 2020
 # Paolo Valier, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2024\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
@@ -29,8 +28,8 @@ msgid ""
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"fa fa-lg fa-building-o mr8\" title=\"I valori impostati qui "
-"sono specifici per azienda.\" aria-label=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"sono specifici per azienda.\" aria-label=\"I valori impostati qui sono "
+"specifici per azienda.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
@@ -40,7 +39,7 @@ msgstr "Conto"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr ""
+msgstr "Aggiungere mancia tramite terminale di pagamento (Adyen)"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
@@ -60,7 +59,7 @@ msgstr "Chiave API Adyen"
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__adyen_account_id
 #: model:ir.ui.menu,name:pos_adyen.menu_pos_adyen_account
 msgid "Adyen Account"
-msgstr "Account Adyen"
+msgstr "Conto Adyen"
 
 #. module: pos_adyen
 #. openerp-web
@@ -82,7 +81,7 @@ msgstr "Ultima risposta Adyen"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_payout_id
 msgid "Adyen Payout"
-msgstr ""
+msgstr "Pagamento Adyen"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
@@ -97,7 +96,7 @@ msgstr "Terminale Adyen"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
-msgstr "Identificatore terminale Adyen"
+msgstr "Identificativo terminale Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
@@ -107,7 +106,7 @@ msgstr "Modalità test Adyen"
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_account
 msgid "Adyen for Platforms Account"
-msgstr "Account Adyen per piattaforme"
+msgstr "Conto Adyen per piattaforme"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_store
@@ -129,14 +128,14 @@ msgstr "Si è verificato un errore non atteso. Messaggio da Adyen: %s"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr ""
+msgstr "Richiesta mancia ai clienti"
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
-msgstr "Autenticazione non riuscita. Controllare le credenziali Adyen."
+msgstr "Autenticazione non riuscita, controllare le credenziali Adyen."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__city
@@ -163,7 +162,7 @@ msgstr "Codice nazione"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
 msgid "Create an account in 1 minute"
-msgstr "Crea account in 1 minuto"
+msgstr "Crea un conto in 1 minuto"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_uid
@@ -175,7 +174,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_date
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__display_name
@@ -244,7 +243,7 @@ msgstr "Nome"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
 msgid "Order a Terminal"
-msgstr ""
+msgstr "Ordina terminale"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__terminal_ids
@@ -262,6 +261,7 @@ msgstr "Numero di telefono"
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
+"Per gestire le mance in Adyen configurare un prodotto mancia per il POS %s."
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/adyen_account.py:0
@@ -282,7 +282,7 @@ msgstr "Metodi di pagamento punto vendita"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Prompt the customer to tip."
-msgstr ""
+msgstr "Invita il cliente a lasciare la mancia."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_reference
@@ -298,12 +298,12 @@ msgstr "Esegue le transazioni nell'ambiente di prova."
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_id
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
 msgid "State"
-msgstr "Stato"
+msgstr "Stato/Provincia"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_code
 msgid "State Code"
-msgstr "Codice stato"
+msgstr "Codice stato/provincia"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__store_ids
@@ -345,7 +345,14 @@ msgstr "Terminale"
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
-msgstr "Il terminale %sè già utilizzato nel metodo di pagamento %s."
+msgstr "Il terminale %s è già in uso nel metodo di pagamento %s."
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr ""
+"Il terminale %s è già in uso nell'azienda %s nel metodo di pagamento %s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__terminal_uuid
@@ -375,7 +382,7 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_adyen_store__state_code
 msgid "The state code."
-msgstr "Il codice provincia."
+msgstr "Il codice stato/provincia."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_uuid
@@ -388,8 +395,8 @@ msgid ""
 "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
 "to-get-the-api-key/#description"
 msgstr ""
-"Utilizzata per connettersi ad Adyen: https://docs.adyen.com/user-management"
-"/how-to-get-the-api-key/#description"
+"Utilizzata per connettersi ad Adyen: https://docs.adyen.com/user-"
+"management/how-to-get-the-api-key/#description"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__zip

@@ -1545,6 +1545,271 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('correctly group data after flip (1)', async function (assert) {
+        assert.expect(4);
+        const actionManager = await createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,pivot': "<pivot/>",
+                'partner,false,search': `<search><filter name="bayou" string="Bayou" domain="[(1,'=',1)]"/></search>`,
+                'partner,false,list': '<tree><field name="foo"/></tree>',
+                'partner,false,form': '<form><field name="foo"/></form>',
+            },
+        });
+
+        await actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+            context: { group_by: ["product_id"] },
+        });
+
+        assert.deepEqual(
+            [...actionManager.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total",
+                    "xphone",
+                    "xpad"
+            ]
+        );
+
+        // flip axis
+        await testUtils.dom.click(actionManager.el.querySelector('.o_cp_buttons .o_pivot_flip_button'));
+        await testUtils.nextTick();
+
+        assert.deepEqual(
+            [...actionManager.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total",
+            ]
+        );
+
+        // select filter "Bayou" in control panel
+        await cpHelpers.toggleFilterMenu(actionManager);
+        await cpHelpers.toggleMenuItem(actionManager, "Bayou");
+        await testUtils.nextTick();
+
+        assert.deepEqual(
+            [...actionManager.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total",
+                    "xphone",
+                    "xpad"
+            ]
+        );
+
+        // close row header "Total"
+        await testUtils.dom.click(actionManager.el.querySelector('tbody .o_pivot_header_cell_opened'));
+        await testUtils.nextTick();
+
+        assert.deepEqual(
+            [...actionManager.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total"
+            ]
+        );
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('correctly group data after flip (2)', async function (assert) {
+        assert.expect(5);
+        const actionManager = await createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,pivot': "<pivot/>",
+                'partner,false,search': `<search><filter name="bayou" string="Bayou" domain="[(1,'=',1)]"/></search>`,
+                'partner,false,list': '<tree><field name="foo"/></tree>',
+                'partner,false,form': '<form><field name="foo"/></form>',
+            },
+        });
+
+        await actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+            context: { group_by: ["product_id"] },
+        });
+
+        assert.deepEqual(
+            [...actionManager.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total",
+                    "xphone",
+                    "xpad"
+            ]
+        );
+
+        // select filter "Bayou" in control panel
+        await cpHelpers.toggleFilterMenu(actionManager);
+        await cpHelpers.toggleMenuItem(actionManager, "Bayou");
+
+        assert.deepEqual(
+            [...actionManager.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total",
+                    "xphone",
+                    "xpad"
+            ]
+        );
+
+        // flip axis
+        await testUtils.dom.click(actionManager.el.querySelector('.o_cp_buttons .o_pivot_flip_button'));
+        await testUtils.nextTick();
+
+        assert.deepEqual(
+            [...actionManager.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total"
+            ]
+        );
+
+        // unselect filter "Bayou" in control panel
+        await cpHelpers.toggleFilterMenu(actionManager);
+        await cpHelpers.toggleMenuItem(actionManager, "Bayou");
+        await testUtils.nextTick();
+
+        assert.deepEqual(
+            [...actionManager.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total",
+                    "xphone",
+                    "xpad" 
+            ]
+        );
+
+        // close row header "Total"
+        await testUtils.dom.click(actionManager.el.querySelector('tbody .o_pivot_header_cell_opened'));
+        await testUtils.nextTick();
+
+        assert.deepEqual(
+            [...actionManager.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total"
+            ]
+        );
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('correctly group data after flip (3))', async function (assert) {
+        assert.expect(10);
+        var pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="company_type" type="col"/>
+                </pivot>
+            `,
+            archs: {
+                'partner,false,search': `<search><filter name="bayou" string="Bayou" domain="[(1,'=',1)]"/></search>`,
+            }
+        });
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("thead th")].map(e => e.innerText),
+            [
+                "", "Total",                 "",
+                    "Company", "individual",
+                    "Count",   "Count",      "Count"
+            ]
+        );
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total",
+                    "xphone",
+                    "xpad"
+            ]
+        );
+
+        // close col header "Total"
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_opened'));
+        await testUtils.nextTick();
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("thead th")].map(e => e.innerText),
+            [
+                "", "Total",
+                    "Count"
+              ]
+        );
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total",
+                    "xphone",
+                    "xpad"
+            ]
+        );
+
+        // flip axis
+        await testUtils.dom.click(pivot.el.querySelector('.o_cp_buttons .o_pivot_flip_button'));
+        await testUtils.nextTick();
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("thead th")].map(e => e.innerText),
+            [
+                "", "Total",           "",
+                    "xphone", "xpad",
+                    "Count",  "Count", "Count"
+            ]
+        );
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total"
+            ]
+        );
+
+        // select filter "Bayou" in control panel
+        await cpHelpers.toggleFilterMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, "Bayou");
+        await testUtils.nextTick();
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("thead th")].map(e => e.innerText),
+            [
+                "", "Total",           "",
+                    "xphone", "xpad",
+                    "Count",  "Count", "Count"
+            ]
+        );
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total",
+                    "xphone",
+                    "xpad"
+            ]
+        );
+
+        // close row header "Total"
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_opened'));
+        await testUtils.nextTick();
+
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("thead th")].map(e => e.innerText),
+            [
+                "", "Total",           "",
+                    "xphone", "xpad",
+                    "Count",  "Count", "Count"
+            ]
+        );
+        assert.deepEqual(
+            [...pivot.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [
+                "Total"
+            ]
+        );
+
+        pivot.destroy();
+    });
+
     QUnit.test('correctly uses pivot_ keys from the context (at reload)', async function (assert) {
         assert.expect(8);
 
@@ -2866,6 +3131,71 @@ QUnit.module('Views', {
             "32", // Total Value
             "18", // Second
             "14", // First
+        ];
+        assert.strictEqual(getCurrentValues(pivot), values.join());
+
+        pivot.destroy();
+    });
+
+    QUnit.test('comparison with two groupbys: rows from reference period should be displayed', async function (assert) {
+        assert.expect(3);
+        patchDate(2023, 2, 22, 1, 0, 0);
+
+        this.data.partner.records = [
+            { id: 1, date: "2021-10-10", product_id: 1, customer: 1 },
+            { id: 2, date: "2020-10-10", product_id: 2, customer: 1 },
+        ]
+        this.data.product.records = [
+            { id: 1, display_name: "A" },
+            { id: 2, display_name: "B" },
+        ]
+        this.data.customer.records = [
+            { id: 1, display_name: "P" },
+        ]
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot><field name="customer" type="row"/><field name="product_id" type="row"/></pivot>',
+            archs: {
+                "partner,false,search": "<search><filter name='date' date='date'/></search>"
+            },
+        });
+
+        // compare 2021 to 2020
+        await cpHelpers.toggleFilterMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, "Date");
+        await cpHelpers.toggleMenuItemOption(pivot, "Date", "2021");
+        await cpHelpers.toggleComparisonMenu(pivot);
+        await cpHelpers.toggleMenuItem(pivot, 0);
+
+        assert.strictEqual(
+            pivot.$('th').slice(0, 6).text(),
+            [
+                        "Total",
+                        "Count",
+                "2020", "2021", "Variation"
+            ].join(''),
+            "The col headers should be as expected"
+        );
+
+        assert.strictEqual(
+            pivot.$('th').slice(6).text(),
+            [
+                'Total',
+                    'P',
+                        'B',
+                        'A',
+            ].join(''),
+            "The row headers should be as expected"
+        );
+
+        const values = [
+            "1", "1", "0%",
+            "1", "1", "0%",
+            "1", "0", "-100%",
+            "0", "1", "100%",
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 

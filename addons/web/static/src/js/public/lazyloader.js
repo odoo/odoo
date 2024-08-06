@@ -10,7 +10,7 @@ var blockFunction = function (ev) {
 var waitingLazy = false;
 
 /**
- * Blocks the DOM sections which explicitely require the lazy loaded JS to be
+ * Blocks the DOM sections which explicitly require the lazy loaded JS to be
  * working (those sections should be marked with the 'o_wait_lazy_js' class).
  *
  * @see stopWaitingLazy
@@ -28,6 +28,8 @@ function waitLazy() {
             element.addEventListener(evType, blockFunction);
         });
     }
+
+    document.body.classList.add('o_lazy_js_waiting');
 }
 /**
  * Unblocks the DOM sections blocked by @see waitLazy and removes the related
@@ -47,6 +49,8 @@ function stopWaitingLazy() {
         });
         element.classList.remove('o_wait_lazy_js');
     }
+
+    document.body.classList.remove('o_lazy_js_waiting');
 }
 
 // Start waiting for lazy loading as soon as the DOM is available

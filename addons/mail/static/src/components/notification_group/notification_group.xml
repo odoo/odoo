@@ -18,9 +18,11 @@
                             (<t t-esc="group.notifications.length"/>)
                         </span>
                         <span class="o-autogrow"/>
-                        <span class="o_NotificationGroup_date">
-                            <t t-esc="group.date.fromNow()"/>
-                        </span>
+                        <t t-if="group.date">
+                            <span class="o_NotificationGroup_date">
+                                <t t-esc="group.date.fromNow()"/>
+                            </span>
+                        </t>
                     </div>
                     <div class="o_NotificationGroup_core">
                         <span class="o_NotificationGroup_coreItem o_NotificationGroup_inlineText">

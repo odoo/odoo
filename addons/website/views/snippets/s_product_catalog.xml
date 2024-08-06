@@ -70,11 +70,10 @@
                 <!-- Note: no need of extra dependency thanks to the apply-to -->
             </t>
         </div>
-        <div data-selector=".s_product_catalog_dish"/>
+        <div data-selector=".s_product_catalog_dish" data-drop-near=".s_product_catalog_dish"/>
     </xpath>
     <xpath expr="//div[@data-js='SnippetMove']" position="attributes">
         <attribute name="data-selector" add=".s_product_catalog_dish" separator=","/>
-        <attribute name="data-drop-near" add=".s_product_catalog_dish" separator=","/>
     </xpath>
 </template>
 

@@ -13,7 +13,7 @@ class TestRecurrentEvents(SavepointCase):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
+        super(TestRecurrentEvents, cls).setUpClass()
         lang = cls.env['res.lang']._lang_get(cls.env.user.lang)
         lang.week_start = '1'  # Monday
 
@@ -34,8 +34,8 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         super().setUpClass()
         cls.event = cls.env['calendar.event'].create({
             'name': 'Recurrent Event',
-            'start': datetime(2019, 10, 25, 8, 0),
-            'stop': datetime(2019, 10, 27, 18, 0),
+            'start': datetime(2019, 10, 21, 8, 0),
+            'stop': datetime(2019, 10, 23, 18, 0),
             'recurrency': True,
         })
 
@@ -115,7 +115,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'rrule_type': 'monthly',
             'interval': 2,
             'month_by': 'date',
-            'day': 15,
+            'day': 27,
             'end_type': 'count',
             'count': 3,
             'event_tz': 'UTC',
@@ -124,9 +124,9 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         events = recurrence.calendar_event_ids
         self.assertEqual(len(events), 3, "It should have 3 events in the recurrence")
         self.assertEventDates(events, [
-            (datetime(2019, 10, 15, 8, 0), datetime(2019, 10, 17, 18, 0)),
-            (datetime(2019, 12, 15, 8, 0), datetime(2019, 12, 17, 18, 0)),
-            (datetime(2020, 2, 15, 8, 0), datetime(2020, 2, 17, 18, 0)),
+            (datetime(2019, 10, 27, 8, 0), datetime(2019, 10, 29, 18, 0)),
+            (datetime(2019, 12, 27, 8, 0), datetime(2019, 12, 29, 18, 0)),
+            (datetime(2020, 2, 27, 8, 0), datetime(2020, 2, 29, 18, 0)),
         ])
 
     def test_monthly_count_by_date_31(self):
@@ -150,7 +150,9 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         ])
 
     def test_monthly_until_by_day(self):
-        """ Every 2 months, on the third Tuesday, until 15th March 2020 """
+        """ Every 2 months, on the third Tuesday, until 27th March 2020 """
+        self.event.start = datetime(2019, 10, 1, 8, 0)
+        self.event.stop = datetime(2019, 10, 3, 18, 0)
         self.event._apply_recurrence_values({
             'rrule_type': 'monthly',
             'interval': 2,
@@ -158,7 +160,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'byday': '3',
             'weekday': 'TU',
             'end_type': 'end_date',
-            'until': date(2020, 3, 15),
+            'until': date(2020, 3, 27),
             'event_tz': 'UTC',
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
@@ -206,8 +208,8 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
 
     def test_dst_timezone(self):
         """ Test hours stays the same, regardless of DST changes """
-        self.event.start = datetime(2002, 10, 26, 10, 0)
-        self.event.stop = datetime(2002, 10, 26, 12, 0)
+        self.event.start = datetime(2002, 10, 28, 10, 0)
+        self.event.stop = datetime(2002, 10, 28, 12, 0)
         self.event._apply_recurrence_values({
             'interval': 2,
             'rrule_type': 'weekly',
@@ -217,8 +219,8 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         self.assertEventDates(recurrence.calendar_event_ids, [
-            (datetime(2002, 10, 21, 10, 0), datetime(2002, 10, 21, 12, 0)),
-            (datetime(2002, 11, 4, 11, 0), datetime(2002, 11, 4, 13, 0)),
+            (datetime(2002, 10, 28, 10, 0), datetime(2002, 10, 28, 12, 0)),
+            (datetime(2002, 11, 11, 10, 0), datetime(2002, 11, 11, 12, 0)),
         ])
 
     def test_ambiguous_dst_time_winter(self):

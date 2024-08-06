@@ -375,10 +375,17 @@ odoo.define('web.OwlCompatibility', function () {
          */
         on_attach_callback() {
             function recursiveCallMounted(component) {
+                const { status, currentFiber } = component.__owl__;
+
+                if (status === 2 && currentFiber && !currentFiber.isCompleted) {
+                    // the component is rendered but another rendering is being done
+                    // it would be foolish to declare the component and children as mounted
+                    return;
+                }
                 if (
-                    component.__owl__.status !== 2 /* RENDERED */ &&
-                    component.__owl__.status !== 3 /* MOUNTED */ &&
-                    component.__owl__.status !== 4 /* UNMOUNTED */
+                   status !== 2 /* RENDERED */ &&
+                   status !== 3 /* MOUNTED */ &&
+                   status !== 4 /* UNMOUNTED */
                 ) {
                     // Avoid calling mounted on a component that is not even
                     // rendered. Doing otherwise will lead to a crash if a

@@ -3,30 +3,39 @@
 # 	* gamification
 # 
 # Translators:
-# Arminas Grigonis <arminas@versada.lt>, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# Rolandas <info@paninfo.lt>, 2019
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Edgaras Kriukonis <edgaras@focusate.eu>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Arminas Grigonis <arminas@versada.lt>, 2021
+# Silvija Butko <silvija.butko@gmail.com>, 2021
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2021
+# Rolandas <info@paninfo.lt>, 2021
+# Martin Trigaux, 2021
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2021
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2021
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2021
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2021
+# Edgaras Kriukonis <edgaras@focusate.eu>, 2021
+# Linas Versada <linaskrisiukenas@gmail.com>, 2021
+# Arunas Vaitekunas <vaitekunas@gmail.com>, 2021
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
-"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"PO-Revision-Date: 2020-09-07 08:12+0000\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022\n"
+"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__rank_users_count
+msgid "# Users"
+msgstr ""
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -95,8 +104,8 @@ msgid ""
 "                        % endif\n"
 "                        <br/><br/>\n"
 "                        Thank you,\n"
-"                        <br/>\n"
-"                        % if object.sender_id and object.sender_id.signature:\n"
+"                        % if object.sender_id.signature:\n"
+"                            <br/>\n"
 "                            ${object.sender_id.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
@@ -161,10 +170,10 @@ msgstr ""
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
-msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
+msgid ""
+"<br/>Reward (badge %(badge_name)s) for every succeeding user was sent to "
+"%(users)s."
 msgstr ""
-"<br/>Apdovanojimas (ženklelis %s) kiekvienam sėkmingam vartotojui buvo "
-"išsiųstas %s."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -191,7 +200,9 @@ msgid ""
 "                <p>\n"
 "                    You just reached a new rank : <strong>${object.rank_id.name}</strong>\n"
 "                </p>\n"
-"                <p>Continue your work to become a <strong>${object.next_rank_id.name}</strong> !</p>\n"
+"                % if object.next_rank_id.name\n"
+"                    <p>Continue your work to become a <strong>${object.next_rank_id.name}</strong> !</p>\n"
+"                % endif\n"
 "                <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                    % set gamification_redirection_data = object.get_gamification_redirection_data()\n"
 "                    % for data in gamification_redirection_data\n"
@@ -207,6 +218,13 @@ msgid ""
 "                </p>\n"
 "            </td>\n"
 "        </tr>\n"
+"        % if user.signature\n"
+"        <tr>\n"
+"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                ${user.signature | safe}\n"
+"            </td>\n"
+"        </tr>\n"
+"        % endif\n"
 "    </tbody>\n"
 " </table>\n"
 "</div>"
@@ -217,25 +235,15 @@ msgstr ""
 msgid ""
 "<div>\n"
 "    <strong>Reminder ${object.name}</strong><br/>\n"
-"You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.\n"
-"<br/><br/>\n"
-"Thank you,\n"
-"    <br/>\n"
-"    % if object.challenge_id.manager_id and object.challenge_id.manager_id.signature:\n"
-"    ${object.challenge_id.manager_id.signature | safe}\n"
+"    You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.\n"
+"    <br/><br/>\n"
+"    Thank you,\n"
+"    % if object.challenge_id.manager_id.signature:\n"
+"        <br/>\n"
+"        ${object.challenge_id.manager_id.signature | safe}\n"
 "    % endif\n"
 "</div>"
 msgstr ""
-"<div>\n"
-"    <strong>Priminimas ${object.name}</strong><br/>\n"
-"Neatnaujinote savo progreso tikslui ${object.definition_id.name} (šiuo metu pasiekta ${object.completeness}%) bent ${object.remind_update_delay} dienoms. Nepamirškite to atlikti.\n"
-"<br/><br/>\n"
-"Ačiū,\n"
-"    <br/>\n"
-"    % if object.challenge_id.manager_id and object.challenge_id.manager_id.signature:\n"
-"    ${object.challenge_id.manager_id.signature | safe}\n"
-"    % endif\n"
-"</div>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -272,6 +280,11 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\">Susiję</span>\n"
 "                                <span class=\"o_stat_text\">Tikslai</span>"
+
+#. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
+msgid "<span class=\"o_stat_text\">Users</span>"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -488,11 +501,9 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid ""
-"A goal definition is a technical model of goal defining a condition to reach.\n"
+"A goal definition is a technical specification of a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
-"Tikslo paaiškinimas yra techninis tikslo modelis, nurodantis, kokias sąlygas reikia pasiekti.\n"
-"Siektinos datos, reikšmės ir vartotojai yra nurodyti tikslo atvejyje."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
@@ -557,11 +568,12 @@ msgid "Alternative to a list of users"
 msgstr "Alternatyva vartotojų sąrašui"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__category
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__challenge_category
 msgid "Appears in"
 msgstr "Rodoma"
 
 #. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Archived"
 msgstr "Archyvuotas"
@@ -790,6 +802,17 @@ msgid "Computation Mode"
 msgstr "Skaičiavimo režimas"
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__condition
+msgid "Condition"
+msgstr "Sąlyga"
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__consolidated
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
+msgid "Consolidated"
+msgstr ""
+
+#. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
 msgid "Create User"
 msgstr "Sukurti vartotoją"
@@ -842,6 +865,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
@@ -855,6 +879,7 @@ msgstr "Sukūrė"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
@@ -885,19 +910,22 @@ msgid "Date Field"
 msgstr "Datos laukas"
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge__category
+#: model:ir.model.fields,help:gamification.field_gamification_goal__computation_mode
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__computation_mode
+msgid ""
+"Define how the goals will be computed. The result of the operation will be "
+"stored in the field 'Current'."
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
 msgstr "Nustatykite iššūkio matomumą per meniu"
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal__computation_mode
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__computation_mode
-msgid ""
-"Defined how will be computed the goals. The result of the operation will be "
-"stored in the field 'Current'."
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_condition
+msgid "Definition Condition"
 msgstr ""
-"Aprašyta, kaip bus skaičiuojami tikslai. Operacijos rezultatas bus laikomas "
-"lauke \"Esamas\"."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_description
@@ -926,11 +954,13 @@ msgstr "Apibūdinkite, ką jie padarė ir kodėl tai svarbu (bus paviešinta)"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__description
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__description
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__description
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "Description"
 msgstr "Aprašymas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__visibility_mode
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_display
 msgid "Display Mode"
 msgstr "Rodymo režimas"
 
@@ -944,11 +974,12 @@ msgstr "Rodymo režimas"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
+#: model:ir.model.fields,field_description:gamification.field_res_users__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_display
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_mode
 msgid "Displayed as"
 msgstr "Rodomas kaip"
@@ -1075,8 +1106,8 @@ msgstr "Kiekvienam sekančiam vartotojui"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
-msgid "Formating Options"
-msgstr "Formatavimo pasirinkimai"
+msgid "Formatting Options"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__level
@@ -1146,6 +1177,13 @@ msgid "Gamification: Goal Challenge Check"
 msgstr "Sužaidybinimas: tikslų iššūkio patikrinimas"
 
 #. module: gamification
+#: model:ir.actions.server,name:gamification.ir_cron_consolidate_last_month_ir_actions_server
+#: model:ir.cron,cron_name:gamification.ir_cron_consolidate_last_month
+#: model:ir.cron,name:gamification.ir_cron_consolidate_last_month
+msgid "Gamification: Karma tracking consolidation"
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
@@ -1183,8 +1221,6 @@ msgid "Goal List"
 msgstr "Tikslų sąrašas"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__condition
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_condition
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__condition
 msgid "Goal Performance"
 msgstr "Tikslo sėkmė"
@@ -1258,6 +1294,7 @@ msgstr "Suteikimas"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Group By"
@@ -1280,11 +1317,11 @@ msgstr "Paslėpta"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
-msgid "How to compute the goal?"
-msgstr "Kaip apskaičiuoti tikslą?"
+msgid "How is the goal computed?"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__category__hr
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
 msgid "Human Resources / Engagement"
 msgstr "Personalas / Įsitraukimas"
 
@@ -1298,6 +1335,8 @@ msgstr "Personalas / Įsitraukimas"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__id
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__id
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__id
+#: model:ir.model.fields,field_description:gamification.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -1340,25 +1379,25 @@ msgstr "Paveikslėlis"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1024
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Paveikslėlis "
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_128
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Paveikslėlis 128"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_256
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Paveikslėlis 256"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_512
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "Paveikslėlis 512"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__inprogress
@@ -1377,11 +1416,9 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
 msgid ""
-"In batch mode, this indicates which field distinct one user form the other, "
-"e.g. user_id, partner_id..."
+"In batch mode, this indicates which field distinguishes one user from the "
+"other, e.g. user_id, partner_id..."
 msgstr ""
-"Grupiniame režime, tai parodo, kuris laukas atskiria vieną vartotoją nuo "
-"kito, pvz., user_id, partner_id..."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
@@ -1405,10 +1442,15 @@ msgid "Individual Goals"
 msgstr "Individualūs tikslai"
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_inherited_ids
+msgid "Inherited models"
+msgstr "Paveldėti modeliai"
+
+#. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin3
 #: model:gamification.goal.definition,name:gamification.definition_base_invite
 msgid "Invite new Users"
-msgstr "Pakviesti naujus vartotojus"
+msgstr "Pakviesti naujus naudotojus"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_is_follower
@@ -1422,6 +1464,11 @@ msgid "Karma"
 msgstr "Karma"
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_res_users__karma_tracking_ids
+msgid "Karma Changes"
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge____last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user____last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard____last_update
@@ -1431,6 +1478,8 @@ msgstr "Karma"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition____last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard____last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank____last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking____last_update
+#: model:ir.model.fields,field_description:gamification.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
@@ -1454,6 +1503,7 @@ msgstr "Paskutinis atnaujinimas"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
@@ -1467,6 +1517,7 @@ msgstr "Paskutinį kartą atnaujino"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
@@ -1499,11 +1550,6 @@ msgstr "Sarašas tikslų, kurie bus nusatatyti"
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__user_ids
 msgid "List of users participating to the challenge"
 msgstr "Vartotojų, dalyvaujančių iššūkyje, sąrašas"
-
-#. module: gamification
-#: model:gamification.goal.definition,name:gamification.definition_nbr_following
-msgid "Mail Group Following"
-msgstr "Pašto grupinis sekimas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_main_attachment_id
@@ -1542,7 +1588,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_id
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Model"
-msgstr "Modelis"
+msgstr "Šablonas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_monetary
@@ -1572,6 +1618,7 @@ msgstr "Mėnesinė suma"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__description_motivational
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "Motivational"
 msgstr ""
 
@@ -1614,6 +1661,11 @@ msgstr "Niekada"
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__remind_update_delay
 msgid "Never reminded if no value or zero is specified."
 msgstr "Niekada nepriminti, jei vertė nenurodyta arba ji yra 0."
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__new_value
+msgid "New Karma Value"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
@@ -1691,7 +1743,7 @@ msgstr "Veiksmų skaičius"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Klaidų kiekis"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction_counter
@@ -1712,9 +1764,14 @@ msgid "Number of unread messages"
 msgstr "Neperskaitytų žinučių skaičius"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_count_distinct
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_users_count
 msgid "Number of users"
 msgstr "Vartotojų skaičius"
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__old_value
+msgid "Old Karma Value"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__onchange
@@ -1823,23 +1880,23 @@ msgid "Ranks List"
 msgstr ""
 
 #. module: gamification
-#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
-msgid "Reach the next rank and become a Master!"
-msgstr ""
-
-#. module: gamification
-#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
-msgid "Reach the next rank and become a powerful user!"
-msgstr ""
-
-#. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
-msgid "Reach the next rank to improve your status!"
+msgid "Reach the next rank and gain a very magic wand !"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
+msgid "Reach the next rank and gain a very nice hat !"
 msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
-msgid "Reach the next rank to show the rest of the world you exist."
+msgid "Reach the next rank and gain a very nice mug !"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
+msgid "Reach the next rank and gain a very nice unicorn !"
 msgstr ""
 
 #. module: gamification
@@ -1999,6 +2056,11 @@ msgid "Search Ranks"
 msgstr ""
 
 #. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
+msgid "Search Trackings"
+msgstr ""
+
+#. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
@@ -2056,7 +2118,7 @@ msgid "Set your Timezone"
 msgstr "Nustatykite savo laiko juostą"
 
 #. module: gamification
-#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__category__other
+#: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__other
 msgid "Settings / Gamification Tools"
 msgstr "Nustatymai / sužaidybinimo įrankiai"
 
@@ -2097,7 +2159,7 @@ msgstr "Pradėti tikslą"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr "Būsena"
+msgstr "Regionas"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -2125,6 +2187,12 @@ msgstr "Priešdėlis"
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__invited_user_ids
 msgid "Suggest to users"
 msgstr "Pasiūlyti vartotojams"
+
+#. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_line_list_view
+msgid "Target"
+msgstr "Tikslas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__target_goal
@@ -2214,6 +2282,11 @@ msgid "The list of instances of this badge granted to users"
 msgstr "Šio ženklelio išdavimo vartotojams atvejų sąrašas"
 
 #. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_inherited_ids
+msgid "The list of models that extends the current model."
+msgstr "Sąrašas modulių, praplėčiančių dabartinį modulį."
+
+#. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__unique_owner_ids
 msgid "The list of unique users having received this badge."
 msgstr "Unikalių vartotojų, gavusių šį ženklelį, sąrašas."
@@ -2235,25 +2308,19 @@ msgstr ""
 #: code:addons/gamification/models/goal.py:0
 #, python-format
 msgid ""
-"The model configuration for the definition %s seems incorrect, please check it.\n"
+"The model configuration for the definition %(name)s seems incorrect, please check it.\n"
 "\n"
-"%s not found"
+"%(error)s not found"
 msgstr ""
-"Modelio konfigūracija aprašui %s atrodo neteisinga, patikrinkite ją.\n"
-"\n"
-"%s nerasta"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
 #, python-format
 msgid ""
-"The model configuration for the definition %s seems incorrect, please check it.\n"
+"The model configuration for the definition %(name)s seems incorrect, please check it.\n"
 "\n"
-"%s not stored"
+"%(field_name)s not stored"
 msgstr ""
-"Modelio konfigūracija aprašui %s atrodo neteisinga, patikrinkite ją.\n"
-"\n"
-"%s nesaugoma"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_id
@@ -2286,7 +2353,7 @@ msgid "The number of time the current user has sent this badge this month."
 msgstr "Kiek kartų esamas vartotojas išsiuntė šį ženklelį šį mėnesį."
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge__stat_count_distinct
+#: model:ir.model.fields,help:gamification.field_gamification_badge__granted_users_count
 msgid "The number of time this badge has been received by unique users."
 msgstr "Kiek kartų šis ženklelis buvo gautas unikalių vartotojų."
 
@@ -2296,9 +2363,14 @@ msgid "The number of time this badge has been received this month."
 msgstr "Kiek kartų šis ženklelis buvo gautas šį mėnesį."
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge__stat_count
+#: model:ir.model.fields,help:gamification.field_gamification_badge__granted_count
 msgid "The number of time this badge has been received."
 msgstr "Kiek kartu šis ženklelis buvo gautas."
+
+#. module: gamification
+#: model:ir.model.constraint,message:gamification.constraint_gamification_karma_rank_karma_min_check
+msgid "The required karma has to be above 0."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_monetary
@@ -2376,9 +2448,31 @@ msgid "To update"
 msgstr "Atnaujinti"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_count
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_count
 msgid "Total"
 msgstr "Suma"
+
+#. module: gamification
+#: model:ir.model,name:gamification.model_gamification_karma_tracking
+msgid "Track Karma Changes"
+msgstr ""
+
+#. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
+msgid "Tracking"
+msgstr "Sekimas"
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__tracking_date
+msgid "Tracking Date"
+msgstr ""
+
+#. module: gamification
+#: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
+#: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
+msgid "Trackings"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__unique_owner_ids
@@ -2417,6 +2511,8 @@ msgstr "Atnaujinti %s"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__user_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__user_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__user_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__user_id
+#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "User"
 msgstr "Vartotojas"
@@ -2427,6 +2523,7 @@ msgid "User domain"
 msgstr "Vartotojo domenas"
 
 #. module: gamification
+#: model:ir.actions.act_window,name:gamification.action_current_rank_users
 #: model:ir.model,name:gamification.model_res_users
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__user_ids
@@ -2436,11 +2533,6 @@ msgstr "Vartotojai"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__user_ids
 msgid "Users having this rank"
-msgstr ""
-
-#. module: gamification
-#: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
-msgid "Users to that rank"
 msgstr ""
 
 #. module: gamification
@@ -2586,15 +2678,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. days"
 msgstr "pvz. dienos"
-
-#. module: gamification
-#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
-msgid ""
-"e.g. result = env['mail.followers'].search_count([('res_model', '=', "
-"'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
-msgstr ""
-"pvz. result = env['mail.followers'].search_count([('res_model', '=', "
-"'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view

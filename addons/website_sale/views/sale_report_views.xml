@@ -59,7 +59,8 @@
         <field name="name">Online Sales Analysis</field>
         <field name="res_model">sale.report</field>
         <field name="view_mode">pivot,graph</field>
-        <field name="domain">[('state','in',('sale', 'done')), ('website_id', '!=', False)]</field>
+        <field name="domain">[('website_id', '!=', False)]</field>
+        <field name="context">{'search_default_confirmed': 1}</field>
         <field name="search_view_id" ref="sale_report_view_search_website"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">

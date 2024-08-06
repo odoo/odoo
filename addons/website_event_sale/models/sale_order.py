@@ -2,6 +2,7 @@
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class SaleOrder(models.Model):
@@ -9,7 +10,7 @@ class SaleOrder(models.Model):
 
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         self.ensure_one()
-        lines = super(SaleOrder, self)._cart_find_product_line(product_id, line_id)
+        lines = super(SaleOrder, self)._cart_find_product_line(product_id, line_id, **kwargs)
         if line_id:
             return lines
         domain = [('id', 'in', lines.ids)]
@@ -71,20 +72,23 @@ class SaleOrder(models.Model):
             if ticket.id:
                 self = self.with_context(event_ticket_id=ticket.id, fixed_price=1)
         else:
-            line = None
-            ticket = self.env['event.event.ticket'].search([('product_id', '=', product_id)], limit=1)
+            ticket_domain = [('product_id', '=', product_id)]
+            if self.env.context.get("event_ticket_id"):
+                ticket_domain = expression.AND([ticket_domain, [('id', '=', self.env.context['event_ticket_id'])]])
+            ticket = self.env['event.event.ticket'].search(ticket_domain, limit=1)
             old_qty = 0
         new_qty = set_qty if set_qty else (add_qty or 0 + old_qty)
 
         # case: buying tickets for a sold out ticket
         values = {}
-        if ticket and ticket.seats_limited and ticket.seats_available <= 0:
+        increased_quantity = new_qty > old_qty
+        if ticket and ticket.seats_limited and ticket.seats_available <= 0 and increased_quantity:
             values['warning'] = _('Sorry, The %(ticket)s tickets for the %(event)s event are sold out.') % {
                 'ticket': ticket.name,
                 'event': ticket.event_id.name}
             new_qty, set_qty, add_qty = 0, 0, -old_qty
         # case: buying tickets, too much attendees
-        elif ticket and ticket.seats_limited and new_qty > ticket.seats_available:
+        elif ticket and ticket.seats_limited and new_qty > ticket.seats_available and increased_quantity:
             values['warning'] = _('Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event.') % {
                 'remaining_seats': ticket.seats_available,
                 'ticket': ticket.name,

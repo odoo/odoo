@@ -16,6 +16,12 @@ QUnit.module('base_settings_tests', {
                 fields: {
                     foo: {string: "Foo", type: "boolean"},
                     bar: {string: "Bar", type: "boolean"},
+                    baz: {
+                        string: "Baz",
+                        type: "selection",
+                        selection: [[1, "treads"], [2, "treats"]],
+                        default: 1,
+                    },
                 },
             },
         };
@@ -84,6 +90,61 @@ QUnit.module('base_settings_tests', {
         assert.isVisible(form.$('.notFound'), "record not found message shown");
         form.$('.searchInput').val('f').trigger('keyup');
         assert.strictEqual(form.$('span.o_form_label .highlighter').html(), "F", "F word highlighted");
+        form.destroy();
+    });
+
+    QUnit.test('unhighlight section not matching anymore', async function(assert) {
+        assert.expect(7);
+
+        const form = await createView({
+            View: BaseSettingsView,
+            model: 'project',
+            data: this.data,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings">
+                    <div class="o_panel">
+                        <div class="setting_search">
+                            <input type="text" class="searchInput" placeholder="Search..." />
+                        </div>
+                    </div>
+                    <header>
+                        <button string="Save" type="object" name="execute" class="oe_highlight" />
+                        <button string="Cancel" type="object" name="cancel" class="oe_link" />
+                    </header>
+                    <div class="o_setting_container">
+                        <div class="settings_tab" />
+                        <div class="settings">
+                            <div class="notFound o_hidden">No Record Found</div>
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_right_pane">
+                                            <label for="baz"/>
+                                            <div class="content-group">
+                                                <div class="mt16">
+                                                    <field name="baz" class="o_light_label" widget="radio"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>`
+        });
+        assert.hasAttrValue(form.$('.selected'), 'data-key',"crm","crm setting selected");
+        assert.isVisible(form.$(".settings .app_settings_block"), "project settings show");
+
+        await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'trea', 'keyup');
+        assert.containsN(form, '.highlighter', 2, 'should have 2 options highlighted');
+        assert.equal(form.$('.highlighter:eq(0)').parent().text(), 'treads');
+        assert.equal(form.$('.highlighter:eq(1)').parent().text(), 'treats');
+
+        await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'tread', 'keyup');
+        assert.containsN(form, '.highlighter', 1, 'should have only one highlighted');
+        assert.equal(form.$('.highlighter').parent().text(), 'treads');
+
         form.destroy();
     });
 

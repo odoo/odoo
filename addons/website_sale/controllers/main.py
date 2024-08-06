@@ -262,7 +262,7 @@ class WebsiteSale(http.Controller):
             url = "/shop/category/%s" % slug(category)
 
         product_count = len(search_product)
-        pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
+        pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=5, url_args=post)
         offset = pager['offset']
         products = search_product[offset: offset + ppg]
 
@@ -282,6 +282,7 @@ class WebsiteSale(http.Controller):
 
         values = {
             'search': search,
+            'order': post.get('order', ''),
             'category': category,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
@@ -491,6 +492,15 @@ class WebsiteSale(http.Controller):
     # Checkout
     # ------------------------------------------------------
 
+    def checkout_check_address(self, order):
+        billing_fields_required = self._get_mandatory_fields_billing(order.partner_id.country_id.id)
+        if not all(order.partner_id.read(billing_fields_required)[0].values()):
+            return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
+
+        shipping_fields_required = self._get_mandatory_fields_shipping(order.partner_shipping_id.country_id.id)
+        if not all(order.partner_shipping_id.read(shipping_fields_required)[0].values()):
+            return request.redirect('/shop/address?partner_id=%d' % order.partner_shipping_id.id)
+
     def checkout_redirection(self, order):
         # must have a draft sales order with lines at this point, otherwise reset
         if not order or order.state != 'draft':
@@ -523,9 +533,6 @@ class WebsiteSale(http.Controller):
                         partner_id = int(kw.get('partner_id'))
                     if partner_id in shippings.mapped('id'):
                         order.partner_shipping_id = partner_id
-                elif not order.partner_shipping_id:
-                    last_order = request.env['sale.order'].sudo().search([("partner_id", "=", order.partner_id.id)], order='id desc', limit=1)
-                    order.partner_shipping_id.id = last_order and last_order.id
 
         values = {
             'order': order,
@@ -568,6 +575,31 @@ class WebsiteSale(http.Controller):
         # data: values after preprocess
         error = dict()
         error_message = []
+
+        if data.get('partner_id'):
+            partner_su = request.env['res.partner'].sudo().browse(int(data['partner_id'])).exists()
+            name_change = partner_su and 'name' in data and data['name'] != partner_su.name
+            email_change = partner_su and 'email' in data and data['email'] != partner_su.email
+
+            # Prevent changing the billing partner name if invoices have been issued.
+            if mode[1] == 'billing' and name_change and not partner_su.can_edit_vat():
+                error['name'] = 'error'
+                error_message.append(_(
+                    "Changing your name is not allowed once documents have been issued for your"
+                    " account. Please contact us directly for this operation."
+                ))
+
+            # Prevent change the partner name or email if it is an internal user.
+            if (name_change or email_change) and not all(partner_su.user_ids.mapped('share')):
+                error.update({
+                    'name': 'error' if name_change else None,
+                    'email': 'error' if email_change else None,
+                })
+                error_message.append(_(
+                    "If you are ordering for an external person, please place your order via the"
+                    " backend. If you wish to change your name or email address, please do so in"
+                    " the account settings or contact your administrator."
+                ))
 
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]
@@ -625,12 +657,21 @@ class WebsiteSale(http.Controller):
         return partner_id
 
     def values_preprocess(self, order, mode, values):
-        # Convert the values for many2one fields to integer since they are used as IDs
+        new_values = dict()
         partner_fields = request.env['res.partner']._fields
-        return {
-            k: (bool(v) and int(v)) if k in partner_fields and partner_fields[k].type == 'many2one' else v
-            for k, v in values.items()
-        }
+
+        for k, v in values.items():
+            # Convert the values for many2one fields to integer since they are used as IDs
+            if k in partner_fields and partner_fields[k].type == 'many2one':
+                new_values[k] = bool(v) and int(v)
+            # Store empty fields as `False` instead of empty strings `''` for consistency with other applications like
+            # Contacts.
+            elif v == '':
+                new_values[k] = False
+            else:
+                new_values[k] = v
+
+        return new_values
 
     def values_postprocess(self, order, mode, values, errors, error_msg):
         new_values = {}
@@ -643,14 +684,13 @@ class WebsiteSale(http.Controller):
                 if k not in ('field_required', 'partner_id', 'callback', 'submitted'): # classic case
                     _logger.debug("website_sale postprocess: %s value has been dropped (empty or not writable)" % k)
 
-        new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
-        new_values['user_id'] = request.website.salesperson_id and request.website.salesperson_id.id
-
         if request.website.specific_user_account:
             new_values['website_id'] = request.website.id
 
         if mode[0] == 'new':
             new_values['company_id'] = request.website.company_id.id
+            new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
+            new_values['user_id'] = request.website.salesperson_id.id
 
         lang = request.lang.code if request.lang.code in request.website.mapped('language_ids.code') else None
         if lang:
@@ -705,7 +745,7 @@ class WebsiteSale(http.Controller):
                 return request.redirect('/shop/checkout')
 
         # IF POSTED
-        if 'submitted' in kw:
+        if 'submitted' in kw and request.httprequest.method == "POST":
             pre_values = self.values_preprocess(order, mode, kw)
             errors, error_msg = self.checkout_form_validate(mode, kw, pre_values)
             post, errors, error_msg = self.values_postprocess(order, mode, pre_values, errors, error_msg)
@@ -715,6 +755,10 @@ class WebsiteSale(http.Controller):
                 values = kw
             else:
                 partner_id = self._checkout_form_save(mode, post, kw)
+                # We need to validate _checkout_form_save return, because when partner_id not in shippings
+                # it returns Forbidden() instead the partner_id
+                if isinstance(partner_id, Forbidden):
+                    return partner_id
                 if mode[1] == 'billing':
                     order.partner_id = partner_id
                     order.with_context(not_self_saleperson=True).onchange_partner_id()
@@ -723,6 +767,10 @@ class WebsiteSale(http.Controller):
                     if not kw.get('use_same'):
                         kw['callback'] = kw.get('callback') or \
                             (not order.only_services and (mode[0] == 'edit' and '/shop/checkout' or '/shop/address'))
+                    # We need to update the pricelist(by the one selected by the customer), because onchange_partner reset it
+                    # We only need to update the pricelist when it is not redirected to /confirm_order
+                    if kw.get('callback', False) != '/shop/confirm_order':
+                        request.website.sale_get_order(update_pricelist=True)
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
 
@@ -782,13 +830,9 @@ class WebsiteSale(http.Controller):
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
             return request.redirect('/shop/address')
 
-        billing_fields_required = self._get_mandatory_fields_billing(order.partner_id.country_id.id)
-        if not all(order.partner_id.read(billing_fields_required)[0].values()):
-            return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
-
-        shipping_fields_required = self._get_mandatory_fields_shipping(order.partner_shipping_id.country_id.id)
-        if not all(order.partner_shipping_id.read(shipping_fields_required)[0].values()):
-            return request.redirect('/shop/address?partner_id=%d' % order.partner_shipping_id.id)
+        redirection = self.checkout_check_address(order)
+        if redirection:
+            return redirection
 
         values = self.checkout_values(**post)
 
@@ -806,7 +850,7 @@ class WebsiteSale(http.Controller):
     def confirm_order(self, **post):
         order = request.website.sale_get_order()
 
-        redirection = self.checkout_redirection(order)
+        redirection = self.checkout_redirection(order) or self.checkout_check_address(order)
         if redirection:
             return redirection
 
@@ -870,6 +914,12 @@ class WebsiteSale(http.Controller):
             return_url= '/shop/payment/validate',
             bootstrap_formatting= True
         )
+        if order.partner_id.company_id and order.partner_id.company_id.id != order.company_id.id:
+            values['errors'].append(
+                (_('Sorry, we are unable to find a Payment Method'),
+                 _('No payment method is available for your current order. '
+                   'Please contact us for more information.')))
+            return values
 
         domain = expression.AND([
             ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order.company_id.id)],
@@ -901,7 +951,7 @@ class WebsiteSale(http.Controller):
            paying / canceling
         """
         order = request.website.sale_get_order()
-        redirection = self.checkout_redirection(order)
+        redirection = self.checkout_redirection(order) or self.checkout_check_address(order)
         if redirection:
             return redirection
 
@@ -1026,6 +1076,12 @@ class WebsiteSale(http.Controller):
         """
         if sale_order_id is None:
             order = request.website.sale_get_order()
+            if not order and 'sale_last_order_id' in request.session:
+                # Retrieve the last known order from the session if the session key `sale_order_id`
+                # was prematurely cleared. This is done to prevent the user from updating their cart
+                # after payment in case they don't return from payment through this route.
+                last_order_id = request.session['sale_last_order_id']
+                order = request.env['sale.order'].sudo().browse(last_order_id).exists()
         else:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             assert order.id == request.session.get('sale_last_order_id')
@@ -1077,7 +1133,7 @@ class WebsiteSale(http.Controller):
     def print_saleorder(self, **kwargs):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
-            pdf, _ = request.env.ref('sale.action_report_saleorder').sudo()._render_qweb_pdf([sale_order_id])
+            pdf, _ = request.env.ref('sale.action_report_saleorder').with_user(SUPERUSER_ID)._render_qweb_pdf([sale_order_id])
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         else:
@@ -1261,7 +1317,7 @@ class WebsiteSale(http.Controller):
                 ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel, orderby='visit_datetime DESC')
             products_ids = [product['product_id'][0] for product in products]
             if products_ids:
-                viewed_products = request.env['product.product'].with_context(display_default_code=False).browse(products_ids)
+                viewed_products = request.env['product.product'].with_context(display_default_code=False).search([('id', 'in', products_ids)])
 
                 FieldMonetary = request.env['ir.qweb.field.monetary']
                 monetary_options = {

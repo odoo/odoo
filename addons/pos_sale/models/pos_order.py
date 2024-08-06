@@ -25,4 +25,6 @@ class PosOrder(models.Model):
     def _prepare_invoice_vals(self):
         invoice_vals = super(PosOrder, self)._prepare_invoice_vals()
         invoice_vals['team_id'] = self.crm_team_id
+        addr = self.partner_id.address_get(['delivery'])
+        invoice_vals['partner_shipping_id'] = addr['delivery']
         return invoice_vals

@@ -23,6 +23,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     start: function () {
         this._adaptPayButton();
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.options = _.extend(self.$el.data(), self.options);
@@ -500,7 +505,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         var self = this;
-        var pm_id = parseInt(ev.target.value);
+        var pm_id = parseInt(ev.currentTarget.value);
 
         var tokenDelete = function () {
             self._rpc({

@@ -545,7 +545,7 @@ Andrew</p>]]></field>
             <field eval="35000" name="expected_revenue"/>
             <field eval="25.0" name="probability"/>
             <field name="contact_name">Leland Martinez</field>
-            <field name="email_from">info@deltapc.com</field>
+            <field name="email_from">info@deltapc.example.com</field>
             <field name="partner_name">Delta PC</field>
             <field name="city">London</field>
             <field name="street">3661 Station Street</field>
@@ -607,7 +607,6 @@ Andrew</p>]]></field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
-            <field name="date_closed" eval="(DateTime.today() - relativedelta(months=3)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>

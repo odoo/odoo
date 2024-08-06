@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import werkzeug.exceptions
+import werkzeug.urls
+
 from odoo import api, fields, models
+from odoo.http import request
 from odoo.tools.translate import html_translate
 
 
@@ -111,11 +115,12 @@ class Menu(models.Model):
     def _compute_visible(self):
         for menu in self:
             visible = True
-            if menu.page_id and not menu.user_has_groups('base.group_user') and \
-                (not menu.page_id.sudo().is_visible or
-                 (not menu.page_id.view_id._handle_visibility(do_raise=False) and
-                 menu.page_id.view_id.visibility != "password")):
-                visible = False
+            if menu.page_id and not menu.user_has_groups('base.group_user'):
+                page_sudo = menu.page_id.sudo()
+                if (not page_sudo.is_visible
+                    or (not page_sudo.view_id._handle_visibility(do_raise=False)
+                        and page_sudo.view_id.visibility != "password")):
+                    visible = False
             menu.is_visible = visible
 
     @api.model
@@ -177,11 +182,20 @@ class Menu(models.Model):
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
             menu_id = self.browse(menu['id'])
-            # if the url match a website.page, set the m2o relation
-            # except if the menu url is '#', meaning it will be used as a menu container, most likely for a dropdown
-            if menu['url'] == '#':
+            # Check if the url match a website.page (to set the m2o relation),
+            # except if the menu url contains '#', we then unset the page_id
+            if '#' in menu['url']:
+                # Multiple case possible
+                # 1. `#` => menu container (dropdown, ..)
+                # 2. `#anchor` => anchor on current page
+                # 3. `/url#something` => valid internal URL
+                # 4. https://google.com#smth => valid external URL
                 if menu_id.page_id:
                     menu_id.page_id = None
+                if request and menu['url'].startswith('#') and len(menu['url']) > 1:
+                    # Working on case 2.: prefix anchor with referer URL
+                    referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
+                    menu['url'] = referer_url + menu['url']
             else:
                 domain = self.env["website"].website_domain(website_id) + [
                     "|",
@@ -193,7 +207,12 @@ class Menu(models.Model):
                     menu['page_id'] = page.id
                     menu['url'] = page.url
                 elif menu_id.page_id:
-                    menu_id.page_id.write({'url': menu['url']})
+                    try:
+                        # a page shouldn't have the same url as a controller
+                        rule, arguments = self.env['ir.http']._match(menu['url'])
+                        menu_id.page_id = None
+                    except werkzeug.exceptions.NotFound:
+                        menu_id.page_id.write({'url': menu['url']})
             menu_id.write(menu)
 
         return True

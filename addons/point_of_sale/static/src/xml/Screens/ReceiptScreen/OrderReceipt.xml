@@ -33,7 +33,7 @@
                     <t t-raw="receipt.header_html" />
                 </t>
                 <t t-if="!receipt.header_html and receipt.header">
-                    <div><t t-esc="receipt.header" /></div>
+                    <div style="white-space:pre-line"><t t-esc="receipt.header" /></div>
                 </t>
                 <t t-if="receipt.cashier">
                     <div class="cashier">
@@ -49,7 +49,7 @@
             <div class="orderlines">
                 <t t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
                     <t t-if="isSimple(line)">
-                        <div>
+                        <div class="responsive-price">
                             <t t-esc="line.product_name_wrapped[0]" />
                             <span t-esc="env.pos.format_currency_no_symbol(line.price_display)" class="price_display pos-receipt-right-align"/>
                         </div>
@@ -82,12 +82,23 @@
                         </t>
                         <div class="pos-receipt-left-padding">
                             <t t-esc="Math.round(line.quantity * Math.pow(10, env.pos.dp['Product Unit of Measure'])) / Math.pow(10, env.pos.dp['Product Unit of Measure'])"/>
-                            <t t-if="line.unit_name !== 'Units'" t-esc="line.unit_name" />
+                            <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
                             x
-                            <t t-esc="env.pos.format_currency_no_symbol(line.price_display_one)" />
+                            <t t-esc="env.pos.format_currency(line.price_display_one)" />
                             <span class="price_display pos-receipt-right-align">
                                 <t t-esc="env.pos.format_currency_no_symbol(line.price_display)" />
                             </span>
+                        </div>
+                    </t>
+                    <t t-if="line.pack_lot_lines">
+                        <div class="pos-receipt-left-padding">
+                            <ul>
+                                <t t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
+                                    <li>
+                                        SN <t t-esc="lot.attributes['lot_name']"/>
+                                    </li>
+                                </t>
+                            </ul>
                         </div>
                     </t>
                 </t>
@@ -100,7 +111,7 @@
                 <br/>
                 <div>Subtotal<span t-esc="env.pos.format_currency(receipt.subtotal)" class="pos-receipt-right-align"/></div>
                 <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.name">
-                    <div>
+                    <div class="responsive-price">
                         <t t-esc="tax.name" />
                         <span t-esc='env.pos.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
                     </div>
@@ -116,9 +127,13 @@
             </div>
             <t t-if="receipt.total_rounded != receipt.total_with_tax">
                 <div class="pos-receipt-amount">
-                    ROUNDED
-                    <span t-esc="env.pos.format_currency(receipt.total_rounded)" class="pos-receipt-right-align"/>
+                  Rounding
+                <span t-esc='env.pos.format_currency(receipt.rounding_applied)' class="pos-receipt-right-align"/>
                 </div>
+                <div class="pos-receipt-amount">
+                  To Pay
+                 <span t-esc='env.pos.format_currency(receipt.total_rounded)' class="pos-receipt-right-align"/>
+              </div>
             </t>
             <br/><br/>
 

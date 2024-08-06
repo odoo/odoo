@@ -58,21 +58,19 @@ class SaleOrder(models.Model):
             'search_default_billable_timesheet': True
         }  # erase default filters
         if self.timesheet_count > 0:
-            action['domain'] = [('so_line', 'in', self.order_line.ids)]
+            action['domain'] = [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)]
         else:
             action = {'type': 'ir.actions.act_window_close'}
         return action
 
-    def _create_invoices(self, grouped=False, final=False, start_date=None, end_date=None):
-        """ Override the _create_invoice method in sale.order model in sale module
-            Add new parameter in this method, to invoice sale.order with a date. This date is used in sale_make_invoice_advance_inv into this module.
-            :param start_date: the start date of the period
-            :param end_date: the end date of the period
-            :return {account.move}: the invoices created
+    def _create_invoices(self, grouped=False, final=False, date=None):
+        """Link timesheets to the created invoices. Date interval is injected in the
+        context in sale_make_invoice_advance_inv wizard.
         """
-        moves = super(SaleOrder, self)._create_invoices(grouped, final)
-        moves._link_timesheets_to_invoice(start_date, end_date)
+        moves = super()._create_invoices(grouped=grouped, final=final, date=date)
+        moves._link_timesheets_to_invoice(self.env.context.get("timesheet_start_date"), self.env.context.get("timesheet_end_date"))
         return moves
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -199,10 +197,15 @@ class SaleOrderLine(models.Model):
         """
         lines_by_timesheet = self.filtered(lambda sol: sol.product_id and sol.product_id._is_delivered_timesheet())
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
-        domain = expression.AND([domain, [
+        refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
+        timesheet_domain = [
             '|',
             ('timesheet_invoice_id', '=', False),
-            ('timesheet_invoice_id.state', '=', 'cancel')]])
+            ('timesheet_invoice_id.state', '=', 'cancel')]
+        if refund_account_moves:
+            credited_timesheet_domain = [('timesheet_invoice_id.state', '=', 'posted'), ('timesheet_invoice_id', 'in', refund_account_moves.ids)]
+            timesheet_domain = expression.OR([timesheet_domain, credited_timesheet_domain])
+        domain = expression.AND([domain, timesheet_domain])
         if start_date:
             domain = expression.AND([domain, [('date', '>=', start_date)]])
         if end_date:

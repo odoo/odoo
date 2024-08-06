@@ -197,10 +197,46 @@ class TestForum(TestForumCommon):
             self.post.with_user(self.user_portal).vote(upvote=True)
 
     def test_vote(self):
+        def check_vote_records_count_and_integrity(expected_total_votes_count):
+            groups = self.env['forum.post.vote'].read_group([], fields=['__count'], groupby=['post_id', 'user_id'], lazy=False)
+            self.assertEqual(len(groups), expected_total_votes_count)
+            for post_user_group in groups:
+                self.assertEqual(post_user_group['__count'], 1)
+
+        check_vote_records_count_and_integrity(2)
         self.post.create_uid.karma = KARMA['ask']
-        self.user_portal.karma = KARMA['upv']
-        self.post.with_user(self.user_portal).vote(upvote=True)
+        self.user_portal.karma = KARMA['dwv']
+        initial_vote_count = self.post.vote_count
+        post_as_portal = self.post.with_user(self.user_portal)
+        res = post_as_portal.vote(upvote=True)
+
+        self.assertEqual(res['user_vote'], '1')
+        self.assertEqual(res['vote_count'], initial_vote_count + 1)
+        self.assertEqual(post_as_portal.user_vote, 1)
         self.assertEqual(self.post.create_uid.karma, KARMA['ask'] + KARMA['gen_que_upv'], 'website_forum: wrong karma generation of upvoted question author')
+
+        # On voting again with the same value, nothing changes
+        res = post_as_portal.vote(upvote=True)
+        self.assertEqual(res['vote_count'], initial_vote_count + 1)
+        self.assertEqual(res['user_vote'], '1')
+        self.post.invalidate_cache()
+        self.assertEqual(post_as_portal.user_vote, 1)
+
+        # On reverting vote, vote cancels
+        res = post_as_portal.vote(upvote=False)
+        self.assertEqual(res['vote_count'], initial_vote_count)
+        self.assertEqual(res['user_vote'], '0')
+        self.post.invalidate_cache()
+        self.assertEqual(post_as_portal.user_vote, 0)
+
+        # Everything works from "0" too
+        res = post_as_portal.vote(upvote=False)
+        self.assertEqual(res['vote_count'], initial_vote_count - 1)
+        self.assertEqual(res['user_vote'], '-1')
+        self.post.invalidate_cache()
+        self.assertEqual(post_as_portal.user_vote, -1)
+
+        check_vote_records_count_and_integrity(3)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_downvote_crash(self):
@@ -436,3 +472,25 @@ class TestForum(TestForumCommon):
             not discussions_post.uid_has_answered or discussions_post.forum_id.mode == 'discussions', True)
         self.assertEqual(
             discussions_post.uid_has_answered and discussions_post.forum_id.mode == 'questions', False)
+
+    def test_tag_creation_multi_forum(self):
+        Post = self.env['forum.post']
+        forum_1 = self.forum
+        forum_2 = forum_1.copy({
+            'name': 'Questions Forum'
+        })
+        self.user_portal.karma = KARMA['tag_create']
+        Post.with_user(self.user_portal).create({
+            'name': "Post Forum 1",
+            'forum_id': forum_1.id,
+            'tag_ids': forum_1._tag_to_write_vals('_Food'),
+        })
+        Post.with_user(self.user_portal).create({
+            'name': "Post Forum 2",
+            'forum_id': forum_2.id,
+            'tag_ids': forum_2._tag_to_write_vals('_Food'),
+        })
+        food_tags = self.env['forum.tag'].search([('name', '=', 'Food')])
+        self.assertEqual(len(food_tags), 2, "One Food tag should have been created in each forum.")
+        self.assertIn(forum_1, food_tags.forum_id, "One Food tag should have been created for forum 1.")
+        self.assertIn(forum_2, food_tags.forum_id, "One Food tag should have been created for forum 2.")

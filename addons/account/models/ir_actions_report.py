@@ -3,6 +3,9 @@
 from odoo import models, api, _
 from odoo.exceptions import UserError
 
+from odoo.tools import float_compare
+
+
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
@@ -33,3 +36,24 @@ class IrActionsReport(models.Model):
             if attachment:
                 attachment.register_as_main_attachment(force=False)
         return res
+
+    def _render_qweb_pdf(self, res_ids=None, data=None):
+        # Overridden so that the print > invoices actions raises an error
+        # when trying to print a miscellaneous operation instead of an invoice.
+        # + append context data with the display_name_in_footer parameter
+        if self.model == 'account.move' and res_ids:
+            invoice_reports = (self.env.ref('account.account_invoices_without_payment'), self.env.ref('account.account_invoices'))
+            if self in invoice_reports:
+                if self.env['ir.config_parameter'].sudo().get_param('account.display_name_in_footer'):
+                    data = data and dict(data) or {}
+                    data.update({'display_name_in_footer': True})
+                moves = self.env['account.move'].browse(res_ids)
+                if any(not move.is_invoice(include_receipts=True) for move in moves):
+                    raise UserError(_("Only invoices could be printed."))
+
+        return super()._render_qweb_pdf(res_ids=res_ids, data=data)
+
+    def _get_rendering_context(self, docids, data):
+        data = data and dict(data) or {}
+        data.update({'float_compare': float_compare})
+        return super()._get_rendering_context(docids=docids, data=data)

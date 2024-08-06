@@ -20,21 +20,23 @@
 # xu xiaohu <xu.xiaohu@gmail.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# mao luo <dooms21day@163.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
+# GritLuo <dooms21day@163.com>, 2020
 # Martin Trigaux, 2020
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # bf2549c5415a9287249cba2b8a5823c7, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # keecome <7017511@qq.com>, 2020
-# Zang <minoscc@gmail.com>, 2020
+# mino <minoscc@gmail.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # 洋 任 <1042636194@qq.com>, 2020
 # Melvin Liu <betien@msn.cn>, 2020
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# Benson <Benson.Dr@Gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -42,8 +44,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -496,7 +498,7 @@ msgstr "添加副产品到物料清单。 这也可以用来获得几个成品�
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Add quality checks to your work orders"
-msgstr "工单质量检查"
+msgstr "质检【亲，这是付费企业版才有，当然你也可以请人开发一个功能模块自己用】"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -2129,6 +2131,14 @@ msgid "It has already been unblocked."
 msgstr "已经解除阻塞"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr "无法取消计划一个工单。您应该取消计划制造订单，以便取消计划所有链接的操作。"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 msgid "Its Operations are Planned"
 msgstr "已计划其作业"
@@ -2562,8 +2572,8 @@ msgid ""
 "Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
 msgstr ""
-"制造作业在工作中心进行。 工作中心可以由\n"
-" 工人和/或机器，它们用于成本核算，计划，产能计划等。"
+"所有的制造订单作业都可以排到工作中心，安排制造计划到工作中心里去。 这工作中心是什么意思呢？工作中心它可以是\n"
+" 工人和/或机器的统称，意思是工作也可以叫一个工作中心，一台车床可以叫一个工作中心，它们用来做成本核算，排计划，产能计划等。"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -2572,9 +2582,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
-"制造作业在工作中心进行。 工作中心可以由\n"
-" 工人和/或机器，它们用于成本核算，计划，产能计划等。\n"
-" 可以通过配置菜单定义它们。"
+"所有的制造订单作业都可以排到工作中心，安排制造计划到工作中心里去。 这工作中心是什么意思呢？工作中心它可以是\n"
+" 工人和/或机器的统称，意思是工作也可以叫一个工作中心，一台车床可以叫一个工作中心，它们用来做成本核算，排计划，产能计划等。\n"
+"您可以通过配置菜单来设置并定义它。"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
@@ -2724,7 +2734,7 @@ msgstr "无数据可用"
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workcenter_load_report_graph
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_report
 msgid "No data yet!"
-msgstr "还没有数据！"
+msgstr "还没有数据耶！"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
@@ -2778,6 +2788,24 @@ msgstr "不可用"
 #: model:ir.model.fields,help:mrp.field_stock_scrap__workorder_id
 msgid "Not to restrict or prefer quants, but informative."
 msgstr "不限制或偏好数量，但内容丰富。"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid ""
+"Note that archived work center(s): '%s' is/are still linked to active Bill "
+"of Materials, which means that operations can still be planned on it/them. "
+"To prevent this, deletion of the work center is recommended instead."
+msgstr ""
+"请注意，已归档的工作中心：'%s'仍然与活动的物料清单相联系，这意味着仍然可以对它/它们进行操作计划。为了防止这种情况，建议删除该工作中心。"
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr "注意!! 产品: '%s' 仍然链接到有效的物料清单, 这意味著该产品仍可用于它/它们."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3225,7 +3253,7 @@ msgstr "生产残留产品"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Produce residual products (A + B -&gt; C + D)"
-msgstr "产生残留产物(A + B -&gt; C + D)"
+msgstr "产生残留产物(A + B -&gt; C + D)【例如模具制作过程中产生的铜渣就是副产品，不能直接扔了，这都是钱啊】"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3765,6 +3793,12 @@ msgid "Sequence stock after manufacturing"
 msgstr "制造后的库存顺序"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Serial number (%s) has already been produced."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
 msgid "Set duration manually"
 msgstr "手动设置时长"
@@ -4019,7 +4053,7 @@ msgstr "子 BOM"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Subcontract the production of some products"
-msgstr "外包一些产品的生产"
+msgstr "外包一些产品的生产【不能工序外包，仅在创建产品BOM时就指定是否外包。】"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
@@ -4123,6 +4157,12 @@ msgid ""
 msgstr "选择的计量单位跟产品表单的计量单位在不同的类别。"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr "工单 (%s) 无法启动两次"
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4168,6 +4208,15 @@ msgid ""
 msgstr "工作订单的计划结束日期不能早于计划开始日期，请更正此日期以保存工单。"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr "该产品已至少使用过一次，编辑其结构可能会导致不良行为。您应该归档产品并使用新的物料清单创建一个新产品。"
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
@@ -4195,6 +4244,14 @@ msgid ""
 "The serial number %(number)s used for component %(component)s has already "
 "been consumed"
 msgstr "用于组件%(component)s的序列号%(number)s已经消耗"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr "选择的序列号与制造订单中使用的序列号不对应，请选择另一个序列号."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4461,7 +4518,7 @@ msgstr "调拨"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Transfers"
-msgstr "转账"
+msgstr "物料流转"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__type
@@ -5157,6 +5214,14 @@ msgid ""
 "<i>apply</i> Odoo will produce all the finished products and consume all "
 "components."
 msgstr "您尚未记录<i>生产量</i>，通过单击<i>应用</i>Odoo将生产所有成品并消耗所有组件。"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr "你必须表明至少有一个组件的消耗量不为零"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

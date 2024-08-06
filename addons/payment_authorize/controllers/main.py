@@ -17,8 +17,18 @@ class AuthorizeController(http.Controller):
     @http.route([
         '/payment/authorize/return/',
         '/payment/authorize/cancel/',
-    ], type='http', auth='public', csrf=False)
+    ], type='http', auth='public', csrf=False, save_session=False)
     def authorize_form_feedback(self, **post):
+        """ Process the data returned by Authorize after redirection.
+
+        The route is flagged with `save_session=False` to prevent Odoo from assigning a new session
+        to the user if they are redirected to this route with a POST request. Indeed, as the session
+        cookie is created without a `SameSite` attribute, some browsers that don't implement the
+        recommended default `SameSite=Lax` behavior will not include the cookie in the redirection
+        request from the payment provider to Odoo. As the redirection to the '/payment/status' page
+        will satisfy any specification of the `SameSite` attribute, the session of the user will be
+        retrieved and with it the transaction which will be immediately post-processed.
+        """
         _logger.info('Authorize: entering form_feedback with post data %s', pprint.pformat(post))
         if post:
             request.env['payment.transaction'].sudo().form_feedback(post, 'authorize')
@@ -77,7 +87,7 @@ class AuthorizeController(http.Controller):
         #You cannot issue refunds against unsettled, voided, declined or errored transactions.</quote>
         return res
 
-    @http.route(['/payment/authorize/s2s/create'], type='http', auth='public')
+    @http.route(['/payment/authorize/s2s/create'], type='http', auth='public', save_session=False)
     def authorize_s2s_create(self, **post):
         acquirer_id = int(post.get('acquirer_id'))
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)

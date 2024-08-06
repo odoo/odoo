@@ -499,6 +499,20 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {string}
+         */
+        _computeMessageTypeText() {
+            if (this.message_type === 'notification') {
+                return this.env._t("System notification");
+            }
+            if (!this.is_discussion && !this.is_notification) {
+                return this.env._t("Note");
+            }
+            return this.env._t("Message");
+        }
+
+        /**
+         * @private
          * @returns {mail.messaging}
          */
         _computeMessaging() {
@@ -515,6 +529,10 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computePrettyBody() {
+            if (!this.body) {
+                // body null in db, body will be false instead of empty string
+                return clear();
+            }
             let prettyBody;
             for (const emoji of emojis) {
                 const { unicode } = emoji;
@@ -585,9 +603,10 @@ function factory(dependencies) {
         checkedThreadCaches: many2many('mail.thread_cache', {
             inverse: 'checkedMessages',
         }),
-        date: attr({
-            default: moment(),
-        }),
+        /**
+         * Determines the date of the message as a moment object.
+         */
+        date: attr(),
         /**
          * States the time elapsed since date up to now.
          */
@@ -719,6 +738,14 @@ function factory(dependencies) {
         isStarred: attr({
             default: false,
         }),
+        messageTypeText: attr({
+            compute: '_computeMessageTypeText',
+            dependencies: [
+                'message_type',
+                'is_discussion',
+                'is_notification',
+            ],
+        }),
         message_type: attr(),
         messaging: many2one('mail.messaging', {
             compute: '_computeMessaging',
@@ -771,6 +798,7 @@ function factory(dependencies) {
          */
         prettyBody: attr({
             compute: '_computePrettyBody',
+            default: "",
             dependencies: ['body'],
         }),
         subject: attr(),

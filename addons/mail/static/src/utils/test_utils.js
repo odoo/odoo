@@ -748,6 +748,23 @@ function pasteFiles(el, files) {
 }
 
 //------------------------------------------------------------------------------
+// Public: DOM utilities
+//------------------------------------------------------------------------------
+
+/**
+ * Determine if a DOM element has been totally scrolled
+ *
+ * A 1px margin of error is given to accomodate subpixel rounding issues and
+ * Element.scrollHeight value being either int or decimal
+ *
+ * @param {DOM.Element} el
+ * @returns {boolean}
+ */
+function isScrolledToBottom(el) {
+    return Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop) <= 1;
+}
+
+//------------------------------------------------------------------------------
 // Export
 //------------------------------------------------------------------------------
 
@@ -758,6 +775,7 @@ return {
     createRootComponent,
     dragenterFiles,
     dropFiles,
+    isScrolledToBottom,
     nextAnimationFrame,
     nextTick,
     pasteFiles,

@@ -273,6 +273,9 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_reordering_days_to_purchase(self):
         company = self.env.ref('base.main_company')
+        company2 = self.env['res.company'].create({
+            'name': 'Second Company',
+        })
         company.write({'po_lead': 0.00})
         self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
         self.mock_date = self.patcher.start()
@@ -280,15 +283,26 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         vendor = self.env['res.partner'].create({
             'name': 'Colruyt'
         })
+        vendor2 = self.env['res.partner'].create({
+            'name': 'Delhaize'
+        })
 
         self.env.company.days_to_purchase = 2.0
 
         product = self.env['product.product'].create({
             'name': 'Chicory',
             'type': 'product',
-            'seller_ids': [(0, 0, {'name': vendor.id, 'delay': 1.0})]
+            'seller_ids': [
+                (0, 0, {'name': vendor2.id, 'delay': 15.0, 'company_id': company2.id}),
+                (0, 0, {'name': vendor.id, 'delay': 1.0, 'company_id': company.id})
+            ]
         })
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = product
+        orderpoint_form.product_min_qty = 0.0
+        orderpoint = orderpoint_form.save()
+
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_company(company2))
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 0.0
         orderpoint = orderpoint_form.save()
@@ -308,7 +322,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         delivery_moves._action_confirm()
         self.env['procurement.group'].run_scheduler()
         po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
-        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), fields.Date.today() + timedelta(days=2))
+        expected_date_order = fields.Date.today() + timedelta(days=2)
+        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), expected_date_order)
         self.assertEqual(len(po_line), 1)
         self.assertEqual(po_line.product_uom_qty, 20.0)
         self.assertEqual(len(po_line.order_id), 1)
@@ -318,10 +333,33 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.mock_date.today.return_value = fields.Date.today() + timedelta(days=1)
         orderpoint._compute_qty()
         self.env['procurement.group'].run_scheduler()
-        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
-        self.assertEqual(len(po_line), 2)
-        self.assertEqual(len(po_line.order_id), 2)
-        new_order = po_line.order_id.sorted('date_order')[-1]
-        self.assertEqual(fields.Date.to_date(new_order.date_order), fields.Date.today() + timedelta(days=2))
-        self.assertEqual(new_order.order_line.product_uom_qty, 5.0)
+        po_line02 = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(po_line02, po_line, 'The orderpoint execution should not create a new POL')
+        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), expected_date_order, 'The Order Deadline should not change')
+        self.assertEqual(po_line.product_uom_qty, 25.0, 'The existing POL should be updated with the quantity of the last execution')
         self.patcher.stop()
+
+    def test_supplier_lead_time(self):
+        """ Basic stock configuration and a supplier with a minimum qty and a lead time """
+        self.env['stock.warehouse.orderpoint'].search([]).unlink()
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.product_1
+        orderpoint_form.product_min_qty = 10
+        orderpoint_form.product_max_qty = 50
+        orderpoint = orderpoint_form.save()
+
+        self.env['product.supplierinfo'].search([('product_tmpl_id', '=', self.product_1.product_tmpl_id.id)]).unlink()
+        self.env['product.supplierinfo'].create({
+            'name': self.partner_1.id,
+            'min_qty': 1,
+            'price': 1,
+            'delay': 7,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+        })
+
+        self.env['procurement.group'].run_scheduler()
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner_1.id)])
+
+        today = fields.Datetime.start_of(fields.Datetime.now(), 'day')
+        self.assertEqual(purchase_order.date_order, today)
+        self.assertEqual(fields.Datetime.start_of(purchase_order.date_planned, 'day'), today + timedelta(days=7))

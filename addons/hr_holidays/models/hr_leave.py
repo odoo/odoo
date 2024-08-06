@@ -6,7 +6,7 @@
 import logging
 import math
 
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 
 from datetime import datetime, date, timedelta, time
 from dateutil.rrule import rrule, DAILY
@@ -16,7 +16,7 @@ from odoo import api, fields, models, SUPERUSER_ID, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, format_date
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import _
 from odoo.osv import expression
@@ -78,10 +78,11 @@ class HolidaysRequest(models.Model):
 
             if lt:
                 defaults['holiday_status_id'] = lt.id
+                defaults['request_unit_custom'] = False
 
         if 'state' in fields_list and not defaults.get('state'):
             lt = self.env['hr.leave.type'].browse(defaults.get('holiday_status_id'))
-            defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
+            defaults['state'] = 'confirm'
 
         now = fields.Datetime.now()
         if 'date_from' not in defaults:
@@ -594,7 +595,12 @@ class HolidaysRequest(models.Model):
         """ Returns a float equals to the timedelta between two dates given as string."""
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
-            return employee._get_work_days_data_batch(date_from, date_to)[employee.id]
+            # We force the company in the domain as we are more than likely in a compute_sudo
+            domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+            result = employee._get_work_days_data_batch(date_from, date_to, domain=domain)[employee.id]
+            if self.request_unit_half and result['hours'] > 0:
+                result['days'] = 0.5
+            return result
 
         today_hours = self.env.company.resource_calendar_id.get_work_hours_count(
             datetime.combine(date_from.date(), time.min),
@@ -602,8 +608,8 @@ class HolidaysRequest(models.Model):
             False)
 
         hours = self.env.company.resource_calendar_id.get_work_hours_count(date_from, date_to)
-
-        return {'days': hours / (today_hours or HOURS_PER_DAY), 'hours': hours}
+        days = hours / (today_hours or HOURS_PER_DAY) if not self.request_unit_half else 0.5
+        return {'days': days, 'hours': hours}
 
     def _adjust_date_based_on_tz(self, leave_date, hour):
         """ request_date_{from,to} are local to the user's tz but hour_{from,to} are in UTC.
@@ -648,6 +654,7 @@ class HolidaysRequest(models.Model):
                     target = leave.category_id.name
                 else:
                     target = leave.employee_id.name
+                display_date = format_date(self.env, leave.date_from)
                 if leave.leave_type_request_unit == 'hour':
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         res.append((
@@ -656,7 +663,7 @@ class HolidaysRequest(models.Model):
                                 person=target,
                                 leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(leave.date_from),
+                                date=display_date,
                             )
                         ))
                     else:
@@ -666,13 +673,12 @@ class HolidaysRequest(models.Model):
                                 person=target,
                                 leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(leave.date_from),
+                                date=display_date,
                             )
                         ))
                 else:
-                    display_date = fields.Date.to_string(leave.date_from)
                     if leave.number_of_days > 1:
-                        display_date += ' ⇨ %s' % fields.Date.to_string(leave.date_to)
+                        display_date += ' ⇨ %s' % format_date(self.env, leave.date_to)
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         res.append((
                             leave.id,
@@ -792,7 +798,7 @@ class HolidaysRequest(models.Model):
     def write(self, values):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
 
-        if not is_officer:
+        if not is_officer and values.keys() - {'message_main_attachment_id'}:
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
 
@@ -834,6 +840,8 @@ class HolidaysRequest(models.Model):
             default['request_date_from'] = default.get('date_from')
             default['request_date_to'] = default.get('date_to')
             return super().copy_data(default)
+        elif self.state in {"cancel", "refuse"}:  # No overlap constraint in these cases
+            return super().copy_data(default)
         raise UserError(_('A time off cannot be duplicated.'))
 
     def _get_mail_redirect_suggested_company(self):
@@ -849,11 +857,10 @@ class HolidaysRequest(models.Model):
     # Business methods
     ####################################################
 
-    def _create_resource_leave(self):
-        """ This method will create entry in resource calendar time off object at the time of holidays validated
-        :returns: created `resource.calendar.leaves`
+    def _prepare_resource_leave_vals_list(self):
+        """Hook method for others to inject data
         """
-        vals_list = [{
+        return [{
             'name': leave.name,
             'date_from': leave.date_from,
             'holiday_id': leave.id,
@@ -861,7 +868,13 @@ class HolidaysRequest(models.Model):
             'resource_id': leave.employee_id.resource_id.id,
             'calendar_id': leave.employee_id.resource_calendar_id.id,
             'time_type': leave.holiday_status_id.time_type,
-        } for leave in self]
+            } for leave in self]
+
+    def _create_resource_leave(self):
+        """ This method will create entry in resource calendar time off object at the time of holidays validated
+        :returns: created `resource.calendar.leaves`
+        """
+        vals_list = self._prepare_resource_leave_vals_list()
         return self.env['resource.calendar.leaves'].sudo().create(vals_list)
 
     def _remove_resource_leave(self):
@@ -874,20 +887,25 @@ class HolidaysRequest(models.Model):
         holidays = self.filtered(lambda request: request.holiday_type == 'employee')
         holidays._create_resource_leave()
         meeting_holidays = holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting)
+        meetings = self.env['calendar.event']
         if meeting_holidays:
-            meeting_values = meeting_holidays._prepare_holidays_meeting_values()
-            meetings = self.env['calendar.event'].with_context(
-                no_mail_to_attendees=True,
-                active_model=self._name
-            ).create(meeting_values)
-            for holiday, meeting in zip(meeting_holidays, meetings):
-                holiday.meeting_id = meeting
+            meeting_values_for_user_id = meeting_holidays._prepare_holidays_meeting_values()
+            for user_id, meeting_values in meeting_values_for_user_id.items():
+                meetings += self.env['calendar.event'].with_user(user_id or self.env.uid).with_context(
+                                allowed_company_ids=[],
+                                no_mail_to_attendees=True,
+                                active_model=self._name
+                            ).create(meeting_values)
+        Holiday = self.env['hr.leave']
+        for meeting in meetings:
+            Holiday.browse(meeting.res_id).meeting_id = meeting
 
     def _prepare_holidays_meeting_values(self):
-        result = []
+        result = defaultdict(list)
         company_calendar = self.env.company.resource_calendar_id
         for holiday in self:
             calendar = holiday.employee_id.resource_calendar_id or company_calendar
+            user = holiday.user_id
             if holiday.leave_type_request_unit == 'hour':
                 meeting_name = _("%s on Time Off : %.2f hour(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_hours_display)
             else:
@@ -896,19 +914,20 @@ class HolidaysRequest(models.Model):
                 'name': meeting_name,
                 'duration': holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY),
                 'description': holiday.notes,
-                'user_id': holiday.user_id.id,
+                'user_id': user.id,
                 'start': holiday.date_from,
                 'stop': holiday.date_to,
                 'allday': False,
                 'privacy': 'confidential',
-                'event_tz': holiday.user_id.tz,
+                'event_tz': user.tz,
                 'activity_ids': [(5, 0, 0)],
+                'res_id': holiday.id,
             }
             # Add the partner_id (if exist) as an attendee
-            if holiday.user_id and holiday.user_id.partner_id:
+            if user and user.partner_id:
                 meeting_values['partner_ids'] = [
-                    (4, holiday.user_id.partner_id.id)]
-            result.append(meeting_values)
+                    (4, user.partner_id.id)]
+            result[user.id].append(meeting_values)
         return result
 
     # YTI TODO: Remove me in master
@@ -924,8 +943,8 @@ class HolidaysRequest(models.Model):
             'holiday_status_id': self.holiday_status_id.id,
             'date_from': self.date_from,
             'date_to': self.date_to,
-            'request_date_from': self.date_from,
-            'request_date_to': self.date_to,
+            'request_date_from': self.request_date_from,
+            'request_date_to': self.request_date_to,
             'notes': self.notes,
             'number_of_days': work_days_data[employee.id]['days'],
             'parent_id': self.id,
@@ -1149,6 +1168,9 @@ class HolidaysRequest(models.Model):
                         if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
                             raise UserError(_('You must be either %s\'s manager or Time off Manager to approve this leave') % (holiday.employee_id.name))
 
+                    if not is_officer and (state == 'validate' and val_type == 'hr') and holiday.holiday_type == 'employee':
+                        raise UserError(_('You must either be a Time off Officer or Time off Manager to approve this leave'))
+
     # ------------------------------------------------------------
     # Activity methods
     # ------------------------------------------------------------
@@ -1220,15 +1242,15 @@ class HolidaysRequest(models.Model):
         """ Handle HR users and officers recipients that can validate or refuse holidays
         directly from email. """
         groups = super(HolidaysRequest, self)._notify_get_groups(msg_vals=msg_vals)
-        msg_vals = msg_vals or {}
+        local_msg_vals = dict(msg_vals or {})
 
         self.ensure_one()
         hr_actions = []
         if self.state == 'confirm':
-            app_action = self._notify_get_action_link('controller', controller='/leave/validate', **msg_vals)
+            app_action = self._notify_get_action_link('controller', controller='/leave/validate', **local_msg_vals)
             hr_actions += [{'url': app_action, 'title': _('Approve')}]
         if self.state in ['confirm', 'validate', 'validate1']:
-            ref_action = self._notify_get_action_link('controller', controller='/leave/refuse', **msg_vals)
+            ref_action = self._notify_get_action_link('controller', controller='/leave/refuse', **local_msg_vals)
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
         holiday_user_group_id = self.env.ref('hr_holidays.group_hr_holidays_user').id

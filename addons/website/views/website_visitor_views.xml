@@ -321,7 +321,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">website.track</field>
         <field name="view_mode">tree</field>
-        <field name="context">{'search_default_type_url':1}</field>
+        <field name="context">{'search_default_type_url': 1, 'create': False, 'edit': False, 'copy': False}</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'tree', 'view_id': ref('website_visitor_track_view_tree')}),
             (0, 0, {'view_mode': 'graph', 'view_id': ref('website_visitor_track_view_graph')}),

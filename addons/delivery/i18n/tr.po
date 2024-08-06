@@ -10,14 +10,14 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2020
 # Gökay Kıvırcıoğlu <riza.gokay@gmail.com>, 2020
-# Umur Akın <umura@projetgrup.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
-# Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
 # Ediz Duman <neps1192@gmail.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Umur Akın <umura@projetgrup.com>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,8 +25,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -38,6 +38,12 @@ msgstr ""
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr " (Tahmini Maliyet: %s )"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Ücretsiz Sevkiyat"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -190,6 +196,7 @@ msgstr ""
 "belirtilmiştir."
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "Arşivlendi"
@@ -1143,6 +1150,19 @@ msgstr "Genişlik"
 #: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
 msgid "Width must be positive"
 msgstr "Genişlik artı (+) değerde olmalıdır"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
+"Daha önce faturalanmış bir siparişin kargo ücretini güncelleyemezsiniz!\n"
+"\n"
+"Aşağıdaki teslimat satırları (ürün, faturalanan miktar ve fiyat) halihazırda işlenmiştir:\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

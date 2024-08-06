@@ -5,9 +5,10 @@
 # Translators:
 # Gennady Marchenko <gennadym@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2020
 # ILMIR <karamov@it-projects.info>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -56,13 +57,8 @@ msgstr "Разрешено"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
-msgid "Authentication URL"
-msgstr "URL проверки подлинности"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
-msgid "Body"
-msgstr "Содержимое"
+msgid "Authorization URL"
+msgstr "URL-адрес авторизации"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
@@ -97,8 +93,8 @@ msgstr "Создан"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
-msgid "Data URL"
-msgstr "URL данных"
+msgid "Data Endpoint"
+msgstr "Конечная точка данных"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
@@ -136,11 +132,6 @@ msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
-msgid "Link text in Login Dialog"
-msgstr "Текст ссылки в диалоге входа"
-
-#. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
 msgid "Log in with Facebook"
 msgstr "Зайти через Facebook"
@@ -154,6 +145,11 @@ msgstr "Зайдите через Google"
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
 msgstr "Зайдите через Odoo.com"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
+msgid "Login button label"
+msgstr "Ярлык кнопки входа в систему"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
@@ -233,14 +229,14 @@ msgid "System Parameter"
 msgstr "параметр системы"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
+msgid "UserInfo URL"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
 msgstr "Пользователи"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
-msgid "Validation URL"
-msgstr "URL валидации"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:0

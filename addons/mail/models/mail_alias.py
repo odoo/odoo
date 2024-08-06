@@ -142,6 +142,7 @@ class Alias(models.Model):
         name already exists an UserError is raised. """
         sanitized_name = remove_accents(name).lower().split('@')[0]
         sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
+        sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
         sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
 
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
@@ -176,7 +177,7 @@ class Alias(models.Model):
     def _get_alias_bounced_body_fallback(self, message_dict):
         return _("""Hi,<br/>
 The following email sent to %s cannot be accepted because this is a private email address.
-Only allowed people can contact us at this address.""", message_dict.get('to'))
+Only allowed people can contact us at this address.""", self.display_name)
 
     def _get_alias_bounced_body(self, message_dict):
         """Get the body of the email return in case of bounced email.

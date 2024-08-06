@@ -135,3 +135,21 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             self.company_data['default_journal_bank'].payment_debit_account_id.reconcile = False
         with self.assertRaises(ValidationError), self.cr.savepoint():
             self.company_data['default_journal_bank'].payment_credit_account_id.reconcile = False
+
+    def test_remove_account_from_account_group(self):
+        """Test if an account is well removed from account group"""
+        group = self.env['account.group'].create({
+            'name': 'test_group',
+            'code_prefix_start': 401000,
+            'code_prefix_end': 402000,
+            'company_id': self.env.company.id
+        })
+
+        account_1 = self.company_data['default_account_revenue'].copy({'code': 401000})
+        account_2 = self.company_data['default_account_revenue'].copy({'code': 402000})
+
+        self.assertRecordValues(account_1 + account_2, [{'group_id': group.id}] * 2)
+
+        group.code_prefix_end = 401000
+
+        self.assertRecordValues(account_1 + account_2, [{'group_id': group.id}, {'group_id': False}])

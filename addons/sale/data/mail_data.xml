@@ -56,7 +56,8 @@
     </data>
     <!-- Template and notification section -->
     <data noupdate="1">
-        <template id="mail_notification_paynow_online" inherit_id="mail.mail_notification_paynow" name="Quotation: Sign and Pay mail notification template">
+        <template id="mail_notification_paynow_online" inherit_id="mail.mail_notification_paynow"
+            name="Quotation: Sign and Pay mail notification template">
             <xpath expr="//t[@t-set='access_name']" position="after">
                 <t t-if="record._name == 'sale.order'">
                     <t t-set="is_transaction_pending" t-value="record.get_portal_last_transaction().state == 'pending'"/>

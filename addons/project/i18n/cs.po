@@ -4,7 +4,7 @@
 # 
 # Translators:
 # milda dvorak <milda.dvorak@optimal4.cz>, 2020
-# Chris <krystof.reklamy13@gmail.com>, 2020
+# Chris, 2020
 # Jakub Lohnisky <jakub@lepremier.cz>, 2020
 # Ladislav Tomm <tomm@helemik.cz>, 2020
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
@@ -12,9 +12,11 @@
 # Michal Veselý <michal@veselyberanek.net>, 2020
 # Jakub Snášel <jakub@potisk-tricek.cz>, 2020
 # Martin Trigaux, 2020
-# trendspotter, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Jiří Podhorecký, 2021
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
@@ -22,8 +24,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Katerina Horylova, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -251,6 +253,9 @@ msgid ""
 "    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
 "    or # <b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Zaznamenávejte poznámky</b> pro interní komunikaci <i>(lidé sledující tento úkol nebudou upozorněni\n"
+"    na poznámku, kterou logujete, pokud je výslovně neoznačíte)</i>. Pomocí @ <b>zmínek</b> pingněte kolegu\n"
+"    nebo # <b>zmínek</b>oslovte celý tým."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -888,6 +893,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site...</i>"
 msgstr ""
+"Vyberte <b>název</b> svého projektu. <i>Může to být cokoli: jméno zákazníka,\n"
+"výrobku, týmu, staveniště ...</i>"
 
 #. module: project
 #. openerp-web
@@ -896,6 +903,8 @@ msgstr ""
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
 msgstr ""
+"Vyberte název úkolu <b></b> <i>(např. Návrh webových stránek, Nákup "
+"zboží...)</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
@@ -1225,16 +1234,23 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
+"Definujte kroky, které budou v projektu použity od vytvoření úkolu až po "
+"uzavření úkolu nebo problému. Tyto etapy budete používat ke sledování "
+"postupu řešení úkolu nebo problému."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited internal users: employees may only see the followed project and tasks.\n"
-"- All internal users: employees may see all project and tasks.\n"
-"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following."
 msgstr ""
 
 #. module: project
@@ -2106,6 +2122,9 @@ msgid ""
 "acquired projects, assign them and use the %s and %s to define if the "
 "project is ready for the next step. %s"
 msgstr ""
+"Spravujte životní cyklus projektu pomocí zobrazení kanban. Přidejte nově "
+"získané projekty, přiřaďte je a pomocí %sa %s určete, zda je projekt "
+"připraven k dalšímu kroku. %s"
 
 #. module: project
 #. openerp-web
@@ -3898,6 +3917,8 @@ msgid ""
 "Use this chatter to <b>send emails</b> and communicate efficently with your customers. \n"
 "    Add new people in the followers list to make them aware about the main changes about this task."
 msgstr ""
+"Pomocí tohoto chatteru můžete <b>odesílat e-maily</b> a efektivně komunikovat se svými zákazníky.\n"
+"Přidejte nové lidi do seznamu sledujících, abyste je informovali o hlavních změnách tohoto úkolu."
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -3933,7 +3954,7 @@ msgstr "Čekání na další fázi: použijte%s a %s kulky. %s"
 #, python-format
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr ""
+msgstr "Chcete lépe <b>řídit své projekty</b>? <i>Začíná to tady.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__website_message_ids

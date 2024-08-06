@@ -12,6 +12,7 @@ class IrDefault(models.Model):
     _name = 'ir.default'
     _description = 'Default Values'
     _rec_name = 'field_id'
+    _allow_sudo_commands = False
 
     field_id = fields.Many2one('ir.model.fields', string="Field", required=True,
                                ondelete='cascade', index=True)
@@ -21,6 +22,14 @@ class IrDefault(models.Model):
                                  help="If set, action binding only applies for this company")
     condition = fields.Char('Condition', help="If set, applies the default upon condition.")
     json_value = fields.Char('Default Value (JSON format)', required=True)
+
+    @api.constrains('json_value')
+    def _check_json_format(self):
+        for record in self:
+            try:
+                json.loads(record.json_value)
+            except json.JSONDecodeError:
+                raise ValidationError(_('Invalid JSON format in Default Value field.'))
 
     @api.model_create_multi
     def create(self, vals_list):

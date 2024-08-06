@@ -3,7 +3,7 @@
 # 	* website_jitsi
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,13 +11,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_jitsi
 #: model:ir.model.fields.selection,name:website_jitsi.selection__chat_room__max_capacity__12
@@ -46,7 +46,7 @@ msgstr "Stanza chat"
 #. module: website_jitsi
 #: model:ir.model,name:website_jitsi.model_chat_room_mixin
 msgid "Chat Room Mixin"
-msgstr ""
+msgstr "Mixin stanze chat"
 
 #. module: website_jitsi
 #: model:ir.actions.act_window,name:website_jitsi.chat_room_action
@@ -74,7 +74,7 @@ msgstr "Creato da"
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__display_name
@@ -86,7 +86,7 @@ msgstr "Nome visualizzato"
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__is_full
 msgid "Full"
-msgstr "Intera"
+msgstr "Al completo"
 
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__id
@@ -104,7 +104,7 @@ msgstr "Dominio server Jitsi"
 #. module: website_jitsi
 #: model_terms:ir.ui.view,arch_db:website_jitsi.chat_room_join_button
 msgid "Join the room"
-msgstr ""
+msgstr "Entra nella stanza"
 
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__lang_id
@@ -150,12 +150,12 @@ msgstr "Caricamento stanza..."
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__max_capacity
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room_mixin__room_max_capacity
 msgid "Max capacity"
-msgstr "Capacità massima"
+msgstr "Capienza massima"
 
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room__max_participant_reached
 msgid "Max participant reached"
-msgstr ""
+msgstr "Massimo di partecipanti raggiunto"
 
 #. module: website_jitsi
 #: model:ir.model.fields,help:website_jitsi.field_chat_room__max_participant_reached
@@ -177,12 +177,12 @@ msgstr "Numero partecipanti"
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room_mixin__room_max_participant_reached
 msgid "Peak participants"
-msgstr ""
+msgstr "Partecipanti massimi"
 
 #. module: website_jitsi
 #: model_terms:ir.ui.view,arch_db:website_jitsi.chat_room_view_form
 msgid "Reporting"
-msgstr "Rendicontazione"
+msgstr "Resoconti"
 
 #. module: website_jitsi
 #: model:ir.model.fields,field_description:website_jitsi.field_chat_room_mixin__room_is_full
@@ -200,7 +200,7 @@ msgstr "Nome stanza"
 #: code:addons/website_jitsi/static/src/js/chat_room.js:0
 #, python-format
 msgid "Sorry, this room is full"
-msgstr ""
+msgstr "La stanza è piena"
 
 #. module: website_jitsi
 #: model:ir.model.fields,help:website_jitsi.field_chat_room__jitsi_server_domain

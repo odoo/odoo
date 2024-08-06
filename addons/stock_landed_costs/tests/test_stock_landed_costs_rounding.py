@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -152,3 +152,136 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         # I check that the landed cost is now "Closed" and that it has an accounting entry
         self.assertEqual(stock_landed_cost_3.state, 'done')
         self.assertTrue(stock_landed_cost_3.account_move_id)
+
+    def test_stock_landed_costs_rounding_02(self):
+        """ The landed costs should be correctly computed, even when the decimal accuracy
+        of the deciaml price is increased. """
+        self.env.ref("product.decimal_price").digits = 4
+
+        fifo_pc = self.env['product.category'].create({
+            'name': 'Fifo Category',
+            'parent_id': self.env.ref("product.product_category_all").id,
+            'property_valuation': 'real_time',
+            'property_cost_method': 'fifo',
+        })
+
+        products = self.Product.create([{
+            'name': 'Super Product %s' % price,
+            'categ_id': fifo_pc.id,
+            'type': 'product',
+            'standard_price': price,
+        } for price in [0.91, 0.93, 75.17, 20.54]])
+
+        landed_product = self.Product.create({
+            'name': 'Landed Costs',
+            'type': 'service',
+            'landed_cost_ok': True,
+            'split_method_landed_cost': 'by_quantity',
+            'standard_price': 1000.0,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': qty,
+                'price_unit': product.standard_price,
+            }) for product, qty in zip(products, [6, 6, 3, 6])]
+        })
+        po.button_confirm()
+
+        res_dict = po.picking_ids.button_validate()
+        validate_wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict.get('context'))).save()
+        validate_wizard.process()
+
+        lc_form = Form(self.LandedCost)
+        lc_form.picking_ids.add(po.picking_ids)
+        with lc_form.cost_lines.new() as line:
+            line.product_id = landed_product
+        lc = lc_form.save()
+        lc.compute_landed_cost()
+
+        self.assertEqual(sum(lc.valuation_adjustment_lines.mapped('additional_landed_cost')), 1000.0)
+
+    def test_stock_landed_costs_rounding_03(self):
+        """
+        Storable AVCO product
+        Receive:
+            5 @ 5
+            5 @ 8
+            5 @ 7
+            20 @ 7.33
+        Add landed cost of $5 to each receipt (except the first one)
+        Deliver:
+            23
+            2
+            10
+        At the end, the SVL value should be zero
+        """
+        self.product_a.type = 'product'
+        self.product_a.categ_id.property_cost_method = 'average'
+
+        stock_location = self.warehouse.lot_stock_id
+        supplier_location_id = self.ref('stock.stock_location_suppliers')
+        customer_location_id = self.ref('stock.stock_location_customers')
+
+        receipts = self.env['stock.picking'].create([{
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': supplier_location_id,
+            'location_dest_id': stock_location.id,
+            'move_lines': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'price_unit': price,
+                'product_uom': self.product_a.uom_id.id,
+                'product_uom_qty': qty,
+                'location_id': supplier_location_id,
+                'location_dest_id': stock_location.id,
+            })]
+        } for qty, price in [
+            (5, 5.0),
+            (5, 8.0),
+            (5, 7.0),
+            (20, 7.33),
+        ]])
+
+        receipts.action_confirm()
+        for m in receipts.move_lines:
+            m.quantity_done = m.product_uom_qty
+        receipts.button_validate()
+
+        landed_costs = self.env['stock.landed.cost'].create([{
+            'picking_ids': [(6, 0, picking.ids)],
+            'account_journal_id': self.expenses_journal.id,
+            'cost_lines': [(0, 0, {
+                'name': 'equal split',
+                'split_method': 'equal',
+                'price_unit': 5.0,
+                'product_id': self.landed_cost.id
+            })],
+        } for picking in receipts[1:]])
+        landed_costs.compute_landed_cost()
+        landed_costs.button_validate()
+
+        self.assertEqual(self.product_a.standard_price, 7.47)
+
+        deliveries = self.env['stock.picking'].create([{
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location_id,
+            'move_lines': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom': self.product_a.uom_id.id,
+                'product_uom_qty': qty,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location_id,
+            })]
+        } for qty in [23, 2, 10]])
+
+        deliveries.action_confirm()
+        for m in deliveries.move_lines:
+            m.quantity_done = m.product_uom_qty
+        deliveries.button_validate()
+
+        self.assertEqual(self.product_a.value_svl, 0)

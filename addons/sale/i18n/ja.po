@@ -15,18 +15,20 @@
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Tim Siu Lai <tl@roomsfor.hk>, 2020
-# Ryoko Tsuda <ryoko@quartile.co>, 2020
 # Noma Yuki, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2021
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2021
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2021\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -965,9 +967,7 @@ msgstr "請求対象見積金額"
 msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "                ordered quantities, and the invoicing policy is based on ordered quantities."
-msgstr ""
-"注文は、納品数量が最初に注文された数量を上回ったときにアップセルすることであり、\n"
-"請求ポリシーは注文数量に基づいています。"
+msgstr "請求方針でオーダ数量を請求が設定され、納品数量が最初に注文された数量を上回ったときに、アップセルするオーダです。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -1016,7 +1016,7 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "                to sell extra hours when all ordered hours have been consumed."
 msgstr ""
-"たとえば、プリペイド式の時間単位サービスを販売する場合、Odooは、注文したすべての時間が消費されたときに延長して販売することをお勧めします。"
+"たとえば、プリペイド式の時間単位サービスを販売する場合、Odooは、注文されたすべての時間が消費されたときに超過時間を販売することをお勧めします。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1445,8 +1445,8 @@ msgstr "見積もりと注文をカスタマイズします。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
-msgstr "DHLUSAコネクタ"
+msgid "DHL Express Connector"
+msgstr "DHL Expressコネクタ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4032,21 +4032,17 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
-"請求するものは何もありません！\n"
-"この動作の理由は次のとおりです。\n"
-"-請求する前に製品を納品する必要があります。'トラック'アイコン(画面の右上)をクリックして、指示に従います。\n"
-"-製品の請求ポリシーを変更する必要があります。製品を開き、'販売'タブに移動して、請求ポリシーを'納品数量'から'注文数量'に変更します。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
-msgstr "このデフォルト値は、作成されたすべての新製品に適用されます。これは、製品詳細フォームで変更できます。"
+msgstr "このデフォルト値は、作成されたすべての新プロダクトに適用されます。これは、プロダクト詳細フォームで変更できます。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__campaign_id
@@ -4442,6 +4438,15 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr "ここで、受注に表示される通信タイプを設定できます。顧客が支払い方法を選択すると、通信が行われます。"
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr "商品の種類は、すでに販売注文で使用されているため、変更することができません。"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

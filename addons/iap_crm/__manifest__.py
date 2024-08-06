@@ -17,4 +17,5 @@
     'auto_install': True,
     'data': [
     ],
+    'license': 'LGPL-3',
 }

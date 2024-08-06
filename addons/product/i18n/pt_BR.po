@@ -6,11 +6,11 @@
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
 # Marcos Abreu <marcoos.abreu@gmail.com>, 2020
 # mariana rodrigues <mariana12v@gmail.com>, 2020
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
+# Rodrigo de Almeida Sottomaior Macedo <sottomaiormacedotec@gmail.com>, 2020
 # Ricardo Freitas Rodrigues <ricardo.freitasgr@gmail.com>, 2020
 # Adriel Kotviski <kotviski@gmail.com>, 2020
 # falexandresilva <falexandresilva@gmail.com>, 2020
-# grazziano <gra.negocia@gmail.com>, 2020
+# grazziano <grazziano.do+transifex@gmail.com>, 2020
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # Silmar <pinheirosilmar@gmail.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
@@ -30,6 +30,10 @@
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
+# Kevilyn Rosa, 2023
+# Adriano Prado <adrianojprado@gmail.com>, 2023
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
@@ -37,13 +41,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Maitê Dietze, 2024\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -208,9 +212,9 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"Uma descrição do produto que você deseja que apareça aos seus clientes. Esta"
-" descrição será copiada para todas os pedidos de vendas, ordens de entrega e"
-" faturas."
+"Uma descrição do produto que você deseja exibir para os seus clientes. Esta "
+"descrição será copiada para todos os pedidos de venda, pedidos de entrega e "
+"faturas de cliente/notas de crédito."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -433,7 +437,7 @@ msgstr "Disponibilidade"
 #: model_terms:ir.ui.view,arch_db:product.report_simple_barcode
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "Barcode"
-msgstr "Código de barras"
+msgstr "Código de Barras"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__barcode
@@ -1025,7 +1029,7 @@ msgstr "Atividades Futuras"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "General Information"
-msgstr "Informações Gerais"
+msgstr "Informações gerais"
 
 #. module: product
 #: model:ir.actions.server,name:product.action_product_price_list_report
@@ -1194,7 +1198,7 @@ msgstr "Importar Modelo para Lista de Preço"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "Importar Modelo para Produtos"
+msgstr "Importar modelo para produtos"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -1207,14 +1211,14 @@ msgstr "Importar Modelo para Lista de Preço de Fornecedores"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "Em Preço Padrão & AVCO: valor do produto (calculado automaticamente em AVCO).\n"
-"        Em PEPS: valor da última unidade que saiu do estoque (calculado automaticamente).\n"
-"        Usado para avaliar o produto quando o custo de compra não é conhecido (ex: ajuste de inventário).\n"
-"        Usado para calcular margens em pedidos de venda."
+"Em PEPS (FIFO): valor da próxima unidade que sairá do estoque (calculado automaticamente).\n"
+"Usado para avaliar o produto quando o custo de compra não é conhecido (por exemplo, ajuste de estoque).\n"
+"Usado para calcular margens em ordens de venda."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1428,7 +1432,7 @@ msgstr "Margem Máxima"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_max_margin
 msgid "Max. Price Margin"
-msgstr "Margem para Preço Máx."
+msgstr "Margem máxima de preço"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error
@@ -1450,7 +1454,7 @@ msgstr "Margem Mínima"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_min_margin
 msgid "Min. Price Margin"
-msgstr "Margem para Preço Min."
+msgstr "Margem mínima de preço"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__min_quantity
@@ -1608,7 +1612,7 @@ msgstr "Tipo de package"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Packaging"
-msgstr "Empacotamento"
+msgstr "Embalagem"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -1794,7 +1798,7 @@ msgstr "Método de lista de preços"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr "Listas de preços são geridos"
+msgstr "Listas de preços são geridas em"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -1981,7 +1985,7 @@ msgstr "Valores da variante de produto"
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
 msgid "Product Variants"
-msgstr "Variantes de Produto"
+msgstr "Variantes de produto"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -2244,11 +2248,9 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Especifique o valor fixo para adicionar ou subtrair (se negativo) para o "
-"valor calculado com o desconto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2339,8 +2341,8 @@ msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
 msgstr ""
-"O tributo não pode ser alterado uma vez que o valor tenha sido usado em ao "
-"menos um produto."
+"O atributo não pode ser alterado após o valor ter sido usado em ao menos um "
+"produto."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2413,6 +2415,12 @@ msgstr ""
 "O modelo do produto é arquivado para que nenhuma combinação seja possível."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2460,6 +2468,18 @@ msgstr "Não há mais combinações possíveis."
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 msgid "This comes from the product form."
 msgstr "Isto vem do formulário do produto"
+
+#. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Essa configuração de atributos, valores e exclusões do produto não levaria a"
+" nenhuma variante possível. Arquive ou exclua seu produto diretamente, se "
+"for o caso."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2672,7 +2692,7 @@ msgstr "Valores"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Variant"
-msgstr "Subtipo"
+msgstr "Variante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
@@ -2965,10 +2985,24 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
+"%s\n"
+"If the value has been associated to a product in the past, you will not be able to delete it."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"Você não pode excluir o valor %s porque ele foi usado em alguns produtos."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n"
 "%s"
 msgstr ""
-"Você não pode excluir o valor %s porque ele está sendo usado nos seguintes produtos:\n"
-"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -2987,6 +3021,14 @@ msgid ""
 msgstr ""
 "Você não pode movimentar o atributo %s a partir do produto %s para o produto"
 " %s."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Argentinean Website',
+    'name': 'Argentinean eCommerce',
     'version': '1.0',
     'category': 'Accounting/Localizations/Website',
     'sequence': 14,
@@ -20,4 +20,5 @@
     'installable': True,
     'auto_install': True,
     'application': False,
+    'license': 'LGPL-3',
 }

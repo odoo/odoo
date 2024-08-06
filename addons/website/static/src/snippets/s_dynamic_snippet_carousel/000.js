@@ -26,19 +26,31 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Method to be overridden in child components in order to prepare QWeb
-     * options
-     * @private
+     * @override
+     */
+    _getQWebRenderOptions: function () {
+        return Object.assign(
+            this._super.apply(this, arguments),
+            {
+                interval: parseInt(this.$target[0].dataset.carouselInterval),
+            },
+        );
+    },
+    /**
+     * @deprecated
+     * @todo remove me in master, this was wrongly named and was supposed to
+     * override _getQWebRenderOptions. This is kept for potential custo in
+     * stable, although note that without hacks, calling this._super here just
+     * crashes.
      */
     _getQWebRenderParams: function () {
         return Object.assign(
             this._super.apply(this, arguments),
             {
-                interval : parseInt(this.$target[0].dataset.carouselInterval),
+                interval: parseInt(this.$target[0].dataset.carouselInterval),
             },
         );
     },
-
 });
 publicWidget.registry.dynamic_snippet_carousel = DynamicSnippetCarousel;
 

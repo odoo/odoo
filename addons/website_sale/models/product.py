@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
@@ -7,6 +8,9 @@ from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
+from psycopg2.extras import execute_values
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductRibbon(models.Model):
@@ -86,7 +90,8 @@ class ProductPricelist(models.Model):
 
     def _check_website_pricelist(self):
         for website in self.env['website'].search([]):
-            if not website.pricelist_ids:
+            # sudo() to be able to read pricelists/website from another company
+            if not website.sudo().pricelist_ids:
                 raise UserError(_("With this action, '%s' website would not have any pricelist available.") % (website.name))
 
     def _is_available_on_website(self, website_id):
@@ -291,7 +296,7 @@ class ProductTemplate(models.Model):
             product = self.env['product.product'].browse(combination_info['product_id']) or self
 
             tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
-            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id).sudo()
+            fpos = self.env['account.fiscal.position'].sudo().get_fiscal_position(partner.id)
             taxes = fpos.map_tax(product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), product, partner)
 
             # The list_price is always the price of one.
@@ -303,27 +308,18 @@ class ProductTemplate(models.Model):
                 list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             else:
                 list_price = price
+            combination_info['price_extra'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['price_extra'], product.sudo().taxes_id, taxes, company_id)
+            price_extra = taxes.compute_all(combination_info['price_extra'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
 
             combination_info.update(
                 price=price,
                 list_price=list_price,
+                price_extra=price_extra,
                 has_discounted_price=has_discounted_price,
             )
 
         return combination_info
-
-    def _create_first_product_variant(self, log_warning=False):
-        """Create if necessary and possible and return the first product
-        variant for this template.
-
-        :param log_warning: whether a warning should be logged on fail
-        :type log_warning: bool
-
-        :return: the first product variant or none
-        :rtype: recordset of `product.product`
-        """
-        return self._create_product_variant(self._get_first_possible_combination(), log_warning)
 
     def _get_image_holder(self):
         """Returns the holder of the image to use as default representation.
@@ -334,11 +330,11 @@ class ProductTemplate(models.Model):
         :rtype: recordset of 'product.template' or recordset of 'product.product'
         """
         self.ensure_one()
-        if self.image_1920:
+        if self.image_128:
             return self
         variant = self.env['product.product'].browse(self._get_first_possible_variant_id())
         # if the variant has no image anyway, spare some queries by using template
-        return variant if variant.image_variant_1920 else self
+        return variant if variant.image_variant_128 else self
 
     def _get_current_company_fallback(self, **kwargs):
         """Override: if a website is set on the product or given, fallback to
@@ -346,6 +342,25 @@ class ProductTemplate(models.Model):
         res = super(ProductTemplate, self)._get_current_company_fallback(**kwargs)
         website = self.website_id or kwargs.get('website')
         return website and website.company_id or res
+
+    def _init_column(self, column_name):
+        # to avoid generating a single default website_sequence when installing the module,
+        # we need to set the default row by row for this column
+        if column_name == "website_sequence":
+            _logger.debug("Table '%s': setting default value of new column %s to unique values for each row", self._table, column_name)
+            self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
+            prod_tmpl_ids = self.env.cr.dictfetchall()
+            max_seq = self._default_website_sequence()
+            query = """
+                UPDATE {table}
+                SET website_sequence = p.web_seq
+                FROM (VALUES %s) AS p(p_id, web_seq)
+                WHERE id = p.p_id
+            """.format(table=self._table)
+            values_args = [(prod_tmpl['id'], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)]
+            execute_values(self.env.cr._obj, query, values_args)
+        else:
+            super(ProductTemplate, self)._init_column(column_name)
 
     def _default_website_sequence(self):
         ''' We want new product to be the last (highest seq).
@@ -474,3 +489,7 @@ class Product(models.Model):
         # [1:] to remove the main image from the template, we only display
         # the template extra images here
         return variant_images + self.product_tmpl_id._get_images()[1:]
+
+    def _is_add_to_cart_allowed(self):
+        self.ensure_one()
+        return self.user_has_groups('base.group_system') or (self.sale_ok and self.website_published)

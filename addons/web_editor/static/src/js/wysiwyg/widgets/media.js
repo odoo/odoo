@@ -2,6 +2,7 @@ odoo.define('wysiwyg.widgets.media', function (require) {
 'use strict';
 
 var concurrency = require('web.concurrency');
+const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
@@ -421,7 +422,7 @@ var FileWidget = SearchableMediaWidget.extend({
         if (img.image_src) {
             var src = img.image_src;
             if (!img.public && img.access_token) {
-                src += _.str.sprintf('?access_token=%s', img.access_token);
+                src += _.str.sprintf('?access_token=%s', encodeURIComponent(img.access_token));
             }
             if (!this.$media.is('img')) {
 
@@ -444,7 +445,7 @@ var FileWidget = SearchableMediaWidget.extend({
             }
             href += 'unique=' + img.checksum + '&download=true';
             this.$media.attr('href', href);
-            this.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
+            this.$media.addClass('o_image').attr('title', img.name);
         }
 
         this.$media.attr('alt', img.alt || img.description || '');
@@ -457,6 +458,10 @@ var FileWidget = SearchableMediaWidget.extend({
         removeOnImageChangeAttrs.forEach(attr => {
             delete this.media.dataset[attr];
         });
+        // Add mimetype for documents
+        if (!img.image_src) {
+            this.media.dataset.mimetype = img.mimetype;
+        }
         this.media.classList.remove('o_modified_image_to_save');
         this.$media.trigger('image_changed');
         return this.media;
@@ -577,8 +582,10 @@ var FileWidget = SearchableMediaWidget.extend({
                             'res_model': self.options.res_model,
                             'width': 0,
                             'quality': 0,
+                            'generate_access_token': true,
                         },
                     }).then(function (attachment) {
+                        self.trigger_up('wysiwyg_attachment', attachment);
                         self._handleNewAttachment(attachment);
                     });
                 });
@@ -866,6 +873,38 @@ var ImageWidget = FileWidget.extend({
                 .addClass("o_we_attachment_selected");
         });
     },
+    /**
+     * @override
+     */
+    _getAttachmentsDomain(needle) {
+        const domain = this._super(...arguments);
+
+        // Optimized images (meaning they are related to an `original_id`) can
+        // only be shown in debug mode as the toggler to make those images
+        // appear is hidden when not in debug mode.
+        // There is thus no point to fetch those optimized images outside debug
+        // mode. Worst, it leads to bugs: it might fetch only optimized images
+        // when clicking on "load more" which will look like it's bugged as no
+        // images will appear on screen (they all will be hidden).
+        if (!config.isDebug()) {
+            const subDomain = [false];
+
+            // Particular exception: if the edited image is an optimized
+            // image, we need to fetch it too so it's displayed as the
+            // selected image when opening the media dialog.
+            // We might get a few more optimized image than necessary if the
+            // original image has multiple optimized images but it's not a
+            // big deal.
+            const originalId = this.$media.length && this.$media[0].dataset.originalId;
+            if (originalId) {
+                subDomain.push(originalId);
+            }
+
+            domain.push(['original_id', 'in', subDomain]);
+        }
+
+        return domain;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -957,7 +996,7 @@ var ImageWidget = FileWidget.extend({
      */
     _clear: function (type) {
         // Not calling _super: we don't want to call the document widget's _clear method on images
-        var allImgClasses = /(^|\s+)(img|img-\S*|o_we_custom_image|rounded-circle|rounded|thumbnail|shadow)(?=\s|$)/g;
+        var allImgClasses = /(^|\s+)(img|img-\S*|o_we_custom_image|rounded-circle|rounded|thumbnail|shadow|w-25|w-50|w-75|w-100|o_modified_image_to_save)(?=\s|$)/g;
         this.media.className = this.media.className && this.media.className.replace(allImgClasses, ' ');
     },
 });
@@ -1105,7 +1144,7 @@ var IconWidget = SearchableMediaWidget.extend({
      * @override
      */
     _clear: function () {
-        var allFaClasses = /(^|\s)(fa|(text-|bg-|fa-)\S*|rounded-circle|rounded|thumbnail|shadow)(?=\s|$)/g;
+        var allFaClasses = /(^|\s)(fa|(text-|bg-|fa-)\S*|rounded-circle|rounded|thumbnail|img-thumbnail|shadow)(?=\s|$)/g;
         this.media.className = this.media.className && this.media.className.replace(allFaClasses, ' ');
     },
     /**
@@ -1337,19 +1376,22 @@ var VideoWidget = MediaWidget.extend({
             this.$('input#o_video_hide_fullscreen, input#o_video_hide_yt_logo').closest('div').toggleClass('d-none', this.$('input#o_video_hide_controls').is(':checked'));
         }
 
+        this.error = false;
         var $content = query.$video;
         if (!$content) {
             switch (query.errorCode) {
                 case 0:
+                    this.error = _t("The provided url is not valid");
                     $content = $('<div/>', {
                         class: 'alert alert-danger o_video_dialog_iframe mb-2 mt-2',
-                        text: _t("The provided url is not valid"),
+                        text: this.error,
                     });
                     break;
                 case 1:
+                    this.error = _t("The provided url does not reference any supported video");
                     $content = $('<div/>', {
                         class: 'alert alert-warning o_video_dialog_iframe mb-2 mt-2',
-                        text: _t("The provided url does not reference any supported video"),
+                        text: this.error,
                     });
                     break;
             }
@@ -1417,9 +1459,15 @@ var VideoWidget = MediaWidget.extend({
         let type;
         if (matches.youtube && matches.youtube[2].length === 11) {
             const fullscreen = options.hide_fullscreen ? '&fs=0' : '';
-            const ytLoop = loop ? loop + `&playlist=${matches.youtube[2]}` : '';
+            const ytLoop = loop ? loop + `&playlist=${encodeURIComponent(matches.youtube[2])}` : '';
             const logo = options.hide_yt_logo ? '&modestbranding=1' : '';
-            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${matches.youtube[2]}${autoplay}&rel=0${ytLoop}${controls}${fullscreen}${logo}`;
+            // The youtube js api is needed for autoplay on mobile. Note: this
+            // was added as a fix, old customers may have autoplay videos
+            // without this, which will make their video autoplay on desktop
+            // but not in mobile (so no behavior change was done in stable,
+            // this should not be migrated).
+            const enablejsapi = options.autoplay ? '&enablejsapi=1' : '';
+            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${matches.youtube[2]}${autoplay}${enablejsapi}&rel=0${ytLoop}${controls}${fullscreen}${logo}`;
             type = 'youtube';
         } else if (matches.instagram && matches.instagram[2].length) {
             embedURL = `//www.instagram.com/p/${matches.instagram[2]}/embed/`;
@@ -1428,8 +1476,9 @@ var VideoWidget = MediaWidget.extend({
             embedURL = `${matches.vine[0]}/embed/simple`;
             type = 'vine';
         } else if (matches.vimeo && matches.vimeo[3].length) {
-            const vimeoAutoplay = autoplay.replace('mute', 'muted');
-            embedURL = `//player.vimeo.com/video/${matches.vimeo[3]}${vimeoAutoplay}${loop}`;
+            const vimeoAutoplay = autoplay.replace('mute', 'muted')
+                .replace('autoplay=1', 'autoplay=1&autopause=0');
+            embedURL = `//player.vimeo.com/video/${matches.vimeo[3]}${vimeoAutoplay}${loop}${controls}`;
             type = 'vimeo';
         } else if (matches.dailymotion && matches.dailymotion[2].length) {
             const videoId = matches.dailymotion[2].replace('video/', '');

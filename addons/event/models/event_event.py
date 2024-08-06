@@ -103,7 +103,9 @@ class EventEvent(models.Model):
         return event_stages[0] if event_stages else False
 
     def _default_description(self):
-        return self.env['ir.ui.view']._render_template('event.event_default_descripton')
+        # avoid template branding with rendering_bundle=True
+        return self.env['ir.ui.view'].with_context(rendering_bundle=True) \
+            ._render_template('event.event_default_descripton')
 
     name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Text(string='Note')
@@ -237,7 +239,7 @@ class EventEvent(models.Model):
             self._cr.execute(query, (tuple(self.ids),))
             res = self._cr.fetchall()
             for event_id, state, num in res:
-                results[event_id][state_field[state]] += num
+                results[event_id][state_field[state]] = num
 
         # compute seats_available
         for event in self:

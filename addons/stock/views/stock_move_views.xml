@@ -75,7 +75,7 @@
                     <field name="product_uom_qty" string="Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False)]}"/>
                     <field name="reserved_availability" string="Reserved"/>
                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
-                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                 </tree>
             </field>
         </record>
@@ -89,6 +89,7 @@
                     <field name="product_id"/>
                     <field name="show_details_visible"/>
                     <field name="product_uom_qty"/>
+                    <field name="product_qty" readonly="1"/>
                     <field name="quantity_done"/>
                     <field name="reserved_availability"/>
                     <field name="inventory_id"/>
@@ -164,6 +165,12 @@
                                         title="Assign Serial Numbers">
                                     <span>Assign Serial Numbers</span>
                                 </button>
+                                <button name="action_clear_lines_show_details" type="object"
+                                        class="btn-link"
+                                        title="Clear Lines"
+                                        attrs="{'invisible': [('display_assign_serial', '=', False)]}">
+                                    <span>Clear All</span>
+                                </button>
                             </div>
                         </group>
                     </group>
@@ -221,14 +228,17 @@
                         attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
                         invisible="not context.get('show_lots_text')"/>
                     <field name="package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_package')" groups="stock.group_tracking_lot"/>
-                    <field name="result_package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" groups="stock.group_tracking_lot"/>
+                    <field name="result_package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" groups="stock.group_tracking_lot" context="{'picking_id': picking_id}"/>
                     <field name="owner_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_owner')" groups="stock.group_tracking_owner"/>
                     <field name="product_uom_qty" invisible="not context.get('show_reserved_quantity')" readonly="1"/>
                     <field name="state" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="picking_code" invisible="1"/>
                     <field name="qty_done" attrs="{'readonly': ['|', '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
-                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('product_uom_qty', '!=', 0.0), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" string="Unit of Measure" groups="uom.group_uom"/>
+                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"
+                        attrs="{'readonly': ['|', '|', ('product_uom_qty', '!=', 0.0),
+                                                '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True),
+                                                '&amp;', ('state', '=', 'done'), ('id', '!=', False)]}"/>
                 </tree>
             </field>
         </record>
@@ -257,7 +267,7 @@
                     <field name="product_uom_qty" readonly="1" attrs="{'column_invisible': ['|',('parent.immediate_transfer', '=', True),('parent.picking_type_code','=','incoming')]}" optional="show"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="qty_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1"/>
-                    <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="uom.group_uom"/>
+                    <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" groups="uom.group_uom"/>
                 </tree>
             </field>
         </record>
@@ -338,7 +348,8 @@
                 <search string="Stock Moves">
                     <field name="origin" filter_domain="['|', '|', ('origin', 'ilike', self), ('name', 'ilike', self), ('picking_id', 'ilike', self)]" string="Reference"/>
                     <field name="product_id"/>
-                    <field name="name" string="Location" filter_domain="['|',('location_id', 'ilike', self),('location_dest_id', 'ilike', self)]"/>
+                    <field name="location_id" string="Source Location" groups="stock.group_stock_multi_locations"/> 
+                    <field name="location_dest_id" string="Destination Location" groups="stock.group_stock_multi_locations"/> 
                     <field name="partner_id" string="Partner" filter_domain="[('picking_id.partner_id', 'child_of', self)]"/>
                     <filter string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
                     <filter string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>

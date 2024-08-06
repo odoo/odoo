@@ -7,11 +7,14 @@
 # Martin Trigaux, 2021
 # krnkris, 2021
 # Tamás Németh <ntomasz81@gmail.com>, 2021
-# gezza <geza.nagy@oregional.hu>, 2021
 # Kovács Tibor <kovika@gmail.com>, 2021
 # Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # Istvan <leki69@gmail.com>, 2021
 # A . <tiboreu@protonmail.com>, 2021
+# sixsix six, 2022
+# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
+# gezza <geza.nagy@oregional.hu>, 2023
+# Szabolcs Rádi, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +22,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: A . <tiboreu@protonmail.com>, 2021\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Last-Translator: Szabolcs Rádi, 2023\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -30,7 +33,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Lekért adatok"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
@@ -167,7 +170,7 @@ msgstr ""
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "Token szükséges új fizetési tranzakció létrehozásához."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -299,6 +302,13 @@ msgid "Amount Max"
 msgstr ""
 
 #. module: payment
+#: code:addons/payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"An acquirer is using this journal. Only bank and cash types are allowed."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "An error occured during the processing of this payment"
@@ -328,6 +338,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Biztosan szeretné érvényteleníteni a jóváhagyott tranzakciót? Ezt az akciót "
+"nem lehet visszavonni."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -836,12 +848,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Értékesítési fizetési hivatkozás generálása"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_invoice_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Fizetési link létrehozása"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
@@ -971,12 +983,6 @@ msgid "Invalid token found! Token acquirer %s != %s"
 msgstr "Érvénytelen token! Token szolgáltató %s != %s"
 
 #. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr "Érvénytelen token! Token partner %s != %s"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
 msgstr "Számla"
@@ -1062,7 +1068,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage payment methods"
-msgstr ""
+msgstr "Fizetési módok kezelése"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1511,7 +1517,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr ""
+msgstr "Feldolgozta"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__provider
@@ -1603,7 +1609,7 @@ msgstr "Elmentett fizetési adatok"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "Elmentett fizetési token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__token_implemented
@@ -1778,6 +1784,14 @@ msgid "The transaction %s with %s for %s is pending."
 msgstr ""
 
 #. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "The value of the payment amount must be positive."
@@ -1946,7 +1960,7 @@ msgstr "Figyelem!"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr ""
+msgstr "Pillanatnyilag nem tudjuk felvenni a fizetési módot."
 
 #. module: payment
 #. openerp-web
@@ -1954,7 +1968,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method at the moment."
-msgstr ""
+msgstr "Pillanatnyilag nem tudjuk törölni a fizetési módot."
 
 #. module: payment
 #. openerp-web
@@ -1976,14 +1990,14 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
-msgstr ""
+msgstr "Feldolgozzuk a fizetést, kis türelmet kérünk ..."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "Várjuk, hogy a fogadó fél megerősítse a fizetést."
 
 #. module: payment
 #. openerp-web
@@ -2002,6 +2016,12 @@ msgstr "Banki átutalás"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:0
+#, python-format
+msgid "You cannot delete the payment acquirer %s; archive it instead."
 msgstr ""
 
 #. module: payment
@@ -2062,7 +2082,7 @@ msgstr ""
 #: model_terms:payment.acquirer,auth_msg:payment.payment_acquirer_transfer
 #, python-format
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "A fizetés jóváhagyásra került."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2081,7 +2101,7 @@ msgstr ""
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 #, python-format
 msgid "Your payment has been cancelled."
-msgstr ""
+msgstr "A fizetés törlésre került."
 
 #. module: payment
 #. openerp-web
@@ -2126,7 +2146,7 @@ msgstr ""
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_transfer
 #, python-format
 msgid "Your payment has been successfully processed. Thank you!"
-msgstr ""
+msgstr "A fizetése sikeres volt. Köszönjük!"
 
 #. module: payment
 #. openerp-web

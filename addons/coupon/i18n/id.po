@@ -5,11 +5,13 @@
 # Translators:
 # Martin Trigaux, 2020
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2020
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2020
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2020
 # Bonny Useful <bonny.useful@gmail.com>, 2020
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2020
 # Ryanto The <ry.the77@gmail.com>, 2020
-# PAS IRVANUS <ipankbiz@gmail.com>, 2020
+# Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2021
+# Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2021
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: PAS IRVANUS <ipankbiz@gmail.com>, 2020\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,42 +31,42 @@ msgstr ""
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(amount)s %(currency)s discount on total amount"
-msgstr ""
+msgstr "%(amount)s %(currency)s diskon pada jumlah total"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(percentage)s%% discount on %(product_name)s"
-msgstr ""
+msgstr "%(percentage)s%% diskon pada %(product_name)s"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on cheapest product"
-msgstr ""
+msgstr "%s%% diskon untuk produk termurah"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on products"
-msgstr ""
+msgstr "%s%% diskon pada produk"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on total amount"
-msgstr ""
+msgstr "%s%% diskon pada jumlah total"
 
 #. module: coupon
 #: code:addons/coupon/wizard/coupon_generate.py:0
 #, python-format
 msgid "%s, a coupon has been generated for you"
-msgstr ""
+msgstr "%s, satu kupon telah terbuat untuk Anda"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "*Valid for following products:"
-msgstr ""
+msgstr "*Berlaku untuk produk berikut:"
 
 #. module: coupon
 #: model:coupon.program,name:coupon.10_percent_coupon
@@ -83,11 +85,13 @@ msgid ""
 "<span class=\"o_form_label oe_inline\"> Days</span> <span "
 "class=\"oe_grey\">if 0, infinite use</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\"> Hari</span> <span "
+"class=\"oe_grey\">jika 0, penggunaan tak terbatas</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "<span class=\"oe_grey\">if 0, no limit</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\">jika 0, tidak ada batas</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -99,33 +103,35 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Minimum purchase of</span>"
-msgstr ""
+msgstr "<span>Pembelian minimal sebesar</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Valid for purchase above</span>"
-msgstr ""
+msgstr "<span>Berlaku untuk pembelian di atas</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>products</span>"
-msgstr ""
+msgstr "<span>produk</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid ""
 "<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
 msgstr ""
+"<strong style=\"font-size: 55px; color: #875A7B\">dapatkan gratis "
+"pengiriman</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
 msgid "<strong>Active</strong>"
-msgstr ""
+msgstr "<strong>Aktif</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
 msgid "<strong>Coupons</strong>"
-msgstr ""
+msgstr "<strong>Kupon</strong>"
 
 #. module: coupon
 #: model:mail.template,body_html:coupon.mail_template_sale_coupon
@@ -261,7 +267,7 @@ msgstr "Terapkan Diskon"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_current_order
 msgid "Apply On Current Order"
-msgstr ""
+msgstr "Terapkan pada Order Saat Ini"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -278,7 +284,7 @@ msgstr "Diarsipkan"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__no_code_needed
 msgid "Automatically Applied"
-msgstr ""
+msgstr "Otomatis diterapkan"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__promo_code_usage
@@ -296,13 +302,13 @@ msgstr "Barcode"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_partners_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_partners_domain
 msgid "Based on Customers"
-msgstr ""
+msgstr "Berdasarkan Pelanggan"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_products_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_products_domain
 msgid "Based on Products"
-msgstr ""
+msgstr "Berdasarkan Produk"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
@@ -314,7 +320,7 @@ msgstr ""
 #. module: coupon
 #: model:coupon.program,name:coupon.3_cabinets_plus_1_free
 msgid "Buy 3 large cabinets, get one for free"
-msgstr ""
+msgstr "Beli 3 kabinet besar, dapatkan satu gratis"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -335,7 +341,7 @@ msgstr "Kode"
 #. module: coupon
 #: model:coupon.program,name:coupon.10_percent_auto_applied
 msgid "Code for 10% on orders"
-msgstr ""
+msgstr "Kode untuk diskon 10% pada order"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__company_id
@@ -361,7 +367,7 @@ msgstr "Selamat"
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_coupon
 msgid "Coupon"
-msgstr ""
+msgstr "Kupon"
 
 #. module: coupon
 #: model:ir.actions.report,name:coupon.report_coupon_code
@@ -371,14 +377,14 @@ msgstr "Kode kupon"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_count
 msgid "Coupon Count"
-msgstr ""
+msgstr "Jumlah Kupon"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_program
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__coupon_program
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Coupon Program"
-msgstr ""
+msgstr "Program Kupon"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -398,25 +404,25 @@ msgstr ""
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr ""
+msgstr "Hadiah Kupon"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_id
 msgid "Coupon Rule"
-msgstr ""
+msgstr "Aturan Kupon"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_to
 msgid "Coupon program end date"
-msgstr ""
+msgstr "Tanggal berakhir program kupon"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_from
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_from
 msgid "Coupon program start date"
-msgstr ""
+msgstr "Tanggal mulai program kupon"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__sequence
@@ -429,14 +435,14 @@ msgstr ""
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_partners_domain
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_partners_domain
 msgid "Coupon program will work for selected customers only"
-msgstr ""
+msgstr "Program kupon hanya berlaku untuk pelanggan terpilih"
 
 #. module: coupon
 #: model:ir.actions.server,name:coupon.expire_coupon_cron_ir_actions_server
 #: model:ir.cron,cron_name:coupon.expire_coupon_cron
 #: model:ir.cron,name:coupon.expire_coupon_cron
 msgid "Coupon: expire coupon based on date"
-msgstr ""
+msgstr "Kupon: kupon kadaluwarsa berdasarkan tanggal"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_action
@@ -445,17 +451,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
 msgid "Coupons"
-msgstr ""
+msgstr "Kupon"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
 msgid "Create a new coupon program"
-msgstr ""
+msgstr "Buat program kupon baru"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
 msgid "Create a new promotion program"
-msgstr ""
+msgstr "Buat program promosi baru"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_uid
@@ -489,7 +495,7 @@ msgstr "Pelanggan"
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_uom_id
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Satuan unit default yang digunakan untuk semua operasi stok."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_percentage
@@ -523,7 +529,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_type
 msgid "Discount Type"
-msgstr ""
+msgstr "Tipe Diskon"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
@@ -556,7 +562,7 @@ msgstr "Tanggal Berakhir"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__expiration_date
 msgid "Expiration Date"
-msgstr "Tanggal Kadaluarsa"
+msgstr "Tanggal Kedaluwarsa"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__expired
@@ -567,7 +573,7 @@ msgstr "Berakhir"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
 msgid "Expired Programs"
-msgstr ""
+msgstr "Program Kedaluwarsa"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_fixed_amount
@@ -580,26 +586,26 @@ msgstr "Jumlah Tetap"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__partner_id
 msgid "For Customer"
-msgstr ""
+msgstr "Untuk Pelanggan"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_id
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__reward_type__product
 msgid "Free Product"
-msgstr ""
+msgstr "Produk Gratis"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "Free Product - %s"
-msgstr ""
+msgstr "Produk Gratis - %s"
 
 #. module: coupon
 #: model:product.product,name:coupon.product_product_free_large_cabinet
 #: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
 msgid "Free Product - Large Cabinet"
-msgstr ""
+msgstr "Produk Gratis - Kabinet Besar"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -610,12 +616,12 @@ msgstr "Buat"
 #: model:ir.model,name:coupon.model_coupon_generate_wizard
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Generate Coupon"
-msgstr ""
+msgstr "Buat Kupon"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Generate Coupons"
-msgstr ""
+msgstr "Buat Kupon"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
@@ -623,11 +629,13 @@ msgid ""
 "Generate and share coupon codes with your customers to get discounts or free"
 " products."
 msgstr ""
+"Dapatkan dan bagikan kode kupon dengan pelanggan Anda untuk mendapatkan "
+"diskon atau produk gratis."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_ids
 msgid "Generated Coupons"
-msgstr ""
+msgstr "Kupon yang DIbuat"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__generation_type
@@ -642,7 +650,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Here is your reward from"
-msgstr ""
+msgstr "Ini hadiah Anda dari"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
@@ -754,7 +762,7 @@ msgstr "Nama"
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__nbr_coupons
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_coupon
 msgid "Number of Coupons"
-msgstr ""
+msgstr "Jumlah Kupon"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_generate_action
@@ -764,17 +772,17 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_customer
 msgid "Number of Selected Customers"
-msgstr ""
+msgstr "Jumlah Pelanggan Terpilih"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_generate_wizard__nbr_coupons
 msgid "Number of coupons"
-msgstr ""
+msgstr "Jumlah kupon"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__cheapest_product
 msgid "On Cheapest Product"
-msgstr ""
+msgstr "Pada Produk Termurah"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__on_order
@@ -822,7 +830,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_coupon__discount_line_product_id
 msgid "Product used in the sales order to apply the discount."
-msgstr ""
+msgstr "Produk digunakan di sale order untuk menerapkan diskon."
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_line_product_id
@@ -849,12 +857,12 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__program_id
 msgid "Program"
-msgstr ""
+msgstr "Program"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
 msgid "Program Type"
-msgstr ""
+msgstr "Tipe Program"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code_usage
@@ -884,7 +892,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__promotion_program
 msgid "Promotional Program"
-msgstr ""
+msgstr "Program Promisi"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_quantity
@@ -897,7 +905,7 @@ msgstr "Kuantitas"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_id
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Reward"
-msgstr "imbalan"
+msgstr "Hadiah"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_description
@@ -916,13 +924,13 @@ msgstr ""
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_id
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_id
 msgid "Reward Product"
-msgstr ""
+msgstr "Produk Hadiah"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr ""
+msgstr "Tipe Hadiah"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
@@ -933,7 +941,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Rewards"
-msgstr ""
+msgstr "Hadiah"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount
@@ -950,22 +958,22 @@ msgstr ""
 #. module: coupon
 #: model:ir.model,name:coupon.model_report_coupon_report_coupon
 msgid "Sales Coupon Report"
-msgstr ""
+msgstr "Laporan Kupon Penjualan"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select company"
-msgstr ""
+msgstr "Pilih perusahaan"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Select customer"
-msgstr ""
+msgstr "Pilih pelanggan"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select product"
-msgstr ""
+msgstr "Pilih produk"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -975,7 +983,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select reward product"
-msgstr ""
+msgstr "Pilih produk hadiah"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
@@ -1003,6 +1011,8 @@ msgid ""
 "Some selected customers do not have an email address and will not receive "
 "the coupon."
 msgstr ""
+"Beberapa pelanggan yang dipilih tidak memiliki alamat email dan tidak akan "
+"menerima kupon."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
@@ -1018,22 +1028,22 @@ msgstr "Status"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
 msgid "Tax Excluded"
-msgstr "Tax Excluded"
+msgstr "Tidak Termasuk Pajak"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_included
 msgid "Tax Included"
-msgstr ""
+msgstr "Termasuk Pajak"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Thank you,"
-msgstr ""
+msgstr "Terima kasih,"
 
 #. module: coupon
 #: model:ir.model.constraint,message:coupon.constraint_coupon_coupon_unique_coupon_code
 msgid "The coupon code must be unique!"
-msgstr ""
+msgstr "Kode kupon tidak boleh sama!"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_fixed_amount
@@ -1071,27 +1081,27 @@ msgstr "Satuan"
 #: model:product.template,uom_name:coupon.product_product_10_percent_discount_product_template
 #: model:product.template,uom_name:coupon.product_product_free_large_cabinet_product_template
 msgid "Units"
-msgstr ""
+msgstr "Unit"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed
 msgid "Use a code"
-msgstr ""
+msgstr "Gunakan kode"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Use this promo code before"
-msgstr ""
+msgstr "Gunakan kode promo ini sebelum"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
 msgid "Used"
-msgstr "Used"
+msgstr "Dipakai"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__new
 msgid "Valid"
-msgstr ""
+msgstr "Valid"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -1102,7 +1112,7 @@ msgstr "Masa Berlaku"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__validity_duration
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Validity Duration"
-msgstr ""
+msgstr "Durasi Validitas"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__validity_duration
@@ -1148,4 +1158,4 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "on your next order"
-msgstr ""
+msgstr "pada order Anda berikutnya"

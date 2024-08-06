@@ -4,14 +4,17 @@ odoo.define('web_editor.snippets.options', function (require) {
 var core = require('web.core');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const Dialog = require('web.Dialog');
+const {scrollTo} = require('web.dom');
 const rpc = require('web.rpc');
 const time = require('web.time');
+const utils = require('web.utils');
 var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
 const {
     normalizeColor,
     getBgImageURL,
+    isBackgroundImageAttribute,
 } = weUtils;
 var weWidgets = require('wysiwyg.widgets');
 const {
@@ -75,7 +78,16 @@ function _buildElement(tagName, title, options) {
  */
 function _buildTitleElement(title) {
     const titleEl = document.createElement('we-title');
-    titleEl.textContent = title;
+    // As a stable fix, to not touch XML templates and break existing
+    // translations, the ⌙ character is automatically replaced by └ which makes
+    // more sense for the usecase and should work properly in all browsers. The
+    // ⌙ character is actually rendered mirrored on Windows 11 Chrome (and
+    // others) as the font used for those unicode characters is left to the
+    // browser. We could force a font of our own but it's probably not worth it.
+    // TODO a better solution with a SVG or CSS solution has to be done in
+    // master. That would unify the look of the symbol across all browsers and
+    // also prevent special characters to be placed in translations.
+    titleEl.textContent = title.replace(/⌙/g, '└');
     return titleEl;
 }
 /**
@@ -149,6 +161,9 @@ function _buildCollapseElement(title, options) {
 
     const togglerEl = document.createElement('we-toggler');
     togglerEl.classList.add('o_we_collapse_toggler');
+    if (_t.database.parameters.direction === 'rtl') {
+        togglerEl.classList.add('o_we_collapse_toggler_rtl');
+    }
     groupEl.appendChild(togglerEl);
 
     const containerEl = document.createElement('div');
@@ -278,6 +293,16 @@ const UserValueWidget = Widget.extend({
             // initialized yet. No need to prevent that case: asking a non
             // initialized widget to close itself should just not be a problem
             // and just be ignored.
+            return;
+        }
+        if (!this.el.classList.contains('o_we_widget_opened')) {
+            // Small optimization: it would normally not matter asking to
+            // remove a class of an element if it does not already have it but
+            // in this case we do more: we trigger_up an event and ask to close
+            // all sub widgets. When we ask the editor to close all widgets...
+            // it makes sense not letting every sub button of every select
+            // trigger_up an event. This allows to avoid tens of thousands of
+            // instructions being done at each click in the editor.
             return;
         }
         this.trigger_up('user_value_widget_closing');
@@ -847,6 +872,16 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      */
     async start() {
         await this._super(...arguments);
+        if (!this.menuEl.children.length) {
+            // Remove empty text nodes so that :empty css rule can work
+            // TODO this has been added here as a fix to be extra careful. In
+            // master we should just avoid adding text nodes inside
+            // we-selection-items in the first place.
+            while (this.menuEl.firstChild
+                    && !this.menuEl.firstChild.data.trim().length) {
+                this.menuEl.firstChild.remove();
+            }
+        }
 
         if (this.options && this.options.valueEl) {
             this.containerEl.insertBefore(this.options.valueEl, this.menuEl);
@@ -936,6 +971,18 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _shouldIgnoreClick(ev) {
+        return !!ev.target.closest('[role="button"]');
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -945,7 +992,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      * @private
      */
     _onClick: function (ev) {
-        if (ev.target.closest('[role="button"]')) {
+        if (this._shouldIgnoreClick(ev)) {
             return;
         }
 
@@ -1241,12 +1288,16 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         const _super = this._super.bind(this);
         const args = arguments;
 
-        // TODO review in master, this was done in stable to keep the speed fix
-        // as stable as possible (to have a reference to a widget even if not a
-        // colorPalette widget).
-        this.colorPalette = new Widget(this);
-        this.colorPalette.getColorNames = () => [];
-        await this.colorPalette.appendTo(document.createDocumentFragment());
+        if (this.options.dataAttributes.lazyPalette === 'true') {
+            // TODO review in master, this was done in stable to keep the speed
+            // fix as stable as possible (to have a reference to a widget even
+            // if not a colorPalette widget).
+            this.colorPalette = new Widget(this);
+            this.colorPalette.getColorNames = () => [];
+            await this.colorPalette.appendTo(document.createDocumentFragment());
+        } else {
+            await this._renderColorPalette();
+        }
 
         // Build the select element with a custom span to hold the color preview
         this.colorPreviewEl = document.createElement('span');
@@ -1352,7 +1403,23 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             } else if (weUtils.isColorCombinationName(this._value)) {
                 this.colorPreviewEl.classList.add('o_cc', `o_cc${this._value}`);
             } else {
-                this.colorPreviewEl.classList.add(`bg-${this._value}`);
+                // Checking if the className actually exists seems overkill but
+                // it is actually needed to prevent a crash. As an example, if a
+                // colorpicker widget is linked to a SnippetOption instance's
+                // `selectStyle` method designed to handle the "border-color"
+                // property of an element, the value received can be split if
+                // the item uses different colors for its top/right/bottom/left
+                // borders. For instance, you could receive "red blue" if the
+                // item as red top and bottom borders and blue left and right
+                // borders, in which case you would reach this `else` and try to
+                // add the class "bg-red blue" which would crash because of the
+                // space inside). In that case, we simply do not show any color.
+                // We could choose to handle this split-value case specifically
+                // but it was decided that this is enough for the moment.
+                const className = `bg-${this._value}`;
+                if (classes.includes(className)) {
+                    this.colorPreviewEl.classList.add(className);
+                }
             }
         }
     },
@@ -1384,6 +1451,12 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             });
         }
         return this.colorPalette.appendTo(document.createDocumentFragment());
+    },
+    /**
+     * @override
+     */
+    _shouldIgnoreClick(ev) {
+        return ev.originalEvent.__isColorpickerClick || this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1437,16 +1510,6 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onEnterKey: function () {
         this.close();
-    },
-    /**
-     * @override
-     */
-    _onClick: function (ev) {
-        // Do not close the colorpalette on colorpicker click
-        if (!ev.originalEvent.__isColorpickerClick) {
-            this._super(...arguments);
-        }
-        ev.stopPropagation();
     },
 });
 
@@ -1709,6 +1772,8 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
         this.input.setAttribute('max', max);
         this.input.setAttribute('step', step);
         this.containerEl.appendChild(this.input);
+
+        this._onInputChange = _.debounce(this._onInputChange, 100);
     },
 
     //--------------------------------------------------------------------------
@@ -1781,6 +1846,12 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _shouldIgnoreClick(ev) {
+        return !!ev.target.closest('.o_we_pager_header') || this._super(...arguments);
+    },
     /**
      * Updates the pager's page number display.
      *
@@ -2046,6 +2117,13 @@ const SnippetOptionWidget = Widget.extend({
      * @param {boolean} previewMode - @see this.selectClass
      * @param {string} widgetValue
      * @param {Object} params
+     * @param {string} [params.forceStyle] if undefined, the method will not
+     *      set the inline style (and thus even remove it) if the item would
+     *      already have the given style without it (thanks to a CSS rule for
+     *      example). If defined (as a string), it acts as the "priority" param
+     *      of @see CSSStyleDeclaration.setProperty: it should be 'important' to
+     *      set the style as important or '' otherwise. Note that if forceStyle
+     *      is undefined, the style is always set as important when applied.
      * @returns {Promise|undefined}
      */
     selectStyle: function (previewMode, widgetValue, params) {
@@ -2140,8 +2218,11 @@ const SnippetOptionWidget = Widget.extend({
         hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
 
         function applyCSS(cssProp, cssValue, styles) {
-            if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue)) {
-                this.$target[0].style.setProperty(cssProp, cssValue, 'important');
+            const forceStyle = (typeof params.forceStyle !== 'undefined');
+            if (forceStyle
+                    || !weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
+                const priority = forceStyle ? params.forceStyle : 'important';
+                this.$target[0].style.setProperty(cssProp, cssValue, priority);
                 return true;
             }
             return false;
@@ -2196,7 +2277,6 @@ const SnippetOptionWidget = Widget.extend({
      *
      * @param {string} name - an identifier for a type of update
      * @param {*} data
-     * @returns {Promise}
      */
     notify: function (name, data) {
         if (name === 'target') {
@@ -2437,6 +2517,7 @@ const SnippetOptionWidget = Widget.extend({
 
                 const styles = window.getComputedStyle(this.$target[0]);
                 const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
+                const borderWidthCssProps = weUtils.CSS_SHORTHANDS['border-width'];
                 const cssValues = cssProps.map(cssProp => {
                     let value = styles[cssProp].trim();
                     if (cssProp === 'box-shadow') {
@@ -2445,6 +2526,11 @@ const SnippetOptionWidget = Widget.extend({
                         const color = values.find(s => !s.match(/^\d/));
                         values = values.join(' ').replace(color, '').trim();
                         value = `${color} ${values}${inset ? ' inset' : ''}`;
+                    }
+                    if (borderWidthCssProps.includes(cssProp) && value.endsWith('px')) {
+                        // Rounding value up avoids zoom-in issues.
+                        // Zoom-out issues are not an expected use case.
+                        value = `${Math.ceil(parseFloat(value))}px`;
                     }
                     return value;
                 });
@@ -3405,6 +3491,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
  * Controls image width and quality.
  */
 registry.ImageOptimize = ImageHandlerOption.extend({
+    MAX_SUGGESTED_WIDTH: 1920,
+
     /**
      * @override
      */
@@ -3429,20 +3517,36 @@ registry.ImageOptimize = ImageHandlerOption.extend({
      * @override
      */
     _computeMaxDisplayWidth() {
-        // TODO: read widths from computed style in case container widths are not default
-        const displayWidth = this._getImg().clientWidth;
-        // If the image is in a column, it might get bigger on smaller screens.
-        // We use col-lg for this in snippets, so they get bigger on the md breakpoint
-        if (this.$target.closest('[class*="col-lg"]').length) {
-            // container and o_container_small have maximum inner width of 690px on the md breakpoint
-            if (this.$target.closest('.container, .o_container_small').length) {
-                return Math.min(1920, Math.max(displayWidth, 690));
-            }
-            // A container-fluid's max inner width is 962px on the md breakpoint
-            return Math.min(1920, Math.max(displayWidth, 962));
+        const img = this._getImg();
+        const computedStyles = window.getComputedStyle(img);
+        const displayWidth = parseFloat(computedStyles.getPropertyValue('width'));
+        const gutterWidth = parseFloat(computedStyles.getPropertyValue('--o-grid-gutter-width')) || 30;
+
+        // For the logos we don't want to suggest a width too small.
+        if (this.$target[0].closest('nav')) {
+            return Math.round(Math.min(displayWidth * 3, this.MAX_SUGGESTED_WIDTH));
+        // If the image is in a container(-small), it might get bigger on
+        // smaller screens. So we suggest the width of the current image unless
+        // it is smaller than the size of the container on the md breapoint
+        // (which is where our bootstrap columns fallback to full container
+        // width since we only use col-lg-* in Odoo).
+        } else if (img.closest('.container, .o_container_small')) {
+            const mdContainerMaxWidth = parseFloat(computedStyles.getPropertyValue('--o-md-container-max-width')) || 720;
+            const mdContainerInnerWidth = mdContainerMaxWidth - gutterWidth;
+            return Math.round(utils.confine(displayWidth, mdContainerInnerWidth, this.MAX_SUGGESTED_WIDTH));
+        // If the image is displayed in a container-fluid, it might also get
+        // bigger on smaller screens. The same way, we suggest the width of the
+        // current image unless it is smaller than the max size of the container
+        // on the md breakpoint (which is the LG breakpoint since the container
+        // fluid is full-width).
+        } else if (img.closest('.container-fluid')) {
+            const lgBp = parseFloat(computedStyles.getPropertyValue('--breakpoint-lg')) || 992;
+            const mdContainerFluidMaxInnerWidth = lgBp - gutterWidth;
+            return Math.round(utils.confine(displayWidth, mdContainerFluidMaxInnerWidth, this.MAX_SUGGESTED_WIDTH));
         }
-        // If it's not in a col-lg, it's probably not going to change size depending on breakpoints
-        return displayWidth;
+        // If it's not in a container, it's probably not going to change size
+        // depending on breakpoints. We still keep a margin safety.
+        return Math.round(Math.min(displayWidth * 1.5, this.MAX_SUGGESTED_WIDTH));
     },
     /**
      * @override
@@ -3496,22 +3600,6 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
         this.$target.off('.BackgroundOptimize');
         return this._super(...arguments);
     },
-    /**
-     * Marks the target for creation of an attachment and copies data attributes
-     * to the target so that they can be restored on this.img in later editions.
-     *
-     * @override
-     */
-    async cleanForSave() {
-        const img = this._getImg();
-        if (img.matches('.o_modified_image_to_save')) {
-            this.$target.addClass('o_modified_image_to_save');
-            Object.entries(img.dataset).forEach(([key, value]) => {
-                this.$target[0].dataset[key] = value;
-            });
-            this.$target[0].dataset.bgSrc = img.getAttribute('src');
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -3536,15 +3624,23 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
      */
     async _loadImageInfo() {
         this.img = new Image();
-        Object.entries(this.$target[0].dataset).filter(([key]) =>
-            // Avoid copying dynamic editor attributes
-            !['oeId','oeModel', 'oeField', 'oeXpath', 'noteId'].includes(key)
-        ).forEach(([key, value]) => {
-            this.img.dataset[key] = value;
-        });
-        const src = getBgImageURL(this.$target[0]);
-        // Don't set the src if not relative (ie, not local image: cannot be modified)
-        this.img.src = src.startsWith('/') ? src : '';
+        // In the case of a parallax, the background of the snippet is actually
+        // set on a child <span> and should be focused here. This is necessary
+        // because, at this point, the $target has not yet been updated in the
+        // notify() method ("option_update" event), although the event is
+        // properly fired from the parallax.
+        const targetEl = this.$target[0].classList.contains("oe_img_bg")
+            ? this.$target[0] : this.$target[0].querySelector(":scope > .s_parallax_bg.oe_img_bg");
+        if (targetEl) {
+            Object.entries(targetEl.dataset).filter(([key]) =>
+                isBackgroundImageAttribute(key)).forEach(([key, value]) => {
+                this.img.dataset[key] = value;
+            });
+            const src = getBgImageURL(targetEl);
+            // Don't set the src if not relative (ie, not local image: cannot be
+            // modified)
+            this.img.src = src.startsWith("/") ? src : "";
+        }
         return await this._super(...arguments);
     },
     /**
@@ -3552,6 +3648,21 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
      */
     _applyImage(img) {
         this.$target.css('background-image', `url('${img.getAttribute('src')}')`);
+        // Apply modification on the DOM HTML element that is currently being
+        // modified.
+        this.$target[0].classList.add("o_modified_image_to_save");
+        // First delete the data attributes relative to the image background
+        // from the target as a data attribute could have been be removed (ex:
+        // glFilter).
+        for (const attribute in this.$target[0].dataset) {
+            if (isBackgroundImageAttribute(attribute)) {
+                delete this.$target[0].dataset[attribute];
+            }
+        }
+        Object.entries(img.dataset).forEach(([key, value]) => {
+            this.$target[0].dataset[key] = value;
+        });
+        this.$target[0].dataset.bgSrc = img.getAttribute("src");
     },
 
     //--------------------------------------------------------------------------
@@ -3564,6 +3675,7 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
      * @private
      */
     async _onBackgroundChanged(ev, previewMode) {
+        ev.stopPropagation();
         if (!previewMode) {
             this.trigger_up('snippet_edition_request', {exec: async () => {
                 await this._autoOptimizeImage();
@@ -3636,7 +3748,7 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
                 this.$target.prepend(bgFilterEl);
             }
         } else {
-            this.$target.find('.o_we_bg_filter').remove();
+            this.$target.find('> .o_we_bg_filter').remove();
         }
     },
 
@@ -3770,12 +3882,29 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      */
     setTarget: function () {
         // When we change the target of this option we need to transfer the
-        // background-image from the old target to the new one.
+        // background-image and the dataset information relative to this image
+        // from the old target to the new one.
         const oldBgURL = getBgImageURL(this.$target);
+        const isModifiedImage = this.$target[0].classList.contains("o_modified_image_to_save");
+        const filteredOldDataset = Object.entries(this.$target[0].dataset).filter(([key]) => {
+            return isBackgroundImageAttribute(key);
+        });
+        // Delete the dataset information relative to the background-image of
+        // the old target.
+        filteredOldDataset.forEach(([key]) => {
+            delete this.$target[0].dataset[key];
+        });
+        // It is important to delete ".o_modified_image_to_save" from the old
+        // target as its image source will be deleted.
+        this.$target[0].classList.remove("o_modified_image_to_save");
         this._setBackground('');
         this._super(...arguments);
         if (oldBgURL) {
             this._setBackground(oldBgURL);
+            filteredOldDataset.forEach(([key, value]) => {
+                this.$target[0].dataset[key] = value;
+            });
+            this.$target[0].classList.toggle("o_modified_image_to_save", isModifiedImage);
         }
 
         // TODO should be automatic for all options as equal to the start method
@@ -3836,6 +3965,18 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             return this._rerenderXML();
         }
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    onBuilt() {
+        // Flip classes should no longer be used but are still present in some
+        // theme snippets.
+        if (this.$target[0].querySelector('.o_we_flip_x, .o_we_flip_y')) {
+            this._handlePreviewState(false, () => {
+                return {flip: this._getShapeData().flip};
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -3975,7 +4116,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         const insertShapeContainer = newContainer => {
             const shapeContainer = target.querySelector(':scope > .o_we_shape');
             if (shapeContainer) {
-                shapeContainer.remove();
+                this._removeShapeEl(shapeContainer);
             }
             if (newContainer) {
                 const preShapeLayerElement = this._getLastPreShapeLayerElement();
@@ -4059,6 +4200,13 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
     },
     /**
+     * @private
+     * @param {HTMLElement} shapeEl
+     */
+    _removeShapeEl(shapeEl) {
+        shapeEl.remove();
+    },
+    /**
      * Overwrites shape properties with the specified data.
      *
      * @private
@@ -4101,7 +4249,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
         const searchParams = Object.entries(colors)
             .map(([colorName, colorValue]) => {
-                const encodedCol = encodeURIComponent(colorValue);
+                const encodedCol = encodeURIComponent(normalizeColor(colorValue));
                 return `${colorName}=${encodedCol}`;
             });
         if (flip.length) {
@@ -4165,7 +4313,12 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 shapeToSelect = possibleShapes.find((shape, i) => {
                     return possibleShapes[i - 1] === previousShape;
                 });
-            } else {
+            }
+            // If there is no previous sibling, if the previous sibling had the
+            // last shape selected or if the previous shape could not be found
+            // in the possible shapes, default to the first shape. ([0] being no
+            // shapes selected.)
+            if (!shapeToSelect) {
                 shapeToSelect = possibleShapes[1];
             }
             return this._handlePreviewState(false, () => ({shape: shapeToSelect}));
@@ -4240,6 +4393,18 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             left: position[0] / 100 * delta.x || 0,
             top: position[1] / 100 * delta.y || 0,
         };
+        // Make sure the element is in a visible area.
+        const rect = this.$target[0].getBoundingClientRect();
+        const viewportTop = $(window).scrollTop();
+        const viewportBottom = viewportTop + $(window).height();
+        const visibleHeight = rect.top < viewportTop
+            ? Math.max(0, Math.min(viewportBottom, rect.bottom) - viewportTop) // Starts above
+            : rect.top < viewportBottom
+                ? Math.min(viewportBottom, rect.bottom) - rect.top // Starts inside
+                : 0; // Starts after
+        if (visibleHeight < 200) {
+            await scrollTo(this.$target[0], {extraOffset: 50});
+        }
         this._toggleBgOverlay(true);
     },
     /**
@@ -4321,7 +4486,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             height: `${this.$target.innerHeight()}px`,
         });
 
-        const topPos = (parseInt(this.$overlay.css('top')) - parseInt(this.$overlayContent.css('top')));
+        const topPos = Math.max(0, $(window).scrollTop() - this.$target.offset().top);
         this.$overlayContent.find('.o_we_overlay_buttons').css('top', `${topPos}px`);
     },
     /**
@@ -4468,7 +4633,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @private
      */
     _onDocumentClicked: function (ev) {
-        if (!$(ev.target).closest('.o_we_background_position_overlay')) {
+        if (!$(ev.target).closest('.o_we_background_position_overlay').length) {
             this._toggleBgOverlay(false);
         }
     },
@@ -4784,6 +4949,20 @@ registry.SnippetSave = SnippetOptionWidget.extend({
             }).open();
             dialog.on('closed', this, () => resolve());
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * TODO adapt in master, this option should only be instantiated for real
+     * snippets in the first place.
+     *
+     * @override
+     */
+    _computeVisibility() {
+        return this.$target[0].hasAttribute('data-snippet');
     },
 });
 

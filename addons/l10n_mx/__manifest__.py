@@ -51,4 +51,5 @@ With this module you will have:
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

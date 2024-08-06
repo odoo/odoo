@@ -909,12 +909,12 @@ class Warehouse(models.Model):
                 'barcode': self.code.replace(" ", "").upper() + "-DELIVERY",
             },
             'pick_type_id': {
-                'active': self.delivery_steps != 'ship_only',
+                'active': self.delivery_steps != 'ship_only' and self.active,
                 'default_location_dest_id': output_loc.id if self.delivery_steps == 'pick_ship' else self.wh_pack_stock_loc_id.id,
                 'barcode': self.code.replace(" ", "").upper() + "-PICK",
             },
             'pack_type_id': {
-                'active': self.delivery_steps == 'pick_pack_ship',
+                'active': self.delivery_steps == 'pick_pack_ship' and self.active,
                 'barcode': self.code.replace(" ", "").upper() + "-PACK",
             },
             'int_type_id': {

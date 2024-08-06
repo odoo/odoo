@@ -13,6 +13,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import groupby
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -80,7 +81,7 @@ class Message(models.Model):
     author_id = fields.Many2one(
         'res.partner', 'Author', index=True, ondelete='set null',
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
-    author_avatar = fields.Binary("Author's avatar", related='author_id.image_128', readonly=False)
+    author_avatar = fields.Binary("Author's avatar", related='author_id.image_128', depends=['author_id'], readonly=False)
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
     partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
@@ -88,7 +89,7 @@ class Message(models.Model):
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(
         'res.partner', 'mail_message_res_partner_needaction_rel', string='Partners with Need Action',
-        context={'active_test': False}, depends=['notification_ids'])
+        context={'active_test': False}, depends=['notification_ids'], copy=False)
     needaction = fields.Boolean(
         'Need Action', compute='_get_needaction', search='_search_needaction',
         help='Need Action')
@@ -111,7 +112,7 @@ class Message(models.Model):
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
         string='Tracking values',
-        groups="base.group_no_one",
+        groups="base.group_system",
         help='Tracked values are stored in a separate model. This field allow to reconstruct '
              'the tracking and to generate statistics on the model.')
     # mail gateway
@@ -602,7 +603,7 @@ class Message(models.Model):
                 values['attachment_ids'] = []
             # extract base64 images
             if 'body' in values:
-                Attachments = self.env['ir.attachment']
+                Attachments = self.env['ir.attachment'].with_context(clean_context(self._context))
                 data_to_url = {}
                 def base64_to_boundary(match):
                     key = match.group(2)
@@ -701,11 +702,11 @@ class Message(models.Model):
             limit=limit, orderby=orderby, lazy=lazy,
         )
 
-    def export_data(self, fields_to_export, raw_data=False):
+    def export_data(self, fields_to_export):
         if not self.env.is_admin():
             raise AccessError(_("Only administrators are allowed to export mail message"))
 
-        return super(Message, self).export_data(fields_to_export, raw_data)
+        return super(Message, self).export_data(fields_to_export)
 
     # ------------------------------------------------------
     # DISCUSS API
@@ -980,23 +981,6 @@ class Message(models.Model):
             else:
                 author = (0, message_sudo.email_from)
 
-            # Attachments
-            main_attachment = self.env['ir.attachment']
-            if message_sudo.attachment_ids and message_sudo.res_id and issubclass(self.pool[message_sudo.model], self.pool['mail.thread']):
-                main_attachment = self.env[message_sudo.model].sudo().browse(message_sudo.res_id).message_main_attachment_id
-            attachment_ids = []
-            for attachment in message_sudo.attachment_ids:
-                attachment_ids.append({
-                    'checksum': attachment.checksum,
-                    'id': attachment.id,
-                    'filename': attachment.name,
-                    'name': attachment.name,
-                    'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-                    'is_main': main_attachment == attachment,
-                    'res_id': attachment.res_id,
-                    'res_model': attachment.res_model,
-                })
-
             # Tracking values
             tracking_value_ids = []
             for tracking in message_sudo.tracking_value_ids:
@@ -1022,7 +1006,7 @@ class Message(models.Model):
             vals.update({
                 'author_id': author,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachment_ids': attachment_ids,
+                'attachment_ids': message_sudo.attachment_ids._attachment_format(),
                 'tracking_value_ids': tracking_value_ids,
                 'record_name': record_name,
             })
@@ -1030,15 +1014,15 @@ class Message(models.Model):
         return vals_list
 
     def message_fetch_failed(self):
-        """Returns all messages, sent by the current user, that have errors, in
-        the format expected by the web client."""
+        """Returns first 100 messages, sent by the current user, that have
+        errors, in the format expected by the web client."""
         messages = self.search([
             ('has_error', '=', True),
             ('author_id', '=', self.env.user.partner_id.id),
             ('res_id', '!=', 0),
             ('model', '!=', False),
             ('message_type', '!=', 'user_notification')
-        ])
+        ], limit=100)
         return messages._message_notification_format()
 
     @api.model
@@ -1062,7 +1046,7 @@ class Message(models.Model):
                 ('res_id', 'in', moderated_channel_ids),
                 '|',
                 ('author_id', '=', self.env.user.partner_id.id),
-                ('moderation_status', '=', 'pending_moderation'),
+                ('need_moderation', '=', True),
             ]
             messages |= self.search(moderated_messages_dom, limit=limit)
             # Truncate the results to `limit`
@@ -1237,7 +1221,7 @@ class Message(models.Model):
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
-            if issubclass(self.pool[model], self.pool['mail.thread']):
+            if model and issubclass(self.pool[model], self.pool['mail.thread']):
                 self.env[model].invalidate_cache(fnames=[
                     'message_ids',
                     'message_unread',

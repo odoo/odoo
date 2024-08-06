@@ -11,8 +11,11 @@
 # Michal Veselý <michal@veselyberanek.net>, 2020
 # Martin Trigaux, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# trendspotter, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Jiří Podhorecký, 2021
+# SlavekB <slavek.banko@axis.cz>, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Jakub Smolka, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,8 +23,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Jakub Smolka, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -61,18 +64,18 @@ msgstr "%s (kopie)"
 #: model:ir.actions.report,print_report_name:product.report_product_label
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
 msgid "'Products Labels - %s' % (object.name)"
-msgstr ""
+msgstr "'Popisy produktů - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_product_barcode
 #: model:ir.actions.report,print_report_name:product.report_product_template_barcode
 msgid "'Products barcode - %s' % (object.name)"
-msgstr ""
+msgstr "'Čárové kódy produktů - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr ""
+msgstr "'Balení produktů - %s' % (object.name)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -109,7 +112,7 @@ msgstr "2 roky"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -470,7 +473,7 @@ msgstr "Image 1024 lze přibližovat"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr ""
+msgstr "Lze zvětšit variantní obrázek 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
@@ -523,7 +526,7 @@ msgstr "Barevný index"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "Kombinace indikátorů"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -556,13 +559,13 @@ msgstr "Výpočet ceny"
 #: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair (CONFIG)"
-msgstr ""
+msgstr "Konferenční židle (CONFIG)"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Conference room table"
-msgstr ""
+msgstr "Stůl konferenční místnosti"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
@@ -603,7 +606,7 @@ msgstr "Obsahuje množství"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "Rohový stůl, levý sed"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -723,7 +726,7 @@ msgstr "reference na zákazníka"
 #: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk (CONFIG)"
-msgstr ""
+msgstr "Přizpůsobitelná pracovní plocha (CONFIC)"
 
 #. module: product
 #: model:product.product,uom_name:product.expense_hotel
@@ -797,7 +800,7 @@ msgstr "Kombinace stolu"
 #: model:product.product,name:product.product_product_22
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
-msgstr ""
+msgstr "Stolní stojan s obrazovkou"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_3
@@ -914,6 +917,8 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Datum ukončení pro ověření položky ceníku\n"
+"Zobrazená hodnota závisí na časovém pásmu nastaveném ve vašich předvolbách."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -989,13 +994,13 @@ msgstr "Vzorec"
 #: model:product.product,name:product.consu_delivery_03
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Four Person Desk"
-msgstr ""
+msgstr "Stůl pro čtyři osoby"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_03
 #: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid "Four person modern office workstation"
-msgstr ""
+msgstr "Moderní kancelářská pracovní stanice pro čtyři osoby"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1186,10 +1191,14 @@ msgstr "Import šablony pro ceníky prodejců"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Ve standardní ceně a AVCO: hodnota produktu (automaticky vypočtená v AVCO).\n"
+"        Ve FIFO: hodnota další jednotky, která opustí sklad (automaticky vypočtená).\n"
+"        Používá se k ocenění produktu, když nejsou známy nákupní náklady (např. úprava zásob).\n"
+"        Používá se k výpočtu marží na prodejních objednávkách."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1200,7 +1209,7 @@ msgstr "Neaktivní"
 #: model:product.product,name:product.product_product_24
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Individual Workplace"
-msgstr ""
+msgstr "Individuální pracovní místo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
@@ -1555,6 +1564,8 @@ msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
 msgstr ""
+"Na produktu %s nemůžete přiřadit hodnotu %s k atributu %s, protože se "
+"neshodují."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -1562,7 +1573,7 @@ msgstr ""
 msgid ""
 "On the product %s you cannot transform the attribute %s into the attribute "
 "%s."
-msgstr ""
+msgstr "Na produktu %s nemůžete atribut %s převést na atribut %s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -1985,7 +1996,7 @@ msgstr "Ceník výrobků"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr ""
+msgstr "Hledání pravidel cen produktů"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -2043,12 +2054,12 @@ msgstr "Množství"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
-msgstr ""
+msgstr "Množství již existuje (%d)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "Quantity of products contained in the packaging."
-msgstr ""
+msgstr "Množství produktů obsažených v balení."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -2119,7 +2130,7 @@ msgstr "Prodejní popis"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
 msgid "Sales Grid Entry"
-msgstr ""
+msgstr "Záznam prodejní mřížky"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
@@ -2128,7 +2139,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Sales Price"
-msgstr "Zlevněné ceny"
+msgstr "Prodejní cena"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
@@ -2214,7 +2225,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
 "Zadejte pevnou částku pro přičtení nebo odečtení (zápornou částku) od ceny "
@@ -2301,7 +2312,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
-msgstr ""
+msgstr "Atribut %s musí mít pro produkt %s alespoň jednu hodnotu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -2378,6 +2389,12 @@ msgid "The product template is archived so no combination is possible."
 msgstr "Šablona produktu je archivována, takže není možná žádná kombinace."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr "Varianta produktu musí být variantou šablony produktu."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2401,7 +2418,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
-msgstr ""
+msgstr "Hodnota %s není definována pro atribut %s na produktu %s."
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2425,6 +2442,18 @@ msgstr "Nejsou žádné zbývající možné kombinace."
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 msgid "This comes from the product form."
 msgstr "Pochází z formuláře výrobku."
+
+#. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Toto nastavení atributů, hodnot a výjimek produktů by nevedlo k žádné možné "
+"variantě. Archivujte nebo přímo odstraňte svůj produkt, pokud je to "
+"zamýšlené."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2459,6 +2488,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"Tato přesnost zaokrouhlení je vyšší než přesnost desetinných míst (%s číslic).\n"
+"To může způsobit nesrovnalosti ve výpočtech.\n"
+"Nastavte prosím přesnost mezi %s a 1. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2482,7 +2514,7 @@ msgstr ""
 #: model:product.product,description_sale:product.consu_delivery_01
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
-msgstr ""
+msgstr "Třímístná pohovka s lehátkem v ocelově šedé barvě"
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_01
@@ -2621,7 +2653,7 @@ msgstr "Hodnota"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Value Price Extra"
-msgstr ""
+msgstr "Hodnota extra ceny"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -2674,7 +2706,7 @@ msgstr "Informace o variantě"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Extra cena varianty"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
@@ -2685,7 +2717,7 @@ msgstr "Prodejce varianty"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "Hodnoty varianty"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -2704,7 +2736,7 @@ msgstr "Varianty"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variants Creation Mode"
-msgstr ""
+msgstr "Režim vytváření variant"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name
@@ -2754,13 +2786,13 @@ msgstr "Dodavatelé"
 #: model:product.product,name:product.product_product_2
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
-msgstr ""
+msgstr "Titul: Virtual Home Staging"
 
 #. module: product
 #: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Virtual Interior Design"
-msgstr ""
+msgstr "Virtuální interiérový design"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume
@@ -2783,7 +2815,7 @@ msgstr "Objemová měrná jednotka"
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Štítek měrné jednotky objemu"
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:0
@@ -2811,19 +2843,19 @@ msgstr "MJ váhy"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr ""
+msgstr "Jednotka hmotnosti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Štítek měrné jednotky hmotnosti"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
-msgstr ""
+msgstr "Bílá"
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:0
@@ -2862,6 +2894,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Režim vytváření variant atributu %s nemůžete měnit, protože se používá v "
+"následujících produktech: %s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2870,18 +2904,20 @@ msgid ""
 "You cannot change the attribute of the value %s because it is used on the "
 "following products:%s"
 msgstr ""
+"Atribut hodnoty %s nemůžete změnit, protože se používá v následujících "
+"produktech: %s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
-msgstr ""
+msgstr "Produkt nelze změnit na hodnotu %s nastavenou na produktu %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
-msgstr ""
+msgstr "Hodnotu nelze změnit na hodnotu %s nastavenou na produktu %s."
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -2912,14 +2948,37 @@ msgid ""
 "You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Nemůžete smazat atribut %s, protože se používá v následujících produktech:\n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
+"%s\n"
+"If the value has been associated to a product in the past, you will not be able to delete it."
+msgstr ""
+"Nemůžete smazat atribut %s, protože se používá v následujících produktech:\n"
+"%s\n"
+"Pokud byla hodnota v minulosti přidružena k produktu, nebudete ji moci smazat."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"Nemůžete smazat hodnotu %s, protože byla použita v některých produktech."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n"
 "%s"
 msgstr ""
+"Tento ceník nelze smazat (%s), je použit v jiných cenících:\n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -2934,7 +2993,16 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
+msgstr "Tento atribut %s nelze přesunout z produktu %s k produktu %s."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
 msgstr ""
+"Pravidlo ceníku nelze vypnout, prosím smažte jej nebo archivujte jeho ceník."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2965,6 +3033,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Musíte definovat produkt pro vše, co prodáváte nebo nakupujete,\n"
+"                ať už jde o fyzický produkt, spotřební materiál nebo službu.\n"
+"                Formulář produktu obsahuje informace pro usnadnění prodejního procesu:\n"
+"                cenu, poznámky pro nabídku, účetní data, nákupní metody apod."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -2974,6 +3046,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Musíte definovat jak produkt pro vše, co prodáváte, ať už jde o fyzický produkt, spotřební\n"
+"                materiál nebo službu, kterou nabízíte zákazníkům.\n"
+"                Formulář produktu obsahuje informace pro usnadnění prodejního procesu:\n"
+"                cenu, poznámky pro nabídku, účetní data, nákupní metody apod."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2999,7 +3075,7 @@ msgstr "např. EUR prodejci"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "na"
 
 #. module: product
 #: code:addons/product/models/product.py:0

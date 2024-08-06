@@ -53,7 +53,7 @@ function factory(dependencies) {
             }
             const messageIds = this.fetchedMessages.map(message => message.id);
             const fetchedMessages = this._loadMessages({
-                extraDomain: [['id', '>', Math.max(...messageIds)]],
+                extraDomain: [['id', '>', Math.max(...messageIds, 0)]],
                 limit: false,
             });
             for (const threadView of this.threadViews) {

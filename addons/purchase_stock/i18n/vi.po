@@ -9,6 +9,7 @@
 # Duy BQ <duybq86@gmail.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -287,6 +288,18 @@ msgstr "(Các) ngoại lệ xảy ra trên (các) đơn đặt mua:"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
 msgstr "Các ngoại lệ:"
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
+"Đối với sản phẩm %s, nhà kho của loại hoạt động (%s) không tương thích với "
+"vị trí (%s) của quy tắc tái đặt hàng (%s). Hãy thay đổi loại hoạt động hoặc "
+"huỷ yêu cầu báo giá."
 
 #. module: purchase_stock
 #. openerp-web
@@ -781,10 +794,12 @@ msgstr "Khi sản phẩm được mua, chúng có thể được giao tới kho 
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need."
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
 msgstr ""
-"Khi cần sản phẩm<b>%s</b>, <br/> một yêu cầu báo giá được tạo ra để đáp ứng "
-"nhu cầu."
+"Khi cần sản phẩm trong <b>%s</b>, <br/> một yêu cầu báo giá sẽ được tạo để "
+"đáp ứng nhu cầu. <br/>Lưu ý: Quy tắc này sẽ được sử dụng cùng với những quy "
+"tắc <br/>về (các) tuyến biên nhận."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0

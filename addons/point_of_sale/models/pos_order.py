@@ -6,6 +6,7 @@ from functools import partial
 
 import psycopg2
 import pytz
+import re
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round
@@ -63,6 +64,7 @@ class PosOrder(models.Model):
             'cardholder_name': ui_paymentline.get('cardholder_name'),
             'transaction_id': ui_paymentline.get('transaction_id'),
             'payment_status': ui_paymentline.get('payment_status'),
+            'ticket': ui_paymentline.get('ticket'),
             'pos_order_id': order.id,
         }
 
@@ -100,6 +102,9 @@ class PosOrder(models.Model):
 
         return new_session
 
+    def _get_fields_for_draft_order(self):
+        """This method is here to be overridden in order to add fields that are required for draft orders."""
+        return []
 
     @api.model
     def _process_order(self, order, draft, existing_order):
@@ -138,10 +143,10 @@ class PosOrder(models.Model):
                 raise
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
+            pos_order._create_order_picking()
 
-        pos_order._create_order_picking()
         if pos_order.to_invoice and pos_order.state == 'paid':
-            pos_order.action_pos_order_invoice()
+            pos_order._generate_pos_order_invoice()
 
         return pos_order.id
 
@@ -165,8 +170,7 @@ class PosOrder(models.Model):
         order_bank_statement_lines= self.env['pos.payment'].search([('pos_order_id', '=', order.id)])
         order_bank_statement_lines.unlink()
         for payments in pos_order['statement_ids']:
-            if not float_is_zero(payments[2]['amount'], precision_digits=prec_acc):
-                order.add_payment(self._payment_fields(order, payments[2]))
+            order.add_payment(self._payment_fields(order, payments[2]))
 
         order.amount_paid = sum(order.payment_ids.mapped('amount'))
 
@@ -185,12 +189,14 @@ class PosOrder(models.Model):
             order.add_payment(return_payment_vals)
 
     def _prepare_invoice_line(self, order_line):
+        display_name = order_line.product_id.get_product_multiline_description_sale()
+        name = order_line.product_id.default_code + " " + display_name if order_line.product_id.default_code else display_name
         return {
             'product_id': order_line.product_id.id,
             'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
             'discount': order_line.discount,
             'price_unit': order_line.price_unit,
-            'name': order_line.product_id.display_name,
+            'name': name,
             'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
             'product_uom_id': order_line.product_uom_id.id,
         }
@@ -198,9 +204,9 @@ class PosOrder(models.Model):
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
             .mapped('picking_ids.move_lines')\
-            .filtered(lambda m: m.product_id.id == product.id)\
+            ._filter_anglo_saxon_moves(product)\
             .sorted(lambda x: x.date)
-        price_unit = product._compute_average_price(0, quantity, moves)
+        price_unit = product.with_company(self.company_id)._compute_average_price(0, quantity, moves)
         return price_unit
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
@@ -235,9 +241,9 @@ class PosOrder(models.Model):
     invoice_group = fields.Boolean(related="config_id.module_account", readonly=False)
     state = fields.Selection(
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced')],
-        'Status', readonly=True, copy=False, default='draft')
+        'Status', readonly=True, copy=False, default='draft', index=True)
 
-    account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False)
+    account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False, index=True)
     picking_ids = fields.One2many('stock.picking', 'pos_order_id')
     picking_count = fields.Integer(compute='_compute_picking_count')
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
@@ -254,7 +260,7 @@ class PosOrder(models.Model):
     )
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
-    to_invoice = fields.Boolean('To invoice')
+    to_invoice = fields.Boolean('To invoice', copy=False)
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
@@ -278,6 +284,8 @@ class PosOrder(models.Model):
     @api.onchange('payment_ids', 'lines')
     def _onchange_amount_all(self):
         for order in self:
+            if not order.pricelist_id.currency_id:
+                raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
             currency = order.pricelist_id.currency_id
             order.amount_paid = sum(payment.amount for payment in order.payment_ids)
             order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
@@ -343,6 +351,7 @@ class PosOrder(models.Model):
     def action_stock_picking(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
+        action['display_name'] = _('Pickings')
         action['context'] = {}
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
@@ -367,6 +376,73 @@ class PosOrder(models.Model):
         currency = self.currency_id
         return currency.round(amount) if currency else amount
 
+    def _create_invoice(self, move_vals):
+        self.ensure_one()
+        new_move = self.env['account.move'].sudo().with_company(self.company_id).with_context(default_move_type=move_vals['move_type']).create(move_vals)
+        message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (self.id, self.name)
+        new_move.message_post(body=message)
+        if self.config_id.cash_rounding:
+            rounding_applied = float_round(self.amount_paid - self.amount_total,
+                                           precision_rounding=new_move.currency_id.rounding)
+            rounding_line = new_move.line_ids.filtered(lambda line: line.is_rounding_line)
+            if rounding_line and rounding_line.debit > 0:
+                rounding_line_difference = rounding_line.debit + rounding_applied
+            elif rounding_line and rounding_line.credit > 0:
+                rounding_line_difference = -rounding_line.credit + rounding_applied
+            else:
+                rounding_line_difference = rounding_applied
+            if rounding_applied:
+                if rounding_applied > 0.0:
+                    account_id = new_move.invoice_cash_rounding_id.loss_account_id.id
+                else:
+                    account_id = new_move.invoice_cash_rounding_id.profit_account_id.id
+                if rounding_line:
+                    if rounding_line_difference:
+                        rounding_line.with_context(check_move_validity=False).write({
+                            'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
+                            'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
+                            'account_id': account_id,
+                            'price_unit': rounding_applied,
+                        })
+
+                else:
+                    self.env['account.move.line'].with_context(check_move_validity=False).create({
+                        'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
+                        'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
+                        'quantity': 1.0,
+                        'amount_currency': rounding_applied,
+                        'partner_id': new_move.partner_id.id,
+                        'move_id': new_move.id,
+                        'currency_id': new_move.currency_id if new_move.currency_id != new_move.company_id.currency_id else False,
+                        'company_id': new_move.company_id.id,
+                        'company_currency_id': new_move.company_id.currency_id.id,
+                        'is_rounding_line': True,
+                        'sequence': 9999,
+                        'name': new_move.invoice_cash_rounding_id.name,
+                        'account_id': account_id,
+                    })
+            else:
+                if rounding_line:
+                    rounding_line.with_context(check_move_validity=False).unlink()
+            if rounding_line_difference:
+                existing_terms_line = new_move.line_ids.filtered(
+                    lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+                if existing_terms_line.debit > 0:
+                    existing_terms_line_new_val = float_round(
+                        existing_terms_line.debit + rounding_line_difference,
+                        precision_rounding=new_move.currency_id.rounding)
+                else:
+                    existing_terms_line_new_val = float_round(
+                        -existing_terms_line.credit + rounding_line_difference,
+                        precision_rounding=new_move.currency_id.rounding)
+                existing_terms_line.write({
+                    'debit': existing_terms_line_new_val > 0.0 and existing_terms_line_new_val or 0.0,
+                    'credit': existing_terms_line_new_val < 0.0 and -existing_terms_line_new_val or 0.0,
+                })
+
+                new_move._recompute_payment_terms_lines()
+        return new_move
+
     def action_pos_order_paid(self):
         self.ensure_one()
 
@@ -378,8 +454,20 @@ class PosOrder(models.Model):
         else:
             total = float_round(self.amount_total, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
 
-        if not float_is_zero(total - self.amount_paid, precision_rounding=self.currency_id.rounding):
+        isPaid = float_is_zero(total - self.amount_paid, precision_rounding=self.currency_id.rounding)
+
+        if not isPaid and not self.config_id.cash_rounding:
             raise UserError(_("Order %s is not fully paid.", self.name))
+        elif not isPaid and self.config_id.cash_rounding:
+            currency = self.currency_id
+            if self.config_id.rounding_method.rounding_method == "HALF-UP":
+                maxDiff = currency.round(self.config_id.rounding_method.rounding / 2)
+            else:
+                maxDiff = currency.round(self.config_id.rounding_method.rounding)
+
+            diff = currency.round(self.amount_total - self.amount_paid)
+            if not abs(diff) <= maxDiff:
+                raise UserError(_("Order %s is not fully paid.", self.name))
 
         self.write({'state': 'paid'})
 
@@ -388,6 +476,13 @@ class PosOrder(models.Model):
     def _prepare_invoice_vals(self):
         self.ensure_one()
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        note = self.note or ''
+        terms = ''
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
+            terms = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
+
+        narration = note + '\n' + terms if note else terms
+
         vals = {
             'payment_reference': self.name,
             'invoice_origin': self.name,
@@ -395,7 +490,7 @@ class PosOrder(models.Model):
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
             'partner_id': self.partner_id.id,
-            'narration': self.note or '',
+            'narration': narration,
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'invoice_user_id': self.user_id.id,
@@ -407,8 +502,14 @@ class PosOrder(models.Model):
             else False
         }
         return vals
-
     def action_pos_order_invoice(self):
+        self.write({'to_invoice': True})
+        res = self._generate_pos_order_invoice()
+        if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing:
+            self._create_order_picking()
+        return res
+
+    def _generate_pos_order_invoice(self):
         moves = self.env['account.move']
 
         for order in self:
@@ -421,12 +522,7 @@ class PosOrder(models.Model):
                 raise UserError(_('Please provide a partner for the sale.'))
 
             move_vals = order._prepare_invoice_vals()
-            new_move = moves.sudo()\
-                            .with_company(order.company_id)\
-                            .with_context(default_move_type=move_vals['move_type'])\
-                            .create(move_vals)
-            message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-            new_move.message_post(body=message)
+            new_move = order._create_invoice(move_vals)
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_company(order.company_id)._post()
             moves += new_move
@@ -507,6 +603,16 @@ class PosOrder(models.Model):
             'amount_paid': 0,
         }
 
+    def _prepare_mail_values(self, name, message, client, receipt):
+        return {
+            'subject': _('Receipt %s', name),
+            'body_html': message,
+            'author_id': self.env.user.partner_id.id,
+            'email_from': self.env.company.email or self.env.user.email_formatted,
+            'email_to': client['email'],
+            'attachment_ids': [(4, receipt.id)],
+        }
+
     def refund(self):
         """Create a copy of order  for refund order"""
         refund_orders = self.env['pos.order']
@@ -551,17 +657,10 @@ class PosOrder(models.Model):
             'datas': ticket,
             'res_model': 'pos.order',
             'res_id': self.ids[0],
-            'store_fname': filename,
             'mimetype': 'image/jpeg',
         })
-        mail_values = {
-            'subject': _('Receipt %s', name),
-            'body_html': message,
-            'author_id': self.env.user.partner_id.id,
-            'email_from': self.env.company.email or self.env.user.email_formatted,
-            'email_to': client['email'],
-            'attachment_ids': [(4, receipt.id)],
-        }
+
+        mail_values = self._prepare_mail_values(name, message, client, receipt)
 
         if self.mapped('account_move'):
             report = self.env.ref('point_of_sale.pos_invoice_report')._render_qweb_pdf(self.ids[0])
@@ -570,7 +669,6 @@ class PosOrder(models.Model):
                 'name': filename,
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
-                'store_fname': filename,
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
                 'mimetype': 'application/x-pdf'
@@ -611,7 +709,7 @@ class PosOrder(models.Model):
             'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
             'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
             'name': order.pos_reference,
-            'uid': order.pos_reference[6:],
+            'uid': re.search('([0-9]|-){14}', order.pos_reference).group(0),
             'amount_paid': order.amount_paid,
             'amount_total': order.amount_total,
             'amount_tax': order.amount_tax,
@@ -675,7 +773,7 @@ class PosOrderLine(models.Model):
     price_subtotal_incl = fields.Float(string='Subtotal', digits=0,
         readonly=True, required=True)
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
-    order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True)
+    order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True, index=True)
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
@@ -881,7 +979,7 @@ class ReportSaleDetails(models.AbstractModel):
                 products_sold[key] += line.qty
 
                 if line.tax_ids_after_fiscal_position:
-                    line_taxes = line.tax_ids_after_fiscal_position.compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+                    line_taxes = line.tax_ids_after_fiscal_position.sudo().compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
                     for tax in line_taxes['taxes']:
                         taxes.setdefault(tax['id'], {'name': tax['name'], 'tax_amount':0.0, 'base_amount':0.0})
                         taxes[tax['id']]['tax_amount'] += tax['amount']

@@ -233,7 +233,7 @@ class MailClientExtensionController(http.Controller):
             # if there is already a company for this partner, just take it without enrichment.
             if partner.parent_id:
                 response['partner']['company'] = self._get_company_dict(partner.parent_id)
-            else:
+            elif not partner.is_company:
                 company = self._find_existing_company(sender_domain)
                 if not company: # create and enrich company
                     company, enrichment_info = self._create_company_from_iap(sender_domain)

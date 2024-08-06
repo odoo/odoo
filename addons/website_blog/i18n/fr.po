@@ -27,9 +27,12 @@
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
-# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
+# anthony chaussin <chaussin.anthony@gmail.com>, 2021
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2021
+# Alexandra Jubert, 2021
+# Cécile Collart <cco@odoo.com>, 2022
+# Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
@@ -37,13 +40,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:41+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Sébastien BÜHL <buhlsebastien@gmail.com>, 2021\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website_blog.py:0
@@ -214,7 +217,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 msgid "<em>No tags defined</em>"
-msgstr ""
+msgstr "<em>Aucune balise définie</em>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -284,6 +287,8 @@ msgid ""
 "<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-sm\">Read "
 "Next</span>"
 msgstr ""
+"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-sm\">Lire le "
+"suivant</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
@@ -601,7 +606,7 @@ msgstr "Au-delà de l'œil"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Big Pictures"
-msgstr ""
+msgstr "Grandes images"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website.py:0
@@ -645,7 +650,7 @@ msgstr "Le post blog <b>%s</b> semble contenir un lien vers cette page !"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
 msgid "Blog Post Cover"
-msgstr ""
+msgstr "Couverture de l'article de blog"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -750,7 +755,7 @@ msgstr "Peut publier"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Cards"
-msgstr ""
+msgstr "Cartes"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__category_id
@@ -765,7 +770,7 @@ msgstr "Installations pour enfants"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Choose a blog"
-msgstr ""
+msgstr "Choisissez un blog"
 
 #. module: website_blog
 #. openerp-web
@@ -871,7 +876,7 @@ msgstr "Créé le"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Dexter"
-msgstr ""
+msgstr "Dexter"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__display_name
@@ -880,7 +885,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
 #: model:ir.model.fields,field_description:website_blog.field_website__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_edit_options
@@ -915,12 +920,12 @@ msgstr "Modifier"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 msgid "Edit in backend"
-msgstr "Editer dans le système"
+msgstr "Modifier dans le système"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Edit the '"
-msgstr "Editez le '"
+msgstr "Modifiez le '"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -935,7 +940,7 @@ msgstr "Modifiez l'en-tête de page \"Filtrer les résultats\"."
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Existing"
-msgstr ""
+msgstr "Éxistant"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -1066,7 +1071,7 @@ msgstr "Horizontal"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Hover effect"
-msgstr ""
+msgstr "Effet de survol"
 
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_4
@@ -1345,7 +1350,7 @@ msgstr "Pièce jointe principale"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Marley"
-msgstr ""
+msgstr "Marley"
 
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_2
@@ -1467,7 +1472,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Most viewed"
-msgstr ""
+msgstr "Les plus vus"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__name
@@ -1486,7 +1491,7 @@ msgstr "Nouvel article de blog"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "New tag"
-msgstr ""
+msgstr "Nouvelle étiquette"
 
 #. module: website_blog
 #. openerp-web
@@ -1510,7 +1515,7 @@ msgstr "Nombre d'affichages"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "No results for \"%s\"."
-msgstr ""
+msgstr "Aucun résultat pour \"%s\"."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
@@ -1754,7 +1759,7 @@ msgstr "Sauvegarder"
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Search for an image. (eg: type \"business\")"
-msgstr ""
+msgstr "Rechercher une image. (ex: tapez \"entreprise\")"
 
 #. module: website_blog
 #. openerp-web
@@ -1847,7 +1852,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Silly-Chico"
-msgstr ""
+msgstr "Silly-Chico"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -2239,7 +2244,7 @@ msgstr "Cette boîte ne sera pas visible pour vos visiteurs"
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:0
 #, python-format
 msgid "This tag already exists"
-msgstr ""
+msgstr "Cette étiquette existe déjà."
 
 #. module: website_blog
 #. openerp-web
@@ -2458,7 +2463,7 @@ msgstr "Image opengraph"
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_5
 msgid "What If They Let You Run The Hubble"
-msgstr "Et s'ils vous laissaient courir le Hubble"
+msgstr "Et si on vous laissait diriger le Hubble"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5

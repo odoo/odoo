@@ -72,14 +72,14 @@ const DynamicSnippet = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     *
      * @private
      */
     _clearContent: function () {
-        const $dynamicSnippetTemplate = this.$el.find('.dynamic_snippet_template');
-        if ($dynamicSnippetTemplate) {
-            $dynamicSnippetTemplate.html('');
-        }
+        const $templateArea = this.$el.find('.dynamic_snippet_template');
+        this.trigger_up('widgets_stop_request', {
+            $target: $templateArea,
+        });
+        $templateArea.html('');
     },
     /**
      * Method to be overridden in child components if additional configuration elements
@@ -159,6 +159,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
     /**
      * Method to be overridden in child components in order to prepare QWeb
      * options.
+     *
      * @private
      */
     _getQWebRenderOptions: function () {
@@ -185,11 +186,21 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this._renderContent();
     },
     /**
-     *
      * @private
      */
     _renderContent: function () {
-        this.$el.find('.dynamic_snippet_template').html(this.renderedContent);
+        const $templateArea = this.$el.find('.dynamic_snippet_template');
+        this.trigger_up('widgets_stop_request', {
+            $target: $templateArea,
+        });
+        $templateArea.html(this.renderedContent);
+        // TODO this is probably not the only public widget which creates DOM
+        // which should be attached to another public widget. Maybe a generic
+        // method could be added to properly do this operation of DOM addition.
+        this.trigger_up('widgets_start_request', {
+            $target: $templateArea,
+            editableMode: this.editableMode,
+        });
     },
     /**
      *

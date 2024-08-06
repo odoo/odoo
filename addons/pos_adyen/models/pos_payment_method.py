@@ -37,12 +37,19 @@ class PosPaymentMethod(models.Model):
         for payment_method in self:
             if not payment_method.adyen_terminal_identifier:
                 continue
-            existing_payment_method = self.search([('id', '!=', payment_method.id),
+            # sudo() to search all companies
+            existing_payment_method = self.sudo().search([('id', '!=', payment_method.id),
                                                    ('adyen_terminal_identifier', '=', payment_method.adyen_terminal_identifier)],
                                                   limit=1)
             if existing_payment_method:
-                raise ValidationError(_('Terminal %s is already used on payment method %s.')
+                if existing_payment_method.company_id == payment_method.company_id:
+                    raise ValidationError(_('Terminal %s is already used on payment method %s.')
                                       % (payment_method.adyen_terminal_identifier, existing_payment_method.display_name))
+                else:
+                    raise ValidationError(_('Terminal %s is already used in company %s on payment method %s.')
+                                          % (payment_method.adyen_terminal_identifier,
+                                             existing_payment_method.company_id.name,
+                                             existing_payment_method.display_name))
 
     def _get_adyen_endpoints(self):
         return {
@@ -79,25 +86,21 @@ class PosPaymentMethod(models.Model):
         }
 
     def get_latest_adyen_status(self, pos_config_name):
+        _logger.info('get_latest_adyen_status\n%s', pos_config_name)
         self.ensure_one()
-
-        # Poll the status of the terminal if there's no new
-        # notification we received. This is done so we can quickly
-        # notify the user if the terminal is no longer reachable due
-        # to connectivity issues.
-        self.proxy_adyen_request(self._adyen_diagnosis_request_data(pos_config_name))
 
         latest_response = self.sudo().adyen_latest_response
         latest_response = json.loads(latest_response) if latest_response else False
-        self.sudo().adyen_latest_response = ''  # avoid handling old responses multiple times
 
         return {
             'latest_response': latest_response,
-            'last_received_diagnosis_id': self.sudo().adyen_latest_diagnosis,
         }
 
     def proxy_adyen_request(self, data, operation=False):
         ''' Necessary because Adyen's endpoints don't have CORS enabled '''
+        if data['SaleToPOIRequest']['MessageHeader']['MessageCategory'] == 'Payment': # Clear only if it is a payment request
+            self.sudo().adyen_latest_response = ''  # avoid handling old responses multiple times
+
         if not operation:
             operation = 'terminal_request'
 

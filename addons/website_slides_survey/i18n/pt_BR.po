@@ -11,6 +11,7 @@
 # Túlio Georgethon <scorpion.contact@protonmail.com>, 2020
 # Pablo Valentini <pablondrina@gmail.com>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,13 +19,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_slides_survey
 #: model:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
@@ -220,7 +221,7 @@ msgstr "Certificação Bem Sucedida"
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
 msgid "Certification attempts"
-msgstr "Tentativas de certificaçã"
+msgstr "Tentativas de certificação"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -232,7 +233,7 @@ msgstr "Certificação criada"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.o_wss_certification_icon
 msgid "Certification icon"
-msgstr "Ícone de certificaçã"
+msgstr "Ícone de certificação"
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/controllers/slides.py:0
@@ -561,4 +562,5 @@ msgstr ""
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
 msgid "You have failed the course: ${object.slide_partner_id.channel_id.name}"
-msgstr "Você falhou no curso: ${object.slide_partner_id.channel_id.name}"
+msgstr ""
+"Você foi reprovado no curso: ${object.slide_partner_id.channel_id.name}"

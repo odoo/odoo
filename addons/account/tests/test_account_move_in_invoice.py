@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+from freezegun import freeze_time
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
 
+from collections import defaultdict
 
 @tagged('post_install', '-at_install')
 class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
@@ -137,6 +140,33 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             self.tax_line_vals_2,
             self.term_line_vals_1,
         ], self.move_vals)
+
+    def test_in_invoice_onchange_invoice_date(self):
+        for tax_date, invoice_date, accounting_date in [
+            ('2019-03-31', '2019-05-12', '2019-05-31'),
+            ('2019-03-31', '2019-02-10', '2019-04-30'),
+            ('2019-05-31', '2019-06-15', '2019-06-30'),
+        ]:
+            self.invoice.company_id.tax_lock_date = tax_date
+            with Form(self.invoice) as move_form:
+                move_form.invoice_date = invoice_date
+            self.assertEqual(self.invoice.date, fields.Date.to_date(accounting_date))
+
+    @freeze_time('2021-09-16')
+    def test_in_invoice_onchange_invoice_date_2(self):
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', account_predictive_bills_disable_prediction=True))
+        invoice_form.partner_id = self.partner_a
+        invoice_form.invoice_payment_term_id = self.env.ref('account.account_payment_term_30days')
+        with invoice_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+        invoice_form.invoice_date = fields.Date.from_string('2021-09-01')
+        invoice = invoice_form.save()
+
+        self.assertRecordValues(invoice, [{
+            'date': fields.Date.from_string('2021-09-16'),
+            'invoice_date': fields.Date.from_string('2021-09-01'),
+            'invoice_date_due': fields.Date.from_string('2021-10-01'),
+        }])
 
     def test_in_invoice_line_onchange_product_1(self):
         move_form = Form(self.invoice)
@@ -828,6 +858,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
     def test_in_invoice_line_onchange_cash_rounding_1(self):
+        # Test 'add_invoice_line' rounding
         move_form = Form(self.invoice)
         # Add a cash rounding having 'add_invoice_line'.
         move_form.invoice_cash_rounding_id = self.cash_rounding_a
@@ -882,12 +913,45 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             self.term_line_vals_1,
         ], self.move_vals)
 
-        move_form = Form(self.invoice)
-        # Change the cash rounding to one having 'biggest_tax'.
-        move_form.invoice_cash_rounding_id = self.cash_rounding_b
-        move_form.save()
+        # Test 'biggest_tax' rounding
 
-        self.assertInvoiceValues(self.invoice, [
+        self.company_data['company'].country_id = self.env.ref('base.us')
+
+        # Add a tag to product_a's default tax
+        tax_line_tag = self.env['account.account.tag'].create({
+            'name': "Tax tag",
+            'applicability': 'taxes',
+            'country_id': self.company_data['company'].country_id.id,
+        })
+
+        repartition_line = self.tax_purchase_a.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+        repartition_line.write({'tag_ids': [(4, tax_line_tag.id, 0)]})
+
+        # Create the invoice
+        biggest_tax_invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_cash_rounding_id': self.cash_rounding_b.id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'price_unit': 799.99,
+                    'tax_ids': [(6, 0, self.product_a.supplier_taxes_id.ids)],
+                    'product_uom_id':  self.product_a.uom_id.id,
+                }),
+
+                (0, 0, {
+                    'product_id': self.product_b.id,
+                    'price_unit': self.product_b.standard_price,
+                    'tax_ids': [(6, 0, self.product_b.supplier_taxes_id.ids)],
+                    'product_uom_id':  self.product_b.uom_id.id,
+                }),
+            ],
+        })
+
+        self.assertInvoiceValues(biggest_tax_invoice, [
             {
                 **self.product_line_vals_1,
                 'price_unit': 799.99,
@@ -895,10 +959,24 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'price_total': 919.99,
                 'amount_currency': 799.99,
                 'debit': 799.99,
+                'tax_repartition_line_id': None,
+                'tax_tag_ids': [],
             },
-            self.product_line_vals_2,
-            self.tax_line_vals_1,
-            self.tax_line_vals_2,
+            {
+                **self.product_line_vals_2,
+                'tax_repartition_line_id': None,
+                'tax_tag_ids': [],
+            },
+            {
+                **self.tax_line_vals_1,
+                'tax_repartition_line_id': repartition_line.id,
+                'tax_tag_ids': tax_line_tag.ids,
+            },
+            {
+                **self.tax_line_vals_2,
+                'tax_repartition_line_id': self.tax_purchase_b.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                'tax_tag_ids': [],
+            },
             {
                 'name': '%s (rounding)' % self.tax_purchase_a.name,
                 'product_id': False,
@@ -912,6 +990,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'price_total': -0.04,
                 'tax_ids': [],
                 'tax_line_id': self.tax_purchase_a.id,
+                'tax_repartition_line_id': repartition_line.id,
+                'tax_tag_ids': tax_line_tag.ids,
                 'currency_id': self.company_data['currency'].id,
                 'amount_currency': -0.04,
                 'debit': 0.0,
@@ -926,6 +1006,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'price_total': -1127.95,
                 'amount_currency': -1127.95,
                 'credit': 1127.95,
+                'tax_repartition_line_id': None,
+                'tax_tag_ids': [],
             },
         ], {
             **self.move_vals,
@@ -1473,9 +1555,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Ensure two vendor bills can't share the same vendor reference. '''
         self.invoice.ref = 'a supplier reference'
         invoice2 = self.invoice.copy(default={'invoice_date': self.invoice.invoice_date})
-
+        invoice2.ref = 'a supplier reference'
         with self.assertRaises(ValidationError):
-            invoice2.ref = 'a supplier reference'
+            invoice2.action_post()
 
     def test_in_invoice_switch_in_refund_1(self):
         # Test creating an account_move with an in_invoice_type and switch it in an in_refund.
@@ -1761,3 +1843,229 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {'amount_currency': 96.0,   'debit': 48.0,  'credit': 0.0,      'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
             {'amount_currency': -96.0,  'debit': 0.0,   'credit': 48.0,     'account_id': wizard.expense_accrual_account.id,        'reconciled': True},
         ])
+
+    def test_in_invoice_reverse_caba(self):
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'reconcile': True,
+            'company_id': self.company_data['company'].id,
+        })
+        tax_final_account = self.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.company_data['company'].id,
+        })
+        tax_base_amount_account = self.env['account.account'].create({
+            'name': 'TAX_BASE',
+            'code': 'TBASE',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.company_data['company'].id,
+        })
+        self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
+        tax_tags = defaultdict(dict)
+        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
+            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
+                'name': '%s %s tag' % (line_type, repartition_type),
+                'applicability': 'taxes',
+                'country_id': self.env.ref('base.us').id,
+            })
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'purchase',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags['invoice']['base'].ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [(6, 0, tax_tags['invoice']['tax'].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags['refund']['base'].ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [(6, 0, tax_tags['refund']['tax'].ids)],
+                }),
+            ],
+        })
+        # create invoice
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+            line_form.tax_ids.clear()
+            line_form.tax_ids.add(tax)
+        invoice = move_form.save()
+        invoice.action_post()
+        # make payment
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': invoice.date,
+        })._create_payments()
+        # check caba move
+        partial_rec = invoice.mapped('line_ids.matched_debit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+        expected_values = [
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_base_amount_account.id,
+                'debit': 0.0,
+                'credit': 800.0,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': tax.ids,
+                'tax_tag_ids': tax_tags['invoice']['base'].ids,
+                'account_id': tax_base_amount_account.id,
+                'debit': 800.0,
+                'credit': 0.0,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_waiting_account.id,
+                'debit': 0.0,
+                'credit': 80.0,
+            },
+            {
+                'tax_line_id': tax.id,
+                'tax_repartition_line_id': tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                'tax_ids': [],
+                'tax_tag_ids': tax_tags['invoice']['tax'].ids,
+                'account_id': tax_final_account.id,
+                'debit': 80.0,
+                'credit': 0.0,
+            },
+        ]
+        self.assertRecordValues(caba_move.line_ids, expected_values)
+        # unreconcile
+        credit_aml = invoice.line_ids.filtered('credit')
+        credit_aml.remove_move_reconcile()
+        # check caba move reverse is same as caba move with only debit/credit inverted
+        reversed_caba_move = self.env['account.move'].search([('reversed_entry_id', '=', caba_move.id)])
+        for value in expected_values:
+            value.update({
+                'debit': value['credit'],
+                'credit': value['debit'],
+            })
+        self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    def test_in_invoice_line_tax_line_delete(self):
+        with Form(self.invoice) as invoice_form:
+            lines_count = len(invoice_form.line_ids)
+            with invoice_form.line_ids.edit(0) as line_form:
+                tax = line_form.tax_line_id
+            invoice_form.line_ids.remove(0)
+            # check that the tax line is recreated
+            self.assertEqual(len(invoice_form.line_ids), lines_count)
+
+        # Assert the tax line is recreated for the tax
+        self.assertIn(tax, self.invoice.line_ids.tax_line_id)
+
+    def test_bill_amount_should_be_editable(self):
+        tax0 = self.env['account.tax'].create({
+            'name': 'test_tax_0',
+            'amount_type': 'percent',
+            'amount': 0.0,
+            'type_tax_use': 'purchase',
+        })
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        invoice_form.partner_id = self.partner_a
+        # Both 15% default tax and 0% tax, will have only one tax line for the 15%
+        with invoice_form.invoice_line_ids.new() as line:
+            line.name = 'test_line_1'
+            line.account_id = self.company_data['default_account_expense']
+            line.tax_ids.add(tax0)
+            line.price_unit = 200.0
+        # only the default 15% tax is set
+        with invoice_form.invoice_line_ids.new() as line:
+            line.name = 'test_line_2'
+            line.account_id = self.company_data['default_account_expense']
+            line.price_unit = 100.0
+        # no tax because of zero price
+        with invoice_form.invoice_line_ids.new() as line:
+            line.name = 'test_line_3'
+            line.account_id = self.company_data['default_account_expense']
+            line.price_unit = 0.0
+
+        invoice = invoice_form.save()
+
+        # mimic the behavior editing taxes with `tax_group_widget`
+        with invoice_form:
+            with invoice_form.line_ids.edit(0) as tax_line_form:
+                tax_line_form.debit = 500.0
+
+        # make sure taxes are not recompute
+        self.assertRecordValues(invoice.line_ids.filtered(lambda line: line.tax_line_id),
+                                [{
+                                    'debit': 500,
+                                    'tax_line_id': self.company_data['default_tax_purchase'].id,
+                                }])
+
+    def test_invoice_sent_to_additional_partner(self):
+        """
+        Make sure that when an invoice is a partner to a partner who is not
+        the invoiced customer, they receive a link containing an access token,
+        allowing them to view the invoice without needing to log in.
+        """
+
+        # Create a simple invoice for the partner
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner_a, invoice_date='2023-04-17', amounts=[100])
+
+        # Set the invoice to the 'posted' state
+        invoice.action_post()
+
+        # Create a partner not related to the invoice
+        additional_partner = self.env["res.partner"].create({
+            "name": "Additional Partner",
+            "email": "additional@example.com",
+        })
+
+        # Send the invoice
+        action = invoice.action_invoice_sent()
+        action_context = action["context"]
+
+        # Create the email using the wizard and add the additional partner as a recipient
+        invoice_send_wizard = self.env["account.invoice.send"].with_context(
+            action_context,
+            active_ids=[invoice.id]
+        ).create({'is_print': False})
+        invoice_send_wizard.partner_ids |= additional_partner
+
+        invoice_send_wizard.template_id.auto_delete = False
+
+        invoice_send_wizard.send_and_print_action()
+
+        # Find the email sent to the additional partner
+        additional_partner_mail = self.env["mail.mail"].search([
+            ("res_id", "=", invoice.id),
+            ('recipient_ids', '=', additional_partner.id)
+        ])
+
+        self.assertIn('access_token=', additional_partner_mail.body_html,
+                      "The additional partner should be sent the link including the token")

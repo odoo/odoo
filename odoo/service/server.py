@@ -296,6 +296,7 @@ class FSWatcherInotify(FSWatcherBase):
     def stop(self):
         self.started = False
         self.thread.join()
+        del self.watcher  # ensures inotify watches are freed up before reexec
 
 
 #----------------------------------------------------------
@@ -496,6 +497,8 @@ class ThreadedServer(CommonServer):
                     # and would prevent the forced shutdown.
                     thread.join(0.05)
                     time.sleep(0.05)
+
+        odoo.sql_db.close_all()
 
         _logger.debug('--')
         logging.shutdown()
@@ -1218,9 +1221,8 @@ def preload_registries(dbnames):
                 _logger.info("Starting post tests")
                 tests_before = registry._assertion_report.testsRun
                 with odoo.api.Environment.manage():
-                    for module_name in module_names:
-                        result = loader.run_suite(loader.make_suite(module_name, 'post_install'), module_name)
-                        registry._assertion_report.update(result)
+                    result = loader.run_suite(loader.make_suite(module_names, 'post_install'))
+                    registry._assertion_report.update(result)
                 _logger.info("%d post-tests in %.2fs, %s queries",
                              registry._assertion_report.testsRun - tests_before,
                              time.time() - t0,
@@ -1239,7 +1241,6 @@ def start(preload=None, stop=False):
     global server
 
     load_server_wide_modules()
-    odoo.service.wsgi_server._patch_xmlrpc_marshaller()
 
     if odoo.evented:
         server = GeventServer(odoo.service.wsgi_server.application)

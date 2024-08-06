@@ -52,7 +52,7 @@ class Project(models.Model):
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
 
     _sql_constraints = [
-        ('timesheet_product_required_if_billable_and_timesheets', """
+        ('timesheet_product_required_if_billable_and_time', """
             CHECK(
                 (allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL)
                 OR (allow_billable IS NOT TRUE)
@@ -84,10 +84,10 @@ class Project(models.Model):
     def _compute_warning_employee_rate(self):
         projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.bill_type == 'customer_project' and p.pricing_type == 'employee_rate')
         tasks = projects.task_ids.filtered(lambda t: not t.non_allow_billable)
-        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', tasks.ids), ('non_allow_billable', '=', False)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
+        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', tasks.ids), ('non_allow_billable', '=', False)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
         dict_project_employee = defaultdict(list)
         for line in employees:
-            dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]]
+            dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]] if line['employee_id'] else []
         for project in projects:
             project.warning_employee_rate = any(x not in project.sale_line_employee_ids.employee_id.ids for x in dict_project_employee[project.id])
 
@@ -185,18 +185,6 @@ class Project(models.Model):
             },
         }
 
-    def action_view_so(self):
-        self.ensure_one()
-        action_window = {
-            "type": "ir.actions.act_window",
-            "res_model": "sale.order",
-            "name": "Sales Order",
-            "views": [[False, "form"]],
-            "context": {"create": False, "show_sale": True},
-            "res_id": self.sale_order_id.id
-        }
-        return action_window
-
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
@@ -214,6 +202,8 @@ class ProjectTask(models.Model):
     # override sale_order_id and make it computed stored field instead of regular field.
     sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False,
     domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
+    # content in related parameter of the field definition is removed to manually define the compute and the search method.
+    project_sale_order_id = fields.Many2one(compute='_compute_project_sale_order_id', search='_search_project_sale_order_id', related=None)
     analytic_account_id = fields.Many2one('account.analytic.account', related='sale_order_id.analytic_account_id')
     bill_type = fields.Selection(related="project_id.bill_type")
     pricing_type = fields.Selection(related="project_id.pricing_type")
@@ -232,7 +222,7 @@ class ProjectTask(models.Model):
 
     # TODO: [XBO] remove me in master
     non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheets linked to this task will not be billed.")
-    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so')
+    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
 
     @api.depends('sale_line_id', 'timesheet_ids', 'timesheet_ids.unit_amount')
@@ -250,7 +240,7 @@ class ProjectTask(models.Model):
             if timesheet.so_line == timesheet.task_id.sale_line_id:
                 delta -= timesheet.unit_amount
             if delta:
-                mapped_remaining_hours[timesheet.task_id._origin.id] += timesheet.so_line.product_uom._compute_quantity(delta, uom_hour)
+                mapped_remaining_hours[timesheet.task_id._origin.id] += timesheet.product_uom_id._compute_quantity(delta, uom_hour)
 
         for task in self:
             task.remaining_hours_so = mapped_remaining_hours[task._origin.id]
@@ -281,6 +271,14 @@ class ProjectTask(models.Model):
         super()._compute_analytic_account_active()
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
+
+    @api.depends('project_id.bill_type', 'project_id.sale_order_id')
+    def _compute_project_sale_order_id(self):
+        for task in self:
+            if task.bill_type != 'customer_task':
+                task.project_sale_order_id = task.project_id.sale_order_id
+            else:
+                task.project_sale_order_id = False
 
     @api.depends('sale_line_id', 'project_id', 'allow_billable', 'non_allow_billable')
     def _compute_sale_order_id(self):
@@ -320,6 +318,9 @@ class ProjectTask(models.Model):
             if not self.sale_line_id:
                 self.sale_line_id = self.project_id.sale_line_id
 
+    def _search_project_sale_order_id(self, operator, value):
+        return [('bill_type', '!=', 'customer_task'), ('project_id.sale_order_id', operator, value)]
+
     def write(self, values):
         res = super(ProjectTask, self).write(values)
         # Done after super to avoid constraints on field recomputation
@@ -349,7 +350,7 @@ class ProjectTask(models.Model):
         self.ensure_one()
         if not self.commercial_partner_id or not self.allow_billable:
             return False
-        domain = [('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]
+        domain = [('company_id', '=', self.company_id.id), ('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]
         if self.project_id.bill_type == 'customer_project' and self.project_sale_order_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))
         sale_lines = self.env['sale.order.line'].search(domain)

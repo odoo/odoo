@@ -12,9 +12,11 @@ odoo.define('web.CrashManager', function (require) {
 const AbstractService = require('web.AbstractService');
 var ajax = require('web.ajax');
 const BrowserDetection = require('web.BrowserDetection');
+const config = require("web.config");
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var ErrorDialogRegistry = require('web.ErrorDialogRegistry');
+const session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -122,6 +124,18 @@ var CrashManager = AbstractService.extend({
                     window.onOriginError();
                     delete window.onOriginError;
                 } else {
+                    // In Safari 16.4+ (as of Jun 14th 2023), an error occurs
+                    // when going back and forward through the browser when the
+                    // cache is enabled. A feedback has been reported but in the
+                    // meantime, hide any script error in these versions.
+                    if (
+                        config.device.isIOS
+                        && message === "Script error."
+                        && session.is_frontend
+                        && odoo.debug !== "assets"
+                    ) {
+                        return;
+                    }
                     self.show_error({
                         type: _t("Odoo Client Error"),
                         message: _t("Unknown CORS error"),

@@ -10,8 +10,10 @@
 # Michal Veselý <michal@veselyberanek.net>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
-# trendspotter, 2021
+# Jiří Podhorecký, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Jakub Smolka, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -793,6 +795,13 @@ msgstr "Velikost písma"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "For technical reasons, this block cannot be dropped here"
+msgstr "Z technických důvodů zde tento blok nelze vypustit"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Format"
@@ -1081,6 +1090,12 @@ msgid "Install"
 msgstr "Instalovat"
 
 #. module: web_editor
+#: code:addons/web_editor/models/ir_ui_view.py:0
+#, python-format
+msgid "Invalid field value for %s: %s"
+msgstr "Neplatná hodnota pole pro %s: %s"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
@@ -1207,7 +1222,7 @@ msgstr "Visačka odkazu"
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js:0
 #, python-format
 msgid "Link to"
-msgstr ""
+msgstr "Odkaz na"
 
 #. module: web_editor
 #. openerp-web
@@ -1389,7 +1404,7 @@ msgstr "Originální (neoptimalizovaná, nezměněná) příloha"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Origins"
-msgstr ""
+msgstr "Zdroje"
 
 #. module: web_editor
 #. openerp-web
@@ -1410,14 +1425,14 @@ msgstr "Obrys"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Outline + Rounded"
-msgstr ""
+msgstr "Obrys + zaoblený"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Padding"
-msgstr ""
+msgstr "Výplň"
 
 #. module: web_editor
 #. openerp-web
@@ -1669,7 +1684,7 @@ msgstr "Resetovat"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Reset Image"
-msgstr ""
+msgstr "Obnovit obrázek"
 
 #. module: web_editor
 #. openerp-web
@@ -1683,7 +1698,7 @@ msgstr "Obnovení zobrazení zatím není podporováno"
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Resize Full"
-msgstr ""
+msgstr "Změnit velikost celého"
 
 #. module: web_editor
 #. openerp-web
@@ -2119,7 +2134,7 @@ msgstr "Kam by mělo toto URL odkazovat?"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Toaster"
-msgstr ""
+msgstr "Toastovač"
 
 #. module: web_editor
 #. openerp-web
@@ -2269,7 +2284,7 @@ msgstr "Pohled"
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Views and Assets bundles"
-msgstr ""
+msgstr "Balíčky zobrazení a majetku"
 
 #. module: web_editor
 #. openerp-web
@@ -2281,22 +2296,22 @@ msgstr "Vimeo"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Walden"
-msgstr ""
+msgstr "Walden"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Wavy"
-msgstr ""
+msgstr "Vlnitý"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_web_editor_converter_test_sub
 msgid "Web Editor Converter Subtest"
-msgstr ""
+msgstr "Podtest konvertoru webového editoru"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_web_editor_converter_test
 msgid "Web Editor Converter Test"
-msgstr ""
+msgstr "Test konvertoru webového editoru"
 
 #. module: web_editor
 #. openerp-web
@@ -2426,7 +2441,7 @@ msgstr ""
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "exclusion"
-msgstr ""
+msgstr "vyloučení"
 
 #. module: web_editor
 #. openerp-web
@@ -2450,7 +2465,7 @@ msgstr "světlejší"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "multiply"
-msgstr ""
+msgstr "násobit"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -2480,7 +2495,7 @@ msgstr "videa"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "⌙ Color filter"
-msgstr ""
+msgstr "⌙ Barevný filtr"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -2515,7 +2530,7 @@ msgstr "⌙ Pozice"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "⌙ Shape"
-msgstr ""
+msgstr "⌙ Tvar"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options

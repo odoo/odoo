@@ -34,7 +34,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
@@ -128,9 +128,8 @@ def redirect_with_hash(*args, **kw):
     return http.redirect_with_hash(*args, **kw)
 
 def abort_and_redirect(url):
-    r = request.httprequest
     response = werkzeug.utils.redirect(url, 302)
-    response = r.app.get_response(r, response, explicit_session=False)
+    response = http.root.get_response(request.httprequest, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
 
 def ensure_db(redirect='/web/database/selector'):
@@ -161,7 +160,7 @@ def ensure_db(redirect='/web/database/selector'):
             query_string = iri_to_uri(r.query_string)
             url_redirect = url_redirect.replace(query=query_string)
         request.session.db = db
-        abort_and_redirect(url_redirect)
+        abort_and_redirect(url_redirect.to_url())
 
     # if db not provided, use the session one
     if not db and request.session.db and http.db_filter([request.session.db]):
@@ -647,6 +646,10 @@ class HomeStaticTemplateHelpers(object):
     def get_qweb_templates(cls, addons, db=None, debug=False):
         return cls(addons, db, debug=debug)._get_qweb_templates()[0]
 
+# Shared parameters for all login/signup flows
+SIGN_UP_REQUEST_PARAMS = {'db', 'login', 'debug', 'token', 'message', 'error', 'scope', 'mode',
+                          'redirect', 'redirect_hostname', 'email', 'name', 'partner_id',
+                          'password', 'confirm_password', 'city', 'country_id', 'lang'}
 
 class GroupsTreeNode:
     """
@@ -774,6 +777,9 @@ class ExportXlsxWriter:
         self.datetime_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd hh:mm:ss'})
         self.worksheet = self.workbook.add_worksheet()
         self.value = False
+        self.float_format = '#,##0.00'
+        decimal_places = [res['decimal_places'] for res in request.env['res.currency'].search_read([], ['decimal_places'])]
+        self.monetary_format = f'#,##0.{max(decimal_places or [2]) * "0"}'
 
         if row_count > self.worksheet.xls_rowmax:
             raise UserError(_('There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.') % (row_count, self.worksheet.xls_rowmax))
@@ -821,6 +827,10 @@ class ExportXlsxWriter:
             cell_style = self.datetime_style
         elif isinstance(cell_value, datetime.date):
             cell_style = self.date_style
+        elif isinstance(cell_value, float):
+            cell_style.set_num_format(self.float_format)
+        elif isinstance(cell_value, (list, tuple)):
+            cell_value = pycompat.to_text(cell_value)
         self.write(row, column, cell_value, cell_style)
 
 class GroupExportXlsxWriter(ExportXlsxWriter):
@@ -854,26 +864,16 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
         label = '%s%s (%s)' % ('    ' * group_depth, label, group.count)
         self.write(row, column, label, self.header_bold_style)
-        if any(f.get('type') == 'monetary' for f in self.fields[1:]):
-
-            decimal_places = [res['decimal_places'] for res in group._model.env['res.currency'].search_read([], ['decimal_places'])]
-            decimal_places = max(decimal_places) if decimal_places else 2
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
-            # Float fields may not be displayed properly because of float
-            # representation issue with non stored fields or with values
-            # that, even stored, cannot be rounded properly and it is not
-            # acceptable to display useless digits (i.e. monetary)
-            #
-            # non stored field ->  we force 2 digits
-            # stored monetary -> we force max digits of installed currencies
-            if isinstance(aggregated_value, float):
-                if field.get('type') == 'monetary':
-                    aggregated_value = float_repr(aggregated_value, decimal_places)
-                elif not field.get('store'):
-                    aggregated_value = float_repr(aggregated_value, 2)
-            self.write(row, column, str(aggregated_value if aggregated_value is not None else ''), self.header_bold_style)
+            if field.get('type') == 'monetary':
+                self.header_bold_style.set_num_format(self.monetary_format)
+            elif field.get('type') == 'float':
+                self.header_bold_style.set_num_format(self.float_format)
+            else:
+                aggregated_value = str(aggregated_value if aggregated_value is not None else '')
+            self.write(row, column, aggregated_value, self.header_bold_style)
         return row + 1, 0
 
 
@@ -934,7 +934,7 @@ class Home(http.Controller):
         if not request.uid:
             request.uid = odoo.SUPERUSER_ID
 
-        values = request.params.copy()
+        values = {k: v for k, v in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
         try:
             values['databases'] = http.db_list()
         except odoo.exceptions.AccessDenied:
@@ -1053,7 +1053,6 @@ class WebClient(http.Controller):
         :param lang: the language of the user
         :return:
         """
-        request.disable_db = False
 
         if mods:
             mods = mods.split(',')
@@ -1089,23 +1088,6 @@ class WebClient(http.Controller):
     def benchmarks(self, mod=None, **kwargs):
         return request.render('web.benchmark_suite')
 
-
-class Proxy(http.Controller):
-
-    @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
-    def post(self, path):
-        """Effectively execute a POST request that was hooked through user login"""
-        with request.session.load_request_data() as data:
-            if not data:
-                raise werkzeug.exceptions.BadRequest()
-            from werkzeug.test import Client
-            from werkzeug.wrappers import BaseResponse
-            base_url = request.httprequest.base_url
-            query_string = request.httprequest.query_string
-            client = Client(request.httprequest.app, BaseResponse)
-            headers = {'X-Openerp-Session-Id': request.session.sid}
-            return client.post('/' + path, base_url=base_url, query_string=query_string,
-                               headers=headers, data=data)
 
 class Database(http.Controller):
 
@@ -1246,7 +1228,6 @@ class Session(http.Controller):
     def get_session_info(self):
         request.session.check_security()
         request.uid = request.session.uid
-        request.disable_db = False
         return request.env['ir.http'].session_info()
 
     @http.route('/web/session/authenticate', type='json', auth="none")
@@ -1607,6 +1588,8 @@ class Binary(http.Controller):
                     'res_id': int(id)
                 })
                 attachment._post_add_create()
+            except AccessError:
+                args.append({'error': _("You are not allowed to upload an attachment here.")})
             except Exception:
                 args.append({'error': _("Something horrible happened")})
                 _logger.exception("Fail to upload attachment %s" % ufile.filename)
@@ -1772,7 +1755,7 @@ class Export(http.Controller):
         fields = self.fields_get(model)
         if import_compat:
             if parent_field_type in ['many2one', 'many2many']:
-                rec_name = request.env[model]._rec_name
+                rec_name = request.env[model]._rec_name_fallback()
                 fields = {'id': fields['id'], rec_name: fields[rec_name]}
         else:
             fields['.id'] = {**fields['id']}
@@ -1921,7 +1904,7 @@ class ExportFormat(object):
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
 
-        Model = request.env[model].with_context(**params.get('context', {}))
+        Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
         if not Model._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
 
@@ -1945,7 +1928,6 @@ class ExportFormat(object):
 
             response_data = self.from_group_data(fields, tree)
         else:
-            Model = Model.with_context(import_compat=import_compat)
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
 
             export_data = records.export_data(field_names).get('datas',[])
@@ -2046,7 +2028,7 @@ class ReportController(http.Controller):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
             # the user explicitely wants to change the lang, this mechanism overwrites it.
             data['context'] = json.loads(data['context'])
-            if data['context'].get('lang'):
+            if data['context'].get('lang') and not data.get('force_context_lang'):
                 del data['context']['lang']
             context.update(data['context'])
         if converter == 'html':
@@ -2067,9 +2049,10 @@ class ReportController(http.Controller):
     # Misc. route utils
     #------------------------------------------------------
     @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="public")
-    def report_barcode(self, type, value, width=600, height=100, humanreadable=0, quiet=1, mask=None):
+    def report_barcode(self, type, value, **kwargs):
         """Contoller able to render barcode images thanks to reportlab.
-        Samples:
+        Samples::
+
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
                 ('QR', o.name, 200, 200)"/>
@@ -2077,6 +2060,8 @@ class ReportController(http.Controller):
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
         'UPCA', 'USPS_4State'
+        :param width: Pixel width of the barcode
+        :param height: Pixel height of the barcode
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
         :param quiet: Accepted values: 0 (default) or 1. 1 will display white
@@ -2084,10 +2069,11 @@ class ReportController(http.Controller):
         :param mask: The mask code to be used when rendering this QR-code.
                      Masks allow adding elements on top of the generated image,
                      such as the Swiss cross in the center of QR-bill codes.
+        :param barLevel: QR code Error Correction Levels. Default is 'L'.
+        ref: https://hg.reportlab.com/hg-public/reportlab/file/830157489e00/src/reportlab/graphics/barcode/qr.py#l101
         """
         try:
-            barcode = request.env['ir.actions.report'].barcode(type, value, width=width,
-                height=height, humanreadable=humanreadable, quiet=quiet, mask=mask)
+            barcode = request.env['ir.actions.report'].barcode(type, value, **kwargs)
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 
@@ -2148,7 +2134,8 @@ class ReportController(http.Controller):
                 'message': "Odoo Server Error",
                 'data': se
             }
-            return request.make_response(html_escape(json.dumps(error)))
+            res = request.make_response(html_escape(json.dumps(error)))
+            raise werkzeug.exceptions.InternalServerError(response=res) from e
 
     @http.route(['/report/check_wkhtmltopdf'], type='json', auth="user")
     def check_wkhtmltopdf(self):

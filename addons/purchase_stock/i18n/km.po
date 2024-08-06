@@ -14,7 +14,7 @@ msgstr ""
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
 "Last-Translator: Lux Sok <sok.lux@gmail.com>, 2020\n"
-"Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
+"Language-Team: Khmer (https://app.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -269,6 +269,15 @@ msgid "Exception(s):"
 msgstr "អញ្ញតិ្តកម្ម(s):"
 
 #. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
+
+#. module: purchase_stock
 #. openerp-web
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
@@ -390,8 +399,7 @@ msgid ""
 " to cope with unexpected vendor delays."
 msgstr ""
 "រឹមនៃកំហុសសម្រាប់ពេលវេលានាំមុខរបស់អ្នកលក់។ "
-"នៅពេលដែលប្រព័ន្ធបង្កើតការបញ្ជាទិញការបញ្ជាទិញសម្រាប់ការតំរែតំរង់ផលិតផលពួកគេនឹងត្រូវបានកំណត់ពេលជាច្រើនថ្ងៃមុនដើម្បីទប់ទល់នឹងការពន្យារពេលរបស់អ្នកលក់ដែលមិនបានរំពឹងទុក។"
-" "
+"នៅពេលដែលប្រព័ន្ធបង្កើតការបញ្ជាទិញការបញ្ជាទិញសម្រាប់ការតំរែតំរង់ផលិតផលពួកគេនឹងត្រូវបានកំណត់ពេលជាច្រើនថ្ងៃមុនដើម្បីទប់ទល់នឹងការពន្យារពេលរបស់អ្នកលក់ដែលមិនបានរំពឹងទុក។ "
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -679,8 +687,7 @@ msgstr ""
 " "
 "ផលិតផលទៅដំណក់ទឹកនឹងបង្កើតការស្នើសុំទិញសម្រាប់ការដកស្រង់នៅពេលការបញ្ជាទិញបានបញ្ជាក់។"
 " នេះគឺជាលំហូរតាមតម្រូវការ។ "
-"អាសយដ្ឋានដឹកជញ្ជូនដែលបានស្នើសុំនឹងជាអាស័យដ្ឋានដឹកជញ្ជូនរបស់អតិថិជនហើយមិនមែនជាឃ្លាំងរបស់អ្នកទេ។"
-" "
+"អាសយដ្ឋានដឹកជញ្ជូនដែលបានស្នើសុំនឹងជាអាស័យដ្ឋានដឹកជញ្ជូនរបស់អតិថិជនហើយមិនមែនជាឃ្លាំងរបស់អ្នកទេ។ "
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -751,10 +758,9 @@ msgstr "នៅពេលដែលផលិតផលត្រូវបានទិ
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need."
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
 msgstr ""
-"នៅពេលដែលផលិតផលត្រូវការនៅក្នុង<b>%s</b>,<br/>នោះការស្នើសុំដកស្រង់ត្រូវបានបង្កើតឡើងដើម្បីបំពេញតំរូវការ។"
-" "
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0

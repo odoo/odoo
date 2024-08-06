@@ -5,7 +5,6 @@
 # Translators:
 # Rui Andrada <shingonoide@gmail.com>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
-# Peter Leaf <pablleaf@gmail.com>, 2020
 # Hélio Dias de Brito Teixeira <helio.dbt@gmail.com>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
 # Keli Brugalli <kbr@odoo.com>, 2020
@@ -29,15 +28,16 @@
 # Lauro de Lima <lauro@ciclix.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
 # danimaribeiro <danimaribeiro@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020
-# grazziano <gra.negocia@gmail.com>, 2020
+# grazziano <grazziano.do+transifex@gmail.com>, 2020
 # Marcos Abreu <marcoos.abreu@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
 # Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
-# Maurício Liell <mauricio@liell.com.br>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
+# Martin Trigaux, 2022
+# Layna Nascimento, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -45,13 +45,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard___data_fetched
@@ -72,7 +72,7 @@ msgstr "#{'Desdobrar' if c.id in category.parents_and_self.ids else 'Dobrar'}"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "&amp; Shipping"
-msgstr "&amp; Envio"
+msgstr "e Envio"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
@@ -317,7 +317,7 @@ msgid ""
 msgstr ""
 "<br/>\n"
 "                Garantia de devolução do dinheiro em 30 dias<br/>\n"
-"                Envio: 2-3 Dias Úteis"
+"                Envio: 2-3 dias úteis"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -377,6 +377,16 @@ msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
 msgstr "<i class=\"fa fa-shopping-cart\"/> Adicionar ao Carrinho"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">País...</option>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
+msgstr "<option value=\"\">Estado...</option>"
+
+#. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:0
 #, python-format
 msgid ""
@@ -393,11 +403,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
 msgid ""
-"<small class=\"text-muted float-right\">Source: https://termsfeed.com/blog"
-"/sample-terms-and-conditions-template</small>"
+"<small class=\"text-muted float-right\">Source: "
+"https://termsfeed.com/blog/sample-terms-and-conditions-template</small>"
 msgstr ""
-"<small class=\"text-muted float-right\">Fonte: https://termsfeed.com/blog"
-"/sample-terms-and-conditions-template</small>"
+"<small class=\"text-muted float-right\">Fonte: "
+"https://termsfeed.com/blog/sample-terms-and-conditions-template</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -548,7 +558,7 @@ msgstr "<span>Finalizar Compra</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
-msgstr "<span>Visualizar Vídeo</span>"
+msgstr "<span>Pré-visualização do vídeo</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -558,12 +568,21 @@ msgstr "<span>Seu pagamento foi autorizado.</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "<strong>Add to Cart</strong>"
-msgstr "<strong>Adicionar ao Carrinho</strong>"
+msgstr "<strong>Adicionar ao carrinho</strong>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid ""
+"<strong>No suitable payment option could be found.</strong><br/>\n"
+"                                    If you believe that it is an error, please contact the website administrator."
+msgstr ""
+"<strong>Não foi possível encontrar uma opção de pagamento adequada.</strong><br/>\n"
+"                                    Se você acredita que isso é um erro, entre em contato com o administrador do site."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<strong>Payment Information:</strong>"
-msgstr "<strong>Informação de Pagamento:</strong>"
+msgstr "<strong>Informações de pagamento:</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -643,7 +662,7 @@ msgstr "Uma descrição curta que também aparecerá em documentos."
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "AT A GLANCE"
-msgstr "NUM RELANCE"
+msgstr "EM RESUMO"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -668,7 +687,7 @@ msgstr "Carrinhos Abandonados"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.crm_team_salesteams_view_kanban_inherit_website_sale
 msgid "Abandoned Carts to Recover"
-msgstr "Carrinhos Abandonados para Recuperar"
+msgstr "Carrinhos abandonados a recuperar"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
@@ -700,8 +719,8 @@ msgid ""
 "Accessories show up when the customer reviews the cart before payment "
 "(cross-sell strategy)."
 msgstr ""
-"Os acessórios aparecem quando o cliente analisa o carrinho antes do "
-"pagamento (estratégia de venda cruzada)."
+"Os acessórios aparecem quando o cliente revisa o carrinho antes do pagamento"
+" (estratégia de venda cruzada)."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
@@ -774,7 +793,7 @@ msgstr "Produtos Alternativos:"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
 msgid "Amount of Abandoned Carts"
-msgstr "Montante de Carrinhos Abandonados"
+msgstr "Número de carrinhos abandonados"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -937,7 +956,7 @@ msgstr "Carrinhos"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Carts are flagged as abandoned after this delay."
-msgstr "Carrinhos são marcados como abandonados a partir deste prazo."
+msgstr "Carrinhos são marcados como abandonados após este período de tempo."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -974,9 +993,29 @@ msgid "Chairs"
 msgstr "Cadeiras"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"A alteração do nome não é permitida após a emissão de faturas para sua "
+"conta. Entre em contato conosco diretamente para esta operação."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Não é permitido alterar seu nome após a emissão de documentos para sua "
+"conta. Entre em contato conosco diretamente para essa operação."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
-msgstr "Sub Categorias"
+msgstr "Categorias secundárias"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
@@ -1043,32 +1082,32 @@ msgstr "Componentes"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
-msgstr "Calcule o custo de envio e envie com Easypost"
+msgstr "Calcular o custo de envio e enviar com Easypost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Computar custos de envio e enviar com DHL"
+msgstr "Calcular o custo de envio e enviar com DHL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "Computar custos e enviar com FedEx"
+msgstr "Calcular o custo de envio e enviar pelo FedEx"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Computar custos de envio e enviar com UPS"
+msgstr "Calcular o custo de envio e enviar pela UPS"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "Computar custos de vneio e enviar com USPS"
+msgstr "Calcular o custo de envio e enviar pela USPS"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "Computar custos de envio e enviar com bpost"
+msgstr "Calcular o custo de envio e enviar pelo bpost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1083,7 +1122,7 @@ msgstr "Definições de Configuração"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Confirm Order"
-msgstr "Confirmar Pedido"
+msgstr "Confirmar pedido"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -1095,7 +1134,7 @@ msgstr "Confirmar Pedido <span class=\"fa fa-chevron-right\"/>"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Confirm orders when you get paid."
-msgstr "Confirme os pedidos quando você receber o pagamento."
+msgstr "Confirme pedidos quando você receber o pagamento."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1105,7 +1144,7 @@ msgstr "Confirmado"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Confirmed Orders"
-msgstr "Pedidos Confirmados"
+msgstr "Pedidos confirmados"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
@@ -1123,18 +1162,13 @@ msgstr "Conversão"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
 msgid "Couches"
-msgstr "Camadas"
+msgstr "Sofás"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_country
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "País"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "País..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1177,7 +1211,7 @@ msgstr "Cliente"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Customer Country"
-msgstr "País do Consumidor"
+msgstr "País do cliente"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -1186,8 +1220,8 @@ msgstr "Clientes"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL"
-msgstr "DHL"
+msgid "DHL Express Connector"
+msgstr "Conector DHL Express"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1625,6 +1659,18 @@ msgstr "Instala o aplicativo \"Informações de entrega do site\""
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"Se você estiver fazendo o pedido para uma pessoa externa, faça seu pedido "
+"por meio do back-end. Se você deseja alterar seu nome ou endereço de e-mail,"
+" faça-o nas configurações da conta ou entre em contato com o administrador."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "E-mail inválido! Por favor insira um endereço de e-mail válido."
 
@@ -1818,7 +1864,7 @@ msgstr "Gerenciar promoção e programas de cupom"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Medium"
-msgstr "Médio"
+msgstr "Meio"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1849,6 +1895,7 @@ msgstr "Meu Carrinho"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 #, python-format
 msgid "Name"
 msgstr "Nome"
@@ -1892,6 +1939,14 @@ msgstr "Próximo <span class=\"fa fa-chevron-right\"/>"
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "No abandoned carts found"
 msgstr "Nenhum carrinho abandonado encontrado"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"No payment method is available for your current order. Please contact us for"
+" more information."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1980,7 +2035,7 @@ msgstr "Assim que você clicar em <b>Salvar</b>, seu produto será atualizado."
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
 msgid "Online Sales"
-msgstr "Vendas Online"
+msgstr "Vendas online"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
@@ -2101,14 +2156,14 @@ msgstr "Acompanhamento de Pedidos"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
-msgstr "Pedidos para Faturar"
+msgstr "Pedidos a faturar"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Orders to Invoice"
-msgstr "Pedidos para Faturar"
+msgstr "Pedidos a faturar"
 
 #. module: website_sale
 #. openerp-web
@@ -2181,7 +2236,7 @@ msgstr "Método de Pagamento"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
-msgstr "Transações de Pagamento"
+msgstr "Transações de pagamento"
 
 #. module: website_sale
 #. openerp-web
@@ -2227,7 +2282,7 @@ msgstr "Mês Anterior"
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Week"
-msgstr "Próxima Semana"
+msgstr "Semana anterior"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:0
@@ -2354,7 +2409,7 @@ msgstr "Variação do Produto"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.product_catalog_variants
 msgid "Product Variants"
-msgstr "Variantes de Produto"
+msgstr "Variantes de produto"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
@@ -2382,13 +2437,16 @@ msgid "Product views"
 msgstr "Visualizações do produto"
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_demo_products
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
+#, python-format
 msgid "Products"
 msgstr "Produtos"
 
@@ -2468,7 +2526,7 @@ msgstr "Quantidade"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "REVENUE BY"
-msgstr "POR RECEITA"
+msgstr "RECEITA POR"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_ids
@@ -2508,17 +2566,17 @@ msgstr "Motivo da pontuação"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
 msgid "Recently viewed Products"
-msgstr "Produtos visualizados Recentemente"
+msgstr "Produtos visualizados recentemente"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email Sent"
-msgstr "Enviar E-mail de Recuperação"
+msgstr "E-mail de recuperação enviado"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
-msgstr "E-mail de Recuperação para Enviar"
+msgstr "E-mail de recuperação a enviar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -2558,7 +2616,7 @@ msgstr "Rever Pedido"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Ribbon"
-msgstr "Fita"
+msgstr "Faixa"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
@@ -2583,7 +2641,7 @@ msgstr "Cor do texto da fita"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Right (only on grid view)"
-msgstr ""
+msgstr "Direita (apenas na visualização em grade)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
@@ -2798,17 +2856,17 @@ msgstr "Loja"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shop - Checkout"
-msgstr "Compras - Checkout"
+msgstr "Loja - Checkout"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Shop - Confirmed"
-msgstr "Compras - Confirmadas"
+msgstr "Loja - confirmados"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Shop - Select Payment Acquirer"
-msgstr "Loja - Selecione o adquirente de pagamento"
+msgstr "Compras - selecione o intermediador de pagamento"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
@@ -2872,6 +2930,12 @@ msgid "Some required fields are empty."
 msgstr "Alguns campos obrigatórios estão vazios."
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Sorry, we are unable to find a Payment Method"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Sort by"
 msgstr "Ordenar por"
@@ -2894,15 +2958,10 @@ msgid "State / Province"
 msgstr "Estado"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "Estado"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
 msgstr ""
-"Estado da etapa do adquirente de pagamento de integração de venda no site"
+"Estado da etapa de integração do intermediador de pagamento da venda no site"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2956,8 +3015,8 @@ msgstr "Sugestões"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
-msgid "TIN / VAT"
-msgstr "TIN / VAT"
+msgid "VAT"
+msgstr "Imposto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3017,16 +3076,14 @@ msgstr "A URL completa para acessar o documento através do site."
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
 msgstr ""
-"A combinação fornecida não existe, portanto, não pode ser adicionada ao "
-"carrinho."
+"Essa combinação não existe, portanto, não pode ser adicionada ao carrinho."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
 msgstr ""
-"O produto fornecido não existe, portanto, não pode ser adicionado ao "
-"carrinho."
+"Este produto não existe, portanto, não pode ser adicionado ao carrinho."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3494,13 +3551,13 @@ msgstr "default"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #, python-format
 msgid "eCommerce"
-msgstr "Comércio Eletrônico"
+msgstr "e-Commerce"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 msgid "eCommerce Categories"
-msgstr "Categorias de Comércio Eletrônico"
+msgstr "Categorias do e-Commerce"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -3613,7 +3670,7 @@ msgid ""
 "your account. Please contact us directly for this operation."
 msgstr ""
 "Não é permitido alterar o nome da empresa depois que algum documento foi "
-"emitido para sua conta. Entre em contato conosco diretamente para esta "
+"emitido para a sua conta. Entre em contato conosco diretamente para esta "
 "operação."
 
 #. module: website_sale
@@ -3622,6 +3679,5 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"A alteração do número do IVA não é permitida depois que algum documento foi "
-"emitido para sua conta. Entre em contato conosco diretamente para esta "
-"operação."
+"A alteração do CNPJ não é permitida depois que algum documento foi emitido "
+"para a sua conta. Entre em contato conosco diretamente para esta operação."

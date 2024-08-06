@@ -6,11 +6,14 @@
 # Piia Paurson <piia@avalah.ee>, 2020
 # Rivo Zängov <eraser@eraser.ee>, 2020
 # Arma Gedonsky <armagedonsky@hot.ee>, 2020
-# Eneli Õigus <enelioigus@gmail.com>, 2020
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Martin Trigaux, 2020
-# atriine <triine@avalah.ee>, 2020
 # Andre Roomet <andreroomet@gmail.com>, 2020
+# Algo Kärp <algokarp@gmail.com>, 2021
+# Triine Aavik <triine@avalah.ee>, 2021
+# Eneli Õigus <enelioigus@gmail.com>, 2021
+# Leaanika Randmets, 2023
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Andre Roomet <andreroomet@gmail.com>, 2020\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Last-Translator: Anna, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,7 +42,7 @@ msgstr "&amp;times;"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "(not verified)"
-msgstr ""
+msgstr "(kinnitamata)"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -47,11 +50,13 @@ msgid ""
 ". Collect points on the forum or on the eLearning platform. Those points "
 "will make you reach new ranks."
 msgstr ""
+". Kogu kursustel punkte. Kursustelt saadud punktid aitavad jõuda sul uute "
+"tasemeteni."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
-msgstr ""
+msgstr ". Proovi teistsugust otsingut."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -61,7 +66,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "<i class=\"fa fa-arrow-right\"/> All Badges"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Kõik märgid"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -82,6 +87,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid "<i class=\"text-muted\"> awarded users</i>"
 msgstr "<i class=\"text-muted\"> tunnustatud kasutajad</i>"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Riik...</option>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -146,12 +156,12 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "<span class=\"text-muted\">Badges</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Märgid</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "<span class=\"text-muted\">XP</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Punktid</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -159,11 +169,13 @@ msgid ""
 "<span id=\"email_validated_message\">Congratulations! Your email has just "
 "been validated.</span>"
 msgstr ""
+"<span id=\"email_validated_message\">Teie e-posti aadress on "
+"kinnitatud.</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "<strong class=\"form-group text-white mr-2\">Rank by :</strong>"
-msgstr ""
+msgstr "<strong class=\"form-group text-white mr-2\">Järjesta:</strong>"
 
 #. module: website_profile
 #: model:mail.template,body_html:website_profile.validation_email
@@ -268,13 +280,13 @@ msgstr "Teave"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "All Users"
-msgstr ""
+msgstr "Kõik kasutajad"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "All time"
-msgstr ""
+msgstr "Kogu periood"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -290,16 +302,19 @@ msgid ""
 "                        you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
 "                        appear on your profile page, and your posts."
 msgstr ""
+"Lisaks teadmistele, mis sa kogud kursuseid läbi tehes,\n"
+"                        anname sulle tunnusmärke.<br class=\"d-none d-lg-inline-block\"/>Tunnusmärgid\n"
+"                        on nähtavad sinu profiilil ja sinu postitustes."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Biography"
-msgstr ""
+msgstr "Biograafia"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Võib avaldada"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -315,11 +330,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "Close"
 msgstr "Sulge"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "Country..."
-msgstr "Maa..."
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__display_name
@@ -341,22 +351,22 @@ msgstr "Muudaprofiili"
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "Mängustamise märk"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Home"
-msgstr ""
+msgstr "Kodu"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "How do I earn badges?"
-msgstr ""
+msgstr "Kuidas ma saan teenida märke?"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "How do I score more points?"
-msgstr ""
+msgstr "Kuidas ma saan rohkem punkte koguda?"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__id
@@ -368,7 +378,7 @@ msgstr "ID"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "On avaldatud"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -378,7 +388,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Keep learning with"
-msgstr ""
+msgstr "Jätkake õppimist koos"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge____last_update
@@ -390,12 +400,12 @@ msgstr "Viimati muudetud (millal)"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_website__karma_profile_min
 msgid "Minimal karma to see other user's profile"
-msgstr ""
+msgstr "Minimaalsed punktid, et näha teise kasutaja profiili"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Mobile sub-nav"
-msgstr ""
+msgstr "Mobiilne alamnavigaator"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -405,22 +415,22 @@ msgstr "Rohkem informatsiooni"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Nav"
-msgstr ""
+msgstr "Nav"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Next rank:"
-msgstr ""
+msgstr "Järgmine tase:"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "No badges yet!"
-msgstr ""
+msgstr "Märke veel pole!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid "No user found for"
-msgstr ""
+msgstr "Ei leitud kasutajat nimega"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -428,21 +438,23 @@ msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
 msgstr ""
+"Palun sisestage kehtiv e-posti aadress, et saada teavitusi vastuste või "
+"kommentaaride kohta. "
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Rank badge"
-msgstr ""
+msgstr "Taseme märk"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Ranks"
-msgstr ""
+msgstr "Tasemed"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
 msgid "Return to the website."
-msgstr ""
+msgstr "Tagasi veebilehele."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -452,12 +464,12 @@ msgstr "Otsi"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search courses"
-msgstr ""
+msgstr "Otsi kursuseid"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search users"
-msgstr ""
+msgstr "Otsi kasutajaid"
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
@@ -467,17 +479,17 @@ msgstr "The full URL to access the document through the website."
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "This month"
-msgstr "Sellel kuul"
+msgstr "See kuu"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
 msgid "This profile is private!"
-msgstr ""
+msgstr "Antud profiil on privaatne!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "This week"
-msgstr ""
+msgstr "See nädal"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -493,7 +505,7 @@ msgstr "Uuenda"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "User rank"
-msgstr ""
+msgstr "Kasutaja tase"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users
@@ -504,7 +516,7 @@ msgstr "Kasutajad"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "Nähtav praegusel veebilehel"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_website
@@ -519,13 +531,13 @@ msgstr "Veebilehe URL"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "When you finish a course or reach milestones, you're awarded badges."
-msgstr ""
+msgstr "Kui lõpetad kursuse või saavutad eesmärke, siis antakse märke. "
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "XP"
-msgstr ""
+msgstr "punktid"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -534,34 +546,37 @@ msgid ""
 "content. Points can also be earned on the forum. Follow this link to the "
 "guidelines of the forum."
 msgstr ""
+"Punkte kogute näiteks iga kursuse lõpus vastates viktoriini küsimustele. "
+"Samuti saab koguda punkte ka foorumis. Sellel lingil saad juhiseid foorumi "
+"kohta: "
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "breadcrumb"
-msgstr ""
+msgstr "navigatsioon"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "point"
-msgstr ""
+msgstr "punkt"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 msgid "this month"
-msgstr ""
+msgstr "see kuu"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 msgid "this week"
-msgstr ""
+msgstr "see nädal"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
 msgid "xp"
-msgstr ""
+msgstr "xp"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "└ Users"
-msgstr ""
+msgstr "└ Kasutajad"

@@ -3,10 +3,10 @@
 
 from datetime import datetime
 import random
-import json
 
 from odoo import api, models, fields, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 from odoo.tools import html2plaintext
 
@@ -211,7 +211,7 @@ class BlogPost(models.Model):
             if (published_in_vals and 'published_date' not in vals and
                     (not post.published_date or post.published_date <= fields.Datetime.now())):
                 copy_vals['published_date'] = vals[list(published_in_vals)[0]] and fields.Datetime.now() or False
-            result &= super(BlogPost, self).write(copy_vals)
+            result &= super(BlogPost, post).write(copy_vals)
         self._check_for_publication(vals)
         return result
 
@@ -263,7 +263,7 @@ class BlogPost(models.Model):
         res['default_opengraph']['article:modified_time'] = self.write_date
         res['default_opengraph']['article:tag'] = self.tag_ids.mapped('name')
         # background-image might contain single quotes eg `url('/my/url')`
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = json.loads(self.cover_properties).get('background-image', 'none')[4:-1].strip("'")
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = json_scriptsafe.loads(self.cover_properties).get('background-image', 'none')[4:-1].strip("'")
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_meta_description'] = self.subtitle
         return res

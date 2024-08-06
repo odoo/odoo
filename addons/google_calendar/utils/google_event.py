@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.api import model
+from odoo.tools.misc import ReadonlyDict
 from odoo.tools.sql import existing_tables
 import pytz
 import logging
@@ -29,14 +30,15 @@ class GoogleEvent(abc.Set):
     """
 
     def __init__(self, iterable=()):
-        self._events = {}
+        _events = {}
         for item in iterable:
             if isinstance(item, self.__class__):
-                self._events[item.id] = item._events[item.id]
+                _events[item.id] = item._events[item.id]
             elif isinstance(item, Mapping):
-                self._events[item.get('id')] = item
+                _events[item.get('id')] = item
             else:
                 raise ValueError("Only %s or iterable of dict are supported" % self.__class__.__name__)
+        self._events = ReadonlyDict(_events)
 
     def __iter__(self) ->  Iterator['GoogleEvent']:
         return iter(GoogleEvent([vals]) for vals in self._events.values())
@@ -68,8 +70,9 @@ class GoogleEvent(abc.Set):
 
     @property
     def rrule(self):
-        if self.recurrence and 'RRULE:' in self.recurrence[0]:  # LUL TODO what if there are something else in the list?
-            return self.recurrence[0][6:]  # skip "RRULE:" in the rrule string
+        if self.recurrence and any('RRULE' in item for item in self.recurrence):
+            rrule = next(item for item in self.recurrence if 'RRULE' in item)
+            return rrule[6:]  # skip "RRULE:" in the rrule string
 
     def odoo_id(self, env):
         self.odoo_ids(env)  # load ids

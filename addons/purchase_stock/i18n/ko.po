@@ -8,8 +8,9 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2020
 # Seongseok Shin <shinss61@hotmail.com>, 2020
 # Mark Lee <odoos@soti.33mail.com>, 2020
-# JH CHOI <hwangtog@gmail.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,8 +18,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -42,13 +43,13 @@ msgstr ""
 msgid ""
 "<p>Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated.</p>"
-msgstr ""
+msgstr "<p>승인된 %s입고건이 이미 승인되었으므로 날짜가 수정될수 없습니다. </p>"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "<p>Those dates have been updated accordingly on the receipt %s.</p>"
-msgstr ""
+msgstr "<p>%s입고건에 따라 날짜가 업데이트됩니다.</p>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -56,6 +57,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
 "Delivery Data</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">정시 배송 정보 "
+"없음</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -106,6 +109,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"품목 설정에 따라, 입고수량은 자동으로 논리에 의해 계산됩니다 :\n"
+"- 수동 : 수량은 수동으로 내역에 업데이트 합니다\n"
+"-재고이동: 수량은 승인된 입출고건에서 업데이트 됩니다\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -153,7 +159,7 @@ msgstr "회사들"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the first receipt order."
-msgstr "첫번째 입고 완료일"
+msgstr "첫번째 입고의 완료일자"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -173,14 +179,14 @@ msgstr "생성된 구매 주문 명세"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
 msgid "Custom Description"
-msgstr ""
+msgstr "맞춤 설명"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO, define when a PO should be validated"
-msgstr ""
+msgstr "발주서 승인에 소요되는 기간, 발주서를 확인해야 하는 시기 설정"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -263,7 +269,7 @@ msgstr "유효 날짜"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "Effective Date Last Year"
-msgstr ""
+msgstr "작년 기준 효력 발생일"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -274,6 +280,17 @@ msgstr "구매 주문에서 예외가 발생했습니다 :"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
 msgstr "예외 :"
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
+"%s 품목에 대한 작업 유형 (%s)의 창고가 재정렬 규칙 (%s)에 따른 위치 (%s)와 일치하지 않습니다. 작업 유형을 변경하거나 "
+"견적 요청을 취소하십시오."
 
 #. module: purchase_stock
 #. openerp-web
@@ -287,7 +304,7 @@ msgstr "공급업체 청구서 초안을 생성합니다."
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
-msgstr ""
+msgstr "업체 청구서를 생성하려면 구매발주서로 돌아가십시오."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
@@ -442,18 +459,18 @@ msgstr "정시배송률"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
 msgid "On-Time Quantity"
-msgstr ""
+msgstr "정시 수량"
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "On-time Delivery"
-msgstr ""
+msgstr "정시 배송"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "On-time Rate"
-msgstr ""
+msgstr "정시 비율"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
@@ -467,7 +484,7 @@ msgstr "지시점"
 msgid ""
 "Over the past 12 months; the number of products received on time divided by "
 "the number of ordered products."
-msgstr ""
+msgstr "지난 12개월 동안 정시에 수령한 품목 수를 주문 품목 수로 나눈 값입니다."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_count
@@ -479,7 +496,7 @@ msgstr "선별 수"
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Process all the receipt quantities."
-msgstr ""
+msgstr "입고 수량 전체를 처리합니다."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
@@ -511,7 +528,7 @@ msgstr "취소 전달"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__purchase_line_ids
 msgid "Purchase Lines"
-msgstr ""
+msgstr "매입 명세"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -541,7 +558,7 @@ msgstr "구매 보고서"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Purchase Security Lead Time"
-msgstr ""
+msgstr "구매 보안 리드타임"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
@@ -652,7 +669,7 @@ msgstr "기술 : 수량 계산에 사용됩니다."
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
-msgstr ""
+msgstr "다음과 같이 보충 주문이 생성되었습니다."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -660,7 +677,7 @@ msgstr ""
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
-msgstr ""
+msgstr "구매발주서 상의 수량이 청구서 수량보다 적습니다. 환불 요청을 해야 합니다."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -713,7 +730,7 @@ msgstr "일부 접수가 이미 완료되었으므로 구매 주문 %s을 취소
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
-msgstr ""
+msgstr "모든 주문 품목의 입고 승인"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
@@ -753,8 +770,11 @@ msgstr "상품이 도착하면 이 창고로 배송될 것입니다."
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need."
-msgstr "<b>%s</b>에 제품이 필요한 경우, <br/>요구 사항을 충족하기 위해 견적 요청을 작성합니다."
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
+msgstr ""
+"<b>%s</b>에 필요한 품목이 있을 경우 <br/>견적요청서를 생성합니다. <br/>참고: 이 규칙은 입고 경로 규칙과 함께 "
+"사용합니다.<br/>"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0

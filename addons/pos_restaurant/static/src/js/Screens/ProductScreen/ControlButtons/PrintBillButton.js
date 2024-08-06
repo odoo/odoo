@@ -14,6 +14,7 @@ odoo.define('pos_restaurant.PrintBillButton', function(require) {
         async onClick() {
             const order = this.env.pos.get_order();
             if (order.get_orderlines().length > 0) {
+                order.initialize_validation_date();
                 await this.showTempScreen('BillScreen');
             } else {
                 await this.showPopup('ErrorPopup', {

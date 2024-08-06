@@ -231,12 +231,13 @@ var VariantMixin = {
 
         $container.find(variantsValuesSelectors.join(',')).each(function (){
             var $variantValueInput = $(this);
+            var singleNoCustom = $variantValueInput.data('is_single') && !$variantValueInput.data('is_custom');
 
             if ($variantValueInput.is('select')){
                 $variantValueInput = $variantValueInput.find('option[value=' + $variantValueInput.val() + ']');
             }
 
-            if ($variantValueInput.length !== 0){
+            if ($variantValueInput.length !== 0 && !singleNoCustom){
                 noVariantAttributeValues.push({
                     'custom_product_template_attribute_value_id': $variantValueInput.data('value_id'),
                     'attribute_value_name': $variantValueInput.data('value_name'),

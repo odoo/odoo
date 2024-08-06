@@ -13,5 +13,6 @@
         'views/pos_payment_method_views.xml',
         'views/point_of_sale_assets.xml',
     ],
-    'auto-install': True,
+    'auto_install': True,
+    'license': 'LGPL-3',
 }

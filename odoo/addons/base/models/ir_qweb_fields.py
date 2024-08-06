@@ -266,7 +266,7 @@ class DateTimeConverter(models.AbstractModel):
 
         if options.get('time_only'):
             format_func = babel.dates.format_time
-            return pycompat.to_text(format_func(value, format=pattern, locale=locale))
+            return pycompat.to_text(format_func(value, format=pattern, tzinfo=tzinfo, locale=locale))
         if options.get('date_only'):
             format_func = babel.dates.format_date
             return pycompat.to_text(format_func(value, format=pattern, locale=locale))
@@ -570,6 +570,10 @@ class DurationConverter(models.AbstractModel):
         r = round((value * factor) / round_to) * round_to
 
         sections = []
+        sign = ''
+        if value < 0:
+            r = -r
+            sign = '-'
 
         if options.get('digital'):
             for unit, label, secs_per_unit in TIMEDELTA_UNITS:
@@ -578,14 +582,9 @@ class DurationConverter(models.AbstractModel):
                 v, r = divmod(r, secs_per_unit)
                 if not v and (secs_per_unit > factor or secs_per_unit < round_to):
                     continue
-                if len(sections):
-                    sections.append(u':')
                 sections.append(u"%02.0f" % int(round(v)))
-            return u''.join(sections)
+            return sign + u':'.join(sections)
 
-        if value < 0:
-            r = -r
-            sections.append(u'-')
         for unit, label, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
             if not v:
@@ -599,7 +598,8 @@ class DurationConverter(models.AbstractModel):
                 locale=locale)
             if section:
                 sections.append(section)
-
+        if sign:
+            sections.insert(0, sign)
         return u' '.join(sections)
 
 
@@ -743,10 +743,10 @@ class QwebView(models.AbstractModel):
 
     @api.model
     def record_to_html(self, record, field_name, options):
-        if not getattr(record, field_name):
+        if field_name not in record._fields:
             return None
 
-        view = getattr(record, field_name)
+        view = record[field_name]
 
         if view._name != "ir.ui.view":
             _logger.warning("%s.%s must be a 'ir.ui.view' model." % (record, field_name))

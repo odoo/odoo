@@ -211,8 +211,7 @@ class Lang(models.Model):
 
     @tools.ormcache('self.code', 'monetary')
     def _data_get(self, monetary=False):
-        conv = locale.localeconv()
-        thousands_sep = self.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
+        thousands_sep = self.thousands_sep or ''
         decimal_point = self.decimal_point
         grouping = self.grouping
         return grouping, thousands_sep, decimal_point

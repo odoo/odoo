@@ -20,4 +20,5 @@ that would need such functionality.
         'python' : ['pyusb','pyserial','qrcode'],
     },
     'installable': False,
+    'license': 'LGPL-3',
 }

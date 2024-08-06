@@ -160,3 +160,17 @@ class TestRedirect(HttpCase):
             resp = self.url_open("/test_website/308/xx-100", allow_redirects=False)
             self.assertEqual(resp.status_code, 404)
             self.assertEqual(resp.text, "CUSTOM 404")
+
+    def test_03_redirect_308_qs(self):
+        self.env['website.rewrite'].create({
+            'name': 'Test QS Redirect',
+            'redirect_type': '308',
+            'url_from': '/empty_controller_test',
+            'url_to': '/empty_controller_test_redirected',
+        })
+        r = self.url_open('/test_website/test_redirect_view_qs?a=a')
+        self.assertEqual(r.status_code, 200)
+        self.assertIn(
+            'href="/empty_controller_test_redirected?a=a"', r.text,
+            "Redirection should have been applied, and query string should not have been duplicated.",
+        )

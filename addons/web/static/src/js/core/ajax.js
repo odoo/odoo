@@ -102,6 +102,11 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
             message: "XmlHttpRequestError abort",
             event: $.Event('abort')
         });
+
+        if (!shadow) {
+            core.bus.trigger('rpc_response');
+        }
+
         if (xhr.abort) {
             xhr.abort();
         }
@@ -311,7 +316,7 @@ function get_file(options) {
     xhr.onerror = function () {
         if (options.error) {
             options.error({
-                message: _("Something happened while trying to contact the server, check that the server is online and that you still have a working network connection."),
+                message: _t("Something happened while trying to contact the server, check that the server is online and that you still have a working network connection."),
                 data: { title: _t("Could not connect to the server") }
             });
         }

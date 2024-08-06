@@ -4,7 +4,12 @@
 from odoo.tests import Form, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
 import uuid
+import logging
 
+_logger = logging.getLogger(__name__)
+
+
+@tagged('post_install', '-at_install')
 class TestTraceability(TestMrpCommon):
     TRACKING_TYPES = ['none', 'serial', 'lot']
 
@@ -306,3 +311,276 @@ class TestTraceability(TestMrpCommon):
         self.assertEqual(byproduct_move_line_2_lot_1.consume_line_ids.filtered(lambda l: l.qty_done), raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
         byproduct_move_line_2_lot_2 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Byproduct_2_lot_2')
         self.assertEqual(byproduct_move_line_2_lot_2.consume_line_ids, raw_line_raw_1_lot_2 | raw_line_raw_2_lot_2)
+
+    def test_tracking_repair_production(self):
+        """
+        Test that removing a tracked component with a repair does not block the flow of using that component in another
+        bom
+        """
+        if 'repair.order' not in self.env:  # Module required for that test
+            return
+        product_to_repair = self.env['product.product'].create({
+            'name': 'product first serial to act repair',
+            'tracking': 'serial',
+        })
+        ptrepair_lot = self.env['stock.production.lot'].create({
+            'name': 'A1',
+            'product_id': product_to_repair.id,
+            'company_id': self.env.user.company_id.id
+        })
+        product_to_remove = self.env['product.product'].create({
+            'name': 'other first serial to remove with repair',
+            'tracking': 'serial',
+        })
+        ptremove_lot = self.env['stock.production.lot'].create({
+            'name': 'B2',
+            'product_id': product_to_remove.id,
+            'company_id': self.env.user.company_id.id
+        })
+        # Create a manufacturing order with product (with SN A1)
+        mo = self.env['mrp.production'].create({
+            'name': 'testing',
+            'product_id': product_to_repair.id,
+            'product_uom_id': product_to_repair.uom_id.id,
+            'product_qty': 1
+        })
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as move:
+            move.product_id = product_to_remove
+            move.product_uom_qty = 1
+            move.move_line_ids.lot_id = ptremove_lot  # Set component serial to B2
+        mo = mo_form.save()
+        mo.action_confirm()
+        # Set serial to A1
+        mo.lot_producing_id = ptrepair_lot
+        mo.button_mark_done()
+
+        with Form(self.env['repair.order']) as ro_form:
+            ro_form.name = 'Please repair'
+            ro_form.product_id = product_to_repair
+            ro_form.lot_id = ptrepair_lot  # Repair product Serial A1
+            with ro_form.operations.new() as operation:
+                operation.type = 'remove'
+                operation.product_id = product_to_remove
+                operation.lot_id = ptremove_lot  # Remove product Serial B2 from the product
+            ro = ro_form.save()
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+
+        # Create a manufacturing order with product (with SN A2)
+        mo2 = self.env['mrp.production'].create({
+            'name': 'testing duo',
+            'product_id': product_to_repair.id,
+            'product_uom_id': product_to_repair.uom_id.id,
+            'product_qty': 1
+        })
+        mo2_form = Form(mo2)
+        with mo2_form.move_raw_ids.new() as move:
+            move.product_id = product_to_remove
+            move.product_uom_qty = 1
+            move.move_line_ids.lot_id = ptremove_lot  # Set component serial to B2 again, it is possible
+        mo2 = mo2_form.save()
+        mo2.action_confirm()
+        # Set serial to A2
+        mo2.lot_producing_id = self.env['stock.production.lot'].create({
+            'name': 'A2',
+            'product_id': product_to_repair.id,
+            'company_id': self.env.user.company_id.id
+        })
+        # We are not forbidden to use that serial number, so nothing raised here
+        mo2.button_mark_done()
+
+    def test_mo_with_used_sn_component(self):
+        """
+        Suppose a tracked-by-usn component has been used to produce a product. Then, using a repair order,
+        this component is removed from the product and returned as available stock. The user should be able to
+        use the component in a new MO
+        """
+        if 'repair.order' not in self.env:
+            # todo in 15.0: move the test in module `mrp_repair`
+            self.skipTest('`repair` is not installed')
+
+        def produce_one(product, component):
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = product
+            with mo_form.move_raw_ids.new() as raw_line:
+                raw_line.product_id = component
+                raw_line.product_uom_qty = 1
+            mo = mo_form.save()
+            mo.action_confirm()
+            mo.action_assign()
+            action = mo.button_mark_done()
+            wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+            wizard.process()
+            return mo
+
+        stock_location = self.env.ref('stock.stock_location_stock')
+
+        finished, component = self.env['product.product'].create([{
+            'name': 'Finished Product',
+            'type': 'product',
+        }, {
+            'name': 'SN Componentt',
+            'type': 'product',
+            'tracking': 'serial',
+        }])
+
+        sn_lot = self.env['stock.production.lot'].create({
+            'product_id': component.id,
+            'name': 'USN01',
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
+
+        mo = produce_one(finished, component)
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = finished
+        with ro_form.operations.new() as ro_line:
+            ro_line.type = 'remove'
+            ro_line.product_id = component
+            ro_line.lot_id = sn_lot
+            ro_line.location_dest_id = stock_location
+        ro = ro_form.save()
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+
+        mo = produce_one(finished, component)
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+
+    def test_reuse_unbuilt_usn(self):
+        """
+        Produce a SN product
+        Unbuilt it
+        Produce a new SN product with same lot
+        """
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_base_1=1, qty_base_2=1, qty_final=1, tracking_final='serial')
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(p1, stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(p2, stock_location, 1)
+        mo.action_assign()
+
+        lot = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': p_final.id,
+            'company_id': self.env.company.id,
+        })
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo_form.lot_producing_id = lot
+        mo = mo_form.save()
+        mo.button_mark_done()
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.lot_id = lot
+        unbuild_form.save().action_unbuild()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        with self.assertLogs(level="WARNING") as log_catcher:
+            mo_form = Form(mo)
+            mo_form.qty_producing = 1.0
+            mo_form.lot_producing_id = lot
+            mo = mo_form.save()
+            _logger.warning('Dummy')
+        self.assertEqual(len(log_catcher.output), 1, "Useless warnings: \n%s" % "\n".join(log_catcher.output[:-1]))
+
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
+    def test_unbuild_scrap_and_unscrap_tracked_component(self):
+        """
+        Suppose a tracked-by-SN component C. There is one C in stock with SN01.
+        Build a product P that uses C with SN, unbuild P, scrap SN, unscrap SN
+        and rebuild a product with SN in the components
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+
+        component = self.bom_4.bom_line_ids.product_id
+        component.write({
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        serial_number = self.env['stock.production.lot'].create({
+            'product_id': component.id,
+            'name': 'Super Serial',
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=serial_number)
+
+        # produce 1
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+        self.assertEqual(mo.move_raw_ids.move_line_ids.lot_id, serial_number)
+
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1
+        mo.move_raw_ids.move_line_ids.qty_done = 1
+        mo.button_mark_done()
+
+        # unbuild
+        action = mo.button_unbuild()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.action_validate()
+
+        # scrap the component
+        scrap = self.env['stock.scrap'].create({
+            'product_id': component.id,
+            'product_uom_id': component.uom_id.id,
+            'scrap_qty': 1,
+            'lot_id': serial_number.id,
+        })
+        scrap_location = scrap.scrap_location_id
+        scrap.do_scrap()
+
+        # unscrap the component
+        internal_move = self.env['stock.move'].create({
+            'name': component.name,
+            'location_id': scrap_location.id,
+            'location_dest_id': stock_location.id,
+            'product_id': component.id,
+            'product_uom': component.uom_id.id,
+            'product_uom_qty': 1.0,
+            'move_line_ids': [(0, 0, {
+                'product_id': component.id,
+                'location_id': scrap_location.id,
+                'location_dest_id': stock_location.id,
+                'product_uom_id': component.uom_id.id,
+                'qty_done': 1.0,
+                'lot_id': serial_number.id,
+            })],
+        })
+        internal_move._action_confirm()
+        internal_move._action_done()
+
+        # produce one with the unscrapped component
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+        self.assertEqual(mo.move_raw_ids.move_line_ids.lot_id, serial_number)
+
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1
+        mo.move_raw_ids.move_line_ids.qty_done = 1
+        mo.button_mark_done()
+
+        self.assertRecordValues((mo.move_finished_ids + mo.move_raw_ids).move_line_ids, [
+            {'product_id': self.bom_4.product_id.id, 'lot_id': False, 'qty_done': 1},
+            {'product_id': component.id, 'lot_id': serial_number.id, 'qty_done': 1},
+        ])

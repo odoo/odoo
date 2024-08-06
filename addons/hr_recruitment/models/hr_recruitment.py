@@ -120,7 +120,7 @@ class Applicant(models.Model):
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
-    job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
+    job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True)
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True)
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True)
     salary_proposed = fields.Float("Proposed Salary", group_operator="avg", help="Salary Proposed by the Organisation", tracking=True)
@@ -341,6 +341,7 @@ class Applicant(models.Model):
         category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window']._for_xml_id('calendar.action_calendar_event')
         res['context'] = {
+            'default_applicant_id': self.id,
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
             'default_name': self.name,
@@ -402,7 +403,7 @@ class Applicant(models.Model):
             if applicant.partner_id:
                 applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id, reason=_('Contact'))
             elif applicant.email_from:
-                email_from = applicant.email_from
+                email_from = tools.email_normalize(applicant.email_from)
                 if applicant.partner_name:
                     email_from = tools.formataddr((applicant.partner_name, email_from))
                 applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
@@ -419,6 +420,9 @@ class Applicant(models.Model):
         # want the gateway user to be responsible if no other responsible is
         # found.
         self = self.with_context(default_user_id=False)
+        stage = False
+        if custom_values and 'job_id' in custom_values:
+            stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
         val = msg.get('from').split('<')[0]
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
@@ -428,6 +432,8 @@ class Applicant(models.Model):
         }
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
+        if stage and stage.id:
+            defaults['stage_id'] = stage.id
         if custom_values:
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
@@ -437,18 +443,24 @@ class Applicant(models.Model):
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
             # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
+            email_normalized = tools.email_normalize(self.email_from)
+            new_partner = message.partner_ids.filtered(
+                lambda partner: partner.email == self.email_from or (email_normalized and partner.email_normalized == email_normalized)
+            )
             if new_partner:
-                if new_partner.create_date.date() == fields.Date.today():
-                    new_partner.write({
+                if new_partner[0].create_date.date() == fields.Date.today():
+                    new_partner[0].write({
                         'type': 'private',
                         'phone': self.partner_phone,
                         'mobile': self.partner_mobile,
                     })
+                if new_partner[0].email_normalized:
+                    email_domain = ('email_from', 'in', [new_partner[0].email, new_partner[0].email_normalized])
+                else:
+                    email_domain = ('email_from', '=', new_partner[0].email)
                 self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
+                    ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
+                ]).write({'partner_id': new_partner[0].id})
         return super(Applicant, self)._message_post_after_hook(message, msg_vals)
 
     def create_employee_from_applicant(self):
@@ -477,7 +489,7 @@ class Applicant(models.Model):
                     'default_name': applicant.partner_name or contact_name,
                     'default_job_id': applicant.job_id.id,
                     'default_job_title': applicant.job_id.name,
-                    'address_home_id': address_id,
+                    'default_address_home_id': address_id,
                     'default_department_id': applicant.department_id.id or False,
                     'default_address_id': applicant.company_id and applicant.company_id.partner_id
                             and applicant.company_id.partner_id.id or False,
@@ -515,7 +527,8 @@ class Applicant(models.Model):
                 ], order='sequence asc', limit=1).id
         for applicant in self:
             applicant.write(
-                {'stage_id': default_stage[applicant.job_id.id], 'refuse_reason_id': False})
+                {'stage_id': applicant.job_id.id and default_stage[applicant.job_id.id],
+                 'refuse_reason_id': False})
 
     def toggle_active(self):
         res = super(Applicant, self).toggle_active()

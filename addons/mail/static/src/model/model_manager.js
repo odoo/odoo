@@ -639,6 +639,7 @@ class ModelManager {
         // method, and it shouldn't be needed to manually remove
         // _toComputeFields and _toUpdateAfters, but it is not possible until
         // related are also properly unlinked during `set`
+        this._createdRecords.delete(record);
         this._toComputeFields.delete(record);
         this._toUpdateAfters.delete(record);
         delete Model.__records[record.localId];
@@ -739,6 +740,9 @@ class ModelManager {
             });
             if (!generatable) {
                 throw new Error(`Cannot generate following Model: ${toGenerateNames.join(', ')}`);
+            }
+            if (!generatable.factory) {
+                throw new Error(`Missing factory for the following Model: ${generatable.name} (maybe check for typo in name?)`);
             }
             // Make environment accessible from Model.
             const Model = generatable.factory(Models);

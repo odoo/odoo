@@ -8,8 +8,9 @@
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # Paolo Valier, 2020
-# maiolif <maiolif@mgftools.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# neveroils <maiolif@mgftools.com>, 2020
+# Friederike Fasterling-Nesselbosch, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,13 +18,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -54,6 +55,7 @@ msgid ""
 "Are you sure you want to switch this calendar to 1 week calendar ? All "
 "entries will be lost"
 msgstr ""
+"Passare veramente al calendario settimanale? Verranno perse tutte le voci"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -61,12 +63,13 @@ msgid ""
 "Are you sure you want to switch this calendar to 2 weeks calendar ? All "
 "entries will be lost"
 msgstr ""
+"Passare veramente al calendario bisettimanale? Verranno perse tutte le voci"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr ""
+msgstr "Le presenze non possono sovrapporsi."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
@@ -85,7 +88,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
 msgid "Calendar in 2 weeks mode"
-msgstr ""
+msgstr "Calendario in modalità bisettimanale"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -124,7 +127,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_date
 #: model:ir.model.fields,field_description:resource.field_resource_test__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
@@ -156,8 +159,8 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
-"Definisce le ore di lavoro e l'agenda che potrebbero essere programmati dai "
-"vostri membri del team"
+"Definisci l'orario lavorativo e il calendario che potrebbero essere "
+"programmati per gli iscritti al progetto"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__display_name
@@ -195,7 +198,7 @@ msgstr "Settimana pari"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
 msgid "Explanation"
-msgstr ""
+msgstr "Spiegazione"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -218,6 +221,8 @@ msgstr "Venerdì mattina"
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
 msgstr ""
+"Fornisce la sequenza della riga quando viene visualizzato il calendario "
+"delle risorse."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -239,7 +244,7 @@ msgstr "Ore"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
 msgid "Human"
-msgstr "Umano"
+msgstr "Umana"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__id
@@ -268,7 +273,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Se il campo attivo è impostato a Falso, consente di nascondere il record "
+"Se il campo Attivo è impostato a falso, consente di nascondere il record "
 "della risorsa senza rimuoverlo."
 
 #. module: resource
@@ -277,8 +282,16 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
-"Se il campo attivo è impostato a Falso, consente di nascondere l'orario "
+"Se il campo Attivo è impostato a falso, consente di nascondere l'orario "
 "lavorativo senza rimuoverlo."
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "Impossible to switch calendar type for the default company schedule."
+msgstr ""
+"Impossibile cambiare il tipo di calendario per l'orario aziendale "
+"predefinito."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -286,6 +299,8 @@ msgstr ""
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr ""
+"In un calendario con modalità bisettimanale, i periodi devono stare tutti "
+"nelle sezioni."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -388,7 +403,7 @@ msgstr "Motivo"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Nome utente collegato per gestire l'accesso alla risorsa."
+msgstr "Nome utente correlato per gestire l'accesso alla risorsa."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
@@ -428,7 +443,7 @@ msgstr "Tipo di risorsa"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Working Time"
-msgstr "Risorsa orario lavorativo"
+msgstr "Orario lavorativo risorsa"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_id
@@ -458,10 +473,9 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"Risorse permettono di creare e gestire risorse che possono essere coinvolte "
-"in una specifica fase di un progetto. È inoltre possibile indicare un "
-"livello di efficienza e carico di lavoro basato sulle loro ore di lavoro "
-"settimanali."
+"Risorse consente di creare e gestire le risorse che devono essere coinvolte "
+"in una specifica fase di progetto. È anche possibile impostare il livello di"
+" efficienza e il carico di lavoro in base alle ore di lavoro settimanali."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
@@ -510,6 +524,8 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
+"Orario di inizio e fine del lavoro.\n"
+"Un valore di 24:00 preciso viene interpretato come 23:59:59.999999."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
@@ -529,12 +545,12 @@ msgstr "Domenica"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 1 week calendar"
-msgstr "Passa a calendario 1 settimana"
+msgstr "Passa a calendario settimanale"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 2 weeks calendar"
-msgstr "Passa a calendario 2 settimane"
+msgstr "Passa a calendario bisettimanale"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
@@ -544,19 +560,19 @@ msgstr "Campo tecnico per l'esperienza utente (UX)."
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
 msgid "Test Resource Model"
-msgstr ""
+msgstr "Test del modello risorsa"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
-msgstr "Il fattore di efficienza non puà essere uguale a 0."
+msgstr "Il fattore di efficienza non può essere uguale a 0."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
-msgstr ""
+msgstr "La data di inizio delle ferie deve essere precedente la data di fine."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -579,6 +595,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Campo usato per calcolare la durata prevista di un ordine nel centro di "
+"lavoro. Se, ad esempio, un ordine di lavoro impiega un'ora con fattore di "
+"efficienza pari a 100%, la durata prevista corrisponde a un'ora. Ma se il "
+"fattore di efficienza è 200%, è prevista una durata di 30 minuti."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
@@ -607,12 +627,12 @@ msgstr "Ferie"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
 msgid "Time Type"
-msgstr ""
+msgstr "Tipo di periodo"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "L'efficienza temporale deve essere strettamente positiva"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
@@ -747,7 +767,7 @@ msgstr "Orari lavorativi"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "You can't delete section between weeks."
-msgstr ""
+msgstr "Impossibile eliminare una sezione tra le settimane."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0

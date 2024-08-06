@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Daniela Cervantes <dace@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,19 +12,19 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Daniela Cervantes <dace@odoo.com>, 2021\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
-msgstr "; se ha encontrado un pedido múltiple"
+msgstr "; se encontró un pedido múltiple"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment.py:0
@@ -41,7 +41,7 @@ msgstr "Adyen"
 #: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: feedback error"
-msgstr "Adyen: feedback error"
+msgstr "Adyen: error en respuesta"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment.py:0
@@ -53,7 +53,7 @@ msgstr "Adyen: invalid merchantSig, recibido %s, calculado %s"
 #: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: received data for reference %s"
-msgstr "Adyen: datos recibidos de referencia %s"
+msgstr "Datos recibidos para la referencia %s"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment.py:0
@@ -61,9 +61,7 @@ msgstr "Adyen: datos recibidos de referencia %s"
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
 "(%s)"
-msgstr ""
-"Adyen: received data with missing reference (%s) or missing pspReference "
-"(%s)"
+msgstr "Adyen: datos recibidos sin referencia (%s) o sin pspReference (%s)"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__display_name
@@ -74,7 +72,7 @@ msgstr "Nombre mostrado"
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
 msgid "How to configure your Adyen account?"
-msgstr "¿Cómo configurar su cuenta Adyen?"
+msgstr "¿Cómo configurar tu cuenta Adyen?"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__id
@@ -91,12 +89,12 @@ msgstr "Última modificación el"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
 msgid "Merchant Account"
-msgstr "Cuenta mercantil"
+msgstr "Cuenta de comerciante"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Método de Pago"
+msgstr "Método de pago"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction

@@ -10,7 +10,7 @@
                             type="object" class="oe_highlight"
                             attrs="{'invisible': ['|','|', ('active','=',False), ('probability', '=', 100), ('type', '=', 'lead')]}"/>
                         <button name="%(crm.crm_lead_lost_action)d" string="Mark Lost"
-                            type="action" class="oe_highlight" context="{'default_lead_id': active_id}" attrs="{'invisible': ['|', ('type', '=', 'lead'),('active', '=', False),('probability', '&lt;', 100)]}"/>
+                            type="action" class="oe_highlight" context="{'default_lead_id': active_id}" attrs="{'invisible': ['|', ('type', '=', 'lead'), '&amp;',('active', '=', False),('probability', '&lt;', 100)]}"/>
                         <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action" help="Convert to Opportunity"
                             class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'opportunity'), ('active', '=', False)]}"/>
                         <button name="toggle_active" string="Restore" type="object"
@@ -734,16 +734,16 @@
                  to 0. but this approach is not working. the work around is temporary -->
                 <xpath expr="//filter[@name='activities_overdue']" position="replace">
                     <filter string="Late Activities" name="activities_overdue"
-                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all opportunities for which the next action date is before today"/>
                 </xpath>
                 <xpath expr="//filter[@name='activities_today']" position="replace">
                     <filter string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 </xpath>
                 <xpath expr="//filter[@name='activities_upcoming_all']" position="replace">
                     <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 </xpath>
                 <xpath expr="//filter[@name='assigned_to_me']" position="replace">
                     <filter string="My Activities" name="assigned_to_me"
@@ -823,7 +823,7 @@
                     <filter string="Won" name="won" domain="['&amp;', ('active', '=', True), ('stage_id.is_won', '=', True)]"/>
                     <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
                     <separator/>
-                    <filter invisible="1" string="Overdue Opportunities" name="overdue_opp" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter invisible="1" string="Overdue Opportunities" name="overdue_opp" domain="['&amp;', ('date_closed', '=', False), ('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all opportunities for which the next action date is before today"/>
@@ -864,7 +864,9 @@
             <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
-if record:
+if not 'opportunity' in records.mapped('type'):
+    records.action_set_lost()
+elif records:
     action_values = env.ref('crm.crm_lead_lost_action').sudo().read()[0]
     action_values.update({'context': env.context})
     action = action_values

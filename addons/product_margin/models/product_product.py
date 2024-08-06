@@ -78,37 +78,40 @@ class ProductProduct(models.Model):
         return res
 
     def _compute_product_margin_fields_values(self, field_names=None):
-        res = {}
         if field_names is None:
             field_names = []
-        for val in self:
-            res[val.id] = {}
-            date_from = self.env.context.get('date_from', time.strftime('%Y-01-01'))
-            date_to = self.env.context.get('date_to', time.strftime('%Y-12-31'))
-            invoice_state = self.env.context.get('invoice_state', 'open_paid')
-            res[val.id]['date_from'] = date_from
-            res[val.id]['date_to'] = date_to
-            res[val.id]['invoice_state'] = invoice_state
-            states = ()
-            payment_states = ()
-            if invoice_state == 'paid':
-                states = ('posted',)
-                payment_states = ('paid',)
-            elif invoice_state == 'open_paid':
-                states = ('posted',)
-                payment_states = ('not_paid', 'paid')
-            elif invoice_state == 'draft_open_paid':
-                states = ('posted', 'draft')
-                payment_states = ('not_paid', 'paid')
+        date_from = self.env.context.get('date_from', time.strftime('%Y-01-01'))
+        date_to = self.env.context.get('date_to', time.strftime('%Y-12-31'))
+        invoice_state = self.env.context.get('invoice_state', 'open_paid')
+        res = {
+            product_id: {'date_from': date_from, 'date_to': date_to, 'invoice_state': invoice_state, 'turnover': 0.0,
+                'sale_avg_price': 0.0, 'purchase_avg_price': 0.0, 'sale_num_invoiced': 0.0, 'purchase_num_invoiced': 0.0,
+                'sales_gap': 0.0, 'purchase_gap': 0.0, 'total_cost': 0.0, 'sale_expected': 0.0, 'normal_cost': 0.0, 'total_margin': 0.0,
+                'expected_margin': 0.0, 'total_margin_rate': 0.0, 'expected_margin_rate': 0.0}
+            for product_id in self.ids
+        }
+        states = ()
+        payment_states = ()
+        if invoice_state == 'paid':
+            states = ('posted',)
+            payment_states = ('in_payment', 'paid',)
+        elif invoice_state == 'open_paid':
+            states = ('posted',)
+            payment_states = ('not_paid', 'in_payment', 'paid')
+        elif invoice_state == 'draft_open_paid':
+            states = ('posted', 'draft')
+            payment_states = ('not_paid', 'in_payment', 'paid')
+        if "force_company" in self.env.context:
+            company_id = self.env.context['force_company']
+        else:
             company_id = self.env.company.id
-
-            #Cost price is calculated afterwards as it is a property
-            self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
-            self.env['account.move'].flush(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
-            self.env['product.template'].flush(['list_price'])
-            sqlstr = """
+        self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
+        self.env['account.move'].flush(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
+        self.env['product.template'].flush(['list_price'])
+        sqlstr = """
                 WITH currency_rate AS ({})
                 SELECT
+                    l.product_id as product_id,
                     SUM(
                         l.price_unit / (CASE COALESCE(cr.rate, 0) WHEN 0 THEN 1.0 ELSE cr.rate END) *
                         l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END) * ((100 - l.discount) * 0.01)
@@ -125,7 +128,7 @@ class ProductProduct(models.Model):
                  cr.company_id = i.company_id and
                  cr.date_start <= COALESCE(i.invoice_date, NOW()) and
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(i.invoice_date, NOW())))
-                WHERE l.product_id = %s
+                WHERE l.product_id IN %s
                 AND i.state IN %s
                 AND i.payment_state IN %s
                 AND i.move_type IN %s
@@ -133,28 +136,35 @@ class ProductProduct(models.Model):
                 AND i.company_id = %s
                 AND l.display_type IS NULL
                 AND l.exclude_from_invoice_tab = false
+                GROUP BY l.product_id
                 """.format(self.env['res.currency']._select_companies_rates())
-            invoice_types = ('out_invoice', 'out_refund')
-            self.env.cr.execute(sqlstr, (val.id, states, payment_states, invoice_types, date_from, date_to, company_id))
-            result = self.env.cr.fetchall()[0]
-            res[val.id]['sale_avg_price'] = result[0] and result[0] or 0.0
-            res[val.id]['sale_num_invoiced'] = result[1] and result[1] or 0.0
-            res[val.id]['turnover'] = result[2] and result[2] or 0.0
-            res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
-            res[val.id]['sales_gap'] = res[val.id]['sale_expected'] - res[val.id]['turnover']
-            invoice_types = ('in_invoice', 'in_refund')
-            self.env.cr.execute(sqlstr, (val.id, states, payment_states, invoice_types, date_from, date_to, company_id))
-            result = self.env.cr.fetchall()[0]
-            res[val.id]['purchase_avg_price'] = result[0] and result[0] or 0.0
-            res[val.id]['purchase_num_invoiced'] = result[1] and result[1] or 0.0
-            res[val.id]['total_cost'] = result[2] and result[2] or 0.0
-            res[val.id]['normal_cost'] = val.standard_price * res[val.id]['purchase_num_invoiced']
-            res[val.id]['purchase_gap'] = res[val.id]['normal_cost'] - res[val.id]['total_cost']
+        invoice_types = ('out_invoice', 'out_refund')
+        self.env.cr.execute(sqlstr, (tuple(self.ids), states, payment_states, invoice_types, date_from, date_to, company_id))
+        for product_id, avg, qty, total, sale in self.env.cr.fetchall():
+            res[product_id]['sale_avg_price'] = avg and avg or 0.0
+            res[product_id]['sale_num_invoiced'] = qty and qty or 0.0
+            res[product_id]['turnover'] = total and total or 0.0
+            res[product_id]['sale_expected'] = sale and sale or 0.0
+            res[product_id]['sales_gap'] = res[product_id]['sale_expected'] - res[product_id]['turnover']
+            res[product_id]['total_margin'] = res[product_id]['turnover']
+            res[product_id]['expected_margin'] = res[product_id]['sale_expected']
+            res[product_id]['total_margin_rate'] = res[product_id]['turnover'] and res[product_id]['total_margin'] * 100 / res[product_id]['turnover'] or 0.0
+            res[product_id]['expected_margin_rate'] = res[product_id]['sale_expected'] and res[product_id]['expected_margin'] * 100 / res[product_id]['sale_expected'] or 0.0
 
-            res[val.id]['total_margin'] = res[val.id]['turnover'] - res[val.id]['total_cost']
-            res[val.id]['expected_margin'] = res[val.id]['sale_expected'] - res[val.id]['normal_cost']
-            res[val.id]['total_margin_rate'] = res[val.id]['turnover'] and res[val.id]['total_margin'] * 100 / res[val.id]['turnover'] or 0.0
-            res[val.id]['expected_margin_rate'] = res[val.id]['sale_expected'] and res[val.id]['expected_margin'] * 100 / res[val.id]['sale_expected'] or 0.0
-            for k, v in res[val.id].items():
-                setattr(val, k, v)
+        ctx = self.env.context.copy()
+        ctx['force_company'] = company_id
+        invoice_types = ('in_invoice', 'in_refund')
+        self.env.cr.execute(sqlstr, (tuple(self.ids), states, payment_states, invoice_types, date_from, date_to, company_id))
+        for product_id, avg, qty, total, dummy in self.env.cr.fetchall():
+            res[product_id]['purchase_avg_price'] = avg and avg or 0.0
+            res[product_id]['purchase_num_invoiced'] = qty and qty or 0.0
+            res[product_id]['total_cost'] = total and total or 0.0
+            res[product_id]['total_margin'] = res[product_id].get('turnover', 0.0) - res[product_id]['total_cost']
+            res[product_id]['total_margin_rate'] = res[product_id].get('turnover', 0.0) and res[product_id]['total_margin'] * 100 / res[product_id].get('turnover', 0.0) or 0.0
+        for product in self:
+            res[product.id]['normal_cost'] = product.standard_price * res[product.id]['purchase_num_invoiced']
+            res[product.id]['purchase_gap'] = res[product.id]['normal_cost'] - res[product.id]['total_cost']
+            res[product.id]['expected_margin'] = res[product.id].get('sale_expected', 0.0) - res[product.id]['normal_cost']
+            res[product.id]['expected_margin_rate'] = res[product.id].get('sale_expected', 0.0) and res[product.id]['expected_margin'] * 100 / res[product.id].get('sale_expected', 0.0) or 0.0
+            product.write(res[product.id])
         return res

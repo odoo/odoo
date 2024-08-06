@@ -4,9 +4,13 @@
 # 
 # Translators:
 # Nicolás Broggi <rnbroggi@gmail.com>, 2020
-# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
-# Martin Trigaux, 2020
+# Osiris Anael Roman Eras <osiris.roman@yachaytech.edu.ec>, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
+# Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
+# marcescu, 2022
+# Luis D Lafaurie, 2022
+# Martin Trigaux, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,13 +18,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -37,7 +41,7 @@ msgstr "# Productos"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr ""
+msgstr "%(percentage)s %% de descuento y %(price)s de recargo"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -262,7 +266,7 @@ msgstr "Ícono de tipo de actvidad"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Add a quantity"
-msgstr ""
+msgstr "Agregar cantidad"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -346,6 +350,8 @@ msgid ""
 "At most %d quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"A lo mucho se pueden mostrar %d cantidades simultáneamente. Quite una de las"
+" cantidades seleccionadas para agregar otras."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -415,9 +421,9 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
-"Código de barras utilizado para la identificación de los envases. Escanee "
-"este código de barras de embalaje desde una transferencia en la aplicación "
-"Código de barras para mover todas las unidades contenidas."
+"Código de barras utilizado para la identificación de los empaquetados. "
+"Escaneelo desde una transferencia en la aplicación Código de barras para "
+"mover todas las unidades contenidas."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -596,7 +602,7 @@ msgstr "Cantidad contenida"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "Escritorio para sentarse en la izquierda"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -763,12 +769,12 @@ msgstr "Definir listas de precios de proveedores."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "Defina su unidad de medida de volumen"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "Defina la unidad de medida de peso"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -907,6 +913,8 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Fecha y hora límite para la validación de la lista de precios \n"
+"El valor que se muestra depende del uso horario que está indicado en sus preferencias."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1004,7 +1012,7 @@ msgstr "Información General"
 #: model:ir.actions.server,name:product.action_product_price_list_report
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 msgid "Generate Pricelist"
-msgstr ""
+msgstr "Generar una lista de precios"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1179,12 +1187,12 @@ msgstr "Importar plantilla para listas de precios de proveedores"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "En Standard Price & AVCO: valor del producto (calculado automáticamente en AVCO).\n"
-"En FIFO: valor de la última unidad que salió del stock (calculado automáticamente).\n"
+"En FIFO: valor de la última unidad que salió del inventario (calculado automáticamente).\n"
 "Se utiliza para valorar el producto cuando se desconoce el coste de compra (por ejemplo, ajuste de inventario).\n"
 "Se utiliza para calcular los márgenes de las órdenes de venta."
 
@@ -1485,7 +1493,7 @@ msgstr "Siguiente tipo de actividad"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr ""
+msgstr "No se encontró una lista de precios para el proveedor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1616,7 +1624,7 @@ msgstr "Porcentaje de precio"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number"
-msgstr ""
+msgstr "Por favor introduzca un número entero positivo."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -1739,7 +1747,7 @@ msgstr "Nombre tarifa"
 #: model:ir.model,name:product.model_report_product_report_pricelist
 #, python-format
 msgid "Pricelist Report"
-msgstr ""
+msgstr "Reporte de la lista de precios"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -1878,7 +1886,7 @@ msgstr "Nombre del producto"
 #: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
 #: model:ir.model.fields,field_description:product.field_product_template__packaging_ids
 msgid "Product Packages"
-msgstr "Paquetes de productos"
+msgstr "Empaquetados del producto"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
@@ -2001,7 +2009,7 @@ msgstr "Buscar precio productos"
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "Productos: %(category)s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
@@ -2036,7 +2044,7 @@ msgstr "Unidad de medida compra"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Quantities:"
-msgstr ""
+msgstr "Cantidades:"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
@@ -2048,12 +2056,12 @@ msgstr "Cantidad"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
-msgstr ""
+msgstr "Ya se seleccionó la cantidad por defecto (%d)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "Quantity of products contained in the packaging."
-msgstr "Cantidad de productos contenidos en el envase."
+msgstr "Cantidad de productos contenidos en el empaquetado."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -2071,6 +2079,8 @@ msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
 msgstr ""
+"Registre los precios que pidieron sus proveedores para cada producto de "
+"acuerdo con la cantidad y el periodo."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
@@ -2088,7 +2098,7 @@ msgstr "Variantes Relacionadas"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Remove quantity"
-msgstr ""
+msgstr "Quitar la cantidad"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
@@ -2219,7 +2229,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
 "Especifica el importe fijo a añadir o a quitar (si es negativo) al importe "
@@ -2252,6 +2262,9 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Fecha y hora de inicio de la validación de la lista de precios\n"
+"\n"
+"El valor que se muestra depende del uso horario que está indicando en sus preferencias."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_state
@@ -2389,6 +2402,13 @@ msgstr ""
 "combinación."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+"La variante del producto debe ser una variante del modelo de producto."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2439,6 +2459,18 @@ msgid "This comes from the product form."
 msgstr "Esto proviene del formulario del producto"
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Esta configuración de atributos, valores y exclusiones del producto no "
+"resultará en una variante posible. Bórrela o borre su producto directamente "
+"si así lo desea."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "Ésta es la suma de los precios extra de todos los atributos"
@@ -2471,6 +2503,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"La precisión de redondeo es más alta que la precisión decimal (%s dígitos).\n"
+"Esto puede hacer que los cálculos no sean consistentes.\n"
+"Indique una precisión entre %s y 1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2692,7 +2727,7 @@ msgstr "Precio adicional de la variante "
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
 msgid "Variant Seller"
-msgstr "Variante del vendedor"
+msgstr "Variante del proveedor"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
@@ -2784,7 +2819,7 @@ msgstr "Volumen"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Volume UoM"
-msgstr ""
+msgstr "Unidades de medida para volumen"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
@@ -2818,7 +2853,7 @@ msgstr "Peso"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Weight UoM"
-msgstr ""
+msgstr "Unidades de medida para peso"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
@@ -2846,6 +2881,10 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
+"La precisión decimal que está indicando es menos precisa que la unidad de medida:\n"
+"%s\n"
+"Esto puede hacer que los cálculos no sean consistentes.\n"
+"Aumente el redondeo de esas unidades de medida, o los dígitos de esta precisión decimal."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2936,9 +2975,27 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
+"%s\n"
+"If the value has been associated to a product in the past, you will not be able to delete it."
+msgstr ""
+"No puede eliminar el valor %s porque está siendo usado en los siguientes productos:\n"
+"%s\n"
+"Si el valor ha sido asociado a un producto anteriormente, no podrá eliminarse."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr "No puede eliminar el valor %s porque se usó en algunos productos."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n"
 "%s"
 msgstr ""
-"No puede eliminar el valor %s porque se usa en los siguientes productos:\n"
+"No puede eliminar esta lista de precios (%s); está siendo utilizada en otra(s) lista(s) de precios: \n"
 "%s"
 
 #. module: product
@@ -2947,6 +3004,8 @@ msgstr ""
 msgid ""
 "You cannot delete this product category, it is the default generic category."
 msgstr ""
+"No puede eliminar esta categoría de producto, es la categoría por defecto "
+"general."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2954,6 +3013,15 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr "No puede mover el atributo %s del producto %s al producto %s."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
+"No puede desactivar la regla de lista de precios, bórrela o archívela."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

@@ -495,9 +495,10 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
 
         // determine if we need to reorder all records
         _.each(records, function (record, index) {
-            if ((index < lowerIndex || index >= upperIndex) &&
+            if (((index < lowerIndex || index >= upperIndex) &&
                 ((asc && sequence >= record.data[self.handleField]) ||
-                 (!asc && sequence <= record.data[self.handleField]))) {
+                 (!asc && sequence <= record.data[self.handleField]))) ||
+                (index >= lowerIndex && index < upperIndex && sequence === record.data[self.handleField])) {
                 reorderAll = true;
             }
             sequence = record.data[self.handleField];

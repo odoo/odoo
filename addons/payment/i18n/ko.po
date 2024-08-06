@@ -5,9 +5,11 @@
 # Translators:
 # Martin Trigaux, 2020
 # Link Up링크업 <linkup.way@gmail.com>, 2020
-# Linkup <link-up@naver.com>, 2020
 # Seongseok Shin <shinss61@hotmail.com>, 2020
-# JH CHOI <hwangtog@gmail.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
+# Linkup <link-up@naver.com>, 2021
+# Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,7 +28,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "데이터를 가져왔습니다"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
@@ -117,7 +119,7 @@ msgid ""
 "<span class=\"badge badge-primary oe_inline "
 "o_enterprise_label\">Enterprise</span>"
 msgstr ""
-"<span class=\"badge badge-primary oe_inline o_enterprise_label\">기업용</span>"
+"<span class=\"badge badge-primary oe_inline o_enterprise_label\">유료버전</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -149,7 +151,7 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A journal must be specified for the acquirer %s."
-msgstr ""
+msgstr "%s 고객에 대한 분개장을 지정해야 합니다."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -297,6 +299,13 @@ msgstr "금액"
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
 msgstr "최대 금액"
+
+#. module: payment
+#: code:addons/payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"An acquirer is using this journal. Only bank and cash types are allowed."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -746,7 +755,7 @@ msgstr "이메일"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Enable QR Codes"
-msgstr ""
+msgstr "QR 코드 활성화"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__qr_code
@@ -929,7 +938,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
 msgid "Inbound Payment Methods"
-msgstr ""
+msgstr "인바운드 결제 수단"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ingenico
@@ -971,15 +980,9 @@ msgid "Invalid token found! Token acquirer %s != %s"
 msgstr "잘못된 토큰을 찾았습니다! 토큰 매입사 %s != %s"
 
 #. module: payment
-#: code:addons/payment/models/account_invoice.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
-msgstr "잘못된 토큰을 찾았습니다! 토큰 협력사 %s != %s"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
-msgstr "송장"
+msgstr "청구서(들)"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1211,12 +1214,12 @@ msgstr "참고 : 구독은이 필드를 고려하지 않으며 기본적으로 �
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_to_buy
 msgid "Odoo Enterprise Module"
-msgstr "Odoo Enterprise 모듈"
+msgstr "Odoo 유료버전 모듈"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_odoo_by_adyen
 msgid "Odoo Payments by Adyen"
-msgstr ""
+msgstr "Adyen의 Odoo 결제"
 
 #. module: payment
 #. openerp-web
@@ -1774,6 +1777,14 @@ msgid "The transaction %s with %s for %s is pending."
 msgstr "%s 거래는 %s와 %s 사이의 거래로 보류중입니다."
 
 #. module: payment
+#: code:addons/payment/models/account_invoice.py:0
+#, python-format
+msgid ""
+"The transaction was aborted because you are not the customer of this "
+"invoice. Log in as %s to be able to use this payment method."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "The value of the payment amount must be positive."
@@ -2016,6 +2027,12 @@ msgstr "계좌 이체"
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
 msgstr "여기를 클릭하여 확인 페이지로 이동할 수 있습니다."
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:0
+#, python-format
+msgid "You cannot delete the payment acquirer %s; archive it instead."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0

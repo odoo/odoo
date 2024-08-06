@@ -45,7 +45,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // welcome message action button
         var forumLogin = _.string.sprintf('%s/web?redirect=%s',
             window.location.origin,
-            escape(window.location.href)
+            encodeURIComponent(window.location.href)
         );
         $('.forum_register_url').attr('href', forumLogin);
 
@@ -88,6 +88,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     return {
                         query: term,
                         limit: 50,
+                        forum_id: $('#wrapwrap').data('forum_id'),
                     };
                 },
                 results: function (data) {
@@ -133,7 +134,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             toolbar.push(['history', ['undo', 'redo']]);
 
             var options = {
-                height: 200,
+                height: 350,
                 minHeight: 80,
                 toolbar: toolbar,
                 styleWithSpan: false,
@@ -201,7 +202,10 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         let $title = $form.find('input[name=post_name]');
         let $textarea = $form.find('textarea[name=content]');
         // It's not really in the textarea that the user write at first
-        let textareaContent = $form.find('.o_wysiwyg_wrapper .note-editable.panel-body').text().trim();
+        const fillableTextAreaEl = ev.currentTarget
+            .querySelector(".o_wysiwyg_wrapper .note-editable.panel-body");
+        const isTextAreaFilled = fillableTextAreaEl &&
+            (fillableTextAreaEl.innerText.trim() || fillableTextAreaEl.querySelector("img"));
 
         if ($title.length && $title[0].required) {
             if ($title.val()) {
@@ -215,7 +219,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // Because the textarea is hidden, we add the red or green border to its container
         if ($textarea[0] && $textarea[0].required) {
             let $textareaContainer = $form.find('.o_wysiwyg_wrapper .note-editor.panel.panel-default');
-            if (!textareaContent.length) {
+            if (!isTextAreaFilled) {
                 $textareaContainer.addClass('border border-danger rounded-top');
                 validForm = false;
             } else {
@@ -587,6 +591,24 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
         }).then(function () {
             window.location.reload();
         });
+    },
+});
+
+publicWidget.registry.WebsiteForumBackButton = publicWidget.Widget.extend({
+    selector: '.o_back_button',
+    events: {
+        'click': '_onBackButtonClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onBackButtonClick() {
+        window.history.back();
     },
 });
 

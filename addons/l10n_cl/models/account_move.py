@@ -21,28 +21,35 @@ class AccountMove(models.Model):
                 self.journal_id.l10n_latam_use_documents:
             return super()._get_l10n_latam_documents_domain()
         if self.journal_id.type == 'sale':
-            domain = [('country_id.code', '=', "CL"), ('internal_type', '!=', 'invoice_in')]
+            domain = [('country_id.code', '=', 'CL')]
+            if self.move_type in ['in_invoice', 'out_invoice']:
+                domain += [('internal_type', 'in', ['invoice', 'debit_note', 'invoice_in'])]
+            elif self.move_type in ['in_refund', 'out_refund']:
+                domain += [('internal_type', '=', 'credit_note')]
             if self.company_id.partner_id.l10n_cl_sii_taxpayer_type == '1':
                 domain += [('code', '!=', '71')]  # Companies with VAT Affected doesn't have "Boleta de honorarios Electrónica"
             return domain
+        if self.move_type == 'in_refund':
+            internal_types_domain = ('internal_type', '=', 'credit_note')
+        else:
+            internal_types_domain = ('internal_type', 'in', ['invoice', 'debit_note', 'invoice_in'])
         domain = [
             ('country_id.code', '=', 'CL'),
-            ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])]
+            internal_types_domain,
+        ]
         if self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat != '60805000-0':
             domain += [('code', 'not in', ['39', '70', '71', '914', '911'])]
         elif self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat == '60805000-0':
             domain += [('code', 'not in', ['39', '70', '71'])]
-            if self.move_type == 'in_invoice':
-                domain += [('internal_type', '!=', 'credit_note')]
         elif self.partner_id.l10n_cl_sii_taxpayer_type == '2':
             domain += [('code', 'in', ['70', '71', '56', '61'])]
         elif self.partner_id.l10n_cl_sii_taxpayer_type == '3':
             domain += [('code', 'in', ['35', '38', '39', '41', '56', '61'])]
-        elif not self.partner_id.l10n_cl_sii_taxpayer_type or self.partner_id.country_id != self.env.ref(
-                'base.cl') or self.partner_id.l10n_cl_sii_taxpayer_type == '4':
+        elif self.partner_id.country_id.code != 'CL' or self.partner_id.l10n_cl_sii_taxpayer_type == '4':
+            domain += [('code', '=', '46')]
+        else:
             domain += [('code', 'in', [])]
         return domain
-
 
     def _check_document_types_post(self):
         for rec in self.filtered(
@@ -82,16 +89,12 @@ class AccountMove(models.Model):
                     if latam_document_type_code in ['110', '111', '112']:
                         raise ValidationError(_('The tax payer type of this supplier is not entitled to deliver '
                                                 'imports documents'))
-                if tax_payer_type == '4' or country_id.code != "CL":
+                if (tax_payer_type == '4' or country_id.code != "CL") and latam_document_type_code != '46':
                     raise ValidationError(_('You need a journal without the use of documents for foreign '
                                             'suppliers'))
-            if rec.journal_id.type == 'purchase' and not rec.journal_id.l10n_latam_use_documents:
-                if tax_payer_type != '4':
-                    raise ValidationError(_('This supplier should be defined as foreigner tax payer type and '
-                                            'the country should be different from Chile to register purchases.'))
 
     @api.onchange('journal_id')
-    def _onchange_journal(self):
+    def _l10n_cl_onchange_journal(self):
         self.l10n_latam_document_type_id = False
 
     def _post(self, soft=True):
@@ -104,7 +107,7 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the
         journal document number with a 6 padding number """
-        if self.journal_id.l10n_latam_use_documents and self.env.company.country_id.code == "CL":
+        if self.journal_id.l10n_latam_use_documents and self.company_id.country_id.code == "CL":
             if self.l10n_latam_document_type_id:
                 return self._l10n_cl_get_formatted_sequence()
         return super()._get_starting_sequence()

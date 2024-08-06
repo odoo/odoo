@@ -22,8 +22,11 @@ from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
 
-from decorator import decorate
 from werkzeug.local import Local, release_local
+try:
+    from decorator import decoratorx as decorator
+except ImportError:
+    from decorator import decorator
 
 from .exceptions import CacheMiss
 from .tools import frozendict, classproperty, lazy_property, StackMap
@@ -285,6 +288,9 @@ def split_context(method, args, kwargs):
     """ Extract the context from a pair of positional and keyword arguments.
         Return a triple ``context, args, kwargs``.
     """
+    # altering kwargs is a cause of errors, for instance when retrying a request
+    # after a serialization error: the retry is done without context!
+    kwargs = kwargs.copy()
     return kwargs.pop('context', None), args, kwargs
 
 
@@ -317,6 +323,7 @@ def model(method):
 _create_logger = logging.getLogger(__name__ + '.create')
 
 
+@decorator
 def _model_create_single(create, self, arg):
     # 'create' expects a dict and returns a record
     if isinstance(arg, Mapping):
@@ -333,11 +340,12 @@ def model_create_single(method):
             record = model.create(vals)
             records = model.create([vals, ...])
     """
-    wrapper = decorate(method, _model_create_single)
+    wrapper = _model_create_single(method) # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
     return wrapper
 
 
+@decorator
 def _model_create_multi(create, self, arg):
     # 'create' expects a list of dicts and returns a recordset
     if isinstance(arg, Mapping):
@@ -353,7 +361,7 @@ def model_create_multi(method):
             record = model.create(vals)
             records = model.create([vals, ...])
     """
-    wrapper = decorate(method, _model_create_multi)
+    wrapper = _model_create_multi(method) # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
     return wrapper
 
@@ -386,7 +394,9 @@ def _call_kw_multi(method, self, args, kwargs):
 
 def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
-    method = getattr(type(model), name)
+    method = getattr(type(model), name, None)
+    if not method:
+        raise AttributeError(f"The method '{name}' does not exist on the model '{model._name}'")
     api = getattr(method, '_api', None)
     if api == 'model':
         result = _call_kw_model(method, model, args, kwargs)
@@ -436,22 +446,28 @@ class Environment(Mapping):
         """
         cls._local.environments = Environments()
 
-    def __new__(cls, cr, uid, context, su=False):
+    def __new__(cls, cr, uid, context, su=False, uid_origin=None):
         if uid == SUPERUSER_ID:
             su = True
+
+        # isinstance(uid, int) is to handle `RequestUID`
+        uid_origin = uid_origin or (uid if isinstance(uid, int) else None)
+        if uid_origin == SUPERUSER_ID:
+            uid_origin = None
+
         assert context is not None
-        args = (cr, uid, context, su)
 
         # if env already exists, return it
         env, envs = None, cls.envs
         for env in envs:
-            if env.args == args:
+            if (env.cr, env.uid, env.context, env.su, env.uid_origin) == (cr, uid, context, su, uid_origin):
                 return env
 
         # otherwise create environment, and add it in the set
+        assert isinstance(cr, BaseCursor)
         self = object.__new__(cls)
-        args = (cr, uid, frozendict(context), su)
-        self.cr, self.uid, self.context, self.su = self.args = args
+        self.cr, self.uid, self.context, self.su = self.args = (cr, uid, frozendict(context), su)
+        self.uid_origin = uid_origin
         self.registry = Registry(cr.dbname)
         self.cache = envs.cache
         self._cache_key = {}                    # memo {field: cache_key}
@@ -504,7 +520,7 @@ class Environment(Mapping):
         uid = self.uid if user is None else int(user)
         context = self.context if context is None else context
         su = (user is None and self.su) if su is None else su
-        return Environment(cr, uid, context, su)
+        return Environment(cr, uid, context, su, self.uid_origin)
 
     def ref(self, xml_id, raise_if_not_found=True):
         """Return the record corresponding to the given ``xml_id``."""
@@ -613,6 +629,7 @@ class Environment(Mapping):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
         """
+        lazy_property.reset_all(self)
         self.cache.invalidate()
         self.all.tocompute.clear()
         self.all.towrite.clear()
@@ -943,3 +960,4 @@ class Cache(object):
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, AccessError, MissingError
 from odoo.modules.registry import Registry
+from .sql_db import BaseCursor

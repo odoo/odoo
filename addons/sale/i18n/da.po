@@ -7,7 +7,7 @@
 # JonathanStein <jstein@image.dk>, 2020
 # peso <peer.sommerlund@gmail.com>, 2020
 # Jesper Carstensen <jc@danodoo.dk>, 2020
-# walther_b <wba@miracle.dk>, 2020
+# Walther Barnett <walther@gundogpro.dk>, 2020
 # Kenneth Hansen <kenneth@vkdata.dk>, 2020
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
@@ -17,18 +17,18 @@
 # Simon Andersen <simon@vkdata.dk>, 2020
 # Martin Trigaux, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# Mads Søndergaard, 2023
+# lhmflexerp <lhm@flexerp.dk>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
-"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2023\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -63,7 +63,7 @@ msgid ""
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
-"'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
+"'pending') and 'Afventende Ordre' or 'Ordre'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -649,7 +649,7 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Antal</span>\n"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Beløb</span>\n"
 "                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total</span>"
 
 #. module: sale
@@ -658,7 +658,7 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Antal</span>\n"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Beløb</span>\n"
 "                            <span groups=\"account.group_show_line_subtotals_tax_included\">Samlet Pris</span>"
 
 #. module: sale
@@ -1497,8 +1497,8 @@ msgstr "Tilpas dine tilbud og ordre."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
-msgstr "DHL USA Connector"
+msgid "DHL Express Connector"
+msgstr "DHL Express Connector"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -3244,7 +3244,7 @@ msgstr "Tilbud sendt"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr "Tilbug set af kunde %s"
+msgstr "Tilbud set af kunde %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -4149,15 +4149,10 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
-"Der er intet at fakturer!\n"
-"\n"
-"Årsag(er) til denne opførsel kunne være:\n"
-"- At du bør levere dine produkter før du fakturere dem: Klik på \"varevogn\" ikonet (øverst til højre i din skærm) og følg instruktionerne.\n"
-"- At du bør redigere fakturerings policen for dine produkter: Åben produktet, gå til \"Salg\" fanen, og rediger fakturerings policen fra \"Leverede mængder\" til \"Bestilte mængder\"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4587,6 +4582,17 @@ msgid ""
 msgstr ""
 "Her kan du angive kommunikationstypen der vil vises på salgsordre. "
 "Kommunikationen vil blive givet til kunden, når de vælger betalingsmetode."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"Du kan ikke ændre produktets type, da det allerede anvendes på en "
+"salgsordre."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

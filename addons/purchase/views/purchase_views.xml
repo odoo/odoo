@@ -178,9 +178,9 @@
                             <field name="id" invisible="1"/>
                         </group>
                         <group>
-                            <field name="date_order" attrs="{'invisible': [('state','=','purchase')]}"/>
-                            <label for="date_approve" attrs="{'invisible': [('state','!=','purchase')]}"/>
-                            <div name="date_approve" attrs="{'invisible': [('state','!=','purchase')]}" class="o_row">
+                            <field name="date_order" attrs="{'invisible': [('state','in',('purchase','done'))]}"/>
+                            <label for="date_approve" attrs="{'invisible': [('state','not in',('purchase','done'))]}"/>
+                            <div name="date_approve" attrs="{'invisible': [('state','not in',('purchase','done'))]}" class="o_row">
                                 <field name="date_approve"/>
                                 <field name="mail_reception_confirmed" invisible="1"/>
                                 <span class="text-muted" attrs="{'invisible': [('mail_reception_confirmed','=', False)]}">(confirmed by vendor)</span>
@@ -250,6 +250,8 @@
                                     <field name="price_unit" attrs="{'readonly': [('invoice_lines', '!=', [])]}"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', parent.company_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
                                     <field name="price_subtotal" widget="monetary"/>
+                                    <field name="price_total" invisible="1"/>
+                                    <field name="price_tax" invisible="1"/>
                                 </tree>
                                 <form string="Purchase Order Line">
                                         <field name="state" invisible="1"/>
@@ -447,12 +449,12 @@
                     <filter name="order_date" string="Order Date" date="date_order"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
@@ -471,7 +473,7 @@
             <field name="name">purchase.order.kanban</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" js_class="purchase_kanban_dashboard" sample="1">
+                <kanban class="o_kanban_mobile" js_class="purchase_kanban_dashboard" sample="1" quick_create="false">
                     <field name="name"/>
                     <field name="partner_id" readonly="1"/>
                     <field name="amount_total"/>
@@ -511,10 +513,9 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
+                <tree string="Purchase Order" multi_edit="1"
                       decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" sample="1">
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
-                    <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1"/>
                     <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
@@ -542,13 +543,12 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
-                      class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
+                <tree string="Purchase Order" multi_edit="1" class="o_purchase_order"
+                      js_class="purchase_list_dashboard" sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
-                    <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1"/>
                     <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
@@ -575,8 +575,7 @@
             <field name="name">purchase.order.view.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True"
-                    decoration-muted="state=='cancel'"
+                <tree decoration-muted="state=='cancel'"
                     decoration-info="state in ('wait','confirmed')"
                     string="Purchase Order"
                     class="o_purchase_order"
@@ -585,7 +584,6 @@
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
-                    <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1"/>
                     <field name="date_approve" widget="date" invisible="context.get('quotation_only', False)" optional="show"/>

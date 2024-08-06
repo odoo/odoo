@@ -22,20 +22,27 @@ var KioskMode = AbstractAction.extend({
         var self = this;
         core.bus.on('barcode_scanned', this, this._onBarcodeScanned);
         self.session = Session;
+        const company_id = this.session.user_context.allowed_company_ids[0];
         var def = this._rpc({
                 model: 'res.company',
                 method: 'search_read',
-                args: [[['id', '=', this.session.company_id]], ['name']],
+                args: [[['id', '=', company_id]], ['name']],
             })
             .then(function (companies){
                 self.company_name = companies[0].name;
-                self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: self.session.company_id, field: 'logo',});
+                self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: company_id, field: 'logo',});
                 self.$el.html(QWeb.render("HrAttendanceKioskMode", {widget: self}));
                 self.start_clock();
             });
         // Make a RPC call every day to keep the session alive
         self._interval = window.setInterval(this._callServer.bind(this), (60*60*1000*24));
         return Promise.all([def, this._super.apply(this, arguments)]);
+    },
+
+    on_attach_callback: function () {
+        // Stop polling to avoid notifications in kiosk mode
+        this.call('bus_service', 'stopPolling');
+        $('body').find('.o_ChatWindowHeader_commandClose').click();
     },
 
     _onBarcodeScanned: function(barcode) {
@@ -68,6 +75,7 @@ var KioskMode = AbstractAction.extend({
         core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
         clearInterval(this.clock_start);
         clearInterval(this._interval);
+        this.call('bus_service', 'startPolling');
         this._super.apply(this, arguments);
     },
 

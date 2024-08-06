@@ -3,7 +3,7 @@
 
 import binascii
 
-from odoo import fields, http, _
+from odoo import fields, http, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.addons.payment.controllers.portal import PaymentProcessing
@@ -20,17 +20,25 @@ class CustomerPortal(CustomerPortal):
 
         SaleOrder = request.env['sale.order']
         if 'quotation_count' in counters:
-            values['quotation_count'] = SaleOrder.search_count([
-                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-                ('state', 'in', ['sent', 'cancel'])
-            ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
+            values['quotation_count'] = SaleOrder.search_count(self._prepare_quotations_domain(partner)) \
+                if SaleOrder.check_access_rights('read', raise_exception=False) else 0
         if 'order_count' in counters:
-            values['order_count'] = SaleOrder.search_count([
-                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-                ('state', 'in', ['sale', 'done'])
-            ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
+            values['order_count'] = SaleOrder.search_count(self._prepare_orders_domain(partner)) \
+                if SaleOrder.check_access_rights('read', raise_exception=False) else 0
 
         return values
+
+    def _prepare_quotations_domain(self, partner):
+        return [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('state', 'in', ['sent', 'cancel'])
+        ]
+
+    def _prepare_orders_domain(self, partner):
+        return [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('state', 'in', ['sale', 'done'])
+        ]
 
     def _order_get_page_view_values(self, order, access_token, **kwargs):
         values = {
@@ -65,6 +73,13 @@ class CustomerPortal(CustomerPortal):
 
         return values
 
+    def _get_sale_searchbar_sortings(self):
+        return {
+            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
+            'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
+        }
+
     #
     # Quotations and Sales Orders
     #
@@ -75,16 +90,9 @@ class CustomerPortal(CustomerPortal):
         partner = request.env.user.partner_id
         SaleOrder = request.env['sale.order']
 
-        domain = [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sent', 'cancel'])
-        ]
+        domain = self._prepare_quotations_domain(partner)
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
 
         # default sortby order
         if not sortby:
@@ -125,16 +133,10 @@ class CustomerPortal(CustomerPortal):
         partner = request.env.user.partner_id
         SaleOrder = request.env['sale.order']
 
-        domain = [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sale', 'done'])
-        ]
+        domain = self._prepare_orders_domain(partner)
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
+
         # default sortby order
         if not sortby:
             sortby = 'date'
@@ -187,7 +189,7 @@ class CustomerPortal(CustomerPortal):
             session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
             if session_obj_date != now and request.env.user.share and access_token:
                 request.session['view_quote_%s' % order_sudo.id] = now
-                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name)
+                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name if request.env.user._is_public() else request.env.user.partner_id.name)
                 _message_post_helper(
                     "sale.order",
                     order_sudo.id,
@@ -231,7 +233,7 @@ class CustomerPortal(CustomerPortal):
             order_sudo.action_confirm()
             order_sudo._send_order_confirmation_mail()
 
-        pdf = request.env.ref('sale.action_report_saleorder').sudo()._render_qweb_pdf([order_sudo.id])[0]
+        pdf = request.env.ref('sale.action_report_saleorder').with_user(SUPERUSER_ID)._render_qweb_pdf([order_sudo.id])[0]
 
         _message_post_helper(
             'sale.order', order_sudo.id, _('Order signed by %s') % (name,),

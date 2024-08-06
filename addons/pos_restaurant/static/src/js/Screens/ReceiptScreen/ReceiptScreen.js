@@ -20,13 +20,6 @@ odoo.define('pos_restaurant.ReceiptScreen', function(require) {
                     return super.nextScreen;
                 }
             }
-            /**
-             * @override
-             */
-            async _printWeb() {
-                await super._printWeb();
-                this.currentOrder._printed = false;
-            }
         };
 
     Registries.Component.extend(ReceiptScreen, PosResReceiptScreen);

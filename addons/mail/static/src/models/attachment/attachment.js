@@ -26,11 +26,17 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
+            if ('checksum' in data) {
+                data2.checksum = data.checksum;
+            }
             if ('filename' in data) {
                 data2.filename = data.filename;
             }
             if ('id' in data) {
                 data2.id = data.id;
+            }
+            if ('is_main' in data) {
+                data2.is_main = data.is_main;
             }
             if ('mimetype' in data) {
                 data2.mimetype = data.mimetype;
@@ -130,6 +136,14 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeCheckSum() {
+            return this.checksum === undefined ? clear() : this.checksum;
+        }
+
+        /**
+         * @private
          * @returns {mail.composer[]}
          */
         _computeComposers() {
@@ -158,7 +172,7 @@ function factory(dependencies) {
                 return `/web/image/${this.id}?unique=1&amp;signature=${this.checksum}&amp;model=ir.attachment`;
             }
             if (this.fileType === 'application/pdf') {
-                return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.id}?model%3Dir.attachment`;
+                return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.id}?model%3Dir.attachment#pagemode=none`;
             }
             if (this.fileType && this.fileType.includes('text')) {
                 return `/web/content/${this.id}?model%3Dir.attachment`;
@@ -335,7 +349,16 @@ function factory(dependencies) {
         attachmentViewer: many2many('mail.attachment_viewer', {
             inverse: 'attachments',
         }),
-        checkSum: attr(),
+        checksum: attr(),
+        /**
+         * Deprecated, use checksum instead.
+         */
+        checkSum: attr({
+            compute: '_computeCheckSum',
+            dependencies: [
+                'checksum',
+            ],
+        }),
         composers: many2many('mail.composer', {
             compute: '_computeComposers',
             inverse: 'attachments',
@@ -343,7 +366,7 @@ function factory(dependencies) {
         defaultSource: attr({
             compute: '_computeDefaultSource',
             dependencies: [
-                'checkSum',
+                'checksum',
                 'fileType',
                 'id',
                 'url',
@@ -374,6 +397,7 @@ function factory(dependencies) {
             compute: '_computeIsLinkedToComposer',
             dependencies: ['composers'],
         }),
+        is_main: attr(),
         isTemporary: attr({
             default: false,
         }),

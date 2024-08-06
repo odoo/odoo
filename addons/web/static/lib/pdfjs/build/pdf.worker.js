@@ -32676,7 +32676,8 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
     },
     getBaseFontMetrics: function PartialEvaluator_getBaseFontMetrics(name) {
       var defaultWidth = 0;
-      var widths = [];
+      // Odoo: backport mozilla/pdf.js@8805614a03c for courier font bug with chrome 92
+      var widths = Object.create(null);
       var monospace = false;
       var stdFontMap = (0, _standard_fonts.getStdFontMap)();
       var lookupName = stdFontMap[name] || name;

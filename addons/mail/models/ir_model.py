@@ -87,15 +87,21 @@ class IrModel(models.Model):
 
     def _reflect_model_params(self, model):
         vals = super(IrModel, self)._reflect_model_params(model)
-        vals['is_mail_thread'] = issubclass(type(model), self.pool['mail.thread'])
-        vals['is_mail_activity'] = issubclass(type(model), self.pool['mail.activity.mixin'])
-        vals['is_mail_blacklist'] = issubclass(type(model), self.pool['mail.thread.blacklist'])
+        vals['is_mail_thread'] = isinstance(model, self.pool['mail.thread'])
+        vals['is_mail_activity'] = isinstance(model, self.pool['mail.activity.mixin'])
+        vals['is_mail_blacklist'] = isinstance(model, self.pool['mail.thread.blacklist'])
         return vals
 
     @api.model
     def _instanciate(self, model_data):
         model_class = super(IrModel, self)._instanciate(model_data)
-        if model_data.get('is_mail_thread') and model_class._name != 'mail.thread':
+        if model_data.get('is_mail_blacklist') and model_class._name != 'mail.thread.blacklist':
+            parents = model_class._inherit or []
+            parents = [parents] if isinstance(parents, str) else parents
+            model_class._inherit = parents + ['mail.thread.blacklist']
+            if model_class._custom:
+                model_class._primary_email = 'x_email'
+        elif model_data.get('is_mail_thread') and model_class._name != 'mail.thread':
             parents = model_class._inherit or []
             parents = [parents] if isinstance(parents, str) else parents
             model_class._inherit = parents + ['mail.thread']
@@ -103,8 +109,4 @@ class IrModel(models.Model):
             parents = model_class._inherit or []
             parents = [parents] if isinstance(parents, str) else parents
             model_class._inherit = parents + ['mail.activity.mixin']
-        if model_data.get('is_mail_blacklist') and model_class._name != 'mail.thread.blacklist':
-            parents = model_class._inherit or []
-            parents = [parents] if isinstance(parents, str) else parents
-            model_class._inherit = parents + ['mail.thread.blacklist']
         return model_class

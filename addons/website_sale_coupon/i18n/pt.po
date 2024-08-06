@@ -7,25 +7,32 @@
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
 # Marcelo Pereira <marcelo.pereira@arxi.pt>, 2020
 # Pedro Filipe <pedro2.10@hotmail.com>, 2020
+# Vasco Rodrigues, 2024
+# Rita Bastos, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2020\n"
-"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
+"Last-Translator: Rita Bastos, 2024\n"
+"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: website_sale_coupon
+#: model:ir.model,name:website_sale_coupon.model_coupon_coupon
+msgid "Coupon"
+msgstr "Cupão"
 
 #. module: website_sale_coupon
 #: model:ir.model,name:website_sale_coupon.model_coupon_program
 msgid "Coupon Program"
-msgstr ""
+msgstr "Programa de Cupões"
 
 #. module: website_sale_coupon
 #: model:ir.ui.menu,name:website_sale_coupon.menu_coupon_type_config
@@ -44,12 +51,14 @@ msgid "Discounted amount"
 msgstr ""
 
 #. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_coupon__display_name
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__display_name
 #: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order__display_name
 msgid "Display Name"
 msgstr "Nome"
 
 #. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_coupon__id
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__id
 #: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order__id
 msgid "ID"
@@ -61,6 +70,7 @@ msgid "Invalid or expired promo code."
 msgstr ""
 
 #. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_coupon____last_update
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program____last_update
 #: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order____last_update
 msgid "Last Modified on"
@@ -75,7 +85,7 @@ msgstr ""
 #. module: website_sale_coupon
 #: model:ir.model.fields,help:website_sale_coupon.field_coupon_program__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "Restringir publicação a este site."
 
 #. module: website_sale_coupon
 #: model:ir.model,name:website_sale_coupon.model_sale_order

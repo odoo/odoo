@@ -19,9 +19,36 @@ odoo.define("crm.crm_form", function (require) {
          * We check if the stage_id field was altered and if we need to display a rainbowman
          * message.
          *
+         * This method will also simulate a real "force_save" on the email and phone
+         * when needed. The "force_save" attribute only works on readonly field. For our
+         * use case, we need to write the email and the phone even if the user didn't
+         * change them, to synchronize those values with the partner (so the email / phone
+         * inverse method can be called).
+         *
+         * We base this synchronization on the value of "ribbon_message", which is a
+         * computed field that hold a value whenever we need to synch.
+         *
          * @override
          */
-        saveRecord: function () {
+        saveRecord: function (recordID, options) {
+            recordID = recordID || this.handle;
+            const localData = this.model.localData[recordID];
+            const changes = localData._changes || {};
+
+            const needsSynchronization = changes.ribbon_message === undefined
+                ? localData.data.ribbon_message // original value
+                : changes.ribbon_message; // new value
+
+            if (needsSynchronization && changes.email_from === undefined && localData.data.email_from) {
+                changes.email_from = localData.data.email_from;
+            }
+            if (needsSynchronization && changes.phone === undefined && localData.data.phone) {
+                changes.phone = localData.data.phone;
+            }
+            if (!localData._changes && Object.keys(changes).length) {
+                localData._changes = changes;
+            }
+
             return this._super(...arguments).then((modifiedFields) => {
                 if (modifiedFields.indexOf('stage_id') !== -1) {
                     this._checkRainbowmanMessage(this.renderer.state.res_id)

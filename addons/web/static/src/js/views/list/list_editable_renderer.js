@@ -16,6 +16,7 @@ var dom = require('web.dom');
 var ListRenderer = require('web.ListRenderer');
 var utils = require('web.utils');
 const { WidgetAdapterMixin } = require('web.OwlCompatibility');
+const concurrency = require('web.concurrency');
 
 var _t = core._t;
 
@@ -97,6 +98,8 @@ ListRenderer.include({
         this.currentFieldIndex = null;
         this.isResizing = false;
         this.eventListeners = [];
+
+        this.rowModeChangeMutex = new concurrency.Mutex();
     },
     /**
      * @override
@@ -263,7 +266,7 @@ ListRenderer.include({
                     currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
                     if (currentWidget) {
                         focusedElement = currentWidget.getFocusableElement().get(0);
-                        if (currentWidget.formatType !== 'boolean') {
+                        if (currentWidget.formatType !== 'boolean' && focusedElement) {
                             selectionRange = dom.getSelectionRange(focusedElement);
                         }
                     }
@@ -315,7 +318,7 @@ ListRenderer.include({
     editRecord: function (recordID) {
         var $row = this._getRow(recordID);
         var rowIndex = $row.prop('rowIndex') - 1;
-        this._selectCell(rowIndex, 0);
+        return this._selectCell(rowIndex, 0);
     },
     /**
      * Gives focus to a specific cell, given its row and its related column.
@@ -404,7 +407,12 @@ ListRenderer.include({
      * @returns {Promise}
      */
     setRowMode: function (recordID, mode) {
-        var self = this;
+        // Use a mutex because we don't want to rerender a row before the previous render is finished
+        return this.rowModeChangeMutex.exec(this._setRowMode.bind(this, recordID, mode));
+    },
+
+    _setRowMode: async function (recordID, mode) {
+        const self = this;
         var record = self._getRecord(recordID);
         if (!record) {
             return Promise.resolve();
@@ -471,6 +479,7 @@ ListRenderer.include({
             core.bus.trigger('DOM_updated');
         });
     },
+
     /**
      * This method is called whenever we click/move outside of a row that was
      * in edit mode. This is the moment we save all accumulated changes on that
@@ -861,7 +870,7 @@ ListRenderer.include({
      * @returns {string} record dataPoint id
      */
     _getRecordID: function (rowIndex) {
-        var $tr = this.$('table.o_list_table > tbody tr').eq(rowIndex);
+        var $tr = this.$('table.o_list_table > tbody > tr').eq(rowIndex);
         return $tr.data('id');
     },
     /**
@@ -1716,7 +1725,7 @@ ListRenderer.include({
 
         // Fix container width to prevent the table from overflowing when being resized
         if (!this.el.style.width) {
-            this.el.style.width = `${initialTableWidth}px`;
+            this.el.style.width = `${this.el.offsetWidth}px`;
         }
 
         // Apply classes to table and selected column
@@ -1731,6 +1740,7 @@ ListRenderer.include({
             const newWidth = Math.max(10, initialWidth + delta);
             const tableDelta = newWidth - initialWidth;
             th.style.width = `${newWidth}px`;
+            th.style.maxWidth = `${newWidth}px`;
             table.style.width = `${initialTableWidth + tableDelta}px`;
             if (optionalDropdown) {
                 optionalDropdown.style.left = `${initialDropdownX + tableDelta}px`;
@@ -1834,6 +1844,12 @@ ListRenderer.include({
         // ignore clicks if target is inside the list. In that case, they are
         // handled directly by the renderer.
         if (this.el.contains(event.target) && this.el !== event.target) {
+            return;
+        }
+
+        // ignore click if search facet is removed as it will re-render whole
+        // listview again
+        if ($(event.target).hasClass('o_facet_remove')) {
             return;
         }
 

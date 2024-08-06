@@ -44,6 +44,23 @@ class TestLivechatLead(TestCrmCommon):
         self.assertEqual(lead.name, 'TestLead command')
         self.assertEqual(lead.partner_id, self.env['res.partner'])
 
+        # public user: should not be set as customer
+        # 'base.public_user' is archived by default
+        self.assertFalse(self.env.ref('base.public_user').active)
+
+        channel = self.env['mail.channel'].create({
+            'name': 'Chat with Visitor',
+            'channel_partner_ids': [(4, self.env.ref('base.public_partner').id)]
+        })
+        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, channel.channel_last_seen_partner_ids, '/lead TestLead command')
+
+        self.assertEqual(
+            channel.channel_last_seen_partner_ids.partner_id,
+            self.user_sales_leads.partner_id | self.env.ref('base.public_partner')
+        )
+        self.assertEqual(lead.name, 'TestLead command')
+        self.assertEqual(lead.partner_id, self.env['res.partner'])
+
         # public + someone else: no customer (as he was anonymous)
         channel.write({
             'channel_partner_ids': [(4, self.user_sales_manager.partner_id.id)]

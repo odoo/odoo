@@ -168,7 +168,11 @@ You receive this email because you are:
 
     @api.model
     def run(self, autocommit=False):
-        schedulers = self.search([('done', '=', False), ('scheduled_date', '<=', datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))])
+        schedulers = self.search([
+            ('event_id.active', '=', True),
+            ('done', '=', False),
+            ('scheduled_date', '<=', datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
+        ])
         for scheduler in schedulers:
             try:
                 with self.env.cr.savepoint():
@@ -204,7 +208,22 @@ class EventMailRegistration(models.Model):
             reg_mail.scheduler_id.notification_type == 'mail'
         )
         for reg_mail in todo:
-            reg_mail.scheduler_id.template_id.send_mail(reg_mail.registration_id.id)
+            organizer = reg_mail.scheduler_id.event_id.organizer_id
+            company = self.env.company
+            author = self.env.ref('base.user_root')
+            if organizer.email:
+                author = organizer
+            elif company.email:
+                author = company.partner_id
+            elif self.env.user.email:
+                author = self.env.user
+
+            email_values = {
+                'author_id': author.id,
+            }
+            if not reg_mail.scheduler_id.template_id.email_from:
+                email_values['email_from'] = author.email_formatted
+            reg_mail.scheduler_id.template_id.send_mail(reg_mail.registration_id.id, email_values=email_values)
         todo.write({'mail_sent': True})
 
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')

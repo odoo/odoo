@@ -43,7 +43,7 @@ var PopoverWidgetField = AbstractField.extend({
             content: this.$popover,
             html: this.html,
             placement: this.placement,
-            title: value.title || this.title,
+            title: value.title || this.title.toString(),
             trigger: this.trigger,
             delay: {'show': 0, 'hide': 100},
         });

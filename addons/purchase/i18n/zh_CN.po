@@ -7,7 +7,6 @@
 # 卓忆科技 <zhanghao@jointd.com>, 2020
 # 苏州远鼎 <tiexinliu@126.com>, 2020
 # Gary Wei <Gary.wei@elico-corp.com>, 2020
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # diaojiaolou <124412206@qq.com>, 2020
 # 黎伟杰 <674416404@qq.com>, 2020
 # John An <johnxan@163.com>, 2020
@@ -26,17 +25,18 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
 # Jerry Pan <panjianyu@inspur.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # as co02 <asco02@163.com>, 2020
-# mao luo <dooms21day@163.com>, 2020
+# GritLuo <dooms21day@163.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # Melvin Liu <betien@msn.cn>, 2020
 # snow wang <147156565@qq.com>, 2021
 # 洋 任 <1042636194@qq.com>, 2021
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # Titan Li <lghbeta@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -44,8 +44,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -60,7 +60,7 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('draft', 'sent') 与 'Request for Quotation - %s' % (object.name) 或者\n"
+"                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 
 #. module: purchase
@@ -80,6 +80,12 @@ msgstr "明细行数"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr "${object.company_id.name} 订单 (编号 ${object.name or 'n/a' })"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "%(name)s confirmed the receipt will take place on %(date)s."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -173,22 +179,22 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        亲爱的 ${object.partner_id.name}\n"
+"        尊敬的 ${object.partner_id.name} 您好！\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Here is in attachment a purchase order <strong>${object.name}</strong>\n"
+"        这我司的采购订单 <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
-"            with reference: ${object.partner_ref}\n"
+"            参考: ${object.partner_ref}\n"
 "        % endif\n"
-"        amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
-"        from ${object.company_id.name}. \n"
+"        金额 <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        来自 ${object.company_id.name}. \n"
 "        <br/><br/>\n"
 "        % if object.date_planned:\n"
-"            The receipt is expected for <strong>${format_date(object.date_planned)}</strong>.\n"
+"            日期 <strong>${format_date(object.date_planned)}</strong>.\n"
 "            <br/><br/>\n"
-"            Could you please acknowledge the receipt of this order?\n"
+"            敬请您仔细确认订单是否有误？点击下方确认按钮将打开浏览器在线查看更多详情：\n"
 "        % endif\n"
 "    </p>\n"
 "</div>"
@@ -2570,6 +2576,12 @@ msgstr "UX用途的技术领域。"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__notes
 msgid "Terms and Conditions"
 msgstr "条款和条件"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "The order receipt has been acknowledged by %(name)s."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order

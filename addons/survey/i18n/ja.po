@@ -7,27 +7,28 @@
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2020
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2020
 # 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2020
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2020
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # kent_ocean <ke.tanabe@gmail.com>, 2020
-# Tim Siu Lai <tl@roomsfor.hk>, 2020
 # Manami Hashi <manami@roomsfor.hk>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2020
 # Hau Dao <hau@quartile.co>, 2020
 # Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # Takuya Sawada <takuya@tuntunkun.com>, 2020
 # Noma Yuki, 2020
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 15:34+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -37,7 +38,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_4
 msgid "$100"
-msgstr ""
+msgstr "$100"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_1
@@ -47,22 +48,22 @@ msgstr "$20"
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_5
 msgid "$200"
-msgstr ""
+msgstr "$200"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_6
 msgid "$300"
-msgstr ""
+msgstr "$300"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_2
 msgid "$50"
-msgstr ""
+msgstr "$50"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_3
 msgid "$80"
-msgstr ""
+msgstr "$80"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
@@ -86,11 +87,6 @@ msgstr "%s 資格合格"
 #, python-format
 msgid "%s challenge certification"
 msgstr "%s 資格を検証"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: survey
 #: model:ir.actions.report,print_report_name:survey.certification_report
@@ -703,8 +699,8 @@ msgstr "問題が発生しました"
 #. module: survey
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
-msgid "A question is either skipped or answered, not both."
-msgstr "質問がスキップされたか回答されていません。"
+msgid "A question can either be skipped or answered, not both."
+msgstr "質問はスキップまたは回答するかのどちらかで、両方はできません。"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2
@@ -883,7 +879,7 @@ msgstr "回答期限"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__triggering_answer_id
 msgid "Answer that will trigger the display of the current question."
-msgstr ""
+msgstr "現在の質問を表示するトリガとなる回答。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -2192,7 +2188,7 @@ msgstr "進行中"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q5
 msgid "In the list below, select all the coniferous."
-msgstr ""
+msgstr "下記のリストで、針葉樹をすべて選択してください。"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q2
@@ -2240,7 +2236,7 @@ msgstr "フォロー中　"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification
 msgid "Is a Certification"
-msgstr "認定です"
+msgstr "認定"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -2512,7 +2508,7 @@ msgstr "最小日時"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_min
 msgid "Minimum Text Length"
-msgstr "最大文字数"
+msgstr "最少文字数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_float_value
@@ -2660,7 +2656,7 @@ msgstr "質問が見つかりません"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__no_scoring
 msgid "No scoring"
-msgstr "得点が見つかりません"
+msgstr "スコアなし"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.survey_question_answer_action
@@ -3431,7 +3427,7 @@ msgstr "開始"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
 msgid "Start Certification"
-msgstr "スタート認定"
+msgstr "認定スタート"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -3644,7 +3640,7 @@ msgstr "Takaaki Kajita"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Test"
-msgstr "インポートテスト"
+msgstr "テスト"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -4490,6 +4486,22 @@ msgstr "スコアリングメカニズムを持っているアンケートのた
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "何の設問もないアンケートのための招待状を送信することはできません。"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey has no sections."
+msgstr "アンケートにセクションがない場合、 \"セクションごとに1ページ\"アンケート用の招待状を送ることはできません。"
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey only contains empty sections."
+msgstr "アンケートに空のセクションしかない場合、 \"セクションごとに1ページ\"アンケート用の招待状を送ることはできません。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0

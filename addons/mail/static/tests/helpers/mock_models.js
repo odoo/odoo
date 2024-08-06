@@ -25,6 +25,7 @@ class MockModels {
         return {
             'ir.attachment': {
                 fields: {
+                    checksum: { string: 'cheksum', type: 'char' },
                     create_date: { type: 'date' },
                     create_uid: { string: "Created By", type: "many2one", relation: 'res.users' },
                     datas: { string: "File Content (base64)", type: 'binary' },
@@ -127,7 +128,7 @@ class MockModels {
                     author_id: { string: "Author", type: 'many2one', relation: 'res.partner', default() { return this.currentPartnerId; } },
                     body: { string: "Contents", type: 'html', default: "<p></p>" },
                     channel_ids: { string: "Channels", type: 'many2many', relation: 'mail.channel' },
-                    date: { string: "Date", type: 'datetime' },
+                    date: { string: "Date", type: 'datetime', default() { return moment.utc().format("YYYY-MM-DD HH:mm:ss"); } },
                     email_from: { string: "From", type: 'char' },
                     history_partner_ids: { string: "Partners with History", type: 'many2many', relation: 'res.partner' },
                     id: { string: "Id", type: 'integer' },
@@ -242,7 +243,7 @@ class MockModels {
                     email_cc: { type: 'char' },
                     partner_ids: {
                         string: "Related partners",
-                        type: 'many2one',
+                        type: 'one2many',
                         relation: 'res.partner'
                     },
                 },

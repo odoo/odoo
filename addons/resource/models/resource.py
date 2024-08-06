@@ -12,7 +12,7 @@ from pytz import timezone, utc
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
@@ -285,6 +285,9 @@ class ResourceCalendar(models.Model):
         self.hours_per_day = self._compute_hours_per_day(attendances)
 
     def switch_calendar_type(self):
+        if self == self.env.company.resource_calendar_id:
+            raise UserError(_('Impossible to switch calendar type for the default company schedule.'))
+
         if not self.two_weeks_calendar:
             self.attendance_ids.unlink()
             self.attendance_ids = [
@@ -437,6 +440,10 @@ class ResourceCalendar(models.Model):
                     days = rrule(DAILY, start, until=until, byweekday=weekday)
 
                 for day in days:
+                    # We need to exclude incorrect days according to re-defined start previously
+                    # with weeks=-1 (Note: until is correctly handled)
+                    if (self.two_weeks_calendar and attendance.date_from and attendance.date_from > day.date()):
+                        continue
                     # attendance hours are interpreted in the resource's timezone
                     hour_from = attendance.hour_from
                     if (tz, day, hour_from) in cache_deltas:
@@ -617,12 +624,14 @@ class ResourceCalendar(models.Model):
         def interval_dt(interval):
             return interval[1 if match_end else 0]
 
+        tz = resource.tz if resource else self.tz
         if resource is None:
             resource = self.env['resource.resource']
 
         if not dt.tzinfo or search_range and not (search_range[0].tzinfo and search_range[1].tzinfo):
             raise ValueError('Provided datetimes needs to be timezoned')
-        dt = dt.astimezone(timezone(self.tz))
+
+        dt = dt.astimezone(timezone(tz))
 
         if not search_range:
             range_start = dt + relativedelta(hour=0, minute=0, second=0)
@@ -950,6 +959,7 @@ class ResourceResource(models.Model):
             search_range = None
             tz = timezone(resource.tz)
             if calendar_start and start.astimezone(tz).date() == end.astimezone(tz).date():
+                end = end.astimezone(tz)
                 # Make sure to only search end after start
                 search_range = (
                     start,
@@ -976,7 +986,7 @@ class ResourceResource(models.Model):
             calendar_mapping[resource.calendar_id] |= resource
 
         for calendar, resources in calendar_mapping.items():
-            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources)
+            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources, tz=timezone(calendar.tz))
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
 

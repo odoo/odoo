@@ -62,4 +62,4 @@ class TestBaseUrl(TestUrlCommon):
         self._assertCanonical('/?debug=1', self.domain + '/')
         self._assertCanonical('/a-page', self.domain + '/a-page')
         self._assertCanonical('/en_US', self.domain + '/')
-        self._assertCanonical('/fr_FR', self.domain + '/fr/')
+        self._assertCanonical('/fr_FR', self.domain + '/fr')

@@ -3,6 +3,7 @@
 import itertools
 import logging
 import re
+import psycopg2
 from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Mapping
@@ -13,7 +14,7 @@ from psycopg2 import sql
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import pycompat, unique
+from odoo.tools import pycompat, unique, OrderedSet
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
@@ -146,6 +147,7 @@ class IrModel(models.Model):
     _name = 'ir.model'
     _description = "Models"
     _order = 'model'
+    _allow_sudo_commands = False
 
     def _default_field_id(self):
         if self.env.context.get('install_mode'):
@@ -200,7 +202,7 @@ class IrModel(models.Model):
         self.count = 0
         for model in self:
             records = self.env[model.model]
-            if not records._abstract:
+            if not records._abstract and records._auto:
                 cr.execute(sql.SQL('SELECT COUNT(*) FROM {}').format(sql.Identifier(records._table)))
                 model.count = cr.fetchone()[0]
 
@@ -290,6 +292,11 @@ class IrModel(models.Model):
         # delete fields whose comodel is being removed
         self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
 
+        # delete ir_crons created by user
+        crons = self.env['ir.cron'].with_context(active_test=False).search([('model_id', 'in', self.ids)])
+        if crons:
+            crons.unlink()
+
         self._drop_table()
         res = super(IrModel, self).unlink()
 
@@ -348,7 +355,7 @@ class IrModel(models.Model):
             'model': model._name,
             'name': model._description,
             'order': model._order,
-            'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
+            'info': next(cls.__doc__ for cls in self.env.registry[model._name].mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
             'transient': model._transient,
         }
@@ -430,8 +437,18 @@ class IrModel(models.Model):
             if tools.table_kind(cr, Model._table) not in ('r', None):
                 # not a regular table, so disable schema upgrades
                 Model._auto = False
-                cr.execute('SELECT * FROM %s LIMIT 0' % Model._table)
-                columns = {desc[0] for desc in cr.description}
+                cr.execute(
+                    '''
+                    SELECT a.attname
+                      FROM pg_attribute a
+                      JOIN pg_class t
+                        ON a.attrelid = t.oid
+                       AND t.relname = %s
+                     WHERE a.attnum > 0 -- skip system columns
+                    ''',
+                    [Model._table]
+                )
+                columns = {colinfo[0] for colinfo in cr.fetchall()}
                 Model._log_access = set(models.LOG_ACCESS_COLUMNS) <= columns
 
 
@@ -444,6 +461,7 @@ class IrModelFields(models.Model):
     _description = "Fields"
     _order = "name"
     _rec_name = 'field_description'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Field Name', default='x_', required=True, index=True)
     complete_name = fields.Char(index=True)
@@ -615,6 +633,8 @@ class IrModelFields(models.Model):
                 names = seq.strip().split(".")
                 last = len(names) - 1
                 for index, name in enumerate(names):
+                    if name == 'id':
+                        raise UserError(_("Compute method cannot depend on field 'id'"))
                     field = model._fields.get(name)
                     if field is None:
                         raise UserError(_("Unknown field %r in dependency %r") % (name, seq.strip()))
@@ -815,16 +835,15 @@ class IrModelFields(models.Model):
         self._prepare_update()
 
         # determine registry fields corresponding to self
-        fields = []
+        fields = OrderedSet()
         for record in self:
             try:
-                fields.append(self.pool[record.model]._fields[record.name])
+                fields.add(self.pool[record.model]._fields[record.name])
             except KeyError:
                 pass
 
-        model_names = self.mapped('model')
-        self._drop_column()
-        res = super(IrModelFields, self).unlink()
+        # clean the registry from the fields to remove
+        self.pool.registry_invalidated = True
 
         # discard the removed fields from field triggers
         def discard_fields(tree):
@@ -839,7 +858,18 @@ class IrModelFields(models.Model):
                     discard_fields(subtree)
 
         discard_fields(self.pool.field_triggers)
-        self.pool.registry_invalidated = True
+
+        # discard the removed fields from field inverses
+        for Model in self.pool.values():
+            Model._field_inverses.discard_keys_and_values(fields)
+
+        # discard the removed fields from fields to compute
+        for field in fields:
+            self.env.all.tocompute.pop(field, None)
+
+        model_names = self.mapped('model')
+        self._drop_column()
+        res = super(IrModelFields, self).unlink()
 
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
@@ -1023,6 +1053,8 @@ class IrModelFields(models.Model):
             model_id = self.env['ir.model']._get_id(model_name)
             for field in self.env[model_name]._fields.values():
                 rows.append(self._reflect_field_params(field, model_id))
+        if not rows:
+            return
         cols = list(unique(['model', 'name'] + list(rows[0])))
         expected = [tuple(row[col] for col in cols) for row in rows]
 
@@ -1156,6 +1188,7 @@ class IrModelSelection(models.Model):
     _name = 'ir.model.fields.selection'
     _order = 'sequence, id'
     _description = "Fields Selection"
+    _allow_sudo_commands = False
 
     field_id = fields.Many2one("ir.model.fields",
         required=True, ondelete="cascade", index=True,
@@ -1237,8 +1270,8 @@ class IrModelSelection(models.Model):
         for field in fields:
             model = self.env[field.model_name]
             for value, modules in field._selection_modules(model).items():
-                if module in modules:
-                    xml_id = selection_xmlid(module, field.model_name, field.name, value)
+                for m in modules:
+                    xml_id = selection_xmlid(m, field.model_name, field.name, value)
                     record = self.browse(selection_ids[field.model_name, field.name, value])
                     data_list.append({'xml_id': xml_id, 'record': record})
         self.env['ir.model.data']._update_xmlids(data_list)
@@ -1377,7 +1410,7 @@ class IrModelSelection(models.Model):
             except Exception as e:
                 # going through the ORM failed, probably because of an exception
                 # in an override or possibly a constraint.
-                _logger.warning(
+                _logger.runbot(
                     "Could not fulfill ondelete action for field %s.%s, "
                     "attempting ORM bypass...", records._name, fname,
                 )
@@ -1399,7 +1432,7 @@ class IrModelSelection(models.Model):
             # the orphaned 'ir.model.fields' down the stack, and will log a
             # warning prompting the developer to write a migration script.
             field = Model._fields.get(selection.field_id.name)
-            if not field or not field.store or Model._abstract:
+            if not field or not field.store or not Model._auto:
                 continue
 
             ondelete = (field.ondelete or {}).get(selection.value)
@@ -1443,6 +1476,7 @@ class IrModelConstraint(models.Model):
     """
     _name = 'ir.model.constraint'
     _description = 'Model Constraint'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Constraint', required=True, index=True,
                        help="PostgreSQL constraint or foreign key name.")
@@ -1493,18 +1527,22 @@ class IrModelConstraint(models.Model):
                     self._cr.execute(
                         sql.SQL('ALTER TABLE {} DROP CONSTRAINT {}').format(
                             sql.Identifier(table),
-                            sql.Identifier(name)
+                            sql.Identifier(name[:63])
                         ))
                     _logger.info('Dropped FK CONSTRAINT %s@%s', name, data.model.model)
 
             if typ == 'u':
                 # test if constraint exists
+                # Since type='u' means any "other" constraint, to avoid issues we limit to
+                # 'c' -> check, 'u' -> unique, 'x' -> exclude constraints, effective leaving
+                # out 'p' -> primary key and 'f' -> foreign key, constraints.
+                # See: https://www.postgresql.org/docs/9.5/catalog-pg-constraint.html
                 self._cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
-                                    WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
-                                 ('u', name, table))
+                                    WHERE cs.contype in ('c', 'u', 'x') and cs.conname=%s and cl.relname=%s""",
+                                 (name[:63], table))
                 if self._cr.fetchone():
                     self._cr.execute(sql.SQL('ALTER TABLE {} DROP CONSTRAINT {}').format(
-                        sql.Identifier(table), sql.Identifier(name)))
+                        sql.Identifier(table), sql.Identifier(name[:63])))
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
         self.unlink()
@@ -1568,7 +1606,7 @@ class IrModelConstraint(models.Model):
         # map each constraint on the name of the module where it is defined
         constraint_module = {
             constraint[0]: cls._module
-            for cls in reversed(type(model).mro())
+            for cls in reversed(self.env.registry[model._name].mro())
             if not getattr(cls, 'pool', None)
             for constraint in getattr(cls, '_local_sql_constraints', ())
         }
@@ -1592,6 +1630,7 @@ class IrModelRelation(models.Model):
     """
     _name = 'ir.model.relation'
     _description = 'Relation Model'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Relation Name', required=True, index=True,
                        help="PostgreSQL table name implementing a many2many relation.")
@@ -1654,6 +1693,7 @@ class IrModelAccess(models.Model):
     _name = 'ir.model.access'
     _description = 'Model Access'
     _order = 'model_id,group_id,name,id'
+    _allow_sudo_commands = False
 
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
@@ -1842,6 +1882,7 @@ class IrModelData(models.Model):
     _name = 'ir.model.data'
     _description = 'Model Data'
     _order = 'module, model, name'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='External Identifier', required=True,
                        help="External Key/Identifier that can be used for "
@@ -2169,9 +2210,9 @@ class IrModelData(models.Model):
         modules._remove_copied_views()
 
         # remove constraints
-        delete(self.env['ir.model.constraint'].browse(unique(constraint_ids)))
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
         constraints._module_data_uninstall()
+        delete(self.env['ir.model.constraint'].browse(unique(constraint_ids)))
 
         # If we delete a selection field, and some of its values have ondelete='cascade',
         # we expect the records with that value to be deleted. If we delete the field first,
@@ -2185,8 +2226,29 @@ class IrModelData(models.Model):
         # remove models
         delete(self.env['ir.model'].browse(unique(model_ids)))
 
+        # sort out which undeletable model data may have become deletable again because
+        # of records being cascade-deleted or tables being dropped just above
+        for data in self.browse(undeletable_ids).exists():
+            record = self.env[data.model].browse(data.res_id)
+            try:
+                with self.env.cr.savepoint():
+                    if record.exists():
+                        # record exists therefore the data is still undeletable,
+                        # remove it from module_data
+                        module_data -= data
+                        continue
+            except psycopg2.ProgrammingError:
+                # This most likely means that the record does not exist, since record.exists()
+                # is rougly equivalent to `SELECT id FROM table WHERE id=record.id` and it may raise
+                # a ProgrammingError because the table no longer exists (and so does the
+                # record), also applies to ir.model.fields, constraints, etc.
+                pass
         # remove remaining module data records
-        (module_data - self.browse(undeletable_ids)).unlink()
+        module_data.unlink()
+
+    @api.model
+    def _process_end_unlink_record(self, record):
+        record.unlink()
 
     @api.model
     def _process_end(self, modules):
@@ -2258,12 +2320,12 @@ class IrModelData(models.Model):
                 module = xmlid.split('.', 1)[0]
                 record = record.with_context(module=module)
                 if record._name == 'ir.model.fields' and not module.startswith('test_'):
-                    _logger.warning(
+                    _logger.runbot(
                         "Deleting field %s.%s (hint: fields should be"
                         " explicitly removed by an upgrade script)",
                         record.model, record.name,
                     )
-                record.unlink()
+                self._process_end_unlink_record(record)
             else:
                 bad_imd_ids.append(id)
         if bad_imd_ids:
@@ -2279,7 +2341,7 @@ class IrModelData(models.Model):
         """ Toggle the noupdate flag on the external id of the record """
         record = self.env[model].browse(res_id)
         if record.check_access_rights('write'):
-            for xid in  self.search([('model', '=', model), ('res_id', '=', res_id)]):
+            for xid in self.search([('model', '=', model), ('res_id', '=', res_id)]):
                 xid.noupdate = not xid.noupdate
 
 

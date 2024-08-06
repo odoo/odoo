@@ -16,6 +16,7 @@ from xmlrpc import client as xmlrpclib
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 
 
 _logger = logging.getLogger(__name__)
@@ -83,9 +84,9 @@ class FetchmailServer(models.Model):
 
                     # To leave the mail in the state in which they were.
                     if "Seen" not in data[1].decode("utf-8"):
-                        imap_server.uid('STORE', uid, '+FLAGS', '\\Seen')
+                        imap_server.uid('STORE', uid, '+FLAGS', '(\\Seen)')
                     else:
-                        imap_server.uid('STORE', uid, '-FLAGS', '\\Seen')
+                        imap_server.uid('STORE', uid, '-FLAGS', '(\\Seen)')
 
                     # See details in message_process() in mail_thread.py
                     if isinstance(message, xmlrpclib.Binary):
@@ -133,10 +134,23 @@ class FetchmailServer(models.Model):
                 if split_underscore[1] in ['RC', 'NS', 'MC', 'MT', 'EC', 'SE', 'NE', 'DT']:
                     # we have a receipt
                     self._message_receipt_invoice(split_underscore[1], attachment)
-                elif re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", attachment.fname):
-                    # we have a new E-invoice
-                    att_content_data = attachment.content.encode()
-                    self._create_invoice_from_mail(att_content_data, attachment.fname, from_address)
+                else:
+                    att_filename = attachment.fname
+                    match = re.search("[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))", att_filename)
+                    # If match, we have an invoice.
+                    if match:
+                        # If it's signed, the content has a bytes type and we just remove the signature's envelope
+                        if match.groups()[0].lower() == 'xml.p7m':
+                            att_content_data = remove_signature(attachment.content)
+                            # If the envelope cannot be removed, the remove_signature returns None, so we skip
+                            if not att_content_data:
+                                _logger.warning("E-invoice couldn't be read: %s", att_filename)
+                                continue
+                            att_filename = att_filename.replace('.xml.p7m', '.xml')
+                        else:
+                            # Otherwise, it should be an utf-8 encoded XML string
+                            att_content_data = attachment.content.encode()
+                    self._create_invoice_from_mail(att_content_data, att_filename, from_address)
             else:
                 if split_underscore[1] == 'AT':
                     # Attestazione di avvenuta trasmissione della fattura con impossibilità di recapito
@@ -162,7 +176,7 @@ class FetchmailServer(models.Model):
             return invoices
 
         # Create the new attachment for the file
-        self.env['ir.attachment'].create({
+        attachment = self.env['ir.attachment'].create({
             'name': att_name,
             'raw': att_content_data,
             'res_model': 'account.move',
@@ -175,14 +189,16 @@ class FetchmailServer(models.Model):
             _logger.info('The xml file is badly formatted: %s', att_name)
             return invoices
 
-        # Create the invoice
         invoices = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(att_name, tree)
         if not invoices:
             _logger.info('E-invoice not found in file: %s', att_name)
             return invoices
-
-        invoices.l10n_it_send_state = 'new'
+        invoices.l10n_it_send_state = "new"
         invoices.invoice_source_email = from_address
+        for invoice in invoices:
+            invoice.with_context(no_new_invoice=True, default_res_id=invoice.id) \
+                    .message_post(body=(_("Original E-invoice XML file")), attachment_ids=[attachment.id])
+
         self._cr.commit()
 
         _logger.info('New E-invoices (%s), ids: %s', att_name, [x.id for x in invoices])
@@ -391,8 +407,10 @@ class FetchmailServer(models.Model):
 class IrMailServer(models.Model):
     _name = "ir.mail_server"
     _inherit = "ir.mail_server"
+
     def _get_test_email_addresses(self):
         self.ensure_one()
+
         company = self.env["res.company"].search([("l10n_it_mail_pec_server_id", "=", self.id)], limit=1)
         if not company:
             # it's not a PEC server

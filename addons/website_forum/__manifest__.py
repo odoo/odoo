@@ -39,4 +39,5 @@ Ask questions, get answers, no distractions
     ],
     'installable': True,
     'application': True,
+    'license': 'LGPL-3',
 }

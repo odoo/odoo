@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools
 
 
 class MrpRoutingWorkcenter(models.Model):
@@ -49,14 +49,24 @@ class MrpRoutingWorkcenter(models.Model):
         for operation in manual_ops:
             operation.time_cycle = operation.time_cycle_manual
         for operation in self - manual_ops:
-            data = self.env['mrp.workorder'].read_group([
+            data = self.env['mrp.workorder'].search([
                 ('operation_id', '=', operation.id),
                 ('qty_produced', '>', 0),
-                ('state', '=', 'done')], ['operation_id', 'duration', 'qty_produced'], ['operation_id'],
-                limit=operation.time_mode_batch)
-            count_data = dict((item['operation_id'][0], (item['duration'], item['qty_produced'])) for item in data)
-            if count_data.get(operation.id) and count_data[operation.id][1]:
-                operation.time_cycle = (count_data[operation.id][0] / count_data[operation.id][1]) * (operation.workcenter_id.capacity or 1.0)
+                ('state', '=', 'done')],
+                limit=operation.time_mode_batch,
+                order="date_finished desc")
+            # To compute the time_cycle, we can take the total duration of previous operations
+            # but for the quantity, we will take in consideration the qty_produced like if the capacity was 1.
+            # So producing 50 in 00:10 with capacity 2, for the time_cycle, we assume it is 25 in 00:10
+            # When recomputing the expected duration, the capacity is used again to divide the qty to produce
+            # so that if we need 50 with capacity 2, it will compute the expected of 25 which is 00:10
+            total_duration = 0  # Can be 0 since it's not an invalid duration for BoM
+            cycle_number = 0  # Never 0 unless infinite item['workcenter_id'].capacity
+            for item in data:
+                total_duration += item['duration']
+                cycle_number += tools.float_round((item['qty_produced'] / item['workcenter_id'].capacity or 1.0), precision_digits=0, rounding_method='UP')
+            if cycle_number:
+                operation.time_cycle = total_duration / cycle_number
             else:
                 operation.time_cycle = operation.time_cycle_manual
 
@@ -67,3 +77,15 @@ class MrpRoutingWorkcenter(models.Model):
         count_data = dict((item['operation_id'][0], item['operation_id_count']) for item in data)
         for operation in self:
             operation.workorder_count = count_data.get(operation.id, 0)
+
+    def _get_comparison_values(self):
+        if not self:
+            return False
+        self.ensure_one()
+        return tuple(self[key] for key in  ('name', 'company_id', 'workcenter_id', 'time_mode', 'time_cycle_manual'))
+
+    def write(self, values):
+        if 'bom_id' in values:
+            filtered_lines = self.bom_id.bom_line_ids.filtered(lambda line: line.operation_id == self)
+            filtered_lines.operation_id = False
+        return super().write(values)

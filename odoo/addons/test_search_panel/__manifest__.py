@@ -9,4 +9,5 @@
     'depends': ['web'],
 
     'data': ['ir.model.access.csv'],
+    'license': 'LGPL-3',
 }

@@ -14,10 +14,9 @@ from textwrap import dedent
 import itertools
 from lxml import etree, html
 from psycopg2.extensions import TransactionRollbackError
-import werkzeug
-from werkzeug.utils import escape as _escape
 
 from odoo.tools import pycompat, freehash
+from odoo.tools.misc import html_escape as escape
 from odoo.tools.safe_eval import check_values
 
 import builtins
@@ -160,9 +159,6 @@ class QWebException(Exception):
     def __repr__(self):
         return str(self)
 
-# Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
-escape = (lambda text: _escape(text, quote=True)) if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0') else _escape
-
 def foreach_iterator(base_ctx, enum, name):
     ctx = base_ctx.copy()
     if not enum:
@@ -279,8 +275,10 @@ class QWeb(object):
         _options['ast_calls'] = []
         _options['root'] = element.getroottree()
         _options['last_path_node'] = None
-        if not options.get('nsmap'):
-            _options['nsmap'] = {}
+        _options['nsmap'] = {
+            ns_prefix: str(ns_definition)
+            for ns_prefix, ns_definition in options.get('nsmap', {}).items()
+        }
 
         # generate ast
 
@@ -1066,6 +1064,7 @@ class QWeb(object):
             for item in el:
                 # ignore comments & processing instructions
                 if isinstance(item, etree._Comment):
+                    body.extend(self._compile_tail(item))
                     continue
                 body.extend(self._compile_node(item, options))
                 body.extend(self._compile_tail(item))
@@ -1725,14 +1724,5 @@ class QWeb(object):
         ), elts)
 
     def _compile_expr(self, expr):
-        """ Compiles a purported Python expression to ast, and alter its
-        variable references to access values data instead exept for
-        python buildins.
-        This compile method is unsafe!
-        Can be overridden to use a safe eval method.
-        """
-        # string must be stripped otherwise whitespace before the start for
-        # formatting purpose are going to break parse/compile
-        st = ast.parse(expr.strip(), mode='eval')
-        # ast.Expression().body -> expr
-        return Contextifier(builtin_defaults).visit(st).body
+        """This method must be overridden by <ir.qweb> in order to compile the template."""
+        raise NotImplementedError("Templates should use the ir.qweb compile method")

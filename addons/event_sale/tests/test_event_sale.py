@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
+
 from odoo.tests import tagged
 from odoo.tests.common import users
 
@@ -13,18 +15,57 @@ class TestEventSale(TestEventSaleCommon):
     def setUpClass(cls):
         super(TestEventSale, cls).setUpClass()
 
+        product = cls.env['product.product'].create({
+            'name': 'Event',
+            'type': 'service',
+            'event_ok': True,
+        })
+
+        cls.user_salesperson = mail_new_test_user(cls.env, login='user_salesman', groups='sales_team.group_sale_salesman')
+
+        cls.ticket = cls.env['event.event.ticket'].create({
+            'name': 'First Ticket',
+            'product_id': cls.event_product.id,
+            'seats_max': 30,
+            'event_id': cls.event_0.id,
+        })
+
         cls.event_0.write({
             'event_ticket_ids': [
-                (5, 0),
+                (6, 0, cls.ticket.ids),
                 (0, 0, {
-                    'name': 'First Ticket',
-                    'product_id': cls.event_product.id,
-                    'seats_max': 30,
-                }), (0, 0, {
                     'name': 'Second Ticket',
                     'product_id': cls.event_product.id,
                 })
             ],
+        })
+
+        cls.sale_order = cls.env['sale.order'].create({
+            'partner_id': cls.env.ref('base.res_partner_2').id,
+            'note': 'Invoice after delivery',
+            'payment_term_id': cls.env.ref('account.account_payment_term_end_following_month').id
+        })
+
+        # In the sales order I add some sales order lines. i choose event product
+        cls.env['sale.order.line'].create({
+            'product_id': product.id,
+            'price_unit': 190.50,
+            'product_uom': cls.env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': 1.0,
+            'order_id': cls.sale_order.id,
+            'name': 'sales order line',
+            'event_id': cls.event_0.id,
+            'event_ticket_id': cls.ticket.id,
+        })
+
+        cls.register_person = cls.env['registration.editor'].create({
+            'sale_order_id': cls.sale_order.id,
+            'event_registration_ids': [(0, 0, {
+                'event_id': cls.event_0.id,
+                'name': 'Administrator',
+                'email': 'abc@example.com',
+                'sale_order_line_id': cls.sale_order.order_line.id,
+            })],
         })
 
         # make a SO for a customer, selling some tickets
@@ -50,6 +91,7 @@ class TestEventSale(TestEventSaleCommon):
                     'event_ticket_id': ticket1.id,
                     'product_id': ticket1.product_id.id,
                     'product_uom_qty': TICKET1_COUNT,
+                    'price_unit': 10,
                 }), (0, 0, {
                     'event_id': self.event_0.id,
                     'event_ticket_id': ticket2.id,
@@ -153,3 +195,88 @@ class TestEventSale(TestEventSaleCommon):
 
         self.assertEqual(editor_action['type'], 'ir.actions.act_window')
         self.assertEqual(editor_action['res_model'], 'registration.editor')
+
+    def test_ticket_price_with_pricelist_and_tax(self):
+        self.env.user.partner_id.country_id = False
+        pricelist = self.env['product.pricelist'].search([], limit=1)
+
+        tax = self.env['account.tax'].create({
+            'name': "Tax 10",
+            'amount': 10,
+        })
+
+        event_product = self.env['product.template'].create({
+            'name': 'Event Product',
+            'list_price': 10.0,
+        })
+
+        event_product.taxes_id = tax
+
+        event = self.env['event.event'].create({
+            'name': 'New Event',
+            'date_begin': '2020-02-02',
+            'date_end': '2020-04-04',
+        })
+        event_ticket = self.env['event.event.ticket'].create({
+            'name': 'VIP',
+            'price': 1000.0,
+            'event_id': event.id,
+            'product_id': event_product.product_variant_id.id,
+        })
+
+        pricelist.item_ids = self.env['product.pricelist.item'].create({
+            'applied_on': "1_product",
+            'base': "list_price",
+            'compute_price': "fixed",
+            'fixed_price': 6.0,
+            'product_tmpl_id': event_product.id,
+        })
+
+        pricelist.discount_policy = 'without_discount'
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'pricelist_id': pricelist.id,
+        })
+        sol = self.env['sale.order.line'].create({
+            'name': event.name,
+            'product_id': event_product.product_variant_id.id,
+            'product_uom_qty': 1,
+            'product_uom': event_product.uom_id.id,
+            'price_unit': event_product.list_price,
+            'order_id': so.id,
+            'event_id': event.id,
+            'event_ticket_id': event_ticket.id,
+        })
+        sol.product_id_change()
+        self.assertEqual(so.amount_total, 660.0, "Ticket is $1000 but the event product is on a pricelist 10 -> 6. So, $600 + a 10% tax.")
+
+    @users('user_salesman')
+    def test_unlink_so(self):
+        """ This test ensures that when deleting a sale order, if the latter is linked to an event registration,
+        the number of expected seats will be correctly updated """
+        event = self.env['event.event'].browse(self.event_0.ids)
+        self.register_person.action_make_registration()
+        self.assertEqual(event.seats_expected, 1)
+        self.sale_order.unlink()
+        self.assertEqual(event.seats_expected, 0)
+
+    @users('user_salesman')
+    def test_unlink_soline(self):
+        """ This test ensures that when deleting a sale order line, if the latter is linked to an event registration,
+        the number of expected seats will be correctly updated """
+        event = self.env['event.event'].browse(self.event_0.ids)
+        self.register_person.action_make_registration()
+        self.assertEqual(event.seats_expected, 1)
+        self.sale_order.order_line.unlink()
+        self.assertEqual(event.seats_expected, 0)
+        
+    @users('user_salesman')
+    def test_cancel_so(self):
+        """ This test ensures that when canceling a sale order, if the latter is linked to an event registration,
+        the number of expected seats will be correctly updated """
+        event = self.env['event.event'].browse(self.event_0.ids)
+        self.register_person.action_make_registration()
+        self.assertEqual(event.seats_expected, 1)
+        self.sale_order.action_cancel()
+        self.assertEqual(event.seats_expected, 0)

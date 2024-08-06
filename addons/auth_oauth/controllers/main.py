@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import functools
-import logging
-
 import json
+import logging
+import os
 
 import werkzeug.urls
 import werkzeug.utils
@@ -14,6 +14,7 @@ from odoo import api, http, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied
 from odoo.http import request
 from odoo import registry as registry_get
+from odoo.tools.misc import clean_context
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
 from odoo.addons.web.controllers.main import db_monodb, ensure_db, set_cookie_and_redirect, login_and_redirect
@@ -65,6 +66,7 @@ class OAuthLogin(Home):
                 redirect_uri=return_url,
                 scope=provider['scope'],
                 state=json.dumps(state),
+                # nonce=base64.urlsafe_b64encode(os.urandom(16)),
             )
             provider['auth_link'] = "%s?%s" % (provider['auth_endpoint'], werkzeug.urls.url_encode(params))
         return providers
@@ -125,7 +127,7 @@ class OAuthController(http.Controller):
         if not http.db_filter([dbname]):
             return BadRequest()
         provider = state['p']
-        context = state.get('c', {})
+        context = clean_context(state.get('c', {}))
         registry = registry_get(dbname)
         with registry.cursor() as cr:
             try:

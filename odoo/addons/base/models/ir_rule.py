@@ -15,6 +15,7 @@ class IrRule(models.Model):
     _description = 'Record Rule'
     _order = 'model_id DESC,id'
     _MODES = ['read', 'write', 'create', 'unlink']
+    _allow_sudo_commands = False
 
     name = fields.Char(index=True)
     active = fields.Boolean(default=True, help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).")
@@ -216,6 +217,7 @@ class IrRule(models.Model):
 
     def _make_access_error(self, operation, records):
         _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, records.ids[:6], self._uid, records._name)
+        self = self.with_context(self.env.user.context_get())
 
         model = records._name
         description = self.env['ir.model']._get(model).name or model
@@ -229,7 +231,7 @@ class IrRule(models.Model):
         operation_error = msg_heads[operation]
         resolution_info = _("Contact your administrator to request access if necessary.")
 
-        if not self.env.user.has_group('base.group_no_one') or not self.env.user.has_group('base.group_user'):
+        if not self.user_has_groups('base.group_no_one') or not self.env.user.has_group('base.group_user'):
             msg = """{operation_error}
 
 {resolution_info}""".format(

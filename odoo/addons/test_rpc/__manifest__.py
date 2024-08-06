@@ -8,4 +8,5 @@
     "installable": True,
     "auto_install": False,
     "data": ["ir.model.access.csv"],
+    'license': 'LGPL-3',
 }

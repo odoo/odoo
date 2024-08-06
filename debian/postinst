@@ -12,6 +12,8 @@ case "${1}" in
     configure)
         if ! getent passwd | grep -q "^odoo:"; then
             adduser --system --home $ODOO_DATA_DIR --quiet --group $ODOO_USER
+            # Data dir
+            chown $ODOO_USER:$ODOO_GROUP $ODOO_DATA_DIR
         fi
         # Register "$ODOO_USER" as a postgres user with "Create DB" role attribute
         su - postgres -c "createuser -d -R -S $ODOO_USER" 2> /dev/null || true
@@ -22,8 +24,6 @@ case "${1}" in
         mkdir -p $ODOO_LOG_DIR
         chown $ODOO_USER:$ODOO_GROUP $ODOO_LOG_DIR
         chmod 0750 $ODOO_LOG_DIR
-        # Data dir
-        chown $ODOO_USER:$ODOO_GROUP $ODOO_DATA_DIR
         ;;
     *)
         ;;

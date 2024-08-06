@@ -667,3 +667,157 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             (50, self.percent_tax_3_incl),
         ], currency_id=self.currency_data['currency'], invoice_payment_term_id=self.pay_terms_a)
         invoice.action_post()
+
+    def test_tax_calculation_multi_currency(self):
+        self.env['res.currency.rate'].create({
+            'name': '2018-01-01',
+            'rate': 0.273748,
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.env.company.id,
+        })
+        self.currency_data['currency'].rounding = 0.01
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_date': '2018-01-01',
+            'date': '2018-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'xxxx',
+                'quantity': 1,
+                'price_unit': 155.32,
+                'tax_ids': [(6, 0, self.percent_tax_1.ids)],
+            })]
+        })
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 567.38,      # 155.32 * 1 / (1 / 0.273748)
+            'balance': -119.16,             # tax_base_amount * 0.21
+        }])
+
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: not l.name), [{
+            'balance': 686.54
+        }])
+
+        with Form(invoice) as invoice_form:
+            invoice_form.currency_id = self.currency_data['currency']
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 567.38,
+            'balance': -119.16,
+        }])
+
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable'), [{
+            'balance': 686.54
+        }])
+
+    def test_change_tax_line_account_when_tax_zero_percent(self):
+        """
+        This test checks the following flow:
+        - Invoice with three invoice lines:
+            • One with tax > 0%
+            • One with tax == 0%
+            • One with tax == 0 fixed
+        - On line_ids, change the account of the tax line
+        The tax line should still be there and the account should be effectively changed
+        """
+        tax_0_percent, tax_0_fixed = self.env['account.tax'].create([
+            {
+                'name': '0%',
+                'amount_type': 'percent',
+                'amount': 0,
+                'sequence': 10,
+            },
+            {
+                'name': '0 fixed',
+                'amount_type': 'fixed',
+                'amount': 0,
+                'sequence': 10,
+            }
+        ])
+
+
+        new_account_revenue = self.company_data['default_account_revenue'].copy()
+
+        invoice = self._create_invoice([(500, self.percent_tax_1), (300, tax_0_percent), (100, tax_0_fixed)], inv_type='out_invoice')
+
+        self.assertRecordValues(invoice.line_ids, [
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': self.percent_tax_1.ids,
+                'debit': 0.0,
+                'credit': 500.0,
+            },
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': tax_0_percent.ids,
+                'debit': 0.0,
+                'credit': 300.0,
+            },
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': tax_0_fixed.ids,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': '21%',
+                'tax_ids': [],
+                'debit': 0.0,
+                'credit': 105.0,
+            },
+            {
+                'account_id': self.company_data['default_account_receivable'].id,
+                'name': '',
+                'tax_ids': [],
+                'debit': 1005.0,
+                'credit': 0.0,
+            }
+        ])
+
+        with Form(invoice) as invoice_form:
+            with invoice_form.line_ids.edit(3) as line:
+                line.account_id = new_account_revenue
+
+        self.assertRecordValues(invoice.line_ids, [
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': self.percent_tax_1.ids,
+                'debit': 0.0,
+                'credit': 500.0,
+            },
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': tax_0_percent.ids,
+                'debit': 0.0,
+                'credit': 300.0,
+            },
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': tax_0_fixed.ids,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+            {
+                'account_id': new_account_revenue.id,
+                'name': '21%',
+                'tax_ids': [],
+                'debit': 0.0,
+                'credit': 105.0,
+            },
+            {
+                'account_id': self.company_data['default_account_receivable'].id,
+                'name': '',
+                'tax_ids': [],
+                'debit': 1005.0,
+                'credit': 0.0,
+            }
+        ])

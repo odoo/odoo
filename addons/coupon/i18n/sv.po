@@ -5,13 +5,14 @@
 # Translators:
 # Kristoffer Grundström <lovaren@gmail.com>, 2021
 # Martin Trigaux, 2021
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Haojun Zou <apollo_zhj@msn.com>, 2021
 # Leif Persson <leifpz54@gmail.com>, 2021
 # Robert Frykelius <robert.frykelius@linserv.se>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
 # Peter Wickenberg <peter@wickenberg.nu>, 2021
-# Fredrik Arvas <fredrik.arvas@vertel.se>, 2021
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Simon S, 2022
+# Lasse L, 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +20,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Fredrik Arvas <fredrik.arvas@vertel.se>, 2021\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -31,53 +32,53 @@ msgstr ""
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(amount)s %(currency)s discount on total amount"
-msgstr ""
+msgstr "%(amount)s %(currency)s rabatt på totalbeloppet"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(percentage)s%% discount on %(product_name)s"
-msgstr ""
+msgstr "%(percentage)s%% rabatt på %(product_name)s"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on cheapest product"
-msgstr ""
+msgstr "%s%% rabatt på billigaste produkten"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on products"
-msgstr ""
+msgstr "%s%% rabatt på produkter"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on total amount"
-msgstr ""
+msgstr "%s%% rabatt på totalbeloppet"
 
 #. module: coupon
 #: code:addons/coupon/wizard/coupon_generate.py:0
 #, python-format
 msgid "%s, a coupon has been generated for you"
-msgstr ""
+msgstr "%s, en kupong har genererats åt dig"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "*Valid for following products:"
-msgstr ""
+msgstr "*Giltig för följande produkter:"
 
 #. module: coupon
 #: model:coupon.program,name:coupon.10_percent_coupon
 msgid "10% Discount"
-msgstr ""
+msgstr "10% Rabatt"
 
 #. module: coupon
 #: model:product.product,name:coupon.product_product_10_percent_discount
 #: model:product.template,name:coupon.product_product_10_percent_discount_product_template
 msgid "10.0% discount on total amount"
-msgstr ""
+msgstr "10,0% rabatt på hela beloppet"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -85,11 +86,13 @@ msgid ""
 "<span class=\"o_form_label oe_inline\"> Days</span> <span "
 "class=\"oe_grey\">if 0, infinite use</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\"> Dagar <span class=\"oe_grey\">om 0, "
+"obegränsad användning</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "<span class=\"oe_grey\">if 0, no limit</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\">om 0, obegränsad</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -111,23 +114,24 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>products</span>"
-msgstr ""
+msgstr "<span>produkter</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid ""
 "<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
 msgstr ""
+"<strong style=\"font-size: 55px; color: #875A7B\">få gratis frakt</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
 msgid "<strong>Active</strong>"
-msgstr ""
+msgstr "<strong>Aktiv</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
 msgid "<strong>Coupons</strong>"
-msgstr ""
+msgstr "<strong>Kuponger</strong>"
 
 #. module: coupon
 #: model:mail.template,body_html:coupon.mail_template_sale_coupon
@@ -298,13 +302,13 @@ msgstr "Streckkod"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_partners_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_partners_domain
 msgid "Based on Customers"
-msgstr ""
+msgstr "Baserat på kunder"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_products_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_products_domain
 msgid "Based on Products"
-msgstr ""
+msgstr "Baserat på produkter"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
@@ -316,7 +320,7 @@ msgstr ""
 #. module: coupon
 #: model:coupon.program,name:coupon.3_cabinets_plus_1_free
 msgid "Buy 3 large cabinets, get one for free"
-msgstr ""
+msgstr "Köp 3 stora skåp, få ett gratis"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -363,7 +367,7 @@ msgstr "Grattis"
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_coupon
 msgid "Coupon"
-msgstr ""
+msgstr "Kupong"
 
 #. module: coupon
 #: model:ir.actions.report,name:coupon.report_coupon_code
@@ -373,14 +377,14 @@ msgstr "Kupongkod"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_count
 msgid "Coupon Count"
-msgstr ""
+msgstr "Kupong Antal"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_program
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__coupon_program
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Coupon Program"
-msgstr ""
+msgstr "Kupongprogram"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -395,30 +399,30 @@ msgstr ""
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
 msgid "Coupon Programs"
-msgstr "Kupong Program"
+msgstr "Kupongprogram"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr ""
+msgstr "Kupongbelöning"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_id
 msgid "Coupon Rule"
-msgstr ""
+msgstr "Kupongregel"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_to
 msgid "Coupon program end date"
-msgstr ""
+msgstr "Kupongprogrammets slutdatum"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_from
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_from
 msgid "Coupon program start date"
-msgstr ""
+msgstr "Kupongprogrammets startdatum"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__sequence
@@ -447,12 +451,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
 msgid "Coupons"
-msgstr ""
+msgstr "Kuponger"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
 msgid "Create a new coupon program"
-msgstr ""
+msgstr "Skapa ett nytt kupongprogram"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
@@ -491,7 +495,7 @@ msgstr "Kund"
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_uom_id
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Standardmåttenhet som används för alla lageroperationer."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_percentage
@@ -508,24 +512,27 @@ msgid ""
 "Free Product - Free product will be provide as reward \n"
 "Free Shipping - Free shipping will be provided as reward (Need delivery module)"
 msgstr ""
+"Rabatt - Belöning ges som rabatt.\n"
+"Gratis produkt - Gratis produkt kommer att ges som belöning \n"
+"Gratis frakt - Fri frakt kommer som belöning (behöver leveransmodul)"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_apply_on
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_apply_on
 msgid "Discount Apply On"
-msgstr ""
+msgstr "Rabatt tillämpas på"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_max_amount
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_max_amount
 msgid "Discount Max Amount"
-msgstr ""
+msgstr "Maxbelopp för rabatt"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_type
 msgid "Discount Type"
-msgstr ""
+msgstr "Rabattyp"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
@@ -569,7 +576,7 @@ msgstr "Förfallen"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
 msgid "Expired Programs"
-msgstr ""
+msgstr "Utgångna program"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_fixed_amount
@@ -589,19 +596,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_id
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__reward_type__product
 msgid "Free Product"
-msgstr ""
+msgstr "Gratis produkt"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "Free Product - %s"
-msgstr ""
+msgstr "Gratis produkt- %s"
 
 #. module: coupon
 #: model:product.product,name:coupon.product_product_free_large_cabinet
 #: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
 msgid "Free Product - Large Cabinet"
-msgstr ""
+msgstr "Gratisprodukt - Stort skåp"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -612,12 +619,12 @@ msgstr "Skapa"
 #: model:ir.model,name:coupon.model_coupon_generate_wizard
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Generate Coupon"
-msgstr ""
+msgstr "Generera kupong"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Generate Coupons"
-msgstr ""
+msgstr "Generera kuponger"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
@@ -629,7 +636,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_ids
 msgid "Generated Coupons"
-msgstr ""
+msgstr "Genererade kuponger"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__generation_type
@@ -694,7 +701,7 @@ msgstr "Logotyp"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Max Discount Amount"
-msgstr ""
+msgstr "Maximalt rabattbelopp"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__maximum_use_number
@@ -705,7 +712,7 @@ msgstr ""
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_max_amount
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_max_amount
 msgid "Maximum amount of discount that can be provided"
-msgstr ""
+msgstr "Maximal rabatt som kan ges"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__maximum_use_number
@@ -727,7 +734,7 @@ msgstr "Minsta antal"
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "Minimum purchased amount should be greater than 0"
-msgstr ""
+msgstr "Minsta köpta antal borde vara större än 0"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_rules.py:0
@@ -776,12 +783,12 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__cheapest_product
 msgid "On Cheapest Product"
-msgstr ""
+msgstr "På billigaste produkten"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__on_order
 msgid "On Order"
-msgstr ""
+msgstr "På order"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_apply_on
@@ -791,6 +798,9 @@ msgid ""
 "Cheapest product - Discount on cheapest product of the order\n"
 "Specific products - Discount on selected specific products"
 msgstr ""
+"På order - Rabatt på hela ordern\n"
+"Billigaste produkten - Rabatt på orderns billigaste produkt\n"
+"Specifika produkter - Rabatt på specifikt valda produkt"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_products_domain
@@ -801,7 +811,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__specific_products
 msgid "On Specific Products"
-msgstr ""
+msgstr "På specifika produkter"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__reserved
@@ -820,6 +830,8 @@ msgid ""
 "Percentage - Entered percentage discount will be provided\n"
 "Amount - Entered fixed amount discount will be provided"
 msgstr ""
+"Procent - Angiven procentuell rabatt ges\n"
+"Belopp - Angiven rabatt med fast belopp ges"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_coupon__discount_line_product_id
@@ -847,16 +859,18 @@ msgid ""
 "Products that will be discounted if the discount is applied on specific "
 "products"
 msgstr ""
+"Produkter som kommer att rabatteras om rabatten tillämpas på specifika "
+"produkter"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__program_id
 msgid "Program"
-msgstr ""
+msgstr "Program"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
 msgid "Program Type"
-msgstr ""
+msgstr "Programtyp"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code_usage
@@ -866,7 +880,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code
 msgid "Promotion Code"
-msgstr ""
+msgstr "Kampanjkod"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -899,7 +913,7 @@ msgstr "Antal"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_id
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Reward"
-msgstr ""
+msgstr "Belöning"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_description
@@ -924,7 +938,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr ""
+msgstr "Belöningstyp"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
@@ -972,12 +986,12 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select products"
-msgstr ""
+msgstr "Välj produkter"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select reward product"
-msgstr ""
+msgstr "Välj belöningsprodukt"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
@@ -1015,17 +1029,17 @@ msgstr "Startdatum"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__state
 msgid "State"
-msgstr "Stat"
+msgstr "Status"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
 msgid "Tax Excluded"
-msgstr ""
+msgstr "Ex moms"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_included
 msgid "Tax Included"
-msgstr ""
+msgstr "Tax Included"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -1041,13 +1055,13 @@ msgstr ""
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_fixed_amount
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_fixed_amount
 msgid "The discount in fixed amount"
-msgstr ""
+msgstr "Rabatten i fast belopp"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_percentage
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_percentage
 msgid "The discount in percentage, between 1 and 100"
-msgstr ""
+msgstr "Rabatten i procent, mellan 1 och 100"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_program.py:0
@@ -1088,17 +1102,17 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
 msgid "Used"
-msgstr ""
+msgstr "Använda"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__new
 msgid "Valid"
-msgstr ""
+msgstr "Giltig"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Validity"
-msgstr ""
+msgstr "Giltighet"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__validity_duration
@@ -1120,7 +1134,7 @@ msgstr ""
 #. module: coupon
 #: model:mail.template,report_name:coupon.mail_template_sale_coupon
 msgid "Your Coupon Code"
-msgstr ""
+msgstr "Din kupongkod"
 
 #. module: coupon
 #: model:mail.template,subject:coupon.mail_template_sale_coupon

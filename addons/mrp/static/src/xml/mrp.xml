@@ -3,6 +3,9 @@
     <t t-name="mrp.button">
         <div class="o_list_buttons o_mrp_bom_report_buttons">
             <button type="button" class="btn btn-primary o_mrp_bom_print">Print</button>
+            <t t-if="is_variant_applied">
+                <button type="button" class="btn btn-primary o_mrp_bom_print_all_variants">Print All Variants</button>
+            </t>
             <button type="button" class="btn btn-primary o_mrp_bom_print_unfolded">Print Unfolded</button>
         </div>
     </t>

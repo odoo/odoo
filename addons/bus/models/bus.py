@@ -2,6 +2,7 @@
 import datetime
 import json
 import logging
+import os
 import random
 import select
 import threading
@@ -12,10 +13,15 @@ from odoo import api, fields, models, SUPERUSER_ID
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import date_utils
 
+from psycopg2 import sql
+
 _logger = logging.getLogger(__name__)
 
 # longpolling timeout connection
 TIMEOUT = 50
+
+# custom function to call instead of NOTIFY postgresql command (opt-in)
+ODOO_NOTIFY_FUNCTION = os.environ.get('ODOO_NOTIFY_FUNCTION')
 
 #----------------------------------------------------------
 # Bus
@@ -62,7 +68,11 @@ class ImBus(models.Model):
             @self.env.cr.postcommit.add
             def notify():
                 with odoo.sql_db.db_connect('postgres').cursor() as cr:
-                    cr.execute("notify imbus, %s", (json_dump(list(channels)),))
+                    if ODOO_NOTIFY_FUNCTION:
+                        query = sql.SQL("SELECT {}('imbus', %s)").format(sql.Identifier(ODOO_NOTIFY_FUNCTION))
+                    else:
+                        query = "NOTIFY imbus, %s"
+                    cr.execute(query, (json_dump(list(channels)), ))
 
     @api.model
     def sendone(self, channel, message):
@@ -99,6 +109,7 @@ class ImDispatch(object):
     def __init__(self):
         self.channels = {}
         self.started = False
+        self.Event = None
 
     def poll(self, dbname, channels, last, options=None, timeout=TIMEOUT):
         if options is None:
@@ -181,7 +192,7 @@ class ImDispatch(object):
     def start(self):
         if odoo.evented:
             # gevent mode
-            import gevent
+            import gevent.event  # pylint: disable=import-outside-toplevel
             self.Event = gevent.event.Event
             gevent.spawn(self.run)
         else:
@@ -193,7 +204,7 @@ class ImDispatch(object):
         self.started = True
         return self
 
-dispatch = None
-if not odoo.multi_process or odoo.evented:
-    # We only use the event dispatcher in threaded and gevent mode
-    dispatch = ImDispatch()
+# Partially undo a2ed3d3d5bdb6025a1ba14ad557a115a86413e65
+# IMDispatch has a lazy start, so we could initialize it anyway
+# And this avoids the Bus unavailable error messages
+dispatch = ImDispatch()

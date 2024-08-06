@@ -5,6 +5,7 @@ from werkzeug import urls
 
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 
 class PayUlatamCommon(PaymentAcquirerCommon):
@@ -23,6 +24,22 @@ class PayUlatamCommon(PaymentAcquirerCommon):
 
 @tagged('post_install', '-at_install', 'external', '-standard')
 class PayUlatamForm(PayUlatamCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(PayUlatamForm, cls).setUpClass()
+
+        # typical data posted by payulatam after client has successfully paid
+        cls.payulatam_post_confirmation_approved_data = {
+            'currency': 'EUR',
+            'reference_sale': 'Test Transaction',
+            'response_message_pol': 'APPROVED',
+            'sign': 'df4ce433330a1400df065948d3e5795e',
+            'state_pol': '4',
+            'transaction_id': '7008bc34-8258-4857-b866-7d4d7982bd73',
+            'value': '0.01',
+            'merchant_id': 'dummy',
+        }
 
     def test_10_payulatam_form_render(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
@@ -60,6 +77,7 @@ class PayUlatamForm(PayUlatamCommon):
             'taxReturnBase': '0',
             'buyerEmail': 'norbert.buyer@example.com',
             'responseUrl': urls.url_join(base_url, '/payment/payulatam/response'),
+            'confirmationUrl': urls.url_join(base_url, '/payment/payulatam/webhook'),
             'extra1': None
         }
         # check form result
@@ -94,7 +112,7 @@ class PayUlatamForm(PayUlatamCommon):
             'pseBank': '',
             'referenceCode': 'test_ref_10',
             'reference_pol': '844164756',
-            'signature': '88f11d693d3551419f86850948d731ba',
+            'signature': '31af67235afba03be244224fe4d71da8',
             'pseReference3': '',
             'buyerEmail': 'admin@yourcompany.example.com',
             'lapResponseCode': 'PENDING_TRANSACTION_CONFIRMATION',
@@ -152,3 +170,86 @@ class PayUlatamForm(PayUlatamCommon):
         # check transaction
         self.assertEqual(tx.state, 'done', 'payulatam: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'payulatam: wrong txn_id after receiving a valid pending notification')
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_confirmation_webhook_approved(self):
+        tx = self.env['payment.transaction'].create({
+            'amount': 0.01,
+            'acquirer_id': self.payulatam.id,
+            'currency_id': self.currency_euro.id,
+            'reference': 'Test Transaction',
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id,
+            'partner_id': self.buyer_id})
+        self.assertEqual(tx.state, 'draft')
+
+        res = self.url_open('/payment/payulatam/webhook',
+                            data=self.payulatam_post_confirmation_approved_data)
+        tx.invalidate_cache()
+        self.assertEqual(res.status_code, 200, 'Should be OK')
+        self.assertEqual(res.text, '', "Body should be empty")
+        self.assertEqual(tx.state, 'done')
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_confirmation_webhook_approved_bad_signature(self):
+        tx = self.env['payment.transaction'].create({
+            'amount': 0.01,
+            'acquirer_id': self.payulatam.id,
+            'currency_id': self.currency_euro.id,
+            'reference': 'Test Transaction',
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id,
+            'partner_id': self.buyer_id})
+        self.assertEqual(tx.state, 'draft')
+
+        post_data = self.payulatam_post_confirmation_approved_data
+        post_data['sign'] = "wrong signature"
+
+        res = self.url_open('/payment/payulatam/webhook', data=post_data)
+        tx.invalidate_cache()
+        self.assertEqual(res.status_code, 200, 'Should be OK')
+        self.assertEqual(tx.state, 'draft')
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_confirmation_webhook_declined(self):
+        tx = self.env['payment.transaction'].create({
+            'amount': 0.01,
+            'acquirer_id': self.payulatam.id,
+            'currency_id': self.currency_euro.id,
+            'reference': 'Test Transaction',
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id,
+            'partner_id': self.buyer_id})
+        self.assertEqual(tx.state, 'draft')
+
+        post_data = self.payulatam_post_confirmation_approved_data
+        post_data['state_pol'] = '6'
+        post_data['response_message_pol'] = 'DECLINED'
+        post_data['sign'] = 'd2f074547e8b79d3ddb333e10f0de8b7'
+        res = self.url_open('/payment/payulatam/webhook', data=post_data)
+        tx.invalidate_cache()
+        self.assertEqual(res.status_code, 200, 'Should be OK')
+        self.assertEqual(res.text, '', "Body should be empty")
+        self.assertEqual(tx.state, 'cancel')
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_confirmation_webhook_expired(self):
+        tx = self.env['payment.transaction'].create({
+            'amount': 0.01,
+            'acquirer_id': self.payulatam.id,
+            'currency_id': self.currency_euro.id,
+            'reference': 'Test Transaction',
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id,
+            'partner_id': self.buyer_id})
+        self.assertEqual(tx.state, 'draft')
+
+        post_data = self.payulatam_post_confirmation_approved_data
+        post_data['state_pol'] = '5'
+        post_data['response_message_pol'] = 'EXPIRED'
+        post_data['sign'] = 'f8eb1d10496b87af9706fedf97200619'
+        res = self.url_open('/payment/payulatam/webhook', data=post_data)
+        tx.invalidate_cache()
+        self.assertEqual(res.status_code, 200, 'Should be OK')
+        self.assertEqual(res.text, '', "Body should be empty")
+        self.assertEqual(tx.state, 'cancel')

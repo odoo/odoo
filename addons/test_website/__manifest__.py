@@ -14,6 +14,7 @@ dependencies. Neither we want to add in website module some routes, views and
 models which only purpose is to run tests.""",
     'depends': [
         'website',
+        'theme_default',
     ],
     'data': [
         'views/templates.xml',
@@ -22,4 +23,5 @@ models which only purpose is to run tests.""",
     ],
     'installable': True,
     'application': False,
+    'license': 'LGPL-3',
 }

@@ -6,12 +6,15 @@
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
 # e2f <projects@e2f.com>, 2020
 # DE T1 <e2f8846@yahoo.com>, 2020
-# Martin Trigaux, 2020
 # Leon Grill <leg@odoo.com>, 2020
-# Chris Egal <sodaswed@web.de>, 2020
 # Malin Kienke <malin.kienke@initos.com>, 2020
 # Wolfgang Taferner, 2020
 # Marco Broscheit <marco.broscheit@posteo.de>, 2020
+# Chris Egal <sodaswed@web.de>, 2021
+# Robert Förster <hello@suppliot.eu>, 2021
+# Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2021
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +22,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Marco Broscheit <marco.broscheit@posteo.de>, 2020\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -32,6 +35,12 @@ msgstr ""
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr " (Geschätzte Kosten: %s )"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Kostenloser Versand"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -86,18 +95,18 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight (estimated): </span>"
-msgstr ""
+msgstr "<span> - Gewicht (geschätzt):</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_stock_report_delivery_no_package_section_line
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight: </span>"
-msgstr ""
+msgstr "<span>  - Gewicht: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr ""
+msgstr "<span>Versandgewicht: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -125,6 +134,8 @@ msgid ""
 "<strong>Total Weight:</strong>\n"
 "                <br/>"
 msgstr ""
+"<strong>Gesamtgewicht:</strong>\n"
+"                <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -182,6 +193,7 @@ msgstr ""
 "wird"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "Archiviert"
@@ -339,13 +351,13 @@ msgstr "Auswahlassistent für Lieferpakete"
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr "Lieferungen"
+msgstr "Versandverpackungen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
-msgstr "Lieferungen"
+msgstr "Versandverpackungen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -628,7 +640,7 @@ msgstr "Länge muss positiv sein"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__length_uom_name
 msgid "Length unit of measure label"
-msgstr ""
+msgstr "Lengenmaßeinheit Etikett"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -714,7 +726,7 @@ msgstr "Auftrag"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "Verpackung"
+msgstr "Paket"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__shipper_package_code
@@ -882,6 +894,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
+"Sendung an den Spediteur übergeben %(carrier_name)s für den Versand mit "
+"Trackingnummer %(ref)s<br/>Kosten: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -1009,11 +1023,16 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
+"Gesamtgewicht von Paketen und Produkten, die nicht in einem Paket enthalten "
+"sind. Bei Paketen, für die kein Versandgewicht angegeben ist, wird "
+"standardmäßig das Gesamtgewicht der Produkte verwendet. Dies ist das "
+"Gewicht, das zur Berechnung der Versandkosten verwendet wird."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
 msgstr ""
+"Gesamtgewicht der Produkte, die sich nicht in einer Verpackung befinden."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
@@ -1136,6 +1155,19 @@ msgstr "Breite"
 #: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
 msgid "Width must be positive"
 msgstr "Breite muss positiv sein"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
+"Sie können die Versandkosten für eine Bestellung, die bereits fakturiert wurde, nicht aktualisieren!\n"
+"\n"
+"Die folgenden Lieferzeilen (Produkt, fakturierte Menge und Preis) sind bereits bearbeitet worden:\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

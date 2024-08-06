@@ -66,7 +66,7 @@ according to the enabled options.
                 <span t-if="date_begin" class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
                     <i class="fa fa-calendar-o mr-2 text-muted"/>
                     <t t-esc="date_begin" t-options="{'widget': 'date', 'format': 'MMM yyyy'}"></t>
-                    <a t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="btn border-0 py-1">&#215;</a>
+                    <a t-attf-href="#{blog_url(date_begin=False, date_end=False, tag=tag)}" class="btn border-0 py-1">&#215;</a>
                 </span>
                 <hr class="mt-2"/>
             </div>

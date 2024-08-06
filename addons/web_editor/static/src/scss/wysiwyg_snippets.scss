@@ -398,10 +398,7 @@ body.editor_enable.editor_has_snippets {
                 border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
                 margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
                 user-select: none;
-
-                cursor: pointer;
-                cursor: copy;
-                cursor: grab;
+                @include o-grab-cursor;
 
                 .oe_snippet_thumbnail_title {
                     display: block;
@@ -749,6 +746,9 @@ body.editor_enable.editor_has_snippets {
                 background: none;
             }
 
+            we-toggler:empty::before {
+                content: '/';
+            }
             we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
@@ -758,7 +758,17 @@ body.editor_enable.editor_has_snippets {
                     max-height: 600px;
                     overflow-y: auto;
                 }
+                &:empty {
+                    line-height: $o-we-sidebar-content-field-dropdown-item-height;
+                    background-color: $o-we-sidebar-content-field-dropdown-item-bg;
+                    color: $o-we-sidebar-content-field-dropdown-item-color;
+                    // Padding from we-icon-button mixin.
+                    padding-left: 2 * $o-we-sidebar-content-field-control-item-spacing + $o-we-sidebar-content-field-control-item-size;
 
+                    &::before {
+                        content: '/';
+                    }
+                }
                 > we-title {
                     line-height: $o-we-sidebar-content-field-dropdown-item-height;
                 }
@@ -828,13 +838,17 @@ body.editor_enable.editor_has_snippets {
                 }
             }
             .o_we_pager_next, .o_we_pager_prev {
+                margin: 0.3em;
                 padding: $o-we-sidebar-content-field-label-spacing;
                 cursor: pointer;
+                border: $o-we-item-border-width solid currentColor;
+                border-radius: $o-we-item-border-radius;
             }
             we-select-page {
                 display: none;
                 width: 100%;
-                max-height: 600px;
+                // Cut the last visible option in the list to understand that we can scroll.
+                max-height: 75px * 7.5;
                 overflow-y: auto;
 
                 &.active {
@@ -940,6 +954,7 @@ body.editor_enable.editor_has_snippets {
                 height: $o-we-sidebar-content-field-colorpicker-size;
                 border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
                 border-radius: 10rem;
+                cursor: pointer;
 
                 &::after {
                     box-shadow: $o-we-sidebar-content-field-colorpicker-shadow;
@@ -996,13 +1011,8 @@ body.editor_enable.editor_has_snippets {
                         width: 28px;
                     }
                 }
-                &.o_we_matrix_five_col {
-                    width: auto;
-                    td, th {
-                        input {
-                            width: 43px;
-                        }
-                    }
+                tr:last-child we-button {
+                    overflow: visible;
                 }
             }
         }
@@ -1248,6 +1258,11 @@ body.editor_enable.editor_has_snippets {
                     position: static;
                     transform: none;
                 }
+
+                &.o_we_collapse_toggler_rtl::after {
+                    scale: -1 1;
+                }
+
                 &.active {
 
                     &::after {
@@ -1338,8 +1353,14 @@ body.editor_enable.editor_has_snippets {
 
             &::after {
                 content: "";
-                @include o-position-absolute(0, 0, 0, 0);
+                // We use a "sticky" position because it ensures that the
+                // backdrop covers the entire "customize panel" element, even
+                // when it has a vertical scrollbar and is scrolled to the
+                // bottom.
+                @include o-position-sticky(auto, 0, 0, 0);
                 display: block;
+                height: 100vh;
+                margin-top: -100vh;
                 pointer-events: none;
                 background: $o-we-sidebar-content-backdrop-bg;
             }
@@ -1441,11 +1462,27 @@ body.editor_enable.editor_has_snippets {
             border: 0;
             background-color: transparent;
             background-clip: padding-box;
+
+            // Borders instead of margins so that the user smoothly goes from
+            // one button to another without leaving them.
             border-top: $o-we-sidebar-content-field-spacing solid transparent;
             border-bottom: $o-we-sidebar-content-field-spacing solid transparent;
 
             + .o_we_color_combination_btn {
                 margin-top: $o-we-sidebar-content-field-spacing * -.5;
+            }
+
+            &.selected {
+                > .o_we_cc_preview_wrapper {
+                    box-shadow: 0 0 0 1px $o-we-color-success !important;
+                }
+                .o_we_color_combination_btn_title::before {
+                    content: "\f00c";
+                    margin-right: $o-we-sidebar-content-field-spacing;
+                    font-size: 0.8em;
+                    font-family: FontAwesome;
+                    color: $o-we-color-success;
+                }
             }
 
             .o_we_cc_preview_wrapper:after {
@@ -1517,6 +1554,11 @@ body.editor_enable.editor_has_snippets {
             float: left;
             margin: 0 (-$o-we-dropzone-size/2);
         }
+    }
+    &.oe_drop_zone_danger {
+        background-color: rgba($o-we-color-danger, 0.15);
+        color: $o-we-color-danger;
+        border-color: $o-we-color-danger;
     }
 }
 
@@ -1697,9 +1739,14 @@ body.editor_enable.editor_has_snippets {
                         color: $o-we-fg-lighter;
                     }
                 }
-                > .oe_snippet_remove {
+                // TODO In master: restore `.oe_snippet_remove`.
+                > .fa-trash {
                     margin-left: $o-we-sidebar-content-field-button-group-button-spacing;
-                    background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);;
+                    background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);
+                    // TODO In master: use `.o_disabled`.
+                    &:not(.oe_snippet_remove) {
+                        opacity: 0.5;
+                    }
                 }
                 > .o_overlay_move_options > .o_move_handle {
                     cursor: move;
@@ -1720,9 +1767,14 @@ body.editor_enable.editor_has_snippets {
                             }
                         }
                     }
-                    > .oe_snippet_remove:hover {
+                    // TODO In master: restore `.oe_snippet_remove`.
+                    > .fa-trash:hover {
                         border-color: mix($o-we-color-danger, $o-we-sidebar-content-field-pressed-bg, .4);
                         background-color: $o-we-color-danger;
+                        // TODO In master: use `.o_disabled`.
+                        &:not(.oe_snippet_remove) {
+                            opacity: 0.5;
+                        }
                     }
                 }
             }
@@ -1751,7 +1803,7 @@ body.editor_enable.editor_has_snippets {
             z-index: auto;
 
             .o_we_overlay_content {
-                cursor: grab;
+                @include o-grab-cursor;
 
                 .o_we_grabbing {
                     cursor: grabbing;

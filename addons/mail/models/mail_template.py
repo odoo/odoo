@@ -67,6 +67,21 @@ class MailTemplate(models.Model):
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
 
+    def _fix_attachment_ownership(self):
+        for record in self:
+            record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
+        return self
+
+    @api.model_create_multi
+    def create(self, values_list):
+        return super().create(values_list)\
+            ._fix_attachment_ownership()
+
+    def write(self, vals):
+        super().write(vals)
+        self._fix_attachment_ownership()
+        return True
+
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
@@ -139,7 +154,7 @@ class MailTemplate(models.Model):
             partner_to = values.pop('partner_to', '')
             if partner_to:
                 # placeholders could generate '', 3, 2 due to some empty field values
-                tpl_partner_ids = [int(pid) for pid in partner_to.split(',') if pid]
+                tpl_partner_ids = [int(pid.strip()) for pid in partner_to.split(',') if (pid and pid.strip().isdigit())]
                 partner_ids += self.env['res.partner'].sudo().browse(tpl_partner_ids).exists().ids
             results[res_id]['partner_ids'] = partner_ids
         return results
@@ -261,9 +276,16 @@ class MailTemplate(models.Model):
                 _logger.warning('QWeb template %s not found when sending template %s. Sending without layouting.' % (notif_layout, self.name))
             else:
                 record = self.env[self.model].browse(res_id)
+                model = self.env['ir.model']._get(record._name)
+
+                if self.lang:
+                    lang = self._render_lang([res_id])[res_id]
+                    template = template.with_context(lang=lang)
+                    model = model.with_context(lang=lang)
+
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
-                    'model_description': self.env['ir.model']._get(record._name).display_name,
+                    'model_description': model.display_name,
                     'company': 'company_id' in record and record['company_id'] or self.env.company,
                     'record': record,
                 }

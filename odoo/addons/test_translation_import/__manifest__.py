@@ -13,5 +13,6 @@
     'auto_install': False,
     'qweb': [
         'static/src/xml/js_templates.xml',
-    ]
+    ],
+    'license': 'LGPL-3',
 }

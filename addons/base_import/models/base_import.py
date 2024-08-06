@@ -874,7 +874,7 @@ class Import(models.TransientModel):
 
             return base64.b64encode(content)
         except Exception as e:
-            _logger.exception(e)
+            _logger.warning(e, exc_info=True)
             raise ValueError(_("Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s") % {
                 'url': url,
                 'field_name': field,

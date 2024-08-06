@@ -173,11 +173,12 @@ async function _getMockedOwlEnv(params, mockServer) {
 function _mockGlobalObjects(params) {
     // store initial session state (for restoration)
     const initialSession = Object.assign({}, session);
-    // patch session
-    Object.assign(session, {
+    const sessionPatch = Object.assign({
         getTZOffset() { return 0; },
         async user_has_group() { return false; },
     }, params.session);
+    // patch session
+    Object.assign(session, sessionPatch);
 
     // patch config
     let initialConfig;
@@ -202,10 +203,8 @@ function _mockGlobalObjects(params) {
     // build the cleanUp function to restore everything at the end of the test
     function cleanUp() {
         let key;
-        if ('session' in params) {
-            for (key in session) {
-                delete session[key];
-            }
+        for (key in sessionPatch) {
+            delete session[key];
         }
         Object.assign(session, initialSession);
         if ('config' in params) {

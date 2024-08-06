@@ -4,8 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Jorge Luis Alfonso <jlalfonso21@gmail.com>, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2021
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,13 +15,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2021\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -48,7 +50,7 @@ msgid ""
 "right, please contact Human Resource staff"
 msgstr ""
 "<b>¡Advertencia! El último registro fue hace más de 12 horas.</b><br/> Si "
-"esto no está bien, comuníquese con el personal de Recursos Humanos"
+"esto no es correcto, comunícate con el personal de Recursos Humanos"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -88,7 +90,7 @@ msgstr "<span class=\"o_stat_text\">Asistió desde</span>"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Not Attended Since</span>"
-msgstr "<span class=\"o_stat_text\">No atendido desde</span>"
+msgstr "<span class=\"o_stat_text\">No ha atendido desde</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -107,6 +109,8 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -114,8 +118,8 @@ msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
-"Agregue algunos empleados para poder seleccionar un empleado aquí y registrar su ingreso / salida\n"
-"                 Para crear empleados, vaya al menú de Empleados."
+"Agrega algunos empleados para poder seleccionar un empleado aquíy registrar su entrada y salida.\n"
+"                Para crear empleados, dirígete al menú de Empleados."
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
@@ -194,8 +198,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
-"No se puede crear una nueva entrada para %(empl_name)s, el empleado no ha "
-"registrado su salida desde %(datetime)s"
+"No se puede crear una nuevo registro de asistencia para %(empl_name)s, el "
+"empleado no ha registrado su salida desde %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -205,8 +209,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
-"No se puede crear un nueva entrada para %(empl_name)s, sus entrada ya fue "
-"registrada a las %(datetime)s"
+"No se puede crear un nuevo registro de asistencia para %(empl_name)s, su "
+"entrada ya fue registrada a las %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -284,19 +288,19 @@ msgstr "Salida registrada a las"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Click to"
-msgstr "Pulse para"
+msgstr "Haz clic para"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Company Logo"
-msgstr "Logotipo de la compañia"
+msgstr "Logo de la empresa"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
@@ -337,15 +341,14 @@ msgstr "Nombre mostrado"
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr ""
-"Temprano a la cama y temprano para levantarse, hace a un hombre sano, rico y"
-" sabio"
+"Acostarse temprano y levantarse temprano, hacen al hombre sano, rico y sabio"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
-msgstr "Desayuna como rey, come como príncipe y cena como medigo"
+msgstr "Desayuna como rey, come como príncipe y cena como mendigo"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
@@ -363,7 +366,7 @@ msgstr "PIN del empleado"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Employee attendances"
-msgstr "Asistencia empleado"
+msgstr "Asistencias del empleado"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
@@ -388,7 +391,7 @@ msgstr "Error: No se pudo encontrar al empleado correspondiente."
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "First come, first served"
-msgstr "Primer llegado, primer servido"
+msgstr "Primero en llegar, primer servido"
 
 #. module: hr_attendance
 #. openerp-web
@@ -419,14 +422,14 @@ msgstr "Buenas tardes"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good evening"
-msgstr "Buena noche"
+msgstr "Buenas noches"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good morning"
-msgstr "Buen día"
+msgstr "Buenos días"
 
 #. module: hr_attendance
 #. openerp-web
@@ -454,28 +457,28 @@ msgstr "Agrupar por"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good afternoon"
-msgstr "Que tenga una buena tarde"
+msgstr "Ten una buena tarde"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good day!"
-msgstr "¡Que tenga un buen día!"
+msgstr "¡Ten un buen día!"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good evening"
-msgstr "Que tenga una buena noche"
+msgstr "Ten una buena noche"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a nice lunch!"
-msgstr "Ten un buen almuerzo!"
+msgstr "¡Ten un buen almuerzo!"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -524,7 +527,7 @@ msgstr "ID"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Identify Manually"
-msgstr ""
+msgstr "Identificar manualmente"
 
 #. module: hr_attendance
 #. openerp-web
@@ -543,7 +546,7 @@ msgstr "Petición inválida, por favor regrese al menú principal."
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
 msgid "Kiosk Attendance"
-msgstr ""
+msgstr "Quiosco de asistencia"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
@@ -614,13 +617,14 @@ msgstr "No hay registros de asistencia para mostrar"
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_graph
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_graph_filtered
 msgid "No data yet!"
-msgstr "No hay información aún"
+msgstr "¡No hay información aún!"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "No employee corresponding to Badge ID '%(barcode)s.'"
 msgstr ""
+"No se encontró ingún empleado correspondiente al ID número '%(barcode)s.'"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -638,7 +642,7 @@ msgstr "OK"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer"
-msgstr "Empleado RRHH"
+msgstr "Oficial"
 
 #. module: hr_attendance
 #. openerp-web
@@ -652,7 +656,7 @@ msgstr "Por favor ingrese su PIN para"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please return to the main menu."
-msgstr "Por favor regrese al menú principal."
+msgstr "Regresa al menú principal."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
@@ -664,12 +668,14 @@ msgstr "Informes"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Scan your badge"
-msgstr "Escaneé su identificación"
+msgstr "Escanea tu identificación"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr "Configurar PIN en la ficha del empleado (en la pestaña de RRHH)."
+msgstr ""
+"Establece códigos PIN en la ficha del empleado (en la pestaña de ajustes de "
+"RRHH)."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -721,7 +727,7 @@ msgstr "Al que madruga Dios le ayuda"
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
 msgid ""
 "The user will be able to open the kiosk mode and validate the employee PIN."
-msgstr ""
+msgstr "El usuario podrá abrir el modo kiosco y validar el PIN del empleado."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -738,8 +744,8 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
-"El usuario tendrá que ingresar manualmente su PIN para registrar entradas y "
-"salidas desde la pantalla de la compañia."
+"El usuario tendrá que ingresar su PIN para registrar manualmente entradas y "
+"salidas desde la pantalla de la empresa."
 
 #. module: hr_attendance
 #. openerp-web
@@ -752,7 +758,7 @@ msgstr "Horas laborales de hoy:"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
-msgstr "Use códigos PIN para registrar entrada en el Modo Quiosco"
+msgstr "Usar códigos PIN para registrar asistencias en el Modo Quiosco"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -765,7 +771,7 @@ msgstr "Usuarios"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Want to check out?"
-msgstr "¿Quiere registrar su salida?"
+msgstr "¿Quieres registrar su salida?"
 
 #. module: hr_attendance
 #. openerp-web
@@ -775,8 +781,8 @@ msgid ""
 "Warning : Your user should be linked to an employee to use attendance. "
 "Please contact your administrator."
 msgstr ""
-"Advertencia: su usuario debe estar vinculado a un empleado para usar el "
-"modulo de asistencia. Por favor contacte a su administrador."
+"Advertencia: tu usuario debe estar vinculado a un empleado para usar el "
+"modulo de asistencia. Por favor, contacta a tu administrador."
 
 #. module: hr_attendance
 #. openerp-web
@@ -826,7 +832,7 @@ msgstr "PIN incorrecto"
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "You cannot duplicate an attendance."
-msgstr "No puede duplicar un registro de asistencia."
+msgstr "No puedes duplicar un registro de asistencia."
 
 #. module: hr_attendance
 #. openerp-web

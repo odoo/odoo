@@ -3,8 +3,11 @@
 
 <t t-name="WebClient.DebugManager">
     <li class="o_debug_manager" role="menuitem">
-        <a role="button" href="#" class="o_debug_mode" t-attf-title="Open Developer Tools#{widget.debug_mode_help}"
-                         t-att-data-debug-mode="widget.debug_mode" aria-label="Open Developer Tools#{widget.debug_mode_help}"
+        <t t-set="_devtool_button_title">Open Developer Tools</t>
+        <a role="button" href="#" class="o_debug_mode"
+                         t-att-title="_devtool_button_title + widget.debug_mode_help"
+                         t-att-aria-label="_devtool_button_title + widget.debug_mode_help"
+                         t-att-data-debug-mode="widget.debug_mode"
                          data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-display="static">
             <span class="fa fa-bug"/>
         </a>

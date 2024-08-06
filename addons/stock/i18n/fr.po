@@ -14,18 +14,18 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Simon CARRIER <carrier.sim@gmail.com>, 2020
 # Guilhaume Bordiau <github@guilhaume.fr>, 2020
-# Alexandra Jubert <aju@odoo.com>, 2020
+# Alexandra Jubert, 2020
 # Nathan Grognet <ngr@odoo.com>, 2020
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2020
 # Clo <clo@odoo.com>, 2020
 # Micky Jault <micky037@hotmail.fr>, 2020
 # Lucas Deliege <lud@openerp.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
+# bb76cd9ac0cb7e20167a14728edb858b, 2020
 # Fabri Yohann <psn@fabri.pw>, 2020
 # Xavier Symons <xsy@openerp.com>, 2020
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
-# bb76cd9ac0cb7e20167a14728edb858b, 2020
 # 31c77b784710e4a287a92d851a40e039, 2020
 # Loic <loic.richard2@gmail.com>, 2020
 # Melanie Bernard <mbe@odoo.com>, 2020
@@ -53,26 +53,28 @@
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # guillaume bauer <guillaume.bauer@syentys.fr>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Yael Terrettaz <yael.terrettaz@camptocamp.com>, 2021
-# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
+# anthony chaussin <chaussin.anthony@gmail.com>, 2021
 # Christophe Ricevuto <cri@nalios.be>, 2021
 # Alexis de Lattre <alexis@via.ecp.fr>, 2021
+# qdelcourte <delcourte.quentin@hotmail.com>, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:23+0000\n"
+"POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -503,6 +505,11 @@ msgid "<span>Assign Serial Numbers</span>"
 msgstr "<span>Attribuer numéro de série</span>"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+msgid "<span>Clear All</span>"
+msgstr "<span>Effacer tout</span>"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "<span>LN/SN:</span>"
 msgstr "<span>LN/SN:</span>"
@@ -714,7 +721,7 @@ msgstr "Activités"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Activité exception décoration"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__activity_state
@@ -1309,6 +1316,11 @@ msgid "Choose your date"
 msgstr "Choisir la date"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+msgid "Clear Lines"
+msgstr "Effacer les lignes"
+
+#. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -1403,6 +1415,7 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_level_form_edit_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -1666,6 +1679,16 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: stock
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"Creating a new warehouse will automatically activate the Storage Locations "
+"setting"
+msgstr ""
+"Créer un nouvel entrepôt activera automatiquement les Emplacements  dans la "
+"configuration"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -1739,8 +1762,8 @@ msgstr "Emplacements clients"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
-msgstr "Connecteur DHL USA"
+msgid "DHL Express Connector"
+msgstr "Connecteur DHL Express"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -1855,10 +1878,10 @@ msgstr "Routes par défaut à travers l'entrepôt"
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
-"quotations or draft manufacturing orders to resupply your stock."
+"quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Définissez une règle de stock minimum pour qu'Odoo crée automatiquement des "
-"demandes de prix ou des ordres de fabrication pour réassortir votre stock."
+"Définissez un règle de stock minimum pour qu'Odoo crée automatiquement des "
+"achats ou des ordres de fabrication pour réapprovisionner votre stock."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2126,6 +2149,7 @@ msgid "Difference different than zero"
 msgstr "Différence différente de zéro"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.package_level_form_edit_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -2205,7 +2229,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__display_name
 #: model:ir.model.fields,field_description:stock.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: stock
 #: model:res.groups,name:stock.group_lot_on_delivery_slip
@@ -3189,16 +3213,27 @@ msgid "Invalid domain left operand %s"
 msgstr "Opérande gauche du domaine non valide: %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Opérateur du domaine non valide: %s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#, python-format
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
+"Opérande droit du domaine non valide '%s'. Il doit être de type "
+"Entier/Flottant"
+
+#. module: stock
 #: code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "Opérande droit du domaine non valide: %s"
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Configuration de règles non valide, la règle suivante entraîne une boucle "
+"infinie : %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
@@ -3372,22 +3407,42 @@ msgid "Is quantity done editable"
 msgstr "La quantité traitée est-elle modifiable ?"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:0
+#: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
 msgstr ""
-"La quantité de %s réservée ne peut pas être supérieure à la quantité en "
-"stock."
+"il n'est pas autorisé d'importer une quantité réservée, vous devez utiliser "
+"la quantité directement."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
 msgstr ""
-"La quantité de %s débloquée ne peut pas être supérieure à la quantité en "
-"stock."
+"Il n'est pas possible de débloquer plus de produits de %s que ce que vous "
+"avez en stock. La correction pourrait débloquer certaines opérations avec "
+"des produits problématiques."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
+msgstr ""
+"Il n'est pas possible de débloquer plus de produits de %s que ce que vous "
+"avez en stock. Veuillez contacter un administrateur."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr "Essayez notre action automatisée pour y remédier"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3994,6 +4049,13 @@ msgstr "Routes en plusieurs étapes"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
 msgid "Multiple Quantity"
 msgstr "Quantité Multiple de"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory__my_activity_date_deadline
+#: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Échéance de mon activité"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -5214,6 +5276,17 @@ msgstr "Quant"
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+"Les quantités sont supprimées automatiquement le cas échéant. Si vous devez "
+"les supprimer manuellement, demandez à un gestionnaire des stocks de le "
+"faire."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
 "La création de quant n'est pas autorisée, vous ne pouvez réaliser cette "
@@ -5412,7 +5485,7 @@ msgstr "Réceptions"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Receive From"
-msgstr "Réception de"
+msgstr "Recevoir de"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
@@ -6821,10 +6894,8 @@ msgstr "Ce produit n'est pas disponible en quantité suffisante"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
 "La quantité renseignée pour l' article \"%s\" ne respecte pas les règles "
 "d'arrondissement définies dans l'unité de mesure \"%s\". Veuillez changer la"
@@ -7063,10 +7134,30 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
-"Ce produit a été utilisé dans au moins un mouvement de stock. Il n'est pas "
-"conseillé de changer le type de produit car cela peut entraîner des "
+"Ce produit a été utilisé dans au moins un mouvement d'inventaire. Il n'est "
+"pas conseillé de changer le type de produit car cela peut entraîner des "
 "incohérences. Une meilleure solution pourrait consister à archiver le "
 "produit et à en créer un nouveau à la place."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"La société de ce produit ne peut être modifiée tant qu'il existe des "
+"quantités de ce produit appartenant à une autre société."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"La société de ce produit ne peut pas être modifiée tant qu'il y a des "
+"mouvements de stock de ce produit appartenant à une autre société."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7212,10 +7303,11 @@ msgid ""
 " life, alert. Such dates are set automatically at lot/serial number creation"
 " based on values set on the product (in days)."
 msgstr ""
-"Les dates suivantes peuvent être suivies via les numéros de lot et de série "
-": date de péremption, date de retrait, date d'expiration et date d'alerte. "
-"Ces dates sont définies automatiquement lors de la création du numéro de "
-"lot/série en fonction de valeurs spécifiées pour chaque produit (en jours)."
+"Les dates suivantes peuvent être suivies via les numéros de lot et de "
+"série : date de péremption, date de retrait, date d'expiration et date "
+"d'alerte. Ces dates sont définies automatiquement lors de la création du "
+"numéro de lot/série en fonction de valeurs spécifiées pour chaque produit "
+"(en jours)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7446,8 +7538,8 @@ msgstr "Unités de mesure"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unity of measure"
-msgstr "Untié de mesure"
+msgid "Unit of measure"
+msgstr "Unité de mesure"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7493,6 +7585,14 @@ msgstr "Compteur de messages non lus"
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Unreserve"
 msgstr "Annuler la réservation"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
+"Recherche non prise en charge sur %s en dehors d'un ajustement d'inventaire"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
@@ -7759,6 +7859,7 @@ msgstr "Avertir sur Quantité de Rebut insuffisante"
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/models/stock_move_line.py:0
+#: code:addons/stock/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__warning
 #, python-format
 msgid "Warning"
@@ -8017,6 +8118,13 @@ msgstr ""
 " la réservation du mouvement de stock."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+"Vous ne pouvez pas modifier le type d'un produit qui a déjà été utilisé."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8061,6 +8169,16 @@ msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Vous pouvez uniquement traiter 1.0 %s des articles avec un numéro de série "
 "unique."
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You can't desactivate the multi-location if you have more than once "
+"warehouse by company"
+msgstr ""
+"Vous ne pouvez pas désactiver les emplacements multiples si vous avez plus "
+"d'un entrepôt par société"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -8116,8 +8234,8 @@ msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
-"Vous ne pouvez pas changer le ratio de cette unité de mesure car certains "
-"articles dans cette Udm ont déjà été transférés ou sont actuellement "
+"Vous ne pouvez pas changer le ratio de cette unité de mesure, car certains "
+"produits avec cette UdM ont déjà été transférés ou sont actuellement "
 "réservés."
 
 #. module: stock
@@ -8185,8 +8303,10 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "Vous ne pouvez pas diviser un mouvement de stock  l'état est \"Terminé."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
+"Vous ne pouvez pas diviser un mouvement de stock qui est défini sur 'Fait' "
+"ou 'Annuler'."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8205,6 +8325,14 @@ msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Vous ne pouvez pas décommander un mouvement de stock dont l'état est "
 "\"Terminé."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"Vous ne pouvez pas modifier un mouvement de stock annulé, créez plutôt une "
+"nouvelle ligne."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8471,23 +8599,3 @@ msgstr "report_stock_quantity_graph"
 #, python-format
 msgid "should be replenished to reach the maximum of"
 msgstr "devrait être réapprovisionné pour atteindre le maximum de"
-
-#. module: stock
-#: code:addons/stock/models/res_config_settings.py:0
-#, python-format
-msgid ""
-"You can't desactivate the multi-location if you have more than once "
-"warehouse by company"
-msgstr ""
-"Vous ne pouvez pas désactiver les emplacements multiples si vous avez plus "
-"d'un entrepôt par société"
-
-#. module: stock
-#: code:addons/stock/models/stock_warehouse.py:0
-#, python-format
-msgid ""
-"Creating a new warehouse will automatically activate the Storage Locations "
-"setting"
-msgstr ""
-"Créer un nouvel entrepôt activera automatiquement les Emplacements  dans la "
-"configuration"

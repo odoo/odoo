@@ -130,7 +130,9 @@ var Wysiwyg = Widget.extend({
         $editable.find('[title=""]').removeAttr('title');
         $editable.find('[alt=""]').removeAttr('alt');
         $editable.find('[data-original-title=""]').removeAttr('data-original-title');
-        $editable.find('a.o_image, span.fa, i.fa').html('');
+        if (!options || !options['style-inline']) {
+            $editable.find('a.o_image, span.fa, i.fa').html('');
+        }
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-original-title');
         return $editable.html();
     },
@@ -142,9 +144,9 @@ var Wysiwyg = Widget.extend({
      * @returns {Promise}
      *      - resolve with true if the content was dirty
      */
-    save: function () {
+    save: function (options) {
         var isDirty = this.isDirty();
-        var html = this.getValue();
+        var html = this.getValue(options);
         if (this.$target.is('textarea')) {
             this.$target.val(html);
         } else {

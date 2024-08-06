@@ -161,6 +161,11 @@ function factory(dependencies) {
             _newOrdered[index + 1] = chatWindow.localId;
             this.update({ _ordered: _newOrdered });
             chatWindow.focus();
+            for (const loopedChatWindow of [chatWindow, otherChatWindow]) {
+                if (loopedChatWindow.threadView) {
+                    loopedChatWindow.threadView.addComponentHint('adjust-scroll');
+                }
+            }
         }
 
         /**
@@ -181,6 +186,11 @@ function factory(dependencies) {
             _newOrdered[index - 1] = chatWindow.localId;
             this.update({ _ordered: _newOrdered });
             chatWindow.focus();
+            for (const loopedChatWindow of [chatWindow, otherChatWindow]) {
+                if (loopedChatWindow.threadView) {
+                    loopedChatWindow.threadView.addComponentHint('adjust-scroll');
+                }
+            }
         }
 
         /**
@@ -198,6 +208,11 @@ function factory(dependencies) {
             _newOrdered[index1] = chatWindow2.localId;
             _newOrdered[index2] = chatWindow1.localId;
             this.update({ _ordered: _newOrdered });
+            for (const chatWindow of [chatWindow1, chatWindow2]) {
+                if (chatWindow.threadView) {
+                    chatWindow.threadView.addComponentHint('adjust-scroll');
+                }
+            }
         }
 
         //----------------------------------------------------------------------

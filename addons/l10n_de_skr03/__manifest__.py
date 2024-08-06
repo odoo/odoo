@@ -33,7 +33,7 @@
 
 {
     'name': 'Germany SKR03 - Accounting',
-    'version': '3.0',
+    'version': '3.1',
     'author': 'openbig.org',
     'website': 'http://www.openbig.org',
     'category': 'Accounting/Localizations/Account Charts',
@@ -56,5 +56,6 @@ German accounting chart and localization.
     'demo': [
         'demo/demo_company.xml',
     ],
-    'auto_install': True
+    'auto_install': True,
+    'license': 'LGPL-3',
 }

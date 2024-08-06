@@ -15,26 +15,41 @@ from odoo import _, api, fields, models
 from odoo.addons.base.models.res_users import check_identity
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request, db_list
+from odoo.tools import sql
 
 _logger = logging.getLogger(__name__)
+
+TRUSTED_DEVICE_SCOPE = '2fa_trusted_device'
 
 compress = functools.partial(re.sub, r'\s', '')
 class Users(models.Model):
     _inherit = 'res.users'
 
-    totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS)
-    totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled')
+    totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS, compute='_compute_totp_secret', inverse='_inverse_totp_secret')
+    totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled', search='_search_totp_enable')
+    totp_trusted_device_ids = fields.One2many('res.users.apikeys', 'user_id',
+        string="Trusted Devices", domain=[('scope', '=', TRUSTED_DEVICE_SCOPE)])
+    api_key_ids = fields.One2many(domain=[('scope', '!=', TRUSTED_DEVICE_SCOPE)])
 
     def __init__(self, pool, cr):
         init_res = super().__init__(pool, cr)
-        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['totp_enabled']
+        if not sql.column_exists(cr, self._table, "totp_secret"):
+            cr.execute("ALTER TABLE res_users ADD COLUMN totp_secret varchar")
+        pool[self._name].SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['totp_enabled', 'totp_trusted_device_ids']
         return init_res
+
+    def _mfa_type(self):
+        r = super()._mfa_type()
+        if r is not None:
+            return r
+        if self.totp_enabled:
+            return 'totp'
 
     def _mfa_url(self):
         r = super()._mfa_url()
         if r is not None:
             return r
-        if self.totp_enabled:
+        if self._mfa_type() == 'totp':
             return '/web/login/totp'
 
     @api.depends('totp_secret')
@@ -55,9 +70,9 @@ class Users(models.Model):
         key = base64.b32decode(sudo.totp_secret)
         match = TOTP(key).match(code)
         if match is None:
-            _logger.info("2FA check: FAIL for %s %r", self, self.login)
+            _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
             raise AccessDenied()
-        _logger.info("2FA check: SUCCESS for %s %r", self, self.login)
+        _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
 
     def _totp_try_setting(self, secret, code):
         if self.totp_enabled or self != self.env.user:
@@ -87,7 +102,9 @@ class Users(models.Model):
             _logger.info("2FA disable: REJECT for %s (%s) by uid #%s", self, logins, self.env.user.id)
             return False
 
+        self.revoke_all_devices()
         self.sudo().write({'totp_secret': False})
+
         if request and self == self.env.user:
             self.flush()
             # update session token so the user does not get logged out (cache cleared by change)
@@ -129,6 +146,37 @@ class Users(models.Model):
             'res_id': w.id,
             'views': [(False, 'form')],
         }
+
+    @check_identity
+    def revoke_all_devices(self):
+        self._revoke_all_devices()
+
+    def _revoke_all_devices(self):
+        self.totp_trusted_device_ids._remove()
+
+    @api.model
+    def change_password(self, old_passwd, new_passwd):
+        self.env.user._revoke_all_devices()
+        return super().change_password(old_passwd, new_passwd)
+
+    def _compute_totp_secret(self):
+        for user in self.filtered('id'):
+            self.env.cr.execute('SELECT totp_secret FROM res_users WHERE id=%s', (user.id,))
+            user.totp_secret = self.env.cr.fetchone()[0]
+
+    def _inverse_totp_secret(self):
+        for user in self.filtered('id'):
+            secret = user.totp_secret if user.totp_secret else None
+            self.env.cr.execute('UPDATE res_users SET totp_secret = %s WHERE id=%s', (secret, user.id))
+
+    def _search_totp_enable(self, operator, value):
+        value = not value if operator == '!=' else value
+        if value:
+            self.env.cr.execute("SELECT id FROM res_users WHERE totp_secret IS NOT NULL")
+        else:
+            self.env.cr.execute("SELECT id FROM res_users WHERE totp_secret IS NULL OR totp_secret='false'")
+        result = self.env.cr.fetchall()
+        return [('id', 'in', [x[0] for x in result])]
 
 class TOTPWizard(models.TransientModel):
     _name = 'auth_totp.wizard'

@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Haval Abdulkarim <haval.abdulkarim@gmail.com>, 2020
+# Haval Abdulkarim <haval.abdulkarim@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Haval Abdulkarim <haval.abdulkarim@gmail.com>, 2020\n"
-"Language-Team: Central Kurdish (https://www.transifex.com/odoo/teams/41243/ckb/)\n"
+"Last-Translator: Haval Abdulkarim <haval.abdulkarim@gmail.com>, 2023\n"
+"Language-Team: Central Kurdish (https://app.transifex.com/odoo/teams/41243/ckb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -6215,12 +6215,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 
@@ -8957,7 +8957,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_sales_crm
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
-msgstr ""
+msgstr "بەڕێوەبردنی کڕیار"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_crm
@@ -9405,7 +9405,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "City"
-msgstr ""
+msgstr "شار"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
@@ -9732,6 +9732,12 @@ msgid "Compute"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
 msgid "Compute scores and assign leads automatically"
 msgstr ""
@@ -9953,7 +9959,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact Name"
-msgstr ""
+msgstr "ناوی پەیوەندی"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_form
@@ -10673,7 +10679,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
 #: model:ir.actions.act_window,name:base.action_partner_form
 msgid "Customers"
-msgstr ""
+msgstr "کڕیارەکان"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_customizations
@@ -12503,7 +12509,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_selection_search
 msgid "Field"
-msgstr ""
+msgstr "خانە"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -12565,7 +12571,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__field_description
 msgid "Field Label"
-msgstr ""
+msgstr "ناونیشانی خانە"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14626,13 +14632,13 @@ msgstr "پیشەسازییەکان"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr ""
+msgstr "پیشەسازی"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__info
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Information"
-msgstr ""
+msgstr "زانیاری"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_ingenico
@@ -14705,7 +14711,7 @@ msgstr "دامەزراندن"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
 msgid "Install Apps"
-msgstr ""
+msgstr "دامەزراندنی ئەپەکان"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
@@ -14724,7 +14730,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Installed"
-msgstr ""
+msgstr "دامەزراو"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -14734,7 +14740,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__latest_version
 msgid "Installed Version"
-msgstr ""
+msgstr "وەشانی دامەزراو"
 
 #. module: base
 #: model:ir.module.module,description:base.module_bus
@@ -14825,22 +14831,22 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Internal User"
-msgstr ""
+msgstr "بەکارهێنەری ناوەخۆیی"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 msgid "Internal Users"
-msgstr ""
+msgstr "بەکارهێنەر ناوەخۆییەکان"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Internal note..."
-msgstr ""
+msgstr "تێبینی ناوەخۆیی..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Internal notes..."
-msgstr ""
+msgstr "تێبینییە ناوەخۆییەکان..."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iot
@@ -14886,6 +14892,12 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Invalid 'group by' parameter"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
 msgstr ""
 
 #. module: base
@@ -14955,6 +14967,12 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "Invalid model name %r in action definition."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
 msgstr ""
 
 #. module: base
@@ -15198,7 +15216,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__function
 #: model:ir.model.fields,field_description:base.field_res_users__function
 msgid "Job Position"
-msgstr ""
+msgstr "ناونیشانی کار"
 
 #. module: base
 #: model:res.country,name:base.jo
@@ -15328,7 +15346,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
+msgid "Lithuania - Accounting Reports"
 msgstr ""
 
 #. module: base
@@ -15368,7 +15386,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__lang
 #: model_terms:ir.ui.view,arch_db:base.res_lang_search
 msgid "Language"
-msgstr ""
+msgstr "زمان"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -16862,7 +16880,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
 msgid "Mister"
-msgstr ""
+msgstr "بەڕێز"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -16872,12 +16890,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.contact
 #, python-format
 msgid "Mobile"
-msgstr ""
+msgstr "مۆبایل"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Mobile:"
-msgstr ""
+msgstr "مۆبایل:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__model_id
@@ -16946,7 +16964,7 @@ msgstr ""
 #: model:ir.model,name:base.model_ir_model_data
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__model_data_id
 msgid "Model Data"
-msgstr ""
+msgstr "زانیاری مۆدێل"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__name
@@ -16954,12 +16972,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_tree
 msgid "Model Description"
-msgstr ""
+msgstr "باسکردنی مۆدێل"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_translation__type__model
 msgid "Model Field"
-msgstr ""
+msgstr "خانەی مۆدێل"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__model
@@ -21570,7 +21588,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__user_id
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Salesperson"
-msgstr ""
+msgstr "فرۆشیار"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -22535,7 +22553,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr ""
+msgstr "دۆخ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -22673,7 +22691,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__street
 #: model:ir.model.fields,field_description:base.field_res_users__street
 msgid "Street"
-msgstr ""
+msgstr "شەقام"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -22682,7 +22700,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street 2..."
-msgstr ""
+msgstr "شەقام ٢..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -22691,7 +22709,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street..."
-msgstr ""
+msgstr "شەقام..."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__street2
@@ -22699,7 +22717,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__street2
 #: model:ir.model.fields,field_description:base.field_res_users__street2
 msgid "Street2"
-msgstr ""
+msgstr "شەقام٢"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_stripe
@@ -23285,7 +23303,7 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
+msgid "Those modules cannot be uninstalled: %s"
 msgstr ""
 
 #. module: base
@@ -25973,7 +25991,7 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
+msgid "You cannot archive a contact linked to a portal or internal user."
 msgstr ""
 
 #. module: base
@@ -26686,3 +26704,9 @@ msgstr "بەڵێ"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "دوورگەکانی ئالاند"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
+msgstr ""

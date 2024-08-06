@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Moka Tourisme <hello@mokatourisme.fr>, 2020
-# Martin Trigaux, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Nathan Noël <nathan070@me.com>, 2020
@@ -20,6 +19,8 @@
 # Frédéric GILSON <frederic.gilson@logicasoft.eu>, 2020
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2020
 # Thomas Deleval <thd@odoo.com>, 2021
+# Martin Trigaux, 2021
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,19 +28,25 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr "(Coût estimé)%s"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Livraison gratuite"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -192,6 +199,7 @@ msgstr ""
 "dans la devise de la société"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "Archivé"
@@ -420,7 +428,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__display_name
 #: model:ir.model.fields,field_description:delivery.field_stock_return_picking__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
@@ -1152,6 +1160,19 @@ msgstr "Largeur"
 #: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
 msgid "Width must be positive"
 msgstr "La largeur doit être positive"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
+"Vous ne pouvez pas mettre à jour les couts d'expéditions sur une commande si elle a déjà été facturée!\n"
+"\n"
+"Les lignes de livraison suivantes (produit, quantité facturée et prix) ont déjà été exécutées.\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

@@ -6,9 +6,11 @@
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
-# trendspotter, 2021
+# Jiří Podhorecký, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
+# Jakub Smolka, 2023
+# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,8 +18,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: trendspotter, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Katerina Horylova, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -68,7 +70,7 @@ msgstr "Přidat do košíku"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Add to order lines"
-msgstr ""
+msgstr "Pridať do objednávkových riadkov"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
@@ -411,12 +413,12 @@ msgstr "Šablona nabídky"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "Položka šablony nabídky"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Template Lines"
-msgstr ""
+msgstr "Řádky šablony cenové nabídky"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
@@ -427,7 +429,7 @@ msgstr "Možnosti šablony nabídky"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__sale_order_template_id
 msgid "Quotation Template Reference"
-msgstr ""
+msgstr "Odkaz na šablonu cenové nabídky"
 
 #. module: sale_management
 #: model:ir.actions.act_window,name:sale_management.sale_order_template_action
@@ -473,7 +475,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "Prodejní možnosti"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.digest_digest_view_form
@@ -493,12 +495,12 @@ msgstr "Řádek zakázky"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
 msgid "Sales Order Reference"
-msgstr ""
+msgstr "Odkaz na prodejní objednávku"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Sales Quotation Template Lines"
-msgstr ""
+msgstr "Řádky šablony prodejní nabídky"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -518,6 +520,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
+"Prodáváte stejný produkt v různých velikostech nebo barvách? Vyzkoušejte "
+"produktovou mřížku a vyplňte své objednávky několika množstvími každé "
+"varianty. Tato funkce existuje také v aplikaci Nákup."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -532,6 +537,10 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
+"Bojujete se složitým katalogem produktů? Vyzkoušejte konfigurátor produktu, "
+"který pomůže prodejům nakonfigurovat produkt s různými možnostmi: barvy, "
+"velikost, kapacita atd. Usnadněte kódování prodejních objednávek a zajistěte"
+" jejich odolnost vůči chybám."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
@@ -572,13 +581,13 @@ msgstr ""
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr ""
+msgstr "Tip: Odoo podporuje konfigurovatelné produkty"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr ""
+msgstr "Tip: prodávejte nebo kupujte produkty hromadně s maticemi"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -637,6 +646,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Vaše nabídka obsahuje produkty od společnosti %(product_company)s, zatímco vaše nabídka patří společnosti %(quote_company)s.\n"
+"Změňte společnost své nabídky nebo odeberte produkty od jiných společností (%(bad_products)s)."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -651,6 +662,8 @@ msgid ""
 "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
+"Vaše šablona obsahuje produkty od společnosti %(product_company)s zatímco vaše šablona patří společnosti %(template_company)s. \n"
+"Změňte prosím společnost vaší šablony nebo odeberte produkty od jiných společností."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

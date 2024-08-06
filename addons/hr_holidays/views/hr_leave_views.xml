@@ -70,12 +70,12 @@
                 <filter name="year" string="Active Time Off"
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
@@ -562,7 +562,7 @@
         <field name="name">Dashboard</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">calendar,tree,form,activity</field>
-        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="domain">[('user_id', '=', uid), ('employee_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="context">{'short_name': 1}</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_my"/>
         <field name="help" type="html">
@@ -648,7 +648,7 @@
             'search_default_managed_people': 1,
             'hide_employee_name': 1}
         </field>
-        <field name="domain">[]</field>
+        <field name="domain">[('employee_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.

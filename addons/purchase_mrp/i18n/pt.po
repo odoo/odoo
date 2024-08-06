@@ -4,10 +4,12 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Manuela Silva <manuelarodsilva@gmail.com>, 2020
+# Manuela Silva <mmsrs@sky.com>, 2020
 # Pedro Castro Silva <pedrocs@exo.pt>, 2020
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
 # Pedro Filipe <pedro2.10@hotmail.com>, 2020
+# Marcelo Pereira <marcelo.pereira@arxi.pt>, 2022
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,33 +17,33 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2020\n"
-"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
+"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024\n"
+"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: purchase_mrp
 #: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
 msgid "<span class=\"o_stat_text\">Manufacturing</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Fabricação</span>"
 
 #. module: purchase_mrp
 #: model_terms:ir.ui.view,arch_db:purchase_mrp.mrp_production_form_view_purchase
 msgid "<span class=\"o_stat_text\">Purchases</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Compras</span>"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
 msgid "Count of MO Source"
-msgstr ""
+msgstr "Contagem de Origem de OM"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
 msgid "Count of generated PO"
-msgstr ""
+msgstr "Contagem de EF geradas"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__display_name
@@ -71,7 +73,17 @@ msgstr "Última Modificação em"
 #: code:addons/purchase_mrp/models/purchase.py:0
 #, python-format
 msgid "Manufacturing Source of %s"
+msgstr "Origem de Manufatura %s"
+
+#. module: purchase_mrp
+#: code:addons/purchase_mrp/models/stock_move.py:0
+#, python-format
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
 msgstr ""
+"Odoo não é capaz de gerar as entradas anglo-saxônicas. A avaliação total de "
+"%s é zero."
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_production
@@ -92,7 +104,7 @@ msgstr "Linha de Encomenda de Compra"
 #: code:addons/purchase_mrp/models/mrp_production.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
-msgstr ""
+msgstr "Encomenda gerada a partir de %s"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_stock_move

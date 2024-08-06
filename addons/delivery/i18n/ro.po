@@ -6,8 +6,8 @@
 # Martin Trigaux, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
 # Cozmin Candea <office@terrabit.ro>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,6 +28,12 @@ msgstr ""
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr "(Cost estimat: %s)"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Livrare gratuită"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -58,7 +64,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
 "<span class=\"o_warning_text\">Testare</span>\n"
-"                                    <span class=\"o_stat_text\">Mediu inconjurator</span>"
+"                                    <span class=\"o_stat_text\">Mediu </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -77,7 +83,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
 "<span class=\"text-success\">Producție</span>\n"
-"                                    <span class=\"o_stat_text\">Mediu inconjurator</span>"
+"                                    <span class=\"o_stat_text\">Mediu</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
@@ -180,6 +186,7 @@ msgstr ""
 "moneda companiei"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "Arhivat"
@@ -573,7 +580,7 @@ msgstr "Politică de facturare"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr ""
+msgstr "Este returnare"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -880,6 +887,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
+"Expediere trimisă către curierul %(carrier_name)s pentru expediere cu "
+"numărul de urmărire %(ref)s<br/>Cost: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -1025,7 +1034,7 @@ msgstr "Greutatea totală a ambalajului."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight
 msgid "Total weight of the products in the picking."
-msgstr ""
+msgstr "Greutatea totală a produselor din livrare."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -1138,6 +1147,20 @@ msgstr "Lățime"
 #: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
 msgid "Width must be positive"
 msgstr "Lățimea trebuie sa fie pozitivă"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
+"Nu puteți actualiza costurile de livrare pentru o comandă unde acestea au fost deja facturate!\n"
+"\n"
+"Următoarele linii de livrare (produs, cantitate și preț facturate) au fost deja procesate:\n"
+"\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
