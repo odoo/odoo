@@ -41,24 +41,54 @@ export class Chrome extends Component {
         }
         this.customerDisplayChannel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
         effect(
-            batched(({ selectedOrder }) => {
-                if (!selectedOrder) {
-                    return;
+            batched(
+                ({
+                    selectedOrder,
+                    scaleData,
+                    scaleWeight,
+                    scaleTare,
+                    totalPriceOnScale,
+                    isScaleScreenVisible,
+                }) => {
+                    if (
+                        !selectedOrder &&
+                        !scaleData &&
+                        !scaleWeight &&
+                        !scaleTare &&
+                        !totalPriceOnScale &&
+                        !isScaleScreenVisible
+                    ) {
+                        return;
+                    }
+                    this.sendOrderToCustomerDisplay(selectedOrder, scaleData);
                 }
-                this.sendOrderToCustomerDisplay(selectedOrder);
-            }),
+            ),
             [this.pos]
         );
     }
 
-    sendOrderToCustomerDisplay(selectedOrder) {
+    sendOrderToCustomerDisplay(selectedOrder, scaleData) {
+        const customerDisplayData = selectedOrder.getCustomerDisplayData();
+        customerDisplayData.isScaleScreenVisible = this.pos.isScaleScreenVisible;
+        if (scaleData) {
+            customerDisplayData.scaleData = {
+                productName: scaleData.productName,
+                uomName: scaleData.uomName,
+                uomRounding: scaleData.uomRounding,
+                productPrice: scaleData.productPrice,
+            };
+        }
+        customerDisplayData.weight = this.pos.scaleWeight;
+        customerDisplayData.tare = this.pos.scaleTare;
+        customerDisplayData.totalPriceOnScale = this.pos.totalPriceOnScale;
+
         if (this.pos.config.customer_display_type === "local") {
-            this.customerDisplayChannel.postMessage(selectedOrder.getCustomerDisplayData());
+            this.customerDisplayChannel.postMessage(customerDisplayData);
         }
         if (this.pos.config.customer_display_type === "remote") {
             this.pos.data.call("pos.config", "update_customer_display", [
                 [this.pos.config.id],
-                selectedOrder.getCustomerDisplayData(),
+                customerDisplayData,
                 this.pos.config.access_token,
             ]);
         }
@@ -73,7 +103,7 @@ export class Chrome extends Component {
                 body: JSON.stringify({
                     params: {
                         action: "set",
-                        data: selectedOrder.getCustomerDisplayData(),
+                        data: customerDisplayData,
                     },
                 }),
             }).catch(() => {

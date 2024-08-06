@@ -3,19 +3,17 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import {
-    getTaxesAfterFiscalPosition,
-    getTaxesValues,
-} from "@point_of_sale/app/models/utils/tax_utils";
 
 export class ScaleScreen extends Component {
     static template = "point_of_sale.ScaleScreen";
     static components = { Dialog };
     static props = {
         getPayload: Function,
-        product: Object,
+        productName: String,
+        uomName: String,
+        uomRounding: Number,
+        productPrice: Number,
         close: Function,
-        taxIncluded: Boolean,
     };
     setup() {
         this.pos = usePos();
@@ -45,79 +43,45 @@ export class ScaleScreen extends Component {
             return;
         }
         this.state.weight = await this.hardwareProxy.readScale();
+        this.pos.setScaleWeight(this.state.weight);
         setTimeout(() => this._setWeight(), 500);
     }
     get netWeight() {
-        const weight = round_pr(this.state.weight || 0, this.productUnit.rounding);
+        const weight = round_pr(this.state.weight || 0, this.props.uomRounding);
         const weightRound = weight.toFixed(
-            Math.ceil(Math.log(1.0 / this.productUnit.rounding) / Math.log(10))
+            Math.ceil(Math.log(1.0 / this.props.uomRounding) / Math.log(10))
         );
         return weightRound - parseFloat(this.state.tare);
     }
-    get _activePricelist() {
-        const current_order = this.pos.get_order();
-        let current_pricelist = this.pos.config.pricelist_id;
-        if (current_order) {
-            current_pricelist = current_order.pricelist_id;
-        }
-        return current_pricelist;
-    }
+
     get productWeightString() {
         const defaultstr = (this.state.weight || 0).toFixed(3) + " Kg";
-        if (!this.props.product) {
+        const uom = this.props.uomName;
+        if (!uom) {
             return defaultstr;
         }
-        const unit = this.productUnit;
-        if (!unit) {
-            return defaultstr;
-        }
-        const weight = round_pr(this.state.weight || 0, unit.rounding);
-        let weightstr = weight.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
-        weightstr += " " + unit.name;
+        const weight = round_pr(this.state.weight || 0, this.props.uomRounding);
+        let weightstr = weight.toFixed(
+            Math.ceil(Math.log(1.0 / this.props.uomRounding) / Math.log(10))
+        );
+        weightstr += " " + this.props.uomName;
         return weightstr;
     }
-    get productUnit() {
-        const unit = this.props.product.uom_id;
-        return unit;
-    }
     get computedPriceString() {
-        return this.env.utils.formatCurrency(this.netWeight * this.productUnitPrice);
-    }
-    get productUom() {
-        return this.props.product?.uom_id?.name;
+        const priceString = this.env.utils.formatCurrency(this.netWeight * this.props.productPrice);
+        this.pos.totalPriceOnScale = priceString;
+        return priceString;
     }
     async handleTareButtonClick() {
         this.state.tareLoading = true;
         const tareWeight = await this.hardwareProxy.readScale();
         this.state.tare = tareWeight;
+        this.pos.setScaleTare(this.state.tare);
         setTimeout(() => {
             this.state.tareLoading = false;
         }, 3000);
     }
-    get productUnitPrice() {
-        const product = this.props.product;
-        const priceUnit = product.get_price(this._activePricelist, 1);
-        let taxes = product.taxes_id;
-        if (this.pos.get_order().fiscal_position_id) {
-            taxes = getTaxesAfterFiscalPosition(
-                taxes,
-                this.pos.get_order().fiscal_position_id,
-                this.pos.models
-            );
-        }
-        const taxesData = getTaxesValues(
-            taxes,
-            priceUnit,
-            1,
-            product,
-            this.pos.config._product_default_values,
-            this.pos.company,
-            this.pos.currency
-        );
-        if (this.props.taxIncluded) {
-            return taxesData.total_included;
-        } else {
-            return taxesData.total_excluded;
-        }
+    handleInputChange(ev) {
+        this.pos.setScaleTare(ev.target.value);
     }
 }
