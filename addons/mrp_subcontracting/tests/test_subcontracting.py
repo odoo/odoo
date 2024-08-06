@@ -1109,6 +1109,48 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'quantity_done': 3.0, 'product_qty': 3.0, 'state': 'assigned'},
         ])
 
+    def test_strict_consumption_backorders_serial(self):
+        """ Test for the correct consumption of components with a 'strict' consumption BoM and available quantity
+            of the component in the subcontracting location and serial tracking.
+        """
+
+        self.finished.write({"tracking": "serial"})
+        self.bom.consumption = 'strict'
+        self.bom.bom_line_ids.filtered(lambda bl: bl.product_id != self.comp1).unlink()
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        subcontract_location = self.subcontractor_partner1.property_stock_subcontractor
+
+        self.env['stock.quant']._update_available_quantity(self.comp1, subcontract_location, 1)
+
+        receipt = self.env['stock.picking'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'move_ids': [
+                Command.create({
+                    'name': self.finished.name,
+                    'product_id': self.finished.id,
+                    'product_uom_qty': 2,
+                    'product_uom': self.finished.uom_id.id,
+                    'location_id': supplier_location.id,
+                    'location_dest_id': self.warehouse.lot_stock_id.id,
+                })
+            ],
+        })
+
+        receipt.action_confirm()
+        receipt.move_ids.next_serial = "0001"
+        receipt.move_ids._generate_serial_numbers(2)
+        receipt.button_validate()
+
+        productions = self.env['mrp.production'].search([('product_id', '=', self.finished.id)], order='id')
+        fns_produced_qty = sum(productions.filtered(lambda p: p.state == 'done').mapped('qty_producing'))
+        self.assertEqual(fns_produced_qty, 2)
+
+        cmp1_consumed_qty = sum(productions.move_raw_ids.filtered(lambda m: m.state == 'done').mapped("quantity_done"))
+        self.assertEqual(cmp1_consumed_qty, 2)
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
