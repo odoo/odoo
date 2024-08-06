@@ -1592,22 +1592,37 @@ Please change the quantity done or the rounding precision of your unit of measur
         taken_quantity = 0
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Find a candidate move line to update or create a new one.
-        for reserved_quant, quantity in quants:
+        candidate_lines = {}
+        for line in self.move_line_ids:
+            if line.result_package_id or line.product_id.tracking == 'serial':
+                continue
+            candidate_lines[(line.location_id, line.lot_id, line.package_id, line.owner_id)] = line
+        move_line_vals = []
+        grouped_quants = {}
+        # Handle quants duplication
+        for quant, quantity in quants:
+            if (quant.location_id, quant.lot_id, quant.package_id, quant.owner_id) not in grouped_quants:
+                grouped_quants[quant.location_id, quant.lot_id, quant.package_id, quant.owner_id] = [quant, quantity]
+            else:
+                grouped_quants[quant.location_id, quant.lot_id, quant.package_id, quant.owner_id][1] += quantity
+        for reserved_quant, quantity in grouped_quants.values():
             taken_quantity += quantity
-            to_update = next((line for line in self.move_line_ids if line._reservation_is_updatable(quantity, reserved_quant)), False)
+            to_update = candidate_lines.get((reserved_quant.location_id, reserved_quant.lot_id, reserved_quant.package_id, reserved_quant.owner_id))
             if to_update:
                 uom_quantity = self.product_id.uom_id._compute_quantity(quantity, to_update.product_uom_id, rounding_method='HALF-UP')
                 uom_quantity = float_round(uom_quantity, precision_digits=rounding)
                 uom_quantity_back_to_product_uom = to_update.product_uom_id._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
             if to_update and float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
-                to_update.with_context(reserved_quant=reserved_quant).quantity += uom_quantity
+                to_update.quantity += uom_quantity
             else:
                 if self.product_id.tracking == 'serial' and (self.picking_type_id.use_create_lots or self.picking_type_id.use_existing_lots):
                     vals_list = self._add_serial_move_line_to_vals_list(reserved_quant, quantity)
                     if vals_list:
-                        self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(vals_list)
+                        move_line_vals += vals_list
                 else:
-                    self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
+                    move_line_vals.append(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
+        if move_line_vals:
+            self.env['stock.move.line'].create(move_line_vals)
         return taken_quantity
 
     def _add_serial_move_line_to_vals_list(self, reserved_quant, quantity):
@@ -1710,7 +1725,15 @@ Please change the quantity done or the rounding precision of your unit of measur
                 lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
             )
         moves_mto = moves_to_assign.filtered(lambda m: m.move_orig_ids and not m._should_bypass_reservation())
+<<<<<<< saas-17.4
         quants_cache = self.env['stock.quant']._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
+||||||| 718567eb720cbf66abc9f9096da6fc6ea1aab103
+        moves_to_reserve = moves_to_assign.filtered(lambda m: not m._should_bypass_reservation())
+        quants_by_product = self.env['stock.quant']._get_quants_by_products_locations(moves_to_reserve.product_id, moves_to_reserve.location_id)
+
+=======
+        quants_cache = self.env['stock.quant']._get_quants_cache_by_products_locations(moves_mto.product_id, moves_mto.location_id)
+>>>>>>> c4f9ae3ae4b633a7fee34c1a3967cef2d251ba06
         for move in moves_to_assign:
             rounding = roundings[move]
             if not force_qty:
@@ -1803,7 +1826,13 @@ Please change the quantity done or the rounding precision of your unit of measur
                         # this case `quantity` is directly the quantity on the quants themselves.
 
                         taken_quantity = move.with_context(quants_cache=quants_cache)._update_reserved_quantity(
+<<<<<<< saas-17.4
                             min(quantity, need), location_id, lot_id, package_id, owner_id)
+||||||| 718567eb720cbf66abc9f9096da6fc6ea1aab103
+                        taken_quantity = move._update_reserved_quantity(min(quantity, need), location_id, quants, lot_id, package_id, owner_id)
+=======
+                            min(quantity, need), location_id, None, lot_id, package_id, owner_id)
+>>>>>>> c4f9ae3ae4b633a7fee34c1a3967cef2d251ba06
                         if float_is_zero(taken_quantity, precision_rounding=rounding):
                             continue
                         moves_to_redirect.add(move.id)
@@ -1853,6 +1882,13 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _skip_push(self):
         return self.is_inventory or self.move_dest_ids and any(m.location_id._child_of(self.location_dest_id) for m in self.move_dest_ids) or\
             self.location_final_id and self.location_final_id._child_of(self.location_dest_id)
+
+    def _check_quantity(self):
+        return self.env['stock.quant'].search_fetch([
+            ('product_id', 'in', self.product_id.ids),
+            ('location_id', 'child_of', self.location_dest_id.ids),
+            ('lot_id', 'in', self.lot_ids.ids)
+        ], ['id']).check_quantity()
 
     def _action_done(self, cancel_backorder=False):
         moves = self.filtered(
@@ -1916,6 +1952,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             backorder = picking._create_backorder()
             if any([m.state == 'assigned' for m in backorder.move_ids]):
                 backorder._check_entire_pack()
+        if moves_todo:
+            moves_todo._check_quantity()
         return moves_todo
 
     def _create_backorder(self):

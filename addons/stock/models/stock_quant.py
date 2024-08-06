@@ -281,7 +281,15 @@ class StockQuant(models.Model):
                     quant = quant[0].sudo()
                 else:
                     quant = self.sudo().create(vals)
+<<<<<<< saas-17.4
                     _add_to_cache(quant)
+||||||| 718567eb720cbf66abc9f9096da6fc6ea1aab103
+=======
+                    if 'quants_cache' in self.env.context:
+                        self.env.context['quants_cache'][
+                            quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                        ] |= quant
+>>>>>>> c4f9ae3ae4b633a7fee34c1a3967cef2d251ba06
                 if auto_apply:
                     quant.write({'inventory_quantity_auto_apply': inventory_quantity})
                 else:
@@ -292,7 +300,15 @@ class StockQuant(models.Model):
                 quants |= quant
             else:
                 quant = super().create(vals)
+<<<<<<< saas-17.4
                 _add_to_cache(quant)
+||||||| 718567eb720cbf66abc9f9096da6fc6ea1aab103
+=======
+                if 'quants_cache' in self.env.context:
+                    self.env.context['quants_cache'][
+                        quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                    ] |= quant
+>>>>>>> c4f9ae3ae4b633a7fee34c1a3967cef2d251ba06
                 quants |= quant
                 if self._is_inventory_mode():
                     quant._check_company()
@@ -583,15 +599,15 @@ class StockQuant(models.Model):
         if any(not elem.product_id.is_storable for elem in self):
             raise ValidationError(_('Quants cannot be created for consumables or services.'))
 
-    @api.constrains('quantity')
     def check_quantity(self):
         sn_quants = self.filtered(lambda q: q.product_id.tracking == 'serial' and q.location_id.usage != 'inventory' and q.lot_id)
         if not sn_quants:
             return
-        domain = expression.OR([
-            [('product_id', '=', q.product_id.id), ('location_id', '=', q.location_id.id), ('lot_id', '=', q.lot_id.id)]
-            for q in sn_quants
-        ])
+        domain = [
+            ('product_id', 'in', sn_quants.product_id.ids),
+            ('location_id', 'child_of', sn_quants.location_id.ids),
+            ('lot_id', 'in', sn_quants.lot_id.ids)
+        ]
         groups = self._read_group(
             domain,
             ['product_id', 'location_id', 'lot_id'],
@@ -763,9 +779,18 @@ class StockQuant(models.Model):
         """
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
+<<<<<<< saas-17.4
         if removal_strategy == 'least_packages' and qty:
             domain = self._run_least_packages_removal_strategy_astar(domain, qty)
         order = self._get_removal_strategy_order(removal_strategy)
+||||||| 718567eb720cbf66abc9f9096da6fc6ea1aab103
+        domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
+        if self.ids:
+            sort_key = self._get_removal_strategy_sort_key(removal_strategy)
+            res = self.filtered_domain(domain).sorted(key=sort_key[0], reverse=sort_key[1])
+=======
+        domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
+>>>>>>> c4f9ae3ae4b633a7fee34c1a3967cef2d251ba06
 
         quants_cache = self.env.context.get('quants_cache')
         if quants_cache is not None and strict and removal_strategy != 'least_packages':
@@ -778,6 +803,36 @@ class StockQuant(models.Model):
         if removal_strategy == "closest":
             res = res.sorted(lambda q: (q.location_id.complete_name, -q.id))
         return res.sorted(lambda q: not q.lot_id)
+
+    def _get_quants_cache_by_products_locations(self, product_ids, location_ids, extra_domain=False):
+        res = defaultdict(lambda: self.env['stock.quant'])
+        if product_ids and location_ids:
+            domain = [
+                ('product_id', 'in', product_ids.ids),
+                ('location_id', 'child_of', location_ids.ids)
+            ]
+            if extra_domain:
+                domain = expression.AND([domain, extra_domain])
+            needed_quants = self.env['stock.quant']._read_group(
+                domain,
+                ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
+                ['id:recordset'], order="lot_id"
+            )
+            for product, loc, lot, package, owner, quants in needed_quants:
+                res[product.id, loc.id, lot.id, package.id, owner.id] = quants
+        return res
+
+    @api.model
+    def _get_quants_by_products_locations(self, product_ids, location_ids):
+        quants_by_product = defaultdict(lambda: self.env['stock.quant'])
+        if product_ids and location_ids:
+            needed_quants = self.env['stock.quant']._read_group([('product_id', 'in', product_ids.ids),
+                                                                ('location_id', 'child_of', location_ids.ids)],
+                                                            ['product_id'],
+                                                            ['id:recordset'])
+            for product, quants in needed_quants:
+                quants_by_product[product.id] = quants
+        return quants_by_product
 
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
         """ Return the available quantity, i.e. the sum of `quantity` minus the sum of
@@ -857,7 +912,13 @@ class StockQuant(models.Model):
             quantity_move_uom = product_id.uom_id._compute_quantity(quantity, uom_id, rounding_method='DOWN')
             quantity = uom_id._compute_quantity(quantity_move_uom, product_id.uom_id, rounding_method='HALF-UP')
 
+<<<<<<< saas-17.4
         if product_id.tracking == 'serial':
+||||||| 718567eb720cbf66abc9f9096da6fc6ea1aab103
+        if self.product_id.tracking == 'serial':
+=======
+        if quants.product_id.tracking == 'serial':
+>>>>>>> c4f9ae3ae4b633a7fee34c1a3967cef2d251ba06
             if float_compare(quantity, int(quantity), precision_rounding=rounding) != 0:
                 quantity = 0
 

@@ -339,7 +339,7 @@ class StockMoveLine(models.Model):
             else:
                 create_move(move_line)
 
-        move_to_recompute_state = self.env['stock.move']
+        move_to_recompute_state = set()
         for move_line in mls:
             if move_line.state == 'done':
                 continue
@@ -351,12 +351,12 @@ class StockMoveLine(models.Model):
             else:
                 reservation = product.is_storable and not location.should_bypass_reservation()
             if move_line.quantity and reservation:
-                self.env.context.get('reserved_quant', self.env['stock.quant'])._update_reserved_quantity(
+                self.env['stock.quant']._update_reserved_quantity(
                     product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
 
                 if move:
-                    move_to_recompute_state |= move
-        move_to_recompute_state._recompute_state()
+                    move_to_recompute_state.add(move.id)
+        self.env['stock.move'].browse(move_to_recompute_state)._recompute_state()
 
         for ml, vals in zip(mls, vals_list):
             if ml.state == 'done':
@@ -376,6 +376,9 @@ class StockMoveLine(models.Model):
                 next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
                 next_moves._do_unreserve()
                 next_moves._action_assign()
+        move_done = mls.filtered(lambda m: m.state == "done").move_id
+        if move_done:
+            move_done._check_quantity()
         return mls
 
     def write(self, vals):
@@ -462,6 +465,9 @@ class StockMoveLine(models.Model):
                 # Log a note
                 if ml.picking_id:
                     ml._log_message(ml.picking_id, ml, 'stock.track_move_template', vals)
+            move_done = mls.move_id
+            if move_done:
+                move_done._check_quantity()
 
         res = super(StockMoveLine, self).write(vals)
 
@@ -586,9 +592,9 @@ class StockMoveLine(models.Model):
             mls_tracked_without_lot = self.env['stock.move.line'].browse(ml_ids_tracked_without_lot)
             raise UserError(_('You need to supply a Lot/Serial Number for product: \n - ') +
                               '\n - '.join(mls_tracked_without_lot.mapped('product_id.display_name')))
-
+        ml_to_create_lot = self.env['stock.move.line'].browse(ml_ids_to_create_lot)
         if ml_ids_to_create_lot:
-            self.env['stock.move.line'].browse(ml_ids_to_create_lot)._create_and_assign_production_lot()
+            ml_to_create_lot.with_context(bypass_reservation_update=True)._create_and_assign_production_lot()
 
         mls_to_delete = self.env['stock.move.line'].browse(ml_ids_to_delete)
         mls_to_delete.unlink()
@@ -602,6 +608,13 @@ class StockMoveLine(models.Model):
             mls_todo.product_id, mls_todo.location_id | mls_todo.location_dest_id,
             extra_domain=['|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False)])
 
+<<<<<<< saas-17.4
+||||||| 718567eb720cbf66abc9f9096da6fc6ea1aab103
+        for ml in mls_todo:
+=======
+        quants_cache = self.env['stock.quant']._get_quants_cache_by_products_locations(mls_todo.product_id, mls_todo.location_id | mls_todo.location_dest_id, extra_domain=['|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False)])
+
+>>>>>>> c4f9ae3ae4b633a7fee34c1a3967cef2d251ba06
         for ml in mls_todo.with_context(quants_cache=quants_cache):
             # if this move line is force assigned, unreserve elsewhere if needed
             ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
@@ -675,14 +688,7 @@ class StockMoveLine(models.Model):
             mls.write({'lot_id': lot.id})
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
-        self.ensure_one()
-        if (self.product_id.tracking != 'serial' and
-                self.location_id.id == reserved_quant.location_id.id and
-                self.lot_id.id == reserved_quant.lot_id.id and
-                self.package_id.id == reserved_quant.package_id.id and
-                self.owner_id.id == reserved_quant.owner_id.id and
-                not self.result_package_id):
-            return True
+        # To remove in master
         return False
 
     def _log_message(self, record, move, template, vals):
