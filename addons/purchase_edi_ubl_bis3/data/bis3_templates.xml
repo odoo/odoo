@@ -203,6 +203,9 @@
             <cbc:ID t-out="vals.get('id')" />
             <cbc:IssueDate t-out="vals.get('issue_date')" />
             <cbc:Note t-out="vals.get('note')" />
+            <cac:OriginatorDocumentReference>
+                <cbc:ID t-out="vals.get('originator_document_reference')"/>
+            </cac:OriginatorDocumentReference>
             <cbc:DocumentCurrencyCode t-out="vals.get('document_currency_code')" />
             <cac:BuyerCustomerParty>
                 <cac:Party>
