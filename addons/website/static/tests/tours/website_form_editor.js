@@ -272,31 +272,31 @@
         ...addCustomField('one2many', 'checkbox', 'Products', true),
         {
             content: "Change Option 1 label",
-            trigger: 'we-list table input:eq(0)',
+            trigger: 'we-list:visible table input:eq(0)',
             run: "edit Iphone",
         }, {
             content: "Change Option 2 label",
-            trigger: 'we-list table input:eq(1)',
+            trigger: 'we-list:visible table input:eq(1)',
             run: "edit Galaxy S",
         },{
             content: "Change first Option 3 label",
-            trigger: 'we-list table input:eq(2)',
+            trigger: 'we-list:visible table input:eq(2)',
             run: "edit Xperia",
         },
         {
             // TODO: Fix code to avoid this behavior
             content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
-            trigger: "we-list we-title",
+            trigger: "we-list:visible we-title",
             run: "click",
         },
         {
             content: "Click on Add new Checkbox",
-            trigger: 'we-list we-button.o_we_list_add_optional',
+            trigger: 'we-list:visible we-button.o_we_list_add_optional',
             run: "click",
         },
         {
             content: "Change added Option label",
-            trigger: 'we-list table input:eq(3)',
+            trigger: 'we-list:visible table input:eq(3)',
             run: "edit Wiko Stairway",
         }, {
             content: "Check the resulting field",
@@ -321,15 +321,15 @@
         ...addCustomField('selection', 'radio', 'Service', true),
         {
             content: "Change Option 1 label",
-            trigger: 'we-list table input:eq(0)',
+            trigger: 'we-list:visible table input:eq(0)',
             run: "edit After-sales Service",
         }, {
             content: "Change Option 2 label",
-            trigger: 'we-list table input:eq(1)',
+            trigger: 'we-list:visible table input:eq(1)',
             run: "edit Invoicing Service",
         }, {
             content: "Change first Option 3 label",
-            trigger: 'we-list table input:eq(2)',
+            trigger: 'we-list:visible table input:eq(2)',
             run: "edit Development Service",
         }, 
         {
@@ -344,7 +344,7 @@
             run: "click",
         }, {
             content: "Change last Option label",
-            trigger: 'we-list table input:eq(3)',
+            trigger: 'we-list:visible table input:eq(3)',
             run: "edit Management Service",
         }, {
             content: "Mark the field as not required",
@@ -373,15 +373,15 @@
         // Customize custom selection field
         {
             content: "Change Option 1 Label",
-            trigger: 'we-list table input:eq(0)',
+            trigger: 'we-list:visible table input:eq(0)',
             run: "edit Germany",
         }, {
             content: "Change Option 2 Label",
-            trigger: 'we-list table input:eq(1)',
+            trigger: 'we-list:visible table input:eq(1)',
             run: "edit Belgium",
         }, {
             content: "Change first Option 3 label",
-            trigger: 'we-list table input:eq(2)',
+            trigger: 'we-list:visible table input:eq(2)',
             run: "edit France",
         }, 
         {
@@ -403,12 +403,12 @@
         },
         {
             content: "Change last Option label",
-            trigger: 'we-list table input:eq(3)',
+            trigger: 'we-list:visible table input:eq(3)',
             // TODO: Fix code to avoid blur event
             run: "edit Canada",
         }, {
             content: "Remove Germany Option",
-            trigger: '.o_we_select_remove_option:eq(0)',
+            trigger: '.o_we_select_remove_option:visible:eq(0)',
             run: "click",
         }, 
         {
@@ -423,7 +423,7 @@
             run: "click",
         }, {
             content: "Change last option label with a number",
-            trigger: 'we-list table input:eq(3)',
+            trigger: 'we-list:visible table input:eq(3)',
             run: "edit 44 - UK",
         }, {
             content: "Check that the input value is the full option value",
