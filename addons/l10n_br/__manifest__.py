@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Brazilian - Accounting',
+    'version': '1.0',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/brazil.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['br'],
@@ -58,9 +59,12 @@ Create electronic sales invoices with Avatax.
     ],
     'auto_install': ['account'],
     'data': [
+        'security/ir.model.access.csv',
         'views/res_partner_views.xml',
         'data/account_tax_report_data.xml',
         'data/res_country_data.xml',
+        'data/res.city.csv',
+        'data/l10n_br.zip.range.csv',
         'data/l10n_latam.identification.type.csv',
         'data/l10n_latam.document.type.csv',
         'views/account_view.xml',
