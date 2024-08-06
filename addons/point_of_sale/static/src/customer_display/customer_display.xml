@@ -24,6 +24,33 @@
                 <div t-else="" class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
                     <h1 class="display-2 w-75 mt-2 fw-bold text-center text-muted">Thank you.</h1>
                 </div>
+                <div t-if="order.isScaleScreenVisible">
+                    <t t-set-slot="header">
+                        <h4 class="modal-title text-break text-center w-100" t-att-class="{ 'me-auto': this.env.isSmall }">
+                            <t t-esc="'Scaling Product: ' + order.scaleData.productName || 'Unnamed Product'"/>
+                        </h4>
+                    </t>
+                    <div class="d-flex flex-column px-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="w-60 fs-5 me-2 form-control-plaintext">Gross Weight:</div>
+                            <div class="weight fs-5 js-weight text-end form-control-plaintext" t-esc="order.weight + ' ' + order.scaleData.uomName"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="w-60 fs-5 me-2 form-control-plaintext">Tare Weight:</div>
+                            <div class="weight fs-5 js-weight text-end form-control-plaintext" t-esc="order.tare + ' ' + order.scaleData.uomName"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="w-60 fs-5 me-2 form-control-plaintext">Net Weight:</div>
+                            <div class="text-end fs-5 form-control-plaintext" t-esc="netWeight.toFixed(3) + ' ' + order.scaleData.uomName"></div>
+                        </div>
+                        <div class="d-flex px-5 flex-row gap-2 m-2 align-items-center">
+                            <div class="product-price w-50 fs-5 text-center"
+                                t-esc="order.scaleData.productPrice + '/' + order.scaleData.uomName" />
+                            <div class="computed-price fd-flex flex-grow-1 p-2 rounded text-center text-bg-info bg-opacity-25 text-info fs-5 fw-bold" t-esc="order.totalPriceOnScale" />
+                        </div>
+                    </div>
+                </div>
+
                 <div t-if="order.amount and !order.finalized" class="py-3 px-4 bg-view border-top">
                     <div class="d-flex flex-column justify-content-center gap-1 w-100 w-sm-50 ms-auto">
                         <div class="row fs-2 fw-bolder">
