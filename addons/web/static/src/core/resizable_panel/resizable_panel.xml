@@ -2,10 +2,15 @@
 <templates>
 
     <t t-name="web_studio.ResizablePanel">
-        <div class="o_resizable_panel d-flex flex-column" t-att-class="class" t-ref="containerRef">
+        <div class="o_resizable_panel" t-att-class="class" t-ref="containerRef">
             <t t-slot="default" />
             <div
-                class="o_resizable_panel_handle position-absolute top-0 bottom-0 end-0" t-att-class="props.handleSide === 'start' ? 'start-0' : 'end-0'"
+                class="o_resizable_panel_handle position-absolute" t-att-class="{
+                    'o_resizable_panel_handle o_resizable_panel_handle_y start-0 end-0 top-0': props.handleSide === 'top',
+                    'o_resizable_panel_handle o_resizable_panel_handle_y start-0 end-0 bottom-0': props.handleSide === 'bottom',
+                    'o_resizable_panel_handle o_resizable_panel_handle_x start-0 top-0 bottom-0': props.handleSide === 'start',
+                    'o_resizable_panel_handle o_resizable_panel_handle_x end-0 top-0 bottom-0': props.handleSide === 'end',
+                }"
                 t-ref="handleRef"
             ></div>
         </div>
