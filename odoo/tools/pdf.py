@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import re
@@ -13,8 +12,8 @@ from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
-from odoo.tools.parse_version import parse_version
-from odoo.tools.arabic_reshaper import reshape
+from .parse_version import parse_version
+from .arabic_reshaper import reshape
 
 import PyPDF2
 try:
@@ -36,6 +35,10 @@ try:
     PdfFileWriter._addObject = PdfFileWriter._add_object
 except ImportError:
     from PyPDF2 import PdfFileWriter, PdfFileReader
+try:
+    from PyPDF2.errors import PdfReadError  # noqa: F401
+except ImportError:
+    from PyPDF2.utils import PdfReadError  # noqa: F401
 
 from PyPDF2.generic import ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObject, IndirectObject, NameObject, NumberObject, createStringObject
 

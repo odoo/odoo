@@ -7,8 +7,8 @@ from odoo.exceptions import RedirectWarning
 from odoo.tools import pdf
 from odoo.tests import tagged
 from odoo.tools import file_open
+from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 
-from PyPDF2 import PdfFileReader, PdfFileWriter
 
 @tagged('post_install', '-at_install')
 class TestIrActionsReport(AccountTestInvoicingCommon):
