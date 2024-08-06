@@ -7,6 +7,10 @@ import { checkFiltersTypeValueCombination } from "@spreadsheet/global_filters/he
 import { _t } from "@web/core/l10n/translation";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
+import {helpers} from "@odoo/o-spreadsheet";
+
+const { splitReference } = helpers;
+
 
 /**
  * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
@@ -249,10 +253,8 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
     import(data) {
         for (const globalFilter of data.globalFilters || []) {
             if (globalFilter.type === "text" && globalFilter.rangeOfAllowedValues) {
-                globalFilter.rangeOfAllowedValues = this.getters.getRangeFromSheetXC(
-                    "", // there's no default sheet, global filters are cross-sheet
-                    globalFilter.rangeOfAllowedValues
-                );
+                const  { sheetName, xc } = splitReference(globalFilter.rangeOfAllowedValues);
+                globalFilter.rangeOfAllowedValues = this.getters.getRangeFromSheetXC(sheetName, xc);
             }
             this.globalFilters.push(globalFilter);
         }
