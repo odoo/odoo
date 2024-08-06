@@ -1,5 +1,6 @@
 import { session } from "@web/session";
 import { browser } from "../browser/browser";
+import { shallowEqual } from "@web/core/utils/objects";
 const { DateTime } = luxon;
 
 export class RedirectionError extends Error {}
@@ -132,4 +133,25 @@ export function redirect(url) {
         throw new RedirectionError("Can't redirect to another origin");
     }
     browser.location.assign(_url.href);
+}
+
+/**
+ * This function compares two URLs. It doesn't care about the order of the search parameters.
+ *
+ * @param {string} _url1
+ * @param {string} _url2
+ * @returns {boolean} true if the urls are identical, false otherwise
+ */
+export function compareUrls(_url1, _url2) {
+    const url1 = new URL(_url1);
+    const url2 = new URL(_url2);
+    return (
+        url1.origin === url2.origin &&
+        url1.pathname === url2.pathname &&
+        shallowEqual(
+            Object.fromEntries(url1.searchParams),
+            Object.fromEntries(url2.searchParams)
+        ) &&
+        url1.hash === url2.hash
+    );
 }
