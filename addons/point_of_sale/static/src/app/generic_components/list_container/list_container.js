@@ -67,7 +67,7 @@ export class ListContainer extends Component {
         // but in this case we want it to be right on top of it;
         // in order to do this we set the height of our div to 0 for the
         // duration that the popover is shown.
-        // this.container.el.style.height = 0;
+        this.container.el.style.height = 0;
         this.popover.open(this.container.el, {
             items: this.props.items,
             slots: this.props.slots,
