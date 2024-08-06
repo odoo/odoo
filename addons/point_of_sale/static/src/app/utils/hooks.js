@@ -152,20 +152,18 @@ export function useTrackedAsync(asyncFn) {
     };
 }
 
-export function useIsChildLarger(childRefName) {
-    const child = useRef(childRefName);
+export function useIsChildLarger(child) {
     const state = useState({
         isLarger: false,
     });
     useEffect(
         (child) => {
-            const updateDimensions = () => {
+            const resizeObserver = new ResizeObserver(() => {
                 state.isLarger = child.el.scrollWidth > child.el.parentElement.clientWidth;
-            };
-            updateDimensions();
-            window.addEventListener("resize", updateDimensions);
+            });
+            resizeObserver.observe(child.el);
             return () => {
-                window.removeEventListener("resize", updateDimensions);
+                resizeObserver.unobserve(child.el);
             };
         },
         () => [child]
