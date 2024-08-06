@@ -469,6 +469,7 @@ class ProductTemplate(models.Model):
                 raise UserError(_("Combo products can't have attributes"))
             self.taxes_id = False
             self.supplier_taxes_id = False
+        return {}
 
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
