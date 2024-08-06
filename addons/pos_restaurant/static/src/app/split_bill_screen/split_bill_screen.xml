@@ -5,17 +5,18 @@
         <div class="splitbill-screen screen h-100 bg-100">
             <div class="contents d-flex flex-column flex-nowrap h-100 my-0 mx-auto">
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
-                    <button class="button back back-button btn btn-lg btn-outline-primary" t-on-click="back">
-                        <i class="fa fa-angle-double-left me-2"></i>
-                        <span>Back</span>
-                    </button>
+                    <t t-if="!ui.isSmall">
+                        <button class="button back back-button btn btn-lg btn-outline-primary" t-on-click="back">
+                            <i class="fa fa-angle-double-left me-2"></i>
+                            <span>Back</span>
+                        </button>
+                    </t>
                     <div class="top-content-center flex-grow-1">
                         <h2 class="mb-0">Bill Splitting</h2>
                     </div>
                 </div>
-
-                <div class="main d-flex flex-nowrap flex-grow-1 overflow-hidden">
-                    <div class="flex-grow-1 mw-50 m-3 bg-view border rounded w-50 overflow-auto">
+                <div class="main d-flex flex-nowrap flex-grow-1 overflow-hidden flex-column-reverse flex-lg-row">
+                    <div class="mw-lg-50 flex-grow-1 border rounded overflow-auto">
                         <OrderWidget lines="orderlines" t-slot-scope="scope">
                             <t t-set="line" t-value="scope.line" />
                             <Orderline line="getLineData(line)"
@@ -23,20 +24,48 @@
                                 class="{'selected text-bg-primary': qtyTracker[line.uuid] and qtyTracker[line.uuid] !== 0}" />
                         </OrderWidget>
                     </div>
-                    <div class="controls border-start flex-column flex-nowrap flex-grow-1 flex-shrink-1 flex-basis-0">
-                        <div class="order-info py-4 border-bottom text-center text-success">
+                    <div class="controls border-start flex-column flex-nowrap w-100 w-lg-50">
+                        <div class="order-info border-bottom text-center py-4">
                             <span class="subtotal">
                                 <t t-esc="env.utils.formatCurrency(newOrderPrice)" />
                             </span>
+                            <span class="total">
+                                / <t t-esc="env.utils.formatCurrency(getTotalAmount())" />
+                            </span>
                         </div>
-                        <div class="pay-button m-3">
-                            <div class="button btn btn-lg btn-secondary py-3 w-100" t-on-click="createSplittedOrder">
-                                <i class="oi oi-chevron-right me-2" />
-                                <span>Split Order</span>
+                        <t t-if="!ui.isSmall">
+                            <div class="pay-button m-3">
+                                <t t-set="nbrProduct" t-value="getProductSelectedQuantity() " />
+                                <div class="button btn btn-lg btn-secondary py-3 w-100"
+                                     t-on-click="createSplittedOrder"
+                                     t-att-class="nbrProduct &gt; 0 ? 'btn-primary' : 'btn-secondary'">
+                                    <i class="oi oi-chevron-right me-2" />
+                                    <span>Split Order</span>
+                                    <br/>
+                                    <span class="fs-6">
+                                        <t t-esc="nbrProduct" /> product<span t-if="nbrProduct &gt; 1">s</span> selected
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        </t>
                     </div>
                 </div>
+                <t t-if="ui.isSmall">
+                    <div class="pay-button d-flex">
+                        <t t-set="nbrProduct" t-value="getProductSelectedQuantity() " />
+                        <div class="btn-switchpane validation-button btn btn-secondary flex-fill py-3 gap-0 rounded-0 fw-bolder fs-1 w-50"
+                             t-on-click="createSplittedOrder"
+                             t-att-class="nbrProduct &gt; 0 ? 'btn-primary' : 'btn-secondary'">
+                            <span>Split</span>
+                            <div class="fs-6 m-0">
+                                <t t-esc="nbrProduct" /> product<span t-if="nbrProduct &gt; 1">s</span> selected
+                            </div>
+                        </div>
+                        <div class="btn-switchpane validation-button btn btn-secondary flex-fill py-3 rounded-0 fw-bolder fs-1 w-50 flex-align-center" t-on-click="back">
+                            Back
+                        </div>
+                    </div>
+                </t>
             </div>
         </div>
     </t>
