@@ -4,6 +4,7 @@ odoo.define('web_editor.field_html_tests', function (require) {
 var ajax = require('web.ajax');
 var FormController = require('web.FormController');
 var FormView = require('web.FormView');
+const ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
 var weTestUtils = require('web_editor.test_utils');
 var core = require('web.core');
@@ -1002,6 +1003,40 @@ QUnit.module('web_editor', {}, function () {
             );
 
             form.destroy();
+        });
+
+        QUnit.test("use the toolbar in a list view", async function (assert) {
+            const expectedValue = `<p>t<span style="font-size: 9px;">oto toto </span>toto</p><p>tata</p>`;
+            const list = await testUtils.createView({
+                View: ListView,
+                model: 'note.note',
+                data: this.data,
+                arch: `<tree editable="top">
+                    <field name="body" widget="html"/>
+                </tree>`,
+                mockRPC: function (route, args) {
+                    if (args.method === "write") {
+                        assert.step("write");
+                        assert.strictEqual(args.args[1].body, expectedValue, "should save the content");
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+            await testUtils.dom.click(".o_data_row:first [name=body]");
+            await legacyExtraNextTick();
+            await new Promise(resolve => setTimeout(resolve, 50));
+            const $field = $('.oe_form_field[name="body"]');
+            const pText = $field.find('.note-editable p').first().contents()[0];
+            Wysiwyg.setRange(pText, 1, pText, 10);
+            await testUtils.dom.click("#font-size button");
+            await testUtils.dom.click("#font-size a[data-arg1=9px]");
+            await testUtils.dom.click(".o_list_button_save");
+            assert.strictEqual(
+                $(".o_data_row:first [name=body] .o_readonly").html(),
+                expectedValue,
+            );
+            assert.verifySteps(["write"]);
+            list.destroy();
         });
 
         QUnit.module('cssReadonly');
