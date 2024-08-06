@@ -3,16 +3,16 @@ import { getFontSizeDisplayValue } from "@html_editor/utils/formatting";
 import { Component, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 
 export class FontSelector extends Component {
     static template = "html_editor.FontSelector";
     static props = {
-        dispatch: Function,
-        getSelection: Function,
         document: { optional: true },
         getItems: Function,
         command: String,
         isFontSize: { type: Boolean, optional: true },
+        ...toolbarButtonProps,
     };
     static components = { Dropdown, DropdownItem };
 

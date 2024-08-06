@@ -67,25 +67,23 @@ export class LinkPlugin extends Plugin {
         toolbarItems: [
             {
                 id: "link",
+                name: _t("Link"),
                 category: "link",
                 action(dispatch) {
                     dispatch("CREATE_LINK_ON_SELECTION");
                 },
                 icon: "fa-link",
-                name: "link",
-                label: _t("Link"),
                 isFormatApplied: isLinkActive,
             },
             {
                 id: "unlink",
                 category: "link",
+                name: _t("Remove Link"),
 
                 action(dispatch) {
                     dispatch("REMOVE_LINK_FROM_SELECTION");
                 },
                 icon: "fa-unlink",
-                name: "unlink",
-                label: _t("Remove Link"),
                 isAvailable: isSelectionHasLink,
             },
         ],

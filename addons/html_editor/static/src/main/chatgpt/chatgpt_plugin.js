@@ -18,17 +18,17 @@ export class ChatGPTPlugin extends Plugin {
             {
                 id: "translate",
                 category: "ai",
+                name: _t("Translate with AI"),
                 Component: LanguageSelector,
             },
             {
                 id: "chatgpt",
                 category: "ai",
+                name: _t("Generate or transform content with AI."),
                 action(dispatch) {
                     dispatch("OPEN_CHATGPT_DIALOG");
                 },
                 icon: "fa-magic",
-                name: "chatgpt",
-                label: _t("Generate or transform content with AI."),
                 text: "AI",
             },
         ],
