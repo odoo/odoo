@@ -38,7 +38,6 @@ registry.category("web_tour.tours").add('event_tour', {
     run: "edit Odoo Experience 2020",
 }, {
     trigger: '.o_event_form_view div[name="date_begin"]',
-    content: _t("Open date range picker. Pick a Start date for your event"),
     run: function () {
         const el1 = this.anchor.querySelector('input[data-field="date_begin"]');
         el1.value = '09/30/2020 08:00:00';
@@ -46,8 +45,11 @@ registry.category("web_tour.tours").add('event_tour', {
         const el2 = this.anchor.querySelector('input[data-field="date_end"]');
         el2.value = '10/02/2020 23:00:00';
         el2.dispatchEvent(new Event("change"));
-        el1.click();
     },
+}, {
+    trigger: '.o_event_form_view input[data-field="date_begin"]',
+    content: markup(_t("Open date range picker.<br/>Pick a Start and End date for your event.")),
+    run: "click",
 }, {
     content: _t("Apply change."),
     trigger: '.o_datetime_picker .o_datetime_buttons .o_apply',
