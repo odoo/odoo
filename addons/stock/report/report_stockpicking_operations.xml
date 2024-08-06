@@ -63,6 +63,10 @@
                                     <div t-else=""
                                         t-field="o.picking_type_id.warehouse_id.name"/>
                                     </div>
+                                <div t-if="o.picking_type_id.code == 'internal' and o.partner_id" class="col" name="div_contact">
+                                    <strong>Contact</strong>
+                                    <div t-field="o.partner_id" class="m-0"/>
+                                </div>
                                 <div name="div_state">
                                     <strong>Status:</strong>
                                     <p t-field="o.state">Draft</p>
