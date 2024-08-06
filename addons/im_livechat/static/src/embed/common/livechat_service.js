@@ -8,6 +8,8 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 
+session.websocket_worker_version ??= session.livechatData?.options?.websocket_worker_version;
+
 /**
  * @typedef LivechatRule
  * @property {"auto_popup"|"display_button_and_text"|undefined} [action]
