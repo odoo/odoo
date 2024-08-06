@@ -14,6 +14,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Larisa_nexterp, 2024
+# Alin Miclea, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Larisa_nexterp, 2024\n"
+"Last-Translator: Alin Miclea, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9025,6 +9026,12 @@ msgid "Negative value of amount field if payment_type is outbound"
 msgstr "Valoarea negativă a câmpului sumă dacă tipul de plată este de ieșire"
 
 #. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__open
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "New"
@@ -13870,6 +13877,8 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
 msgstr ""
+"Țara numărului de TVA străin nu a putut fi detectată.Vă rugăm să atribuiți o"
+" țară poziției fiscale sau să stabiliți un grup de țări"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
