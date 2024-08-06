@@ -43,6 +43,7 @@
         'views/snippets/s_image_text.xml',
         'views/snippets/s_mockup_image.xml',
         'views/snippets/s_instagram_page.xml',
+        'views/snippets/s_image_text_overlap.xml',
         'views/snippets/s_banner.xml',
         'views/snippets/s_snippet_group.xml',
         'views/snippets/s_text_block.xml',
