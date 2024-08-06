@@ -126,7 +126,7 @@ class Holidays(models.Model):
             ("company_id.leave_timesheet_task_id", "!=", False),
         ])
         if global_leaves:
-            global_leaves._generate_public_time_off_timesheets(self.employee_ids)
+            global_leaves._generate_public_time_off_timesheets(self.sudo().employee_ids)
 
     def action_refuse(self):
         """ Remove the timesheets linked to the refused holidays """

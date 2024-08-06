@@ -158,7 +158,7 @@ class StockForecasted(models.AbstractModel):
         if move_in:
             document_in = move_in._get_source_document()
             line.update({
-                'move_in' : move_in.read()[0] if read else move_in,
+                'move_in': move_in.read(fields=self._get_report_moves_fields())[0] if read else move_in,
                 'document_in' : {
                     '_name' : document_in._name,
                     'id' : document_in.id,
@@ -170,7 +170,7 @@ class StockForecasted(models.AbstractModel):
         if move_out:
             document_out = move_out._get_source_document()
             line.update({
-                'move_out' : move_out.read()[0] if read else move_out,
+                'move_out': move_out.read(fields=self._get_report_moves_fields())[0] if read else move_out,
                 'document_out' : {
                     '_name' : document_out._name,
                     'id' : document_out.id,
@@ -183,6 +183,9 @@ class StockForecasted(models.AbstractModel):
                     'picking_id': move_out.picking_id.read(fields=['id', 'priority'])[0],
                 })
         return line
+
+    def _get_report_moves_fields(self):
+        return ['id', 'date']
 
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 

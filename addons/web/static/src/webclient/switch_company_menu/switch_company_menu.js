@@ -8,7 +8,7 @@ import { Component, useChildSubEnv, useState } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
 import { useService } from "@web/core/utils/hooks";
 
-class CompanySelector {
+export class CompanySelector {
     constructor(companyService, toggleDelay) {
         this.companyService = companyService;
         this.selectedCompaniesIds = companyService.activeCompanyIds.slice();
@@ -154,12 +154,13 @@ export class SwitchCompanyMenu extends Component {
     static components = { Dropdown, DropdownItem, SwitchCompanyItem };
     static props = {};
     static toggleDelay = 1000;
+    static CompanySelector = CompanySelector;
 
     setup() {
         this.companyService = useService("company");
 
         this.companySelector = useState(
-            new CompanySelector(this.companyService, this.constructor.toggleDelay)
+            new this.constructor.CompanySelector(this.companyService, this.constructor.toggleDelay)
         );
         useChildSubEnv({ companySelector: this.companySelector });
     }
