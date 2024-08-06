@@ -102,7 +102,7 @@ class WebsiteSnippetFilter(models.Model):
             hide_variants = True
             search_domain.remove('hide_variants')
         domain = expression.AND([
-            [('website_published', '=', True)] if self.env.user._is_public() else [],
+            [('website_published', '=', True)] if self.env.user._is_public() or self.env.user._is_portal() else [],
             website.website_domain(),
             [('company_id', 'in', [False, website.company_id.id])],
             search_domain or [],
