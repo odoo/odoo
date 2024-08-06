@@ -19,6 +19,16 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         categ_form.property_valuation = 'real_time'
         cls.categ_fifo_auto = categ_form.save()
 
+        categ_form = Form(cls.env['product.category'])
+        categ_form.name = 'avco auto'
+        categ_form.parent_id = cls.env.ref('product.product_category_all')
+        categ_form.property_cost_method = 'average'
+        categ_form.property_valuation = 'real_time'
+        cls.categ_avco_auto = categ_form.save()
+
+        cls.dropship_route = cls.env.ref('stock_dropshipping.route_drop_shipping')
+        cls.dropship_subcontractor_route = cls.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping')
+
         (cls.product_a | cls.product_b).type = 'product'
 
         cls.bom_a = cls.env['mrp.bom'].create({
@@ -132,3 +142,66 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             {'account_id': stock_out_acc_id,    'product_id': self.product_a.id,    'debit': 0.0,   'credit': 110.0},
             {'account_id': stock_valu_acc_id,   'product_id': self.product_a.id,    'debit': 110.0, 'credit': 0.0},
         ])
+
+    def test_avco_valuation_subcontract_and_dropshipped_and_backorder(self):
+        """ Splitting a dropship transfer via backorder and invoicing for delivered quantities
+        should result in SVL records which have accurate values based on the portion of the total
+        order-picking sequence for which they were generated.
+        """
+        final_product = self.product_a
+        final_product.write({
+            'categ_id': self.categ_avco_auto.id,
+            'invoice_policy': 'delivery',
+        })
+        comp_product = self.product_b
+        comp_product.write({
+            'categ_id': self.categ_avco_auto.id,
+            'route_ids': [(4, self.dropship_subcontractor_route.id)],
+        })
+
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'partner_id': self.partner_a.id,
+            'price': 10,
+        })
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': comp_product.product_tmpl_id.id,
+            'partner_id': self.partner_a.id,
+            'price': 1,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': final_product.id,
+                'route_id': self.dropship_route.id,
+                'product_uom_qty': 100,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order._get_purchase_orders()[0]
+        purchase_order.button_confirm()
+        dropship_transfer = purchase_order.picking_ids[0]
+        dropship_transfer.move_ids[0].quantity_done = 50
+        dropship_transfer.with_context(cancel_backorder=False)._action_done()
+        account_move_1 = sale_order._create_invoices()
+        account_move_1.action_post()
+        dropship_backorder = dropship_transfer.backorder_ids[0]
+        dropship_backorder.action_set_quantities_to_reservation()
+        dropship_backorder._action_done()
+        account_move_2 = sale_order._create_invoices()
+        account_move_2.action_post()
+
+        self.assertRecordValues(
+            self.env['stock.valuation.layer'].search([('product_id', '=', final_product.id)]),
+            [
+                # DS/01
+                {'reference': dropship_transfer.name, 'quantity': -50, 'value': -500},
+                {'reference': dropship_transfer.move_ids.move_orig_ids[0].name, 'quantity': 50, 'value': 8500},
+                {'reference': dropship_transfer.name, 'quantity': 0, 'value': -8000},
+                # DS/02 - backorder
+                {'reference': dropship_backorder.name, 'quantity': -50, 'value': -500},
+                {'reference': dropship_backorder.move_ids.move_orig_ids[1].name, 'quantity': 50, 'value': 8500},
+                {'reference': dropship_backorder.name, 'quantity': 0, 'value': -8000},
+            ]
+        )
