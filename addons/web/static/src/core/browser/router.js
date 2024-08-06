@@ -1,6 +1,6 @@
 import { EventBus } from "@odoo/owl";
 import { omit, pick } from "../utils/objects";
-import { objectToUrlEncodedString } from "../utils/urls";
+import { compareUrls, objectToUrlEncodedString } from "../utils/urls";
 import { browser } from "./browser";
 import { slidingWindow } from "@web/core/utils/arrays";
 import { isNumeric } from "@web/core/utils/strings";
@@ -311,7 +311,7 @@ function makeDebouncedPush(mode) {
         // Calculates new route based on aggregated search and options
         const nextState = computeNextState(pushArgs.state, pushArgs.replace);
         const url = browser.location.origin + router.stateToUrl(nextState);
-        if (url + browser.location.hash !== browser.location.href) {
+        if (!compareUrls(url + browser.location.hash, browser.location.href)) {
             // If the route changed: pushes or replaces browser state
             if (mode === "push") {
                 // Because doPush is delayed, the history entry will have the wrong name.
