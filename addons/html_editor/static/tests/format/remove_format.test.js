@@ -603,13 +603,13 @@ describe("Toolbar", () => {
     async function removeFormatClick() {
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveCount(1); // toolbar open
-        expect(".btn.fa-eraser").toHaveCount(1); // remove format
-        expect(".btn.fa-eraser:not(.disabled)").toHaveCount(1); // remove format button should not be disabled
+        expect(".btn[name='remove_format']").toHaveCount(1); // remove format
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled"); // remove format button should not be disabled
 
-        click(".btn.fa-eraser");
+        click(".btn[name='remove_format']");
         await animationFrame();
         expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
-        expect(".btn.fa-eraser.disabled").toHaveCount(1); // remove format button should be disabled
+        expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should be disabled
     }
 
     test("Should remove bold from selection", async () => {
@@ -626,7 +626,7 @@ describe("Toolbar", () => {
         expect(getContent(el)).toBe(
             `<p>this <span style="color:red">is</span>[ a ]<span style="color:red">UX</span> test.</p>`
         );
-        click(".btn.fa-eraser");
+        click(".btn .fa-eraser");
         expect(getContent(el)).toBe(
             `<p>this <span style="color:red">is</span>[ a ]<span style="color:red">UX</span> test.</p>`
         );
@@ -658,13 +658,13 @@ describe("Toolbar", () => {
         );
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveCount(1); // toolbar open
-        expect(".btn.fa-eraser").toHaveCount(1); // remove format
-        expect(".btn.fa-eraser.disabled").toHaveCount(1); // remove format button should be disabled when no format
+        expect(".btn[name='remove_format']").toHaveCount(1); // remove format
+        expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should be disabled when no format
 
-        click(".btn.fa-eraser");
+        click(".btn[name='remove_format']");
         await animationFrame();
         expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
-        expect(".btn.fa-eraser.disabled").toHaveCount(1); // remove format button should still be disabled
+        expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should still be disabled
         expect(getContent(el)).toBe(
             `<p>this <span class="random-class">is[ a ]UX</span> test.</p>`
         );
