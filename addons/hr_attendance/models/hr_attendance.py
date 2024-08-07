@@ -42,8 +42,8 @@ class HrAttendance(models.Model):
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
     color = fields.Integer(compute='_compute_color')
     overtime_hours = fields.Float(string="Over Time", compute='_compute_overtime_hours', store=True)
-    in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True)
-    in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True)
+    in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True, aggregator=None)
+    in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True, aggregator=None)
     in_country_name = fields.Char(string="Country", help="Based on IP Address", readonly=True)
     in_city = fields.Char(string="City", readonly=True)
     in_ip_address = fields.Char(string="IP Address", readonly=True)
@@ -54,8 +54,8 @@ class HrAttendance(models.Model):
                                           ('manual', "Manual")],
                                readonly=True,
                                default='manual')
-    out_latitude = fields.Float(digits=(10, 7), readonly=True)
-    out_longitude = fields.Float(digits=(10, 7), readonly=True)
+    out_latitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
+    out_longitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
     out_country_name = fields.Char(help="Based on IP Address", readonly=True)
     out_city = fields.Char(readonly=True)
     out_ip_address = fields.Char(readonly=True)
