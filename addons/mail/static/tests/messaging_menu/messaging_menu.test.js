@@ -725,6 +725,26 @@ test("channel preview: basic rendering", async () => {
     await contains(".o-mail-NotificationItem-text", { text: "Demo: test" });
 });
 
+test("channel preview: markdown basic rendering", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<odoo-markdown>test</odoo-markdown>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem img");
+    await contains(".o-mail-NotificationItem-name", { text: "General" });
+    await contains(".o-mail-NotificationItem-text", { text: "Demo: test" });
+});
+
 test("filtered previews", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
@@ -778,6 +798,22 @@ test("no code injection in message body preview from sanitized message", async (
     const channelId = pyEnv["discuss.channel"].create({});
     pyEnv["mail.message"].create({
         body: "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(".o-mail-NotificationItem-text", {
+        text: "You: <em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script>",
+    });
+    await contains(".o-mail-NotificationItem-text script", { count: 0 });
+});
+
+test("no code injection in markdown message body preview from sanitized message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({});
+    pyEnv["mail.message"].create({
+        body: "<odoo-markdown>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</odoo-markdown>",
         model: "discuss.channel",
         res_id: channelId,
     });

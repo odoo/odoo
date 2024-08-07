@@ -135,9 +135,8 @@ For more specific needs, you may also assign custom-defined actions
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
             'mail/static/src/scss/*.scss',
-            'mail/static/lib/**/*',
-            ('remove', 'mail/static/lib/odoo_sfu/odoo_sfu.js'),
-            ('remove', 'mail/static/lib/lame/lame.js'),
+            'mail/static/lib/selfie_segmentation/**/*',
+            'mail/static/lib/marked/marked.js',
             'mail/static/src/js/**/*',
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
@@ -201,6 +200,10 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_lamejs': [
             'mail/static/lib/lame/lame.js',
         ],
+        'mail.assets_markdown': [
+            'mail/static/lib/marked/marked-highlight.js',
+            'mail/static/lib/marked/highlight.js',
+        ],
         'mail.assets_public': [
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/odoo_ui_icons/style.css',
@@ -225,6 +228,7 @@ For more specific needs, you may also assign custom-defined actions
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
 
+            'mail/static/lib/marked/marked.js',
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/public_web/**/*',

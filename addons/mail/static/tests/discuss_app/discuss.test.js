@@ -884,7 +884,7 @@ test("post a simple message", async () => {
         step("message_post");
         expect(args.thread_model).toBe("discuss.channel");
         expect(args.thread_id).toBe(channelId);
-        expect(args.post_data.body).toBe("Test");
+        expect(args.post_data.body).toBe("<odoo-markdown>Test</odoo-markdown>");
         expect(args.post_data.message_type).toBe("comment");
         expect(args.post_data.subtype_xmlid).toBe("mail.mt_comment");
         await messagePostDef;
@@ -915,7 +915,9 @@ test("post several messages with failures", async () => {
     /** awaiting deferreds of message_post of msg 0, 1, 2 respectively  */
     const messagePostDefs = [new Deferred(), new Deferred(), new Deferred()];
     onRpcBefore("/mail/message/post", async (args) => {
-        await messagePostDefs[parseInt(args.post_data.body)];
+        const htmlDoc = new DOMParser().parseFromString(args.post_data.body, "text/html");
+        const index = htmlDoc.querySelector("odoo-markdown").textContent;
+        await messagePostDefs[parseInt(index)];
     });
     await start();
     await openDiscuss(channelId);

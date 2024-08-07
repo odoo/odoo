@@ -122,7 +122,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
                 temporary_id: 0.81,
             },
             post_data: {
-                body: "Hello!",
+                body: "<odoo-markdown>Hello!</odoo-markdown>",
                 attachment_ids: [],
                 message_type: "comment",
                 partner_ids: [],
