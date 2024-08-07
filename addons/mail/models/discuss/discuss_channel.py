@@ -929,6 +929,7 @@ class Channel(models.Model):
             info["fetchChannelInfoState"] = "fetched"
             info["parent_channel_id"] = Store.one(channel.parent_channel_id)
             info["from_message_id"] = Store.one(channel.from_message_id)
+            info["group_public_id"] = channel.group_public_id.id or False
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
