@@ -14,6 +14,7 @@ from textwrap import shorten
 
 from odoo import api, fields, models, _, Command, SUPERUSER_ID
 from odoo.addons.account.tools import format_structured_reference_iso
+from odoo.addons.base_import.models.base_import import FILE_TYPE_DICT
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.osv import expression
 from odoo.tools import (
@@ -3573,6 +3574,7 @@ class AccountMove(models.Model):
                 file_data['type'] == 'binary'
                 and self._context.get('from_alias')
                 and not attachments_by_invoice.get(file_data['attachment'])
+                and file_data['attachment'].mimetype not in FILE_TYPE_DICT
             ):
                 close_file(file_data)
                 continue
@@ -3610,7 +3612,7 @@ class AccountMove(models.Model):
                         invoice = current_invoice or self.create({})
                         success = decoder(invoice, file_data, new)
 
-                        if success or file_data['type'] == 'pdf':
+                        if success or file_data['type'] == 'pdf' or file_data['attachment'].mimetype in FILE_TYPE_DICT:
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
                             invoices |= invoice
                             current_invoice = self.env['account.move']
