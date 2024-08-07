@@ -10,6 +10,7 @@ import base64
 import concurrent.futures
 import contextlib
 import difflib
+import freezegun
 import importlib
 import inspect
 import itertools
@@ -790,7 +791,7 @@ class TransactionCase(BaseCase):
     env: api.Environment = None
     cr: Cursor = None
     muted_registry_logger = mute_logger(odoo.modules.registry._logger.name)
-
+    freeze_time = None
 
     @classmethod
     def _gc_filestore(cls):
@@ -805,7 +806,6 @@ class TransactionCase(BaseCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
         cls.addClassCleanup(cls._gc_filestore)
         cls.registry = odoo.registry(get_db_name())
         cls.registry_start_invalidated = cls.registry.registry_invalidated
@@ -840,6 +840,9 @@ class TransactionCase(BaseCase):
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
 
+        if cls.freeze_time:
+            cls.startClassPatcher(freezegun.freeze_time(cls.freeze_time))
+
         def forbidden(*args, **kwars):
             traceback.print_stack()
             raise AssertionError('Cannot commit or rollback a cursor from inside a test, this will lead to a broken cursor when trying to rollback the test. Please rollback to a specific savepoint instead or open another cursor if really necessary')
@@ -865,7 +868,6 @@ class TransactionCase(BaseCase):
 
     def setUp(self):
         super().setUp()
-
         # restore environments after the test to avoid invoking flush() with an
         # invalid environment (inexistent user id) from another test
         envs = self.env.transaction.envs
@@ -2110,3 +2112,28 @@ def tagged(*tags):
             _logger.warning('A tests should be either at_install or post_install, which is not the case of %r', obj)
         return obj
     return tags_decorator
+
+
+class freeze_time:
+    """ Object to replace the freezegun in Odoo test suites
+        It properly handles the test classes decoration
+        Also, it can be used like the usual method decorator or context manager
+    """
+
+    def __init__(self, time_to_freeze):
+        self.freezer = None
+        self.time_to_freeze = time_to_freeze
+
+    def __call__(self, func):
+        if isinstance(func, MetaCase):
+            func.freeze_time = self.time_to_freeze
+            return func
+        else:
+            return freezegun.freeze_time(self.time_to_freeze)(func)
+
+    def __enter__(self):
+        self.freezer = freezegun.freeze_time(self.time_to_freeze)
+        return self.freezer.start()
+
+    def __exit__(self, *args):
+        self.freezer.stop()
