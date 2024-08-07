@@ -6,7 +6,7 @@ import { sprintf } from "@web/core/utils/strings";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { EvaluationError } from "@odoo/o-spreadsheet";
 const { functionRegistry } = spreadsheet.registries;
-const { arg, toBoolean, toString, toNumber, toJsDate, formatValue } = spreadsheet.helpers;
+const { arg, toBoolean, toString, toNumber, toJsDate } = spreadsheet.helpers;
 
 const QuarterRegexp = /^q([1-4])\/(\d{4})$/i;
 const MonthRegexp = /^0?([1-9]|1[0-2])\/(\d{4})$/i;
@@ -44,11 +44,11 @@ const MonthRegexp = /^0?([1-9]|1[0-2])\/(\d{4})$/i;
  */
 
 /**
- * @param {string} dateRange
+ * @param {object | undefined} dateRange
  * @returns {QuarterDateRange | undefined}
  */
 function parseAccountingQuarter(dateRange) {
-    const found = dateRange.match(QuarterRegexp);
+    const found = toString(dateRange?.value).trim().match(QuarterRegexp);
     return found
         ? {
               rangeType: "quarter",
@@ -59,11 +59,23 @@ function parseAccountingQuarter(dateRange) {
 }
 
 /**
- * @param {string} dateRange
+ * @param {object | undefined} dateRange
  * @returns {MonthDateRange | undefined}
  */
-function parseAccountingMonth(dateRange) {
-    const found = dateRange.match(MonthRegexp);
+function parseAccountingMonth(dateRange, locale) {
+    if (
+        typeof dateRange?.value === "number" &&
+        dateRange.format?.includes("m") &&
+        !dateRange.format?.includes("d")
+    ) {
+        const date = toJsDate(dateRange.value, locale);
+        return {
+            rangeType: "month",
+            year: date.getFullYear(),
+            month: date.getMonth() + 1,
+        };
+    }
+    const found = toString(dateRange?.value).trim().match(MonthRegexp);
     return found
         ? {
               rangeType: "month",
@@ -74,11 +86,11 @@ function parseAccountingMonth(dateRange) {
 }
 
 /**
- * @param {string} dateRange
+ * @param {object | undefined} dateRange
  * @returns {YearDateRange | undefined}
  */
 function parseAccountingYear(dateRange, locale) {
-    const dateNumber = toNumber(dateRange, locale);
+    const dateNumber = toNumber(dateRange?.value, locale);
     // This allows a bit of flexibility for the user if they were to input a
     // numeric value instead of a year.
     // Users won't need to fetch accounting info for year 3000 before a long time
@@ -91,11 +103,11 @@ function parseAccountingYear(dateRange, locale) {
 }
 
 /**
- * @param {string} dateRange
+ * @param {object | undefined} dateRange
  * @returns {DayDateRange}
  */
 function parseAccountingDay(dateRange, locale) {
-    const dateNumber = toNumber(dateRange, locale);
+    const dateNumber = toNumber(dateRange?.value, locale);
     return {
         rangeType: "day",
         year: functionRegistry.get("YEAR").compute.bind({ locale })(dateNumber),
@@ -105,15 +117,14 @@ function parseAccountingDay(dateRange, locale) {
 }
 
 /**
- * @param {string | number} dateRange
+ * @param {object | undefined} dateRange
  * @returns {DateRange}
  */
 export function parseAccountingDate(dateRange, locale) {
     try {
-        dateRange = toString(dateRange).trim();
         return (
             parseAccountingQuarter(dateRange) ||
-            parseAccountingMonth(dateRange) ||
+            parseAccountingMonth(dateRange, locale) ||
             parseAccountingYear(dateRange, locale) ||
             parseAccountingDay(dateRange, locale)
         );
@@ -123,7 +134,7 @@ export function parseAccountingDate(dateRange, locale) {
                 _t(
                     `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`
                 ),
-                dateRange
+                dateRange?.value
             )
         );
     }
@@ -160,14 +171,7 @@ functionRegistry.add("ODOO.CREDIT", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        if (dateRange?.format) {
-            dateRange = { ...dateRange };
-            dateRange.value = formatValue(dateRange.value, {
-                format: dateRange.format,
-                locale: this.locale,
-            });
-        }
-        const _dateRange = parseAccountingDate(dateRange?.value, this.locale);
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         return {
@@ -200,14 +204,7 @@ functionRegistry.add("ODOO.DEBIT", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        if (dateRange?.format) {
-            dateRange = { ...dateRange };
-            dateRange.value = formatValue(dateRange.value, {
-                format: dateRange.format,
-                locale: this.locale,
-            });
-        }
-        const _dateRange = parseAccountingDate(dateRange?.value, this.locale);
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         return {
@@ -240,14 +237,7 @@ functionRegistry.add("ODOO.BALANCE", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        if (dateRange?.format) {
-            dateRange = { ...dateRange };
-            dateRange.value = formatValue(dateRange.value, {
-                format: dateRange.format,
-                locale: this.locale,
-            });
-        }
-        const _dateRange = parseAccountingDate(dateRange?.value, this.locale);
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         const value =
