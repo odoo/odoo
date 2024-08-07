@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo import fields, Command
 
 from dateutil.relativedelta import relativedelta
@@ -1506,3 +1506,16 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })
 
         self.assertEqual(wizard.amount, 39.50)
+
+    def test_payment_register_without_outstanding_account(self):
+        company = self.env.company
+        company.account_journal_payment_debit_account_id = False
+        company.account_journal_payment_credit_account_id = False
+        ctx = {'active_model': 'account.move', 'active_ids': self.out_invoice_1.ids}
+        wizard = self.env['account.payment.register'].with_context(**ctx)
+        wizard_form = Form(wizard)
+        self.assertEqual(wizard_form.journal_id, self.company_data['default_journal_bank'])
+        wizard = wizard_form.save()
+        with self.assertRaises(UserError, msg="You can't create a new payment without an outstanding payments/receipts"
+                                              "account set either on the company or the Manual payment method in the Bank journal."):
+            wizard._create_payments()

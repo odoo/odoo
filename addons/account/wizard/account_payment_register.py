@@ -692,6 +692,10 @@ class AccountPaymentRegister(models.TransientModel):
             ) AS move_line(move_id, payment_type, balance, account_id, company_id, date, partner_id)
         ''', **place_holders)
 
+        account_conditions = SQL("move_line.account_id = dup_move_line.account_id OR dup_move_line.account_id = %(suspense_account_id)s", suspense_account_id=self.company_id.account_journal_suspense_account_id.id)
+        if outstanding_account_ids:
+            account_conditions = SQL.join(SQL(" OR "), [account_conditions, SQL("dup_move_line.account_id IN %(outstanding_account_ids)s", outstanding_account_ids=outstanding_account_ids)])
+
         query = SQL(
             """
             SELECT
@@ -704,9 +708,7 @@ class AccountPaymentRegister(models.TransientModel):
                AND move_line.date = dup_move_line.date
                AND dup_move_line.parent_state IN %(matching_states)s
                AND (
-                   move_line.account_id = dup_move_line.account_id
-                   OR dup_move_line.account_id IN %(outstanding_account_ids)s
-                   OR dup_move_line.account_id = %(suspense_account_id)s
+                   %(account_conditions)s
                )
                AND NOT dup_move_line.reconciled
              WHERE move_line.balance = dup_move_line.balance
@@ -717,8 +719,7 @@ class AccountPaymentRegister(models.TransientModel):
         """,
             move_table_and_alias=move_table_and_alias,
             matching_states=tuple(matching_states),
-            suspense_account_id=self.company_id.account_journal_suspense_account_id.id,
-            outstanding_account_ids=outstanding_account_ids,
+            account_conditions=account_conditions,
         )
         result = self.env.execute_query(query)[0][0]
         return self.env['account.move'].browse(result)

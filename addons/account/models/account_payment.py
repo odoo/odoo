@@ -728,6 +728,14 @@ class AccountPayment(models.Model):
         def build_query(move_table_and_alias, outstanding_account_ids, payments):
             suspense_account_id = self.company_id.account_journal_suspense_account_id.id
 
+            account_conditions = SQL("move_line.account_id = dup_move_line.account_id OR dup_move_line.account_id = %(suspense_account_id)s", suspense_account_id=suspense_account_id)
+            case_1_condition = SQL("move_line.balance = dup_move_line.balance")
+            case_2_condition = SQL("move_line.balance = -1.0 * dup_move_line.balance")
+            if outstanding_account_ids:
+                account_conditions = SQL.join(SQL(" OR "), [account_conditions, SQL("dup_move_line.account_id IN %(outstanding_account_ids)s", outstanding_account_ids=outstanding_account_ids)])
+                case_1_condition = SQL.join(SQL(" AND "), [case_1_condition, SQL("dup_move_line.account_id NOT IN %(outstanding_account_ids)s", outstanding_account_ids=outstanding_account_ids)])
+                case_2_condition = SQL.join(SQL(" AND "), [case_2_condition, SQL("dup_move_line.account_id IN %(outstanding_account_ids)s", outstanding_account_ids=outstanding_account_ids)])
+
             return SQL(
                 """
                 SELECT
@@ -741,18 +749,16 @@ class AccountPayment(models.Model):
                    AND move_line.date = dup_move_line.date
                    AND dup_move_line.parent_state IN %(matching_states)s
                    AND (
-                       move_line.account_id = dup_move_line.account_id
-                       OR dup_move_line.account_id = %(suspense_account_id)s
-                       OR dup_move_line.account_id IN %(outstanding_account_ids)s
+                        %(account_conditions)s
                    )
                    AND NOT dup_move_line.reconciled
                  WHERE move_line.payment_id IN %(payments)s
                    AND (
                        -- Case 1: a move is a credit in same account receivable or debit in same acc payable as the payment
-                       (dup_move_line.account_id NOT IN %(outstanding_account_ids)s AND move_line.balance = dup_move_line.balance)
+                       (%(case_1)s)
                        OR
                        -- Case 2: a move is a credit in outstanding receipts or debit in outstanding payments
-                       (dup_move_line.account_id IN %(outstanding_account_ids)s AND move_line.balance = -1.0 * dup_move_line.balance)
+                       (%(case_2)s)
                    )
                    AND (
                        move_line.payment_type = 'inbound' AND dup_move_line.balance < 0.0
@@ -762,8 +768,9 @@ class AccountPayment(models.Model):
             """,
                 move_table_and_alias=move_table_and_alias,
                 matching_states=tuple(matching_states),
-                suspense_account_id=suspense_account_id,
-                outstanding_account_ids=outstanding_account_ids,
+                account_conditions=account_conditions,
+                case_1=case_1_condition,
+                case_2=case_2_condition,
                 payments=tuple(payments),
             )
 

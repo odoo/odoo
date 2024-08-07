@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 
@@ -1105,3 +1106,15 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
             payment.journal_id = default_journal
             self.assertEqual(payment.payment_method_line_id.journal_id.id, default_journal.id)
+
+    def test_payment_without_outstanding_account(self):
+        company = self.env.company
+        company.account_journal_payment_debit_account_id = False
+        company.account_journal_payment_credit_account_id = False
+        payment_form = Form(self.env['account.payment'])
+        payment_form.journal_id = self.company_data['default_journal_bank']
+        payment_form.partner_id = self.partner_a
+        payment_form.amount = 666
+        with self.assertRaises(UserError, msg="You can't create a new payment without an outstanding payments/receipts"
+                                              "account set either on the company or the Manual payment method in the Bank journal."):
+            payment_form.save()
