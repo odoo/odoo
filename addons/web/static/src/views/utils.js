@@ -21,6 +21,7 @@ export const BUTTON_CLICK_PARAMS = [
     "args",
     "context",
     "close",
+    "cancel-label",
     "confirm",
     "confirm-title",
     "confirm-label",

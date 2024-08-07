@@ -113,6 +113,9 @@ export function useViewButtons(ref, options = {}) {
                             ...(clickParams["confirm-label"] && {
                                 confirmLabel: clickParams["confirm-label"],
                             }),
+                            ...(clickParams["cancel-label"] && {
+                                cancelLabel: clickParams["cancel-label"],
+                            }),
                             body: clickParams.confirm,
                             confirm: () => execute(),
                             cancel: () => {},
