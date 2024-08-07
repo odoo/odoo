@@ -24,33 +24,39 @@ test("can shape an image", async () => {
     await setupEditor(`
         <img src="${base64Img}">
     `);
-    click("img");
+    const img = queryOne("img");
+    click(img);
     await waitFor(".o-we-toolbar");
 
-    click(".o-we-toolbar .fa-square");
-    await animationFrame();
-    expect(".o-we-toolbar .fa-square.active").toHaveCount(1);
-    expect("img.rounded").toHaveCount(1);
+    const buttons = {};
+    for (const buttonName of ["shape_rounded", "shape_circle", "shape_shadow", "shape_thumbnail"]) {
+        buttons[buttonName] = `.o-we-toolbar button[name='${buttonName}']`;
+    }
 
-    click(".o-we-toolbar .fa-square");
+    click(buttons["shape_rounded"]);
     await animationFrame();
-    expect(".o-we-toolbar .fa-square.active").toHaveCount(0);
-    expect("img.rounded").toHaveCount(0);
+    expect(buttons["shape_rounded"]).toHaveClass("active");
+    expect(img).toHaveClass("rounded");
 
-    click(".o-we-toolbar .fa-circle-o");
+    click(buttons["shape_rounded"]);
     await animationFrame();
-    expect(".o-we-toolbar .fa-circle-o.active").toHaveCount(1);
-    expect("img.rounded-circle").toHaveCount(1);
+    expect(buttons["shape_rounded"]).not.toHaveClass("active");
+    expect(img).not.toHaveClass("rounded");
 
-    click(".o-we-toolbar .fa-sun-o");
+    click(buttons["shape_circle"]);
     await animationFrame();
-    expect(".o-we-toolbar .fa-sun-o.active").toHaveCount(1);
-    expect("img.shadow").toHaveCount(1);
+    expect(buttons["shape_circle"]).toHaveClass("active");
+    expect(img).toHaveClass("rounded-circle");
 
-    click(".o-we-toolbar .fa-picture-o");
+    click(buttons["shape_shadow"]);
     await animationFrame();
-    expect(".o-we-toolbar .fa-picture-o.active").toHaveCount(1);
-    expect("img.img-thumbnail").toHaveCount(1);
+    expect(buttons["shape_shadow"]).toHaveClass("active");
+    expect(img).toHaveClass("shadow");
+
+    click(buttons["shape_thumbnail"]);
+    await animationFrame();
+    expect(buttons["shape_thumbnail"]).toHaveClass("active");
+    expect(img).toHaveClass("img-thumbnail");
 });
 
 test("can undo a shape", async () => {
@@ -60,14 +66,14 @@ test("can undo a shape", async () => {
     click("img");
     await waitFor(".o-we-toolbar");
 
-    click(".o-we-toolbar .fa-square");
+    click(".o-we-toolbar button[name='shape_rounded']");
     await animationFrame();
-    expect(".o-we-toolbar .fa-square.active").toHaveCount(1);
-    expect("img.rounded").toHaveCount(1);
+    expect(".o-we-toolbar button[name='shape_rounded']").toHaveClass("active");
+    expect("img").toHaveClass("rounded");
     editor.dispatch("HISTORY_UNDO");
     await animationFrame();
-    expect(".o-we-toolbar .fa-square.active").toHaveCount(0);
-    expect("img.rounded").toHaveCount(0);
+    expect(".o-we-toolbar button[name='shape_rounded']").not.toHaveClass("active");
+    expect("img").not.toHaveClass("rounded");
 });
 
 test("can add an image description & tooltip", async () => {
@@ -243,7 +249,8 @@ test("Can transform an image", async () => {
 });
 
 test("jquery transform overlay is rightly positioned in iframe", async () => {
-    const { el } = await setupEditor(`
+    const { el } = await setupEditor(
+        `
         <img class="img-fluid test-image" src="${base64Img}">
     `,
         { props: { iframe: true } }

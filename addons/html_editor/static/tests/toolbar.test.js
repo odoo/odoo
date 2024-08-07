@@ -363,11 +363,11 @@ test("toolbar correctly process inheritance buttons chain", async () => {
     await waitFor(".o-we-toolbar");
     expect(".btn-group[name='test_group']").toHaveCount(1);
     expect("button[name='test_btn']").toHaveCount(1);
-    expect("button[name='test_btn']").toHaveClass("fa-square");
+    expect("button[name='test_btn'] span.fa").toHaveClass("fa-square");
     expect("button[name='test_btn']").toHaveAttribute("title", "Test Button");
 
     expect("button[name='test_btn2']").toHaveCount(1);
-    expect("button[name='test_btn2']").toHaveClass("fa-square");
+    expect("button[name='test_btn2'] span.fa").toHaveClass("fa-square");
     expect("button[name='test_btn2']").toHaveAttribute("title", "Test Button 2");
 });
 
