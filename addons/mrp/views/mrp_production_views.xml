@@ -202,7 +202,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
                             invisible="not id or state in ('done', 'cancel')"
-                            confirm="Are you sure you want to cancel this manufacturing order?"/>
+                            confirm="Are you sure you want to cancel this manufacturing order?"
+                            confirm-label="Confirm"
+                            cancel-label="Discard"/>
                     <button name="button_unbuild" type="object" string="Unbuild" invisible="state != 'done'" data-hotkey="shift+v"/>
                 </header>
                 <sheet>
