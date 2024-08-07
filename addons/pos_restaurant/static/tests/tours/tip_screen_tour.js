@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Minute Maid", "1", "2"),
             ProductScreen.totalAmountIs("2.0"),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("2", "1"),
             FloorScreen.clickTable("2"),
             ProductScreen.totalAmountIs("2.0"),
@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             // order 2
             ProductScreen.addOrderline("Coca-Cola", "2", "2"),
             ProductScreen.totalAmountIs("4.0"),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("2", "2"),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.nthRowContains("2", "Tipping"),
@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             // order 4
             ProductScreen.addOrderline("Coca-Cola", "4", "2"),
             ProductScreen.totalAmountIs("8.0"),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("5", "4"),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.nthRowContains("4", "Tipping"),
@@ -69,7 +69,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TipScreen.percentAmountIs("25%", "0.50"),
             TipScreen.clickPercentTip("20%"),
             TipScreen.inputAmountIs("0.40"),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             Chrome.clickMenuOption("Orders"),
 
@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TipScreen.percentAmountIs("25%", "1.50"),
             TipScreen.clickPercentTip("25%"),
             TipScreen.inputAmountIs("1.50"),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             Chrome.clickMenuOption("Orders"),
 
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TipScreen.percentAmountIs("25%", "2.00"),
             TipScreen.setCustomTip("1.00"),
             TipScreen.inputAmountIs("1.00"),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.isShown(),
 
             // settle tips here

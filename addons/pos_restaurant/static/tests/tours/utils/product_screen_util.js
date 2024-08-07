@@ -16,17 +16,18 @@ export function orderlinesHaveNoChange() {
 export function orderlineIsToOrder(name) {
     return Order.hasLine({
         productName: name,
-        withClass: ".has-change.text-success.border-start.border-success.border-4",
+        withClass: ".orderline.has-change",
     });
 }
 export function orderlineIsToSkip(name) {
     return Order.hasLine({
-        withClass: ".skip-change.text-primary.border-start.border-primary.border-4",
+        withClass: ".orderline.skip-change",
         productName: name,
     });
 }
 export function guestNumberIs(num) {
     return [
+        ...ProductScreen.clickControlButtonMore(),
         {
             content: `guest number is ${num}`,
             trigger: ProductScreen.controlButtonTrigger("Guests") + `:contains(${num})`,
@@ -45,7 +46,7 @@ export function tableNameShown(table_name) {
     return [
         {
             content: "Table name is shown",
-            trigger: `.table-name:contains(${table_name})`,
+            trigger: `.table-free-order-label:contains(${table_name})`,
         },
     ];
 }

@@ -154,7 +154,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
             PosLoyalty.removeRewardLine("90% on the cheapest product"),
             PosLoyalty.hasRewardLine("10% on your order", "-1.91"),
             PosLoyalty.orderTotalIs("17.23"),
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Reset Programs"),
             PosLoyalty.hasRewardLine("90% on the cheapest product", "-2.87"),
             PosLoyalty.orderTotalIs("16.27"),
@@ -474,7 +473,6 @@ registry.category("web_tour.tours").add("PosLoyaltyArchivedRewardProductsInactiv
             ProductScreen.clickDisplayedProduct("Test Product A"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA"),
-
             PosLoyalty.isRewardButtonHighlighted(false),
             ProductScreen.selectedOrderlineHas("Test Product A", "1.00", "100.00"),
             PosLoyalty.finalizeOrder("Cash", "100"),

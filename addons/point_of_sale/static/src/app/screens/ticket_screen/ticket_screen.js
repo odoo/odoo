@@ -5,6 +5,7 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
+import { BackButton } from "@point_of_sale/app/screens/product_screen/action_pad/back_button/back_button";
 import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_button/invoice_button";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
@@ -39,6 +40,7 @@ export class TicketScreen extends Component {
         ReprintReceiptButton,
         SearchBar,
         Numpad,
+        BackButton,
     };
     static props = {
         destinationOrder: { type: Object, optional: true },

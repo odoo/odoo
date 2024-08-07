@@ -1,6 +1,6 @@
 import { queryAll } from "@odoo/hoot-dom";
 
-const buttonTriger = (buttonValue) => `div.numpad.row button[value="${buttonValue}"]`;
+const buttonTriger = (buttonValue) => `div.numpad button[value="${buttonValue}"]`;
 export const click = (buttonValue) => ({
     content: `click numpad button: ${buttonValue}`,
     trigger: buttonTriger(buttonValue),

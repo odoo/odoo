@@ -8,15 +8,15 @@
                 </h4>
             </t>
             <div class="opening-cash-section mb-3">
-                <span class="info-title d-flex flex-grow-1 align-items-start">Opening cash</span>
-                <div class="cash-input-sub-section input-group">
+                <label class="form-label">Opening cash</label>
+                <div class="cash-input-sub-section d-flex gap-1">
                     <Input tModel="[state, 'openingCash']"
                         isValid.bind="env.utils.isValidFloat"
                         callback.bind="handleInputChange"
                         autofocus="true"
                         placeholder.translate="Opening Balance Eg: 123"/>
-                    <div class="button icon btn btn-secondary" t-on-click="openDetailsPopup">
-                        <i class="fa fa-money fa-2x" role="img" title="Open the money details popup"/>
+                    <div class="button icon btn btn-secondary btn-lg lh-lg" t-on-click="openDetailsPopup">
+                        <i class="fa fa-money" role="img" title="Open the money details popup"/>
                     </div>
                 </div>
             </div>

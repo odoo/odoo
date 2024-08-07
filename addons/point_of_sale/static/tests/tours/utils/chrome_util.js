@@ -7,7 +7,7 @@ export function confirmPopup() {
 export function clickMenuButton() {
     return {
         content: "Click on the menu button",
-        trigger: ".pos-rightheader button.fa-bars",
+        trigger: ".pos-rightheader button:has(.fa-bars)",
         run: "click",
     };
 }
@@ -44,5 +44,12 @@ export function endTour() {
 export function isSyncStatusConnected() {
     return {
         trigger: negate(".oe_status", ".pos-rightheader .status-buttons"),
+    };
+}
+export function clickPlanButton() {
+    return {
+        content: "go back to the floor screen",
+        trigger: ".pos-leftheader .back-button",
+        run: "click",
     };
 }
