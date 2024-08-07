@@ -61,6 +61,10 @@ export class Thread extends Record {
         return this.get(data);
     }
 
+    static get onlineMemberStatuses() {
+        return ["away", "bot", "online"];
+    }
+
     /** @type {number} */
     id;
     /** @type {string} */
@@ -538,7 +542,10 @@ export class Thread extends Record {
     offlineMembers = Record.many("ChannelMember", {
         /** @this {import("models").Thread} */
         compute() {
-            return this.channelMembers.filter((member) => member.persona?.im_status !== "online");
+            return this.channelMembers.filter(
+                (member) =>
+                    !this.store.Thread.onlineMemberStatuses.includes(member.persona?.im_status)
+            );
         },
         sort: (m1, m2) => (m1.persona?.name < m2.persona?.name ? -1 : 1),
     });
@@ -606,7 +613,9 @@ export class Thread extends Record {
     onlineMembers = Record.many("ChannelMember", {
         /** @this {import("models").Thread} */
         compute() {
-            return this.channelMembers.filter((member) => member.persona.im_status === "online");
+            return this.channelMembers.filter((member) =>
+                this.store.Thread.onlineMemberStatuses.includes(member.persona.im_status)
+            );
         },
         sort(m1, m2) {
             return this.store.Thread.sortOnlineMembers(m1, m2);
