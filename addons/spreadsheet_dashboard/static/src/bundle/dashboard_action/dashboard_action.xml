@@ -2,7 +2,7 @@
 <templates>
     <div t-name="spreadsheet_dashboard.DashboardAction" class="o_action o_spreadsheet_dashboard_action o_field_highlight">
         <ControlPanel display="controlPanelDisplay">
-            <t t-set-slot="layout-actions">
+            <t t-set-slot="layout-actions" t-if="!state.activeDashboard?.isSample">
                 <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
                 <FilterValue
                     t-if="status === Status.Loaded"
@@ -13,7 +13,7 @@
                     t-key="filter.id"
                 />
             </t>
-            <t t-set-slot="control-panel-navigation-additional">
+            <t t-set-slot="control-panel-navigation-additional" t-if="!state.activeDashboard?.isSample">
                 <SpreadsheetShareButton t-key="activeDashboardId" model="state.activeDashboard?.model" onSpreadsheetShared.bind="shareSpreadsheet" togglerClass="'btn-light'"/>
             </t>
         </ControlPanel>
@@ -40,7 +40,7 @@
                 </div>
                 <t t-else="">
                     <MobileFigureContainer t-if="env.isSmall" spreadsheetModel="dashboard.model" t-key="dashboard.id"/>
-                    <div t-else="" class="o_renderer">
+                    <div t-else="" class="o_renderer" t-att-class="{'o-sample-dashboard': dashboard.isSample}">
                         <SpreadsheetComponent
                             model="dashboard.model"
                             t-key="dashboard.id"/>

@@ -161,13 +161,14 @@ export class DashboardLoader {
         const dashboard = this._getDashboard(dashboardId);
         dashboard.status = Status.Loading;
         try {
-            const { snapshot, revisions, default_currency } = await this.orm.call(
+            const { snapshot, revisions, default_currency, is_sample } = await this.orm.call(
                 "spreadsheet.dashboard",
                 "get_readonly_dashboard",
                 [dashboardId]
             );
             dashboard.model = this._createSpreadsheetModel(snapshot, revisions, default_currency);
             dashboard.status = Status.Loaded;
+            dashboard.isSample = is_sample;
         } catch (error) {
             dashboard.error = error;
             dashboard.status = Status.Error;
