@@ -79,6 +79,8 @@ export class Store extends BaseStore {
     Notification;
     /** @type {typeof import("@mail/core/common/persona_model").Persona} */
     Persona;
+    /** @type {typeof import("@mail/core/common/res_groups_model").ResGroups} */
+    ["res.groups"];
     /** @type {typeof import "@mail/chatter/web/scheduled_message_model).ScheduledMessage"} */
     ScheduledMessage;
     /** @type {typeof import("@mail/core/common/settings_model").Settings} */
