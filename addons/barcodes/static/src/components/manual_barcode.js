@@ -1,17 +1,22 @@
-import { BarcodeDialog } from '@web/core/barcode/barcode_dialog';
+import { BarcodeDialog } from "@web/core/barcode/barcode_dialog";
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { _t } from "@web/core/l10n/translation";
 
 export class BarcodeInput extends Component {
-    static template = "stock_barcode.BarcodeInput";
+    static template = "barcodes.BarcodeInput";
     static props = {
         onSubmit: Function,
+        placeholder: { type: String, optional: true },
     };
-
+    static defaultProps = {
+        placeholder: _t("Enter a barcode..."),
+    };
     setup() {
         this.state = useState({
             barcode: false,
         });
-        this.barcodeManual = useRef('manualBarcode');
+        this.barcodeManual = useRef("manualBarcode");
         // Autofocus processing was blocked because a document already has a focused element.
         onMounted(() => {
             this.barcodeManual.el.focus();
@@ -25,16 +30,18 @@ export class BarcodeInput extends Component {
      * @param {KeyboardEvent} ev
      */
     _onKeydown(ev) {
-        if (ev.key === "Enter" && this.state.barcode) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "enter" && this.state.barcode) {
             this.props.onSubmit(this.state.barcode);
         }
     }
 }
 
 export class ManualBarcodeScanner extends BarcodeDialog {
-    static template = "stock_barcode.ManualBarcodeScanner";
+    static template = "barcodes.ManualBarcodeScanner";
     static components = {
         ...BarcodeDialog.components,
         BarcodeInput,
     };
+    static props = [...BarcodeDialog.props, "placeholder?"];
 }
