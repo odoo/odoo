@@ -1,5 +1,6 @@
 declare module "models" {
     export interface Store {
+        readonly onlineMemberStatuses: String[],
         sortOnlineMembers(m1: ChannelMember, m2: ChannelMember)
     }
 
