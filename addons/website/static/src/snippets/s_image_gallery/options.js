@@ -164,15 +164,21 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         const imageEls = this._getItemsGallery();
         const imgHolderEls = this._getImgHolderEls();
         var currentInterval = this.$target.find('.carousel:first').attr('data-bs-interval');
-        var params = {
+        let params = {
             images: imageEls,
             index: 0,
             interval: currentInterval || 0,
             ride: !currentInterval ? "false" : "carousel",
             id: 'slideshow_' + new Date().getTime(),
             hideImage: true,
-        },
-        $slideshow = $(renderToElement('website.gallery.slideshow', params));
+        };
+        // Since there is no versioning for this snippet we use the last version
+        // of "website.gallery.slideshow" called "website.s_image_gallery_mirror"
+        if (this.$target[0].dataset.vcss === '002') {
+            let carouselEl = this.$target[0].querySelector('.carousel');
+            params.colorContrast  = carouselEl && carouselEl.classList.contains('carousel-dark') ? 'carousel-dark' : ' ';
+        }
+        let $slideshow = $(renderToElement('website.s_image_gallery_mirror', params));
         const carouselItemEls = $slideshow[0].querySelectorAll(".carousel-item");
         carouselItemEls.forEach((carouselItemEl, index) => {
             // Add the images in the carousel items.
@@ -487,7 +493,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                     const imagePromises = [];
                     for (const image of images) {
                         const $img = $('<img/>', {
-                            class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
+                            class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover',
                             src: image.src,
                             'data-index': ++index,
                             alt: image.alt || '',

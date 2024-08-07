@@ -2,46 +2,42 @@
 <odoo>
 
 <template id="s_image_gallery" name="Image Gallery">
-    <section class="s_image_gallery o_slideshow s_image_gallery_show_indicators s_image_gallery_indicators_rounded pt24" data-vcss="001" data-columns="3" style="height: 500px; overflow: hidden;">
-        <div class="container">
-            <div id="slideshow_sample" class="carousel slide" data-bs-ride="true" style="margin: 0 12px;">
-                <div class="carousel-inner" style="padding: 0;">
+    <section class="s_image_gallery o_slideshow s_image_gallery_indicators_rounded pt24 pb24 s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right s_image_gallery_indicators_dots s_image_gallery_arrows_default" data-vcss="002" data-columns="3">
+        <div class="o_container_small overflow-hidden">
+            <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="true">
+                <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img class="img img-fluid d-block" src="/web/image/website.library_image_08" data-name="Image" data-index="0" alt=" "/>
+                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_08" data-name="Image" data-index="0" alt=" "/>
                     </div>
                     <div class="carousel-item">
-                        <img class="img img-fluid d-block" src="/web/image/website.library_image_03" data-name="Image" data-index="1" alt=" "/>
+                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_03" data-name="Image" data-index="1" alt=" "/>
                     </div>
                     <div class="carousel-item">
-                        <img class="img img-fluid d-block" src="/web/image/website.library_image_02" data-name="Image" data-index="2" alt=" "/>
+                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_02" data-name="Image" data-index="2" alt=" "/>
                     </div>
                 </div>
-                <ul class="carousel-indicators">
-                    <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
-                        <i class="oi oi-chevron-left"/>
-                    </li>
-                    <li data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active"/>
-                    <li data-bs-target="#slideshow_sample" data-bs-slide-to="1" style="background-image: url(/web/image/website.library_image_03)"/>
-                    <li data-bs-target="#slideshow_sample" data-bs-slide-to="2" style="background-image: url(/web/image/website.library_image_02)"/>
-                    <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
-                        <i class="oi oi-chevron-right"/>
-                    </li>
-                </ul>
-                <a class="carousel-control-prev o_we_no_overlay o_not_editable" href="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
-                    <span class="oi oi-chevron-left fa-2x text-white"/>
-                    <span class="visually-hidden">Previous</span>
-                </a>
-                <a class="carousel-control-next o_we_no_overlay o_not_editable" href="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
-                    <span class="oi oi-chevron-right fa-2x text-white"/>
-                    <span class="visually-hidden">Next</span>
-                </a>
+                <div class="o_carousel_controllers">
+                    <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active"/>
+                        <button type="button" style="background-image: url(/web/image/website.library_image_03)" data-bs-target="#slideshow_sample" data-bs-slide-to="1"/>
+                        <button type="button" style="background-image: url(/web/image/website.library_image_02)" data-bs-target="#slideshow_sample" data-bs-slide-to="2"/>
+                    </div>
+                    <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide="next" aria-label="Next" title="Next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"/>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
 </template>
 
 <template id="s_images_wall" name="Images Wall">
-    <section class="s_image_gallery o_spc-small o_masonry pt24 pb24" data-vcss="001" data-columns="3" style="overflow: hidden;">
+    <section class="s_image_gallery o_spc-small o_masonry pt24 pb24" data-vcss="002" data-columns="3" style="overflow: hidden;">
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
@@ -96,17 +92,26 @@
             <we-range string="Images Spacing"
                 data-dependencies="!slideshow_mode_opt"
                 data-select-class="o_spc-none|o_spc-small|o_spc-medium|o_spc-big"/>
-            <we-select string="Arrows" data-dependencies="slideshow_mode_opt">
-                <we-button data-select-class="">Standard</we-button>
-                <we-button data-select-class="s_image_gallery_indicators_arrows_boxed">Boxed</we-button>
-                <we-button data-select-class="s_image_gallery_indicators_arrows_rounded">Rounded</we-button>
+            <we-select string="Style" data-dependencies="slideshow_mode_opt">
+                <we-button data-select-class="">Classic</we-button>
+                <we-button data-select-class="s_image_gallery_controllers_indicators_outside">Indicators outside</we-button>
+                <we-button data-select-class="s_image_gallery_controllers_outside">Outside, center</we-button>
+                <we-button data-select-class="s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_left">Outside, at left</we-button>
+                <we-button data-select-class="s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right">Outside, at right</we-button>
             </we-select>
-            <we-checkbox string="Image Cover" data-select-class="s_image_gallery_cover" data-dependencies="slideshow_mode_opt"/>
-            <we-select string="Indicators" data-dependencies="slideshow_mode_opt">
-                <we-button data-select-class="">None</we-button>
-                <we-button data-select-class="s_image_gallery_show_indicators s_image_gallery_indicators_dots">Dots</we-button>
-                <we-button data-select-class="s_image_gallery_show_indicators">Squared Miniatures</we-button>
-                <we-button data-select-class="s_image_gallery_show_indicators s_image_gallery_indicators_rounded">Rounded Miniatures</we-button>
+            <we-checkbox string="Invert colors" data-dependencies="slideshow_mode_opt" data-apply-to=".carousel" class="o_we_sublevel_1" data-select-class="carousel-dark"/>
+            <we-select string="Arrows" data-dependencies="slideshow_mode_opt" class="o_we_sublevel_1">
+                <we-button data-select-class="s_image_gallery_arrows_default">Default</we-button>
+                <we-button data-select-class="s_image_gallery_arrows_boxed">Boxed</we-button>
+                <we-button data-select-class="s_image_gallery_arrows_rounded">Rounded</we-button>
+                <we-button data-select-class="s_image_gallery_arrows_hidden">Hidden</we-button>
+            </we-select>
+            <we-select string="Indicators" data-dependencies="slideshow_mode_opt" class="o_we_sublevel_1">
+                <we-button data-select-class="s_image_gallery_indicators_bars">Bars</we-button>
+                <we-button data-select-class="s_image_gallery_indicators_dots">Dots</we-button>
+                <we-button data-select-class="s_image_gallery_indicators_squared">Squared Miniatures</we-button>
+                <we-button data-select-class="s_image_gallery_indicators_rounded">Rounded Miniatures</we-button>
+                <we-button data-select-class="s_image_gallery_indicators_hidden">Hidden</we-button>
             </we-select>
             <t t-call="website.snippet_options_border_widgets">
                 <t t-set="apply_to" t-valuef="img"/>
@@ -134,12 +139,26 @@
     <field name="name">Image gallery 001 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_image_gallery/001.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.s_image_gallery_002_scss" model="ir.asset">
+    <field name="name">Image gallery 002 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_image_gallery/002.scss</field>
 </record>
 
 <record id="website.s_image_gallery_000_xml" model="ir.asset">
     <field name="name">Image gallery 000 XML</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_image_gallery/000.xml</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.s_image_gallery_001_xml" model="ir.asset">
+    <field name="name">Image gallery 001 XML</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_image_gallery/001.xml</field>
 </record>
 
 </odoo>
