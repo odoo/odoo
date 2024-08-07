@@ -28,6 +28,7 @@ class PosSelfOrderController(http.Controller):
 
         order['name'] = order_reference
         order['pos_reference'] = order_reference
+        order['sequence_number'] = sequence_number
         order['user_id'] = request.session.uid
         order['date_order'] = str(fields.Datetime.now())
         order['fiscal_position_id'] = fiscal_position.id if fiscal_position else False
