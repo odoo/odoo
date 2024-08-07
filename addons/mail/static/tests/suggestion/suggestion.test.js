@@ -330,5 +330,5 @@ test("Mention with @everyone", async () => {
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@everyone " });
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message-bubble.bg-warning-light");
+    await contains(".o-mail-Message-bubble.o-orange");
 });

@@ -21,18 +21,18 @@
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75 smaller mt-2">
+                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted smaller mt-2">
                                 <t t-esc="message.dateSimple"/>
                             </small>
                         </t>
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note }">
-                            <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author" t-att-class="getAuthorAttClass()">
+                            <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author small" t-att-class="getAuthorAttClass()">
                                 <strong class="me-1" t-esc="authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
-                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75 smaller" t-att-title="message.datetimeShort">
+                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted smaller" t-att-title="message.datetimeShort">
                                 <t t-if="shouldDisplayAuthorName">- </t>
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
                                 <RelativeTime t-else="" datetime="message.datetime"/>
@@ -72,14 +72,15 @@
                                             <div class="position-relative overflow-x-auto d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                                     'border': state.isEditing and !message.is_note,
-                                                    'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
-                                                    'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
-                                                    'bg-warning-light border border-warning opacity-50': message.isHighlightedFromMention,
+                                                    'o-blue border border-info': !message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
+                                                    'o-green border border-success': message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
+                                                    'o-orange border border-warning': message.isHighlightedFromMention,
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.is_note,
                                                             'fs-1': !state.isEditing and !env.inChatter and message.onlyEmojis,
-                                                            'mb-0 py-2 px-3': !message.is_note,
+                                                            'mb-0 py-2': !message.is_note,
+                                                            'o-note': message.is_note,
                                                             'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.is_note,
                                                             'o-mail-Message-editable flex-grow-1': state.isEditing,
                                                             }" t-ref="body">
