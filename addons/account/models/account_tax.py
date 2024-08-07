@@ -1308,6 +1308,52 @@ class AccountTax(models.Model):
         }
 
     @api.model
+    def _convert_tax_included_price(self, price, price_taxes, new_taxes, company=None):
+        """Convert a price among different taxes included in price
+
+        Example:
+
+        Given a price of $120 with 20% tax included (= $100 tax excluded):
+        - When converting to 10% tax included, the price is $110 (= $100 tax excluded).
+        - When converting to 20% tax excluded, the price is $100.
+        - When converting to 10% tax excluded, the price is $100.
+
+        Given a price of $100 with 20% tax excluded:
+        - When converting to 20% tax included, the price is $120 (= $100 tax excluded).
+        - When converting to 10% tax included, the price is $110 (= $100 tax excluded).
+        - When converting to 10% tax excluded, the price is $100.
+
+        :param price: The price to convert
+        :param price_taxes: The taxes applied on the price
+        :param new_taxes: The new taxes to apply
+        :param company: When provided, filters the taxes to ensure they belong to it
+        :return: The converted price
+        """
+        if company:
+            price_taxes = price_taxes.filtered(lambda tax: tax.company_id == company)
+            new_taxes = new_taxes.filtered(lambda tax: tax.company_id == company)
+
+        flattened_price_taxes = price_taxes.flatten_taxes_hierarchy()
+        flattened_new_taxes = new_taxes.flatten_taxes_hierarchy()
+        new_price = price
+
+        # Substract the previous taxes included in price
+        if any(tax.price_include for tax in flattened_price_taxes):
+            new_price = flattened_price_taxes.with_context(round=False, round_base=False).compute_all(price)['total_excluded']
+
+        # Add the new taxes included in price
+        if any(tax.price_include for tax in flattened_new_taxes):
+            new_taxes_res = flattened_new_taxes.with_context(round=False, round_base=False).compute_all(new_price, handle_price_include=False)
+            new_taxes_included_amount = sum(
+                tax_res['amount']
+                for tax_res in new_taxes_res['taxes']
+                if self.env['account.tax'].browse(tax_res['id']).price_include
+            )
+            new_price += new_taxes_included_amount
+
+        return new_price
+
+    @api.model
     def _fix_tax_included_price(self, price, prod_taxes, line_taxes):
         """Subtract tax amount from price when corresponding "price included" taxes do not apply"""
         # FIXME get currency in param?

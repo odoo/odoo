@@ -722,15 +722,100 @@ class TestSalesTeam(SaleCommon):
         self.assertEqual(order.amount_total, 300)
         self.assertEqual(order.amount_tax, 100)
         order.fiscal_position_id = mapping_a
-        order._recompute_prices()
         order.action_update_taxes()
         self.assertEqual(order.amount_total, 270)
         self.assertEqual(order.amount_tax, 70)
         order.fiscal_position_id = mapping_b
-        order._recompute_prices()
         order.action_update_taxes()
         self.assertEqual(order.amount_total, 252)
         self.assertEqual(order.amount_tax, 52)
+
+    def test_action_recompute_taxes_price_unit_consistency(self):
+        """Test that the product prices are consistent when changing fiscal position
+
+        Makes sure the computed prices are the same, regardless of when the product was
+        added: before or after changing the fiscal position.
+        """
+        tax_20_inc, tax_10_inc, tax_20_exc = self.env['account.tax'].create(
+            [
+                {
+                    'name': 'tax_20_inc',
+                    'amount_type': 'percent',
+                    'amount': 20.0,
+                    'price_include': True,
+                    'include_base_amount': True,
+                },
+                {
+                    'name': 'tax_10_inc',
+                    'amount_type': 'percent',
+                    'amount': 10.0,
+                    'price_include': True,
+                    'include_base_amount': True,
+                },
+                {
+                    'name': 'tax_20_exc',
+                    'amount_type': 'percent',
+                    'amount': 20.0,
+                },
+            ]
+        )
+        fp_reduce_tax = self.env['account.fiscal.position'].create({
+            'name': 'Reduced TAX',
+            'tax_ids': [
+                Command.create({'tax_src_id': tax_20_inc.id, 'tax_dest_id': tax_10_inc.id}),
+            ],
+        })
+        fp_tax_exc = self.env['account.fiscal.position'].create({
+            'name': 'Tax Excluded',
+            'tax_ids': [
+                Command.create({'tax_src_id': tax_20_inc.id, 'tax_dest_id': tax_20_exc.id}),
+            ],
+        })
+        product_tax_inc = self.env['product.product'].create(
+            {
+                'name': 'Product Tax Included',
+                'lst_price': 120,
+                'taxes_id': [Command.set(tax_20_inc.ids)],
+            }
+        )
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_tax_inc.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        })
+        # tax included in price
+        self.assertAlmostEqual(order.order_line[0].price_unit, 120)
+        self.assertAlmostEqual(order.order_line[0].price_subtotal, 100)
+        self.assertAlmostEqual(order.order_line[0].price_total, 120)
+        # Change fiscal position and recompute taxes
+        order.fiscal_position_id = fp_reduce_tax
+        order.action_update_taxes()
+        # Untaxed prices should be kept
+        self.assertAlmostEqual(order.order_line[0].price_unit, 110)
+        self.assertAlmostEqual(order.order_line[0].price_subtotal, 100)
+        self.assertAlmostEqual(order.order_line[0].price_total, 110)
+        # Exaclty the same as if we added a new line
+        with Form(order) as order_form:
+            new_line = order_form.order_line.new()
+            new_line.product_id = product_tax_inc
+            new_line.product_uom_qty = 1
+            self.assertAlmostEqual(new_line.price_unit, 110)
+        # Change to tax excluded should also update the prices
+        order.fiscal_position_id = fp_tax_exc
+        order.action_update_taxes()
+        self.assertAlmostEqual(order.order_line[0].price_unit, 100)
+        self.assertAlmostEqual(order.order_line[0].price_subtotal, 100)
+        self.assertAlmostEqual(order.order_line[0].price_total, 120)
+        # Back to regular prices included
+        order.fiscal_position_id = False
+        order.action_update_taxes()
+        self.assertAlmostEqual(order.order_line[0].price_unit, 120)
+        self.assertAlmostEqual(order.order_line[0].price_subtotal, 100)
+        self.assertAlmostEqual(order.order_line[0].price_total, 120)
 
     def test_recompute_taxes_rounded_globally_multi_company_currency(self):
         '''

@@ -449,7 +449,7 @@ class SaleOrderLine(models.Model):
                     product_taxes=line.product_id.taxes_id.filtered(
                         lambda tax: tax.company_id == line.env.company
                     ),
-                    fiscal_position=line.order_id.fiscal_position_id,
+                    product_taxes_after_fp=line.tax_id,
                 )
 
     def _get_display_price(self):

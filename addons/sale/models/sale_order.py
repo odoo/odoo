@@ -958,7 +958,21 @@ class SaleOrder(models.Model):
 
     def _recompute_taxes(self):
         lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
+        lines_to_recompute_taxes = {line: line.tax_id for line in lines_to_recompute}
         lines_to_recompute._compute_tax_id()
+        # Fix tax included in price
+        for line in lines_to_recompute:
+            previous_taxes = lines_to_recompute_taxes[line]
+            if previous_taxes == line.tax_id:
+                continue
+            new_price = self.env['account.tax']._convert_tax_included_price(
+                line.price_unit,
+                previous_taxes,
+                line.tax_id,
+            )
+            if line.currency_id.compare_amounts(line.price_unit, new_price):
+                line.price_unit = new_price
+        # Hide the update taxes button
         self.show_update_fpos = False
 
     def action_update_prices(self):
