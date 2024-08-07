@@ -340,6 +340,8 @@ class MergePartnerAutomatic(models.TransientModel):
         self._update_reference_fields(src_partners, dst_partner)
         self._update_values(src_partners, dst_partner)
 
+        self.env.add_to_compute(dst_partner._fields['partner_share'], dst_partner)
+
         self._log_merge_operation(src_partners, dst_partner)
 
         # delete source partner, since they are merged
