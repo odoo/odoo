@@ -44,7 +44,7 @@
                                     on <a t-att-href="message.resUrl"><t t-esc="message.thread.displayName"/></a>
                                 </t>
                                 <t t-else="">
-                                    (from <a t-att-href="message.resUrl"><t t-esc="message.thread.prefix"/><t t-esc="message.thread.displayName"/></a>)
+                                    (from <a t-att-href="message.resUrl"><t t-esc="message.thread.prefix"/><t t-esc="message.thread.displayName or message.default_subject"/></a>)
                                 </t>
                             </small>
                             <div t-if="props.message.scheduledDatetime" t-att-class="{ 'ms-2': (props.isInChatWindow and isAlignedRight) or (isPersistentMessageFromAnotherThread) }" t-att-title="props.message.scheduledDateSimple">

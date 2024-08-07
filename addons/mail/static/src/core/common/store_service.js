@@ -71,6 +71,8 @@ export class Store extends BaseStore {
     Persona;
     /** @type {typeof import("@mail/core/common/country_model").Country} */
     ["res.country"];
+    /** @type {typeof import("@mail/core/common/res_groups_model").ResGroups} */
+    ["res.groups"];
     /** @type {typeof import("@mail/core/common/settings_model").Settings} */
     Settings;
     /** @type {typeof import("@mail/core/common/thread_model").Thread} */

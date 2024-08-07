@@ -394,6 +394,7 @@ export class DiscussChannel extends models.ServerModel {
             res.from_message_id = mailDataHelpers.Store.one(
                 MailMessage.browse(channel.from_message_id)
             );
+            res.group_public_id = channel.group_public_id;
             if (this.env.user) {
                 const message_needaction_counter = MailNotification._filter([
                     ["res_partner_id", "=", this.env.user.partner_id],
