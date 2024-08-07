@@ -58,13 +58,6 @@ patch(MockServer.prototype, {
                 },
             });
         }
-        if (args.canned_responses) {
-            this._addToRes(res, {
-                CannedResponse: this.pyEnv["mail.canned.response"].search_read([], {
-                    fields: ["source", "substitution"],
-                }),
-            });
-        }
         return res;
     },
     _addToRes(res, data) {

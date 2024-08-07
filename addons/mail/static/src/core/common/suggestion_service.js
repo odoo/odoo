@@ -69,7 +69,7 @@ export class SuggestionService {
     }
 
     searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
-        const cannedResponses = Object.values(this.store.CannedResponse.records).filter(
+        const cannedResponses = Object.values(this.store["mail.canned.response"].records).filter(
             (cannedResponse) => {
                 return cleanTerm(cannedResponse.source).includes(cleanedSearchTerm);
             }
@@ -98,7 +98,7 @@ export class SuggestionService {
             return c1.id - c2.id;
         };
         return {
-            type: "CannedResponse",
+            type: "mail.canned.response",
             suggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
         };
     }

@@ -1,51 +1,53 @@
-import { models } from "@web/../tests/web_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
+import { getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class MailCannedResponse extends models.ServerModel {
     _name = "mail.canned.response";
 
     create() {
+        const cannedReponseIds = super.create(...arguments);
+        this._broadcast(cannedReponseIds);
+        return cannedReponseIds;
+    }
+
+    write(ids) {
+        const res = super.write(...arguments);
+        this._broadcast(ids);
+        return res;
+    }
+
+    unlink(ids) {
+        this._broadcast(ids, makeKwArgs({ delete: true }));
+        return super.unlink(...arguments);
+    }
+
+    _broadcast(ids, _delete) {
+        const kwargs = getKwArgs(arguments, "ids", "delete");
+        _delete = kwargs.delete;
         const notifications = [];
-        const cannedReponseId = super.create(...arguments);
-        const [cannedResponse] = this.env["mail.canned.response"].search_read([
-            ["id", "=", cannedReponseId],
-        ]);
-        if (cannedResponse) {
-            const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
+        const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
+        for (const cannedResponse of this.browse(ids)) {
             notifications.push([
                 partner,
                 "mail.record/insert",
-                {
-                    CannedResponse: [cannedResponse],
-                },
+                new mailDataHelpers.Store(
+                    this.browse(cannedResponse.id),
+                    makeKwArgs({ delete: _delete })
+                ).get_result(),
             ]);
         }
         if (notifications.length) {
             this.env["bus.bus"]._sendmany(notifications);
         }
-        return cannedReponseId;
     }
 
-    write() {
-        const res = super.write(...arguments);
-        const [cannedResponse] = this.env["mail.canned.response"].search_read([
-            ["id", "=", this[0].id],
-        ]);
-        const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
-        this.env["bus.bus"]._sendone(partner, "mail.record/insert", {
-            CannedResponse: [cannedResponse],
-        });
-        return res;
-    }
-
-    unlink() {
-        const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
-        this.env["bus.bus"]._sendone(partner, "mail.record/delete", {
-            CannedResponse: [
-                {
-                    id: this[0].id,
-                },
-            ],
-        });
-        return super.unlink(...arguments);
+    _to_store(ids, store, fields) {
+        const kwargs = getKwArgs(arguments, "ids", "store", "fields");
+        fields = kwargs.fields;
+        if (!fields) {
+            fields = ["source", "substitution"];
+        }
+        store.add(this._name, this.read(ids, fields, false));
     }
 }

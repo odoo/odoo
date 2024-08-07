@@ -1022,15 +1022,16 @@ test("Canned response can be deleted from the bus", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input");
     await insertText(".o-mail-Composer-input", ":");
     await contains(".o-mail-NavigableList-item", { count: 2 });
+    await contains(".o-mail-NavigableList-item", { text: "hello" });
+    await contains(".o-mail-NavigableList-item", { text: "test" });
     await insertText(".o-mail-Composer-input", "", { replace: true });
-    pyEnv["mail.canned.response"].unlink([cannedResponseId]);
     await contains(".o-mail-NavigableList-item", { count: 0 });
+    pyEnv["mail.canned.response"].unlink([cannedResponseId]);
     await insertText(".o-mail-Composer-input", ":");
-    await contains(".o-mail-Composer-input", { value: ":" });
     await contains(".o-mail-NavigableList-item", { count: 1 });
+    await contains(".o-mail-NavigableList-item", { text: "test" });
 });
 
 test("Canned response last used changes on posting", async () => {
