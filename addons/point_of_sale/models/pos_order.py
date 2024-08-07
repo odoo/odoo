@@ -110,8 +110,6 @@ class PosOrder(models.Model):
             pos_order = pos_order.with_company(pos_order.company_id)
         else:
             pos_order = self.env['pos.order'].browse(order.get('id'))
-            line_ids = [line[2]['id'] for line in order.get('lines') if line[2].get('id')]
-            pos_order.lines.filtered(lambda line: line.id not in line_ids).unlink()
             pos_order.write(order)
 
         pos_order._link_combo_items(combo_child_uuids_by_parent_uuid)
@@ -122,6 +120,9 @@ class PosOrder(models.Model):
     def _prepare_combo_line_uuids(self, order_vals):
         acc = {}
         for line in order_vals['lines']:
+            if line[0] not in [0, 1]:
+                continue
+
             line = line[2]
 
             if line.get('combo_line_ids'):
@@ -991,7 +992,7 @@ class PosOrder(models.Model):
 
     @api.model
     def _get_refunded_orders(self, order):
-        refunded_orderline_ids = [line[2]['refunded_orderline_id'] for line in order['lines'] if line[2].get('refunded_orderline_id')]
+        refunded_orderline_ids = [line[2]['refunded_orderline_id'] for line in order['lines'] if line[0] in [0, 1] and line[2].get('refunded_orderline_id')]
         return self.env['pos.order.line'].browse(refunded_orderline_ids).mapped('order_id')
 
     def _should_create_picking_real_time(self):

@@ -1,4 +1,13 @@
-import { createRelatedModels } from "@point_of_sale/app/models/related_models";
+import { toRaw } from "@odoo/owl";
+import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
+
+const raw = (records) => {
+    if (records instanceof Base) {
+        return toRaw(records);
+    }
+
+    return records.map((record) => toRaw(record));
+};
 
 QUnit.module("models with backlinks", () => {
     QUnit.module("many2one/one2many field relations to other models", (hooks) => {
@@ -40,27 +49,32 @@ QUnit.module("models with backlinks", () => {
             // Test reading back the categories directly
             const readC1 = models["product.category"].read(c1.id);
             assert.deepEqual(
-                readC1,
-                c1,
+                raw(readC1),
+                raw(c1),
                 "Category 1 should be found and match the created category"
             );
             const readP1 = models["product.product"].read(p1.id);
-            assert.deepEqual(readP1, p1, "Product 1 should be found and match the created product");
+            assert.deepEqual(
+                raw(readP1),
+                raw(p1),
+                "Product 1 should be found and match the created product"
+            );
 
             // Test the one2many relationship from category to products
             assert.ok(
-                readC1.product_ids.includes(p1) && readC1.product_ids.includes(p2),
+                raw(readC1.product_ids).includes(raw(p1)) &&
+                    raw(readC1.product_ids).includes(raw(p2)),
                 "Category 1 should include Product 1 and Product 2"
             );
 
             // Test the many2one relationship from products to category
-            assert.equal(readP1.category_id, c1, "Product 3 should belong to Category 2");
+            assert.equal(raw(readP1.category_id), raw(c1), "Product 3 should belong to Category 2");
 
             // Additional checks for completeness
             //todo: make readAll/getAll available
 
             const readMany = models["product.product"].readMany([p2.id, p3.id]);
-            assert.deepEqual(readMany, [p2, p3], "Multiple products should be found");
+            assert.deepEqual(raw(readMany), raw([p2, p3]), "Multiple products should be found");
 
             const readNonExistent = models["product.product"].read(9999);
             assert.equal(
@@ -212,13 +226,13 @@ QUnit.module("models with backlinks", () => {
             const c2 = models["product.category"].create({ parent_id: c1 });
 
             const readC1 = models["product.category"].read(c1.id);
-            assert.deepEqual(readC1.child_ids, [c2], "Child category should be found");
+            assert.deepEqual(raw(readC1.child_ids), raw([c2]), "Child category should be found");
 
             const readC2 = models["product.category"].read(c2.id);
-            assert.deepEqual(readC2.parent_id, c1, "Parent category should be found");
+            assert.deepEqual(raw(readC2.parent_id), raw(c1), "Parent category should be found");
 
             const readMany = models["product.category"].readMany([c1.id, c2.id]);
-            assert.deepEqual(readMany, [c1, c2], "Multiple categories should be found");
+            assert.deepEqual(raw(readMany), raw([c1, c2]), "Multiple categories should be found");
         });
 
         QUnit.test("update operation, many2one", (assert) => {
@@ -369,16 +383,32 @@ QUnit.module("models with backlinks", () => {
             const t2 = models["product.tag"].create({ product_ids: [["link", p1, p2]] });
             // Test reading back the tags directly
             const readT1 = models["product.tag"].read(t1.id);
-            assert.deepEqual(readT1, t1, "Tag 1 should be found and match the created tag");
+            assert.deepEqual(
+                raw(readT1),
+                raw(t1),
+                "Tag 1 should be found and match the created tag"
+            );
             const readP1 = models["product.product"].read(p1.id);
-            assert.deepEqual(readP1, p1, "Product should be found");
+            assert.deepEqual(raw(readP1), raw(p1), "Product should be found");
             // Test the many2many relationship
-            assert.ok(readT1.product_ids.includes(p1), "Product 1 should belong to Tag 1");
-            assert.ok(readT1.product_ids.includes(p2), "Product 2 should belong to Tag 1");
-            assert.ok(readT1.product_ids.includes(p3), "Product 3 should belong to Tag 1");
-            assert.ok(readP1.tag_ids.includes(t1, t2), "Product 1 should belong to Tag 1 and 2");
+            assert.ok(
+                raw(readT1.product_ids).includes(raw(p1)),
+                "Product 1 should belong to Tag 1"
+            );
+            assert.ok(
+                raw(readT1.product_ids).includes(raw(p2)),
+                "Product 2 should belong to Tag 1"
+            );
+            assert.ok(
+                raw(readT1.product_ids).includes(raw(p3)),
+                "Product 3 should belong to Tag 1"
+            );
+            assert.ok(
+                raw(readP1.tag_ids).includes(raw(t1), raw(t2)),
+                "Product 1 should belong to Tag 1 and 2"
+            );
             const readMany = models["product.product"].readMany([p2.id, p3.id]);
-            assert.deepEqual(readMany, [p2, p3], "Multiple products should be found");
+            assert.deepEqual(raw(readMany), raw([p2, p3]), "Multiple products should be found");
         });
 
         QUnit.test("update operation, many2many", (assert) => {
@@ -469,20 +499,24 @@ QUnit.module("models with backlinks", () => {
             const n5 = models["note.note"].create({ parent_ids: [["link", n1, n2]] });
             // Test reading back the tags directly
             const readN1 = models["note.note"].read(n1.id);
-            assert.deepEqual(readN1, n1, "Note 1 should be found and match the created note");
+            assert.deepEqual(
+                raw(readN1),
+                raw(n1),
+                "Note 1 should be found and match the created note"
+            );
             const readN4 = models["note.note"].read(n4.id);
-            assert.deepEqual(readN4, n4, "Note should be found");
+            assert.deepEqual(raw(readN4), raw(n4), "Note should be found");
             // Test the many2many relationship
             assert.ok(
-                [n1, n2, n3].every((n) => readN4.parent_ids.includes(n)),
+                [n1, n2, n3].every((n) => raw(readN4.parent_ids).includes(raw(n))),
                 "Note 1 should include Note 1, 2 and 3"
             );
             assert.ok(
-                [n4, n5].every((n) => readN1.child_ids.includes(n)),
+                [n4, n5].every((n) => raw(readN1.child_ids).includes(raw(n))),
                 "Note 1 should belong to Note 1 and 2"
             );
             const readMany = models["note.note"].readMany([n2.id, n3.id]);
-            assert.deepEqual(readMany, [n2, n3], "Multiple notes should be found");
+            assert.deepEqual(raw(readMany), raw([n2, n3]), "Multiple notes should be found");
         });
 
         QUnit.test("update operation, many2many", (assert) => {
@@ -581,22 +615,22 @@ QUnit.module("models without backlinks", () => {
             // Test reading back the categories directly
             const readC1 = models["product.category"].read(c1.id);
             assert.deepEqual(
-                readC1,
-                c1,
+                raw(readC1),
+                raw(c1),
                 "Category 1 should be found and match the created category"
             );
             const readP1 = models["product.product"].read(p1.id);
-            assert.deepEqual(readP1, p1, "Product should be found");
+            assert.deepEqual(raw(readP1), raw(p1), "Product should be found");
 
             // Test the one2many relationship from category to products
             assert.deepEqual(
-                readC1["<-product.product.category_id"],
-                [p1, p2],
+                raw(readC1["<-product.product.category_id"]),
+                raw([p1, p2]),
                 "Category 1 should have a backlink to Product 1 and Product 2"
             );
 
             // Test the many2one relationship from products to category
-            assert.equal(readP1.category_id, c1, "Product 3 should belong to Category 2");
+            assert.equal(raw(readP1.category_id), raw(c1), "Product 3 should belong to Category 2");
         });
 
         QUnit.test("update operation, many2one", (assert) => {
@@ -684,20 +718,24 @@ QUnit.module("models without backlinks", () => {
             const p3 = models["product.product"].create({ tag_ids: [["link", t1]] });
             // Test reading back the tags directly
             const readT1 = models["product.tag"].read(t1.id);
-            assert.deepEqual(readT1, t1, "Tag 1 should be found and match the created tag");
+            assert.deepEqual(
+                raw(readT1),
+                raw(t1),
+                "Tag 1 should be found and match the created tag"
+            );
             const readP1 = models["product.product"].read(p1.id);
-            assert.deepEqual(readP1, p1, "Product should be found");
+            assert.deepEqual(raw(readP1), raw(p1), "Product should be found");
             // Test the many2many relationship
             assert.ok(
-                [p1, p2, p3].every((p) => t1["<-product.product.tag_ids"].includes(p)),
+                [p1, p2, p3].every((p) => raw(t1["<-product.product.tag_ids"]).includes(raw(p))),
                 "Tag 1 should include Product 1, 2 and 3"
             );
             assert.ok(
-                [t1, t2].every((t) => p1.tag_ids.includes(t)),
+                [t1, t2].every((t) => raw(p1.tag_ids).includes(raw(t))),
                 "Product 1 should belong to Tag 1 and 2"
             );
             const readMany = models["product.product"].readMany([p2.id, p3.id]);
-            assert.deepEqual(readMany, [p2, p3], "Multiple products should be found");
+            assert.deepEqual(raw(readMany), raw([p2, p3]), "Multiple products should be found");
         });
 
         QUnit.test("update operation, link", (assert) => {

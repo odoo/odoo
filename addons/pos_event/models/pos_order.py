@@ -44,7 +44,7 @@ class PosOrder(models.Model):
     @api.model
     def _process_order(self, order, existing_order):
         res = super()._process_order(order, existing_order)
-        refunded_line_ids = [line[2].get('refunded_orderline_id') for line in order.get('lines') if line[2].get('refunded_orderline_id')]
+        refunded_line_ids = [line[2].get('refunded_orderline_id') for line in order.get('lines') if line[0] in [0, 1] and line[2].get('refunded_orderline_id')]
         refunded_orderlines = self.env['pos.order.line'].browse(refunded_line_ids)
         event_to_cancel = []
 
