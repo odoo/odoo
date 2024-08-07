@@ -1933,11 +1933,7 @@ class AccountMoveLine(models.Model):
         credit_currency = credit_aml._get_reconciliation_aml_field_value('currency_id', shadowed_aml_values)
         company_currency = debit_aml.company_currency_id
 
-        is_cross_currency_payment = (
-            debit_currency != credit_currency
-            and debit_currency != company_currency
-            and credit_currency != company_currency
-        )
+        is_cross_currency_payment = len({debit_currency, credit_currency, company_currency}) == 3
 
         remaining_debit_amount_curr = debit_values['amount_residual_currency']
         remaining_credit_amount_curr = credit_values['amount_residual_currency']
@@ -1956,21 +1952,25 @@ class AccountMoveLine(models.Model):
             shadowed_aml_values=shadowed_aml_values,
             other_aml_values=debit_values,
         )
-        AccountMove = self.env['account.move']
         if is_cross_currency_payment:
-            if credit_aml['move_type'] == "entry" and credit_aml['payment_date']:
+            AccountMove = self.env['account.move']
+            if any(aml['move_type'] == 'entry' for aml in (credit_aml, debit_aml)) :
                 debit_currency_rate_during_payment, credit_currency_rate_during_payment = (
                     self._get_currency_debit_and_credit_rates(
-                        debit_currency, credit_currency, credit_aml['payment_date']))
-            elif debit_aml['move_type'] == "entry" and debit_aml['payment_date']:
-                debit_currency_rate_during_payment, credit_currency_rate_during_payment = (
-                    self._get_currency_debit_and_credit_rates(
-                        debit_currency, credit_currency, debit_aml['payment_date']))
+                        debit_currency,
+                        credit_currency,
+                        credit_aml['payment_date'] or debit_aml['payment_date']
+                    )
+                )
             else:
-                debit_currency_rate_during_payment = debit_available_residual_amounts.get(
-                    debit_currency, {}).get('rate') or debit_currency['rate']
-                credit_currency_rate_during_payment = credit_available_residual_amounts.get(
-                    credit_currency, {}).get('rate') or credit_currency['rate']
+                debit_currency_rate_during_payment = (
+                    debit_available_residual_amounts.get(debit_currency, {}).get('rate')
+                    or debit_currency['rate']
+                )
+                credit_currency_rate_during_payment = (
+                    credit_available_residual_amounts.get(credit_currency, {}).get('rate')
+                    or credit_currency['rate']
+                )
 
             is_invoice = debit_aml['move_type'] in AccountMove.get_sale_types()
             is_bill = credit_aml['move_type'] in AccountMove.get_purchase_types()
@@ -1984,10 +1984,14 @@ class AccountMoveLine(models.Model):
                     )
                 )
             else:
-                debit_currency_rate_during_creation = debit_available_residual_amounts.get(
-                    debit_currency, {}).get('rate') or debit_currency['rate']
-                credit_currency_rate_during_creation = credit_available_residual_amounts.get(
-                    credit_currency, {}).get('rate') or credit_currency['rate']
+                debit_currency_rate_during_creation = (
+                    debit_available_residual_amounts.get(debit_currency, {}).get('rate')
+                    or debit_currency['rate']
+                )
+                credit_currency_rate_during_creation = (
+                    credit_available_residual_amounts.get(credit_currency, {}).get('rate')
+                    or credit_currency['rate']
+                )
 
         if debit_currency != company_currency \
             and debit_currency in debit_available_residual_amounts \

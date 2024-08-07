@@ -547,17 +547,17 @@ class AccountPaymentRegister(models.TransientModel):
             return abs(residual_amount), False
         else:
             # Foreign currency on payment different than the one set on the journal entries.
-            if self.env.context.get('active_model') == 'account.move.line':
-                if invoices := self.env['account.move.line'].search([('id', 'in', self.env.context.get('active_ids', []))]):
-                    residual_amount = invoices[0].move_id.amount_residual
-                    return self.source_currency_id._convert(
-                        residual_amount,
-                        self.currency_id,
-                        self.company_id,
-                        self.payment_date,
-                    ), False
-            return comp_curr._convert(
-                self.source_amount,
+            # TODO draft [IMP] not tested!!!
+            payment_curr = comp_curr
+            from_amount = self.source_amount
+            if (
+                self._context.get('active_model') == 'account.move.line'
+                and (aml := self.env['account.move.line'].search([('id', 'in', self.env.context.get('active_ids', []))]))
+            ):
+                from_amount = sum(aml.mapped('move_id').mapped('amount_residual'))
+                payment_curr = self.source_currency_id
+            return payment_curr._convert(
+                from_amount,
                 self.currency_id,
                 self.company_id,
                 self.payment_date,
