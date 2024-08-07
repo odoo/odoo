@@ -222,6 +222,6 @@ class CustomerPortal(portal.CustomerPortal):
         http_headers = [
             ('Content-Type', 'text/xml'),
             ('Content-Length', len(xml_content)),
-            ('Content-Disposition', f'attachment; filename="{download_name}"')
+            ('Content-Disposition', f'attachment; filename={download_name}')
         ]
         return request.make_response(xml_content, headers=http_headers)
