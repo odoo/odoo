@@ -386,3 +386,110 @@ class TestItEdiExport(TestItEdi):
         invoice.action_post()
 
         self._assert_export_invoice(invoice, 'invoice_decimal_precision_product.xml')
+
+    def test_export_foreign_currency(self):
+
+        tax_zero_percent_us = self.env['account.tax'].with_company(self.company).create({
+            'name': '0 % US',
+            'amount': 0.0,
+            'amount_type': 'percent',
+            'l10n_it_exempt_reason': 'N3.1',
+            'l10n_it_law_reference': 'Art. 8, c.1, lett.a - D.P.R. 633/1972',
+        })
+
+        american_partner_b = self.env['res.partner'].create({
+            'name': 'US Partner',
+            'city': 'Test city',
+            'country_id': self.env.ref('base.us').id,
+            'zip': '12345',
+            'street': '123 Rainbow Road',
+            'is_company': True,
+        })
+
+        # =============== create invoices ===============
+
+        # usd simple discount % on the product
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2024-08-07',
+            'invoice_date_due': '2024-08-07',
+            'partner_id': american_partner_b.id,
+            'currency_id': self.env.ref('base.USD').id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'A productive product',
+                    'price_unit': 1068.11,
+                    'balance': -841.5,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_zero_percent_us.ids)],
+                    'currency_rate': 1.0789,
+                    'discount': 15,
+                    'currency_id': self.env.ref('base.USD').id,
+                }),
+            ],
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'export_foreign_currency_simple_discount.xml')
+
+        # usd discount both on product in % + a global one (negative aml)
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2024-08-06',
+            'invoice_date_due': '2024-08-06',
+            'partner_id': american_partner_b.id,
+            'currency_id': self.env.ref('base.USD').id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'A productive product',
+                    'price_unit': 712.07,
+                    'balance': -561,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_zero_percent_us.ids)],
+                    'currency_rate': 1.0789,
+                    'discount': 15,
+                    'currency_id': self.env.ref('base.USD').id,
+                }),
+                Command.create({
+                    'name': 'A global discount',
+                    'price_unit': -100,
+                    'balance': 92.69,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_zero_percent_us.ids)],
+                    'currency_rate': 1.0789,
+                    'currency_id': self.env.ref('base.USD').id,
+                }),
+            ],
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'export_foreign_currency_global_simple_discount.xml')
+
+        # usd discount global (negative aml)
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2024-08-07',
+            'invoice_date_due': '2024-08-07',
+            'partner_id': american_partner_b.id,
+            'currency_id': self.env.ref('base.USD').id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'A productive product',
+                    'price_unit': 712.07,
+                    'balance': -660,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_zero_percent_us.ids)],
+                    'currency_rate': 1.0789,
+                    'currency_id': self.env.ref('base.USD').id,
+                }),
+                Command.create({
+                    'name': 'A global discount',
+                    'price_unit': -200,
+                    'balance': 185.37,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(tax_zero_percent_us.ids)],
+                    'currency_rate': 1.0789,
+                    'currency_id': self.env.ref('base.USD').id,
+                }),
+            ],
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'export_foreign_currency_global_discount.xml')
