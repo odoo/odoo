@@ -626,9 +626,8 @@ export class Orderline extends PosModel {
         let taxes = product.taxes_id;
 
         // Fiscal position.
-        const order = this.pos.get_order();
-        if (order.fiscal_position) {
-            taxes = this.pos.getTaxesAfterFiscalPosition(taxes, order.fiscal_position);
+        if (this.order.fiscal_position) {
+            taxes = this.pos.getTaxesAfterFiscalPosition(taxes, this.order.fiscal_position);
         }
 
         const taxesData = this.pos.getTaxesValues(taxes, priceUnit, 1, product);
