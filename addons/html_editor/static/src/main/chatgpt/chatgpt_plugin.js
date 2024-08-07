@@ -27,6 +27,7 @@ export class ChatGPTPlugin extends Plugin {
                 icon: "fa-magic",
                 name: "chatgpt",
                 label: _t("Generate or transform content with AI."),
+                text: "AI",
             },
             {
                 id: "translate",
