@@ -625,6 +625,11 @@ class MailComposer(models.TransientModel):
         non_mass_mail.can_edit_body = True
         super(MailComposer, self - non_mass_mail)._compute_can_edit_body()
 
+    def _compute_field_value(self, field):
+        if field.compute_sudo:
+            return super(MailComposer, self.with_context(prefetch_fields=False))._compute_field_value(field)
+        return super()._compute_field_value(field)
+
     # ------------------------------------------------------------
     # CRUD / ORM
     # ------------------------------------------------------------
