@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import unittest
@@ -8,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import tests
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import date_utils
 from odoo.tools import mute_logger
 
@@ -602,9 +601,9 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
         }
         hr_leave = self.request_leave(self.user_hruser_id, date_utils.start_of(date.today() + relativedelta(days=7), 'week'), 1, values)
         with self.assertRaises(AccessError):
-            hr_leave.with_user(self.user_employee_id).action_approve()
+            hr_leave.with_user(self.user_employee).action_approve()
         self.employee_hruser.write({'leave_manager_id': self.user_employee_id})
-        hr_leave.with_user(self.user_employee_id).action_approve()
+        hr_leave.with_user(self.user_employee).action_approve()
 
     # hr_holidays.group_hr_holidays_user
 

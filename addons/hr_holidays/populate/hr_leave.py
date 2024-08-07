@@ -27,7 +27,7 @@ class HolidaysType(models.Model):
         ]
 
 
-class HolidaysRequest(models.Model):
+class HrLeave(models.Model):
     _inherit = "hr.leave"
     _populate_sizes = {"small": 100, "medium": 800, "large": 10000}
     _populate_dependencies = ['hr.employee', 'hr.leave.type']

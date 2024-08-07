@@ -140,15 +140,15 @@
                                 </span>
                             </div>
                             <div t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
-                                <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm ps-0"
+                                <button t-if="record.can_validate1.raw_value" name="action_approve" type="object" class="btn btn-link btn-sm ps-0"
                                     groups="hr_holidays.group_hr_holidays_user">
                                     <i class="fa fa-thumbs-up"/> Approve
                                 </button>
-                                <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-link btn-sm ps-0"
+                                <button t-if="record.can_validate.raw_value" name="action_validate" type="object" class="btn btn-link btn-sm ps-0"
                                     groups="hr_holidays.group_hr_holidays_manager">
                                     <i class="fa fa-check"/> Validate
                                 </button>
-                                <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-link btn-sm ps-0"
+                                <button t-if="record.can_refuse.raw_value" name="action_refuse" type="object" class="btn btn-link btn-sm ps-0"
                                     groups="hr_holidays.group_hr_holidays_user">
                                     <i class="fa fa-times"/> Refuse
                                 </button>
@@ -212,18 +212,15 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <form string="Time Off Request" class="o_hr_leave_form">
-            <field name="can_reset" invisible="1"/>
-            <field name="can_approve" invisible="1"/>
-            <field name="can_cancel" invisible="1"/>
-            <field name="has_mandatory_day" invisible="1"/>
             <header>
-                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" invisible="not id or state != 'draft'"/>
-                <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or state != 'confirm'"/>
-                <button string="Validate" name="action_validate" invisible="state != 'validate1'" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
-                <button string="Refuse" name="action_refuse" type="object" invisible="not can_approve or state not in ('confirm', 'validate1', 'validate')"/>
-                <button string="Cancel" name="action_cancel" type="object" invisible="state == 'cancel' or not can_cancel" />
+                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" invisible="not can_confirm"/>
+                <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_validate1"/>
+                <button string="Validate" name="action_validate" invisible="not can_validate"
+                    type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
+                <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse"/>
+                <button string="Cancel" name="action_cancel" type="object" invisible="not can_cancel" />
                 <button string="Mark as Draft" name="action_draft" type="object"
-                        invisible="not can_reset or state not in ['confirm', 'refuse']"/>
+                        invisible="not can_draft"/>
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate,cancel"/>
             </header>
             <sheet>
@@ -476,17 +473,17 @@
                 <field name="message_needaction" column_invisible="True"/>
                 <button string="Approve" name="action_approve" type="object"
                     icon="fa-thumbs-up"
-                    invisible="state != 'confirm'"
+                    invisible="not can_validate1"
                     groups="hr_holidays.group_hr_holidays_responsible"/>
                 <field name="company_id" optional="hidden" groups="base.group_multi_company"/>
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check"
-                    invisible="state != 'validate1'"
+                    invisible="not can_validate"
                     groups="hr_holidays.group_hr_holidays_user"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     icon="fa-times"
-                    invisible="state not in ('confirm', 'validate1')"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    invisible="not can_refuse or state not in ['confirm', 'validate1']"
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
