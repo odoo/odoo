@@ -1528,7 +1528,7 @@ export function makeActionManager(env, router = _router) {
                 throw new Error("Attempted to restore a virtual controller whose state is invalid");
             }
             const { actionRequest, options } = actionParams;
-            options.index = index;
+            controllerStack = controllerStack.slice(0, index);
             return doAction(actionRequest, options);
         }
         if (controller.action.type === "ir.actions.act_window") {
@@ -1555,7 +1555,12 @@ export function makeActionManager(env, router = _router) {
         if (actionParams) {
             // Params valid => performs a "doAction"
             const { actionRequest, options } = actionParams;
-            options.newStack = newStack;
+            if (options.index) {
+                options.newStack = newStack.slice(0, options.index);
+                delete options.index;
+            } else {
+                options.newStack = newStack;
+            }
             await doAction(actionRequest, options);
             return true;
         }

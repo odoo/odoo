@@ -27,7 +27,7 @@ import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { queryAllTexts } from "@odoo/hoot-dom";
+import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -809,11 +809,7 @@ describe(`new urls`, () => {
         await contains(`.o_control_panel .breadcrumb a`).click();
         expect(`.o_list_view`).toHaveCount(1);
         expect(`.o_form_view`).toHaveCount(0);
-        expect.verifySteps([
-            "Update the state without updating URL, nextState: actionStack,resId,action,globalState",
-            "web_search_read",
-            "has_group",
-        ]);
+        expect.verifySteps(["web_search_read", "has_group"]);
 
         await animationFrame(); // pushState is debounced
         expect(browser.location.href).toBe("http://example.com/odoo/action-3");
@@ -1099,10 +1095,7 @@ describe(`new urls`, () => {
 
         await animationFrame(); // pushState is debounced
         expect(browser.location.href).toBe("http://example.com/odoo/action-3");
-        expect.verifySteps([
-            "Update the state without updating URL, nextState: actionStack,resId,action,globalState",
-            "pushState http://example.com/odoo/action-3",
-        ]);
+        expect.verifySteps(["pushState http://example.com/odoo/action-3"]);
     });
 
     test(`initial action crashes`, async () => {
@@ -1159,6 +1152,26 @@ describe(`new urls`, () => {
         );
         // pushState was not called
         expect.verifySteps([]);
+    });
+
+    test("all actions crashes", async () => {
+        expect.errors(2);
+        redirect("/odoo/m-partner/2/m-partner/1");
+        logHistoryInteractions();
+        stepAllNetworkCalls();
+        onRpc("web_read", () => Promise.reject());
+
+        await mountWebClient();
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+            "/web/action/load_breadcrumbs",
+            "get_views",
+            "web_read",
+            "web_read",
+        ]);
+        expect.verifyErrors([/RPC_ERROR/, /RPC_ERROR/]);
+        expect(queryFirst(`.o_action_manager`).childElementCount).toBe(0);
     });
 
     test(`initial loading with multiple path segments loads the breadcrumbs`, async () => {
@@ -1273,6 +1286,33 @@ describe(`new urls`, () => {
         await animationFrame();
         expect(`.o_list_view`).toHaveCount(1);
         expect.verifySteps([
+            "web_search_read",
+            "has_group",
+            "pushState http://example.com/odoo/action-3",
+        ]);
+    });
+
+    test("properly load previous action when error", async () => {
+        // In this test, the _getActionParams, will not return m-partner as an actionRequest
+        // because, there is not id, or an action on the session storage.
+        // So it will try to perform the previous action : action-3 with id 1.
+        // This one will give an error, and it should directly try the previous one : action-3
+        expect.errors(1);
+        redirect("/odoo/action-3/1/m-partner");
+        logHistoryInteractions();
+        stepAllNetworkCalls();
+        onRpc("web_read", () => Promise.reject());
+
+        await mountWebClient();
+        expect(`.o_list_view`).toHaveCount(1);
+        expect.verifyErrors([/RPC_ERROR/]);
+        expect.verifySteps([
+            "/web/webclient/translations",
+            "/web/webclient/load_menus",
+            "/web/action/load_breadcrumbs",
+            "/web/action/load",
+            "get_views",
+            "web_read",
             "web_search_read",
             "has_group",
             "pushState http://example.com/odoo/action-3",
