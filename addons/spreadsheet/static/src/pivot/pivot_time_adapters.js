@@ -86,7 +86,7 @@ export function pivotTimeAdapter(groupAggregate) {
 const dayAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult) {
         const serverDayValue = getGroupStartingDay(field, groupBy, readGroupResult);
-        const date = deserializeDate(serverDayValue);
+        const date = deserializeDate(serverDayValue).reconfigure({ numberingSystem: "latn" });
         return date.toFormat("MM/dd/yyyy");
     },
     normalizeFunctionValue(value) {
@@ -94,7 +94,9 @@ const dayAdapter = {
         return formatValue(date, { locale: DEFAULT_LOCALE, format: "mm/dd/yyyy" });
     },
     increment(normalizedValue, step) {
-        const date = DateTime.fromFormat(normalizedValue, "MM/dd/yyyy");
+        const date = DateTime.fromFormat(normalizedValue, "MM/dd/yyyy", {
+            numberingSystem: "latn",
+        });
         return date.plus({ days: step }).toFormat("MM/dd/yyyy");
     },
     getFormat(locale) {
@@ -151,7 +153,7 @@ const weekAdapter = {
 const monthAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult) {
         const firstOfTheMonth = getGroupStartingDay(field, groupBy, readGroupResult);
-        const date = deserializeDate(firstOfTheMonth);
+        const date = deserializeDate(firstOfTheMonth).reconfigure({ numberingSystem: "latn" });
         return date.toFormat("MM/yyyy");
     },
     normalizeFunctionValue(value) {
@@ -159,7 +161,7 @@ const monthAdapter = {
         return formatValue(date, { DEFAULT_LOCALE, format: "mm/yyyy" });
     },
     increment(normalizedValue, step) {
-        return DateTime.fromFormat(normalizedValue, "MM/yyyy")
+        return DateTime.fromFormat(normalizedValue, "MM/yyyy", { numberingSystem: "latn" })
             .plus({ months: step })
             .toFormat("MM/yyyy");
     },
