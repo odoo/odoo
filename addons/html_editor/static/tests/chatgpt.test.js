@@ -264,3 +264,14 @@ test("ChatGPT prompt dialog properly formats an unordered list", async () => {
         `<ul><li>First item</li><li>Second item</li><li>Third item</li></ul>`
     );
 });
+
+test("ChatGPT toolbar button should have icon and 'AI' text", async () => {
+    await setupEditor("<p>[abc]</p>");
+    await waitFor(".o-we-toolbar");
+
+    // Icon should be present.
+    expect(".o-we-toolbar .btn[name='chatgpt'] span.fa-magic").toHaveCount(1);
+
+    // Text should be present.
+    expect(".o-we-toolbar .btn[name='chatgpt']").toHaveText("AI");
+});
