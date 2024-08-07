@@ -175,6 +175,9 @@ export class SuggestionService {
             partners = thread.channel_member_ids
                 .map((member) => member.persona)
                 .filter((persona) => persona.type === "partner");
+            if (thread.channel_type === "channel") {
+                partners = new Set([...partners, ...(thread.group_public_id?.personas ?? [])]);
+            }
         } else {
             partners = Object.values(this.store.Persona.records).filter((persona) => {
                 if (thread?.model !== "discuss.channel" && persona.eq(this.store.odoobot)) {
