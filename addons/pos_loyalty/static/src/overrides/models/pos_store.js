@@ -558,12 +558,15 @@ patch(PosStore.prototype, {
     },
 
     //@override
-    async processServerData(loadedData) {
-        await super.processServerData(loadedData);
+    async processServerData() {
+        await super.processServerData();
 
         this.partnerId2CouponIds = {};
 
-        this.computeDiscountProductIdsForAllRewards(this.models["product.product"].getAll());
+        this.computeDiscountProductIdsForAllRewards({
+            model: "product.product",
+            ids: Object.keys(this.data.records["product.product"]),
+        });
 
         this.models["product.product"].addEventListener(
             "create",
@@ -584,7 +587,8 @@ patch(PosStore.prototype, {
         }
     },
 
-    computeDiscountProductIdsForAllRewards(products) {
+    computeDiscountProductIdsForAllRewards(data) {
+        const products = this.models[data.model].readMany(data.ids);
         for (const reward of this.models["loyalty.reward"].getAll()) {
             this.compute_discount_product_ids(reward, products);
         }
