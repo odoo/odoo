@@ -1074,6 +1074,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                     GoogleEvent(values),
                     None,
                     [{"method": "popup", "minutes": 30}],
+                    False,
                 ),
             ):
                 self.attendee_user.sudo()._sync_google_calendar(self.google_service)
@@ -1179,6 +1180,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                     GoogleEvent(values),
                     None,
                     [{"method": "popup", "minutes": 30}],
+                    False,
                 ),
             ):
                 self.attendee_user.sudo()._sync_google_calendar(self.google_service)
@@ -2214,7 +2216,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         )
         google_events = self.google_respond_to_recurrent_event_with_option_this_event(recurrence, 2, 'accepted')
         mock_get_events.return_value = (
-            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}], False
         )
         expected_states = ["needsAction", "needsAction", "accepted", "needsAction"]
         with self.mock_datetime_and_now("2024-04-22"):
@@ -2242,7 +2244,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         )
         google_events = self.google_respond_to_recurrent_event_with_option_this_event(recurrence, 2, 'accepted')
         mock_get_events.return_value = (
-            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}], False
         )
         expected_states = ["needsAction", "needsAction", "accepted", "needsAction"]
         with self.mock_datetime_and_now("2024-04-22"):
@@ -2257,7 +2259,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
     def test_accepting_recurrent_event_with_all_events_option_synced_by_attendee(self, mock_get_events):
         """
         Test accepting a recurring event with the option "All events" on Google Calendar and syncing the attendee's calendar.
-        Ensure that all events are accepeted by attendee in Odoo.
+        Ensure that all events are accepted by attendee in Odoo.
         """
         recurrence_id = "abcd3"
         recurrence = self.generate_recurring_event(
@@ -2270,7 +2272,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         )
         google_events = self.google_respond_to_recurrent_event_with_option_all_events(recurrence, "accepted")
         mock_get_events.return_value = (
-            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}], False
         )
         expected_states = ["accepted", "accepted", "accepted", "accepted"]
         with self.mock_datetime_and_now("2024-04-22"):
@@ -2298,7 +2300,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         )
         google_events = self.google_respond_to_recurrent_event_with_option_all_events(recurrence, "accepted")
         mock_get_events.return_value = (
-            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}], False
         )
         expected_states = ["accepted", "accepted", "accepted", "accepted"]
         with self.mock_datetime_and_now("2024-04-22"):
@@ -2332,7 +2334,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             rrule2="RRULE:FREQ=DAILY;COUNT=2"
         )
         mock_get_events.return_value = (
-            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}], False
         )
         expected_states = ["needsAction", "needsAction", "accepted", "accepted"]
         with self.mock_datetime_and_now("2024-04-22"):
@@ -2366,7 +2368,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             rrule2="RRULE:FREQ=DAILY;COUNT=2"
         )
         mock_get_events.return_value = (
-            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}], False
         )
         expected_states = ["needsAction", "needsAction", "accepted", "accepted"]
         with self.mock_datetime_and_now("2024-04-22"):
