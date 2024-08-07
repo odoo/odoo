@@ -105,6 +105,10 @@ class WebsiteRewrite(models.Model):
                 except ValueError as e:
                     raise ValidationError(_('"URL to" is invalid: %s') % e)
 
+            if rewrite.redirect_type in ['301', '302']:
+                if rewrite.url_to.startswith(('?', '#')):
+                    raise ValidationError(_('"URL to" can not start with "?" or "#"'))
+
     def name_get(self):
         result = []
         for rewrite in self:

@@ -10,6 +10,7 @@ import pytz
 import werkzeug
 import werkzeug.routing
 import werkzeug.utils
+from werkzeug import urls
 
 from functools import partial
 
@@ -361,6 +362,12 @@ class Http(models.AbstractModel):
 
         redirect = cls._serve_redirect()
         if redirect:
+            url_from_path = redirect.url_from.strip('/')
+            url_to = urls.url_parse(redirect.url_to)
+            url_to_path = url_to.path.strip('/')
+            if url_from_path == url_to_path:
+                return False
+
             return request.redirect(
                 _build_url_w_params(redirect.url_to, request.params),
                 code=redirect.redirect_type,
