@@ -14,3 +14,4 @@ from . import test_mailing_statistics_sms
 from . import test_mailing_test
 from . import test_performance
 from . import test_sms_controller
+from . import test_utm

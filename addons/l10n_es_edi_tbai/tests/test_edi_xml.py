@@ -43,6 +43,18 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             xml_expected = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST)
             self.assertXmlTreeEqual(xml_doc, xml_expected)
 
+    def test_xml_tree_post_generic_sequence(self):
+        """Test TBAI on moves whose sequence does not contain a '/'"""
+        with freeze_time(self.frozen_today):
+            invoice = self.out_invoice.copy({
+                'name': 'INV01',
+                'invoice_date': date(2022, 1, 1),
+            })
+            xml_doc = self.edi_format._get_l10n_es_tbai_invoice_xml(invoice, cancel=False)[invoice]['xml_file']
+            xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
+            xml_expected = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST)
+            self.assertXmlTreeEqual(xml_doc, xml_expected)
+
     def test_xml_tree_post_multicurrency(self):
         """Test of Customer Invoice XML. The invoice is not in company currency and has a line with a 100% discount"""
 

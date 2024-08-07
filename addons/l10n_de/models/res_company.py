@@ -10,8 +10,12 @@ import stdnum.exceptions
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    l10n_de_stnr = fields.Char(string="St.-Nr.", help="Tax number. Scheme: ??FF0BBBUUUUP, e.g.: 2893081508152 https://de.wikipedia.org/wiki/Steuernummer")
-    l10n_de_widnr = fields.Char(string="W-IdNr.", help="Business identification number.")
+    l10n_de_stnr = fields.Char(
+        string="St.-Nr.",
+        help="Tax number. Scheme: ??FF0BBBUUUUP, e.g.: 2893081508152 https://de.wikipedia.org/wiki/Steuernummer",
+        tracking=True,
+    )
+    l10n_de_widnr = fields.Char(string="W-IdNr.", help="Business identification number.", tracking=True)
 
     @api.depends('country_code')
     @api.constrains('state_id', 'l10n_de_stnr')

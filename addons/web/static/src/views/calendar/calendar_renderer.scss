@@ -233,10 +233,12 @@
                 }
 
                 &.fc-today {
-                    color: $primary;
+                    --o-cw-color: #{color-contrast($o-cw-color-today-accent)};
+                    --o-cw-bg: #{$o-cw-color-today-accent};
+
                     .o_cw_day_number {
                         position:relative;
-                        color: $o-view-background-color;
+                        color: var(--o-cw-color);
 
                         &:before {
                             content: '';
@@ -245,7 +247,7 @@
                             z-index: -1;
                             width: 100%;
                             border-radius: $border-radius-pill;
-                            background: $primary;
+                            background: var(--o-cw-bg);
                             aspect-ratio: 1;
                             color: $o-view-background-color;
                         }
@@ -428,7 +430,7 @@
                     }
 
                     &.fc-today {
-                        --o-cw-color: #{$white};
+                        --o-cw-color: #{color-contrast($o-cw-color-today-accent)};
                         --o-cw-bg: #{$o-cw-color-today-accent};
                         padding-top: map-get($spacers, 1)/2;
 
@@ -495,8 +497,10 @@
                     }
 
                     &:hover > .fc-day-number {
-                        --o-cw-color: #{$o-white};
-                        --o-cw-bg: #{mix($o-white, $o-action, 50%)};
+                        $-bg: mix($o-view-background-color, $o-action, 75%);
+
+                        --o-cw-color: #{color-contrast($-bg)};
+                        --o-cw-bg: #{$-bg};
 
                         &:before {
                             display: block;

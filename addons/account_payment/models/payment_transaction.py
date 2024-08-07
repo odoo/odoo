@@ -125,7 +125,7 @@ class PaymentTransaction(models.Model):
         # Create and post missing payments for transactions requiring reconciliation
         for tx in self.filtered(lambda t: t.operation != 'validation' and not t.payment_id):
             if not any(child.state in ['done', 'cancel'] for child in tx.child_transaction_ids):
-                tx._create_payment()
+                tx.with_company(tx.company_id)._create_payment()
 
     def _create_payment(self, **extra_create_values):
         """Create an `account.payment` record for the current transaction.

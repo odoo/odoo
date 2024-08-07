@@ -3,6 +3,7 @@
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
+from odoo.exceptions import UserError
 
 
 class StockMoveLine(TestStockCommon):
@@ -133,3 +134,27 @@ class StockMoveLine(TestStockCommon):
             delta=1e-6,
             msg="Small line quantity should get detected",
         )
+
+    def test_put_in_pack_with_several_move_lines(self):
+        """
+        Testing putting several move lines with different pickings into a pack should trigger a ValueError.
+        """
+        picking1 = self.env['stock.picking'].create({
+            'name': 'Picking 1',
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        picking2 = picking1.copy({'name': 'picking 2'})
+        move_line1 = self.env['stock.move.line'].create({
+            'picking_id': picking1.id,
+            'product_id': self.productA.id,
+            'quantity': 1,
+        })
+        move_line2 = self.env['stock.move.line'].create({
+            'picking_id': picking2.id,
+            'product_id': self.productA.id,
+            'quantity': 1,
+        })
+        with self.assertRaises(UserError):
+            (move_line1 | move_line2).action_put_in_pack()

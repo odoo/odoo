@@ -1226,6 +1226,8 @@ class BaseModel(metaclass=MetaModel):
                     info = data_list[0]['info']
                     messages.append(dict(info, type='error', message=_(u"Unknown database error: '%s'", e)))
                 return
+            except UserError as e:
+                messages.append(dict(data_list[0]['info'], type='error', message=str(e)))
             except Exception:
                 pass
 
@@ -1247,7 +1249,8 @@ class BaseModel(metaclass=MetaModel):
                     errors += 1
                 except UserError as e:
                     info = rec_data['info']
-                    messages.append(dict(info, type='error', message=str(e)))
+                    if dict(info, type='error', message=str(e)) not in messages:
+                        messages.append(dict(info, type='error', message=str(e)))
                     errors += 1
                 except Exception as e:
                     _logger.debug("Error while loading record", exc_info=True)
@@ -2704,7 +2707,7 @@ class BaseModel(metaclass=MetaModel):
                 continue
 
             if name not in self._fields:
-                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+                raise ValueError(f"Invalid field {name!r} on model {self._name!r}")
             field = self._fields[name]
             if field.base_field.store and field.base_field.column_type and field.group_operator and field_spec not in annoted_groupby:
                 annoted_aggregates[name] = f"{name}:{field.group_operator}"
@@ -2878,15 +2881,16 @@ class BaseModel(metaclass=MetaModel):
             else:
                 comodel = self.env.get(definition.get('comodel'))
                 if comodel is None or comodel._transient or comodel._abstract:
-                    # all value are false, because the model does not exist anymore
-                    # (or is a transient model e.g.)
-                    condition = SQL("FALSE")
-                else:
-                    # check the existences of the many2many
-                    condition = SQL(
-                        "%s::int IN (SELECT id FROM %s)",
-                        SQL.identifier(property_alias), SQL.identifier(comodel._table),
-                    )
+                    raise UserError(_(
+                                            "You cannot use %(property_name)r because the linked %(model_name)r model doesn't exist or is invalid",
+                        property_name=definition.get('string', property_name), model_name=definition.get('comodel'),
+                    ))
+
+                # check the existences of the many2many
+                condition = SQL(
+                    "%s::int IN (SELECT id FROM %s)",
+                    SQL.identifier(property_alias), SQL.identifier(comodel._table),
+                )
 
             query.add_join(
                 "LEFT JOIN",
@@ -2914,9 +2918,10 @@ class BaseModel(metaclass=MetaModel):
         elif property_type == 'many2one':
             comodel = self.env.get(definition.get('comodel'))
             if comodel is None or comodel._transient or comodel._abstract:
-                # all value are false, because the model does not exist anymore
-                # (or is a transient model e.g.)
-                return SQL('FALSE')
+                raise UserError(_(
+                    "You cannot use %(property_name)r because the linked %(model_name)r model doesn't exist or is invalid",
+                    property_name=definition.get('string', property_name), model_name=definition.get('comodel'),
+                ))
 
             return SQL(
                 """ CASE
@@ -3683,7 +3688,9 @@ class BaseModel(metaclass=MetaModel):
         langs = set(langs or [l[0] for l in self.env['res.lang'].get_installed()])
         self_lang = self.with_context(check_translations=True, prefetch_langs=True)
         val_en = self_lang.with_context(lang='en_US')[field_name]
-        if not callable(field.translate):
+        if not field.translate:
+            translations = []
+        elif field.translate is True:
             translations = [{
                 'lang': lang,
                 'source': val_en,

@@ -8,6 +8,7 @@ import {
     editSelect,
     getFixture,
     makeDeferred,
+    mockTimeout,
     nextTick,
     patchDate,
     patchTimeZone,
@@ -29,6 +30,7 @@ import {
     navigate,
     pickDate,
     resizeEventToTime,
+    resizeEventToDate,
     selectAllDayRange,
     selectDateRange,
     selectTimeRange,
@@ -3507,6 +3509,23 @@ QUnit.module("Views", ({ beforeEach }) => {
         }
     );
 
+    QUnit.test(
+        `set event as all day when field is datetime (without all_day mapping)`,
+        async (assert) => {
+            await makeView({
+                serverData,
+                resModel: "event",
+                type: "calendar",
+                arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+            });
+            assert.containsOnce(
+                target,
+                ".fc-day-grid .fc-event-container",
+                "should be one event in the all day row"
+            );
+        }
+    );
+
     QUnit.test(`quickcreate avoid double event creation`, async (assert) => {
         assert.expect(1);
         let createCount = 0;
@@ -4133,7 +4152,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     });
 
     QUnit.test(`Monday week start week mode`, async (assert) => {
-        assert.expect(4);
+        assert.expect(5);
 
         patchDate(2019, 8, 15, 8, 0, 0); // 2019-09-15 08:00:00
         // the week start depends on the locale
@@ -4159,6 +4178,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 }
             },
         });
+        assert.containsOnce(target, ".fc-timeGridWeek-view .fc-day-grid");
 
         const dayNameHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
         const dayNumberHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_number");
@@ -4182,7 +4202,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     });
 
     QUnit.test(`Saturday week start week mode`, async (assert) => {
-        assert.expect(4);
+        assert.expect(5);
 
         patchDate(2019, 8, 12, 8, 0, 0); // 2019-09-12 08:00:00
 
@@ -4209,6 +4229,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 }
             },
         });
+        assert.containsOnce(target, ".fc-timeGridWeek-view .fc-day-grid");
 
         const dayNameHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_name");
         const dayNumberHeaders = target.querySelectorAll(".fc-day-header .o_cw_day_number");
@@ -5439,6 +5460,50 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
+    QUnit.test("save selected date during view switching", async function (assert) {
+        serverData.models.event.records = [];
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partners",
+                res_model: "event",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "calendar"],
+                ],
+            },
+        };
+
+        serverData.views = {
+            "event,false,calendar": `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+            "event,false,list": `<tree sample="1">
+                    <field name="start"/>
+                    <field name="stop"/>
+                </tree>`,
+
+            "event,false,search": `<search />`,
+        };
+
+        const webClient = await createWebClient({
+            serverData,
+            async mockRPC(route) {
+                if (route.endsWith("/has_group")) {
+                    return true;
+                }
+            },
+        });
+
+        await doAction(webClient, 1);
+
+        await click(target, ".o_cp_switch_buttons .o_calendar");
+        await click(target, ".o_calendar_button_next");
+        const weekNumber = target.querySelector(".fc-week-number").textContent;
+        await click(target, ".o_cp_switch_buttons .o_list");
+        await click(target, ".o_cp_switch_buttons .o_calendar");
+        assert.equal(weekNumber, target.querySelector(".fc-week-number").textContent);
+    });
+
     QUnit.test(
         "sample data are not removed when switching back from calendar view",
         async function (assert) {
@@ -5539,11 +5604,107 @@ QUnit.module("Views", ({ beforeEach }) => {
         await doAction(webClient, 1);
 
         await click(target, ".o_calendar_filter_item[data-value='all'] input");
-        assert.ok(document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked, "Check if the value of the 'all' filter is set to true")
+        assert.ok(
+            document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked,
+            "Check if the value of the 'all' filter is set to true"
+        );
 
         await click(target, ".o_cp_switch_buttons .o_list");
         await click(target, ".o_cp_switch_buttons .o_calendar");
 
-        assert.ok(document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked, "The value of the 'all' filter should remain the same as it was before re-rendering")
+        assert.ok(
+            document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked,
+            "The value of the 'all' filter should remain the same as it was before re-rendering"
+        );
+    });
+
+    QUnit.test(`Resizing Pill of Multiple Days(Allday)`, async (assert) => {
+        const { advanceTime } = mockTimeout();
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="allday" delete="0" mode="month" >
+                    <field name="stop"/>
+                </calendar>`,
+            mockRPC(route, { args, method }) {
+                if (method === "create") {
+                    assert.deepEqual(
+                        args[0],
+                        [
+                            {
+                                allday: true,
+                                name: "new event",
+                                start: "2016-12-25",
+                                stop: "2016-12-28",
+                            },
+                        ],
+                        "should send the correct data to create events"
+                    );
+                } else if (method === "write") {
+                    assert.deepEqual(args[1], {
+                        allday: true,
+                        start: "2016-12-25",
+                        stop: "2016-12-31",
+                    });
+                }
+            },
+        });
+
+        await selectAllDayRange(target, "2016-12-25", "2016-12-28");
+        await editInput(target, ".o-calendar-quick-create--input", "new event");
+        await click(target, ".o-calendar-quick-create--create-btn");
+        await resizeEventToDate(target, 8, "2016-12-31");
+        await clickEvent(target, 8);
+        await advanceTime(300);
+        assert.strictEqual(
+            target
+                .querySelector(
+                    ".o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_datetime"
+                )
+                .textContent.split(" ")[0],
+            "12/31/2016",
+            "should have correct stop date"
+        );
+    });
+
+    QUnit.test(`update time while drag and drop on month mode`, async (assert) => {
+        assert.expect(2);
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="month" event_open_popup="1" quick_create="0">
+                    <field name="name" />
+                </calendar>
+            `,
+        });
+
+        // Create event (on 20 december)
+        await clickDate(target, "2016-12-20");
+        await editInput(target, ".modal-body .o_field_widget[name=name] input", "An event");
+        await click(target, ".form-check-input");
+        await editInput(
+            target,
+            ".modal-body .o_field_widget[name=start] input",
+            "2016-12-20 08:00:00"
+        );
+        await editInput(
+            target,
+            ".modal-body .o_field_widget[name=stop] input",
+            "2016-12-22 10:00:00"
+        );
+        await click(target, ".modal .o_form_button_save");
+
+        await moveEventToDate(target, 8, "2016-12-29");
+        await clickEvent(target, 8);
+        await click(target, ".o_cw_popover .o_cw_popover_edit");
+
+        const input_start = target.querySelector(".o_field_widget[name='start'] input");
+        assert.strictEqual(input_start.value, "12/28/2016 08:00:00", "should display the datetime");
+        const input_stop = target.querySelector(".o_field_widget[name='stop'] input");
+        assert.strictEqual(input_stop.value, "12/30/2016 10:00:00", "should display the datetime");
     });
 });

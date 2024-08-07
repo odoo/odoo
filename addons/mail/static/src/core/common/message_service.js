@@ -3,6 +3,7 @@
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
 
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 
 const { DateTime } = luxon;
@@ -163,13 +164,13 @@ export class MessageService {
 
     scheduledDateSimple(message) {
         return message.scheduledDate.toLocaleString(DateTime.TIME_24_SIMPLE, {
-            locale: this.userService.lang?.replace("_", "-"),
+            locale: pyToJsLocale(this.userService.lang),
         });
     }
 
     dateSimple(message) {
         return message.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
-            locale: this.userService.lang?.replace("_", "-"),
+            locale: pyToJsLocale(this.userService.lang),
         });
     }
 }

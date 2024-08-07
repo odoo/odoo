@@ -54,14 +54,14 @@
             <field name="priority">999</field>
             <field name="arch" type="xml">
                 <field name="stage_id" position="after">
-                    <field name="project_id" string="Project"/>
+                    <field name="project_id" string="Project" groups="base.group_user"/>
                 </field>
                 <field name="partner_id" position="after">
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
+                    <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]" groups="base.group_user"/>
                 </field>
                 <filter name="stage" position="after">
-                    <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Project" name="project" context="{'group_by': 'project_id'}" groups="base.group_user"/>
                 </filter>
             </field>
         </record>
@@ -80,7 +80,7 @@
                 <filter name="last_stage_update" position="after">
                     <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
                     <separator/>
-                    <filter string="Properties" name="group_by_properties" context="{'group_by': 'task_properties'}"/>
+                    <filter string="Properties" name="group_by_properties" context="{'group_by': 'task_properties'}" groups="base.group_user"/>
                 </filter>
             </field>
         </record>
@@ -787,6 +787,8 @@
                 <graph string="Tasks" sample="1" js_class="project_task_graph">
                     <field name="project_id" invisible="context.get('default_project_id', False)"/>
                     <field name="stage_id"/>
+                    <field name="working_hours_open" widget="float_time"/>
+                    <field name="working_hours_close" widget="float_time"/>
                     <field name="color" invisible="1"/>
                     <field name="sequence" invisible="1"/>
                     <field name="rating_last_value" string="Rating (/5)"/>
@@ -1077,8 +1079,8 @@
             <field name="name">Assigned Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{'search_default_user_ids': [active_id], 'default_user_ids': [(6, 0, [active_id])]}</field>
-            <field name="domain">[('project_id', '!=', False), ('display_in_project', '=', True)]</field>
+            <field name="context">{'default_user_ids': [(6, 0, [active_id])]}</field>
+            <field name="domain">[('project_id', '!=', False), ('display_in_project', '=', True), ('user_ids', 'in', [active_id])]</field>
             <field name="binding_model_id" ref="base.model_res_users"/>
             <field name="binding_view_types">form</field>
         </record>

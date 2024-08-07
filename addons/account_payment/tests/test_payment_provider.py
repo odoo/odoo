@@ -18,7 +18,7 @@ class TestPaymentProvider(AccountPaymentCommon):
             'name': 'Child Company',
             'parent_id': self.env.company.id,
         })
-        with self.mocked_get_payment_method_information(), self.mocked_get_default_payment_method_id():
+        with self.mocked_get_payment_method_information():
             provider_duplicated = self.dummy_provider.copy(default={
                 'name': 'Duplicated Provider',
                 'company_id': child_company.id,

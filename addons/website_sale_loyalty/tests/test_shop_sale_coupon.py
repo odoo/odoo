@@ -217,6 +217,38 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
         self.assertEqual(len(gift_card_program.coupon_ids), 2, 'There should be two coupons, one with points, one without')
         self.assertEqual(len(gift_card_program.coupon_ids.filtered('points')), 1, 'There should be two coupons, one with points, one without')
 
+    def test_02_admin_shop_ewallet_tour(self):
+        public_category = self.env['product.public.category'].create({'name': 'Public Category'})
+        self.env['product.product'].create({
+            'name': 'TEST - Small Drawer',
+            'list_price': 50,
+            'type': 'consu',
+            'is_published': True,
+            'sale_ok': True,
+            'public_categ_ids': [(4, public_category.id)],
+            'taxes_id': False,
+        })
+        # Disable any other program
+        self.env['loyalty.program'].search([]).write({'active': False})
+        ewallet_program = self.env['loyalty.program'].create({
+            'name': 'ewallet - test',
+            'applies_on': 'future',
+            'trigger': 'auto',
+            'program_type': 'ewallet',
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'per_point',
+                'discount': 1,
+            })],
+        })
+        ewallet_program.currency_id = self.env.ref('base.USD')
+        self.env['loyalty.card'].create({
+            'partner_id': self.env.ref('base.partner_admin').id,
+            'program_id': ewallet_program.id,
+            'points': 1000,
+        })
+        self.start_tour('/', 'shop_sale_ewallet', login='admin')
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleCoupon(HttpCase):

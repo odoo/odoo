@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged, Form
 from odoo import fields, Command
 
@@ -482,6 +483,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                         {
                             'tax_group_amount': 90,
                             'tax_group_base_amount': 900,
+                            'hide_base_amount': False,
                         },
                     ],
                 },
@@ -667,6 +669,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                         {
                             'tax_group_amount': 20.58,
                             'tax_group_base_amount': 98,
+                            'hide_base_amount': False,
                         },
                     ],
                 },
@@ -929,3 +932,36 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 'display_type': 'payment_term',
             },
         ])
+
+    def test_epd_validation_on_payment_terms(self):
+        """
+        Test that enabling Early Payment Discount (EPD) on payment terms with multiple lines raises a ValidationError,
+        and that enabling EPD on payment terms with a single line does not raise any error.
+        """
+        payment_term = self.env['account.payment.term'].create({
+            'name': 'Test Term',
+            'line_ids': [
+                Command.create({'value': 'percent', 'value_amount': 50, 'nb_days': 30}),
+                Command.create({'value': 'percent', 'value_amount': 50, 'nb_days': 60}),
+            ]
+        })
+
+        with self.assertRaisesRegex(
+            ValidationError,
+            "The Early Payment Discount functionality can only be used with payment terms using a single 100% line.",
+            msg="EPD should not be allowed with multiple term lines",
+        ):
+            payment_term.early_discount = True
+
+        # Modify the payment term to have a single line
+        payment_term.line_ids = [
+            Command.clear(),
+            Command.create({"value": "percent", "value_amount": 100, "nb_days": 30}),
+        ]
+
+        try:
+            payment_term.early_discount = True
+        except ValidationError:
+            self.fail(
+                "ValidationError raised unexpectedly for single-line payment term with EPD"
+            )

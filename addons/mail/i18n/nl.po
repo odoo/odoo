@@ -6,6 +6,7 @@
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
@@ -2124,8 +2125,10 @@ msgstr "Bedrijf"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/web/activity_mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -2644,7 +2647,7 @@ msgstr "Beste verzender,"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__decoration_type
 msgid "Decoration Type"
-msgstr "Decoratie type"
+msgstr "Type decoratie"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__default
@@ -3022,7 +3025,7 @@ msgstr "Domein"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__done
 #, python-format
 msgid "Done"
-msgstr "Gereed"
+msgstr "Afgehandeld"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -3437,7 +3440,7 @@ msgstr "Alleen werknemer"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
-msgstr "Bestellingstracering inschakelen"
+msgstr "Schakel opvoltracering in"
 
 #. module: mail
 #. odoo-javascript
@@ -3668,11 +3671,11 @@ msgstr "Veld"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
-"Veld \"(field)r op model %(model)r moet van het type Many2one zijn en "
-"tracking=True hebben voor de berekening van de duur."
+"Het veld “%(field)s” op model “%(model)s” moet van het type Many2one zijn en"
+" een tracking=True hebben voor het berekenen van de duur."
 
 #. module: mail
 #. odoo-python
@@ -5041,7 +5044,7 @@ msgstr "Bijlagen bewaren"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__keep_done
 msgid "Keep Done"
-msgstr "Blijf gedaan"
+msgstr "Voltooide activiteiten bewaren"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_keep_log

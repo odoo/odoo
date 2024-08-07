@@ -5,6 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { ActivityController } from "@mail/views/web/activity/activity_controller";
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
+import { DynamicList } from "@web/model/relational_model/dynamic_list"
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { RelationalModel } from "@web/model/relational_model/relational_model";
@@ -13,7 +14,7 @@ import { serializeDate } from "@web/core/l10n/dates";
 import { deepEqual } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
-import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/helpers/utils";
+import { editInput, patchWithCleanup, click, patchDate, triggerEvent } from "@web/../tests/helpers/utils";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
 import { contains } from "@web/../tests/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
@@ -39,30 +40,38 @@ async function openViewAndPatchDoAction(assert) {
     });
 }
 
+function patchActivityDomain(load, params) {
+    if (params.domain) {
+        // Remove domain term used to filter record having "done" activities (not understood by the getRecords mock)
+        const domain = new Domain(params.domain);
+        const newDomain = Domain.removeDomainLeaves(domain.toList(), [
+            "activity_ids.active",
+        ]);
+        if (!deepEqual(domain.toList(), newDomain.toList())) {
+            return load({
+                ...params,
+                domain: newDomain.toList(),
+                context: params.context
+                    ? { ...params.context, active_test: false }
+                    : { active_test: false },
+            });
+        }
+    }
+    return load(params);
+}
+
 QUnit.module("test_mail", {}, function () {
     QUnit.module("activity view", {
         async beforeEach() {
             patchDate(2023, 4, 8, 10, 0, 0);
+            patchWithCleanup(DynamicList.prototype, {
+                async load(params) {
+                    return patchActivityDomain(super.load.bind(this), params);
+                },
+            })
             patchWithCleanup(RelationalModel.prototype, {
                 async load(params) {
-                    if (params.domain) {
-                        // Remove domain term used to filter record having "done" activities (not understood by the getRecords mock)
-                        const domain = new Domain(params.domain);
-                        const newDomain = Domain.removeDomainLeaves(domain.toList(), [
-                            "activity_ids.active",
-                        ]);
-                        if (!deepEqual(domain.toList(), newDomain.toList())) {
-                            return super.load({
-                                ...params,
-                                domain: newDomain.toList(),
-                                context: params.context
-                                    ? { ...params.context, active_test: false }
-                                    : { active_test: false },
-                            });
-                        }
-                        return super.load(params);
-                    }
-                    return super.load(params);
+                    return patchActivityDomain(super.load.bind(this), params);
                 },
             });
             pyEnv = await startServer();
@@ -558,8 +567,8 @@ QUnit.module("test_mail", {}, function () {
     });
 
     QUnit.test("activity view: activity_ids condition in domain", async function (assert) {
-        assert.expect(3);
-        const { openView } = await start({
+        assert.expect(5);
+        const { openView, target } = await start({
             serverData,
             mockRPC: function (route, args) {
                 if (["get_activity_data", "web_search_read"].includes(args.method)) {
@@ -572,9 +581,18 @@ QUnit.module("test_mail", {}, function () {
             views: [[false, "activity"]],
         });
 
+        // enter edit mode
+        await click(target, ".o_pager_value");
+        await triggerEvent(target, ".o_pager_value", 'keydown', { key: 'Enter' });
+
         assert.verifySteps([
+            // load view requests
             JSON.stringify([["activity_ids.active", "in", [true, false]]]),
-            '[[1,"=",1]]', // Due to the patch above that removes it
+            '[[1,"=",1]]', // Due to the relational model patch above that removes it
+            // pager requests
+            JSON.stringify([["activity_ids.active", "in", [true, false]]]),
+            // Due to the dynamic list patch above that removes it
+            '[[1,"=",1]]',
         ]);
     });
 

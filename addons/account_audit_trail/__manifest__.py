@@ -10,5 +10,6 @@
         'report/audit_trail_report_views.xml',
         'views/res_config_settings_views.xml',
     ],
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }

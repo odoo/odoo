@@ -14,3 +14,52 @@ registry.category("web_tour.tours").add("self_order_is_close", {
         Utils.checkIsNoBtn("Order"),
     ],
 });
+
+registry.category("web_tour.tours").add("self_order_is_open_consultation", {
+    test: true,
+    steps: () => [
+        LandingPage.isOpened(),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.checkIsNoBtn("Order"),
+    ],
+});
+
+registry.category("web_tour.tours").add("self_order_pos_is_closed", {
+    test: true,
+    steps: () => [
+        LandingPage.isClosed(),
+        // Normal product
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.checkIsNoBtn("Order"),
+        // Product with attributes
+        ProductPage.clickProduct("Desk Organizer"),
+        ...ProductPage.setupAttribute([
+            { name: "Size", value: "M" },
+            { name: "Fabric", value: "Leather" },
+        ], false),
+        Utils.checkIsNoBtn("Add to cart"),
+        Utils.clickBtn("Discard"),
+        // Combo product
+        ProductPage.clickProduct("Office Combo"),
+        ...ProductPage.setupCombo([
+            {
+                product: "Desk Organizer",
+                attributes: [
+                    { name: "Size", value: "M" },
+                    { name: "Fabric", value: "Leather" },
+                ],
+            },
+            {
+                product: "Combo Product 5",
+                attributes: [],
+            },
+            {
+                product: "Combo Product 8",
+                attributes: [],
+            },
+        ], false),
+        Utils.checkIsNoBtn("Add to cart"),
+    ],
+});

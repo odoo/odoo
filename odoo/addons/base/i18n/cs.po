@@ -5,12 +5,12 @@
 # Translators:
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # Ivana Bartonkova, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
-# Wil Odoo, 2024
 # Tomáš Píšek, 2024
 # Jiří Podhorecký, 2024
 # Katerina Horylova, 2024
+# Wil Odoo, 2024
 # Jakub Smolka, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-26 12:42+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakub Smolka, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1340,7 +1340,7 @@ msgstr ""
 "Účetní výkazy pro Lucembursko\n"
 "==============================\n"
 "Lucemburský SAF-T (také známy jako FAIA) je standardní formát souboru pro export různých typů účetních transakčních dat s použitím formátu XML.\n"
-"Tato první verze SAF-T Financí je omezena na úroveň hlavní knihy včetně zákaznických a dodavatelkých transakcí.\n"
+"Tato první verze SAF-T Financí je omezena na úroveň hlavní knihy včetně zákaznických a dodavatelských transakcí.\n"
 "Nezbytná hlavní data jsou rovněž přiložena.\n"
 
 #. module: base
@@ -1511,9 +1511,8 @@ msgid ""
 "================================\n"
 msgstr ""
 "\n"
-"Účetní výkazy pro Taiwan\n"
+"Účetní výkazy pro Tchaj-wan\n"
 "================================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th_reports
@@ -3917,6 +3916,14 @@ msgid ""
 "\n"
 "Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
 msgstr ""
+"\n"
+"Ekvádorská lokalizace EDI\n"
+"=============================\n"
+"Přidává elektronické dokumenty pomocí XML, RIDE, s elektronickým podpisem a přímým napojením na daňový úřad SRI,\n"
+"\n"
+"Podporované dokumenty jsou faktury, dobropisy, vrubopisy, likvidace nákupu a zadržené částky\n"
+"\n"
+"Zahrnuje automatizaci pro snadné předvídání srážkové daně, která se má použít na každou nákupní fakturu\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -4221,7 +4228,7 @@ msgid ""
 "Enterprise digest data\n"
 msgstr ""
 "\n"
-"Enterprise digest data\n"
+"Údaje podnikového přehledu\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_exports
@@ -4233,10 +4240,10 @@ msgid ""
 "complex logic.\n"
 msgstr ""
 "\n"
-"I když je množství obalů zjevně vlastní pouze skladovému použití, potřebujeme pro to pole.\n"
-"na faktuře, protože tato informace může záviset i na deklaraci DUS.\n"
+"I když je množství obalů zjevně vlastní pouze skladovému použití, potřebujeme pro to ve faktuře pole,\n"
+"protože tato informace může záviset i na deklaraci DUS.\n"
 "Měli bychom také počítat s tím, že mohou existovat uživatelé, kteří nemají nainstalovanou skladovou aplikaci a vedou méně\n"
-"složitější logiku\n"
+"složitější logiku.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_expense
@@ -4778,7 +4785,7 @@ msgid ""
 "GSTR-1 return data set as per point of sale orders\n"
 msgstr ""
 "\n"
-"Datová sada GSTR-1 vratky za zaždou objednávku v Místě prodeje\n"
+"Datová sada GSTR-1 vratky za každou objednávku v Místě prodeje\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -6083,6 +6090,20 @@ msgid ""
 "of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
+"\n"
+"Modul pro automatizaci dopisů pro nezaplacené faktury s víceúrovňovým vyvoláním.\n"
+"==========================================================================\n"
+"\n"
+"V nabídce můžete definovat několik úrovní vyvolání:\n"
+"---------------------------------------------------------------\n"
+"    Nastavení / Upomínka / Nastavení platebních upomínek\n"
+"\n"
+"Jakmile je definováno, můžete automaticky tisknout vyvolávání každý den pouhým kliknutím na nabídku:\n"
+"-----------------------------------------------------------------------------------------------------\n"
+"    Následná platba / Odeslání e-mailu a dopisů\n"
+"\n"
+"Bude generovat PDF / odesílat e-maily / nastavovat činnosti podle různých definovaných úrovní vyvolání. Můžete definovat různé zásady pro různé společnosti.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -6248,6 +6269,9 @@ msgid ""
 "Module to import SODA files.\n"
 "======================================\n"
 msgstr ""
+"\n"
+"Module pro import souborů SODA.\n"
+"======================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn_reports
@@ -6637,6 +6661,11 @@ msgid ""
 "With this module, planning take into account employee's contracts for\n"
 "slots planification and allocated hours.\n"
 msgstr ""
+"\n"
+"Plánování integrace se smlouvou o lidských zdrojích\n"
+"\n"
+"S tímto modulem plánování zohledňuje zaměstnanecké smlouvy na\n"
+"plánování slotů a přidělené hodiny.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_planning_holidays
@@ -8956,12 +8985,12 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_tr
 msgid ""
 "\n"
-"Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
+"Turkish charts of accounts\n"
+"========================================\n"
+"    * Defines the default chart of accounts\n"
+"    * Defines the default taxes\n"
+"    * Defines default tax report\n"
+"This was done in collaboration with Broadmax Partner in Turkey."
 msgstr ""
 
 #. module: base
@@ -12537,7 +12566,7 @@ msgstr "Assety"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
 msgid "Assets Management"
-msgstr "Správa majetku"
+msgstr "Správa aktiv"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset_fleet
@@ -18715,6 +18744,11 @@ msgid "France - Accounting Reports"
 msgstr "Francie - účetní zprávy"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
+msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC Export"
 msgstr "Francie - FEC export"
@@ -21850,7 +21884,7 @@ msgstr "Levý okraj (mm)"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__direction__ltr
 msgid "Left-to-Right"
-msgstr "Zleva do prava"
+msgstr "Zleva doprava"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__legal
@@ -24144,7 +24178,7 @@ msgstr "Dejte vědět uživateli, když bude produkt znovu dostupný skladem"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__numbercall
 msgid "Number of Calls"
-msgstr "Počet hovorů"
+msgstr "Počet volání funkce"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__companies_count
@@ -28314,7 +28348,7 @@ msgstr "Účetní aktiva projektu"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_holidays
 msgid "Project and task integration with holidays"
-msgstr "Integrace projektů a úloh se svátky"
+msgstr "Integrace projektů a úloh s dovolenou"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_hr_expense
@@ -34279,9 +34313,9 @@ msgid ""
 "\n"
 "Sorry, %s doesn't have '%s' access to:"
 msgstr ""
-"Uh-oh! Vypadá to, že jste zakopli o nějaký přísně tajný záznam.\n"
+"Ach-och! Vypadá to, že jste zakopli o nějaký přísně tajný záznam.\n"
 "\n"
-"%s nemá přístup '%s' pro záznam:"
+"Prominňte, %s nemá přístup pro '%s' k:"
 
 #. module: base
 #: model:res.country,name:base.ua

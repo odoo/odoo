@@ -307,6 +307,12 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
         self.start_tour("/", 'tour_shop_no_variant_attribute', login="demo")
 
+        sol = self.env['sale.order.line'].search([
+            ('product_id', '=', product_template.product_variant_id.id)
+        ])
+        self.assertTrue(sol)
+        self.assertEqual(sol.product_no_variant_attribute_value_ids, ptal.product_template_value_ids)
+
     def test_06_admin_list_view_b2c(self):
         self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
 
@@ -499,3 +505,26 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_11_shop_editor_set_product_ribbon(self):
         self.start_tour("/", 'shop_editor_set_product_ribbon', login="admin")
+
+    def test_12_multi_checkbox_attribute_single_value(self):
+        attribute = self.env['product.attribute'].create([
+            {
+                'name': 'Toppings',
+                'create_variant': 'no_variant',
+                'display_type': 'multi',
+                'value_ids': [(0, 0, {'name': 'cheese'})],
+            },
+        ])
+        self.env['product.template'].create({
+            'name': 'Burger',
+            'is_published': True,
+            'list_price': 750,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': [(6, 0, attribute.value_ids.ids)],
+                }),
+            ],
+        })
+
+        self.start_tour("/", 'tour_shop_multi_checkbox_single_value', login="admin")

@@ -191,7 +191,7 @@ class AccountPayment(models.Model):
         """ Add is_internal_transfer as a trigger to re-compute """
         return super()._compute_payment_method_line_fields()
 
-    @api.depends('l10n_latam_check_operation_ids.state')
+    @api.depends('l10n_latam_check_operation_ids.state', 'payment_method_line_id.code')
     def _compute_l10n_latam_check_current_journal(self):
         new_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
         payments = self.env['account.payment'].search(

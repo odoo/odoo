@@ -485,7 +485,7 @@ export function makeDraggableHook(hookParams) {
                 return (
                     !ctx.tolerance ||
                     Math.hypot(pointer.x - initialPosition.x, pointer.y - initialPosition.y) >=
-                    ctx.tolerance
+                        ctx.tolerance
                 );
             };
 
@@ -760,13 +760,13 @@ export function makeDraggableHook(hookParams) {
              */
             const updateElementPosition = () => {
                 const { containerRect, element, elementRect, offset } = ctx.current;
-                const { width: ew } = elementRect;
+                const { width: ew, height: eh } = elementRect;
                 const { x: cx, y: cy, width: cw, height: ch } = containerRect;
 
                 // Updates the position of the dragged element.
                 dom.addStyle(element, {
                     left: `${clamp(ctx.pointer.x - offset.x, cx, cx + cw - ew)}px`,
-                    top: `${clamp(ctx.pointer.y - offset.y, cy, cy + ch)}px`,
+                    top: `${clamp(ctx.pointer.y - offset.y, cy, cy + ch - eh)}px`,
                 });
             };
 
@@ -987,7 +987,7 @@ export function makeDraggableHook(hookParams) {
                             // be fired. Note that we DO NOT want to prevent touchstart
                             // events since they're responsible of the native swipe
                             // scrolling.
-                            addListener(el, "touchstart", () => { }, {
+                            addListener(el, "touchstart", () => {}, {
                                 passive: false,
                                 noAddedStyle: true,
                             });
@@ -1005,9 +1005,11 @@ export function makeDraggableHook(hookParams) {
             };
             // Other global event listeners.
             const throttledOnPointerMove = setupHooks.throttle(onPointerMove);
-            addWindowListener(useMouseEvents ? "mousemove" : "pointermove", throttledOnPointerMove, {
-                passive: false,
-            });
+            addWindowListener(
+                useMouseEvents ? "mousemove" : "pointermove",
+                throttledOnPointerMove,
+                { passive: false }
+            );
             addWindowListener(useMouseEvents ? "mouseup" : "pointerup", onPointerUp);
             addWindowListener("pointercancel", onPointerCancel);
             addWindowListener("keydown", onKeyDown, { capture: true });

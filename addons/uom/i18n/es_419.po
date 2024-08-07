@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
@@ -208,7 +207,7 @@ msgstr "Unidad de medida de referencia para esta categoría"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
 msgid "Reference UoM"
-msgstr "UdM de referencia"
+msgstr "Unidad de medida de referencia"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -246,10 +245,10 @@ msgstr ""
 "Se modificaron algunos campos críticos en %s.\n"
 "Tome en cuenta que este cambio no modificará la información existente.\n"
 "\n"
-"Como las unidades de medida impactan a todo el sistema, esto puede traer problemas críticos.\n"
+"Como las unidades de medida impactan a todo el sistema, esto puede causar problemas críticos.\n"
 "Por ejemplo, modificar el redondeo podría alterar el balance de su inventario.\n"
 "\n"
-"Por ello, no se recomienda cambiar las unidades de medida neutrales en una base de datos funcional."
+"No es recomendable cambiar las unidades de medida neutrales en una base de datos funcional."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -303,8 +302,8 @@ msgid ""
 msgstr ""
 "La unidad de medida %s que se definió en la línea de la orden no pertenece a"
 " la misma categoría que la unidad de medida %s definida en el producto. "
-"Corrija la unidad de medida definida en la línea de orden o en el producto, "
-"deben pertenecer a la misma categoría."
+"Estas unidades de medida deben pertenecer a la misma categoría, corrija una "
+"de ellas."
 
 #. module: uom
 #. odoo-python
@@ -384,8 +383,8 @@ msgstr ""
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
-"La categoría %s de UdM debería tener al menos una unidad de medida de "
-"referencia."
+"La categoría %s de unidades de medida debería tener al menos una unidad de "
+"medida de referencia."
 
 #. module: uom
 #. odoo-python
@@ -393,7 +392,8 @@ msgstr ""
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
 msgstr ""
-"La categoría de UdM %s debería tener una unidad de medida de referencia."
+"La categoría de unidades de medida %s debería tener una unidad de medida de "
+"referencia."
 
 #. module: uom
 #. odoo-python

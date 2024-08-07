@@ -35,6 +35,10 @@ async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
     return scMenu;
 }
 
+function toCIDS(...ids) {
+    return `cids=${ids.join("-")}&_company_switching=1`;
+}
+
 QUnit.module("SwitchCompanyMenu", (hooks) => {
     hooks.beforeEach(() => {
         patchWithCleanup(session.user_companies, {
@@ -260,8 +264,111 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          */
         await click(target.querySelectorAll(".log_into")[1]);
         assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
-        assert.verifySteps(["cids=2&_company_switching=1"]);
+        assert.verifySteps([toCIDS(2)]);
     });
+
+    QUnit.test("single company mode: from company loginto branch", async (assert) => {
+        assert.expect(8);
+        const scMenu = await createSwitchCompanyMenu({
+            onPushState: (url) => assert.step(url.split("#")[1]),
+        });
+
+        /**
+         *   [x] **Hermit**
+         *   [ ] Herman's
+         *   [ ] Heroes TM
+         *   [ ]    Hercules
+         *   [ ]    Hulk
+         */
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
+        assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
+        await click(target.querySelector(".dropdown-toggle"));
+        assert.containsN(target, "[data-company-id]", 5);
+        assert.containsN(target, "[data-company-id] .fa-check-square", 1);
+        assert.containsN(target, "[data-company-id] .fa-square-o", 4);
+
+        /**
+         *   [ ] Hermit
+         *   [ ] Herman's
+         *   [x] **Heroes TM** -> log into
+         *   [x]    Hercules
+         *   [x]    Hulk
+         */
+        await click(target.querySelectorAll(".log_into")[2]);
+        assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
+        assert.verifySteps([toCIDS(1, 4, 5)]);
+    });
+
+    QUnit.test("single company mode: from branch loginto company", async (assert) => {
+        assert.expect(8);
+        Object.assign(browser.location, { hash: toCIDS(1, 4, 5) });
+        const scMenu = await createSwitchCompanyMenu({
+            onPushState: (url) => assert.step(url.split("#")[1]),
+        });
+
+        /**
+         *   [ ] Hermit
+         *   [ ] Herman's
+         *   [x] **Heroes TM**
+         *   [x]    Hercules
+         *   [x]    Hulk
+         */
+        assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1, 4, 5]);
+        assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
+        await click(target.querySelector(".dropdown-toggle"));
+        assert.containsN(target, "[data-company-id]", 5);
+        assert.containsN(target, "[data-company-id] .fa-check-square", 3);
+        assert.containsN(target, "[data-company-id] .fa-square-o", 2);
+
+        /**
+         *   [x] Hermit    -> log into
+         *   [ ] Herman's
+         *   [ ] Heroes TM
+         *   [ ]    Hercules
+         *   [ ]    Hulk
+         */
+        await click(target.querySelectorAll(".log_into")[0]);
+        assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
+        assert.verifySteps([toCIDS(3)]);
+    });
+
+    QUnit.test(
+        "single company mode: from leaf (only one company in branch selected) loginto company",
+        async (assert) => {
+            assert.expect(8);
+            Object.assign(browser.location, { hash: toCIDS(1) });
+
+            function onPushState(url) {
+                assert.step(url.split("#")[1]);
+            }
+            const scMenu = await createSwitchCompanyMenu({ onPushState });
+
+            /**
+             *   [ ] Hermit
+             *   [ ] Herman's
+             *   [x] **Heroes TM**
+             *   [ ]    Hercules
+             *   [ ]    Hulk
+             */
+            assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1]);
+            assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
+            await click(target.querySelector(".dropdown-toggle"));
+            assert.containsN(target, "[data-company-id]", 5);
+            assert.containsN(target, "[data-company-id] .fa-check-square", 1);
+            assert.containsN(target, "[data-company-id] .fa-square-o", 4);
+
+            /**
+             *   [ ] Hermit
+             *   [x] **Herman's**     -> log into
+             *   [ ] Heroes TM
+             *   [ ]    Hercules
+             *   [ ]    Hulk
+             */
+            await click(target.querySelectorAll(".log_into")[1]);
+            assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
+            assert.verifySteps([toCIDS(2)]);
+        }
+    );
 
     QUnit.test("multi company mode: log into a non selected company", async (assert) => {
         assert.expect(8);
@@ -269,7 +376,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        Object.assign(browser.location, { hash: "cids=3-1" });
+        Object.assign(browser.location, { hash: toCIDS(3, 1) });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
 
         /**
@@ -287,15 +394,15 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.containsN(target, "[data-company-id] .fa-square-o", 3);
 
         /**
-         *   [ ] Hermit
+         *   [x] Hermit
          *   [x] **Herman's**    -> log into
-         *   [ ] Heroes TM
+         *   [x] Heroes TM
          *   [ ]    Hercules
          *   [ ]    Hulk
          */
         await click(target.querySelectorAll(".log_into")[1]);
         assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
-        assert.verifySteps(["cids=2&_company_switching=1"]);
+        assert.verifySteps([toCIDS(2, 3, 1)]);
     });
 
     QUnit.test("multi company mode: log into an already selected company", async (assert) => {
@@ -323,15 +430,51 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
 
         /**
          *   [ ] Hermit
-         *   [ ] Herman's
+         *   [x] Herman's
          *   [x] **Heroes TM**    -> log into
          *   [x]    Hercules
          *   [x]    Hulk
          */
         await click(target.querySelectorAll(".log_into")[2]);
         assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
-        assert.verifySteps(["cids=1-4-5&_company_switching=1"]);
+        assert.verifySteps([toCIDS(1, 2, 4, 5)]);
     });
+
+    QUnit.test(
+        "multi company mode: switching company doesn't deselect already selected ones",
+        async (assert) => {
+            assert.expect(8);
+            Object.assign(browser.location, { hash: toCIDS(1, 2, 4, 5) });
+            const scMenu = await createSwitchCompanyMenu({
+                onPushState: (url) => assert.step(url.split("#")[1]),
+            });
+
+            /**
+             *   [ ] Hermit
+             *   [x] Herman's
+             *   [x] **Heroes TM**
+             *   [x]    Hercules
+             *   [x]    Hulk
+             */
+            assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1, 2, 4, 5]);
+            assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
+            await click(target.querySelector(".dropdown-toggle"));
+            assert.containsN(target, "[data-company-id]", 5);
+            assert.containsN(target, "[data-company-id] .fa-check-square", 4);
+            assert.containsN(target, "[data-company-id] .fa-square-o", 1);
+
+            /**
+             *   [ ] Hermit
+             *   [x] **Herman's** -> log into
+             *   [x] Heroes TM
+             *   [x]    Hercules
+             *   [x]    Hulk
+             */
+            await click(target.querySelectorAll(".log_into")[1]);
+            assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
+            assert.verifySteps([toCIDS(2, 1, 4, 5)]);
+        }
+    );
 
     QUnit.test("companies can be logged in even if some toggled within delay", async (assert) => {
         assert.expect(8);
@@ -356,9 +499,9 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.containsN(target, "[data-company-id] .fa-square-o", 4);
 
         /**
-         *   [ ] Hermit         -> toggled
-         *   [x] **Herman's**   -> logged in
-         *   [ ] Heroes TM      -> toggled
+         *   [ ] Hermit         -> 2) toggled
+         *   [x] **Herman's**   -> 3) logged in
+         *   [ ] Heroes TM      -> 1) toggled
          *   [ ]    Hercules
          *   [ ]    Hulk
          */
@@ -366,6 +509,9 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         await click(target.querySelectorAll(".toggle_company")[0]);
         await click(target.querySelectorAll(".log_into")[1]);
         assert.containsNone(target, ".dropdown-menu", "dropdown is directly closed");
-        assert.verifySteps(["cids=2&_company_switching=1"]);
+
+        // When "Herman's" is logged into, only one company is currently selected
+        // so we treat it as single company mode
+        assert.verifySteps([toCIDS(2)]);
     });
 });

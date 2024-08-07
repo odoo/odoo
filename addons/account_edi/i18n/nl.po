@@ -3,7 +3,7 @@
 # 	* account_edi
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
@@ -216,7 +216,7 @@ msgstr "EDI, Toon annulleerknop"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr "Edi Webservices om te verwerken"
+msgstr "Edi Web Services om te verwerken"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
@@ -376,6 +376,15 @@ msgid ""
 msgstr ""
 "Het bestand gegenereerd door edi_format_id wanneer de factuur wordt geboekt "
 "(en dit document wordt verwerkt)."
+
+#. module: account_edi
+#: code:addons/account_edi/wizard/account_resequence.py:0
+#, python-format
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr ""
+"De volgende documenten zijn al verzonden en kunnen niet opnieuw worden "
+"gerangschikt: %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

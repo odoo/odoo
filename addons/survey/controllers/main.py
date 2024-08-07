@@ -110,8 +110,8 @@ class Survey(http.Controller):
             survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
             try:
                 survey_user = survey_sudo.with_user(request.env.user)
-                survey_user.check_access_rights(self, 'read', raise_exception=True)
-                survey_user.check_access_rule(self, 'read')
+                survey_user.check_access_rights('read', raise_exception=True)
+                survey_user.check_access_rule('read')
             except:
                 pass
             else:
@@ -318,6 +318,9 @@ class Survey(http.Controller):
                     next_page_or_question = survey_sudo._get_next_page_or_question(
                         answer_sudo,
                         answer_sudo.last_displayed_page_id.id if answer_sudo.last_displayed_page_id else 0)
+                    # fallback to skipped page so that there is a next_page_or_question otherwise this should be a submit
+                    if not next_page_or_question:
+                        next_page_or_question = answer_sudo._get_next_skipped_page_or_question()
 
                 if next_page_or_question:
                     if answer_sudo.survey_first_submitted:

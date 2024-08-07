@@ -216,6 +216,11 @@ export class PosStore extends Reactive {
             searchTerm: "",
         };
     }
+
+    async setDiscountFromUI(line, val) {
+        line.set_discount(val);
+    }
+
     getDefaultPricelist() {
         const current_order = this.get_order();
         if (current_order) {
@@ -239,8 +244,7 @@ export class PosStore extends Reactive {
         window.addEventListener("beforeunload", () =>
             this.db.save("TO_REFUND_LINES", this.toRefundLines)
         );
-        const { start_category, iface_start_categ_id } = this.config;
-        this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
+        this.resetProductScreenSearch();
         this.hasBigScrollBars = this.config.iface_big_scrollbars;
         // Push orders in background, do not await
         this.push_orders();
@@ -860,7 +864,8 @@ export class PosStore extends Reactive {
                 message = messageFp;
             }
         }
-        await this._getMissingProducts(ordersJson);
+        await this._loadMissingProducts(ordersJson);
+        await this._loadMissingPartners(ordersJson);
         const allOrders = [...this.get_order_list()];
         this._replaceOrders(allOrders, ordersJson);
         this.sortOrders();
@@ -898,17 +903,6 @@ export class PosStore extends Reactive {
             "get_pos_ui_product_pricelists_by_ids",
             [[odoo.pos_session_id], pricelistsToGet]
         );
-    }
-    async _getMissingProducts(ordersJson) {
-        const productIds = [];
-        for (const order of ordersJson) {
-            for (const orderline of order.lines) {
-                if (!this.db.get_product_by_id(orderline[2].product_id)) {
-                    productIds.push(orderline[2].product_id);
-                }
-            }
-        }
-        await this._addProducts(productIds, false);
     }
     _addPosPricelists(pricelistsJson) {
         if (!this.config.use_pricelist) {
@@ -1059,20 +1053,8 @@ export class PosStore extends Reactive {
 
             if (mapped_included_taxes.length > 0) {
                 if (new_included_taxes.length > 0) {
-                    const price_without_taxes = this.compute_all(
-                        mapped_included_taxes,
-                        price,
-                        1,
-                        this.currency.rounding,
-                        true
-                    ).total_excluded;
-                    return this.compute_all(
-                        new_included_taxes,
-                        price_without_taxes,
-                        1,
-                        this.currency.rounding,
-                        false
-                    ).total_included;
+                    //If previous tax and new tax where both included in price. The price including tax is the same
+                    return price;
                 } else {
                     return this.compute_all(
                         mapped_included_taxes,
@@ -1242,7 +1224,11 @@ export class PosStore extends Reactive {
      * while processing orders in the backend
      */
     _getCreateOrderContext(orders, options) {
-        return this.context || {};
+        const orderContext = this.context || {};
+        if (options.printedOrders !== undefined) {
+            orderContext.is_receipt_printed = options.printedOrders;
+        }
+        return orderContext;
     }
     // send an array of orders to the server
     // available options:
@@ -1753,6 +1739,10 @@ export class PosStore extends Reactive {
         return false;
     }
 
+    disallowLineDiscountChange() {
+        return false;
+    }
+
     getCurrencySymbol() {
         return this.currency ? this.currency.symbol : "$";
     }
@@ -1924,7 +1914,7 @@ export class PosStore extends Reactive {
         }
         this.get_order() || this.add_new_order();
 
-        options = { ...options, ...(await product.getAddProductOptions()) };
+        options = { ...(await product.getAddProductOptions()), ...options };
 
         if (!Object.keys(options).length) {
             return;
@@ -2047,6 +2037,12 @@ export class PosStore extends Reactive {
 
     redirectToBackend() {
         window.location = "/web#action=point_of_sale.action_client_pos_menu";
+    }
+
+    resetProductScreenSearch() {
+        this.searchProductWord = "";
+        const { start_category, iface_start_categ_id } = this.config;
+        this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
     }
 }
 

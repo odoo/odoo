@@ -123,11 +123,16 @@ def fill_form_fields_pdf(writer, form_fields):
         if is_upper_version_pypdf2:
             writer.update_page_form_field_values(page, form_fields)
         else:
-            # This is a known bug on previous version of PyPDF2, fixed in 2.11
+            # Known bug on previous versions of PyPDF2, fixed in 2.11
             if not page.get('/Annots'):
                 _logger.info("No fields to update in this page")
             else:
-                writer.updatePageFormFieldValues(page, form_fields)
+                try:
+                    writer.updatePageFormFieldValues(page, form_fields)
+                except ValueError:
+                    # Known bug on previous versions of PyPDF2 for some PDFs, fixed in 2.4.2
+                    _logger.info("Fields couldn't be filled in this page.")
+                    continue
 
         for raw_annot in page.get('/Annots', []):
             annot = raw_annot.getObject()

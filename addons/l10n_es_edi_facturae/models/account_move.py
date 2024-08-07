@@ -234,9 +234,7 @@ class AccountMove(models.Model):
             price_before_discount = sum(to_update['price_subtotal'] for _dummy, to_update in tax_before_discount['base_lines_to_update'])
             discount = max(0., (price_before_discount - line.price_subtotal))
             surcharge = abs(min(0., (price_before_discount - line.price_subtotal)))
-            totals['total_gross_amount'] += price_before_discount
-            totals['total_general_discounts'] += discount
-            totals['total_general_surcharges'] += surcharge
+            totals['total_gross_amount'] += line.price_subtotal
             base_line = self.env['account.tax']._convert_to_tax_base_line_dict(
                 line, partner=line.partner_id, currency=line.currency_id, product=line.product_id, taxes=line.tax_ids,
                 price_unit=line.price_unit, quantity=line.quantity, discount=line.discount, account=line.account_id,
@@ -254,7 +252,7 @@ class AccountMove(models.Model):
             totals['total_taxes_withheld'] += sum((abs(tax["tax_amount"]) for tax in taxes_withheld_computed))
 
             invoice_line_values.update({
-                'FileReference': self._l10n_es_edi_facturae_get_filename().split('.')[0][:20],
+                'FileReference': self.ref[:20] if self.ref else False,
                 'FileDate': fields.Date.context_today(self),
                 'ItemDescription': line.name,
                 'Quantity': line.quantity,
@@ -286,6 +284,18 @@ class AccountMove(models.Model):
 
         :return: (data needed to render the full template, data needed to render the signature template)
         """
+        def extract_party_name(party):
+            name = {'firstname': 'UNKNOWN', 'surname': 'UNKNOWN', 'surname2': ''}
+            if not party.is_company:
+                name_split = [part for part in party.name.replace(', ', ' ').split(' ') if part]
+                if len(name_split) > 2:
+                    name['firstname'] = ' '.join(name_split[:-2])
+                    name['surname'], name['surname2'] = name_split[-2:]
+                elif len(name_split) == 2:
+                    name['firstname'] = ' '.join(name_split[:-1])
+                    name['surname'] = name_split[-1]
+            return name
+
         self.ensure_one()
         company = self.company_id
         partner = self.commercial_partner_id
@@ -304,16 +314,6 @@ class AccountMove(models.Model):
         legal_literals = self.narration.striptags() if self.narration else False
         legal_literals = legal_literals.split(";") if legal_literals else False
 
-        partner_name = {'firstname': 'UNKNOWN', 'surname': 'UNKNOWN', 'surname2': ''}
-        if not partner.is_company:
-            name_split = [part for part in partner.name.replace(', ', ' ').split(' ') if part]
-            if len(name_split) > 2:
-                partner_name['firstname'] = ' '.join(name_split[:-2])
-                partner_name['surname'], partner_name['surname2'] = name_split[-2:]
-            elif len(name_split) == 2:
-                partner_name['firstname'] = ' '.join(name_split[:-1])
-                partner_name['surname'] = name_split[-1]
-
         invoice_issuer_signature_type = 'supplier' if self.move_type == 'out_invoice' else 'customer'
         need_conv = bool(inv_curr != eur_curr)
         conversion_rate = abs(self.amount_total_in_currency_signed / self.amount_total_signed) if self.amount_total_signed else 0.
@@ -325,10 +325,11 @@ class AccountMove(models.Model):
         template_values = {
             'self_party': company.partner_id,
             'self_party_country_code': COUNTRY_CODE_MAP[company.country_id.code],
+            'self_party_name': extract_party_name(company.partner_id),
             'other_party': partner,
             'other_party_country_code': COUNTRY_CODE_MAP[partner.country_id.code],
             'other_party_phone': partner.phone.translate(PHONE_CLEAN_TABLE) if partner.phone else False,
-            'other_party_name': partner_name,
+            'other_party_name': extract_party_name(partner),
             'is_outstanding': self.move_type.startswith('out_'),
             'float_repr': float_repr,
             'file_currency': inv_curr,
@@ -362,6 +363,9 @@ class AccountMove(models.Model):
                     'ExchangeRateDetails': need_conv,
                     'ExchangeRate': f"{round(conversion_rate, 4):.4f}",
                     'LanguageName': self._context.get('lang', 'en_US').split('_')[0],
+                    'ReceiverTransactionReference': self.ref[:20] if self.ref else False,
+                    'FileReference': self.ref[:20] if self.ref else False,
+                    'ReceiverContractReference': self.ref[:20] if self.ref else False,
                 },
                 'TaxOutputs': taxes,
                 'TaxesWithheld': taxes_withheld,
@@ -415,7 +419,10 @@ class AccountMove(models.Model):
 
     def _get_edi_decoder(self, file_data, new=False):
         def is_facturae(tree):
-            return tree.tag == '{http://www.facturae.es/Facturae/2014/v3.2.1/Facturae}Facturae'
+            return tree.tag in [
+                '{http://www.facturae.es/Facturae/2014/v3.2.1/Facturae}Facturae',
+                '{http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml}Facturae',
+            ]
 
         if file_data['type'] == 'xml' and is_facturae(file_data['xml_tree']):
             return self._import_invoice_facturae
@@ -460,7 +467,8 @@ class AccountMove(models.Model):
 
         if not partner and name:
             partner_vals = {'name': name, 'email': mail, 'phone': phone}
-            country = self.env['res.country'].search([('code', '=', country_code.lower())]) if country_code else False
+            country_code = REVERSED_COUNTRY_CODE.get(country_code)
+            country = self.env['res.country'].search([('code', '=', country_code)]) if country_code else False
             if country:
                 partner_vals['country_id'] = country.id
             partner = self.env['res.partner'].create(partner_vals)

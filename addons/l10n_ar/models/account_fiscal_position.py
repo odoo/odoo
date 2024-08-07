@@ -19,6 +19,8 @@ class AccountFiscalPosition(models.Model):
 
     def _prepare_fpos_base_domain(self, vat_required):
         domain = super()._prepare_fpos_base_domain(vat_required)
-        if self._context.get('l10n_ar_afip_responsibility_type_id'):
-            domain += [('l10n_ar_afip_responsibility_type_ids', '=', self._context.get('l10n_ar_afip_responsibility_type_id'))]
+        if 'l10n_ar_afip_responsibility_type_id' in self._context:
+            domain += ['|',
+                ('l10n_ar_afip_responsibility_type_ids', '=', False),
+                ('l10n_ar_afip_responsibility_type_ids', '=', self._context.get('l10n_ar_afip_responsibility_type_id'))]
         return domain

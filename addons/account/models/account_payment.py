@@ -98,6 +98,7 @@ class AccountPayment(models.Model):
         comodel_name='account.account',
         string="Outstanding Account",
         store=True,
+        index='btree_not_null',
         compute='_compute_outstanding_account_id',
         check_company=True)
     destination_account_id = fields.Many2one(
@@ -205,7 +206,7 @@ class AccountPayment(models.Model):
         return lines
 
     def _get_valid_liquidity_accounts(self):
-        journal_comp = self.journal_id.company_id
+        journal_comp = self.journal_id.company_id or self.env.company
         accessible_branches = journal_comp.with_company(journal_comp)._accessible_branches()
         return (
             self.journal_id.default_account_id |
@@ -971,7 +972,7 @@ class AccountPayment(models.Model):
         # Do not allow to post if the account is required but not trusted
         for payment in self:
             if payment.require_partner_bank_account and not payment.partner_bank_id.allow_out_payment:
-                raise UserError(_('To record payments with %s, the recipient bank account must be manually validated. You should go on the partner bank account in order to validate it.', self.payment_method_line_id.name))
+                raise UserError(_('To record payments with %s, the recipient bank account must be manually validated. You should go on the partner bank account in order to validate it.', payment.partner_id.display_name))
 
         self.move_id._post(soft=False)
 

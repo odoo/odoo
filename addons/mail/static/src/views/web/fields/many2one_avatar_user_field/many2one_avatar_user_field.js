@@ -26,7 +26,7 @@ const WithUserChatter = (T) =>
         onClickAvatar(ev) {
             const id = this.props.record.data[this.props.name][0] ?? false;
             if (id !== false) {
-                if (this.env.isSmall || this.relation !== "res.users") {
+                if (this.relation !== "res.users") {
                     return;
                 }
                 const target = ev.currentTarget;

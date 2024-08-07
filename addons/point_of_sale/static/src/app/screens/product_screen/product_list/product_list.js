@@ -50,8 +50,7 @@ export class ProductsWidget extends Component {
         return (
             this.pos.show_category_images &&
             Object.values(this.pos.db.category_by_id).some((category) => category.has_image) &&
-            !this.ui.isSmall &&
-            this.state.height >= 720
+            !this.ui.isSmall
         );
     }
 
@@ -127,13 +126,14 @@ export class ProductsWidget extends Component {
             this.state.currentOffset = 0;
         }
         const result = await this.loadProductFromDB();
+        const cleanedProductWord = searchProductWord.replace(/;product_tmpl_id:\d+$/, '');
         if (result.length > 0) {
             this.notification.add(
-                _t('%s product(s) found for "%s".', result.length, searchProductWord),
+                _t('%s product(s) found for "%s".', result.length, cleanedProductWord),
                 3000
             );
         } else {
-            this.notification.add(_t('No more product found for "%s".', searchProductWord), 3000);
+            this.notification.add(_t('No more product found for "%s".', cleanedProductWord), 3000);
         }
         if (this.state.previousSearchWord === searchProductWord) {
             this.state.currentOffset += result.length;
@@ -146,6 +146,21 @@ export class ProductsWidget extends Component {
         const { searchProductWord } = this.pos;
         if (!searchProductWord) {
             return;
+        }
+        const cleanedProductWord = searchProductWord.replace(/;product_tmpl_id:\d+$/, '');
+        const domain = [
+            "|",
+            "|",
+            ["name", "ilike", cleanedProductWord],
+            ["default_code", "ilike", cleanedProductWord],
+            ["barcode", "ilike", cleanedProductWord],
+            ["available_in_pos", "=", true],
+            ["sale_ok", "=", true],
+        ];
+
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            domain.push(["pos_categ_ids", "in", iface_available_categ_ids]);
         }
 
         try {

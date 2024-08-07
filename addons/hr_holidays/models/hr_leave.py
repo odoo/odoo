@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
-
 import logging
 import pytz
 
@@ -358,9 +353,8 @@ class HolidaysRequest(models.Model):
 
         if not is_officer:
             domain = expression.AND([domain, [('user_id', '=', self.env.user.id)]])
-
-        leaves = self.search(domain)
-        return [('id', 'in', leaves.ids)]
+        query = self.sudo()._search(domain)
+        return [('id', 'inselect', query.select())]
 
     @api.depends('holiday_status_id')
     def _compute_state(self):
@@ -1111,6 +1105,19 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         for meeting in meetings:
             Holiday.browse(meeting.res_id).meeting_id = meeting
 
+        for holiday in holidays:
+            user_tz = timezone(holiday.tz)
+            utc_tz = pytz.utc.localize(holiday.date_from).astimezone(user_tz)
+            notify_partner_ids = holiday.employee_id.user_id.partner_id.ids
+            holiday.message_post(
+                body=_(
+                    'Your %(leave_type)s planned on %(date)s has been accepted',
+                    leave_type=holiday.holiday_status_id.display_name,
+                    date=utc_tz.replace(tzinfo=None)
+                ),
+                partner_ids=notify_partner_ids)
+
+
     def _prepare_holidays_meeting_values(self):
         result = defaultdict(list)
         for holiday in self:
@@ -1211,20 +1218,6 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         current_employee = self.env.user.employee_id
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
-
-        # Post a second message, more verbose than the tracking message
-        for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
-            user_tz = timezone(holiday.tz)
-            utc_tz = pytz.utc.localize(holiday.date_from).astimezone(user_tz)
-            # Do not notify the employee by mail, in case if the time off still needs Officer's approval
-            notify_partner_ids = holiday.employee_id.user_id.partner_id.ids if holiday.validation_type != 'both' else []
-            holiday.message_post(
-                body=_(
-                    'Your %(leave_type)s planned on %(date)s has been accepted',
-                    leave_type=holiday.holiday_status_id.display_name,
-                    date=utc_tz.replace(tzinfo=None)
-                ),
-                partner_ids=notify_partner_ids)
 
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
         if not self.env.context.get('leave_fast_create'):
@@ -1512,7 +1505,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     if holiday.employee_id != current_employee:
                         raise UserError(_('Only a Time Off Manager can reset other people leaves.'))
                 else:
-                    if val_type == 'no_validation' and current_employee == holiday.employee_id:
+                    if val_type == 'no_validation' and current_employee == holiday.employee_id and (is_officer or is_manager):
                         continue
                     # use ir.rule based first access check: department, members, ... (see security.xml)
                     holiday.check_access_rule('write')
@@ -1773,8 +1766,11 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             .sorted('date_from', reverse=True)
         reason = _("the accruated amount is insufficient for that duration.")
         for leave in concerned_leaves:
-            to_recheck_leaves_per_leave_type = concerned_leaves.employee_id._get_consumed_leaves(leave.holiday_status_id)[1]
-            exceeding_duration = to_recheck_leaves_per_leave_type[leave.employee_id][leave.holiday_status_id]['exceeding_duration']
-            if not exceeding_duration:
+            leave_type = leave.holiday_status_id
+            date = leave.date_from.date()
+            leave_type_data = leave_type.get_allocation_data(leave.employee_id, date)
+            exceeding_duration = leave_type_data[leave.employee_id][0][1]['total_virtual_excess']
+            excess_limit = leave_type.max_allowed_negative if leave_type.allows_negative else 0
+            if exceeding_duration <= excess_limit:
                 continue
             leave._force_cancel(reason, 'mail.mt_note')

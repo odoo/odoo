@@ -40,7 +40,7 @@
         </td>
         <td t-if="showLeadTimes">
             <div t-if="data.route_name">
-                <span><t t-esc="data.route_name"/>: </span>
+                <span t-attf-class="{{ data.route_alert ? 'text-danger' : '' }}"><t t-esc="data.route_name"/>: </span>
                 <a href="#" t-on-click.prevent="() => this.goToRoute(data.route_type)" t-esc="data.route_detail"/>
             </div>
         </td>

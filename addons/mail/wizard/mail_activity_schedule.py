@@ -6,6 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import ValidationError
+from odoo.tools import html2plaintext
 from odoo.tools.misc import clean_context, format_date
 
 
@@ -189,7 +190,7 @@ class MailActivitySchedule(models.TransientModel):
                     'activity_type_id', 'activity_user_id')  # activity specific
     def _check_consistency(self):
         for scheduler in self.filtered('error'):
-            raise ValidationError(scheduler.error)
+            raise ValidationError(html2plaintext(scheduler.error))
 
     @api.constrains('res_ids')
     def _check_res_ids(self):

@@ -3,7 +3,7 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
 # 
 msgid ""
@@ -775,6 +775,15 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid ""
+"Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
+"instead."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
 "Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
 msgstr ""
 "Mã Peppol EAS 0212 và 0213 không được dùng nữa. Thay vào đó, vui lòng sử "
@@ -818,8 +827,19 @@ msgstr "Thuế '%s' không hợp lệ: %s"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr ""
+"Endpoint Peppol không hợp lệ. Nó phải chứa đúng 10 chữ số (Mã số đăng ký "
+"công ty). Định dạng hợp lệ là: 1234567890"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
 msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
-msgstr "Endpoint Peppol không hợp lệ. Định dạng hợp lệ là: 0239843188"
+msgstr "Endpoint Peppol không hợp lệ. Định dạng dự kiến là: 0239843188"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

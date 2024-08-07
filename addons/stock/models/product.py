@@ -177,8 +177,8 @@ class Product(models.Model):
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
-            moves_in_res_past = {product.id: product_qty for product, product_qty in Move._read_group(domain_move_in_done, ['product_id'], ['product_qty:sum'])}
-            moves_out_res_past = {product.id: product_qty for product, product_qty in Move._read_group(domain_move_out_done, ['product_id'], ['product_qty:sum'])}
+            moves_in_res_past = {product.id: product_qty for product, product_qty in Move._read_group(domain_move_in_done, ['product_id'], ['quantity:sum'])}
+            moves_out_res_past = {product.id: product_qty for product, product_qty in Move._read_group(domain_move_out_done, ['product_id'], ['quantity:sum'])}
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
@@ -307,11 +307,13 @@ class Product(models.Model):
         # this optimizes [('location_id', 'child_of', locations.ids)]
         # by avoiding the ORM to search for children locations and injecting a
         # lot of location ids into the main query
-        for location in locations:
-            loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain.append(('location_id.parent_path', '=like', location.parent_path + '%'))
-            dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain.append(('location_dest_id.parent_path', '=like', location.parent_path + '%'))
+        if self.env.context.get('strict'):
+            loc_domain = [('location_id', 'in', locations.ids)]
+            dest_loc_domain = [('location_dest_id', 'in', locations.ids)]
+        else:
+            paths_domain = expression.OR([[('parent_path', '=like', loc.parent_path + '%')] for loc in locations])
+            loc_domain = [('location_id', 'any', paths_domain)]
+            dest_loc_domain = [('location_dest_id', 'any', paths_domain)]
 
         return (
             loc_domain,
@@ -885,13 +887,13 @@ class ProductTemplate(models.Model):
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
             existing_done_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
                 ('state', '=', 'done'),
             ], limit=1)
             if existing_done_move_lines:
                 raise UserError(_("You can not change the type of a product that was already used."))
             existing_reserved_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
             ], limit=1)
             if existing_reserved_move_lines:
@@ -918,7 +920,10 @@ class ProductTemplate(models.Model):
 
     # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
-        return self.product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
+        if (self.env.context.get('default_product_id')):
+            return self.env['product.product'].browse(self.env.context['default_product_id']).action_open_quants()
+        else:
+            return self.product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
 
     def action_update_quantity_on_hand(self):
         advanced_option_groups = [

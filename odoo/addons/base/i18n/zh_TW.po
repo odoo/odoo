@@ -6,7 +6,6 @@
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2024
 # Tony Ng, 2024
 # 
 msgid ""
@@ -4606,7 +4605,7 @@ msgid ""
 "Enable the VAT wizard when posting a tax return journal entry\n"
 msgstr ""
 "\n"
-"Enable the VAT wizard when posting a tax return journal entry\n"
+"過賬報稅表日記賬記項時，啟用增值稅精靈\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -7538,10 +7537,10 @@ msgid ""
 "slots planification and allocated hours.\n"
 msgstr ""
 "\n"
-"Planning integration with hr contract\n"
+"工作規劃與人力資源合約功能整合\n"
 "\n"
-"With this module, planning take into account employee's contracts for\n"
-"slots planification and allocated hours.\n"
+"安裝此模組後，工作規劃會考慮員工合約資料，\n"
+"規劃工作時段及分配工作時間。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_planning_holidays
@@ -9337,10 +9336,10 @@ msgid ""
 "This shortcut allows you to generate a rental order based on the selected case.\n"
 msgstr ""
 "\n"
-"This module adds a shortcut on one or several opportunity cases in the CRM.\n"
+"此模組在客戶關係程式新增捷徑，用於有一個或多個銷售機會的情況。\n"
 "===========================================================================\n"
 "\n"
-"This shortcut allows you to generate a rental order based on the selected case.\n"
+"此捷徑讓你可根據所選的使用情況，產生租賃訂單。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -9529,7 +9528,7 @@ msgid ""
 "This module allows a customer to give rating.\n"
 msgstr ""
 "\n"
-"本模組允許客戶進行點評\n"
+"此模組允許客戶進行評分。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_ups
@@ -10647,7 +10646,7 @@ msgid ""
 "This provides a base chart of accounts and taxes template for use in Odoo.\n"
 msgstr ""
 "\n"
-"這提供了在 Odoo 中使用的基礎會計科目表和稅金模板。\n"
+"提供在 Odoo 中使用的基本會計科目表/賬目總表，以及稅項範本。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_holidays
@@ -10756,20 +10755,20 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_tr
 msgid ""
 "\n"
-"Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
+"Turkish charts of accounts\n"
+"========================================\n"
+"    * Defines the default chart of accounts\n"
+"    * Defines the default taxes\n"
+"    * Defines default tax report\n"
+"This was done in collaboration with Broadmax Partner in Turkey."
 msgstr ""
 "\n"
-"Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
+"土耳其會計賬目總表\n"
+"========================================\n"
+"    * 定義預設賬目總表\n"
+"    * 定義預設稅項\n"
+"    * 定義預設稅務報告\n"
+"這是與土耳其的 Broadmax 合作夥伴合作完成的。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -16457,7 +16456,7 @@ msgstr "CodaBox"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_codabox_bridge
 msgid "CodaBox Bridge"
-msgstr ""
+msgstr "CodaBox 橋接"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_codabox_bridge_wizard
@@ -17849,7 +17848,7 @@ msgstr "客戶入口網站"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating
 msgid "Customer Rating"
-msgstr "客戶點評"
+msgstr "客戶評分"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
@@ -20711,6 +20710,11 @@ msgstr "法國-會計"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
 msgid "France - Accounting Reports"
 msgstr "法國-會計報表"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
+msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
+msgstr "法國 - 新增強制性發票提及（第 2022-1299 號法令）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
@@ -31027,7 +31031,7 @@ msgstr "服務端動作存在循環調用"
 #: model:ir.model.fields,field_description:base.field_res_users__ref
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Reference"
-msgstr "編號"
+msgstr "客戶成功案例"
 
 #. module: base
 #. odoo-python
@@ -36312,7 +36316,7 @@ msgstr "未歸類"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 #, python-format
 msgid "Uninstall"
-msgstr "解除安裝"
+msgstr "卸載"
 
 #. module: base
 #. odoo-python
@@ -36320,14 +36324,14 @@ msgstr "解除安裝"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 #, python-format
 msgid "Uninstall module"
-msgstr "解除安裝模組"
+msgstr "卸載模組"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__uninstallable
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_dependency__state__uninstallable
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_exclusion__state__uninstallable
 msgid "Uninstallable"
-msgstr "可解除安裝"
+msgstr "可卸載"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -37696,7 +37700,7 @@ msgstr "視窗動作"
 #: model:ir.model.fields,field_description:base.field_change_password_user__wizard_id
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure__wizard_id
 msgid "Wizard"
-msgstr "視窗"
+msgstr "精靈"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search

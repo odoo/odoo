@@ -254,10 +254,10 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <DetalleIVA>
                         <CompraBienesCorrientesGastosBienesInversion>C</CompraBienesCorrientesGastosBienesInversion>
                         <InversionSujetoPasivo>N</InversionSujetoPasivo>
-                        <BaseImponible>4000.0</BaseImponible>
+                        <BaseImponible>4000.00</BaseImponible>
                         <TipoImpositivo>21.0</TipoImpositivo>
-                        <CuotaIVASoportada>840.0</CuotaIVASoportada>
-                        <CuotaIVADeducible>840.0</CuotaIVADeducible>
+                        <CuotaIVASoportada>840.00</CuotaIVASoportada>
+                        <CuotaIVADeducible>840.00</CuotaIVADeducible>
                     </DetalleIVA>
                 </IVA>
         </FacturaRecibida>
@@ -303,17 +303,17 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <DetalleIVA>
                         <CompraBienesCorrientesGastosBienesInversion>C</CompraBienesCorrientesGastosBienesInversion>
                         <InversionSujetoPasivo>N</InversionSujetoPasivo>
-                        <BaseImponible>4000.0</BaseImponible>
+                        <BaseImponible>4000.00</BaseImponible>
                         <TipoImpositivo>21.0</TipoImpositivo>
-                        <CuotaIVASoportada>840.0</CuotaIVASoportada>
-                        <CuotaIVADeducible>840.0</CuotaIVADeducible>
+                        <CuotaIVASoportada>840.00</CuotaIVASoportada>
+                        <CuotaIVADeducible>840.00</CuotaIVADeducible>
                     </DetalleIVA><DetalleIVA>
                         <CompraBienesCorrientesGastosBienesInversion>G</CompraBienesCorrientesGastosBienesInversion>
                         <InversionSujetoPasivo>N</InversionSujetoPasivo>
-                        <BaseImponible>8000.0</BaseImponible>
+                        <BaseImponible>8000.00</BaseImponible>
                         <TipoImpositivo>21.0</TipoImpositivo>
-                        <CuotaIVASoportada>1680.0</CuotaIVASoportada>
-                        <CuotaIVADeducible>1680.0</CuotaIVADeducible>
+                        <CuotaIVASoportada>1680.00</CuotaIVASoportada>
+                        <CuotaIVADeducible>1680.00</CuotaIVADeducible>
                     </DetalleIVA>
                 </IVA>
             </FacturaRecibida>

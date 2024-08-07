@@ -330,15 +330,10 @@ class HrEmployee(models.Model):
             ('company_id', 'in', self.env.companies.ids),
             ('date_from', '<=', date_end),
             ('date_to', '>=', date_start),
+            '|',
+            ('calendar_id', '=', False),
+            ('calendar_id', '=', self.resource_calendar_id.id),
         ]
-
-        # a user with hr_holidays permissions will be able to see all public holidays from his calendar
-        if not self._is_leave_user():
-            domain += [
-                '|',
-                ('calendar_id', '=', False),
-                ('calendar_id', '=', self.resource_calendar_id.id),
-            ]
 
         return self.env['resource.calendar.leaves'].search(domain)
 
@@ -362,32 +357,28 @@ class HrEmployee(models.Model):
             ('start_date', '<=', end_date),
             ('end_date', '>=', start_date),
             ('company_id', 'in', self.env.companies.ids),
+            '|',
+            ('resource_calendar_id', '=', False),
+            ('resource_calendar_id', '=', self.resource_calendar_id.id),
         ]
 
-        # a user with hr_holidays permissions will be able to see all mandatory days from his calendar
-        if not self._is_leave_user():
+        if self.department_id:
             domain += [
                 '|',
-                ('resource_calendar_id', '=', False),
-                ('resource_calendar_id', '=', self.resource_calendar_id.id),
+                ('department_ids', '=', False),
+                ('department_ids', 'parent_of', self.department_id.id),
             ]
-            if self.department_id:
-                domain += [
-                    '|',
-                    ('department_ids', '=', False),
-                    ('department_ids', 'parent_of', self.department_id.id),
-                ]
-            else:
-                domain += [('department_ids', '=', False)]
+        else:
+            domain += [('department_ids', '=', False)]
 
         return self.env['hr.leave.mandatory.day'].search(domain)
 
     @api.model
     def _get_contextual_employee(self):
         ctx = self.env.context
-        if 'employee_id' in ctx:
+        if self.env.context.get('employee_id') is not None:
             return self.browse(ctx.get('employee_id'))
-        if 'default_employee_id' in ctx:
+        if self.env.context.get('default_employee_id') is not None:
             return self.browse(ctx.get('default_employee_id'))
         return self.env.user.employee_id
 
@@ -419,7 +410,7 @@ class HrEmployee(models.Model):
         for allocation in allocations:
             allocations_per_employee_type[allocation.employee_id][allocation.holiday_status_id] |= allocation
 
-        # allocation_leaves_consumed is a tuple of two dictionnaries.
+        # _get_consumed_leaves returns a tuple of two dictionnaries.
         # 1) The first is a dictionary to map the number of days/hours of leaves taken per allocation
         # The structure is the following:
         # - KEYS:
@@ -434,9 +425,12 @@ class HrEmployee(models.Model):
         #              |--max_leaves
         #              |--accrual_bonus
         # - VALUES:
-        # Integer representing the number of (virtual) remaining leaves, (virtual) leaves taken or max leaves for each allocation.
+        # Integer representing the number of (virtual) remaining leaves, (virtual) leaves taken or max leaves
+        # for each allocation.
         # leaves_taken and remaining_leaves only take into account validated leaves, while the "virtual" equivalent are
         # also based on leaves in "confirm" or "validate1" state.
+        # Accrual bonus gives the amount of additional leaves that will have been granted at the given
+        # target_date in comparison to today.
         # The unit is in hour or days depending on the leave type request unit
         # 2) The second is a dictionary mapping the remaining days per employee and per leave type that are either
         # not taken into account by the allocations, mainly because accruals don't take future leaves into account.
@@ -460,7 +454,6 @@ class HrEmployee(models.Model):
                     'amount': 0,
                     'is_virtual': True,
                 }),
-                'total_virtual_excess': 0,
                 'exceeding_duration': 0,
                 'to_recheck_leaves': self.env['hr.leave']
             })
@@ -577,7 +570,7 @@ class HrEmployee(models.Model):
                     virtual_remaining = 0
                     additional_leaves_duration = 0
                     for allocation in consumed_content:
-                        latest_accrual_bonus += allocation._get_future_leaves_on(date_to_simulate)
+                        latest_accrual_bonus += allocation and allocation._get_future_leaves_on(date_to_simulate)
                         date_accrual_bonus += consumed_content[allocation]['accrual_bonus']
                         virtual_remaining += consumed_content[allocation]['virtual_remaining_leaves']
                     for leave in content['to_recheck_leaves']:

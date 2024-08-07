@@ -53,7 +53,8 @@ $o-btn-outline-border-width-defaults: () !default;
         } @else {
             @extend .btn-fill-#{$color};
             @if index($o-btn-flat-defaults, $color) {
-                @extend .btn.flat;
+                // TODO In master: move definition to web_editor
+                @extend .btn.flat !optional;
             }
         }
     }

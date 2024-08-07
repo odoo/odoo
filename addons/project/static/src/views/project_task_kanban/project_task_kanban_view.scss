@@ -14,4 +14,7 @@
         --bs-bg-opacity: 1;
         background-color: rgba(25, 135, 84, var(--bs-bg-opacity)) !important;
     }
+    .o_kanban_group {
+        @include o-kanban-css-filter(success-done, rgba(25, 135, 84, 1));
+    }
 }

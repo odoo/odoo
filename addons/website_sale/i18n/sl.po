@@ -16,6 +16,7 @@
 # Martin Trigaux, 2024
 # Grega Vavtar <grega@hbs.si>, 2024
 # Braulio D. López Vázquez <bdl@odoo.com>, 2024
+# Larissa Manderfeld, 2024
 # Gregor Flajs, 2024
 # 
 msgid ""
@@ -407,7 +408,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<strong>No suitable payment option could be found.</strong><br/>"
-msgstr ""
+msgstr "<strong>Primerne možnosti plačila ni bilo mogoče najti.</strong><br/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -789,7 +790,7 @@ msgstr "Povprečna ocena"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Back to cart"
-msgstr ""
+msgstr "Nazaj v košarico"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1220,6 +1221,11 @@ msgstr "Obdelava stroškov dostave in odprema preko Easypost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Shiprocket"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
 msgstr "Obdelava stroškov dostave in odprema preko DHL"
 
@@ -1319,6 +1325,8 @@ msgid ""
 "Continue checkout\n"
 "                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
 msgstr ""
+"Nadaljujte z nakupom\n"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
 
 #. module: website_sale
 #. odoo-python
@@ -1823,7 +1831,7 @@ msgstr "Dodatni različni mediji"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Extra info"
-msgstr ""
+msgstr "Dodatne informacije"
 
 #. module: website_sale
 #. odoo-python
@@ -3328,7 +3336,7 @@ msgstr "Nadaljuj naročilo"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Return to shipping"
-msgstr ""
+msgstr "Nazaj na dostavo"
 
 #. module: website_sale
 #. odoo-python
@@ -3450,7 +3458,7 @@ msgstr "Vzorec"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Save address"
-msgstr ""
+msgstr "Shrani naslov"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -3582,6 +3590,16 @@ msgstr "Metode odpreme"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Shipping address"
+msgstr "Naslov za dostavo"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket Shipping Methods"
 msgstr ""
 
 #. module: website_sale

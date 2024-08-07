@@ -65,7 +65,7 @@ class AsyncHTTPHandler(logging.Handler):
 
     def _flush_logs(self, odoo_session):
         def convert_to_byte(s):
-            return bytes(s, encoding="ascii") + b'<log/>\n'
+            return bytes(s, encoding="utf-8") + b'<log/>\n'
 
         def convert_server_line(log_level, line_formatted):
             return convert_to_byte(f"{log_level},{line_formatted}")

@@ -6,7 +6,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, Form
 from odoo.tools.misc import format_date
 
@@ -1032,38 +1032,34 @@ class TestExpenses(TestExpenseCommon):
         expense_state = Expense.get_expense_dashboard()
         self.assertEqual(expense_state['to_submit']['amount'], 3000.00)
 
-    def test_payment_register_bank_from_expense_reimbursed_to_employee(self):
+    def test_expense_mandatory_analytic_plan_product_category(self):
         """
-        Test that creating an expense to be paid to an employee having a commercial partner (the company listed in the
-        employee's contact) will have the employee's bank account in the register payment wizard.
+        Check that when an analytic plan has a mandatory applicability matching
+        product category this is correctly triggered
         """
-        # Set bank account in employee.
-        self.expense_employee.bank_account_id = self.env['res.partner.bank'].create({
-            'acc_number': 'BE32707171912447',
-            'partner_id': self.expense_employee.work_contact_id.id,
-            'acc_type': 'bank',
+        self.env['account.analytic.applicability'].create({
+            'business_domain': 'expense',
+            'analytic_plan_id': self.analytic_plan.id,
+            'applicability': 'mandatory',
+            'product_categ_id': self.product_a.categ_id.id,
         })
-        # Set bank account in company.
-        self.env.company.partner_id.bank_ids = self.env['res.partner.bank'].create({
-            'acc_number': 'BE457268179587463',
-            'partner_id': self.env.company.partner_id.id,
-            'acc_type': 'bank',
-        })
-        # Set commercial partner in employee's contact.
-        self.expense_employee.work_contact_id.commercial_partner_id = self.env.company.partner_id
 
-        expense = self.env['hr.expense'].create({
-            'name': 'expense_1',
-            'total_amount': 10.0,
-            'product_id': self.product_c.id,
-            'payment_mode': 'own_account',
-            'employee_id': self.expense_employee.id
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'expense_line_ids': [Command.create({
+                'name': 'Car Travel Expenses',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'total_amount': 350.00,
+                'payment_mode': 'company_account',
+            })]
         })
-        sheet = self.env['hr.expense.sheet'].create(expense._get_default_expense_sheet_values())
-        sheet.action_submit_sheet()
-        sheet.action_approve_expense_sheets()
-        sheet.action_sheet_move_create()
-        action_data = sheet.action_register_payment()
-        with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
-            self.assertEqual(wiz_form.amount, 10)
-            self.assertEqual(wiz_form.partner_bank_id, self.expense_employee.bank_account_id)
+
+        expense_sheet.action_submit_sheet()
+        with self.assertRaises(ValidationError, msg="One or more lines require a 100% analytic distribution."):
+            expense_sheet.with_context(validate_analytic=True).action_approve_expense_sheets()
+
+        expense_sheet.expense_line_ids.analytic_distribution = {self.analytic_account_1.id: 100.00}
+        expense_sheet.with_context(validate_analytic=True).action_approve_expense_sheets()

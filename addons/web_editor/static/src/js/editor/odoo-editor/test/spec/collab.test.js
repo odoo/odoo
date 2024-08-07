@@ -656,7 +656,7 @@ describe('Collaboration', () => {
                         <div data-oe-protected="true">
                             <p id="true">a<br></p>
                             <div data-oe-protected="false">
-                                <p id="false">a[c1}{c1]<br></p>
+                                <p id="false">a[c1}{c1]</p>
                             </div>
                         </div>
                         <p>[c2}{c2]</p>
@@ -665,7 +665,7 @@ describe('Collaboration', () => {
                         <div data-oe-protected="true">
                             <p id="true"><br></p>
                             <div data-oe-protected="false">
-                                <p id="false">a[c1}{c1]<br></p>
+                                <p id="false">a[c1}{c1]</p>
                             </div>
                         </div>
                         <p>[c2}{c2]</p>

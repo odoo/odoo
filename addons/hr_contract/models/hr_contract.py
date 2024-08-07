@@ -158,6 +158,15 @@ class Contract(models.Model):
                     contract=contract.name, start=contract.date_start, end=contract.date_end,
                 ))
 
+    def _get_employee_vals_to_update(self):
+        self.ensure_one()
+        vals = {'contract_id': self.id}
+        if self.job_id and self.job_id != self.employee_id.job_id:
+            vals['job_id'] = self.job_id.id
+        if self.department_id:
+            vals['department_id'] = self.department_id.id
+        return vals
+
     @api.model
     def update_state(self):
         from_cron = 'from_cron' in self.env.context
@@ -261,7 +270,8 @@ class Contract(models.Model):
 
     def _assign_open_contract(self):
         for contract in self:
-            contract.employee_id.sudo().write({'contract_id': contract.id})
+            vals = contract._get_employee_vals_to_update()
+            contract.employee_id.sudo().write(vals)
 
     @api.depends('wage')
     def _compute_contract_wage(self):

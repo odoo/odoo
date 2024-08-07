@@ -127,7 +127,7 @@ class TestHttpMisc(TestHttpBase):
             'X-Forwarded-Host': 'odoo.com',
             'X-Forwarded-Proto': 'https'
         }
-        with patch.dict('odoo.tools.config.options', {'proxy_mode': True}):
+        with patch.dict(odoo.tools.config.options, {'proxy_mode': True}):
             res = self.nodb_url_open('/test_http/geoip', headers=headers)
             res.raise_for_status()
             self.assertEqual(res.json(), {
@@ -206,7 +206,7 @@ class TestHttpEnsureDb(TestHttpBase):
         self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/web/database/selector')
 
     def test_ensure_db1_grant_db(self):
-        res = self.multidb_url_open('/test_http/ensure_db?db=db0', timeout=10000)
+        res = self.multidb_url_open('/test_http/ensure_db?db=db0')
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
         self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
@@ -249,6 +249,22 @@ class TestHttpEnsureDb(TestHttpBase):
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, 'db1')
+
+    def test_ensure_db4_unicode(self):
+        self.db_list = ["basededonnée1", "basededonnée2"]  # é matters
+
+        res = self.multidb_url_open('/test_http/ensure_db?db=basededonnée1')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
+        self.assertEqual(odoo.http.root.session_store.get(res.cookies['session_id']).db, 'basededonnée1')
+
+        # follow the redirection
+        res = self.multidb_url_open('/test_http/ensure_db')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, 'basededonnée1')
+
 
 class TestContentDisposition(BaseCase):
 

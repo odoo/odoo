@@ -22,6 +22,10 @@
                         <Tipo t-out="format_alphanumeric(line_dict['discount_type'])"/>
                         <Percentuale t-out="format_numbers(abs(line.discount))"/>
                     </ScontoMaggiorazione>
+                    <ScontoMaggiorazione t-if="line_dict['discount_amount'] != 0">
+                        <Tipo t-out="'SC'"/>
+                        <Importo t-out="format_numbers(abs(line_dict['discount_amount']))"/>
+                    </ScontoMaggiorazione>
                     <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price'], currency)"/>
                     <AliquotaIVA t-if="vat_tax.amount_type == 'percent'" t-out="format_numbers(vat_tax.amount)"/>
                     <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-out="'0.00'"/>

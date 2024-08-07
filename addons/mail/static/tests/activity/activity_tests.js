@@ -22,7 +22,7 @@ const views = {
                 <field name="message_ids"/>
             </div>
         </form>`,
-        "mail.compose.message,false,form": `
+    "mail.compose.message,false,form": `
         <form>
             <field name="partner_ids"/>
         </form>`,
@@ -416,6 +416,41 @@ QUnit.test("activity click on edit", async (assert) => {
     assert.verifySteps(["do_action"]);
 });
 
+QUnit.test("activity click on edit should pass correct context", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
+    const [activityTypeId] = pyEnv["mail.activity.type"].search([["name", "=", "Email"]]);
+    const activityId = pyEnv["mail.activity"].create({
+        activity_type_id: activityTypeId,
+        can_write: true,
+        mail_template_ids: [mailTemplateId],
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    const { env, openFormView } = await start();
+    await openFormView("res.partner", partnerId);
+    patchWithCleanup(env.services.action, {
+        async doAction(action) {
+            assert.step("do_action");
+            assert.strictEqual(action.type, "ir.actions.act_window");
+            assert.strictEqual(action.res_model, "mail.activity");
+            assert.strictEqual(action.res_id, activityId);
+            assert.deepEqual(
+                action.context,
+                {
+                    default_res_model: "res.partner",
+                    default_res_id: partnerId,
+                },
+                "should pass correct context with default_res_model and default_res_id"
+            );
+            return super.doAction(...arguments);
+        },
+    });
+    await click(".o-mail-Activity .btn", { text: "Edit" });
+    assert.verifySteps(["do_action"]);
+});
+
 QUnit.test("activity click on cancel", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -543,4 +578,49 @@ QUnit.test("chatter 'activities' button open the activity schedule wizard", asyn
     });
     await click("button", { text: "Activities" });
     assert.verifySteps(["doAction"]);
+});
+
+QUnit.test("activity with a link to a record", async () => {
+    const pyEnv = await startServer();
+    const partnerId1 = pyEnv["res.partner"].create({ name: "Partner 1" });
+    const partnerId2 = pyEnv["res.partner"].create({ name: "Partner 2" });
+    pyEnv["mail.activity"].create({
+        note: `<p>Activity with a link to a <a href="#" data-oe-model="res.partner" data-oe-id="${partnerId2}">record</a></p>`,
+        res_id: partnerId1,
+        res_model: "res.partner",
+    });
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId1);
+    await click(".o-mail-Activity-note a", { text: "record" });
+    await contains(".o_form_view input", { value: "Partner 2" });
+});
+
+QUnit.test("activity with a user mention", async () => {
+    const pyEnv = await startServer();
+    const partnerId1 = pyEnv["res.partner"].create({ name: "Partner 1" });
+    const partnerId2 = pyEnv["res.partner"].create({ name: "Partner 2" });
+    pyEnv["mail.activity"].create({
+        note: `<p>How are you, <a class="o_mail_redirect" href="#" data-oe-model="res.partner" data-oe-id="${partnerId2}">@Partner 2</a>?</p>`,
+        res_id: partnerId1,
+        res_model: "res.partner",
+    });
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId1);
+    await click(".o-mail-Activity-note a", { text: "@Partner 2" });
+    await contains(".o-mail-ChatWindow-header", { text: "Partner 2" });
+});
+
+QUnit.test("activity with a channel mention", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "Channel", channel_type: "channel" });
+    pyEnv["mail.activity"].create({
+        note: `<p><a class="o_channel_redirect" href="#" data-oe-model="discuss.channel" data-oe-id="${channelId}">#Channel</a></p>`,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Activity-note a", { text: "#Channel" });
+    await contains(".o-mail-ChatWindow-header", { text: "Channel" });
 });

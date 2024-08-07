@@ -128,10 +128,34 @@ describe('Editor', () => {
             });
         });
         describe('sanitize should modify p within li', () => {
-            it('should convert p into span if p has classes and split link items for each p', async () => {
+            it('should convert p into span if p has classes and add br between each span', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<ul><li><p class="class-1">abc</p><p class="class-2">def</p></li></ul>',
-                    contentAfter: '<ul><li><span class="class-1">abc</span></li><li class="oe-nested"><span class="class-2">def</span></li></ul>',
+                    contentAfter: '<ul><li><span class="class-1">abc</span><br><span class="class-2">def</span></li></ul>',
+                });
+            });
+            it('should convert p into span and add display block if p had text align style', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li><p style="text-align: center;">abc</p></li></ul>',
+                    contentAfter: '<ul><li><span style="text-align: center; display: block;">abc</span></li></ul>',
+                });
+            });
+            it('should convert two p into span and add display block if p had text align style without adding br', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li><p style="text-align: center;">abc</p><p style="text-align: center;">def</p></li></ul>',
+                    contentAfter: '<ul><li><span style="text-align: center; display: block;">abc</span><span style="text-align: center; display: block;">def</span></li></ul>',
+                });
+            });
+            it('should unwrap two p if they do not have any attributes', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li><p>abc</p><p>def</p></li></ul>',
+                    contentAfter: '<ul><li>abc<br>def</li></ul>',
+                });
+            });
+            it('should unwrap two p one containing br and other containing text', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li><p><br></p><p>a</p></li></ul>',
+                    contentAfter: '<ul><li><br>a</li></ul>',
                 });
             });
         });
@@ -2056,6 +2080,13 @@ X[]
                         contentAfter: `<p>abc</p><p>[]def</p>`,
                     });
                 });
+                it('should not delete in contenteditable=false', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p contenteditable="false">ab[]cdef</p>`,
+                        stepFunction: deleteBackward,
+                        contentAfter: `<p contenteditable="false">ab[]cdef</p>`,
+                    });
+                });
             });
             describe('Line breaks', () => {
                 describe('Single', () => {
@@ -3400,6 +3431,28 @@ X[]
                     contentBefore: '<p>ab</p><p>[<br></p><p>d]ef</p>',
                     stepFunction: deleteBackward,
                     contentAfter: '<p>ab</p><p>[]<br></p><p>ef</p>',
+                });
+            });
+            it('should not delete in contenteditable=false 1', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p contenteditable="false">ab[cd]ef</p>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p contenteditable="false">ab[cd]ef</p>`,
+                });
+            });
+            it('should not delete in contenteditable=false 2', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<div contenteditable="false">
+                                        <p>a[b</p>
+                                        <p>cd</p>
+                                        <p>e]f</p>
+                                    </div>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<div contenteditable="false">
+                                        <p>a[b</p>
+                                        <p>cd</p>
+                                        <p>e]f</p>
+                                    </div>`,
                 });
             });
         });
@@ -6322,6 +6375,104 @@ X[]
                         </tr></tbody></table>
                         `,
                     });
+                });
+            });
+        });
+        describe('swapping rows', () => {
+            it('should maintain widths when moving first row down', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table id="table"><tbody>
+                            <tr>
+                                <td style="width: 200px;"><p>test</p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                            </tr>
+                        </tbody></table>
+                    `),
+                    stepFunction: async (editor) => {
+                        const cell = editor.editable.querySelector('td');
+                        await triggerEvent(cell, 'mousemove');
+                        const btn = editor.document.querySelector('.o_move_down');
+                        await btn.dispatchEvent(new Event("click"));
+                    },
+                    contentAfter: unformat(
+                        `<table id="table"><tbody>
+                            <tr>
+                                <td style="width: 200px;"><p><br></p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;"><p>test</p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                            </tr>
+                        </tbody></table>
+                    `),
+                });
+            });
+            it('should maintain widths when moving second row up', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table id="table"><tbody>
+                            <tr>
+                                <td style="width: 200px;"><p>test</p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                            </tr>
+                        </tbody></table>
+                    `),
+                    stepFunction: async (editor) => {
+                        const cell=editor.editable.querySelector("tr:nth-child(2) td");
+                        await triggerEvent(cell, 'mousemove');
+                        const btn= editor.document.querySelector('.o_move_up');
+                        await btn.dispatchEvent(new Event("click"));
+                    },
+                    contentAfter: unformat(
+                        `<table id="table"><tbody>
+                            <tr>
+                                <td style="width: 200px;"><p><br></p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;"><p>test</p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                                <td style="width: 50px;"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                                <td style="width: 100px;"><p><br></p></td>
+                            </tr>
+                        </tbody></table>
+                    `),
                 });
             });
         });

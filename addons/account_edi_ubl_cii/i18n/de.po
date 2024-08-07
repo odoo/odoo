@@ -3,7 +3,7 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -549,7 +549,7 @@ msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 msgstr ""
-"Code zur Identifizierung des Endpunkts für BIS Billing 3.0 und seine Ableitungen.\n"
+"Code zur Identifizierung des Endpoint für BIS Billing 3.0 und seine Ableitungen.\n"
 "              Liste verfügbar unter https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 
 #. module: account_edi_ubl_cii
@@ -786,6 +786,17 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid ""
+"Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
+"instead."
+msgstr ""
+"Die Peppol-EAS-Codes 0037, 0212, 0213, 0215 sind veraltet. Bitte verwenden "
+"Sie stattdessen 0216."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
 "Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
 msgstr ""
 "Die Peppol-EAS-Codes 0212 und 0213 ist veraltet. Bitte verwenden Sie "
@@ -795,7 +806,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
-msgstr "Peppol-Endpunkt"
+msgstr "Peppol Endpoint"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_eas
@@ -824,6 +835,17 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #, python-format
 msgid "Tax '%s' is invalid: %s"
 msgstr "Steuer „%s“ ist ungültig: %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr ""
+"Der Peppol-Endpunkt ist nicht gültig. Er sollte genau 10 Ziffern enthalten "
+"(Unternehmensregisternummer), das erwartete Format ist: 1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

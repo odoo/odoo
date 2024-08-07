@@ -684,16 +684,12 @@ class BaseAutomation(models.Model):
             # this is a create: all fields are considered modified
             return True
 
-        # Note: old_vals are in the format of read()
+        # note: old_vals are in the record format
         old_vals = self._context['old_values'].get(record.id, {})
 
         def differ(name):
-            field = record._fields[name]
-            return (
-                name in old_vals and
-                field.convert_to_cache(record[name], record, validate=False) !=
-                field.convert_to_cache(old_vals[name], record, validate=False)
-            )
+            return name in old_vals and record[name] != old_vals[name]
+
         return any(differ(field.name) for field in self_sudo.trigger_field_ids)
 
     def _register_hook(self):
@@ -738,8 +734,8 @@ class BaseAutomation(models.Model):
                 pre = {a: a._filter_pre(records) for a in automations}
                 # read old values before the update
                 old_values = {
-                    old_vals.pop('id'): old_vals
-                    for old_vals in (records.read(list(vals)) if vals else [])
+                    record.id: {field_name: record[field_name] for field_name in vals}
+                    for record in records
                 }
                 # call original method
                 write.origin(self.with_env(automations.env), vals, **kw)
@@ -758,8 +754,8 @@ class BaseAutomation(models.Model):
             #
             def _compute_field_value(self, field):
                 # determine fields that may trigger an automation
-                stored_fields = [f for f in self.pool.field_computed[field] if f.store]
-                if not any(stored_fields):
+                stored_fnames = [f.name for f in self.pool.field_computed[field] if f.store]
+                if not stored_fnames:
                     return _compute_field_value.origin(self, field)
                 # retrieve the action rules to possibly execute
                 automations = self.env['base.automation']._get_actions(self, WRITE_TRIGGERS)
@@ -771,8 +767,8 @@ class BaseAutomation(models.Model):
                 pre = {a: a._filter_pre(records) for a in automations}
                 # read old values before the update
                 old_values = {
-                    old_vals.pop('id'): old_vals
-                    for old_vals in (records.read([f.name for f in stored_fields]))
+                    record.id: {fname: record[fname] for fname in stored_fnames}
+                    for record in records
                 }
                 # call original method
                 _compute_field_value.origin(self, field)
@@ -841,7 +837,8 @@ class BaseAutomation(models.Model):
                     return message
 
                 # always execute actions when the author is a customer
-                mail_trigger = "on_message_received" if message_sudo.author_id.partner_share else "on_message_sent"
+                # if author is not set, it means the message is coming from outside
+                mail_trigger = "on_message_received" if not message_sudo.author_id or message_sudo.author_id.partner_share else "on_message_sent"
                 automations = self.env['base.automation']._get_actions(self, [mail_trigger])
                 for automation in automations.with_context(old_values=None):
                     records = automation._filter_pre(self, feedback=True)
@@ -907,8 +904,8 @@ class BaseAutomation(models.Model):
 
     @api.model
     def _check_delay(self, automation, record, record_dt):
-        if automation.trg_date_calendar_id and automation.trg_date_range_type == 'day':
-            return automation.trg_date_calendar_id.plan_days(
+        if self._get_calendar(automation, record) and automation.trg_date_range_type == 'day':
+            return self._get_calendar(automation, record).plan_days(
                 automation.trg_date_range,
                 fields.Datetime.from_string(record_dt),
                 compute_leaves=True,
@@ -916,6 +913,10 @@ class BaseAutomation(models.Model):
         else:
             delay = DATE_RANGE_FUNCTION[automation.trg_date_range_type](automation.trg_date_range)
             return fields.Datetime.from_string(record_dt) + delay
+
+    @api.model
+    def _get_calendar(self, automation, record):
+        return automation.trg_date_calendar_id
 
     @api.model
     def _check(self, automatic=False, use_new_cursor=False):
@@ -945,12 +946,29 @@ class BaseAutomation(models.Model):
 
             # process action on the records that should be executed
             now = datetime.datetime.now()
+            past_now = {}
+            past_last_run = {}
             for record in records:
                 record_dt = get_record_dt(record)
                 if not record_dt:
                     continue
-                action_dt = self._check_delay(automation, record, record_dt)
-                if last_run <= action_dt < now:
+                if automation.trg_date_calendar_id and automation.trg_date_range_type == 'day':
+                    calendar = self._get_calendar(automation, record)
+                    if calendar.id not in past_now:
+                        past_now[calendar.id] = calendar.plan_days(
+                            - automation.trg_date_range,
+                            now,
+                            compute_leaves=True,
+                        )
+                        past_last_run[calendar.id] = calendar.plan_days(
+                            - automation.trg_date_range,
+                            last_run,
+                            compute_leaves=True,
+                        )
+                    is_process_to_run = past_last_run[calendar.id] <= fields.Datetime.to_datetime(record_dt) < past_now[calendar.id]
+                else:
+                    is_process_to_run = last_run <= self._check_delay(automation, record, record_dt) < now
+                if is_process_to_run:
                     try:
                         automation._process(record)
                     except Exception:

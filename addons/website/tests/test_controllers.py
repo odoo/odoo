@@ -103,3 +103,13 @@ class TestControllers(tests.HttpCase):
             partner.website_published = True
             res = self.url_open(f'/website/image/res.partner/{partner.id}/avatar_128?download=1')
             self.assertEqual(res.status_code, 200, "Public user should access avatar of published partners")
+
+        with self.subTest(published=True):
+            partner.website_published = True
+            self.patch(self.env.registry[partner._name].avatar_128, 'groups', 'base.group_system')
+            res = self.url_open(f'/website/image/res.partner/{partner.id}/avatar_128?download=1')
+            self.assertEqual(
+                res.status_code,
+                404,
+                "Public user shouldn't access record fields with a `groups` even if published"
+            )

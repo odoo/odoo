@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class SourceModel(models.Model):
@@ -13,7 +13,14 @@ class SourceModel(models.Model):
         'test_search_panel.category_target_model_no_parent_name')
     tag_ids = fields.Many2many(
         'test_search_panel.filter_target_model', 'rel_table', string="Tags")
+    computed_tag_ids = fields.Many2many(
+        'test_search_panel.filter_target_model', string="Computed Tags", compute="_compute_computed_tag_ids")
     tag_id = fields.Many2one('test_search_panel.filter_target_model', string="Tag")
+
+    @api.depends('tag_ids')
+    def _compute_computed_tag_ids(self):
+        for record in self:
+            record.computed_tag_ids = record.tag_ids
 
 
 class CategoryTargetModel(models.Model):

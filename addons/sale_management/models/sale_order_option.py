@@ -115,6 +115,7 @@ class SaleOrderOption(models.Model):
             'product_uom_qty': self.quantity,
             'product_uom': self.uom_id.id,
             'discount': self.discount,
+            'sequence': max(self.order_id.order_line.mapped('sequence'), default=0) + 1
         }
 
     @api.depends('line_id', 'order_id.order_line', 'product_id')

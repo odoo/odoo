@@ -18,6 +18,18 @@
                         help="Update current promotional lines and select new rewards if applicable."
                         class="btn btn-secondary"/>
             </button>
+            <xpath expr="//tree//field[@name='product_uom_qty']" position="before">
+                <field name="is_reward_line" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//tree//field[@name='product_uom_qty']" position="attributes">
+                <attribute name="readonly" add="is_reward_line" separator=" or "/>
+            </xpath>
+            <xpath expr="//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="readonly" add="is_reward_line" separator=" or "/>
+            </xpath>
+            <xpath expr="//tree//field[@name='tax_id']" position="attributes">
+                <attribute name="readonly" add="is_reward_line" separator=" or "/>
+            </xpath>
         </field>
     </record>
 

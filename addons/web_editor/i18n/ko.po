@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
-# Daye Jeong, 2023
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:46+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -249,7 +249,7 @@ msgstr "<span>사용자 정의</span>"
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "ACCESS OPTIONS ANYWAY"
-msgstr ""
+msgstr "어쨌든 액세스 옵션 설정"
 
 #. module: web_editor
 #. odoo-javascript
@@ -881,7 +881,11 @@ msgid "Could not install module %s"
 msgstr "%s 모듈을 설치할 수 없습니다."
 
 #. module: web_editor
+#. odoo-javascript
+#. module: web_editor
+#: code:addons/web_editor/static/src/components/upload_progress_toast/upload_service.js:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+#, python-format
 msgid "Cover"
 msgstr "표지"
 
@@ -1392,14 +1396,14 @@ msgstr "AI로 콘텐츠 생성 또는 변환."
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
 #, python-format
 msgid "Generating"
-msgstr ""
+msgstr "생성"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
 #, python-format
 msgid "Generating an alternative..."
-msgstr ""
+msgstr "대안 생성 중..."
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -2365,6 +2369,13 @@ msgid "Primary"
 msgstr "기본"
 
 #. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/upload_progress_toast/upload_progress_toast.xml:0
+#, python-format
+msgid "Progress bar"
+msgstr "진행 표시 줄"
+
+#. module: web_editor
 #: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__c
 msgid "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"
 msgstr "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"
@@ -2477,7 +2488,7 @@ msgstr "Qweb qweb 필드"
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "REPLACE BY NEW VERSION"
-msgstr ""
+msgstr "새 버전으로 교체하기"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
@@ -3200,7 +3211,7 @@ msgstr "URL이 유효하지 않습니다. 미리보기를 업데이트할 수 �
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "This block is outdated."
-msgstr ""
+msgstr "해당 블록은 최신 버전이 아닙니다"
 
 #. module: web_editor
 #. odoo-javascript
@@ -3586,7 +3597,7 @@ msgstr "예"
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "You can still access the block options but it might be ineffective."
-msgstr ""
+msgstr "차단 옵션에 계속 액세스할 수는 있지만 효과가 없을 수 있습니다."
 
 #. module: web_editor
 #. odoo-javascript
@@ -3598,11 +3609,20 @@ msgid ""
 msgstr "화면 왼쪽 상단에 있는 버튼으로 문서를 업로드할 수 있습니다."
 
 #. module: web_editor
+#. odoo-python
+#: code:addons/web_editor/controllers/main.py:0
+#, python-format
+msgid ""
+"You have reached the maximum number of requests for this service. Try again "
+"later."
+msgstr "이 서비스에 대한 최대 요청 수에 도달했습니다. 나중에 다시 시도하시기 바랍니다."
+
+#. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "You might not be able to customize it anymore."
-msgstr ""
+msgstr "더 이상 사용자 지정이 불가능할 수 있습니다."
 
 #. module: web_editor
 #. odoo-python
@@ -3664,7 +3684,7 @@ msgstr "추가"
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
 #, python-format
 msgid "alternatives..."
-msgstr ""
+msgstr "대안..."
 
 #. module: web_editor
 #. odoo-javascript

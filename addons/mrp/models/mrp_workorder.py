@@ -591,9 +591,8 @@ class MrpWorkorder(models.Model):
         for wo in self:
             if any(not time.date_end for time in wo.time_ids.filtered(lambda t: t.user_id.id == self.env.user.id)):
                 continue
-            # As button_start is automatically called in the new view
             if wo.state in ('done', 'cancel'):
-                continue
+                raise UserError(_('You cannot start a work order that is already done or cancelled'))
 
             if wo.product_tracking == 'serial' and wo.qty_producing == 0:
                 wo.qty_producing = 1.0
@@ -754,7 +753,7 @@ class MrpWorkorder(models.Model):
         cycle_number = float_round(qty_production / capacity, precision_digits=0, rounding_method='UP')
         if alternative_workcenter:
             # TODO : find a better alternative : the settings of workcenter can change
-            duration_expected_working = (self.duration_expected - self.workcenter_id.time_start - self.workcenter_id.time_stop) * self.workcenter_id.time_efficiency / (100.0 * cycle_number)
+            duration_expected_working = (self.duration_expected - self.workcenter_id._get_expected_duration(self.product_id)) * self.workcenter_id.time_efficiency / (100.0 * cycle_number)
             if duration_expected_working < 0:
                 duration_expected_working = 0
             capacity = alternative_workcenter._get_capacity(self.product_id)
@@ -889,7 +888,7 @@ class MrpWorkorder(models.Model):
                 wo.duration_percent = 100
 
     def _compute_expected_operation_cost(self):
-        return (self.duration_expected / 60.0) * self.workcenter_id.costs_hour
+        return (self.duration_expected / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
 
     def _compute_current_operation_cost(self):
-        return (self.get_duration() / 60.0) * self.workcenter_id.costs_hour
+        return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)

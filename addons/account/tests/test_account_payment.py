@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
 
@@ -433,6 +434,33 @@ class TestAccountPayment(AccountTestInvoicingCommon):
                 'partner_id': self.partner_b.id,
             },
         ])
+
+    def test_payment_journal_onchange(self):
+        # Create a new payment form
+        pay_form = Form(self.env['account.payment'].with_context(
+            default_journal_id=self.company_data['default_journal_bank'].id,
+            default_partner_type='customer'
+        ))
+        pay_form.amount = 50.0
+        pay_form.payment_type = 'inbound'
+        pay_form.partner_id = self.partner_a
+        payment = pay_form.save()
+
+        with self.assertRaises(ValidationError):
+            payment.journal_id = False
+
+        # Check the values of the payment record after the onchange method
+        self.assertRecordValues(payment, [{
+            'amount': 50.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'payment_reference': False,
+            'is_reconciled': False,
+            'currency_id': self.company_data['currency'].id,
+            'partner_id': self.partner_a.id,
+            'destination_account_id': self.partner_a.property_account_receivable_id.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        }])
 
     def test_inbound_payment_sync_writeoff_debit_sign(self):
         payment = self.env['account.payment'].create({

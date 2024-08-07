@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging
+from collections import defaultdict
 from datetime import datetime
-from markupsafe import Markup
 from functools import partial
 from itertools import groupby
-from collections import defaultdict
+from markupsafe import Markup
+from random import randrange
 
+import base64
+import logging
 import psycopg2
 import pytz
 import re
@@ -15,7 +17,6 @@ from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
-import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -153,6 +154,9 @@ class PosOrder(models.Model):
         pos_order = pos_order.with_company(pos_order.company_id)
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
+
+        pos_session._remove_capture_content(order)
+
         return pos_order._process_saved_order(draft)
 
     def _link_combo_items(self, order_vals):
@@ -258,11 +262,11 @@ class PosOrder(models.Model):
             line = line_values['record']
             invoice_lines_values = self._get_invoice_lines_values(line_values, line)
             invoice_lines.append((0, None, invoice_lines_values))
-            if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
+            if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_subtotal_incl, line.product_id.lst_price * line.qty, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
                     'name': _('Price discount from %s -> %s',
-                              float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
-                              float_repr(line.price_unit, self.currency_id.decimal_places)),
+                              float_repr(line.product_id.lst_price * line.qty, self.currency_id.decimal_places),
+                              float_repr(line.price_subtotal_incl, self.currency_id.decimal_places)),
                     'display_type': 'line_note',
                 }))
             if line.customer_note:
@@ -556,12 +560,10 @@ class PosOrder(models.Model):
 
     def _get_partner_bank_id(self):
         bank_partner_id = False
-        has_pay_later = any(not pm.journal_id for pm in self.payment_ids.mapped('payment_method_id'))
-        if has_pay_later:
-            if self.amount_total <= 0 and self.partner_id.bank_ids:
-                bank_partner_id = self.partner_id.bank_ids[0].id
-            elif self.amount_total >= 0 and self.company_id.partner_id.bank_ids:
-                bank_partner_id = self.company_id.partner_id.bank_ids[0].id
+        if self.amount_total <= 0 and self.partner_id.bank_ids:
+            bank_partner_id = self.partner_id.bank_ids[0].id
+        elif self.amount_total >= 0 and self.company_id.partner_id.bank_ids:
+            bank_partner_id = self.company_id.partner_id.bank_ids[0].id
         return bank_partner_id
 
     def _create_invoice(self, move_vals):
@@ -942,8 +944,12 @@ class PosOrder(models.Model):
         :type draft: bool.
         :Returns: list -- list of db-ids for the created and updated orders.
         """
+        order_names = [order['data']['name'] for order in orders]
+        sync_token = randrange(100000000)  # Use to differentiate 2 parallels calls to this function in the logs
+        _logger.info("Start PoS synchronisation #%d for PoS orders references: %s (draft: %s)", sync_token, order_names, draft)
         order_ids = []
         for order in orders:
+            order_name = order['data']['name']
             existing_draft_order = None
 
             if 'server_id' in order['data'] and order['data']['server_id']:
@@ -951,20 +957,30 @@ class PosOrder(models.Model):
                 existing_draft_order = self.env['pos.order'].search(['&', ('id', '=', order['data']['server_id']), ('state', '=', 'draft')], limit=1)
 
                 # if there is no draft order, skip processing this order
-                if not existing_draft_order:
+                if not existing_draft_order and draft:
                     continue
 
             if not existing_draft_order:
-                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order['data']['name']), ('state', '=', 'draft')], limit=1)
+                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order_name), ('state', '=', 'draft')], limit=1)
 
-            if existing_draft_order:
-                order_ids.append(self._process_order(order, draft, existing_draft_order))
-            else:
-                existing_orders = self.env['pos.order'].search([('pos_reference', '=', order['data']['name'])])
-                if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
-                    order_ids.append(self._process_order(order, draft, False))
-
-        return self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+            try:
+                if existing_draft_order:
+                    order_ids.append(self._process_order(order, draft, existing_draft_order))
+                else:
+                    existing_orders = self.env['pos.order'].search([('pos_reference', '=', order_name)])
+                    if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
+                        order_ids.append(self._process_order(order, draft, False))
+                    else:
+                        _logger.info("PoS order %s already exists and is the same as the one sent by the PoS", order_name)
+                        self.env['pos.session']._remove_capture_content(order['data'])
+            except Exception as e:
+                _logger.exception("An error occurred when processing the PoS order %s", order_name)
+                pos_session = self.env['pos.session'].browse(order['data']['pos_session_id'])
+                pos_session._handle_order_process_fail(order, e, draft)
+                raise
+        res = self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+        _logger.info("Finish PoS synchronisation #%d with result: %s", sync_token, res)
+        return res
 
     def _is_the_same_order(self, data, existing_order):
         received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['statement_ids']]
@@ -1386,7 +1402,7 @@ class PosOrderLine(models.Model):
         return {
             'id': orderline.id,
             'qty': orderline.qty,
-            'attribute_value_ids': orderline.attribute_value_ids.ids,
+            'attribute_value_ids': orderline.attribute_value_ids.filtered(lambda av: av.ptav_active).ids,
             'custom_attribute_value_ids': orderline.custom_attribute_value_ids.read(['id', 'name', 'custom_product_template_attribute_value_id', 'custom_value'], load=False),
             'price_unit': orderline.price_unit,
             'skip_change': orderline.skip_change,
@@ -1480,9 +1496,9 @@ class PosOrderLine(models.Model):
             pickings_to_confirm = order.picking_ids
             if pickings_to_confirm:
                 # Trigger the Scheduler for Pickings
-                pickings_to_confirm.action_confirm()
                 tracked_lines = order.lines.filtered(lambda l: l.product_id.tracking != 'none')
                 lines_by_tracked_product = groupby(sorted(tracked_lines, key=lambda l: l.product_id.id), key=lambda l: l.product_id.id)
+                pickings_to_confirm.action_confirm()
                 for product_id, lines in lines_by_tracked_product:
                     lines = self.env['pos.order.line'].concat(*lines)
                     moves = pickings_to_confirm.move_ids.filtered(lambda m: m.product_id.id == product_id)
@@ -1571,6 +1587,11 @@ class PosOrderLine(models.Model):
                 }
             )
         return base_line_vals_list
+
+    def _get_discount_amount(self):
+        self.ensure_one()
+        original_price = self.tax_ids.compute_all(self.price_unit, self.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)['total_included']
+        return original_price - self.price_subtotal_incl
 
 
 class PosOrderLineLot(models.Model):

@@ -7,6 +7,7 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # Ivana Bartonkova, 2023
 # Wil Odoo, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,8 @@ msgid ""
 ".\n"
 "                <br/>"
 msgstr ""
+".\n"
+"                <br/>"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,body_html:auth_totp_mail_enforce.mail_template_totp_mail_code
@@ -68,6 +71,41 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Vážený/á <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"    <p>Někdo se pokouší přihlásit k vašemu účtu pomocí nového zařízení.</p>\n"
+"    <ul>\n"
+"        <t t-set=\"not_available\">Není dostupné</t>\n"
+"        <li>Umístění: <t t-out=\"ctx.get('location') or not_available\"></t></li>\n"
+"        <li>Zařízení: <t t-out=\"ctx.get('device') or not_available\"></t></li>\n"
+"        <li>Prohlížeč: <t t-out=\"ctx.get('browser') or not_available\"></t></li>\n"
+"        <li>IP adresa: <t t-out=\"ctx.get('ip') or not_available\"></t></li>\n"
+"    </ul>\n"
+"    <p>Pokud jste to vy, zadejte prosím následující kód pro dokončení přihlášení:</p>\n"
+"    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"></t>\n"
+"    <t t-set=\"code\" t-value=\"code_expiration[0]\"></t>\n"
+"    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"></t>\n"
+"    <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"></span>\n"
+"    </div>\n"
+"    <small>Upozorňujeme, že platnost tohoto kódu vyprší za <t t-out=\"expiration\"></t>.</small>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"       Pokud jste NEinicializovali toto přihlášení,\n"
+"        měli byste si okamžitě změnit heslo, abyste zajistili bezpečnost účtu.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        Důrazně také doporučujeme aktivovat dvoufaktorové ověřování pomocí ověřovací aplikace, která vám pomůže zabezpečit váš účet.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            Aktivovat mé dvoufaktorové ověřování\n"
+"        </a>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -75,6 +113,8 @@ msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                Pro přihlášení zadejte níže šestimístný ověřovací kód, který byl právě zaslán e-mailem na adresu"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
@@ -164,7 +204,7 @@ msgstr "Typ limitu"
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
 msgid "Re-send email"
-msgstr ""
+msgstr "Poslat e-mail znovu"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__scope
@@ -179,7 +219,7 @@ msgstr "Poslat email"
 #. module: auth_totp_mail_enforce
 #: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr ""
+msgstr "Nastavení: 2Fa Nové přihlášení"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
@@ -210,22 +250,24 @@ msgid ""
 "We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
+"Důrazně doporučujeme aktivovat dvoufaktorové ověřování pomocí ověřovací aplikace, která vám pomůže zabezpečit váš účet.\n"
+"                <br/>"
 
 #. module: auth_totp_mail_enforce
 #. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
-msgstr ""
+msgstr "Dosáhli jste limitu ověřovacích e-mailů odeslaných pro váš účet"
 
 #. module: auth_totp_mail_enforce
 #. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"
-msgstr ""
+msgstr "Dosáhli jste limitu ověřovacích kódů pro váš účet"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
-msgstr ""
+msgstr "Váš kód dvoufaktorového ověřování"

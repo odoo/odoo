@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
-from odoo.tests import HttpCase, tagged
+from odoo.tests import Form, HttpCase, tagged
 
 
 @tagged('-at_install', 'post_install')
@@ -118,3 +118,56 @@ class TestStockPickingTour(HttpCase):
 
         names = self.receipt.move_ids.move_line_ids.mapped('lot_name')
         self.assertEqual(names, ["one", "two"])
+
+    def test_onchange_serial_lot_ids(self):
+        """
+        Checks that onchange behaves correctly with respect to multiple unlinks
+        """
+        product_serial = self.env['product.product'].create({
+            'name': 'PSerial',
+            'type': 'product',
+            'tracking': 'serial',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        lots = self.env['stock.lot'].create([{
+            'name': 'SN01',
+            'product_id': product_serial.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': 'SN02',
+            'product_id': product_serial.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': 'SN03',
+            'product_id': product_serial.id,
+            'company_id': self.env.company.id,
+        }])
+
+        stock_location = self.env.ref('stock.stock_location_stock')
+        for lot in lots:
+            self.env['stock.quant']._update_available_quantity(product_serial, stock_location, 1, lot_id=lot)
+
+        picking = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'move_ids': [Command.create({
+                'name': product_serial.name,
+                'product_id': product_serial.id,
+                'product_uom_qty': 3,
+                'product_uom': product_serial.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })]
+        })
+        picking.action_confirm()
+
+        with Form(picking) as form:
+            with form.move_ids_without_package.edit(0) as move_form:
+                move_form.quantity = 3.0
+                move_form.lot_ids = lots
+
+        url = self._get_picking_url(picking.id)
+        self.start_tour(url, 'test_onchange_twice_lot_ids', login='admin', step_delay=100)
+        self.assertRecordValues(picking.move_ids, [{"quantity": 1, "lot_ids": lots[2].ids}])

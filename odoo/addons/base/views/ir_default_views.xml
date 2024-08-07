@@ -11,6 +11,7 @@
                     <group name="field_value">
                         <field name="field_id" options="{'no_create': True}"/>
                         <field name="json_value"/>
+                        <field name="condition"/>
                     </group>
                     <group name="user_company_details">
                         <field name="user_id"/>
@@ -29,6 +30,7 @@
             <tree string="User-defined Defaults">
                 <field name="field_id"/>
                 <field name="json_value"/>
+                <field name="condition" optional="hide"/>
                 <field name="user_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>

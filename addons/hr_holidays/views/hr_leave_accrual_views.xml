@@ -165,7 +165,7 @@
                                     <div t-name="kanban-box" class="border-0 bg-transparent">
                                         <div class="o_hr_holidays_body oe_kanban_global_click">
                                             <div class="o_hr_holidays_timeline text-center">
-                                                <t t-if="record.start_count.value > 0">
+                                                <t t-if="record.start_count.raw_value > 0">
                                                     after <t t-esc="record.start_count.value"/> <t t-esc="record.start_type.value"/>
                                                 </t>
                                                 <t t-else="">
@@ -213,7 +213,7 @@
                                                         Cap:
                                                     </div>
                                                     <div class="col-3 m-0 ps-1">
-                                                        <t t-if="record.cap_accrued_time.value &amp;&amp; record.maximum_leave.value > 0">
+                                                        <t t-if="record.cap_accrued_time.raw_value &amp;&amp; record.maximum_leave.raw_value > 0">
                                                             <field name="maximum_leave" widget="FloatWithoutTrailingZeros"/> <field name="added_value_type"/>
                                                         </t>
                                                         <t t-else="">

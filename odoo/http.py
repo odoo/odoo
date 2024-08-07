@@ -458,13 +458,22 @@ class Stream:
     max_age = None
     immutable = False
     size = None
+    public = False
 
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
     @classmethod
-    def from_path(cls, path, filter_ext=('',)):
-        """ Create a :class:`~Stream`: from an addon resource. """
+    def from_path(cls, path, filter_ext=('',), public=False):
+        """
+        Create a :class:`~Stream`: from an addon resource.
+
+        :param path: See :func:`~odoo.tools.file_path`
+        :param filter_ext: See :func:`~odoo.tools.file_path`
+        :param bool public: Advertise the resource as being cachable by
+            intermediate proxies, otherwise only let the browser caches
+            it.
+        """
         path = file_path(path, filter_ext)
         check = adler32(path.encode())
         stat = os.stat(path)
@@ -475,6 +484,7 @@ class Stream:
             etag=f'{int(stat.st_mtime)}-{stat.st_size}-{check}',
             last_modified=stat.st_mtime,
             size=stat.st_size,
+            public=public,
         )
 
     @classmethod
@@ -485,8 +495,8 @@ class Stream:
         self = cls(
             mimetype=attachment.mimetype,
             download_name=attachment.name,
-            conditional=True,
             etag=attachment.checksum,
+            public=attachment.public,
         )
 
         if attachment.store_fname:
@@ -514,7 +524,7 @@ class Stream:
                 host=request.httprequest.environ.get('HTTP_HOST', '')
             )
             if static_path:
-                self = cls.from_path(static_path)
+                self = cls.from_path(static_path, public=True)
             else:
                 self.type = 'url'
                 self.url = attachment.url
@@ -537,6 +547,7 @@ class Stream:
             etag=request.env['ir.attachment']._compute_checksum(data),
             last_modified=record.write_date if record._log_access else None,
             size=len(data),
+            public=record.env.user._is_public()  # good enough
         )
 
     def read(self):
@@ -589,28 +600,33 @@ class Stream:
         }
 
         if self.type == 'data':
-            return _send_file(BytesIO(self.data), **send_file_kwargs)
+            res = _send_file(BytesIO(self.data), **send_file_kwargs)
+        else:  # self.type == 'path'
+            send_file_kwargs['use_x_sendfile'] = False
+            if config['x_sendfile']:
+                with contextlib.suppress(ValueError):  # outside of the filestore
+                    fspath = Path(self.path).relative_to(opj(config['data_dir'], 'filestore'))
+                    x_accel_redirect = f'/web/filestore/{fspath}'
+                    send_file_kwargs['use_x_sendfile'] = True
 
-        # self.type == 'path'
-        send_file_kwargs['use_x_sendfile'] = False
-        if config['x_sendfile']:
-            with contextlib.suppress(ValueError):  # outside of the filestore
-                fspath = Path(self.path).relative_to(opj(config['data_dir'], 'filestore'))
-                x_accel_redirect = f'/web/filestore/{fspath}'
-                send_file_kwargs['use_x_sendfile'] = True
+            res = _send_file(self.path, **send_file_kwargs)
 
-        res = _send_file(self.path, **send_file_kwargs)
+            if 'X-Sendfile' in res.headers:
+                res.headers['X-Accel-Redirect'] = x_accel_redirect
 
-        if immutable and res.cache_control:
-            res.cache_control["immutable"] = None  # None sets the directive
+                # In case of X-Sendfile/X-Accel-Redirect, the body is empty,
+                # yet werkzeug gives the length of the file. This makes
+                # NGINX wait for content that'll never arrive.
+                res.headers['Content-Length'] = '0'
 
-        if 'X-Sendfile' in res.headers:
-            res.headers['X-Accel-Redirect'] = x_accel_redirect
-
-            # In case of X-Sendfile/X-Accel-Redirect, the body is empty,
-            # yet werkzeug gives the length of the file. This makes
-            # NGINX wait for content that'll never arrive.
-            res.headers['Content-Length'] = '0'
+        if self.public:
+            if (res.cache_control.max_age or 0) > 0:
+                res.cache_control.public = True
+        else:
+            res.cache_control.pop('public', '')
+            res.cache_control.private = True
+        if immutable:
+            res.cache_control['immutable'] = None  # None sets the directive
 
         return res
 
@@ -865,6 +881,8 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
     """ Place where to load and save session objects. """
     def get_session_filename(self, sid):
         # scatter sessions across 256 directories
+        if not self.is_valid_key(sid):
+            raise ValueError(f'Invalid session id {sid!r}')
         sha_dir = sid[:2]
         dirname = os.path.join(self.path, sha_dir)
         session_path = os.path.join(dirname, sid)
@@ -910,7 +928,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
 
 class Session(collections.abc.MutableMapping):
     """ Structure containing data persisted across requests. """
-    __slots__ = ('can_save', '_Session__data', 'is_dirty', 'is_explicit', 'is_new',
+    __slots__ = ('can_save', '_Session__data', 'is_dirty', 'is_new',
                  'should_rotate', 'sid')
 
     def __init__(self, data, sid, new=False):
@@ -918,7 +936,6 @@ class Session(collections.abc.MutableMapping):
         self.__data = {}
         self.update(data)
         self.is_dirty = False
-        self.is_explicit = False
         self.is_new = new
         self.should_rotate = False
         self.sid = sid
@@ -1189,10 +1206,10 @@ class HTTPRequest:
 
         self.__wrapped = httprequest
         self.__environ = self.__wrapped.environ
-        self.environ = {
+        self.environ = self.headers.environ = {
             key: value
             for key, value in self.__environ.items()
-            if (not key.startswith(('werkzeug.', 'wsgi.', 'socket')) or key in ['wsgi.url_scheme'])
+            if (not key.startswith(('werkzeug.', 'wsgi.', 'socket')) or key in ['wsgi.url_scheme', 'werkzeug.proxy_fix.orig'])
         }
 
     def __enter__(self):
@@ -1357,25 +1374,12 @@ class Request:
         self.session, self.db = self._get_session_and_dbname()
 
     def _get_session_and_dbname(self):
-        # The session is explicit when it comes from the query-string or
-        # the header. It is implicit when it comes from the cookie or
-        # that is does not exist yet. The explicit session should be
-        # used in this request only, it should not be saved on the
-        # response cookie.
-        sid = (self.httprequest.args.get('session_id')
-            or self.httprequest.headers.get("X-Openerp-Session-Id"))
-        if sid:
-            is_explicit = True
-        else:
-            sid = self.httprequest.cookies.get('session_id')
-            is_explicit = False
-
-        if sid is None:
+        sid = self.httprequest.cookies.get('session_id')
+        if not sid or not root.session_store.is_valid_key(sid):
             session = root.session_store.new()
         else:
             session = root.session_store.get(sid)
             session.sid = sid  # in case the session was not persisted
-        session.is_explicit = is_explicit
 
         for key, val in get_default_session().items():
             session.setdefault(key, val)
@@ -1545,7 +1549,6 @@ class Request:
             **self.httprequest.form,
             **self.httprequest.files
         }
-        params.pop('session_id', None)
         return params
 
     def get_json_data(self):
@@ -1682,17 +1685,8 @@ class Request:
         elif sess.is_dirty:
             root.session_store.save(sess)
 
-        # We must not set the cookie if the session id was specified
-        # using a http header or a GET parameter.
-        # There are two reasons to this:
-        # - When using one of those two means we consider that we are
-        #   overriding the cookie, which means creating a new session on
-        #   top of an already existing session and we don't want to
-        #   create a mess with the 'normal' session (the one using the
-        #   cookie). That is a special feature of the Javascript Session.
-        # - It could allow session fixation attacks.
         cookie_sid = self.httprequest.cookies.get('session_id')
-        if not sess.is_explicit and (sess.is_dirty or cookie_sid != sess.sid):
+        if sess.is_dirty or cookie_sid != sess.sid:
             self.future_response.set_cookie('session_id', sess.sid, max_age=SESSION_LIFETIME, httponly=True)
 
     def _set_request_dispatcher(self, rule):
@@ -1717,7 +1711,7 @@ class Request:
         try:
             directory = root.statics[module]
             filepath = werkzeug.security.safe_join(directory, path)
-            res = Stream.from_path(filepath).get_response(
+            res = Stream.from_path(filepath, public=True).get_response(
                 max_age=0 if 'assets' in self.session.debug else STATIC_CACHE,
             )
             root.set_csp(res)
@@ -1931,7 +1925,7 @@ class HttpDispatcher(Dispatcher):
             was_connected = session.uid is not None
             session.logout(keep_db=True)
             response = self.request.redirect_query('/web/login', {'redirect': self.request.httprequest.full_path})
-            if not session.is_explicit and was_connected:
+            if was_connected:
                 root.session_store.rotate(session, self.request.env)
                 response.set_cookie('session_id', session.sid, max_age=SESSION_LIFETIME, httponly=True)
             return response

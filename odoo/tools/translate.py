@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from __future__ import annotations
+
 import codecs
 import fnmatch
 import functools
@@ -177,6 +180,7 @@ TRANSLATED_ATTRS.update(
 )
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
+space_pattern = re.compile(r"[\s\uFEFF]*")  # web_editor uses \uFEFF as ZWNBSP
 
 
 def translate_xml_node(node, callback, parse, serialize):
@@ -190,7 +194,7 @@ def translate_xml_node(node, callback, parse, serialize):
 
     def nonspace(text):
         """ Return whether ``text`` is a string with non-space characters. """
-        return bool(text) and not text.isspace()
+        return bool(text) and not space_pattern.fullmatch(text)
 
     def translatable(node):
         """ Return whether the given node can be translated as a whole. """
@@ -386,7 +390,7 @@ def html_translate(callback, value):
         root = parse_html("<div>%s</div>" % value)
         result = translate_xml_node(root, callback, parse_html, serialize_html)
         # remove tags <div> and </div> from result
-        value = serialize_html(result)[5:-6]
+        value = serialize_html(result)[5:-6].replace('\xa0', '&nbsp;')
     except ValueError:
         _logger.exception("Cannot translate malformed HTML, using source value instead")
 
@@ -935,18 +939,12 @@ def _extract_translatable_qweb_terms(element, callback):
                 and el.get("t-translation", '').strip() != "off"):
 
             _push(callback, el.text, el.sourceline)
-            # Do not export terms contained on the Component directive of OWL
-            # attributes in this context are most of the time variables,
-            # not real HTML attributes.
-            # Node tags starting with a capital letter are considered OWL Components
-            # and a widespread convention and good practice for DOM tags is to write
-            # them all lower case.
-            # https://www.w3schools.com/html/html5_syntax.asp
-            # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
-            if not el.tag[0].isupper() and 't-component' not in el.attrib and 't-set-slot' not in el.attrib:
-                for att in TRANSLATED_ATTRS:
-                    if att in el.attrib:
-                        _push(callback, el.attrib[att], el.sourceline)
+            # heuristic: tags with names starting with an uppercase letter are
+            # component nodes
+            is_component = el.tag[0].isupper() or "t-component" in el.attrib or "t-set-slot" in el.attrib
+            for attr in el.attrib:
+                if (not is_component and attr in TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
+                    _push(callback, el.attrib[attr], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
 
@@ -1372,7 +1370,7 @@ class TranslationImporter:
                      the language must be present and activated in the database
         :param xmlids: if given, only translations for records with xmlid in xmlids will be loaded
         """
-        with suppress(FileNotFoundError), file_open(filepath, mode='rb') as fileobj:
+        with suppress(FileNotFoundError), file_open(filepath, mode='rb', env=self.env) as fileobj:
             _logger.info('loading base translation file %s for language %s', filepath, lang)
             fileformat = os.path.splitext(filepath)[-1][1:].lower()
             self.load(fileobj, fileformat, lang, xmlids=xmlids)
@@ -1611,8 +1609,11 @@ def load_language(cr, lang):
     installer.lang_install()
 
 
-
 def get_po_paths(module_name: str, lang: str):
+    return get_po_paths_env(module_name, lang)
+
+
+def get_po_paths_env(module_name: str, lang: str, env: odoo.api.Environment | None = None):
     lang_base = lang.split('_')[0]
     # Load the base as a fallback in case a translation is missing:
     po_names = [lang_base, lang]
@@ -1620,14 +1621,13 @@ def get_po_paths(module_name: str, lang: str):
     if lang_base == 'es' and lang not in ('es_ES', 'es_419'):
         po_names.insert(1, 'es_419')
     po_paths = [
-        path
+        join(module_name, dir_, filename + '.po')
         for filename in po_names
         for dir_ in ('i18n', 'i18n_extra')
-        if (path := join(module_name, dir_, filename + '.po'))
     ]
     for path in po_paths:
         with suppress(FileNotFoundError):
-            yield file_path(path)
+            yield file_path(path, env=env)
 
 
 class CodeTranslations:
@@ -1716,6 +1716,7 @@ def _get_translation_upgrade_queries(cr, field):
     cleanup_queries = []
 
     if field.translate is True:
+        emtpy_src = """'{"en_US": ""}'::jsonb"""
         query = f"""
             WITH t AS (
                 SELECT it.res_id as res_id, jsonb_object_agg(it.lang, it.value) AS value, bool_or(imd.noupdate) AS noupdate
@@ -1726,7 +1727,8 @@ def _get_translation_upgrade_queries(cr, field):
               GROUP BY it.res_id
             )
             UPDATE {Model._table} m
-               SET "{field.name}" = CASE WHEN t.noupdate IS FALSE THEN t.value || m."{field.name}"
+               SET "{field.name}" = CASE WHEN m."{field.name}" IS NULL THEN {emtpy_src} || t.value
+                                         WHEN t.noupdate IS FALSE THEN t.value || m."{field.name}"
                                          ELSE m."{field.name}" || t.value
                                      END
               FROM t

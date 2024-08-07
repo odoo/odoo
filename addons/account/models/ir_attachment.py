@@ -37,7 +37,7 @@ class IrAttachment(models.Model):
         try:
             xml_tree = etree.fromstring(content)
         except Exception as e:
-            _logger.exception("Error when converting the xml content to etree: %s", e)
+            _logger.info('Error when reading the xml file "%s": %s', filename, e)
             return []
 
         to_process = []
@@ -61,7 +61,7 @@ class IrAttachment(models.Model):
             pdf_reader = OdooPdfFileReader(buffer, strict=False)
         except Exception as e:
             # Malformed pdf
-            _logger.warning("Error when reading the pdf: %s", e, exc_info=True)
+            _logger.info('Error when reading the pdf file "%s": %s', filename, e)
             return []
 
         # Process embedded files.

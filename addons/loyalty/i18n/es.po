@@ -54,7 +54,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Mostrar en el portal web, factura del cliente en PdV, proceso de pago de comercio electrónico, el número de puntos disponibles y usados por recompensa.\n"
+"        Mostrar en el portal web, factura del cliente en TPV, proceso de pago de comercio electrónico, el número de puntos disponibles y usados por recompensa.\n"
 "        "
 
 #. module: loyalty
@@ -88,7 +88,7 @@ msgstr "%s por orden"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per order on "
-msgstr "%s por orden sobre "
+msgstr "%s por pedido sobre "
 
 #. module: loyalty
 #. odoo-python
@@ -450,7 +450,7 @@ msgstr ""
 "            Enhorabuena <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>,<br>\n"
 "        </t>\n"
 "\n"
-"        Esta es la recompensa de <t t-out=\"object.program_id.company_id.name or ''\">SuEmpresa</t>.<br>\n"
+"        Esta es la recompensa de <t t-out=\"object.program_id.company_id.name or ''\">SuCompañía</t>.<br>\n"
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "            <t t-if=\"reward.required_points &lt;= object.points\">\n"
@@ -615,7 +615,7 @@ msgstr "Automático"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Automatic promo: 10% off on orders higher than $50"
-msgstr "Promoción automática: 10 % de descuento en órdenes mayores a 50 €"
+msgstr "Promoción automática: 10 % de descuento en pedidos mayores a 50 €"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
@@ -676,7 +676,7 @@ msgstr "Cancelar"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "Card expires"
-msgstr "La tarjeta caduca"
+msgstr "La tarjeta expira"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_category_id
@@ -1037,7 +1037,8 @@ msgid ""
 "Each rule can grant points to the customer he will be able to exchange "
 "against rewards"
 msgstr ""
-"Cada regla puede otorgar puntos al cliente que podrá canjear por recompensas"
+"Cada regla le otorgará puntos al cliente que después podrá intercambiar por "
+"recompensas."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
@@ -1052,7 +1053,7 @@ msgstr "Plantillas de correo electrónico"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_to
 msgid "End date"
-msgstr "Fecha límite"
+msgstr "Fecha de finalización"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__excl
@@ -1083,7 +1084,7 @@ msgstr "Tarjetas de fidelidad"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fill in your eWallet, to pay future orders"
-msgstr "Recargue su monedero electrónico y úselo para pagar órdenes futuras"
+msgstr "Recargue su monedero electrónico y úselo para pagar pedidos futuras"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1487,7 +1488,7 @@ msgstr "Productos múltiples"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Next Order Coupon"
-msgstr "Cupón de la próxima orden "
+msgstr "Cupón del próximo pedido"
 
 #. module: loyalty
 #. odoo-python
@@ -1562,7 +1563,7 @@ msgstr "Puntos"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points_display
 msgid "Points Display"
-msgstr "Indicación de puntos"
+msgstr "Mostrar puntos"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1717,7 +1718,7 @@ msgstr "Cantidad a generar"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__rating_ids
 msgid "Ratings"
-msgstr "Valoraciones"
+msgstr "Calificaciones"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_amount
@@ -1738,7 +1739,7 @@ msgstr "Dominio del producto de recompensa"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
 msgid "Reward Product Qty"
-msgstr "Cant. de productos de recompensa"
+msgstr "Ctd. de productos de recompensa"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id
@@ -1816,7 +1817,7 @@ msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
 msgstr ""
-"Configurar reglas condicionales en la orden que le dará acceso a las "
+"Configurar reglas condicionales en el pedido que le dará acceso a las "
 "recompensas para clientes"
 
 #. module: loyalty
@@ -1942,7 +1943,7 @@ msgid ""
 "program."
 msgstr ""
 "Este producto no se puede archivar ya que se está usando para un programa de"
-" promociones activas."
+" ofertas activo."
 
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
@@ -1952,7 +1953,7 @@ msgstr "Recargar monedero electrónico"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
 msgid "Total Order Count"
-msgstr "Número total de órdenes"
+msgstr "Número total de pedidos"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
@@ -1983,7 +1984,7 @@ msgstr "Usa este código promocional antes de"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__user_has_debug
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__user_has_debug
 msgid "User Has Debug"
-msgstr "El usuario tiene debug"
+msgstr "El usuario tiene depuración"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__valid_until
@@ -2024,9 +2025,9 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
-"Si se separan los cupones de recompensa por unidad igualada, sólo se aplica "
-"a los programas \"futuros\" y al modo de activación por dinero gastado o "
-"unidad pagada."
+"Si separar los cupones de recompensa por unidad emparejada solo se aplica "
+"para programas 'futuros' y activar el modo por dinero gastado o unidad "
+"pagada."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -2054,6 +2055,13 @@ msgstr "No puede eliminar un programa en estado activo"
 
 #. module: loyalty
 #. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "El campo con la descripción de la recompensa no puede estar vacío."
+
+#. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/product_product.py:0
 #: code:addons/loyalty/models/product_template.py:0
 #, python-format
@@ -2067,7 +2075,7 @@ msgstr ""
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
 msgid "Your Gift Card at {{ object.company_id.name }}"
-msgstr "Su tarjeta de regalo en {{ object.company_id.name }}"
+msgstr "Su tarjeta de regalo de {{ object.company_id.name }}"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
@@ -2126,7 +2134,7 @@ msgid ""
 msgstr ""
 "Los monederos electrónicos se crean de forma manual o automática cuando el cliente pide un producto de monedero electrónico.\n"
 "                                    <br/>\n"
-"                                    Después, se propondrá el monedero electrónico como método de pago de los órdenes."
+"                                    Después, se propondrá el monedero electrónico como método de pago de los pedidos."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -2192,7 +2200,7 @@ msgstr "productos específicos"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "spent"
-msgstr "gastado"
+msgstr "gastado(s)"
 
 #. module: loyalty
 #. odoo-python

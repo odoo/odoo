@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, _
 from odoo.osv.expression import AND
-from dateutil.relativedelta import relativedelta
 
 
 class StockPicking(models.Model):
@@ -102,6 +101,11 @@ class Orderpoint(models.Model):
         """ Extend to add more depends values """
         return super()._compute_qty()
 
+    @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state')
+    def _compute_qty_to_order(self):
+        """ Extend to add more depends values """
+        return super()._compute_qty_to_order()
+
     @api.depends('supplier_id')
     def _compute_lead_days(self):
         return super()._compute_lead_days()
@@ -175,6 +179,7 @@ class Orderpoint(models.Model):
                         'url': f'#action={action.id}&id={order.id}&model=purchase.order',
                     }],
                     'sticky': False,
+                    'next': {'type': 'ir.actions.act_window_close'},
                 }
             }
         return super()._get_replenishment_order_notification()

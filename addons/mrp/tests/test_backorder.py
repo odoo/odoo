@@ -627,6 +627,39 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.product_qty, 1)
         self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [0.5, 1])
 
+    def test_split_mo_partially_available(self):
+        """
+        Test that an MO components availability is correct after split.
+        - Create MO with BoM requiring 2 components 1:1
+        - Change components quantity to 10 and 9
+        - Split the MO and make sure that one of the MO's is not available post-split
+        """
+        mo, _, _, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=1, qty_final=10)
+
+        inventory_wizard_1 = self.env['stock.change.product.qty'].create({
+            'product_id': product_to_use_1.id,
+            'product_tmpl_id': product_to_use_1.product_tmpl_id.id,
+            'new_quantity': 10,
+        })
+        inventory_wizard_2 = self.env['stock.change.product.qty'].create({
+            'product_id': product_to_use_2.id,
+            'product_tmpl_id': product_to_use_2.product_tmpl_id.id,
+            'new_quantity': 9,
+        })
+        inventory_wizard_1.change_product_qty()
+        inventory_wizard_2.change_product_qty()
+
+        self.assertEqual(mo.state, 'confirmed')
+        mo.action_assign()
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.counter = 10
+        action = wizard.save().action_split()
+        # check that the MO is split in 10 and exactly one of the components is not available
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 10)
+        last_move = mo.procurement_group_id.mrp_production_ids[-1].move_raw_ids.filtered(lambda m: m.product_id == product_to_use_2)
+        self.assertFalse(last_move.quantity)
+
     def test_auto_generate_backorder(self):
         mo = self.env['mrp.production'].create({
             'product_qty': 10,
@@ -694,3 +727,54 @@ class TestMrpWorkorderBackorder(TransactionCase):
         })
         cls.bom_finished1.bom_line_ids[0].operation_id = cls.bom_finished1.operation_ids[0].id
         cls.bom_finished1.bom_line_ids[1].operation_id = cls.bom_finished1.operation_ids[1].id
+
+    def test_mrp_backorder_operations(self):
+        """
+        Checks that the operations'data are correclty set on a backorder:
+            - Create a MO for 10 units, validate the op 1 completely and op 2 partially
+            - Create a backorder and validate op 2 partially
+            - Create a backorder and validate it completely
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+        mo.action_confirm()
+        op_1, op_2 = mo.workorder_ids
+        with Form(mo) as fmo:
+            fmo.qty_producing = 10
+        op_1.button_start()
+        op_1.button_finish()
+        with Form(mo) as fmo:
+            fmo.qty_producing = 4
+        op_2.button_start()
+        op_2.button_finish()
+        action = mo.button_mark_done()
+        backorder_1 = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_1.save().action_backorder()
+        bo_1 = mo.procurement_group_id.mrp_production_ids - mo
+        self.assertRecordValues(bo_1.workorder_ids, [
+            {'state': 'cancel', 'qty_remaining': 0.0, 'workcenter_id': op_1.workcenter_id.id},
+            {'state': 'waiting', 'qty_remaining': 6.0, 'workcenter_id': op_2.workcenter_id.id},
+        ])
+        with Form(bo_1) as form_bo_1:
+            form_bo_1.qty_producing = 2
+        op_4 = bo_1.workorder_ids.filtered(lambda wo: wo.state != 'cancel')
+        op_4.button_start()
+        op_4.button_finish()
+        action = bo_1.button_mark_done()
+        self.assertRecordValues(op_4, [{'state': 'done', 'qty_remaining': 4.0}])
+        backorder_2 = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_2.save().action_backorder()
+        bo_2 = mo.procurement_group_id.mrp_production_ids - mo - bo_1
+        self.assertRecordValues(bo_2.workorder_ids, [
+            {'state': 'cancel', 'qty_remaining': 0.0, 'workcenter_id': op_1.workcenter_id.id},
+            {'state': 'waiting', 'qty_remaining': 4.0, 'workcenter_id': op_2.workcenter_id.id},
+        ])
+        op_6 = bo_2.workorder_ids.filtered(lambda wo: wo.state != 'cancel')
+        with Form(bo_2) as form_bo_2:
+            form_bo_2.qty_producing = 4
+        op_6.button_start()
+        op_6.button_finish()
+        bo_2.button_mark_done()
+        self.assertRecordValues(op_6, [{'state': 'done', 'qty_remaining': 0.0}])

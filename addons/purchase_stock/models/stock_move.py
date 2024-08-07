@@ -66,11 +66,13 @@ class StockMove(models.Model):
             for invoice_line in line.sudo().invoice_lines:
                 if invoice_line.move_id.state != 'posted':
                     continue
+                # Adjust unit price to account for discounts before adding taxes.
+                adjusted_unit_price = invoice_line.price_unit * (1 - (invoice_line.discount / 100)) if invoice_line.discount else invoice_line.price_unit
                 if invoice_line.tax_ids:
                     invoice_line_value = invoice_line.tax_ids.with_context(round=False).compute_all(
-                        invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
+                        adjusted_unit_price, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
                 else:
-                    invoice_line_value = invoice_line.price_unit * invoice_line.quantity
+                    invoice_line_value = adjusted_unit_price * invoice_line.quantity
                 total_invoiced_value += invoice_line.currency_id._convert(
                         invoice_line_value, order.currency_id, order.company_id, invoice_line.move_id.invoice_date, round=False)
                 invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id)
@@ -172,7 +174,7 @@ class StockMove(models.Model):
 
         if returned_move and self._is_out() and self._is_returned(valued_type='out'):
             returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
-            unit_diff = layer._get_layer_price_unit() - returned_layer._get_layer_price_unit()
+            unit_diff = layer._get_layer_price_unit() - returned_layer._get_layer_price_unit() if returned_layer else 0
         elif returned_move and returned_move._is_out() and returned_move._is_returned(valued_type='out'):
             returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
             unit_diff = returned_layer._get_layer_price_unit() - self.purchase_line_id._get_gross_price_unit()

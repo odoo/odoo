@@ -53,7 +53,7 @@ msgstr "Se ha solicitado una cancelación de EDI."
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
-msgstr "Se ha cancelado una solicitud de anulación del EDI "
+msgstr "Se ha cancelado una solicitud de cancelación del EDI "
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
@@ -79,15 +79,15 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
-"La operación actual del documento se bloquea en función de la gravedad del error:\n"
-" * Info: el documento no está bloqueado y todo trabaja como debería.\n"
-" * Advertencia: hay un error que no impide la operación actual de la facturación electrónica.\n"
-" * Error:  hay un error que está bloqueando la operación actual de facturación electrónica."
+"Bloquea la operación actual del documento dependiendo de la gravedad del error:\n"
+"* Información: el documento no está bloqueado y todo funciona como debería.\n"
+"* Advertencia: hay un error que no impide el funcionamiento de la operación actual de facturación electrónica.\n"
+"* Error: hay un error que bloquea la operación actual de facturación electrónica."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr "Se suspende la cancelación del EDI"
+msgstr "Suspender la cancelación del EDI"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -202,7 +202,7 @@ msgstr "Formato EDI"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr "Muestra el botón de abandonar la cancelación del Edi"
+msgstr "Mostrar el botón de abandonar cancelación del EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
@@ -376,6 +376,14 @@ msgid ""
 msgstr ""
 "El archivo que genera edi_format_id cuando se publica la factura (y una vez "
 "que se procesa el documento)."
+
+#. module: account_edi
+#: code:addons/account_edi/wizard/account_resequence.py:0
+#, python-format
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr ""
+"Los siguientes documentos ya fueron enviados y no se pueden resecuenciar: %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

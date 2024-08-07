@@ -16,6 +16,12 @@
 # Martin Trigaux, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
+# Simonel Criste <info@erpsystems.solutions>, 2024
+# Betty Keresztesi, 2024
+# Larisa_nexterp, 2024
+# Alin Miclea, 2024
+# Maria Muntean, 2024
+# Corina Calin, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-26 12:42+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Corina Calin, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7185,12 +7191,12 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_tr
 msgid ""
 "\n"
-"Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
+"Turkish charts of accounts\n"
+"========================================\n"
+"    * Defines the default chart of accounts\n"
+"    * Defines the default taxes\n"
+"    * Defines default tax report\n"
+"This was done in collaboration with Broadmax Partner in Turkey."
 msgstr ""
 
 #. module: base
@@ -7982,6 +7988,12 @@ msgid ""
 "- Follow-up Address: Preferred address for follow-up reports. Selected by default when you send reminders about overdue invoices.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Contact: Folosiți-l pentru a organiza datele de contact ale angajaților unei anumite companii (de exemplu, CEO, CFO, ...).\n"
+"- Adresa facturii: adresa preferată pentru toate facturile. Selectat implicit atunci când facturați o comandă care aparține acestei companii.\n"
+"- Adresa de livrare: adresa preferată pentru toate livrările. Selectat implicit atunci când livrați o comandă care aparține acestei companii.\n"
+"- Privat: Adresele private sunt vizibile numai de utilizatorii autorizați și conțin date sensibile (adresele de domiciliu ale angajaților, ...).\n"
+"- Adresă de urmărire: adresă preferată pentru rapoartele de urmărire. Selectat implicit atunci când trimiteți mementouri despre facturile restante.\n"
+"- Altele: altă adresă a companiei (de exemplu, filială, ...)"
 
 #. module: base
 #. odoo-python
@@ -8168,7 +8180,7 @@ msgstr "<code>dateutil</code> (Python module)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: mediul asupra căruia este declanșată acțiunea"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -8190,6 +8202,8 @@ msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is"
 " a void recordset"
 msgstr ""
+"<code>model</code>: modelul înregistrării pe care este declanșată acțiunea; "
+"este un set de înregistrări nule"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -8236,6 +8250,8 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
+"<code><code>ora</code>, data</code>, <code>dateutil</code>, <code>fusul "
+"orar</code>: biblioteci Python utile"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -8328,7 +8344,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Arhivat</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -8997,14 +9013,14 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys_description
 msgid "API Key Description"
-msgstr ""
+msgstr "Descrierea cheii API"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "API Key Ready"
-msgstr ""
+msgstr "Cheie API pregătită"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_keys_description
@@ -10814,7 +10830,7 @@ msgstr "Automatizare"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automation Rules"
-msgstr ""
+msgstr "Regulă de automatizare"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation_hr_contract
@@ -12339,7 +12355,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Choose a value..."
-msgstr ""
+msgstr "Alegeți o valoare..."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_encryption
@@ -12416,7 +12432,7 @@ msgstr "Închide"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Turnichet Cloudflare"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -12721,6 +12737,8 @@ msgid ""
 "Company tagline, which is included in a printed document's header or footer "
 "(depending on the selected layout)."
 msgstr ""
+"Sloganul companiei, care este inclus în antetul sau subsolul unui document "
+"tipărit (în funcție de aspectul selectat)."
 
 #. module: base
 #. odoo-python
@@ -13277,7 +13295,7 @@ msgstr "Creare meniu asistent"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_create
 msgid "Create Record"
-msgstr ""
+msgstr "Creează înregistrare"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_report
@@ -15270,7 +15288,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.enable_profiling_wizard
 msgid "Enable profiling"
-msgstr ""
+msgstr "Activare profilare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__duration
@@ -15324,7 +15342,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Enter a description of and purpose for the key."
-msgstr ""
+msgstr "Introduceți o descriere a cheii și scopul acesteia."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
@@ -15658,7 +15676,7 @@ msgstr "Exclusiv"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__code
 msgid "Execute Code"
-msgstr ""
+msgstr "Executați codul"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
@@ -15668,7 +15686,7 @@ msgstr "Executați fiecare"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
 msgid "Execute Existing Actions"
-msgstr ""
+msgstr "Executați acțiunile existente"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
@@ -16332,7 +16350,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_binary
 msgid "File streaming helper model for controllers"
-msgstr ""
+msgstr "Model de ajutor pentru streaming de fișiere pentru controlere"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -16659,6 +16677,11 @@ msgid "France - Accounting Reports"
 msgstr "Franța - Rapoarte contabile"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
+msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC Export"
 msgstr "Franța - Export FEC"
@@ -16743,7 +16766,7 @@ msgstr "De la oferte la facturi"
 #: model:ir.module.category,name:base.module_category_human_resources_frontdesk
 #: model:ir.module.module,shortdesc:base.module_frontdesk
 msgid "Frontdesk"
-msgstr ""
+msgstr "Recepție"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
@@ -17396,7 +17419,7 @@ msgstr "Spațiu antet"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_details
 msgid "Header text displayed at the top of all reports."
-msgstr ""
+msgstr "Textul antet afișat în partea de sus a tuturor rapoartelor."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_Q
@@ -18894,6 +18917,8 @@ msgid ""
 "Invalid server name!\n"
 " %s"
 msgstr ""
+"Nume server invalid!\n"
+" %s"
 
 #. module: base
 #. odoo-python
@@ -19063,7 +19088,7 @@ msgstr "Este Compania"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__is_company_details_empty
 msgid "Is Company Details Empty"
-msgstr ""
+msgstr "Detaliile Companiei sunt Goale"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__is_current_company_currency
@@ -19126,7 +19151,7 @@ msgstr "Italia - Contabilitate"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_reports
 msgid "Italy - Accounting Reports"
-msgstr ""
+msgstr "Italia - Rapoarte contabile"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi
@@ -19136,12 +19161,12 @@ msgstr "Italia - Facturare electronică"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_withholding
 msgid "Italy - E-invoicing (Withholding)"
-msgstr ""
+msgstr "Italia - facturare electronică (reținere la sursă)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
 msgid "Italy - Stock DDT"
-msgstr ""
+msgstr "Italia - stoc DDT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_website_sale
@@ -19199,7 +19224,7 @@ msgstr "Jurnalul de articole conexe la contact"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Json"
-msgstr ""
+msgstr "Json"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
@@ -19984,14 +20009,14 @@ msgstr "Jurnal"
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form_revokedevices
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Log out from all devices"
-msgstr ""
+msgstr "Deconectează-te de pe toate dispozitivele"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Log out from all devices?"
-msgstr ""
+msgstr "Deconectezi de pe toate dispozitivele?"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_logging_all_act
@@ -21207,7 +21232,7 @@ msgstr "Model negăsit: %(model)s"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__model_id
 msgid "Model of the view"
-msgstr ""
+msgstr "Model de vizualizare"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__model_id
@@ -24298,7 +24323,7 @@ msgstr "Localizare salarizare"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_peppol
 msgid "Peppol"
-msgstr ""
+msgstr "Peppol"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -25841,7 +25866,7 @@ msgstr "Reîncarcarcă din atașament"
 #: model:ir.module.category,name:base.module_category_human_resources_remote_work
 #: model:ir.module.module,shortdesc:base.module_hr_homeworking
 msgid "Remote Work"
-msgstr ""
+msgstr "Lucru de la distanță"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__remove
@@ -26718,7 +26743,7 @@ msgstr "Arabia Saudită - Contabilitate"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_edi
 msgid "Saudi Arabia - E-invoicing"
-msgstr ""
+msgstr "Arabia Saudită - Facturare electronică"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
@@ -27074,7 +27099,7 @@ msgstr "Trimiteți SMS vizitatorului cu oportunități"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__webhook
 msgid "Send Webhook Notification"
-msgstr ""
+msgstr "Trimiteți o notificare Webhook"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sign
@@ -27180,6 +27205,11 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
+"Trimiterea de facturi false cu un număr de cont fraudulos este o practică "
+"comună de phishing. Pentru a vă proteja, verificați întotdeauna noile numere"
+" de cont bancar, de preferință apelând furnizorul, deoarece phishing-ul are "
+"loc de obicei atunci când e-mailurile lor sunt compromise. Odată verificat, "
+"puteți activa capacitatea de a trimite bani."
 
 #. module: base
 #: model:res.country,name:base.sn
@@ -28721,7 +28751,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Technical Settings"
-msgstr ""
+msgstr "Setări tehnice"
 
 #. module: base
 #: model:ir.actions.report,name:base.ir_module_reference_print
@@ -29072,6 +29102,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Numărul de identificare fiscală. Valorile aici vor fi validate în funcție de"
+" formatul țării. Puteți folosi „/” pentru a indica că partenerul nu este "
+"plătitor de TVA."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
@@ -30516,7 +30549,7 @@ msgstr "Pentru a returna o acțiune, atribuiți: <code>action = {...}</code>"
 #: model:ir.module.category,name:base.module_category_productivity_to-do
 #: model:ir.module.module,shortdesc:base.module_project_todo
 msgid "To-Do"
-msgstr ""
+msgstr "De făcut"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -30819,6 +30852,15 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"Tipul de acțiune a serverului. Sunt disponibile următoarele valori:\n"
+"- \"Update a Record\": actualizează valorile unei înregistrări\n"
+"- \"Create Activity\": crearea unei activități (discuție)\n"
+"- 'Send Email': postarea unui mesaj, a unei note sau trimiterea unui e-mail (Discuție)\n"
+"- 'Send SMS': trimiteți SMS-uri, înregistrați-le pe documente (SMS)- 'Add/Remove Followers': adăugați sau eliminați adepți la o înregistrare (Discuții)\n"
+"- \"Create Record\": creați o nouă înregistrare cu noi valori\n"
+"- \"Execute Code\": un bloc de cod Python care va fi executat\n"
+"- \"Send Webhook Notification\": trimiteți o cerere POST către un sistem extern, cunoscută și sub denumirea de Webhook\n"
+"- \"Execute Existing Actions\": definește o acțiune care declanșează mai multe alte acțiuni ale serverului\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -31300,7 +31342,7 @@ msgstr "Actualizați Lista cu Module"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_write
 msgid "Update Record"
-msgstr ""
+msgstr "Actualizare înregistrare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_related_model_id
@@ -32322,7 +32364,7 @@ msgstr "Pentru ce este această cheie?"
 #. module: base
 #: model:ir.module.category,name:base.module_category_whatsapp
 msgid "WhatsApp"
-msgstr ""
+msgstr "WhatsApp"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_whatsapp

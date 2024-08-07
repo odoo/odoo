@@ -3,7 +3,6 @@
 # 	* base
 # 
 # Translators:
-# Maitê Dietze, 2023
 # Carlos Teles, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Manuela Silva <mmsrs@sky.com>, 2023
@@ -11,11 +10,12 @@
 # Daniel Reis, 2023
 # Pedro Castro Silva <pedrocs@exo.pt>, 2024
 # Nuno Silva <nuno.silva@arxi.pt>, 2024
-# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # Marta Marouço, 2024
 # Rita Bastos, 2024
 # Vasco Rodrigues, 2024
+# Maitê Dietze, 2024
 # Arxi, 2024
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-26 12:42+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Arxi, 2024\n"
+"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6934,12 +6934,12 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_tr
 msgid ""
 "\n"
-"Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
+"Turkish charts of accounts\n"
+"========================================\n"
+"    * Defines the default chart of accounts\n"
+"    * Defines the default taxes\n"
+"    * Defines default tax report\n"
+"This was done in collaboration with Broadmax Partner in Turkey."
 msgstr ""
 
 #. module: base
@@ -11142,6 +11142,8 @@ msgid ""
 "Blame the following rules:\n"
 "%s"
 msgstr ""
+"\"A responsabilidade é das seguintes regras:\\n\"\n"
+"\"%s\""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__layout_background__blank
@@ -15188,7 +15190,7 @@ msgstr ""
 #. module: base
 #: model:res.country.group,name:base.europe
 msgid "European Union"
-msgstr ""
+msgstr "União Europeia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_jitsi
@@ -16326,6 +16328,11 @@ msgstr "França - Contabilidade"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
 msgid "France - Accounting Reports"
 msgstr "França - Relatórios Contabilísticos"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
+msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
@@ -17718,6 +17725,8 @@ msgid ""
 "If you really, really need access, perhaps you can win over your friendly "
 "administrator with a batch of freshly baked cookies."
 msgstr ""
+"Se necessita de acesso, é possível obter solicitando o apoio do seu "
+"administrador."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_access__active
@@ -20476,7 +20485,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr ""
+msgstr "Mesclar assistente de parceiro"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -20804,7 +20813,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_constraint_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_constraint_list
 msgid "Model Constraints"
-msgstr "Constrições de Modelo"
+msgstr "Restrições de Modelo"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_data
@@ -21597,6 +21606,8 @@ msgid ""
 "Note: this might be a multi-company issue. Switching company may help - in "
 "Odoo, not in real life!"
 msgstr ""
+"Nota: este pode ser um aspeto relacionado com várias empresas. Alterar a "
+"empresa pode ajudar."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -22654,6 +22665,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 msgid "Odoo helps you easily track all activities related to a customer."
 msgstr ""
+"O Odoo ajuda você a rastrear facilmente todas as atividades relacionadas a "
+"um cliente."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -26349,7 +26362,7 @@ msgstr "Ações Agendadas"
 #: model:ir.actions.act_window,name:base.ir_cron_trigger_action
 #: model:ir.ui.menu,name:base.ir_cron_trigger_menu
 msgid "Scheduled Actions Triggers"
-msgstr ""
+msgstr "Disparadores de Ações Agendadas"
 
 #. module: base
 #: code:addons/base/models/ir_cron.py:0
@@ -26716,6 +26729,11 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
+"O envio de faturas falsas com um número de conta fraudulento é uma prática "
+"comum de phishing. Para se proteger, sempre verifique os novos números de "
+"contas bancárias, de preferência ligando para o fornecedor, pois o phishing "
+"geralmente ocorre quando os e-mails deles são comprometidos. Depois de "
+"verificado, você pode ativar a possibilidade de enviar dinheiro."
 
 #. module: base
 #: model:res.country,name:base.sn
@@ -30391,6 +30409,9 @@ msgid ""
 "\n"
 "Sorry, %s doesn't have '%s' access to:"
 msgstr ""
+"\"Parece que se deparou com alguns registos secretos.\\n\"\n"
+"\"\\n\"\n"
+"\"Desculpe, %s não tem acesso a '%s':\""
 
 #. module: base
 #: model:res.country,name:base.ua

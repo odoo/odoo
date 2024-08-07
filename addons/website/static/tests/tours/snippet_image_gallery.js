@@ -102,6 +102,20 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     content: "Check that the image still has the correct filter",
     trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
     isCheck: true,
+}, {
+    content: "Click to access next image",
+    trigger: "iframe .s_image_gallery .carousel-control-next",
+}, {
+    content: "Check that the option has changed",
+    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:not(:contains('Blur'))",
+    isCheck: true,
+}, {
+    content: "Click to access previous image",
+    trigger: "iframe .s_image_gallery .carousel-control-prev",
+}, {
+    content: "Check that the option is restored",
+    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    isCheck: true,
 }]);
 
 wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {

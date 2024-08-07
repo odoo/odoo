@@ -88,6 +88,42 @@
                             </record>
                         </field>
                     </record>
+                    <record id="tax_report_line_parent_line_report_7" model="account.report.line">
+                        <field name="name">Local sales (excluding fixed assets) taxed at 5%</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_104_425" model="account.report.line">
+                                <field name="name">Gross value(425)</field>
+                                <field name="code">c425_104</field>
+                            <field name="expression_ids">
+                                    <record id="tax_report_line_104_425_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">425 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_435" model="account.report.line">
+                                <field name="name">Net value(435)</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_435_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">435 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_445" model="account.report.line">
+                                <field name="name">Tax generated(445)</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_445_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">445 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
                     <record id="tax_report_line_parent_line_report_10" model="account.report.line">
                         <field name="name">VAT generated on the difference between sales and credit notes at different rates (adjustment payable)</field>
                         <field name="children_ids">
@@ -571,6 +607,44 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">521 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_parent_line_report_62" model="account.report.line">
+                        <field name="name">Acquisitions and local payments (excludes fixed assets) taxed at 5% (with the right to tax credits)</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_104_540" model="account.report.line">
+                                <field name="name">Gross value(540)</field>
+                                <field name="code">c540</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_540_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">540 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_550" model="account.report.line">
+                                <field name="name">Net value(550)</field>
+                                <field name="code">c550</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_550_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">550 (Reporte 104)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104_560" model="account.report.line">
+                                <field name="name">Tax generated(560)</field>
+                                <field name="code">c560</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_560_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">560 (Reporte 104)</field>
                                     </record>
                                 </field>
                             </record>

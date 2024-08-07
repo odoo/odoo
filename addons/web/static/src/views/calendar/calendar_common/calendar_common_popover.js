@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { is24HourFormat } from "@web/core/l10n/dates";
+import { registry } from "@web/core/registry";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/model/record";
 import { getFormattedDateSpan } from "@web/views/calendar/utils";
@@ -37,6 +38,19 @@ export class CalendarCommonPopover extends Component {
 
     isInvisible(fieldNode, record) {
         return evaluateBooleanExpr(fieldNode.invisible, record.evalContextWithVirtualIds);
+    }
+
+    getFormattedValue(fieldName, record) {
+        const fieldInfo = this.props.model.popoverFieldNodes[fieldName];
+        const field = this.props.model.fields[fieldName];
+        let format;
+        const formattersRegistry = registry.category("formatters");
+        if (fieldInfo.widget && formattersRegistry.contains(fieldInfo.widget)) {
+            format = formattersRegistry.get(fieldInfo.widget);
+        } else {
+            format = formattersRegistry.get(field.type);
+        }
+        return format(record.data[fieldName]);
     }
 
     computeDateTimeAndDuration() {

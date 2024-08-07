@@ -75,19 +75,31 @@ class HrAttendance(models.Model):
             self.env['hr.attendance'].flush_model(['worked_hours'])
             self.env['hr.attendance.overtime'].flush_model(['duration'])
             self.env.cr.execute('''
-                SELECT att.id as att_id,
-                       att.worked_hours as att_wh,
-                       ot.id as ot_id,
-                       ot.duration as ot_d,
-                       ot.date as od,
-                       att.check_in as ad
+                WITH employee_time_zones AS (
+                    SELECT employee.id AS employee_id,
+                           calendar.tz AS timezone
+                      FROM hr_employee employee
+                INNER JOIN resource_calendar calendar
+                        ON calendar.id = employee.resource_calendar_id
+                )
+                SELECT att.id AS att_id,
+                       att.worked_hours AS att_wh,
+                       ot.id AS ot_id,
+                       ot.duration AS ot_d,
+                       ot.date AS od,
+                       att.check_in AS ad
                   FROM hr_attendance att
-             INNER JOIN hr_attendance_overtime ot
-                    ON date_trunc('day',att.check_in) = date_trunc('day', ot.date)
-                    AND date_trunc('day',att.check_out) = date_trunc('day', ot.date)
-                    AND att.employee_id IN %s
-                    AND att.employee_id = ot.employee_id
-                    ORDER BY att.check_in DESC
+            INNER JOIN employee_time_zones etz
+                    ON att.employee_id = etz.employee_id
+            INNER JOIN hr_attendance_overtime ot
+                    ON date_trunc('day',
+                                  CAST(att.check_in
+                                           AT TIME ZONE 'utc'
+                                           AT TIME ZONE etz.timezone
+                                  as date)) = date_trunc('day', ot.date)
+                   AND att.employee_id = ot.employee_id
+                   AND att.employee_id IN %s
+              ORDER BY att.check_in DESC
             ''', (tuple(self.employee_id.ids),))
             a = self.env.cr.dictfetchall()
             grouped_dict = dict()
@@ -143,9 +155,8 @@ class HrAttendance(models.Model):
                 tz = timezone(calendar.tz)
                 check_in_tz = attendance.check_in.astimezone(tz)
                 check_out_tz = attendance.check_out.astimezone(tz)
-                lunch_intervals = calendar._attendance_intervals_batch(
-                    check_in_tz, check_out_tz, resource, lunch=True)
-                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals[resource.id]
+                lunch_intervals = attendance.employee_id._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=True)
+                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals
                 delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
                 attendance.worked_hours = delta / 3600.0
             else:
@@ -259,17 +270,7 @@ class HrAttendance(models.Model):
 
             # Retrieve expected attendance intervals
             calendar = emp.resource_calendar_id or emp.company_id.resource_calendar_id
-            expected_attendances = calendar._attendance_intervals_batch(
-                start, stop, emp.resource_id
-            )[emp.resource_id.id]
-            # Substract Global Leaves and Employee's Leaves
-            leave_intervals = calendar._leave_intervals_batch(
-                start, stop, emp.resource_id, domain=AND([
-                    self._get_overtime_leave_domain(),
-                    [('company_id', 'in', [False, emp.company_id.id])],
-                ])
-            )
-            expected_attendances -= leave_intervals[False] | leave_intervals[emp.resource_id.id]
+            expected_attendances = emp._employee_attendance_intervals(start, stop)
 
             # working_times = {date: [(start, stop)]}
             working_times = defaultdict(lambda: [])
@@ -344,8 +345,8 @@ class HrAttendance(models.Model):
                                 stop_dt = min(planned_end_dt, local_check_out)
                                 work_duration += (stop_dt - start_dt).total_seconds() / 3600.0
                                 # remove lunch time from work duration
-                                lunch_intervals = calendar._attendance_intervals_batch(start_dt, stop_dt, emp.resource_id, lunch=True)
-                                work_duration -= sum((i[1] - i[0]).total_seconds() / 3600.0 for i in lunch_intervals[emp.resource_id.id])
+                                lunch_intervals = emp._employee_attendance_intervals(start_dt, stop_dt, lunch=True)
+                                work_duration -= sum((i[1] - i[0]).total_seconds() / 3600.0 for i in lunch_intervals)
 
                             # There is an overtime at the end of the day
                             if local_check_out > planned_end_dt:

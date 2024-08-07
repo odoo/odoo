@@ -90,3 +90,24 @@ registry.category("web_tour.tours").add("PosHrTour", {
             TicketScreen.nthRowContains(4, "Mitchell Admin", false),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("CashierStayLogged", {
+    test: true,
+    steps: () =>
+        [
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.isShown(),
+            SelectionPopup.hasSelectionItem("Pos Employee1"),
+            SelectionPopup.hasSelectionItem("Pos Employee2"),
+            SelectionPopup.hasSelectionItem("Mitchell Admin"),
+            SelectionPopup.clickItem("Mitchell Admin"),
+            PosHr.cashierNameIs("Mitchell Admin"),
+            PosHr.refreshPage(),
+            PosHr.cashierNameIs("Mitchell Admin"),
+            Chrome.clickMenuButton(),
+            PosHr.clickLockButton(),
+            PosHr.refreshPage(),
+            PosHr.loginScreenIsShown(),
+        ].flat(),
+});

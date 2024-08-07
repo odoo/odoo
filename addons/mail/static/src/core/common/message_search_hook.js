@@ -21,7 +21,7 @@ export function searchHighlight(searchTerm, target) {
         // Special handling for '
         // Note: browsers use XPath 1.0, so uses concat() rather than ||
         const split = term.toLowerCase().split("'");
-        let lowercase = split.map(s => `'${s}'`).join(', "\'", ');
+        let lowercase = split.map((s) => `'${s}'`).join(', "\'", ');
         let uppercase = lowercase.toUpperCase();
         if (split.length > 1) {
             lowercase = `concat(${lowercase})`;
@@ -72,9 +72,13 @@ export function useMessageSearch(thread) {
         async search(before = false) {
             if (this.searchTerm) {
                 this.searching = true;
-                const { count, loadMore, messages } = await sequential(() =>
+                const data = await sequential(() =>
                     threadService.search(this.searchTerm, this.thread, before)
                 );
+                if (!data) {
+                    return;
+                }
+                const { count, loadMore, messages } = data;
                 this.searched = true;
                 this.searching = false;
                 this.count = count;

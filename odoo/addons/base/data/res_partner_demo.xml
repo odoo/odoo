@@ -38,11 +38,6 @@
        <!--
         Resource: res.partner
         -->
-        <record id="main_partner" model="res.partner">
-            <field name="email">info@yourcompany.com</field>
-            <field name="website">www.example.com</field>
-            <field name="vat">US12345671</field>
-        </record>
         <record id="res_partner_1" model="res.partner">
             <field name="name">Wood Corner</field>
             <field eval="[Command.set([ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>

@@ -1368,6 +1368,15 @@ header {
                     }
                 }
             }
+            .o_header_mobile_buttons_wrap, .btn[data-bs-toggle="offcanvas"] {
+                color: inherit;
+            }
+            .navbar-toggler-icon {
+                background-color: currentColor;
+                background-image: none;
+                mask: $navbar-light-toggler-icon-bg;
+                -webkit-mask: $navbar-light-toggler-icon-bg;
+            }
         }
     }
 }
@@ -1655,6 +1664,12 @@ $ribbon-padding: 100px;
 // Search results
 .o_search_result_item_detail {
     flex: 1;
+}
+
+.o_cookies_bar_toggle {
+    inset-inline-end: 1rem;
+    inset-block-end: var(--cookies-bar-toggle-inset-block-end, 1rem);
+    z-index: $zindex-modal + 1; // Over the modal backdrop.
 }
 
 .o_website_btn_loading {

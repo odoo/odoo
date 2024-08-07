@@ -42,6 +42,13 @@ class AuthSignupHome(Home):
         if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
                 self.do_signup(qcontext)
+
+                # Set user to public if they were not signed in by do_signup
+                # (mfa enabled)
+                if request.session.uid is None:
+                    public_user = request.env.ref('base.public_user')
+                    request.update_env(user=public_user)
+
                 # Send an account creation confirmation email
                 User = request.env['res.users']
                 user_sudo = User.sudo().search(

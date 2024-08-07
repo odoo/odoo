@@ -993,6 +993,200 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertGoogleAPINotCalled()
 
     @patch_api
+    def test_recurrence_reduced(self):
+        # This test is a bit special because it's testing 2 sync processes. The
+        # bug it's protecting against is cross-contamination when event dicts
+        # are mutated in different ways during the call to
+        # `_sync_google_calendar()`. If you want to do a new test, this one is
+        # probably not the best example.
+        google_id = "oj44nep1ldf8a3ll02uip0c9aa"
+        with self.mock_datetime_and_now("2024-06-07"):
+            # We start with an event with 2 repetitions
+            values = [
+                # Recurrence from day 7 changes
+                {
+                    "id": google_id,
+                    "summary": "coucou",
+                    "recurrence": [
+                        "RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20240620T215959Z;BYDAY=FR"
+                    ],
+                    "start": {"dateTime": "2024-06-07T08:00:00+00:00"},
+                    "end": {"dateTime": "2024-06-07T10:00:00+00:00"},
+                    "reminders": {"useDefault": True},
+                    "updated": self.now,
+                    "attendees": [
+                        {
+                            "email": self.organizer_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                        {
+                            "email": self.attendee_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                    ],
+                },
+                # Event details for day 7
+                {
+                    "id": "%s_20240607T080000Z" % google_id,
+                    "summary": "coucou",
+                    "start": {"dateTime": "2024-06-07T08:00:00+00:00"},
+                    "end": {"dateTime": "2024-06-07T10:00:00+00:00"},
+                    "reminders": {"useDefault": True},
+                    "updated": self.now,
+                    "recurringEventId": google_id,
+                    "attendees": [
+                        {
+                            "email": self.organizer_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                        {
+                            "email": self.attendee_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                    ],
+                },
+                # Event details for day 14
+                {
+                    "id": "%s_20240614T080000Z" % google_id,
+                    "summary": "coucou",
+                    "start": {"dateTime": "2024-06-14T08:00:00+00:00"},
+                    "end": {"dateTime": "2024-06-14T10:00:00+00:00"},
+                    "reminders": {"useDefault": True},
+                    "updated": self.now,
+                    "recurringEventId": google_id,
+                    "attendees": [
+                        {
+                            "email": self.organizer_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                        {
+                            "email": self.attendee_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                    ],
+                },
+            ]
+            with patch.object(
+                GoogleCalendarService,
+                "get_events",
+                return_value=(
+                    GoogleEvent(values),
+                    None,
+                    [{"method": "popup", "minutes": 30}],
+                ),
+            ):
+                self.attendee_user.sudo()._sync_google_calendar(self.google_service)
+            events = self.env["calendar.event"].search(
+                [("google_id", "like", google_id)]
+            )
+            self.assertEqual(len(events.exists()), 2)
+
+        with self.mock_datetime_and_now("2024-06-10"):
+            # From Google Calendar, they alter events from day 14 onwards and move
+            # them 1h later. However, they regret and move them back 1h again.
+            values = [
+                # Recurrence from day 7 changes
+                {
+                    "id": google_id,
+                    "summary": "coucou",
+                    "recurrence": [
+                        "RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20240613T215959Z;BYDAY=FR"
+                    ],
+                    "start": {"dateTime": "2024-06-07T08:00:00+00:00"},
+                    "end": {"dateTime": "2024-06-07T10:00:00+00:00"},
+                    "reminders": {"useDefault": True},
+                    "updated": self.now,
+                    "attendees": [
+                        {
+                            "email": self.organizer_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                        {
+                            "email": self.attendee_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                    ],
+                },
+                # Event details for day 7
+                {
+                    "id": "%s_20240607T080000Z" % google_id,
+                    "summary": "coucou",
+                    "start": {"dateTime": "2024-06-07T08:00:00+00:00"},
+                    "end": {"dateTime": "2024-06-07T10:00:00+00:00"},
+                    "reminders": {"useDefault": True},
+                    "updated": self.now,
+                    "recurringEventId": google_id,
+                    "attendees": [
+                        {
+                            "email": self.organizer_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                        {
+                            "email": self.attendee_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                    ],
+                },
+                # Event details for day 14
+                {
+                    "id": "%s_20240614T080000Z" % google_id,
+                    "summary": "coucou",
+                    "start": {"dateTime": "2024-06-14T08:00:00+00:00"},
+                    "end": {"dateTime": "2024-06-14T10:00:00+00:00"},
+                    "reminders": {"useDefault": True},
+                    "updated": self.now,
+                    "recurringEventId": "%s_R20240614T080000" % google_id,
+                    "attendees": [
+                        {
+                            "email": self.organizer_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                        {
+                            "email": self.attendee_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                    ],
+                },
+                # New recurrence that starts on day 14
+                {
+                    "id": "%s_R20240614T080000" % google_id,
+                    "summary": "coucou",
+                    "start": {"dateTime": "2024-06-14T08:00:00+00:00"},
+                    "end": {"dateTime": "2024-06-14T10:00:00+00:00"},
+                    "recurrence": [
+                        "RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20240620T215959Z;BYDAY=FR"
+                    ],
+                    "reminders": {"useDefault": True},
+                    "updated": self.now,
+                    "attendees": [
+                        {
+                            "email": self.organizer_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                        {
+                            "email": self.attendee_user.partner_id.email,
+                            "responseStatus": "accepted",
+                        },
+                    ],
+                },
+            ]
+            # Then, Odoo syncs
+            with patch.object(
+                GoogleCalendarService,
+                "get_events",
+                return_value=(
+                    GoogleEvent(values),
+                    None,
+                    [{"method": "popup", "minutes": 30}],
+                ),
+            ):
+                self.attendee_user.sudo()._sync_google_calendar(self.google_service)
+            events = self.env["calendar.event"].search(
+                [("google_id", "like", google_id)]
+            )
+            self.assertEqual(len(events.exists()), 2)
+
+    @patch_api
     def test_new_google_notifications(self):
         """ Event from Google should not create notifications and trigger. It ruins the perfs on large databases """
         cron_id = self.env.ref('calendar.ir_cron_scheduler_alarm').id
@@ -1980,6 +2174,101 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(len(events), 3, "it should have created a recurrence with 3 events")
         self.assertEqual(events[0].attendee_ids[0].state, 'accepted', 'after google sync, organizer should have accepted status still')
         self.assertGoogleAPINotCalled()
+
+    @patch.object(GoogleCalendarService, "get_events")
+    def test_recurring_event_moved_to_future(self, mock_get_events):
+        # There's a daily recurring event from 2024-07-01 to 2024-07-02
+        recurrence_id = "abcd1"
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-07-01",
+            google_id=recurrence_id,
+            rrule="FREQ=DAILY;INTERVAL=1;COUNT=2",
+            start=datetime(2024, 7, 1, 9),
+            stop=datetime(2024, 7, 1, 10),
+            partner_ids=[
+                Command.set(
+                    [
+                        self.organizer_user.partner_id.id,
+                        self.attendee_user.partner_id.id,
+                    ]
+                )
+            ],
+        )
+        self.assertRecordValues(
+            recurrence.calendar_event_ids.sorted("start"),
+            [
+                {
+                    "start": datetime(2024, 7, 1, 9),
+                    "stop": datetime(2024, 7, 1, 10),
+                    "google_id": f"{recurrence_id}_20240701T090000Z",
+                },
+                {
+                    "start": datetime(2024, 7, 2, 9),
+                    "stop": datetime(2024, 7, 2, 10),
+                    "google_id": f"{recurrence_id}_20240702T090000Z",
+                },
+            ],
+        )
+        # User moves batch to next week
+        common = {
+            "attendees": [
+                {
+                    "email": self.attendee_user.partner_id.email,
+                    "responseStatus": "needsAction",
+                },
+                {
+                    "email": self.organizer_user.partner_id.email,
+                    "responseStatus": "needsAction",
+                },
+            ],
+            "organizer": {"email": self.organizer_user.partner_id.email},
+            "reminders": {"useDefault": True},
+            "summary": "coucou",
+            "updated": "2024-07-02T08:00:00Z",
+        }
+        google_events = [
+            # Recurrence event
+            dict(
+                common,
+                id=recurrence_id,
+                start={"dateTime": "2024-07-08T09:00:00+00:00"},
+                end={"dateTime": "2024-07-08T10:00:00+00:00"},
+                recurrence=["RRULE:FREQ=DAILY;INTERVAL=1;COUNT=2"],
+            ),
+            # Cancelled instances
+            {"id": f"{recurrence_id}_20240701T090000Z", "status": "cancelled"},
+            {"id": f"{recurrence_id}_20240702T090000Z", "status": "cancelled"},
+            # New base event
+            dict(
+                common,
+                id=f"{recurrence_id}_20240708T090000Z",
+                start={"dateTime": "2024-07-08T09:00:00+00:00"},
+                end={"dateTime": "2024-07-08T10:00:00+00:00"},
+                recurringEventId=recurrence_id,
+            ),
+        ]
+        mock_get_events.return_value = (
+            GoogleEvent(google_events),
+            None,
+            [{"method": "popup", "minutes": 30}],
+        )
+        with self.mock_datetime_and_now("2024-04-03"):
+            self.organizer_user.sudo()._sync_google_calendar(self.google_service)
+            self.assertRecordValues(
+                recurrence.calendar_event_ids.sorted("start"),
+                [
+                    {
+                        "start": datetime(2024, 7, 8, 9),
+                        "stop": datetime(2024, 7, 8, 10),
+                        "google_id": f"{recurrence_id}_20240708T090000Z",
+                    },
+                    {
+                        "start": datetime(2024, 7, 9, 9),
+                        "stop": datetime(2024, 7, 9, 10),
+                        "google_id": f"{recurrence_id}_20240709T090000Z",
+                    },
+                ],
+            )
 
     @patch.object(GoogleCalendarService, 'get_events')
     def test_accepting_recurrent_event_with_this_event_option_synced_by_attendee(self, mock_get_events):

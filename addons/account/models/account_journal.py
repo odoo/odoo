@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ast import literal_eval
 
 from odoo import api, Command, fields, models, _
@@ -64,6 +62,20 @@ class AccountJournal(models.Model):
                     return model
         return 'odoo'
 
+    def _get_default_account_domain(self):
+        return """[
+            ('deprecated', '=', False),
+            ('account_type', 'in', ('asset_cash', 'liability_credit_card') if type == 'bank'
+                                   else ('asset_cash',) if type == 'cash'
+                                   else ('income', 'income_other') if type == 'sale'
+                                   else ('expense', 'expense_depreciation', 'expense_direct_cost') if type == 'purchase'
+                                   else ('asset_receivable', 'asset_cash', 'asset_current', 'asset_non_current',
+                                         'asset_prepayments', 'asset_fixed', 'liability_payable',
+                                         'liability_credit_card', 'liability_current', 'liability_non_current',
+                                         'equity', 'equity_unaffected', 'income', 'income_other', 'expense',
+                                         'expense_depreciation', 'expense_direct_cost', 'off_balance'))
+        ]"""
+
     name = fields.Char(string='Journal Name', required=True, translate=True)
     code = fields.Char(
         string='Short Code',
@@ -92,9 +104,7 @@ class AccountJournal(models.Model):
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
-        domain="[('deprecated', '=', False), ('account_type', '=like', default_account_type)]",
-    )
-
+        domain=_get_default_account_domain)
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
@@ -319,7 +329,7 @@ class AccountJournal(models.Model):
             for payment_type in ('inbound', 'outbound'):
                 lines = journal[f'{payment_type}_payment_method_line_ids']
                 for line in lines:
-                    if line.payment_method_id:
+                    if line.payment_method_id.id in method_information_mapping:
                         protected_payment_method_ids.add(line.payment_method_id.id)
                         if manage_providers and method_information_mapping.get(line.payment_method_id.id, {}).get('mode') == 'electronic':
                             protected_provider_ids.add(line.payment_provider_id.id)
@@ -688,6 +698,26 @@ class AccountJournal(models.Model):
         return self.env['mail.alias']._sanitize_alias_name(alias_name)
 
     @api.model
+    def _ensure_unique_alias(self, vals, company):
+        """ Check uniqueness of the alias name within the given alias domain.
+        :param vals: the values of the journal.
+        :return: a unique alias name.
+        """
+        alias_name = vals['alias_name']
+        alias_domain_name = company.alias_domain_id.name
+
+        domain = [('alias_name', '=', alias_name)]
+        if alias_domain_name:
+            domain.append(('alias_domain', '=', alias_domain_name))
+
+        existing_alias = self.env['mail.alias'].search_count(domain, limit=1)
+
+        if existing_alias:
+            alias_name = f"{alias_name}-{vals.get('code')}"
+
+        return self.env['mail.alias']._sanitize_alias_name(alias_name)
+
+    @api.model
     def get_next_bank_cash_default_code(self, journal_type, company, cache=None, protected_codes=False):
         prefix_map = {'cash': 'CSH', 'general': 'GEN', 'bank': 'BNK'}
         journal_code_base = prefix_map.get(journal_type)
@@ -776,10 +806,12 @@ class AccountJournal(models.Model):
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
 
         # === Fill missing alias name for sale / purchase, to force alias creation ===
-        if journal_type in {'sale', 'purchase'} and 'alias_name' not in vals:
-            vals['alias_name'] = self._alias_prepare_alias_name(
+        if journal_type in {'sale', 'purchase'}:
+            if 'alias_name' not in vals:
+                vals['alias_name'] = self._alias_prepare_alias_name(
                 False, vals.get('name'), vals.get('code'), journal_type, company
             )
+            vals['alias_name'] = self._ensure_unique_alias(vals, company)
 
     @api.model_create_multi
     def create(self, vals_list):

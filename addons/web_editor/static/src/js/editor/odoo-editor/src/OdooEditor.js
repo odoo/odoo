@@ -186,6 +186,8 @@ export const CLIPBOARD_WHITELISTS = {
 // Commands that don't require a DOM selection but take an argument instead.
 const SELECTIONLESS_COMMANDS = ['addRow', 'addColumn', 'removeRow', 'removeColumn', 'resetSize'];
 
+const FORMATTING_COMMANDS = ['applyColor', 'bold', 'italic', 'underline', 'strikeThrough', 'setFontSize']
+
 function defaultOptions(defaultObject, object) {
     const newObject = Object.assign({}, defaultObject, object);
     for (const [key, value] of Object.entries(object)) {
@@ -268,6 +270,7 @@ export class OdooEditor extends EventTarget {
                 useResponsiveFontSizes: true,
                 showResponsiveFontSizesBadges: false,
                 showExtendedTextStylesOptions: false,
+                autoActivateContentEditable: true,
                 // TODO probably move `getCSSVariableValue` and
                 // `convertNumericToUnit` as odoo-editor utils to avoid this
                 getCSSVariableValue: () => null,
@@ -342,8 +345,10 @@ export class OdooEditor extends EventTarget {
         this.editable.setAttribute('dir', this.options.direction);
 
         // Set contenteditable before clone as FF updates the content at this point.
-        this._activateContenteditable();
-
+        this.canActivateContentEditable = this.options.autoActivateContentEditable;
+        if (this.canActivateContentEditable) {
+            this._activateContenteditable();
+        }
         this._collabClientId = this.options.collaborationClientId;
         this._collabClientAvatarUrl = this.options.collaborationClientAvatarUrl;
 
@@ -675,6 +680,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'mousedown', this._onMouseDown);
         this.addDomListener(this.editable, 'mouseup', this._onMouseup);
         this.addDomListener(this.editable, 'mousemove', this._onMousemove);
+        this.addDomListener(this.editable, 'mouseleave', this._onMouseLeave);
         this.addDomListener(this.editable, 'paste', this._onPaste);
         this.addDomListener(this.editable, 'dragstart', this._onDragStart);
         this.addDomListener(this.editable, 'drop', this._onDrop);
@@ -2083,6 +2089,7 @@ export class OdooEditor extends EventTarget {
      * from outside the odooEditor.
      */
     activateContenteditable() {
+        this.canActivateContentEditable = true;
         this._activateContenteditable();
     }
 
@@ -2234,6 +2241,11 @@ export class OdooEditor extends EventTarget {
         }
         // Ensure empty blocks be given a <br> child.
         if (start) {
+            if (start === this.editable && startBlock.textContent === '\u200B') {
+                const p = document.createElement('p');
+                start.appendChild(p);
+                start = p;
+            }
             fillEmpty(closestBlock(start));
         }
         fillEmpty(closestBlock(range.endContainer));
@@ -2416,7 +2428,7 @@ export class OdooEditor extends EventTarget {
                         ancestor = ancestor.parentElement;
                     }
                     if (!hiliteColor) {
-                        hiliteColor = computedStyle.backgroundColor;
+                        hiliteColor = this.document.queryCommandValue('backColor');
                     }
                 }
             }
@@ -2459,11 +2471,9 @@ export class OdooEditor extends EventTarget {
         if (sel.anchorNode && isProtected(sel.anchorNode)) {
             return;
         }
-        if (
-            !(SELECTIONLESS_COMMANDS.includes(method) && args.length) && (
-                !this.editable.contains(sel.anchorNode) ||
-                (sel.anchorNode !== sel.focusNode && !this.editable.contains(sel.focusNode))
-            )
+        if (!(SELECTIONLESS_COMMANDS.includes(method) && args.length) &&
+            !this.isSelectionInEditable(sel) &&
+            !(closestElement(sel.anchorNode, "*[t-field],*[t-out],*[t-esc]") && FORMATTING_COMMANDS.includes(method))
         ) {
             // Do not apply commands out of the editable area.
             return false;
@@ -2561,6 +2571,7 @@ export class OdooEditor extends EventTarget {
         }
         this.observerActive('_activateContenteditable');
     }
+
     _stopContenteditable() {
         this.observerUnactive('_stopContenteditable');
         if (this.options.isRootEditable) {
@@ -3600,6 +3611,29 @@ export class OdooEditor extends EventTarget {
 
     _onBeforeInput(ev) {
         this._lastBeforeInputType = ev.inputType;
+        // For chrome when we have this structure
+        // <div contenteditable="true">
+        //     <ul>
+        //         <div contenteditable="false">
+        //             <div contenteditable="true">
+        //                 <p>
+        //                     text[]
+        //                 </p>
+        //             </div>
+        //         </div>
+        //     </ul>
+        // </div>
+        // clicking on `enter` doesn't works as expected and the `input` event is never
+        // triggered, to solve the problem we can use this hack where we stop the propagation
+        // and trigger manually the input event to simulate the correct flow.
+        if (ev.inputType ==="insertParagraph") {
+            const banner = closestElement(ev.target, ".o_editor_banner");
+            if (banner && closestElement(banner, "ul, ol")) {
+                ev.preventDefault();
+                this._onInput(ev);
+                return;
+            }
+        }
     }
 
     /**
@@ -3901,7 +3935,7 @@ export class OdooEditor extends EventTarget {
         // inserting the printed representation of the character.
         if (/^.$/u.test(ev.key) && !ev.ctrlKey && !ev.metaKey && (isMacOS() || !ev.altKey)) {
             const selection = this.document.getSelection();
-            if (selection && !selection.isCollapsed) {
+            if (selection && !selection.isCollapsed && this.isSelectionInEditable(selection)) {
                 this.deleteRange(selection);
             }
         }
@@ -4151,24 +4185,13 @@ export class OdooEditor extends EventTarget {
         // and the toolbar so we need to fix the selection to be based on the
         // editable children. Calling `getDeepRange` ensure the selection is
         // limited to the editable.
-        const containerSelector = '#wrap>*, .oe_structure>*, [contenteditable]';
-        const container =
-            (selection &&
-                closestElement(selection.anchorNode, containerSelector)) ||
-            // In case a suitable container could not be found then the
-            // selection is restricted inside the editable area.
-            this.editable;
         if (
-            selection.anchorNode === container &&
-            selection.focusNode === container &&
+            selection.anchorNode === this.editable &&
+            selection.focusNode === this.editable &&
             selection.anchorOffset === 0 &&
-            selection.focusOffset === [...container.childNodes].length &&
-            // Checks that the container is not an empty editable structure to
-            // avoid calling "getDeepRange" if it is, otherwise it will be
-            // selected again, creating an infine loop.
-            container.childNodes.length
+            selection.focusOffset === [...this.editable.childNodes].length
         ) {
-            getDeepRange(container, {select: true});
+            getDeepRange(this.editable, {select: true});
             // The selection is changed in `getDeepRange` and will therefore
             // re-trigger the _onSelectionChange.
             return;
@@ -4382,9 +4405,12 @@ export class OdooEditor extends EventTarget {
                 restore(); // Make sure to make <br>s visible if needed.
             }
         }
+
+        const tAttrs = ['t-elif', 't-else', 't-esc', 't-foreach', 't-if', 't-out', 't-raw', 't-value'];
         // Remove now empty links
         for (const link of element.querySelectorAll('a')) {
-            if (![...link.childNodes].some(isVisible) && !link.classList.length) {
+            if (![...link.childNodes].some(isVisible) && !link.classList.length
+                && !tAttrs.some(attr => link.hasAttribute(attr))) {
                 link.remove();
             }
         }
@@ -4510,6 +4536,9 @@ export class OdooEditor extends EventTarget {
      * @param {String} currentKeyPress
      */
     _fixSelectionOnEditableRoot(selection, currentKeyPress) {
+        if (!this.editable.isContentEditable) {
+            return;
+        }
         let nodeAfterCursor = this.editable.childNodes[selection.anchorOffset];
         let nodeBeforeCursor = nodeAfterCursor && nodeAfterCursor.previousElementSibling;
         // Handle arrow key presses.
@@ -4572,7 +4601,10 @@ export class OdooEditor extends EventTarget {
         this._currentMouseState = ev.type;
         this._lastMouseClickPosition = [ev.x, ev.y];
 
-        this._activateContenteditable();
+        if (this.canActivateContentEditable) {
+            this._activateContenteditable();
+        }
+
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
 
@@ -4595,7 +4627,6 @@ export class OdooEditor extends EventTarget {
 
             if (isMouseInsideCheckboxBox) {
                 toggleClass(node, 'o_checked');
-                ev.preventDefault();
                 this.historyStep();
                 if (!document.getSelection().isCollapsed) {
                     this._updateToolbar(true);
@@ -4762,6 +4793,12 @@ export class OdooEditor extends EventTarget {
         const direction = {top: 'row', right: 'col', bottom: 'row', left: 'col'}[this._isHoveringTdBorder(ev)] || false;
         if (direction || !this._isResizingTable) {
             this._toggleTableResizeCursor(direction);
+        }
+    }
+
+    _onMouseLeave(ev) {
+        if (!this._isResizingTable) {
+            this._toggleTableResizeCursor(false);
         }
     }
 
@@ -5149,11 +5186,27 @@ export class OdooEditor extends EventTarget {
     }
     _onTableMoveUpClick() {
         if (this._rowUiTarget.previousSibling) {
+            // When moving the second row up, copy the widths of first row's td
+            // elements to second row's td elements, as td widths are only
+            // applied to the first row.
+            if (!this._rowUiTarget.previousSibling.previousSibling) {
+                this._rowUiTarget.childNodes.forEach((cell, index) => {
+                    cell.style.width = this._rowUiTarget.previousSibling.childNodes[index].style.width;
+                });
+            }
             this._rowUiTarget.previousSibling.before(this._rowUiTarget);
         }
     }
     _onTableMoveDownClick() {
         if (this._rowUiTarget.nextSibling) {
+            // When moving the first row down, copy the widths of its td
+            // elements to second row's td elements, as td widths are only
+            // applied to the first row.
+            if (!this._rowUiTarget.previousSibling) {
+                this._rowUiTarget.nextSibling.childNodes.forEach((cell, index) => {
+                    cell.style.width = this._rowUiTarget.childNodes[index].style.width;
+                });
+            }
             this._rowUiTarget.nextSibling.after(this._rowUiTarget);
         }
     }

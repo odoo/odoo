@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
@@ -7,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
+from odoo.exceptions import ValidationError
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -64,6 +63,26 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         level.cap_accrued_time = False
         self.assertEqual(accrual_plan.level_ids.maximum_leave, 0)
+
+    def test_accrual_unlink(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+        })
+
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual allocation for employee',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+        })
+
+        with self.assertRaises(ValidationError):
+            accrual_plan.unlink()
+
+        allocation.unlink()
+        accrual_plan.unlink()
 
     def test_frequency_hourly_calendar(self):
         with freeze_time("2017-12-5"):
@@ -1724,3 +1743,127 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2024-05-06'):
             self.env['hr.leave']._cancel_invalid_leaves()
         self.assertEqual(leave.active, True, "Leave must not be canceled")
+
+    def test_accrual_leaves_cancel_cron(self):
+        leave_type_no_negative = self.env['hr.leave.type'].create({
+            'name': 'Test Accrual - No negative',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no',
+            'leave_validation_type': 'no_validation',
+            'allows_negative': False,
+        })
+        leave_type_negative = self.env['hr.leave.type'].create({
+            'name': 'Test Accrual - Negative',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no',
+            'leave_validation_type': 'no_validation',
+            'allows_negative': True,
+            'max_allowed_negative': 1,
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Monthly accrual',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value_type': 'day',
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': 1,
+                'frequency': 'monthly',
+                'first_day_display': 'last',
+                'cap_accrued_time': False,
+                'action_with_unused_accruals': 'maximum',
+                'postpone_max_days': 5
+            })],
+        })
+
+        with freeze_time("2024-01-01"):
+            self.env['hr.leave.allocation'].create([{
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type_no_negative.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'number_of_days': 1,
+            }, {
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type_negative.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'number_of_days': 1,
+            }])
+
+            excess_leave = self.env['hr.leave'].create([{
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type_no_negative.id,
+                'request_date_from': '2024-01-05',
+                'request_date_to': '2024-01-05',
+            }])
+            allowed_negative_leave = self.env['hr.leave'].create([{
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type_negative.id,
+                'request_date_from': '2024-01-12',
+                'request_date_to': '2024-01-12',
+            }])
+
+            # As accrual allocation don't take into account future leaves,
+            # it should be possible to take both leaves.
+            self.env['hr.leave'].create([{
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type_no_negative.id,
+                'request_date_from': '2024-01-04',
+                'request_date_to': '2024-01-04',
+            }, {
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type_negative.id,
+                'request_date_from': '2024-01-11',
+                'request_date_to': '2024-01-11',
+            }])
+            self.env.flush_all()
+
+            self.env['hr.leave']._cancel_invalid_leaves()
+
+            # Since both leave are outside an allocation validity,
+            # they are detected as discrepancies. However, the
+            # leave that is not exceeding the negative amount should be kept
+            # as it is valid according to the configuration.
+            self.assertFalse(excess_leave.active)
+            self.assertTrue(allowed_negative_leave.active)
+
+            self.env['hr.leave'].create([{
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type_negative.id,
+                'request_date_from': '2024-01-10',
+                'request_date_to': '2024-01-10',
+            }])
+
+            self.env['hr.leave']._cancel_invalid_leaves()
+
+            # The last added leave creates a discrepancy that exceeds the
+            # maximum amount allowed in negative.
+            self.assertFalse(allowed_negative_leave.active)
+
+    def test_check_lastcall_change_regular_to_accrual(self):
+        with freeze_time("2017-12-5"):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+            })
+            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 10,
+                'allocation_type': 'regular',
+            })
+            allocation.action_validate()
+
+            self.assertEqual(allocation.lastcall, False)
+
+            allocation.action_refuse()
+            allocation.write({
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+            })
+
+            self.assertEqual(allocation.lastcall, datetime.date(2017, 12, 5))

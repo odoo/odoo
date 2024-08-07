@@ -52,13 +52,29 @@ class SaleOrderLine(models.Model):
          2. The quotation hasn't commitment_date, we compute the estimated delivery
             date based on lead time"""
         treated = self.browse()
+        all_move_ids = {
+            move.id
+            for line in self
+            if line.state == 'sale'
+            for move in line.move_ids
+            if move.product_id == line.product_id
+        }
+        all_moves = self.env['stock.move'].browse(all_move_ids)
+        forecast_expected_date_per_move = dict(all_moves.mapped(lambda m: (m.id, m.forecast_expected_date)))
         # If the state is already in sale the picking is created and a simple forecasted quantity isn't enough
         # Then used the forecasted data of the related stock.move
         for line in self.filtered(lambda l: l.state == 'sale'):
             if not line.display_qty_widget:
                 continue
             moves = line.move_ids.filtered(lambda m: m.product_id == line.product_id)
-            line.forecast_expected_date = max(moves.filtered("forecast_expected_date").mapped("forecast_expected_date"), default=False)
+            line.forecast_expected_date = max(
+                (
+                    forecast_expected_date_per_move[move.id]
+                    for move in moves
+                    if forecast_expected_date_per_move[move.id]
+                ),
+                default=False,
+            )
             line.qty_available_today = 0
             line.free_qty_today = 0
             for move in moves:
@@ -215,7 +231,7 @@ class SaleOrderLine(models.Model):
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         self.ensure_one()
         # Use the delivery date if there is else use date_order and lead time
-        date_deadline = self.order_id.commitment_date or (self.order_id.date_order + timedelta(days=self.customer_lead or 0.0))
+        date_deadline = self.order_id.commitment_date or self._expected_date()
         date_planned = date_deadline - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
             'group_id': group_id,

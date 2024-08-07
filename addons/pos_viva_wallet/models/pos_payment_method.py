@@ -55,8 +55,6 @@ class PosPaymentMethod(models.Model):
 
     def _bearer_token(self, session):
         self.ensure_one()
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Do not have access to fetch token from Viva Wallet"))
 
         data = {'grant_type': 'client_credentials'}
         auth = requests.auth.HTTPBasicAuth(self.viva_wallet_client_id, self.viva_wallet_client_secret)
@@ -110,7 +108,14 @@ class PosPaymentMethod(models.Model):
         # Send a request to confirm the status of the sesions_id
         # Need wait to the status of sesions_id is updated setted in session headers; code 202
 
-        session_id, pos_session_id = data_webhook.get('MerchantTrns', '').split("/") # Split to retrieve pos_sessions_id
+        MerchantTrns = data_webhook.get('MerchantTrns')
+        if not MerchantTrns:
+            return self._send_notification(
+                {'error': _(
+                    "Your transaction with Viva Wallet failed. Please try again later."
+                    )}
+                )
+        session_id, pos_session_id = MerchantTrns.split("/")  # Split to retrieve pos_sessions_id
         endpoint = f"sessions/{session_id}"
         data = self._call_viva_wallet(endpoint, 'get')
 

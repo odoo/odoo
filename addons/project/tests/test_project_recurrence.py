@@ -114,6 +114,11 @@ class TestProjectRecurrence(TransactionCase):
 
         with freeze_time(self.date_01_01 + relativedelta(days=32)):
             task.state = '1_done'
+        self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is not the last task of the recurrence, next occurrence shouldn't have been created")
+
+        last_recurring_task = task.recurrence_id.task_ids.filtered(lambda t: t != task)
+        with freeze_time(self.date_01_01 + relativedelta(days=32)):
+            last_recurring_task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is after repeat_until, next occurrence shouldn't have been created")
 
     def test_recurring_settings_change(self):

@@ -325,8 +325,8 @@ class Location(models.Model):
 
                     qty_by_location.update({location.id: quantity_sum for location, quantity_sum in quant_data})
                     for location_dest, quantity_list, uoms in move_line_data:
-                        quantity = sum(ml_uom._compute_quantity(float(qty), product.uom_id) for qty, ml_uom in zip(quantity_list, uoms))
-                        qty_by_location[location_dest.id] += quantity
+                        current_qty = sum(ml_uom._compute_quantity(float(qty), product.uom_id) for qty, ml_uom in zip(quantity_list, uoms))
+                        qty_by_location[location_dest.id] += current_qty
 
             if additional_qty:
                 for location_id, qty in additional_qty.items():
@@ -412,7 +412,7 @@ class Location(models.Model):
                 product = product or self._context.get('products')
                 if (positive_quant and positive_quant.product_id != product) or len(product) > 1:
                     return False
-                if self.env['stock.move.line'].search([
+                if self.env['stock.move.line'].search_count([
                     ('product_id', '!=', product.id),
                     ('state', 'not in', ('done', 'cancel')),
                     ('location_dest_id', '=', self.id),
@@ -427,17 +427,28 @@ class Location(models.Model):
         result = defaultdict(lambda: defaultdict(float))
         if not excluded_sml_ids:
             excluded_sml_ids = set()
-        for location in self:
-            quants = location.quant_ids
-            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
-            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
-            for quant in quants:
-                result[location]['net_weight'] += quant.product_id.weight * quant.quantity
-            result[location]['forecast_weight'] = result[location]['net_weight']
-            for line in incoming_move_lines:
-                result[location]['forecast_weight'] += line.product_id.weight * line.quantity_product_uom
-            for line in outgoing_move_lines:
-                result[location]['forecast_weight'] -= line.product_id.weight * line.quantity_product_uom
+        Product = self.env['product.product']
+        StockMoveLine = self.env['stock.move.line']
+
+        quants = self.env['stock.quant'].read_group([('location_id', 'in', self.ids)], ['quantity'], ['location_id', 'product_id'], lazy=False)
+        base_domain = [('state', 'not in', ['draft', 'done', 'cancel']), ('id', 'not in', tuple(excluded_sml_ids))]
+        outgoing_move_lines = StockMoveLine.read_group(expression.AND([[('location_id', 'in', self.ids)], base_domain]), ['quantity_product_uom'], ['location_id', 'product_id'], lazy=False)
+        incoming_move_lines = StockMoveLine.read_group(expression.AND([[('location_dest_id', 'in', self.ids)], base_domain]), ['quantity_product_uom'], ['location_dest_id', 'product_id'], lazy=False)
+
+        product_ids = {record['product_id'][0] for record in quants + outgoing_move_lines + incoming_move_lines}
+        weight_per_product = {weight['id']: weight['weight'] for weight in Product.browse(product_ids).read(['weight'])}
+
+        for quant in quants:
+            weight = quant['quantity'] * weight_per_product[quant['product_id'][0]]
+            result[self.browse(quant['location_id'][0])]['net_weight'] += weight
+            result[self.browse(quant['location_id'][0])]['forecast_weight'] += weight
+
+        for line in outgoing_move_lines:
+            result[self.browse(line['location_id'][0])]['forecast_weight'] -= line['quantity_product_uom'] * weight_per_product[line['product_id'][0]]
+
+        for line in incoming_move_lines:
+            result[self.browse(line['location_dest_id'][0])]['forecast_weight'] += line['quantity_product_uom'] * weight_per_product[line['product_id'][0]]
+
         return result
 
 

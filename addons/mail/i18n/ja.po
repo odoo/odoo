@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Wil Odoo, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2024
 # 
 msgid ""
@@ -881,7 +881,7 @@ msgstr "連絡先を追加..."
 #: code:addons/mail/static/src/core/common/discuss_app_model.js:0
 #, python-format
 msgid "Add or join a channel"
-msgstr "チャネルを追加または参加する"
+msgstr "チャネルを追加または参加"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_add_signature
@@ -2072,8 +2072,10 @@ msgstr "会社"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/web/activity_mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -3579,10 +3581,11 @@ msgstr "フィールド"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
-"フィールド \"(field)r モデル%(model)r 上は多対1タイプおよび期間の計算用にtracking=Trueを有する必要があります。"
+"フィールド \"%(field)s\"モデル "
+"\"%(model)s\"上は多対1タイプおよび期間の計算用にtracking=Trueを有する必要があります。"
 
 #. module: mail
 #. odoo-python
@@ -7783,7 +7786,7 @@ msgstr "予定＆完了済とする"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "Schedule Activity"
-msgstr "活動をスケジュール"
+msgstr "活動を予定する"
 
 #. module: mail
 #. odoo-javascript
@@ -7792,7 +7795,7 @@ msgstr "活動をスケジュール"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "Schedule Activity On Selected Records"
-msgstr "選択済レコード上で活動をスケジュール"
+msgstr "選択済レコード上で活動を予定する"
 
 #. module: mail
 #. odoo-javascript
@@ -7806,21 +7809,21 @@ msgstr "あなたが物事を成し遂げるのを助けるために活動をス
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
 #, python-format
 msgid "Schedule activity"
-msgstr "活動をスケジュール"
+msgstr "活動を予定する"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Schedule an Activity"
-msgstr "ある活動をスケジュール　"
+msgstr "活動を予定する　"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #, python-format
 msgid "Schedule an activity"
-msgstr "活動をスケジュールする"
+msgstr "活動を予定する"
 
 #. module: mail
 #. odoo-javascript
@@ -7839,7 +7842,7 @@ msgstr "計画日"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
 msgid "Scheduled Message"
-msgstr "予定されたメッセージ"
+msgstr "予定済メッセージ"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_message_schedule_action
@@ -7847,7 +7850,7 @@ msgstr "予定されたメッセージ"
 #: model:ir.ui.menu,name:mail.mail_message_schedule_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_search
 msgid "Scheduled Messages"
-msgstr "予定されたメッセージ"
+msgstr "予定済メッセージ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date

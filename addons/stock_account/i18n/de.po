@@ -641,7 +641,7 @@ msgstr "Referenz"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr "Zugehöriges Produkte"
+msgstr "Zugehöriges Produkt"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -1117,6 +1117,17 @@ msgid ""
 " must define one before processing this operation."
 msgstr ""
 "Sie haben für Ihre Produktkategorie kein Bestandseingangskonto definiert. "
+"Sie müssen eines definieren, bevor Sie diesen Vorgang ausführen können."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr ""
+"Sie haben für Ihre Produktkategorie kein Ausgangsbewertungskonto definiert. "
 "Sie müssen eines definieren, bevor Sie diesen Vorgang ausführen können."
 
 #. module: stock_account

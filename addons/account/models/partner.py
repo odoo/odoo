@@ -76,10 +76,10 @@ class AccountFiscalPosition(models.Model):
     @api.constrains('zip_from', 'zip_to')
     def _check_zip(self):
         for position in self:
-            if position.zip_from and position.zip_to and position.zip_from > position.zip_to:
-                raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
+            if bool(position.zip_from) != bool(position.zip_to) or position.zip_from > position.zip_to:
+                raise ValidationError(_('Invalid "Zip Range", You have to configure both "From" and "To" values for the zip range and "To" should be greater than "From".'))
 
-    @api.constrains('country_id', 'state_ids', 'foreign_vat')
+    @api.constrains('country_id', 'country_group_id', 'state_ids', 'foreign_vat')
     def _validate_foreign_vat_country(self):
         for record in self:
             if record.foreign_vat:
@@ -92,15 +92,28 @@ class AccountFiscalPosition(models.Model):
                             raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."))
                         else:
                             raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country."))
+                if record.country_group_id and record.country_id:
+                    if record.country_id not in record.country_group_id.country_ids:
+                        raise ValidationError(_("You cannot create a fiscal position with a country outside of the selected country group."))
 
                 similar_fpos_domain = [
                     *self.env['account.fiscal.position']._check_company_domain(record.company_id),
                     ('foreign_vat', '!=', False),
-                    ('country_id', '=', record.country_id.id),
                     ('id', '!=', record.id),
                 ]
+
+                if record.country_group_id:
+                    foreign_vat_country = self.country_group_id.country_ids.filtered(lambda c: c.code == record.foreign_vat[:2].upper())
+                    if not foreign_vat_country:
+                        raise ValidationError(_("The country code of the foreign VAT number does not match any country in the group."))
+                    similar_fpos_domain += [('country_group_id', '=', record.country_group_id.id), ('country_id', '=', foreign_vat_country.id)]
+                elif record.country_id:
+                    similar_fpos_domain += [('country_id', '=', record.country_id.id), ('country_group_id', '=', False)]
+
                 if record.state_ids:
                     similar_fpos_domain.append(('state_ids', 'in', record.state_ids.ids))
+                else:
+                    similar_fpos_domain.append(('state_ids', '=', False))
 
                 similar_fpos_count = self.env['account.fiscal.position'].search_count(similar_fpos_domain)
                 if similar_fpos_count:
@@ -135,23 +148,24 @@ class AccountFiscalPosition(models.Model):
     @api.onchange('country_id')
     def _onchange_country_id(self):
         if self.country_id:
-            self.zip_from = self.zip_to = self.country_group_id = False
+            self.zip_from = self.zip_to = False
             self.state_ids = [(5,)]
             self.states_count = len(self.country_id.state_ids)
 
     @api.onchange('country_group_id')
     def _onchange_country_group_id(self):
         if self.country_group_id:
-            self.zip_from = self.zip_to = self.country_id = False
+            self.zip_from = self.zip_to = False
             self.state_ids = [(5,)]
 
     @api.model
     def _convert_zip_values(self, zip_from='', zip_to=''):
-        max_length = max(len(zip_from), len(zip_to))
-        if zip_from.isdigit():
-            zip_from = zip_from.rjust(max_length, '0')
-        if zip_to.isdigit():
-            zip_to = zip_to.rjust(max_length, '0')
+        if zip_from and zip_to:
+            max_length = max(len(zip_from), len(zip_to))
+            if zip_from.isdigit():
+                zip_from = zip_from.rjust(max_length, '0')
+            if zip_to.isdigit():
+                zip_to = zip_to.rjust(max_length, '0')
         return zip_from, zip_to
 
     @api.model_create_multi
@@ -175,38 +189,45 @@ class AccountFiscalPosition(models.Model):
     def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
         if not country_id:
             return False
+
+        def local_get_fpos_by_region(base_domain):
+            null_state_dom = state_domain = [('state_ids', '=', False)]
+            null_zip_dom = zip_domain = [('zip_from', '=', False), ('zip_to', '=', False)]
+            null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
+
+            if zipcode:
+                zip_domain = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
+
+            if state_id:
+                state_domain = [('state_ids', '=', state_id)]
+
+            domain_country = base_domain + [('country_id', '=', country_id)]
+            domain_group = base_domain + [('country_group_id.country_ids', '=', country_id)]
+
+            # Build domain to search records with exact matching criteria
+            fpos = self.search(domain_country + state_domain + zip_domain, limit=1)
+            # return records that fit the most the criteria, and fallback on less specific fiscal positions if any can be found
+            if not fpos and state_id:
+                fpos = self.search(domain_country + null_state_dom + zip_domain, limit=1)
+            if not fpos and zipcode:
+                fpos = self.search(domain_country + state_domain + null_zip_dom, limit=1)
+            if not fpos and state_id and zipcode:
+                fpos = self.search(domain_country + null_state_dom + null_zip_dom, limit=1)
+
+            # fallback: country group with no state/zip range
+            if not fpos:
+                fpos = self.search(domain_group + null_state_dom + null_zip_dom, limit=1)
+
+            if not fpos:
+                # Fallback on catchall (no country, no group)
+                fpos = self.search(base_domain + null_country_dom, limit=1)
+            return fpos
+
         base_domain = self._prepare_fpos_base_domain(vat_required)
-        null_state_dom = state_domain = [('state_ids', '=', False)]
-        null_zip_dom = zip_domain = [('zip_from', '=', False), ('zip_to', '=', False)]
-        null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
-
-        if zipcode:
-            zip_domain = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
-
-        if state_id:
-            state_domain = [('state_ids', '=', state_id)]
-
-        domain_country = base_domain + [('country_id', '=', country_id)]
-        domain_group = base_domain + [('country_group_id.country_ids', '=', country_id)]
-
-        # Build domain to search records with exact matching criteria
-        fpos = self.search(domain_country + state_domain + zip_domain, limit=1)
-        # return records that fit the most the criteria, and fallback on less specific fiscal positions if any can be found
-        if not fpos and state_id:
-            fpos = self.search(domain_country + null_state_dom + zip_domain, limit=1)
-        if not fpos and zipcode:
-            fpos = self.search(domain_country + state_domain + null_zip_dom, limit=1)
-        if not fpos and state_id and zipcode:
-            fpos = self.search(domain_country + null_state_dom + null_zip_dom, limit=1)
-
-        # fallback: country group with no state/zip range
-        if not fpos:
-            fpos = self.search(domain_group + null_state_dom + null_zip_dom, limit=1)
-
-        if not fpos:
-            # Fallback on catchall (no country, no group)
-            fpos = self.search(base_domain + null_country_dom, limit=1)
-        return fpos
+        if fpos := local_get_fpos_by_region([('company_id', '=', self.env.company.id)] + base_domain):
+            return fpos
+        else:
+            return local_get_fpos_by_region(base_domain)
 
     def _get_vat_valid(self, delivery, company=None):
         """ Hook for determining VAT validity with more complex VAT requirements """
@@ -512,6 +533,7 @@ class ResPartner(models.Model):
             else:
                 partner.currency_id = self.env.company.currency_id
 
+    name = fields.Char(tracking=True)
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.",
         groups='account.group_account_invoice,account.group_account_readonly')

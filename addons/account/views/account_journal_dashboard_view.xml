@@ -274,7 +274,7 @@
                             </div>
                             <div class="row" t-if="dashboard.nb_misc_operations > 0">
                                 <div id="dashboard_bank_cash_misc_total" class="col text-start">
-                                    <a type="object" name="open_bank_difference_action">Misc. Operations</a>
+                                    <a type="object" name="open_bank_difference_action" t-att-class="dashboard.misc_class">Misc. Operations</a>
                                 </div>
                                 <div class="col-auto text-end">
                                     <span><t t-out="dashboard.misc_operations_balance"/></span>

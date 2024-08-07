@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged, common, Form
 from odoo.tools import float_compare, float_is_zero
-from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -456,31 +457,6 @@ class TestRepair(common.TransactionCase):
             else:
                 self.assertTrue(float_is_zero(sol.qty_delivered, 2))
 
-    def test_repair_return(self):
-        """Tests functionality of creating a repair directly from a return picking,
-        i.e. repair can be made and defaults to appropriate return values. """
-        # test return
-        # Required for `location_dest_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
-        picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = self.stock_warehouse.in_type_id
-        picking_form.partner_id = self.res_partner_1
-        picking_form.location_dest_id = self.stock_location_14
-        return_picking = picking_form.save()
-
-        # create repair
-        res_dict = return_picking.action_repair_return()
-        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']))
-        repair_form.product_id = self.product_product_3
-        repair = repair_form.save()
-
-        # test that the resulting repairs are correctly created
-        self.assertEqual(len(return_picking.repair_ids), 1, "A repair order should have been created and linked to original return.")
-        for repair in return_picking.repair_ids:
-            self.assertEqual(repair.location_id, return_picking.location_dest_id, "Repair location should have defaulted to return destination location")
-            self.assertEqual(repair.partner_id, return_picking.partner_id, "Repair customer should have defaulted to return customer")
-            self.assertEqual(repair.picking_type_id, return_picking.picking_type_id.warehouse_id.repair_type_id)
-
     def test_repair_compute_product_uom(self):
         repair = self.env['repair.order'].create({
             'product_id': self.product_product_3.id,
@@ -576,6 +552,9 @@ class TestRepair(common.TransactionCase):
         res_dict = return_picking.action_repair_return()
         repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']), view=res_dict['view_id'])
         repair_form.product_id = product
+        # The repair needs to be saved to ensure the context is correctly set.
+        repair = repair_form.save()
+        repair_form = Form(repair)
         with repair_form.move_ids.new() as move:
             move.product_id = self.product_product_5
             move.product_uom_qty = 1.0
@@ -586,6 +565,9 @@ class TestRepair(common.TransactionCase):
         repair.action_repair_end()
         self.assertEqual(repair.state, 'done')
         self.assertEqual(len(return_picking.move_ids), 1, "Parts added to the repair order shoudln't be added to the return picking")
+        self.assertEqual(repair.location_id, return_picking.location_dest_id, "Repair location should have defaulted to return destination location")
+        self.assertEqual(repair.partner_id, return_picking.partner_id, "Repair customer should have defaulted to return customer")
+        self.assertEqual(repair.picking_type_id, return_picking.picking_type_id.warehouse_id.repair_type_id)
 
     def test_repair_with_product_in_package(self):
         """
@@ -685,3 +667,35 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(repair_order.name, "PT1/00002")
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
+
+    def test_repair_components_lots_show_in_invoice(self):
+        """
+        Test that the lots of the components of a repair order are shown in the invoice
+        """
+        quant = self.create_quant(self.product_storable_serial, 1)
+        quant.action_apply_inventory()
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'product_uom': self.product_product_3.uom_id.id,
+            'partner_id': self.res_partner_12.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_storable_serial.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                })
+            ],
+        })
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        repair_order.action_create_sale_order()
+        sale_order = repair_order.sale_order_id
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        res = invoice._get_invoiced_lot_values()
+        self.assertEqual(len(res), 1, "The invoice should have one line")
+        self.assertEqual(res[0]['product_name'], self.product_storable_serial.display_name, "The product name should be the same")
+        self.assertEqual(res[0]['lot_name'], quant.lot_id.name, "The lot name should be the same")

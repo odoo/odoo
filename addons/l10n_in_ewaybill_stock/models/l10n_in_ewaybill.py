@@ -391,6 +391,12 @@ class Ewaybill(models.Model):
         self._write_successfully_response({'state': 'cancel'})
         self._cr.commit()
 
+    def _l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(self, response):
+        if self.distance == 0 and (alert := response.get('data').get('alert')):
+            pattern = r", Distance between these two pincodes is \d+, "
+            if re.fullmatch(pattern, alert) and (dist := int(re.search(r'\d+', alert).group())) > 0:
+                self.distance = dist
+
     def _generate_ewaybill_direct(self):
         ewb_api = EWayBillApi(self.company_id)
         generate_json = self._ewaybill_generate_direct_json()
@@ -402,7 +408,7 @@ class Ewaybill(models.Model):
             return False
         self._handle_internal_warning_if_present(response)  # In case of error 604
         response_data = response.get("data")
-        self._write_successfully_response({
+        response_values = {
             'name': response_data.get("ewayBillNo"),
             'state': 'generated',
             'ewaybill_date': self._indian_timezone_to_odoo_utc(
@@ -411,7 +417,9 @@ class Ewaybill(models.Model):
             'ewaybill_expiry_date': self._indian_timezone_to_odoo_utc(
                 response_data.get('validUpto')
             ),
-        })
+        }
+        self._l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(response)
+        self._write_successfully_response(response_values)
         self._cr.commit()
 
     @api.model
@@ -419,6 +427,8 @@ class Ewaybill(models.Model):
         """
             This method is used to convert date from Indian timezone to UTC
         """
+        if not str_date:
+            return False
         try:
             local_time = datetime.strptime(str_date, time_format)
         except ValueError:
@@ -521,8 +531,7 @@ class Ewaybill(models.Model):
                 for key, fun in key_paired_function
                 for place, partner in partner_detail
             }
-
-        return {
+        ewaybill_json = {
                 # document details
                 "supplyType": self.supply_type,
                 "subSupplyType": self.type_id.sub_type_code,
@@ -558,6 +567,9 @@ class Ewaybill(models.Model):
                 "actToStateCode": self._get_partner_state_code(self.partner_ship_to_id),
                 "actFromStateCode": self._get_partner_state_code(self.partner_ship_from_id),
         }
+        if self.type_id.sub_type_code == '8':
+            ewaybill_json["subSupplyDesc"] = self.type_description
+        return ewaybill_json
 
     def _prepare_ewaybill_transportation_json_payload(self):
         # only pass transporter details when value is exist

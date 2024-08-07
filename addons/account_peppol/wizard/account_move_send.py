@@ -133,6 +133,19 @@ class AccountMoveSend(models.TransientModel):
 
         return super().action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, **kwargs)
 
+    def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
+        # Extends account
+        # to update `peppol_move_state` as `skipped` to show users that something went wrong
+        # because those moves that failed XML/PDF files generation are not sent via Peppol
+        moves_failed_file_generation = self.env['account.move']
+        for move, move_data in moves_data.items():
+            if move_data.get('send_peppol') and move_data.get('blocking_error'):
+                moves_failed_file_generation |= move
+
+        moves_failed_file_generation.peppol_move_state = 'skipped'
+
+        return super()._hook_if_errors(moves_data, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+
     @api.model
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
         # Overrides 'account'

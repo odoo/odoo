@@ -15,6 +15,7 @@ import { reposition } from "@web/core/position_hook";
 import { archParseBoolean } from "@web/views/utils";
 import { pick } from "@web/core/utils/objects";
 import { useSortable } from "@web/core/utils/sortable_owl";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
 
@@ -48,7 +49,13 @@ export class PropertiesField extends Component {
         });
         this.propertiesRef = useRef("properties");
 
-        this._saveInitialPropertiesValues();
+        let currentResId;
+        useRecordObserver((record) => {
+            if (currentResId !== record.resId) {
+                currentResId = record.resId;
+                this._saveInitialPropertiesValues();
+            }
+        });
 
         const field = this.props.record.fields[this.props.name];
         this.definitionRecordField = field.definition_record;
@@ -580,7 +587,7 @@ export class PropertiesField extends Component {
     }
 
     async onPropertyCreate() {
-        if (!(await this.checkDefinitionWriteAccess())) {
+        if (!this.state.canChangeDefinition || !(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
                 _t("You need edit access on the parent document to update these property fields"),
                 { type: "warning" }

@@ -59,7 +59,8 @@ class PaymentRefundWizard(models.TransientModel):
     def _compute_support_refund(self):
         for wizard in self:
             p_support_refund = wizard.transaction_id.provider_id.support_refund
-            pm_support_refund = wizard.transaction_id.payment_method_id.support_refund
+            pm = wizard.transaction_id.payment_method_id
+            pm_support_refund = (pm.primary_payment_method_id or pm).support_refund
             if not p_support_refund or not pm_support_refund:
                 wizard.support_refund = False
             elif p_support_refund == 'full_only' or pm_support_refund == 'full_only':

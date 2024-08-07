@@ -101,6 +101,8 @@ class AccountAnalyticAccount(models.Model):
                 existing_aal.unlink()
         # Create new lines from remaining distributions
         for accounts, percentage in distribution.items():
+            if not accounts:
+                continue
             account_field_values = {}
             for account in accounts:
                 new_amount = account.root_plan_id._calculate_distribution_amount(amount, percentage, total_percentages[plan], distribution_on_each_plan)

@@ -9,10 +9,12 @@
              template are rendered. -->
             <div class="d-flex flex-column flex-lg-row gap-2 mb-2">
                 <label
-                    t-if="this.props.attribute_values.length === 1 &amp;&amp; isSelectedPTAVCustom() || this.props.attribute_values.length &gt; 1"
+                    t-if="showValuesChoice || (
+                        this.props.attribute_values.length === 1 &amp;&amp; isSelectedPTAVCustom())"
                     t-out="this.props.attribute.name"
-                    t-attf-class="fw-bold text-break #{this.props.attribute_values.length === 1 &amp;&amp; hasPTAVCustom() ? '' : 'w-lg-25'}"/>
-                <t t-if="this.props.attribute_values.length > 1" t-call="{{getPTAVTemplate()}}"/>
+                    t-attf-class="fw-bold text-break #{this.props.attribute_values.length === 1
+                        &amp;&amp; hasPTAVCustom() ? '' : 'col-lg-3'}"/>
+                <t t-if="showValuesChoice" t-call="{{getPTAVTemplate()}}"/>
             </div>
             <input
                 class="o_input w-75 mb-4 ms-lg-auto"

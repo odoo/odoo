@@ -21,28 +21,28 @@
         <record id="livechat_channel_session_4_message_1" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_4"/>
-            <field name="message_type">email</field>
             <field name="author_id" ref="base.partner_demo_portal"/>
             <field name="body">Hello, I'm looking for a software that can be easily updated with my needs.</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=15)" name="date"/>
         </record>
         <record id="livechat_channel_session_4_message_2" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_4"/>
-            <field name="message_type">email</field>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="body">Hello Joel Willis, you're at the right place! You can customize Odoo using our Studio application in just a few clicks.</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=16)" name="date"/>
         </record>
         <record id="livechat_channel_session_4_message_3" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_4"/>
-            <field name="message_type">email</field>
             <field name="author_id" ref="base.partner_demo_portal"/>
             <field name="body">Thanks for the info, I'll look into it!</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=17)" name="date"/>
         </record>
         <record id="livechat_channel_session_4_rating_message" model="mail.message">

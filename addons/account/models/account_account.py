@@ -7,7 +7,10 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.sql import SQL
 from bisect import bisect_left
 from collections import defaultdict
+import logging
 import re
+
+_logger = logging.getLogger(__name__)
 
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
@@ -98,7 +101,14 @@ class AccountAccount(models.Model):
     note = fields.Text('Internal Notes', tracking=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=False,
         default=lambda self: self.env.company)
-    tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting", ondelete='restrict')
+    tag_ids = fields.Many2many(
+        comodel_name='account.account.tag',
+        relation='account_account_account_tag',
+        string='Tags',
+        help="Optional tags you may want to assign for custom reporting",
+        ondelete='restrict',
+        tracking=True,
+    )
     group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=True,
                                help="Account prefixes can determine account groups.")
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True, precompute=True)
@@ -713,6 +723,12 @@ class AccountAccount(models.Model):
 
         return super(AccountAccount, self).write(vals)
 
+    def _load_records_write(self, values):
+        if 'prefix' in values:
+            del values['code_digits']
+            del values['prefix']
+        super()._load_records_write(values)
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_journal_items(self):
         if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
@@ -767,13 +783,12 @@ class AccountAccount(models.Model):
 class AccountGroup(models.Model):
     _name = "account.group"
     _description = 'Account Group'
-    _parent_store = True
     _order = 'code_prefix_start'
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
     parent_id = fields.Many2one('account.group', index=True, ondelete='cascade', readonly=True, check_company=True)
-    parent_path = fields.Char(index=True, unaccent=False)
+    parent_path = fields.Char(index=True, unaccent=False)  # unused, removed in saas-17.3
     name = fields.Char(required=True, translate=True)
     code_prefix_start = fields.Char(compute='_compute_code_prefix_start', readonly=False, store=True, precompute=True)
     code_prefix_end = fields.Char(compute='_compute_code_prefix_end', readonly=False, store=True, precompute=True)
@@ -873,7 +888,7 @@ class AccountGroup(models.Model):
             children_ids.write({'parent_id': record.parent_id.id})
         return super().unlink()
 
-    def _adapt_accounts_for_account_groups(self, account_ids=None):
+    def _adapt_accounts_for_account_groups(self, account_ids=None, company=None):
         """Ensure consistency between accounts and account groups.
 
         Find and set the most specific group matching the code of the account.
@@ -882,20 +897,25 @@ class AccountGroup(models.Model):
         """
         if self.env.context.get('delay_account_group_sync'):
             return
-        company_ids = account_ids.company_id.root_id.ids if account_ids else self.company_id.ids
-        account_ids = account_ids.ids if account_ids else []
-        if not company_ids and not account_ids:
-            return
+
         self.flush_model()
         self.env['account.account'].flush_model(['code'])
 
-        account_where_clause = ''
-        where_params = [tuple(company_ids)]
+        if company:
+            company_ids = company.root_id.ids
+        elif account_ids:
+            company_ids = account_ids.company_id.root_id.ids
+            account_ids = account_ids.ids
+        else:
+            company_ids = self.company_id.ids
+            account_ids = []
+        if not company_ids and not account_ids:
+            return
+        account_where_clause = SQL('account.company_id IN %s', tuple(company_ids))
         if account_ids:
-            account_where_clause = 'AND account.id IN %s'
-            where_params.append(tuple(account_ids))
+            account_where_clause = SQL('%s AND account.id IN %s', account_where_clause, tuple(account_ids))
 
-        self._cr.execute(f"""
+        self._cr.execute(SQL("""
             WITH relation AS (
                  SELECT DISTINCT ON (account.id)
                         account.id AS account_id,
@@ -906,17 +926,17 @@ class AccountGroup(models.Model):
                      ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
                     AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
                     AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
-                  WHERE account.company_id IN %s {account_where_clause}
+                  WHERE %s
                ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
             )
             UPDATE account_account
                SET group_id = rel.group_id
               FROM relation rel
              WHERE account_account.id = rel.account_id
-        """, where_params)
+        """, account_where_clause))
         self.env['account.account'].invalidate_model(['group_id'], flush=False)
 
-    def _adapt_parent_account_group(self):
+    def _adapt_parent_account_group(self, company=None):
         """Ensure consistency of the hierarchy of account groups.
 
         Find and set the most specific parent for each group.
@@ -925,10 +945,13 @@ class AccountGroup(models.Model):
         """
         if self.env.context.get('delay_account_group_sync'):
             return
-        if not self:
+
+        company_ids = company.ids if company else self.company_id.ids
+        if not company_ids:
             return
+
         self.flush_model()
-        query = """
+        query = SQL("""
             WITH relation AS (
                 SELECT DISTINCT ON (child.id)
                        child.id AS child_id,
@@ -940,17 +963,21 @@ class AccountGroup(models.Model):
                    AND parent.code_prefix_end >= LEFT(child.code_prefix_end, char_length(parent.code_prefix_end))
                    AND parent.id != child.id
                    AND parent.company_id = child.company_id
-                 WHERE child.company_id IN %(company_ids)s
+                 WHERE child.company_id IN %s
+                   AND child.parent_id IS DISTINCT FROM parent.id -- IMPORTANT avoid to update if nothing changed
               ORDER BY child.id, char_length(parent.code_prefix_start) DESC
             )
             UPDATE account_group child
                SET parent_id = relation.parent_id
               FROM relation
-             WHERE child.id = relation.child_id;
-        """
-        self.env.cr.execute(query, {'company_ids': tuple(self.company_id.ids)})
-        self.invalidate_model(['parent_id'])
-        self.search([('company_id', 'in', self.company_id.ids)])._parent_store_update()
+             WHERE child.id = relation.child_id
+         RETURNING child.id
+        """, tuple(company_ids))
+        self.env.cr.execute(query)
+
+        updated_rows = self.env.cr.fetchall()
+        if updated_rows:
+            self.invalidate_model(['parent_id'])
 
 
 class AccountRoot(models.Model):

@@ -12,7 +12,7 @@
             </t>
             <!-- Filter -->
             <t t-if="this.env.searchModel.searchMenuTypes.has('filter')">
-                <div class="o_dropdown_container o_filter_menu w-100 w-lg-auto px-3 mb-4 mb-lg-0 border-end">
+                <div class="o_dropdown_container o_filter_menu w-100 h-100 w-lg-auto px-3 mb-4 mb-lg-0 border-end">
                     <div class="px-3 fs-5 mb-2">
                         <i class="me-2 text-primary" t-att-class="facet_icons.filter"/>
                         <h5 class="o_dropdown_title d-inline">Filters</h5>
@@ -44,6 +44,7 @@
                                                 checked="item.isActive"
                                                 parentClosingMode="'none'"
                                                 t-esc="item.description"
+                                                 title="item.description.length > 15 ? item.description : ''"
                                                 onSelected="() => this.onFilterSelected({ itemId: item.id })"
                             />
                         </t>
@@ -57,7 +58,7 @@
             </t>
             <!-- GroupBy -->
             <t t-if="this.env.searchModel.searchMenuTypes.has('groupBy')">
-                <div class="o_dropdown_container o_group_by_menu w-100 w-lg-auto px-3 mb-4 mb-lg-0 border-end">
+                <div class="o_dropdown_container o_group_by_menu w-100 h-100 w-lg-auto px-3 mb-4 mb-lg-0 border-end">
                     <div class="px-3 fs-5 mb-2">
                         <i class="me-2 text-action" t-att-class="facet_icons.groupBy"/>
                         <h5 class="o_dropdown_title d-inline">Group By</h5>
@@ -81,6 +82,7 @@
                                                         checked="option.isActive ? true : false"
                                                         parentClosingMode="'none'"
                                                         t-esc="option.description"
+                                                        title="option.description.length > 15 ? option.description : ''"
                                                         onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
                                     />
                                     <t t-set="subGroup" t-value="option.groupNumber"/>
@@ -92,6 +94,7 @@
                                                 checked="item.isActive"
                                                 parentClosingMode="'none'"
                                                 t-esc="item.description"
+                                                title="item.description.length > 15 ? item.description : ''"
                                                 onSelected="() => this.onGroupBySelected({ itemId: item.id })"
                             />
                         </t>
@@ -105,7 +108,7 @@
             </t>
             <!-- Comparison -->
             <t t-if="showComparisonMenu">
-                <div class="o_dropdown_container o_comparison_menu w-100 w-lg-auto px-3 border-end">
+                <div class="o_dropdown_container o_comparison_menu w-100 h-100 w-lg-auto px-3 border-end">
                     <div class="px-3 fs-5 mb-2">
                         <i class="me-2 text-danger" t-att-class="facet_icons.comparison"/>
                         <h5 class="o_dropdown_title d-inline">Comparison</h5>
@@ -115,6 +118,7 @@
                                             checked="item.isActive"
                                             parentClosingMode="'none'"
                                             t-esc="item.description"
+                                            title="item.description.length > 15 ? item.description : ''"
                                             onSelected="() => this.onComparisonSelected(item.id)"
                         />
                     </t>
@@ -122,7 +126,7 @@
             </t>
             <!-- Favorite -->
             <t t-if="this.env.searchModel.searchMenuTypes.has('favorite')">
-                <div class="o_dropdown_container o_favorite_menu w-100 w-lg-auto px-3">
+                <div class="o_dropdown_container o_favorite_menu w-100 h-100 w-lg-auto px-3">
                     <div class="px-3 fs-5 mb-2">
                         <i class="me-2 text-favourite" t-att-class="facet_icons.favorite"/>
                         <h5 class="o_dropdown_title d-inline">Favorites</h5>
@@ -139,7 +143,7 @@
                                                 onSelected="() => this.onFavoriteSelected(item.id)"
                             >
                                 <span class="d-flex p-0 align-items-center justify-content-between">
-                                    <span t-out="item.description" class="text-truncate"/>
+                                    <span t-out="item.description" t-att-title="item.description.length > 15 ? item.description : ''" class="text-truncate"/>
                                     <i class="ms-1 o_icon_right fa fa-trash-o"
                                        title="Delete item"
                                        t-on-click.stop="() => this.openConfirmationDialog(item.id)"

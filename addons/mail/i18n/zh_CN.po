@@ -6,9 +6,9 @@
 # 何彬 <vnsoft.he@gmail.com>, 2023
 # Chill Liao <chill421@qq.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
+# Chloe Wang, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
@@ -600,14 +600,14 @@ msgstr "仅限于用户组“%(groupFullName)s”使用"
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Account"
-msgstr "科目"
+msgstr "账户"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_category
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__category
 msgid "Action"
-msgstr "操作"
+msgstr "动作"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction
@@ -633,7 +633,7 @@ msgstr "动作窗口视图"
 msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
-msgstr "操作可能触发特定的行为，如打开日历视图或在上传单据时自动标记"
+msgstr "动作可能触发特定的行为，如打开日历视图或在上传单据时自动标记"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -3567,9 +3567,10 @@ msgstr "字段"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
-msgstr "模型 %(model)r 上的字段 \"(field)r 必须是 Many2one 类型，并且在计算持续时间时跟踪=True。"
+msgstr ""
+"字段 “%(field)s”（位于模型 “%(model)s”内）必须是Many2one 类型，而且计算持续时间设为 tracking=True。"
 
 #. module: mail
 #. odoo-python
@@ -6370,7 +6371,7 @@ msgstr "操作数量"
 msgid ""
 "Number of days/week/month before executing the action. It allows to plan the"
 " action deadline."
-msgstr "在执行该操作前几天/周/月，允许操的截止日期。"
+msgstr "在执行该动作前几天/周/月，允许操的截止日期。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error_counter
@@ -10276,8 +10277,10 @@ msgstr "无法在抽象模型上定义模板：%s"
 #. odoo-python
 #: code:addons/mail/models/ir_attachment.py:0
 #, python-format
-msgid "You may not unlink attachments from other people's messages"
-msgstr ""
+msgid ""
+"You may not unlink or modify the content of attachments from other people's "
+"messages"
+msgstr "不得取消链接或修改他人邮件的附件内容"
 
 #. module: mail
 #. odoo-javascript
@@ -10708,7 +10711,7 @@ msgstr "不正确配置的别名"
 #: code:addons/mail/models/models.py:0
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr "错误地别名配置（未知参考记录）"
+msgstr "不正确配置的别名（未知参考记录）"
 
 #. module: mail
 #. odoo-python
@@ -10958,7 +10961,7 @@ msgstr "未知错误"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "unknown target model %s"
-msgstr "位置目标模型 %s"
+msgstr "未知目标模型 %s"
 
 #. module: mail
 #. odoo-javascript

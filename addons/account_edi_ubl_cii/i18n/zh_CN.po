@@ -3,10 +3,10 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
+# Wil Odoo, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Chloe Wang, 2024
 # 
 msgid ""
@@ -628,7 +628,7 @@ msgstr "各发票行应有且只有一个税项。"
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line should have a product or a label."
-msgstr "每个发票明细行应该有一个产品或一个标签."
+msgstr "每个发票行应该有一个产品或一个标签。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -762,6 +762,15 @@ msgstr "Peppol EAS 代码 9955 已弃用。请改用 0007。"
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid ""
+"Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
+"instead."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
 "Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
 msgstr "Peppol EAS 代码 0212 和 0213 已弃用。请改用 0216。"
 
@@ -798,6 +807,15 @@ msgstr "SI-UBL 2.0（NLCIUS）"
 #, python-format
 msgid "Tax '%s' is invalid: %s"
 msgstr "税项 '%s' 无效：%s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr "Peppol 终端点无效。它应包含正好为 10 位数字（公司注册号）。预期格式如：1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -896,7 +914,7 @@ msgstr "不支持发票中包含具有负单位价格的行。您需要设置一
 msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
-msgstr "发票已转换为贷项凭单，且数量已撤销。"
+msgstr "发票已转换为退款通知，且数量已撤销。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

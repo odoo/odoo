@@ -335,13 +335,14 @@ QUnit.module("Fields", (hooks) => {
      * change the properties value).
      */
     QUnit.test("properties: no access to parent", async function (assert) {
+        assert.expect(6);
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return false;
             }
         }
 
-        await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -359,6 +360,16 @@ QUnit.module("Fields", (hooks) => {
             actionMenus: {},
         });
 
+        patchWithCleanup(form.env.services.notification, {
+            add: (message, options) => {
+                assert.strictEqual(
+                    message,
+                    "You need edit access on the parent document to update these property fields"
+                );
+                assert.strictEqual(options.type, "warning");
+            },
+        });
+
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
 
@@ -366,8 +377,15 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target,
             ".o_cp_action_menus span:contains(Add Properties)",
-            "Show Add Properties btn in cog menu",
+            "Show Add Properties btn in cog menu"
         );
+        const menuItems = target.querySelectorAll(".o_cp_action_menus span.o_menu_item");
+        for (const item of menuItems) {
+            if (item.textContent === "Add Properties") {
+                await click(item, null);
+                break;
+            }
+        }
 
         const editButton = field.querySelector(".o_field_property_open_popover");
         assert.notOk(editButton, "The edit definition button must not be in the view");
@@ -412,7 +430,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target,
             ".o_cp_action_menus span:contains(Add Properties)",
-            "The add button must be in the cog menu",
+            "The add button must be in the cog menu"
         );
 
         const editButton = field.querySelectorAll(".o_field_property_open_popover");
@@ -2564,7 +2582,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target,
             ".o_field_property_add button",
-            "The add button must be in the view",
+            "The add button must be in the view"
         );
     });
 
@@ -2581,7 +2599,7 @@ QUnit.module("Fields", (hooks) => {
             });
             await toggleActionMenu(target);
             assert.containsNone(target, ".o_cp_action_menus span:contains(Add Properties)");
-        },
+        }
     );
 
     QUnit.test("properties: onChange return new properties", async function (assert) {
@@ -2647,6 +2665,69 @@ QUnit.module("Fields", (hooks) => {
                 (el) => el.value
             ),
             ["Hello"]
+        );
+    });
+
+    QUnit.test("new property, change record, change property type", async (assert) => {
+        const records = serverData.models.partner.records;
+        records[0].properties = [];
+        records[1].properties = [];
+        async function mockRPC(route, { method, args }) {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
+                return true;
+            }
+            if (method === "web_save") {
+                if (args[0][0] === 1) {
+                    // On property creation in first record, add a copy with empty value in
+                    // second record
+                    records[1].properties.push({
+                        ...args[1].properties[0],
+                    });
+                    records[1].properties[0].value = "";
+                } else {
+                    // When changing type of second record's properties, also apply it to
+                    // first record and the property's value should be reset on name change
+                    records[0].properties[0].type = args[1].properties[0].type;
+                    if (records[0].properties[0].name !== args[1].properties[0].name) {
+                        records[0].properties[0].value = null;
+                    }
+                    records[0].properties[0].name = args[1].properties[0].name;
+                }
+            }
+        }
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            resIds: [1, 2],
+            serverData,
+            arch: `
+                <form>
+                    <field name="company_id"/>
+                    <field name="properties"/>
+                </form>`,
+            mockRPC,
+            actionMenus: {},
+        });
+        // Add a new property
+        await toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus span .fa-cogs");
+
+        await editInput(target, ".o_property_field .o_property_field_value input", "aze");
+        await click(target, ".o_pager_next");
+        assert.strictEqual(
+            target.querySelector(".o_property_field .o_property_field_value input").value,
+            ""
+        );
+        // Change second record's property type
+        await click(target, ".o_property_field:nth-child(1) .o_field_property_open_popover");
+        await changeType(target, "integer");
+
+        await click(target, ".o_pager_previous");
+        assert.strictEqual(
+            target.querySelector(".o_property_field .o_property_field_value input").value,
+            "0"
         );
     });
 });

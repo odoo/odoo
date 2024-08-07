@@ -17,7 +17,8 @@ def _reopen(self, res_id, model, context=None):
     # save original model in context, because selecting the list of available
     # templates requires a model in context
     context = dict(context or {}, default_model=model)
-    return {'type': 'ir.actions.act_window',
+    return {'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_id': res_id,
             'res_model': self._name,
@@ -319,6 +320,9 @@ class MailComposer(models.TransientModel):
             # update email_from first as it is the main used field currently
             if composer.template_id.email_from:
                 composer._set_value_from_template('email_from')
+            # switch to a template without email_from -> fallback on current user as default
+            elif composer.template_id:
+                composer.email_from = self.env.user.email_formatted
             # removing template or void from -> fallback on current user as default
             elif not composer.template_id or not composer.email_from:
                 composer.email_from = self.env.user.email_formatted

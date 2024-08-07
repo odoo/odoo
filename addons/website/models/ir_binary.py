@@ -26,6 +26,16 @@ class IrBinary(models.AbstractModel):
 
     def _find_record_check_access(self, record, access_token):
         if 'website_published' in record._fields and record.sudo().website_published:
-            return record.sudo()
+            return record
 
         return super()._find_record_check_access(record, access_token)
+
+    def _record_to_stream(self, record, field_name):
+        if (
+            'website_published' in record._fields
+            and field_name in record._fields
+            and not record._fields[field_name].groups
+            and record.sudo().website_published
+        ):
+            record = record.sudo()
+        return super()._record_to_stream(record, field_name)
