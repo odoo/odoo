@@ -103,18 +103,35 @@ class PosOrder(models.Model):
                     "to_invoice": False,
                 })
 
-        pos_order = False
+        pos_order = existing_order
         combo_child_uuids_by_parent_uuid = self._prepare_combo_line_uuids(order)
 
+<<<<<<< 18.0
         if not existing_order:
+||||||| 6eac4c5aaa985bd5dc2225b39b469a3b306a64ab
+        if not existing_order:
+            if order.get('state'):
+                order['state'] = 'draft'
+=======
+        if not pos_order:
+            if order.get('state'):
+                order['state'] = 'draft'
+>>>>>>> acbda34c0ea0afb6a54fbb302c5e2f142d56b09b
             pos_order = self.create({
                 **{key: value for key, value in order.items() if key != 'name'},
                 'pos_reference': order.get('name')
             })
             pos_order = pos_order.with_company(pos_order.company_id)
         else:
+<<<<<<< 18.0
             pos_order = self.env['pos.order'].browse(order.get('id'))
 
+||||||| 6eac4c5aaa985bd5dc2225b39b469a3b306a64ab
+            pos_order = self.env['pos.order'].browse(order.get('id'))
+            line_ids = [line[2]['id'] for line in order.get('lines') if line[2].get('id')]
+            pos_order.lines.filtered(lambda line: line.id not in line_ids).unlink()
+=======
+>>>>>>> acbda34c0ea0afb6a54fbb302c5e2f142d56b09b
             # Save line before to avoid exception if a line is deleted
             # when vals change the state to 'paid'
             if order.get('lines'):

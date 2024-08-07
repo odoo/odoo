@@ -552,13 +552,22 @@ patch(PosStore.prototype, {
             rule.validProductIds = new Set(rule.raw.valid_product_ids);
         }
 
+<<<<<<< 18.0
         this.models["loyalty.card"].addEventListener("create", (records) => {
             records = records.ids.map((record) => this.models["loyalty.card"].get(record));
             this.computePartnerCouponIds(records);
+||||||| 6eac4c5aaa985bd5dc2225b39b469a3b306a64ab
+        this.models["loyalty.card"].addEventListener("create", (records) => {
+            this.computePartnerCouponIds(records);
+=======
+        this.models["loyalty.card"].addEventListener("create", (data) => {
+            this.computePartnerCouponIds(data);
+>>>>>>> acbda34c0ea0afb6a54fbb302c5e2f142d56b09b
         });
         this.computePartnerCouponIds();
     },
 
+<<<<<<< 18.0
     computeDiscountProductIdsForAllRewards(data) {
         const products = this.models[data.model].readMany(data.ids);
         for (const reward of this.models["loyalty.reward"].getAll()) {
@@ -567,6 +576,12 @@ patch(PosStore.prototype, {
     },
 
     computePartnerCouponIds(loyaltyCards = null) {
+||||||| 6eac4c5aaa985bd5dc2225b39b469a3b306a64ab
+    computePartnerCouponIds(loyaltyCards = null) {
+=======
+    computePartnerCouponIds(data) {
+        const loyaltyCards = this.models["loyalty.card"].readMany(data?.ids || []);
+>>>>>>> acbda34c0ea0afb6a54fbb302c5e2f142d56b09b
         const cards = loyaltyCards || this.models["loyalty.card"].getAll();
         for (const card of cards) {
             if (!card.partner_id || card.id < 0) {

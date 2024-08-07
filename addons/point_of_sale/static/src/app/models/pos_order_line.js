@@ -189,6 +189,7 @@ export class PosOrderline extends Base {
 
         const disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
+<<<<<<< 18.0
         this.order_id.recomputeOrderData();
         this.setDirty();
     }
@@ -201,6 +202,10 @@ export class PosOrderline extends Base {
         if (this.price_subtotal_incl !== prices.priceWithTax) {
             this.price_subtotal_incl = prices.priceWithTax;
         }
+||||||| 6eac4c5aaa985bd5dc2225b39b469a3b306a64ab
+=======
+        this.setDirty();
+>>>>>>> acbda34c0ea0afb6a54fbb302c5e2f142d56b09b
     }
 
     // sets the qty of the product. The qty will be rounded according to the
