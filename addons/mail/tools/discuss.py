@@ -52,12 +52,12 @@ class Store:
     The keys of data are the name of models as defined in mail JS code, and the values are any
     format supported by store.insert() method (single dict or list of dict for each model name)."""
 
-    def __init__(self, data=None, values=None, /, *, as_thread=False, **kwargs):
+    def __init__(self, data=None, values=None, /, *, as_thread=False, delete=False, **kwargs):
         self.data = {}
         if data:
-            self.add(data, values, as_thread=as_thread, **kwargs)
+            self.add(data, values, as_thread=as_thread, delete=delete, **kwargs)
 
-    def add(self, data, values=None, /, *, as_thread=False, **kwargs):
+    def add(self, data, values=None, /, *, as_thread=False, delete=False, **kwargs):
         """Adds data to the store.
         - data can be a recordset, in which case the model must have a _to_store() method, with
           optional kwargs passed to it.
@@ -66,19 +66,27 @@ class Store:
         - as_thread: whether to call "_thread_to_store" or "_to_store"
         """
         if isinstance(data, models.Model):
-            if values:
-                assert len(data) == 1, f"expected single record {data} with values"
+            if values is not None:
+                assert len(data) == 1, f"expected single record {data} with values: {values}"
                 assert not kwargs, f"expected empty kwargs with recordset {data} values: {kwargs}"
+                assert not delete, f"deleted not expected for {data} with values: {values}"
+            if delete:
+                assert len(data) == 1, f"expected single record {data} with delete"
+                assert values is None, f"for {data} expected empty value with delete: {values}"
             if as_thread:
-                if values is None:
-                    data._thread_to_store(self, **kwargs)
-                else:
+                if delete:
+                    self.add("mail.thread", {"id": data.id, "model": data._name}, delete=True)
+                elif values is not None:
                     self.add("mail.thread", {"id": data.id, "model": data._name, **values})
-            else:
-                if values is None:
-                    data._to_store(self, **kwargs)
                 else:
+                    data._thread_to_store(self, **kwargs)
+            else:
+                if delete:
+                    self.add(data._name, {"id": data.id}, delete=True)
+                elif values is not None:
                     self.add(data._name, {"id": data.id, **values})
+                else:
+                    data._to_store(self, **kwargs)
             return self
         if isinstance(data, dict):
             assert not values, f"expected empty values with dict {data}: {values}"
@@ -98,6 +106,7 @@ class Store:
         # handle singleton model: update single record in place
         if not ids:
             assert isinstance(values, dict), f"expected dict for singleton {model_name}: {values}"
+            assert not delete, f"Singleton {model_name} cannot be deleted"
             if model_name not in self.data:
                 self.data[model_name] = {}
             self._add_values(values, model_name)
@@ -116,12 +125,17 @@ class Store:
             if index not in self.data[model_name]:
                 self.data[model_name][index] = {}
             self._add_values(vals, model_name, index)
+            if delete:
+                self.data[model_name][index]["_DELETE"] = True
+            elif "_DELETE" in self.data[model_name][index]:
+                del self.data[model_name][index]["_DELETE"]
         return self
 
     def _add_values(self, values, model_name, index=None):
         """Adds values to the store for a given model name and index."""
         target = self.data[model_name][index] if index else self.data[model_name]
         for key, val in values.items():
+            assert key != "_DELETE", f"invalid key {key} in {model_name}: {values}"
             subrecord_kwargs = {}
             if isinstance(val, tuple) and len(val) and val[0] is ONE:
                 subrecord, as_thread, only_id, subrecord_kwargs = val[1], val[2], val[3], val[4]
