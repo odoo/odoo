@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, queryAll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
 test("should do nothing if no format is set", async () => {
@@ -668,5 +668,12 @@ describe("Toolbar", () => {
         expect(getContent(el)).toBe(
             `<p>this <span class="random-class">is[ a ]UX</span> test.</p>`
         );
+    });
+
+    test("Remove format button should be the last one in the decoration button group", async () => {
+        await setupEditor("<p>[abc]</p>");
+        await waitFor(".o-we-toolbar");
+        const formatButtons = queryAll(".o-we-toolbar .btn-group[name='decoration'] .btn");
+        expect(formatButtons.at(-1)).toHaveAttribute("name", "remove_format");
     });
 });

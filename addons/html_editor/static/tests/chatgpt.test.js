@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { setupEditor } from "./_helpers/editor";
-import { press, waitFor } from "@odoo/hoot-dom";
+import { press, queryAll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { insertText } from "./_helpers/user_actions";
@@ -21,10 +21,10 @@ const openFromPowerbox = async (editor) => {
     press("Enter");
 };
 const openFromToolbar = async () => {
-    await contains(".o-we-toolbar [name='ai'] .btn").click();
+    await contains(".o-we-toolbar .btn[name='chatgpt']").click();
 };
 const translateButtonFromToolbar = async () => {
-    await contains(".o-we-toolbar [name='translate'] .btn").click();
+    await contains(".o-we-toolbar .btn[name='translate']").click();
 };
 const translateDropdownFromToolbar = async () => {
     await contains(".lang:contains('French (BE) / Français (BE)')").click();
@@ -70,10 +70,10 @@ test("ChatGPT dialog opens in translate mode when clicked on translate button in
     });
 
     // Expect the toolbar to not have translate dropdown.
-    expect(".o-we-toolbar [name='translate'] .o-dropdown").toHaveCount(0);
+    expect(".o-we-toolbar [name='translate'].o-dropdown").toHaveCount(0);
 
     // Expect the toolbar to have translate button.
-    expect(".o-we-toolbar [name='translate'] .btn").toHaveCount(1);
+    expect(".o-we-toolbar .btn[name='translate']").toHaveCount(1);
 
     // Select Translate button in the toolbar.
     await translateButtonFromToolbar();
@@ -100,7 +100,7 @@ test("ChatGPT dialog opens in translate mode when clicked on translate dropdown 
     });
 
     // Expect the toolbar to have translate dropdown.
-    expect(".o-we-toolbar [name='translate'] .o-dropdown").toHaveCount(1);
+    expect(".o-we-toolbar [name='translate'].o-dropdown").toHaveCount(1);
 
     // Select Translate button in the toolbar.
     await translateButtonFromToolbar();
@@ -274,4 +274,14 @@ test("ChatGPT toolbar button should have icon and 'AI' text", async () => {
 
     // Text should be present.
     expect(".o-we-toolbar .btn[name='chatgpt']").toHaveText("AI");
+});
+
+test("Translate button should be positioned before ChatGPT button in toolbar", async () => {
+    await setupEditor("<p>[abc]</p>");
+    await waitFor(".o-we-toolbar");
+
+    const buttons = queryAll(".o-we-toolbar .btn-group[name='ai'] .btn");
+    expect(buttons).toHaveCount(2);
+    expect(buttons[0]).toHaveAttribute("name", "translate");
+    expect(buttons[1]).toHaveAttribute("name", "chatgpt");
 });
