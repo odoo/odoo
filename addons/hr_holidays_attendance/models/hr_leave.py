@@ -76,14 +76,11 @@ class HRLeave(models.Model):
 
         res = super().action_draft()
         overtime_leaves.overtime_id.sudo().unlink()
-        for leave in overtime_leaves:
-            overtime = self.env['hr.attendance.overtime'].sudo().create({
-                'employee_id': leave.employee_id.id,
-                'date': leave.date_from,
-                'adjustment': True,
-                'duration': -1 * leave.number_of_hours_display
-            })
-            leave.sudo().overtime_id = overtime.id
+        return res
+
+    def action_confirm(self):
+        res = super().action_confirm()
+        self._check_overtime_deductible(self)
         return res
 
     def action_refuse(self):
