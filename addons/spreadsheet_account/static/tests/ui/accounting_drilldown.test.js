@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import * as spreadsheet from "@odoo/o-spreadsheet";
+import { registries, constants } from "@odoo/o-spreadsheet";
 import { selectCell, setCellContent } from "@spreadsheet/../tests/helpers/commands";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { doMenuAction } from "@spreadsheet/../tests/helpers/ui";
@@ -13,7 +13,8 @@ import { mockService } from "@web/../tests/web_test_helpers";
 describe.current.tags("headless");
 defineSpreadsheetAccountModels();
 
-const { cellMenuRegistry } = spreadsheet.registries;
+const { cellMenuRegistry } = registries;
+const { DEFAULT_LOCALE } = constants;
 
 const serverData = getAccountingData();
 
@@ -115,6 +116,40 @@ test("Create drill down domain when month date is a reference", async () => {
     setCellContent(model, "A2", '=ODOO.BALANCE("100", A1)');
     await waitForDataLoaded(model);
     selectCell(model, "A2");
+    await doMenuAction(cellMenuRegistry, ["move_lines_see_records"], env);
+    expect.verifySteps(["spreadsheet_move_line_action"]);
+});
+
+test("Create drill down domain when date uses a non-standard locale", async () => {
+    mockService("action", { doAction: () => {} });
+    const model = await createModelWithDataSource({
+        serverData,
+        mockRPC: async function (route, args) {
+            if (args.method === "spreadsheet_move_line_action") {
+                expect.step("spreadsheet_move_line_action");
+                expect(args.args).toEqual([
+                    {
+                        codes: ["100"],
+                        company_id: null,
+                        include_unposted: false,
+                        date_range: {
+                            range_type: "day",
+                            year: 2002,
+                            month: 2,
+                            day: 1,
+                        },
+                    },
+                ]);
+                return {};
+            }
+        },
+    });
+    const env = model.config.custom.env;
+    env.model = model;
+    const myLocale = { ...DEFAULT_LOCALE, dateFormat: "d/mmm/yyyy" };
+    model.dispatch("UPDATE_LOCALE", { locale: myLocale });
+    setCellContent(model, "A1", '=ODOO.BALANCE("100", DATE(2002, 2, 1))');
+    await waitForDataLoaded(model);
     await doMenuAction(cellMenuRegistry, ["move_lines_see_records"], env);
     expect.verifySteps(["spreadsheet_move_line_action"]);
 });
