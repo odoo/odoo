@@ -8,19 +8,6 @@
 }
 
 .screen-login-header {
-    .screen-login-timer {
-        background-color: #dbdae6;
-        .timer-hours {
-            height: $navbar-height;
-        }
-        .timer-date-container {
-            height:$navbar-height;
-            div {
-                height:calc(#{$navbar-height} / 2);
-            }
-        }
-    }
-
     .screen-login-logo {
         img {
             height:$navbar-height;
@@ -28,30 +15,10 @@
     }
 }
 
-.screen-login{
-    height: fit-content;
-}
-
-.screen-login img,
 .screen-login button{
-    width: 180px;
-}
-.screen-login button{
-    height: 150px;
+    min-width: 240px;
 }
 
 .container {
     background-color: red !important;
-}
-
-@media screen and (max-width: 576px) {
-    .screen-login {
-        height: 450px;
-    }
-}
-
-.login-element {
-    width:180px;
-    height: 150px;
-    cursor:pointer;
 }

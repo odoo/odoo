@@ -3,24 +3,16 @@
 }
 
 .product-list {
-    grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+
+    @include media-breakpoint-down(xl) {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
 }
 
-.actionpad {
-    width: 40%;
-}
-.subpads .numpad{
-    width: 60%;
-}
 @media only screen and (max-width: 992px) {
     .product-list.grid {
         grid-template-columns: repeat(3, 1fr);
-    }
-    .actionpad {
-        width: 30%;
-    }
-    .subpads .numpad{
-        width: 70%;
     }
 }
 
@@ -34,4 +26,9 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+
+.pay-order-button {
+    min-height: 70px;
 }

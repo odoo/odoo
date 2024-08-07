@@ -13,7 +13,7 @@
             </div>
             <t t-set-slot="footer" >
                 <div class="button highlight btn btn-lg btn-primary" t-on-click="confirm">Confirm</div>
-                <h4 class="total-section rounded py-2">
+                <h4 class="total-section ms-auto py-2">
                     Total <t t-esc="env.utils.formatCurrency(computeTotal())"/>
                 </h4>
             </t>

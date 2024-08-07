@@ -2,81 +2,88 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.Navbar">
-        <div class="pos-topheader d-flex align-items-center p-0 m-0 bg-white border-bottom">
-            <div t-if="!ui.isSmall" class="pos-branding d-flex justify-content-between h-100 p-0 my-0 text-start">
-                <img class="pos-logo h-75 ms-3 align-self-center" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
-            </div>
-            <button t-if="pos.showBackButton()" class="back-button btn d-flex align-items-center" t-on-click="onClickBackButton">
-                <i class="fa fa-2x fa-angle-left pb-1" role="img" aria-label="Go Back" title="Go Back" />
-            </button>
-            <div class="my-2 d-flex overflow-hidden">
+        <div class="pos-topheader d-flex align-items-center justify-content-between px-2 py-1 m-0 bg-white border-bottom">
+            <div class="pos-leftheader d-flex">
                 <t t-if="showTabs()">
-                    <button class="btn btn-primary mx-2" t-on-click="newFloatingOrder">
-                        <i class="fa fa-plus-circle" aria-hidden="true"/>
+                    <div t-attf-class=" d-flex overflow-x-auto {{ ui.isSmall ? 'flex-shrink-0' : 'flex-shrink-1'}}">
+                        <ListContainer items="getFloatingOrders()" t-slot-scope="scope">
+                            <t t-set="order" t-value="scope.item"/>
+                            <button t-esc="order.getFloatingOrderName()" t-attf-class="{{pos.get_order()?.id === order.id ? 'btn-secondary active' : ''}}" class="btn btn-lg lh-lg tab text-nowrap" t-on-click="() => this.selectFloatingOrder(order)"/>
+                        </ListContainer>
+                    </div>
+                    <button class="btn btn-light btn-lg border-transparent lh-lg" style="padding: 0.3125rem 0.625rem;" t-on-click="newFloatingOrder">
+                        <i class="fa fa-fw fa-lg fa-plus-circle" aria-hidden="true"/>
                     </button>
-                    <ListContainer items="getFloatingOrders()" t-slot-scope="scope">
-                        <t t-set="order" t-value="scope.item"/>
-                        <button t-if="pos.get_order()?.id === order.id" class="btn tab btn-secondary active d-flex align-items-center" t-on-click="() => this.editOrderNote(this.pos.get_order())">
-                            <i class="fa fa-pencil-square-o me-1" aria-hidden="true" /><t t-esc="pos.get_order().getFloatingOrderName()"/>
-                        </button>
-                        <button t-else="" t-esc="order.getFloatingOrderName()" class="btn btn-secondary" t-on-click="() => this.selectFloatingOrder(order)"/>
-                    </ListContainer>
                 </t>
             </div>
-            <div class="pos-rightheader d-flex ms-auto h-100 px-1" t-if="pos.shouldShowNavbarButtons()">
-                <div class="status-buttons d-flex flex-grow-1  justify-content-end h-100">
-                    <button class="btn btn-outline my-2" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen'" t-on-click="onClickScan">
-                        <i class="fa fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
-                    </button>
+            <div t-if="!ui.isSmall"  class="pos-centerheader d-flex justify-content-center">
+                <img class="pos-logo pos-logo mw-100" height="42" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
+            </div>
+            <div t-if="pos.shouldShowNavbarButtons()"
+                class="pos-rightheader d-flex justify-content-end"
+                t-att-class="{ 'ms-auto': !ui.isSmall, 'me-1 position-absolute end-0 width-100 pos-nav-small': ui.isSmall }"
+            >
+                <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
                     <Input tModel="[pos, 'searchProductWord']"
-                        class="'p-2'"
-                        isSmall="ui.isSmall"
-                        placeholder.translate="Search products..."
-                        icon="{type: 'fa', value: 'fa-search'}"
-                        debounceMillis="500"
-                        t-if="pos.showSearchButton()" />
-                    <CashierName />
-                    <ProxyStatus t-if="pos.config.use_proxy" />
-                    <button t-if="customerFacingDisplayButtonIsShown" t-on-click="openCustomerDisplay" class="btn btn-light fa fa-fw fa-desktop text-success pe-4" title="Customer Display" />
-                    
-                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light rounded-0 d-flex gap-1" t-on-click="onSyncNotificationClick">
+                    class="'p-0'"
+                    isSmall="ui.isSmall"
+                    placeholder.translate="Search products..."
+                    icon="{type: 'fa', value: 'fa-search fa-lg fa-fw'}"
+                    debounceMillis="500"
+                    t-if="pos.showSearchButton()" />
+                    <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen'" t-on-click="onClickScan">
+                        <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
+                    </button>
+                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none" t-on-click="onSyncNotificationClick">
                         <span t-if="this.pos.data.network.unsyncData.length > 0" t-esc="this.pos.data.network.unsyncData.length" /> 
                         <div t-if="this.pos.data.network.offline" class="fa fa-fw fa-chain-broken text-danger"/>
                         <div t-else="" class="fa fa-fw fa-spin fa-circle-o-notch text-warning"/>
                     </div>
-                </div>
-                <Dropdown>
-                    <button class="btn btn-outline fa fa-bars" />
-                    <t t-set-slot="content">
-                        <DropdownItem t-if="!isDisplayStandalone" onSelected="() => window.open(this.appUrl)">
-                            Install App
-                        </DropdownItem>
-                        <DropdownItem onSelected="() => this.pos.onTicketButtonClick()">
-                            Orders <span t-if="orderCount gt 0" class="badge text-bg-info rounded-pill py-1 ms-2" t-esc="orderCount"/>
-                        </DropdownItem>
-                        <DropdownItem t-if="showCashMoveButton" onSelected="() => this.onCashMoveButtonClick()">
-                            Cash In/Out
-                        </DropdownItem>
-                        <DropdownItem t-if="showToggleProductView" onSelected="() => this.toggleProductView()">
-                            Switch Product View
-                        </DropdownItem>
-                        <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
-                            Create Product
-                        </DropdownItem>
-                        <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()">
-                            Print Report
-                        </DropdownItem>
-                        <DropdownItem onSelected="() => pos.closePos()">
-                            Backend
-                        </DropdownItem>
-                        <DropdownItem onSelected="() => this.closeSession()">
-                            Close Register
-                        </DropdownItem>
-                        <DropdownItem t-if="this.env.debug" onSelected="() => debug.toggleWidget()">
-                            Debug Window
-                        </DropdownItem>
-                    </t>
-                </Dropdown>
+                    <!-- No need to show the cashier name on small screens -->
+                    <CashierName t-if="!ui.isSmall"/>
+                    <Dropdown>
+                        <button class="btn btn-light btn-lg lh-lg">
+                            <i class="fa fa-fw fa-lg fa-bars"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <div t-if="customerFacingDisplayButtonIsShown" class="d-flex gap-2 p-2 border-bottom">
+                                <ProxyStatus t-if="pos.config.use_proxy" />
+                                <span t-on-click="openCustomerDisplay" class="btn btn-secondary btn-lg w-100 text-center" title="Customer Display">
+                                    <i class="fa fa-fw fa-desktop"/>
+                                </span>
+                            </div>
+                            <div class="p-2 pos-burger-menu-items">
+                                <DropdownItem t-if="!isDisplayStandalone" onSelected="() => window.open(this.appUrl)">
+                                    Install App
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => this.pos.onTicketButtonClick()">
+                                    Orders <span t-if="orderCount gt 0" class="badge text-bg-info rounded-pill py-1 ms-2 float-end" t-esc="orderCount"/>
+                                </DropdownItem>
+                                <DropdownItem t-if="showCashMoveButton" onSelected="() => this.onCashMoveButtonClick()">
+                                    Cash In/Out
+                                </DropdownItem>
+                                <DropdownItem t-if="showToggleProductView" onSelected="() => this.toggleProductView()">
+                                    Switch Product View
+                                </DropdownItem>
+                                <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
+                                    Create Product
+                                </DropdownItem>
+                                <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()">
+                                    Print Report
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => pos.closePos()">
+                                    Backend
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => this.closeSession()">
+                                    Close Register
+                                </DropdownItem>
+                                <DropdownItem t-if="this.env.debug" onSelected="() => debug.toggleWidget()">
+                                    Debug Window
+                                </DropdownItem>
+                            </div>
+                        </t>
+                    </Dropdown>
+                </div> 
             </div>
         </div>
     </t>

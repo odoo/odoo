@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { BillScreen } from "@pos_restaurant/app/bill_screen/bill_screen";
+import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 
 patch(ControlButtons.prototype, {
     setup() {
@@ -56,6 +57,22 @@ patch(ControlButtons.prototype, {
 
         this.currentOrder.takeaway = isTakeAway;
         this.currentOrder.update({ fiscal_position_id: isTakeAway ? takeawayFp : defaultFp });
+    },
+    editOrderNote(order) {
+        this.dialog.add(TextInputPopup, {
+            title: _t("Edit order note"),
+            placeholder: _t("Emma's Birthday Party"),
+            startingValue: order.note,
+            getPayload: async (newName) => {
+                if (typeof order.id == "number") {
+                    this.pos.data.write("pos.order", [order.id], {
+                        note: newName,
+                    });
+                } else {
+                    order.note = newName;
+                }
+            },
+        });
     },
 });
 patch(ControlButtons, {

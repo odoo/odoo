@@ -1,7 +1,7 @@
 export function back() {
     return {
         content: "go back to the products",
-        trigger: ".pos-topheader .back-button",
+        trigger: ".actionpad .back-button",
         run: "click",
     };
 }

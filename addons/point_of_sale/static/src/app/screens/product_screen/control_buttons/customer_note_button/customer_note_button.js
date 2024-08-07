@@ -15,7 +15,6 @@ export class OrderlineNoteButton extends Component {
         class: { type: String, optional: true },
     };
     static defaultProps = {
-        icon: "fa fa-sticky-note",
         label: _t("Customer Note"),
         getter: (orderline) => orderline.get_customer_note(),
         setter: (orderline, note) => orderline.set_customer_note(note),

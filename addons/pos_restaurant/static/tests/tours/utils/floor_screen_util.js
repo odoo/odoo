@@ -39,7 +39,7 @@ export function clickEditButton(button) {
     return [
         {
             content: "add table",
-            trigger: `.edit-buttons i[aria-label=${button}]`,
+            trigger: `.edit-buttons i[aria-label="${button}"]`,
             run: "click",
         },
     ];
@@ -57,7 +57,7 @@ export function selectedFloorIs(name) {
     return [
         {
             content: `selected floor is '${name}'`,
-            trigger: `.floor-selector .button-floor.btn-primary:contains("${name}")`,
+            trigger: `.button-floor.active:contains("${name}")`,
         },
     ];
 }

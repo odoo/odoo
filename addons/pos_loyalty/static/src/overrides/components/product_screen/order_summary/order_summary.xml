@@ -8,12 +8,19 @@
         </xpath>
         <xpath expr="//OrderWidget/t[@t-set-slot='details']" position="inside">
             <t t-foreach="pos.get_order()?.getLoyaltyPoints() or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
-                <div t-if="_loyaltyStat.points.won || _loyaltyStat.points.spent" class="w-50 d-flex flex-column flex-grow-1">
-                    <div t-esc="_loyaltyStat.points.name" class="loyalty-points-title text-start fw-bolder" />
-                    <div class="loyalty-points d-flex justify-content-left gap-2">
-                        <span class='loyalty-points-won text-success' t-if='_loyaltyStat.points.won'>+<t t-esc='_loyaltyStat.points.won'/></span>
-                        <span class='loyalty-points-spent text-danger' t-if='_loyaltyStat.points.spent'> -<t t-esc='_loyaltyStat.points.spent'/></span>
-                        <span class='loyalty-points-total text-primary'>= <t t-esc='_loyaltyStat.points.total'/></span>
+                <div t-if="_loyaltyStat.points.won || _loyaltyStat.points.spent" class="d-flex justify-content-between mt-2 px-3 py-2 rounded-3 bg-white">
+                    <div t-esc="_loyaltyStat.points.name" class="loyalty-points-title fs-4 fw-bolder"/>
+                    <div class="d-flex gap-1 fw-bold">
+                        <div t-if='_loyaltyStat.points.won' class="loyalty-points loyalty-points-won">
+                            <span class='value text-success'>+<t t-esc='_loyaltyStat.points.won'/></span>
+                        </div>
+                        <div t-if='_loyaltyStat.points.spent' class="loyalty-points loyalty-points-won">
+                            <span class='value text-danger'>-<t t-esc='_loyaltyStat.points.spent'/></span>
+                        </div>
+                        =
+                        <div class="loyalty-points loyalty-points-totaltext-end fw-bolder">
+                            <span class='value'><t t-esc='_loyaltyStat.points.total'/></span>
+                        </div>
                     </div>
                 </div>
             </t>
