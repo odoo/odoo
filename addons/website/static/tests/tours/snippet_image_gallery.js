@@ -157,5 +157,5 @@ registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
     trigger: ":iframe .s_image_gallery:has(img[data-index='3'])",
 }, {
     content: "Check that the thumbnail of the first image has not been changed",
-    trigger: ":iframe .s_image_gallery ul.carousel-indicators li:first-child[style='background-image: url(/web/image/website.library_image_08)']",
+    trigger: ":iframe .s_image_gallery div.carousel-indicators button:first-child[style='background-image: url(/web/image/website.library_image_08)']",
 }]);

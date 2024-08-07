@@ -161,7 +161,7 @@ MEGA_MENU_UP_TO_DATE = """
         </div>
     </section>
 
-<section class="s_image_gallery o_slideshow s_image_gallery_show_indicators s_image_gallery_indicators_rounded pt24 o_colored_level" data-vcss="001" data-columns="3" style="height: 500px; overflow: hidden;" data-snippet="s_image_gallery" data-name="Image Gallery">
+<section class="s_image_gallery o_slideshow pt24 o_colored_level" data-vcss="001" data-columns="3" style="height: 500px; overflow: hidden;" data-snippet="s_image_gallery" data-name="Image Gallery">
         <div class="container">
         </div>
     </section>
