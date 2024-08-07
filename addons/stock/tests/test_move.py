@@ -3104,24 +3104,11 @@ class StockMove(TransactionCase):
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_pack_cust.id)])
         backordered_move = backorder.move_ids
 
-        # due to the rounding, the backordered quantity is 0.999 ; we shoudln't be able to reserve
-        # 0.999 on a tracked by serial number quant
+        # Due to the rounding, the backordered quantity is 0.999, which will be
+        # rounded up to reserve 1.0 because the product is tracked with serial numbers.
         backordered_move._action_assign()
-        self.assertEqual(backordered_move.quantity, 0)
+        self.assertEqual(backordered_move.quantity, 1.0)
 
-        # force the serial number and validate
-        lot3 = self.env['stock.lot'].search([('name', '=', "lot3")])
-        backorder.write({'move_line_ids': [(0, 0, {
-            'product_id': self.product_serial.id,
-            'product_uom_id': self.uom_unit.id,
-            'quantity': 1,
-            'lot_id': lot3.id,
-            'package_id': False,
-            'result_package_id': False,
-            'location_id': backordered_move.location_id.id,
-            'location_dest_id': backordered_move.location_dest_id.id,
-            'move_id': backordered_move.id,
-        })]})
         backorder.move_ids.picked = True
         backorder.button_validate()
 
