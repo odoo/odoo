@@ -21,7 +21,7 @@ export class ProductImageViewer extends Dialog {
         this.images = [...this.props.images].map(image => {
             return {
                 src: image.dataset.zoomImage || image.src,
-                thumbnailSrc: image.src.replace('/image_1024/', '/image_128/'),
+                thumbnailSrc: image.src.replace('/image_1024/', '/image_256/'),
             };
         });
         this.state = useState({
