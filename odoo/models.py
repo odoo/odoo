@@ -3061,6 +3061,9 @@ class BaseModel(metaclass=MetaModel):
             else:
                 return SQL("(%s IS NULL OR %s = FALSE)", sql_field, sql_field)
 
+        if (field.relational or field.name == 'id') and operator in ('=', '!=') and isinstance(value, NewId):
+            return SQL("TRUE") if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("FALSE")
+
         # comparison with null
         # except for some basic types, where we need to check the empty value
         if (field.relational or field.name == 'id') and operator in ('=', '!=') and not value:
