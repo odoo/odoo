@@ -900,7 +900,7 @@ test("format total in hh:mm when measure is unit_amount", async () => {
     checkLegend(view, "Unit Amount");
     checkLabels(view, ["Total"]);
     expect(fieldAttrs[measure].widget).toBe("float_time", { message: "should be a float_time widget" });
-    checkYTicks(view, ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00"]);
+    checkYTicks(view, ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00"]);
     checkTooltip(view, { title: "Unit Amount", lines: [{ label: "Total", value: "08:00" }] }, 0);
 });
 
