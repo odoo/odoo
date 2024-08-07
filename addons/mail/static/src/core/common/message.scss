@@ -11,6 +11,10 @@
     }
 }
 
+.o-mail-Message-date {
+    opacity: 75%;
+}
+
 .o-mail-Message-seenContainer {
     font-size: 0.65rem;
     right: 2px;
@@ -49,12 +53,32 @@
 .o-mail-Message-body {
     font-family: "text-emoji", $font-family-base;
 
+    &:not(.o-note) {
+        padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+        padding-right: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+    }
+
     & > p {
         margin-bottom: 0 !important;
 
         &:last-of-type:has(~ .o-mail-Message-edited) {
             display: inline-block;
         }
+    }
+}
+
+.o-mail-Message-bubble {
+    --border-opacity: 0.15;
+
+    &.o-blue {
+        background-color: mix($o-view-background-color, $info, 87.5%) !important;
+    }
+    &.o-green {
+        background-color: mix($o-view-background-color, $success, 87.5%) !important;
+    }
+    &.o-orange {
+        --border-opacity: 0.3;
+        background-color: mix($o-view-background-color, $warning, 75%) !important;
     }
 }
 
