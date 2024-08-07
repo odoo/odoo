@@ -16,8 +16,8 @@
                         resModel="this.resModel"
                         route="this.uploadFilesRoute"
                     >
-                        <button t-if="isPreviewing" type="button" class="btn btn-secondary">Load File</button>
-                        <button t-else="" type="button" class="btn btn-primary o_import_file">Upload File</button>
+                        <button t-if="isPreviewing" type="button" class="btn btn-secondary">Load Data File</button>
+                        <button t-else="" type="button" class="btn btn-primary o_import_file">Upload Data File</button>
                     </FileInput>
                     <button t-on-click="() => this.exit()" type="button" class="btn btn-secondary">Cancel</button>
                 </t>
@@ -30,6 +30,9 @@
                         isBatched="isBatched"
                         onOptionChanged.bind="onOptionChanged"
                         onReload.bind="reload"
+                        hasBinaryFields="hasBinaryFields"
+                        binaryFilesParams="model.binaryFilesParams"
+                        onBinaryFilesParamsChanged.bind="(name, value) => model.onBinaryFilesParamsChanged(name, value)"
                     />
                     <ImportDataContent
                         columns="model.columns"
