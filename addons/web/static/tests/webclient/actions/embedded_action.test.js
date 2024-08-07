@@ -340,3 +340,20 @@ test("a view coming from a embedded can be saved in the embedded actions", async
         message: "Should have 2 embedded actions in the embedded + the dropdown button",
     });
 });
+
+test("the embedded actions should not be displayed when switching view", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    browser.localStorage.clear();
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_embedded_actions .dropdown").click();
+    await contains(
+        ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
+    ).click();
+    await contains(".o_embedded_actions > button > span:contains('Embedded Action 2')").click();
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains("button.o_switch_view.o_kanban").click();
+    expect(".o_embedded_actions").toHaveCount(0, {
+        message: "The embedded actions menu should not be displayed",
+    });
+});
