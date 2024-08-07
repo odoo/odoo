@@ -506,9 +506,12 @@ class CustomerPortal(Controller):
             'Content-Type': 'application/pdf' if report_type == 'pdf' else 'text/html',
             'Content-Length': len(report),
         }
-        if report_type == 'pdf' and download:
+        if report_type == 'pdf':
             filename = "%s.pdf" % (re.sub(r'\W+', '-', model._get_report_base_filename()))
-            headers['Content-Disposition'] = content_disposition(filename)
+            if download:
+                headers['Content-Disposition'] = content_disposition(filename)
+            else:
+                headers['Content-Disposition'] = "inline; filename*=UTF-8''" + filename
         return headers
 
 def get_error(e, path=''):
