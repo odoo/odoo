@@ -4625,3 +4625,7 @@ class MailThread(models.AbstractModel):
         if thread.exists() and thread.sudo(False).has_access(mode):
             return thread
         return self.browse()
+
+    def _get_forbidden_access_extra(self, messages_to_check):
+        forbidden = self.env["mail.message"].browse()
+        return forbidden

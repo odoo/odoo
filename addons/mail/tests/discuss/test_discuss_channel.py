@@ -1,16 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import base64
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
+
 
 from odoo import Command, fields
 from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import HttpCase, tagged, users
 from odoo.tools import html_escape, mute_logger
 
@@ -23,6 +25,8 @@ class TestChannelInternals(MailCommon, HttpCase):
         super().setUpClass()
         cls.maxDiff = None
         cls.test_channel = cls.env['discuss.channel'].with_context(cls._test_context).channel_create(name='Channel', group_id=None)
+        cls.test_channel_readonly = cls.env["discuss.channel"].with_context(cls._test_context).channel_create(name="Channel", group_id=None)
+        cls.test_channel_readonly.read_only = True
         cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Test Partner',
             'email': 'test_customer@example.com',
@@ -846,3 +850,55 @@ class TestChannelInternals(MailCommon, HttpCase):
             ],
         ):
             test_group.execute_command_help()
+
+    @users('employee')
+    def test_channel_read_only_create_multi(self):
+        with self.assertRaises(AccessError):
+            self.env["mail.message"].create([
+                {
+                    "body": "test",
+                    "model": "discuss.channel",
+                    "res_id": self.test_channel.id,
+                    "author_id": self.test_partner.id,
+                    "message_type": "comment",
+                },
+                {
+                    "body": "test",
+                    "model": "discuss.channel",
+                    "res_id": self.test_channel_readonly.id,
+                    "author_id": self.test_partner.id,
+                    "message_type": "comment",
+                }
+            ])
+
+    @users('employee')
+    def test_message_post_in_readonly_channel(self):
+        channel = self.env["discuss.channel"].create({
+            "group_public_id": None,
+            "name": "public channel",
+            "read_only": True,
+        })
+        with self.assertRaises(AccessError):
+            channel.message_post(body="public message")
+
+    @users('employee')
+    @mute_logger("odoo.http")
+    def test_message_post_controller_read_only_channel(self):
+        res = self.url_open(
+            url="/mail/message/post",
+            data=json.dumps({
+                "params": {
+                    "thread_model": "discuss.channel",
+                    "thread_id": self.test_channel_readonly.id,
+                    "post_data": {
+                        "body": "test",
+                    },
+                },
+            }),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertIn(
+            "You cannot post inside a read only channel.",
+            res.text,
+        )

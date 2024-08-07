@@ -83,6 +83,7 @@
                                     <field name="group_ids" widget="many2many_tags"
                                         invisible="channel_type != 'channel'"
                                         string="Auto Subscribe Groups" readonly="not is_editable"/>
+                                    <field name="read_only"/>
                                 </group>
                             </page>
                             <page string="Members" name="members">
