@@ -3,7 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 
-const DEFAULT_MAX_FILE_SIZE = 128 * 1024 * 1024;
+export const DEFAULT_MAX_FILE_SIZE = 128 * 1024 * 1024;
 
 /**
  * @param {Services["notification"]} notificationService
