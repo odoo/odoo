@@ -958,10 +958,7 @@ async function processRequest(request) {
             ["create_uid", "=", this.env.user.id],
             ["group_ids", "in", this.env.user.groups_id.map((group) => group.id)],
         ];
-        store.add(
-            "CannedResponse",
-            this.env["mail.canned.response"].search_read(domain, ["source", "substitution"])
-        );
+        store.add(this.env["mail.canned.response"].search(domain));
     }
     return store;
 }
@@ -976,24 +973,26 @@ const MANY = Symbol("MANY");
 const ONE = Symbol("ONE");
 
 class Store {
-    constructor(data, values, as_thread, kwargs) {
+    constructor(data, values, as_thread, _delete, kwargs) {
         this.data = new Map();
         if (data) {
             this.add(...arguments);
         }
     }
 
-    add(data, values, as_thread, kwargs) {
+    add(data, values, as_thread, _delete, kwargs) {
         if (!data) {
             return this;
         }
-        kwargs = unmakeKwArgs(getKwArgs(arguments, "data", "values", "as_thread"));
+        kwargs = unmakeKwArgs(getKwArgs(arguments, "data", "values", "as_thread", "delete"));
         data = kwargs.data;
         delete kwargs.data;
         values = kwargs.values;
         delete kwargs.values;
         as_thread = kwargs.as_thread;
         delete kwargs.as_thread;
+        _delete = kwargs.delete ?? false;
+        delete kwargs.delete;
         let model_name;
         if (data instanceof models.Model) {
             if (values) {
@@ -1005,12 +1004,29 @@ class Store {
                         `expected empty kwargs with recordset ${data} values: ${kwargs}`
                     );
                 }
+                if (_delete) {
+                    throw new Error(`deleted not expected for ${data} with values: ${values}`);
+                }
+            }
+            if (_delete) {
+                if (data.length !== 1) {
+                    throw new Error(`expected single record ${data} with delete`);
+                }
+                if (values) {
+                    throw new Error(`for ${data} expected empty values with delete: ${values}`);
+                }
             }
             const ids = data.map((idOrRecord) =>
                 typeof idOrRecord === "number" ? idOrRecord : idOrRecord.id
             );
             if (as_thread) {
-                if (values) {
+                if (_delete) {
+                    this.add(
+                        "mail.thread",
+                        { id: data[0].id, model: data._name },
+                        makeKwArgs({ delete: _delete })
+                    );
+                } else if (values) {
                     this.add("mail.thread", { id: data[0].id, model: data._name, ...values });
                 } else {
                     MockServer.env["mail.thread"]._thread_to_store.call(
@@ -1021,7 +1037,9 @@ class Store {
                     );
                 }
             } else {
-                if (values) {
+                if (_delete) {
+                    this.add(data._name, { id: ids[0] }, makeKwArgs({ delete: _delete }));
+                } else if (values) {
                     this.add(data._name, { id: ids[0], ...values });
                 } else {
                     MockServer.env[data._name]._to_store(ids, this, makeKwArgs(kwargs));
@@ -1058,10 +1076,11 @@ class Store {
             if (typeof values !== "object") {
                 throw new Error(`expected dict for singleton ${model_name}: ${values}`);
             }
-            let record = this.data.get(model_name);
-            if (!record) {
-                record = {};
-                this.data.set(model_name, record);
+            if (_delete) {
+                throw new Error(`Singleton ${model_name} cannot be deleted`);
+            }
+            if (!this.data.has(model_name)) {
+                this.data.set(model_name, {});
             }
             this._add_values(values, model_name);
             return this;
@@ -1091,12 +1110,15 @@ class Store {
                 }
             }
             const index = ids.map((i) => vals[i]).join(" AND ");
-            let record = records.get(index);
-            if (!record) {
-                record = {};
-                records.set(index, record);
+            if (!records.has(index)) {
+                records.set(index, {});
             }
             this._add_values(vals, model_name, index);
+            if (_delete) {
+                records.get(index)._DELETE = true;
+            } else {
+                delete records.get(index)._DELETE;
+            }
         }
         return this;
     }
@@ -1104,6 +1126,9 @@ class Store {
     _add_values(values, model_name, index) {
         const target = index ? this.data.get(model_name).get(index) : this.data.get(model_name);
         for (const [key, val] of Object.entries(values)) {
+            if (key === "_DELETE") {
+                throw new Error(`invalid key ${key} in ${model_name}: ${values}`);
+            }
             if (Array.isArray(val) && val[0] === ONE) {
                 const [, subrecord, as_thread, only_id, subrecord_kwargs] = val;
                 if (subrecord && !(subrecord instanceof models.Model)) {

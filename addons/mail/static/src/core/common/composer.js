@@ -364,7 +364,7 @@ export class Composer extends Component {
                         };
                     }),
                 };
-            case "CannedResponse":
+            case "mail.canned.response":
                 return {
                     ...props,
                     autoSelectFirst: false,

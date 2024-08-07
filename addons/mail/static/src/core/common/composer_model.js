@@ -25,7 +25,7 @@ export class Composer extends Record {
     message = Record.one("Message");
     mentionedPartners = Record.many("Persona");
     mentionedChannels = Record.many("Thread");
-    cannedResponses = Record.many("CannedResponse");
+    cannedResponses = Record.many("mail.canned.response");
     text = "";
     thread = Record.one("Thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/

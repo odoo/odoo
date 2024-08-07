@@ -43,13 +43,6 @@ export class MailCoreCommon {
         this.busService.subscribe("mail.record/insert", (payload) => {
             this.store.insert(payload, { html: true });
         });
-        this.busService.subscribe("mail.record/delete", (payload) => {
-            for (const Model in payload) {
-                for (const data of payload[Model]) {
-                    this.store[Model].get(data)?.delete();
-                }
-            }
-        });
     }
 
     _handleNotificationToggleStar(payload, metadata) {
