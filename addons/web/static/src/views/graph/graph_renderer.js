@@ -87,37 +87,6 @@ const gridOnTop = {
 };
 
 /**
- * Used to generate the min/max value of the grid (line & bar charts).
- * The purpose is to keep a bit of space between the lowest/highest data
- * and the bottom/top of the grid.
- * @param {Object[]} datasets
- * @param {Boolean} isStacked
- * @returns {{ min: number, max: number }}
- */
-function getMinMaxValue(datasets, isStacked) {
-    const values = [];
-    if (isStacked) {
-        datasets.forEach((dataset) => {
-            dataset.data.forEach((value, index) => {
-                values[index] = (values[index] || 0) + value;
-            });
-        });
-    } else {
-        datasets.forEach((dataset) => {
-            dataset.data.forEach((value) => {
-                values.push(value);
-            });
-        });
-    }
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-    return {
-        min: min < 0 ? 1.1 * min : 0.9 * min,
-        max: max < 0 ? 0.9 * max : 1.1 * max,
-    };
-}
-
-/**
  * @param {Object} chartArea
  * @returns {string}
  */
@@ -588,7 +557,7 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getScaleOptions() {
-        const { datasets, labels } = this.model.data;
+        const { labels } = this.model.data;
         const { fieldAttrs, measure, measures, mode, stacked } = this.model.metaData;
         if (mode === "pie") {
             return {};
@@ -609,7 +578,6 @@ export class GraphRenderer extends Component {
                 display: false,
             },
         };
-        const { min: suggestedMin, max: suggestedMax } = getMinMaxValue(datasets, stacked);
         const yAxe = {
             beginAtZero: true,
             type: "linear",
@@ -632,8 +600,8 @@ export class GraphRenderer extends Component {
             border: {
                 display: false,
             },
-            suggestedMax,
-            suggestedMin,
+            suggestedMax: 0,
+            suggestedMin: 0,
         };
         return { x: xAxe, y: yAxe };
     }
