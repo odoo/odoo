@@ -22,7 +22,10 @@ wTourUtils.registerWebsitePreviewTour("editable_root_as_custom_snippet", {
     {
         content: "Go to homepage",
         trigger: ':iframe a[href="/"].nav-link',
-        run: "click",
+        async run(helpers) {
+            helpers.click();
+            await new Promise((r) => setTimeout(r, 3000));
+        }
     },
     {
         content: "Wait to land on homepage",

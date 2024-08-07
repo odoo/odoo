@@ -19,12 +19,8 @@ registry.category("web_tour.tours").add('sale_signature', {
         run: "click",
     },
     {
-        content: "check submit is enabled",
-        trigger: '.o_portal_sign_submit:enabled',
-    },
-    {
         content: "click select style",
-        trigger: '.o_web_sign_auto_select_style button',
+        trigger: ".modal .o_web_sign_auto_select_style button",
         run: "click",
     },
     {
@@ -33,8 +29,15 @@ registry.category("web_tour.tours").add('sale_signature', {
         run: "click",
     },
     {
+        content: "wait signature is updated into the form values",
+        trigger: ".modal input[name=signer]",
+        async run() {
+            await new Promise((r) => setTimeout(r, 200));
+        },
+    },
+    {
         content: "click submit",
-        trigger: '.o_portal_sign_submit:enabled',
+        trigger: ".modal .o_portal_sign_submit:enabled:contains(accept & sign)",
         run: "click",
     },
     {

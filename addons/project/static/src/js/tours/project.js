@@ -123,7 +123,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_form_project_tasks",
 },
 {
-    trigger: ".o-mail-Chatter-topbar button:contains(Send message)",
+    trigger: ".o-mail-Chatter-topbar button:contains(Send message):enabled",
     content: markup(_t("Use the chatter to <b>send emails</b> and communicate efficiently with your customers. Add new people to the followers' list to make them aware of the main changes about this task.")),
     tooltipPosition: "bottom",
     run: "click",

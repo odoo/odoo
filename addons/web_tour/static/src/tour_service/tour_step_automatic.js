@@ -36,22 +36,10 @@ export class TourStepAutomatic extends TourStep {
 
         return [
             {
-                action: () => {
-                    this.running = true;
-                    setupEventActions(document.createElement("div"));
-                    if (this.break && debugMode !== false) {
-                        // eslint-disable-next-line no-debugger
-                        debugger;
-                    }
-                },
-            },
-            {
                 action: async () => {
+                    this.running = true;
                     console.log(this.describeMe);
-                    this._timeout = browser.setTimeout(
-                        () => this.throwError(),
-                        (this.timeout || 10000) + this.tour.stepDelay
-                    );
+                    setupEventActions(document.createElement("div"));
                     // This delay is important for making the current set of tour tests pass.
                     // IMPROVEMENT: Find a way to remove this delay.
                     await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -61,19 +49,14 @@ export class TourStepAutomatic extends TourStep {
                 },
             },
             {
-                trigger: () => {
+                trigger: async () => {
                     if (!this.active) {
                         this.run = () => {};
                         return true;
                     }
-                    const stepEl = this.findTrigger();
-                    if (!stepEl) {
-                        return false;
-                    }
-                    return this.canContinue && stepEl;
+                    return await this.findTrigger();
                 },
                 action: async (stepEl) => {
-                    clearTimeout(this._timeout);
                     tourState.set(this.tour.name, "currentIndex", this.index + 1);
                     if (this.tour.showPointerDuration > 0 && stepEl !== true) {
                         // Useful in watch mode.
@@ -84,29 +67,12 @@ export class TourStepAutomatic extends TourStep {
                         pointer.hide();
                     }
 
-                    // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
-                    const actionHelper = new TourHelpers(stepEl);
-
-                    let result;
-                    if (typeof this.run === "function") {
-                        const willUnload = await callWithUnloadCheck(async () => {
-                            await this.tryToDoAction(() =>
-                                // `this.anchor` is expected in many `step.run`.
-                                this.run.call({ anchor: stepEl }, actionHelper)
-                            );
-                        });
-                        result = willUnload && "will unload";
-                    } else if (typeof this.run === "string") {
-                        for (const todo of this.run.split("&&")) {
-                            const m = String(todo)
-                                .trim()
-                                .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
-                            await this.tryToDoAction(() =>
-                                actionHelper[m.groups?.action](m.groups?.arguments)
-                            );
-                        }
+                    if (this.break && debugMode !== false) {
+                        // eslint-disable-next-line no-debugger
+                        debugger;
                     }
-                    return result;
+
+                    return this.tryToDoAction(stepEl);
                 },
             },
             {
@@ -187,18 +153,27 @@ export class TourStepAutomatic extends TourStep {
     /**
      * @returns {HTMLElement}
      */
-    findTrigger() {
-        let nodes;
-        try {
-            nodes = hoot.queryAll(this.trigger);
-        } catch (error) {
-            this.throwError(`Trigger was not found : ${this.trigger} : ${error.message}`);
-        }
-        const triggerEl = this.trigger.includes(":visible")
-            ? nodes.at(0)
-            : nodes.find(_legacyIsVisible);
-        this.triggerFound = !!triggerEl;
-        return triggerEl;
+    async findTrigger() {
+        const timeout = (this.timeout || 20000) + this.tour.stepDelay;
+        return hoot.waitUntil(
+            () => {
+                const nodes = hoot.queryAll(this.trigger);
+                const triggerEl = this.trigger.includes(":visible")
+                    ? nodes.at(0)
+                    : nodes.find(_legacyIsVisible);
+                if (this.canContinue) {
+                    this.triggerFound = !!triggerEl;
+                    return triggerEl;
+                }
+            },
+            {
+                timeout,
+                message: () => {
+                    this.throwError();
+                    return "Trigger not found";
+                },
+            }
+        );
     }
 
     /**
@@ -221,10 +196,32 @@ export class TourStepAutomatic extends TourStep {
         }
     }
 
-    async tryToDoAction(action) {
+    async tryToDoAction(stepEl) {
+        const timeout = 500;
+        if (!["function", "string"].includes(typeof this.run)) {
+            return;
+        }
         try {
-            await action();
+            let result;
+            const actionHelper = new TourHelpers(stepEl);
+            // await new Promise((r) => setTimeout(r, 400));
+            if (typeof this.run === "function") {
+                await new Promise((resolve) => setTimeout(resolve, timeout));
+                const willUnload = await callWithUnloadCheck(async () => {
+                    await this.run.call({ anchor: stepEl }, actionHelper);
+                });
+                result = willUnload && "will unload";
+            } else if (typeof this.run === "string") {
+                for (const todo of this.run.split("&&")) {
+                    const m = String(todo)
+                        .trim()
+                        .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
+                    await new Promise((resolve) => setTimeout(resolve, timeout));
+                    await actionHelper[m.groups?.action](m.groups?.arguments);
+                }
+            }
             this.hasRun = true;
+            return result;
         } catch (error) {
             this.throwError(error.message);
         }

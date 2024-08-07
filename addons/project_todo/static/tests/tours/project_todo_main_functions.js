@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_todo_form_view",
 },
 {
-    trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-sendMessage",
+    trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-sendMessage:enabled",
     content: "A 'send message' button should be present in the chatter",
     run: "click",
 }, 
