@@ -92,7 +92,19 @@ export class SelfOrder extends Reactive {
             this.onNotified("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
                     this.models.replaceDataByKey("uuid", data);
-                    this.router.navigate("confirmation");
+                    const order = this.models["pos.order"].find(
+                        (o) => o.access_token === data["pos.order"][0].access_token
+                    );
+                    if (["paid", "invoiced", "done"].includes(order?.state)) {
+                        this.notification.add(_t("Your order has been paid"), {
+                            type: "success",
+                        });
+                        this.confirmationPage(
+                            "order",
+                            this.config.self_ordering_mode,
+                            order.access_token
+                        );
+                    }
                 } else {
                     this.paymentError = true;
                 }
@@ -289,9 +301,9 @@ export class SelfOrder extends Reactive {
             newLine.delete();
         }
     }
-    async confirmationPage(screen_mode, device) {
+    async confirmationPage(screen_mode, device, access_token = "") {
         this.router.navigate("confirmation", {
-            orderAccessToken: this.currentOrder.access_token,
+            orderAccessToken: access_token || this.currentOrder.access_token,
             screenMode: screen_mode,
         });
         if (device === "kiosk") {
