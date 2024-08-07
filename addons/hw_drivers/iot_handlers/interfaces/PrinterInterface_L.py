@@ -51,11 +51,19 @@ class PrinterInterface(Interface):
         return dict(self.printer_devices)
 
     def get_identifier(self, path):
-        allowed_characters = '[^a-zA-Z0-9_-]'
-        if 'uuid=' in path:
-            identifier = sub(allowed_characters, '', path.split('uuid=')[1])
-        elif 'serial=' in path:
-            identifier = sub(allowed_characters, '', path.split('serial=')[1])
-        else:
-            identifier = sub(allowed_characters, '', path)
-        return identifier
+        """
+        Necessary because the path is not always a valid Cups identifier,
+        as it may contain characters typically found in URLs or paths.
+
+          - Removes characters: ':', '/', '.', '\', and space.
+          - Removes the exact strings: "uuid=" and "serial=".
+
+        Example 1:
+            Input: "ipp://printers/printer1:1234/abcd"
+            Output: "ippprintersprinter11234abcd"
+
+        Example 2:
+            Input: "uuid=1234-5678-90ab-cdef"
+            Output: "1234-5678-90ab-cdef
+        """
+        return sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)
