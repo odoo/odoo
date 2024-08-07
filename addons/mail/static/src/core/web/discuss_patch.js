@@ -1,4 +1,4 @@
-import { onRendered, useEffect } from "@odoo/owl";
+import { useEffect } from "@odoo/owl";
 
 import { Discuss } from "@mail/core/public_web/discuss";
 import { DiscussSidebar } from "@mail/core/web/discuss_sidebar";
@@ -14,11 +14,14 @@ patch(Discuss.prototype, {
     setup() {
         super.setup();
         this.prevInboxCounter = this.store.inbox.counter;
-        onRendered(() => {
-            if (this.thread?.displayName) {
-                this.env.config?.setDisplayName(this.thread.displayName);
-            }
-        });
+        useEffect(
+            (threadName) => {
+                if (threadName) {
+                    this.env.config?.setDisplayName(threadName);
+                }
+            },
+            () => [this.thread?.displayName]
+        );
         useEffect(
             () => {
                 if (
