@@ -3,10 +3,6 @@ import { patch } from "@web/core/utils/patch";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 
 patch(PosStore.prototype, {
-    // @Override
-    async processServerData(loadedData) {
-        await super.processServerData(...arguments);
-    },
     async getServerOrders() {
         if (this.session._self_ordering) {
             await this.loadServerOrders([

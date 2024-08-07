@@ -296,6 +296,9 @@ export class PosStore extends Reactive {
         return true;
     }
     computeProductPricelistCache(data) {
+        if (data) {
+            data = this.models[data.model].readMany(data.ids);
+        }
         // This function is called via the addEventListener callback initiated in the
         // processServerData function when new products or pricelists are loaded into the PoS.
         // It caches the heavy pricelist calculation when there are many products and pricelists.
@@ -1002,6 +1005,9 @@ export class PosStore extends Reactive {
             await this.preSyncAllOrders(orders);
             const context = this.getSyncAllOrdersContext(orders, options);
 
+            if (this.pendingOrder.delete.size) {
+                await this.deleteOrders([], Array.from(this.pendingOrder.delete));
+            }
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders
             // for a specific table
@@ -1017,7 +1023,9 @@ export class PosStore extends Reactive {
                 order.recomputeOrderData();
             }
 
-            const serializedOrder = orders.map((order) => order.serialize({ orm: true }));
+            const serializedOrder = orders.map((order) =>
+                order.serialize({ orm: true, clear: true })
+            );
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
                 context,
             });

@@ -9,6 +9,9 @@ patch(PartnerLine.prototype, {
         super.setup(...arguments);
         this.pos = usePos();
     },
+    get loyaltyCard() {
+        return this.props.partner["<-loyalty.card.partner_id"];
+    },
     _getLoyaltyPointsRepr(loyaltyCard) {
         const program = loyaltyCard.program_id;
         if (program.program_type === "ewallet") {

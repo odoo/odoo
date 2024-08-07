@@ -540,8 +540,8 @@ patch(PosStore.prototype, {
     },
 
     //@override
-    async processServerData(loadedData) {
-        await super.processServerData(loadedData);
+    async processServerData() {
+        await super.processServerData();
 
         this.partnerId2CouponIds = {};
 
@@ -562,13 +562,14 @@ patch(PosStore.prototype, {
             rule.validProductIds = new Set(rule.raw.valid_product_ids);
         }
 
-        this.models["loyalty.card"].addEventListener("create", (records) => {
-            this.computePartnerCouponIds(records);
+        this.models["loyalty.card"].addEventListener("create", (data) => {
+            this.computePartnerCouponIds(data);
         });
         this.computePartnerCouponIds();
     },
 
-    computePartnerCouponIds(loyaltyCards = null) {
+    computePartnerCouponIds(data) {
+        const loyaltyCards = this.models["loyalty.card"].readMany(data?.ids || []);
         const cards = loyaltyCards || this.models["loyalty.card"].getAll();
         for (const card of cards) {
             if (!card.partner_id || card.id < 0) {
