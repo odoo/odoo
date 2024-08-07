@@ -1082,7 +1082,7 @@ test("highlight the message mentioning the current user inside the channel", asy
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message-bubble.bg-warning-light");
+    await contains(".o-mail-Message-bubble.o-orange");
 });
 
 test("not highlighting the message if not mentioning the current user inside the channel", async () => {
@@ -1105,7 +1105,7 @@ test("not highlighting the message if not mentioning the current user inside the
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message-bubble:not(.bg-warning-light)");
+    await contains(".o-mail-Message-bubble:not(.o-orange)");
 });
 
 test("allow attachment delete on authored message", async () => {
