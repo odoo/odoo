@@ -41,10 +41,7 @@ export class FormatPlugin extends Plugin {
             { hotkey: "control+u", command: "FORMAT_UNDERLINE" },
             { hotkey: "control+5", command: "FORMAT_STRIKETHROUGH" },
         ],
-        toolbarCategory: [
-            { id: "decoration", sequence: 20 },
-            { id: "remove_format", sequence: 26 },
-        ],
+        toolbarCategory: { id: "decoration", sequence: 20 },
         toolbarItems: [
             {
                 id: "bold",
@@ -88,7 +85,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "remove_format",
-                category: "remove_format",
+                category: "decoration",
                 action(dispatch) {
                     dispatch("FORMAT_REMOVE_FORMAT");
                 },
