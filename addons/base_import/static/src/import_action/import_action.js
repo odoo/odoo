@@ -239,6 +239,10 @@ export class ImportAction extends Component {
     isFieldSet(column) {
         return column.fieldInfo != null;
     }
+
+    get hasBinaryFields() {
+        return this.model.columns.some((column) => column.fieldInfo?.type === "binary");
+    }
 }
 
 registry.category("actions").add("import", ImportAction);

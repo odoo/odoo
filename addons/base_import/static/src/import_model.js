@@ -2,11 +2,15 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { checkFileSize, DEFAULT_MAX_FILE_SIZE } from "@web/core/utils/files";
+import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { groupBy, sortBy } from "@web/core/utils/arrays";
 import { memoize } from "@web/core/utils/functions";
+import { session } from "@web/session";
 import { useState } from "@odoo/owl";
 import { ImportBlockUI } from "./import_block_ui";
+import { BinaryFileManager } from "./binary_file_manager";
 
 const mainComponentRegistry = registry.category("main_components");
 
@@ -126,7 +130,29 @@ export class BaseImportModel {
             },
         };
 
+        const maxUploadSize = session.max_file_upload_size || DEFAULT_MAX_FILE_SIZE;
+        this.binaryFilesParams = {
+            binaryFiles: {
+                value: {},
+            },
+            maxSizePerBatch: {
+                help: _t("Defines how many megabytes can be imported in each batch import"),
+                value: 10,
+                max: Math.round(maxUploadSize / 1024 / 1024),
+                min: 0,
+            },
+            delayAfterEachBatch: {
+                help: _t(
+                    "After each batch import, this delay is applied to avoid unthrottled calls"
+                ),
+                value: 1,
+                min: 1,
+            },
+        };
+
         this.fieldsToHandle = {};
+
+        this.notificationService = useService("notification");
     }
 
     //--------------------------------------------------------------------------
@@ -317,6 +343,19 @@ export class BaseImportModel {
         }
     }
 
+    onBinaryFilesParamsChanged(parameterName, value) {
+        if (parameterName === "binaryFiles") {
+            const files = {};
+            for (const file of value) {
+                if (checkFileSize(file.size, this.notificationService)) {
+                    files[file.name] = file;
+                }
+            }
+            value = files;
+        }
+        this.binaryFilesParams[parameterName].value = value;
+    }
+
     setColumnField(column, fieldInfo) {
         column.fieldInfo = fieldInfo;
         this._updateComments(column);
@@ -354,7 +393,10 @@ export class BaseImportModel {
             importRes.columns,
             this.formattedImportOptions,
         ];
-        const { ids, messages, nextrow, name, error } = await this._callImport(isTest, importArgs);
+        const { ids, messages, nextrow, name, error, binary_filenames } = await this._callImport(
+            isTest,
+            importArgs
+        );
 
         // Handle server errors
         if (error) {
@@ -374,9 +416,55 @@ export class BaseImportModel {
             }
         }
 
+        // Push local image to records
+        await this._pushLocalImageToRecords(ids, binary_filenames, isTest);
+
         this.setOption("skip", nextrow || 0);
         importRes.nextrow = nextrow;
         return false;
+    }
+
+    async _pushLocalImageToRecords(ids, binaryFilenames, isTest) {
+        if (typeof binaryFilenames === "object") {
+            const parameters = {
+                tracking_disable: this.importOptions.tracking_disable,
+                delayAfterEachBatch: this.binaryFilesParams.delayAfterEachBatch.value,
+                maxSizePerBatch: this.binaryFilesParams.maxSizePerBatch.value,
+            };
+
+            if (!this.binaryFilesParams.binaryFiles) {
+                return;
+            }
+            const binaryFiles = this.binaryFilesParams.binaryFiles.value;
+            const fields = Object.keys(binaryFilenames);
+            const binaryFileManager = new BinaryFileManager(
+                this.resModel,
+                fields,
+                parameters,
+                this.context,
+                this.orm,
+                this.notificationService
+            );
+            for (let rowIndex = 0; rowIndex < ids.length; rowIndex++) {
+                const id = ids[rowIndex];
+                for (const field of fields) {
+                    const fileName = binaryFilenames[field][rowIndex];
+                    if (!fileName) {
+                        continue;
+                    }
+                    if (fileName in binaryFiles) {
+                        const file = binaryFiles[fileName];
+                        if (!file || isTest) {
+                            continue;
+                        }
+                        await binaryFileManager.addFile(id, field, file);
+                    }
+                }
+            }
+            if (!isTest) {
+                await binaryFileManager.sendLastPayload();
+            }
+        }
     }
 
     async _callImport(dryrun, args) {

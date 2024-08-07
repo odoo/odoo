@@ -21,6 +21,7 @@ import requests
 
 from PIL import Image
 
+from collections import defaultdict
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
@@ -1260,6 +1261,9 @@ class Import(models.TransientModel):
                                 )
 
                             line[index] = self._import_image_by_url(line[index], session, name, num)
+                        elif '.' in line[index]:
+                            # Detect if it's a filename
+                            pass
                         else:
                             try:
                                 base64.b64decode(line[index], validate=True)
@@ -1390,6 +1394,8 @@ class Import(models.TransientModel):
 
         _logger.info('importing %d rows...', len(input_file_data))
 
+        binary_filenames = self._extract_binary_filenames(import_fields, input_file_data)
+
         import_fields, merged_data = self._handle_multi_mapping(import_fields, input_file_data)
 
         if options.get('fallback_values'):
@@ -1459,8 +1465,34 @@ class Import(models.TransientModel):
         # convert load's internal nextrow to the imported file's
         if import_result['nextrow']: # don't update if nextrow = 0 (= no nextrow)
             import_result['nextrow'] += skip
+        if binary_filenames:
+            import_result['binary_filenames'] = binary_filenames
 
         return import_result
+
+    def _extract_binary_filenames(self, import_fields, data, model=False, prefix='', binary_filenames=False):
+        model = model or self.res_model
+        binary_filenames = binary_filenames or defaultdict(list)
+        for name, field in self.env[model]._fields.items():
+            name = prefix + name
+            if any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
+                # Recursive call with the relational as new model and add the field name to the prefix
+                binary_filenames = self._extract_binary_filenames(import_fields, data, field.comodel_name, name + '/', binary_filenames)
+            elif field.type == 'binary' and field.attachment and any(f in name for f in IMAGE_FIELDS) and name in import_fields:
+                index = import_fields.index(name)
+                for line in data:
+                    filename = None
+                    value = line[index]
+                    if isinstance(value, str):
+                        if re.match(config.get("import_image_regex", DEFAULT_IMAGE_REGEX), value):
+                            pass
+                        elif '.' in value:
+                            # Detect if it's a filename
+                            filename = value
+                            line[index] = ''
+                        # else base64 nothing to do
+                    binary_filenames[name].append(filename)
+        return binary_filenames
 
     def _handle_multi_mapping(self, import_fields, input_file_data):
         """ This method handles multiple mapping on the same field.

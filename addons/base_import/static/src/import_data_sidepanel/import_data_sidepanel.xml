@@ -3,7 +3,7 @@
     <t t-name="ImportDataSidepanel">
         <div class="o_import_data_sidepanel p-3 bg-view">
             <div class="pb-4">
-                <h4>Imported file</h4>
+                <h4>Data to import</h4>
                 <div class="mb-2 d-flex align-items-center">
                     <i class="fa fa-file white me-2"></i>
                     <div class="fst-italic truncate"><t t-esc="fileName"/></div>
@@ -76,14 +76,57 @@
                     </div>
                 </div>
             </div>
-            <div class="pt-3 pb-4 border-top">
-                <h4>Help</h4>
-                <t t-foreach="props.importTemplates" t-as="template" t-key="template">
-                    <a class="d-block my-2" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
-                        <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
-                    </a>
-                </t>
-                <DocumentationLink path="'/applications/general/export_import_data.html'" icon="'fa-external-link'" label.translate="Go to Import FAQ"/>
+            <div t-if="props.hasBinaryFields" class="pt-3 pb-4 border-top o_import_file">
+                <h4>Files to import</h4>
+                <div class="o_import_grid gap-1">
+                    <!-- First row-->
+                    <div class="o_import_grid_col">
+                        <label>
+                            <span class="btn btn-sm btn-primary">Upload your files</span>
+                            <input type="file" multiple="multiple" hidden="hidden"
+                                   t-on-change="(event) => this.props.onBinaryFilesParamsChanged('binaryFiles', event.target.files)"/>
+                        </label>
+                    </div>
+                    <div class="o_import_grid_col o_grid_span_2">
+                        <t t-esc="binaryFilesLabel"/>
+                    </div>
+
+                    <!-- Second row-->
+                    <t t-if="env.debug">
+                        <div class="o_import_grid_col">
+                            <label for="o_input_maxSizePerBatch">Max size per batch</label>
+                            <sup t-if="props.binaryFilesParams.maxSizePerBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="props.binaryFilesParams.maxSizePerBatch.help" t-esc="'?'"/>
+                        </div>
+                        <div class="o_import_grid_col">
+                                <input type="number"
+                                       id="o_input_maxSizePerBatch"
+                                       t-att-value="props.binaryFilesParams.maxSizePerBatch.value"
+                                       t-att-max="props.binaryFilesParams.maxSizePerBatch.max"
+                                       t-att-min="props.binaryFilesParams.maxSizePerBatch.min"
+                                       t-on-change="(event) => this.props.onBinaryFilesParamsChanged('maxSizePerBatch', event.target.value)"/>
+                        </div>
+                        <div class="o_import_grid_col">
+                            <label for="o_input_maxSizePerBatch">Mb</label>
+                        </div>
+
+                        <!-- Third row-->
+                        <div class="o_import_grid_col">
+                            <label for="o_input_delayAfterEachBatch">Delay after each batch</label>
+                            <sup t-if="props.binaryFilesParams.delayAfterEachBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="props.binaryFilesParams.delayAfterEachBatch.help" t-esc="'?'"/>
+                        </div>
+                        <div class="o_import_grid_col">
+                                <input type="number"
+                                       id="o_input_delayAfterEachBatch"
+                                       t-att-value="props.binaryFilesParams.delayAfterEachBatch.value"
+                                       t-att-min="props.binaryFilesParams.delayAfterEachBatch.min"
+                                       t-on-change="(event) => this.props.onBinaryFilesParamsChanged('delayAfterEachBatch', event.target.value)"/>
+                        </div>
+                        <div class="o_import_grid_col">
+                            <label for="o_input_delayAfterEachBatch">seconds</label>
+                        </div>
+                    </t>
+                </div>
+
             </div>
             <div t-if="env.debug" class="o_import_debug_options pt-3 pb-4 border-top">
                 <h4>Advanced</h4>
@@ -95,6 +138,15 @@
                 <CheckBox value="props.options.advanced" onChange.bind="(isChecked) => this.props.onOptionChanged('advanced', isChecked)">
                     Allow matching with subfields
                 </CheckBox>
+            </div>
+            <div class="pt-3 pb-4 border-top">
+                <h4>Help</h4>
+                <t t-foreach="props.importTemplates" t-as="template" t-key="template">
+                    <a class="d-block my-2" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
+                        <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
+                    </a>
+                </t>
+                <DocumentationLink path="'/applications/general/export_import_data.html'" icon="'fa-external-link'" label.translate="Go to Import FAQ"/>
             </div>
         </div>
     </t>
