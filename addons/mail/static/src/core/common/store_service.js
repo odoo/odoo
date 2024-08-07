@@ -103,6 +103,7 @@ export class Store extends BaseStore {
     inPublicPage = false;
     odoobot = Record.one("Persona");
     users = {};
+    groupIdToPersonas = new Map();
     /** @type {number} */
     internalUserGroupId;
     /** @type {number} */
