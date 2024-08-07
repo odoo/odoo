@@ -1199,6 +1199,45 @@ class TestAssetsManifest(AddonManifestPatched):
             '''
         )
 
+    def test_13_include3(self):
+        bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.a_with_include')
+        attach = bundle.js()
+        content = attach.raw.decode()
+        self.assertStringEqual(
+            content,
+            '''
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
+            var b=2;;
+
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
+            var c=3;;
+
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
+            var d=4;
+            '''
+        )
+
+    def test_11_include_files(self):
+        bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.a_with_include_files')
+        attach = bundle.js()
+        content = attach.raw.decode()
+        self.assertStringEqual(
+            content,
+            '''
+            /* /test_assetsbundle/static/src/js/test_jsfile1.js */
+            var a=1;;
+
+            /* /test_assetsbundle/static/src/js/test_jsfile2.js */
+            var b=2;;
+
+            /* /test_assetsbundle/static/src/js/test_jsfile3.js */
+            var c=3;;
+
+            /* /test_assetsbundle/static/src/js/test_jsfile4.js */
+            var d=4;
+            '''
+        )
+
     def test_14_other_module(self):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {

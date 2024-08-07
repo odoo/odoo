@@ -78,6 +78,18 @@
         'test_assetsbundle.file_not_found':[
           'test_assetsbundle/static/invalid_src/xml/file_not_found.xml',
         ],
+        'test_assetsbundle.a_with_include': [
+            'test_assetsbundle/static/src/js/test_jsfile1.js',
+            ('include', 'test_assetsbundle.b'),
+        ],
+        'test_assetsbundle.a_with_include_files': [
+            'test_assetsbundle/static/src/js/test_jsfile1.js',
+            ('include_files', 'test_assetsbundle.b'),
+        ],
+        'test_assetsbundle.b': [
+            'test_assetsbundle/static/src/js/test_jsfile*',
+            ('remove', 'test_assetsbundle/static/src/js/test_jsfile1.js'),
+        ],
     },
     'license': 'LGPL-3',
 }
