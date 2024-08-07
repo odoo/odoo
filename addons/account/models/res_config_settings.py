@@ -136,6 +136,7 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.account_cash_basis_base_account_id',
         domain=[('deprecated', '=', False)])
     account_fiscal_country_id = fields.Many2one(string="Fiscal Country Code", related="company_id.account_fiscal_country_id", readonly=False, store=False)
+    multi_vat_foreign_country_ids = fields.Many2many(string="Foreign VAT Countries", related="company_id.multi_vat_foreign_country_ids", readonly=False, store=False)
 
     qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
     invoice_is_download = fields.Boolean(string='Download', related='company_id.invoice_is_download', readonly=False)

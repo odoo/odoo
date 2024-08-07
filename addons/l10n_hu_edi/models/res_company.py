@@ -84,8 +84,28 @@ class ResCompany(models.Model):
 
     def _l10n_hu_edi_get_credentials_dict(self):
         self.ensure_one()
+
+        # Get the correct VAT number depending on whether the company is in HU or multivat.
+        if not self.account_fiscal_country_id:
+            raise UserError(_("Please set the company's fiscal residence in Accounting -> Settings -> Taxes/Fiscal Country."))
+        elif self.account_fiscal_country_id.code == 'HU':
+            if not self.vat:
+                raise UserError(_('Please set the hungarian vat number on the company first!'))
+            vat = self.vat
+        else:
+            hu_fiscal_position = self.env['account.fiscal.position'].search(
+                [
+                    ('foreign_vat', '!=', False),
+                    ('country_id.code', '=', 'HU'),
+                ],
+                limit=1,
+            )
+            if not hu_fiscal_position:
+                raise UserError(_('Please create a fiscal position for Hungary with your Hungarian VAT number.'))
+            vat = hu_fiscal_position.foreign_vat
+
         credentials_dict = {
-            'vat': self.vat,
+            'vat': vat,
             'mode': self.l10n_hu_edi_server_mode,
             'username': self.l10n_hu_edi_username,
             'password': self.l10n_hu_edi_password,
@@ -99,8 +119,6 @@ class ResCompany(models.Model):
     def _l10n_hu_edi_test_credentials(self):
         with L10nHuEdiConnection(self.env) as connection:
             for company in self:
-                if not company.vat:
-                    raise UserError(_('NAV Credentials: Please set the hungarian vat number on the company first!'))
                 if self.l10n_hu_edi_server_mode != 'demo':
                     try:
                         connection.do_token_exchange(company._l10n_hu_edi_get_credentials_dict())
