@@ -6,6 +6,7 @@ import re
 
 from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.bus.websocket import WebsocketConnectionHandler
 
 
 class ImLivechatChannel(models.Model):
@@ -325,6 +326,7 @@ class ImLivechatChannel(models.Model):
         info = {}
         info['available'] = self.chatbot_script_count or len(self.available_operator_ids) > 0
         info['server_url'] = self.get_base_url()
+        info["websocket_worker_version"] = WebsocketConnectionHandler._VERSION
         if info['available']:
             info['options'] = self._get_channel_infos()
             info['options']["default_username"] = username
