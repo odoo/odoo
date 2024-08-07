@@ -50,9 +50,8 @@ class ResUsersSettings(models.Model):
 
     def _refresh_google_calendar_token(self):
         self.ensure_one()
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        client_id = get_param('google_calendar_client_id')
-        client_secret = get_param('google_calendar_client_secret')
+        client_id = self.env['google.service']._get_client_id('calendar')
+        client_secret = self.env['google.service']._get_client_secret('calendar')
 
         if not client_id or not client_secret:
             raise UserError(_("The account for the Google Calendar service is not configured."))
