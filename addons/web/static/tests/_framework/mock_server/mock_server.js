@@ -938,7 +938,7 @@ export class MockServer {
                 return action.name;
             } else if (model) {
                 if (resId) {
-                    return this.models[model].records[resId].display_name;
+                    return this.env[model].read([resId], ["display_name"])[0].display_name;
                 }
                 throw new Error("Actions with a model should also have a resId");
             }
