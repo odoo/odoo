@@ -6,15 +6,11 @@ export function clickNewTicket() {
     return [{ trigger: ".ticket-screen .highlight", run: "click" }];
 }
 export function clickDiscard() {
-    return [
-        {
-            isActive: ["desktop"],
-            content: "go back",
-            trigger: ".ticket-screen button.discard",
-            run: "click",
-        },
-        { ...ProductScreen.back(), isActive: ["mobile"] },
-    ];
+    return {
+        content: "go back",
+        trigger: ".ticket-screen button.discard",
+        run: "click",
+    };
 }
 export function selectOrder(orderName) {
     return [
@@ -190,4 +186,11 @@ export function receiptTotalIs(amount) {
             trigger: `.receipt-screen .pos-receipt-amount:contains("${amount}")`,
         },
     ];
+}
+export function back() {
+    return {
+        isActive: ["mobile"],
+        trigger: ".back-button",
+        run: "click",
+    };
 }

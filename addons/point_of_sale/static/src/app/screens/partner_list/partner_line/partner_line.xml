@@ -43,35 +43,38 @@
             </div>
         </t>
         <t t-else="">
-            <tr class="partner-line partner-info gap-2 gap-lg-0 align-top" t-att-class="{'bg-primary-subtle': props.isSelected}" t-att-data-id="props.partner.id"
+            <tr class="partner-line partner-info" t-att-class="{'selected': props.isSelected}" t-att-data-id="props.partner.id"
                 t-on-click="() => this.props.onClickPartner(props.partner)">
                 <td>
                     <b t-esc="props.partner.name or ''" />
                     <div class="company-field text-bg-muted" t-esc="props.partner.parent_name or ''" />
-                    <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag d-lg-inline-block d-none btn btn-light mt-2">
-                        <i class="fa fa-times me-1"></i>
-                        <span> Unselect </span>
-                    </button>
                 </td>
                 <td>
                     <div class="partner-line-adress" t-if="props.partner.contact_address" t-esc="props.partner.contact_address" />
                 </td>
                 <td class="partner-line-email ">
-                    <div class="mb-2" t-if="props.partner.phone">
+                    <div t-if="props.partner.phone">
                         <i class="fa fa-fw fa-phone me-2"/><t t-esc="props.partner.phone"/>
                     </div>
-                    <div class="mb-2" t-if="props.partner.mobile">
+                    <div t-if="props.partner.mobile">
                         <i class="fa fa-fw fa-mobile me-2"/><t t-esc="props.partner.mobile"/>
                     </div>
-                    <div t-if="props.partner.email" class="email-field mb-2">
+                    <div t-if="props.partner.email" class="email-field">
                         <i class="fa fa-fw fa-paper-plane-o me-2"/><t t-esc="props.partner.email" />
                     </div>
                 </td>
                 <!-- FIXME: this should be in pos_settle_due, not here -->
                 <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>
-                <td class="edit-partner-button-cell">
+                <td class="edit-partner-button-cell align-middle pe-0">
+                    <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag d-lg-inline-block d-none btn btn-link btn-lg mt-1 float-end">
+                        <i class="fa fa-check"/>
+                    </button>
+                </td>
+                <td class="edit-partner-button-cell align-middle">
                     <Dropdown>
-                        <button class="btn btn-ligth fa fa-bars" />
+                        <button class="btn btn-light btn-lg lh-lg border float-end">
+                            <i class="fa fa-fw fa-bars"/>
+                        </button>
                         <t t-set-slot="content">
                             <DropdownItem onSelected="() => props.onClickEdit(props.partner)">
                                 Edit Details

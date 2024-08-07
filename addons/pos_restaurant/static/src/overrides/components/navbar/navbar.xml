@@ -11,14 +11,31 @@
                 Switch Floor View
             </DropdownItem>
         </xpath>
-        <xpath expr="//div[hasclass('pos-rightheader')]" position="before">
-            <div t-if="pos.config.module_pos_restaurant" class="ms-1 d-flex overflow-hidden position-relative">
-                <span t-if="showTableIcon"
-                    t-esc="getTable().getName()"
-                    t-attf-style="background-color: {{getTable().color}};border-radius: 0.25rem;"
-                    class="table-name text-white fw-bolder px-3 my-2 me-1 py-1 d-flex align-items-center" 
-                    t-on-click="() => this.switchTable()"/>
-                <button t-else="" class="btn btn-secondary mx-2" t-on-click="() => this.switchTable()">Go to...</button>
+        <xpath expr="//div[hasclass('pos-leftheader')]/t" position="before">
+            <div t-if="pos.config.module_pos_restaurant" class="d-flex flex-shrink-0 gap-1 position-relative">
+               <div class="navbar-menu d-flex d-lg-grid gap-1">
+                    <button class="back-button btn btn-lg lh-lg" t-attf-class="{{ isFloorScreenActive() ? 'btn-primary' : '' }}" t-on-click="onClickPlanButton">
+                        <span class="d-none d-sm-inline">Plan</span>
+                        <span class="d-flex justify-content-center align-items-center d-sm-none"><img src="/pos_restaurant/static/img/plan.svg" class="navbar-icon" alt="Floor Plan"/></span>
+                    </button>
+                    <button t-if="showSwitchTableButton" class="btn btn-lg lh-lg" t-on-click="() => this.switchTable()">
+                        <span class="d-none d-sm-inline">Table</span>
+                        <span class="d-flex justify-content-center align-items-center d-sm-none"><img src="/pos_restaurant/static/img/table.svg" class="navbar-icon" alt="Table Selector"/></span>
+                    </button>   
+                    <button t-if="showTableNumber"
+                        class="table-free-order-label btn btn-lg lh-lg"
+                        t-att-class="{'btn-primary' : getTable()}"
+                        t-on-click="() => this.switchTable()"
+                    >
+                        <t t-esc="getTable().getName()"/>
+                    </button>  
+                    <div t-if="pos.get_order() and !pos.get_order()?.table_id" 
+                        t-attf-class="table-free-order-label btn btn-primary btn-lg lh-lg" 
+                        t-on-click="() => this.switchTable()"
+                        t-esc="pos.get_order().getFloatingOrderName()"
+                    />
+                </div>
+                <div t-if="!ui.isSmall" class="ms-1 me-2 my-2 border-start border"/>
                 <div class="d-flex align-items-center" t-if="pos.orderToTransferUuid">
                     <strong class="ms-2">
                         Select table to transfer order

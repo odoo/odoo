@@ -105,7 +105,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.clickControlButton("Print Receipt"),
             ReceiptScreen.isShown(),
             ReceiptScreen.clickBack(),
-            { ...ProductScreen.back(), isActive: ["mobile"] },
+            TicketScreen.back(),
             // When going back, the ticket screen should be in its previous state.
             TicketScreen.filterIs("Paid"),
             // Test refund //

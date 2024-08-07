@@ -6,30 +6,30 @@
             <t t-if="!pos.scanning">
                 <button
                     t-if="this.swapButton"
-                    class="btn-switchpane btn flex-fill rounded-0 fw-bolder position-relative overflow-hidden"
+                    class="btn-switchpane btn btn-lg w-50 position-relative overflow-hidden"
                     t-on-click="submitOrder"
-                    t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-secondary' }}">
+                    t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-light' }}">
                     <div t-if="this.uiState.clicked and this.displayCategoryCount.length" class="h-100 w-100 position-absolute top-0 start-0 d-flex align-items-center justify-content-center" style="backdrop-filter: blur(5px);">
                         <img src="/web/static/img/spin.svg" style="height:35px; width:35px" alt="Loading..."/>
                     </div>
                     <!-- Replace the payment button by the order button -->
-                    <span class="fs-1 d-block">Order</span>
+                    <span class="d-block">Order</span>
                     <span><t t-esc="nbrOfChanges"/> changes</span>
                 </button>
                 <t t-else="">
                     <button
-                        class="btn-switchpane btn flex-fill rounded-0 fw-bolder"
+                        class="btn-switchpane btn btn-lg w-50"
                         t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}"
                         t-on-click="() => this.pos.pay()">
-                        <span class="fs-1 d-block">Pay</span>
+                        <span class="d-block">Pay</span>
                         <span><t t-esc="total" /></span>
                     </button>
                 </t>
             </t>
         </xpath>
         <xpath expr="//button[hasclass('review-button')]" position="replace">
-            <button class="btn-switchpane btn w-50 rounded-0 fw-bolder review-button" t-attf-class="{{ primaryReviewButton ? 'btn-primary' : 'btn-secondary' }}" t-on-click="switchPane">
-                <span class="fs-1 d-block">Cart</span>
+            <button class="btn-switchpane btn btn-lg w-50 review-button" t-attf-class="{{ primaryReviewButton ? 'btn-primary' : 'btn-light' }}" t-on-click="switchPane">
+                <span class="d-block">Cart</span>
                 <span t-if="this.swapButton"><t t-esc="total" /></span>
                 <span t-else=""><t t-esc="items"/> items</span>
             </button>

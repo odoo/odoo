@@ -1,0 +1,25 @@
+@include media-breakpoint-up(sm) {
+    .navbar-menu {
+        grid-auto-columns: minmax(100px, 1fr);
+        grid-auto-flow: column;
+    }
+}
+
+.navbar-menu button {
+    min-width: 52px;
+    min-height: 52px;
+}
+
+.btn {
+    &-primary {
+        .navbar-icon {
+            filter: invert(1);
+        }
+    }
+
+    &-light {
+        .navbar-icon {
+            filter: invert(0);
+        }
+    }
+}

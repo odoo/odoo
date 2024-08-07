@@ -175,7 +175,6 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
 
             ProductScreen.addOrderline("Desk Organizer", "1"),
             ProductScreen.addOrderline("Whiteboard Pen", "1"),
-
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("100% on the cheapest product"),
 

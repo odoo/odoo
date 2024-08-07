@@ -45,7 +45,7 @@
                                     </t>
                                 </AccordionItem>
                             </td>
-                            <td class="d-flex">
+                            <td class="d-flex gap-1">
                                 <Input tModel="[state.payments[props.default_cash_details.id], 'counted']"
                                     callback.bind="(value) =>  this.setManualCashInput(value)"
                                     isValid.bind="env.utils.isValidFloat" class="'cash-input'"/>

@@ -122,15 +122,15 @@ export class ControlButtons extends Component {
 
     get buttonClass() {
         return this.props.showRemainingButtons
-            ? "btn btn-secondary rounded fw-bolder"
-            : "btn btn-light rounded-0 fw-bolder";
+            ? "btn btn-secondary btn-lg py-5"
+            : "btn btn-light btn-lg lh-lg";
     }
 }
 
 export class ControlButtonsPopup extends Component {
     static components = { Dialog, ControlButtons };
     static template = xml`
-        <Dialog bodyClass="'d-flex flex-column'" footer="false" header="false" t-on-click="props.close">
+        <Dialog bodyClass="'d-flex flex-column'" footer="false" title="'Actions'" t-on-click="props.close">
             <ControlButtons showRemainingButtons="true" close="props.close"/>
         </Dialog>
     `;

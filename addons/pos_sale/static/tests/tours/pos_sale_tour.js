@@ -210,7 +210,7 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
         [
             Dialog.confirm("Open session"),
             PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Down Payment (POS)", "1.00", "20.00"),
+            ProductScreen.selectedOrderlineHas("Down Payment (POS)"),
             ProductScreen.totalAmountIs(980.0),
         ].flat(),
 });

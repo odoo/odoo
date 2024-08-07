@@ -3,16 +3,16 @@
     <t t-name="point_of_sale.NumberPopup">
         <Dialog title="props.title" bodyClass="'d-flex flex-column'" size="'sm'">
             <div t-if="props.subtitle" class="subtitle p-1 mx-auto" t-esc="props.subtitle"/>
-            <div class="input-symbol pt-3">
-                <div class="popup-input value active form-control form-control-lg w-75 max-width-325px mx-auto">
+            <div class="input-symbol mb-3">
+                <div class="popup-input value active form-control form-control-lg text-center">
                     <span t-if="this.state.buffer || !props.placeholder" class="input-value" t-esc="props.formatDisplayedValue(this.state.buffer || '')"/>
-                    <small t-else="" class="text-muted" t-esc="props.placeholder"/>
+                    <span t-else="" class="text-muted" t-esc="props.placeholder"/>
                 </div>
             </div>
-            <div t-if="props.feedback(this.state.buffer)" class="p-2 mx-auto" t-esc="props.feedback(this.state.buffer)" />
-            <Numpad buttons="props.buttons" class="'mx-auto my-3 w-75 max-width-325px'"/>
+            <div t-if="props.feedback(this.state.buffer)" class="p-2 mx-auto mt-n2 mb-2" t-esc="props.feedback(this.state.buffer)" />
+            <Numpad buttons="props.buttons" class="'p-1 rounded-3 bg-200'"/>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
+                <button class="btn btn-primary btn-lg lh-lg o-default-button" tabindex="1" t-on-click="confirm">Ok</button>
             </t>
         </Dialog>
     </t>

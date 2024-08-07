@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
 
             // Create first order
             FloorScreen.clickTable("5"),
@@ -141,7 +141,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             TicketScreen.clickNewTicket(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
 
             // At floor screen, there should be 2 synced draft orders
             FloorScreen.orderCountSyncedInTableIs("5", "2"),
@@ -163,7 +163,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             TicketScreen.selectOrder("-0005"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
 
             // There should be 1 synced draft order.
             FloorScreen.orderCountSyncedInTableIs("5", "2"),
@@ -183,7 +183,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ProductScreen.totalAmountIs("4.40"),
 
             // Test transfering an order
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
 
@@ -206,12 +205,11 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             FloorScreen.clickTable("2"),
             ProductScreen.isShown(),
             ProductScreen.orderIsEmpty(),
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.totalAmountIs("2.20"),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("4", "1"),
         ].flat(),
 });
@@ -225,7 +223,7 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1.0"),
             ProductScreen.clickOrderButton(),
             ProductScreen.orderlinesHaveNoChange(),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
         ].flat(),
 });
 

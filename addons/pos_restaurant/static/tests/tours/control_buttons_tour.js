@@ -7,6 +7,7 @@ import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/produc
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as SplitBillScreen from "@pos_restaurant/../tests/tours/utils/split_bill_screen_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("ControlButtonsTour", {
@@ -17,21 +18,19 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             Dialog.confirm("Open session"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("4"),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
             ProductScreen.orderIsEmpty(),
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
 
             // Test SplitBillButton
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickBack(),
 
-            ProductScreen.clickControlButton("Internal Note"),
+            ProductScreen.clickInternalNoteButton(),
             TextInputPopup.inputText("test note"),
             Dialog.confirm(),
             Order.hasLine({
@@ -42,7 +41,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
                 withClass: ".selected",
             }),
             // Check that note is imported if come back to the table
-            ProductScreen.back(),
+            Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
             Order.hasLine({
                 productName: "Water",

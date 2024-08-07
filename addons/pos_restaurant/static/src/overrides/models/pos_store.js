@@ -3,8 +3,6 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
-import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -174,20 +172,6 @@ patch(PosStore.prototype, {
             }
         }
         return super.closePos(...arguments);
-    },
-    showBackButton() {
-        if (this.orderToTransferUuid) {
-            return true;
-        }
-        if (this.config.module_pos_restaurant) {
-            const screenWoBackBtn = [ReceiptScreen, FloorScreen, TicketScreen];
-            return (
-                !screenWoBackBtn.includes(this.mainScreen.component) ||
-                (this.ui.isSmall && this.mainScreen.component === TicketScreen)
-            );
-        } else {
-            return super.showBackButton(...arguments);
-        }
     },
     //@override
     async afterProcessServerData() {
