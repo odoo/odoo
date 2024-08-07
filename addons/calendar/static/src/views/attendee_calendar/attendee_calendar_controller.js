@@ -44,7 +44,10 @@ export class AttendeeCalendarController extends CalendarController {
                 res_id: resId || false,
             },
             {
-                additionalContext,
+                additionalContext: {
+                    ...this.props.context,
+                    ...additionalContext,
+                },
             }
         );
     }
