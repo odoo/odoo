@@ -5,7 +5,6 @@ from unittest.mock import patch
 from odoo.addons.sms.models.mail_thread import MailThread
 from odoo.addons.sms.tests.common import SMSCommon, SMSCase
 from odoo.tests import tagged
-from odoo.tools import html2plaintext, plaintext2html
 
 
 @tagged('at_install')
@@ -20,10 +19,6 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
         This is necessary when an SMS is sent from message_post with sms type
         and not from _message_sms. In this case, it can be expected to receive html
         that should be interpreted as such instead of escaped before being sent.
-
-        Note that as it is not simple nor desirable to inline replace a link such as
-        `<a href="href">Here</a>` to `href` in the sms, we keep the footnote behavior
-        of html2plaintext in this case (see second case tested).
         """
         cases = [
             (
@@ -32,7 +27,7 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
                 'Hello there, check this awesome <b>app</b> I found:<br/>https://odoo.com'
             ), (
                 'Hello there, check this awesome <b>app</b> I found:<br/><a href="https://odoo.com">Here</a>',   # a link
-                '<p>Hello there, check this awesome &lt;b&gt;app&lt;/b&gt; I found:&lt;br/&gt;&lt;a href="<a href="https://odoo.com%22&gt;Here&lt;/a&gt;" target="_blank" rel="noreferrer noopener">https://odoo.com"&gt;Here&lt;/a&gt;</a></p>',
+                '<p>Hello there, check this awesome &lt;b&gt;app&lt;/b&gt; I found:&lt;br/&gt;&lt;a href="<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a>"&gt;Here&lt;/a&gt;</p>',
                 'Hello there, check this awesome <b>app</b> I found:<br/><a href="https://odoo.com">Here</a>'  # keep all information
             )
         ]
@@ -53,45 +48,28 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
 
         The only expected difference is that links are converted to be clickable.
         The test verifies that MailThread._message_sms() works as expected."""
-        # Cases are formatted as (sms text, expected notification body, old notification body rendering)
-        # The last element is used to show what bug is fixed with this commit from 15.0.
-        # todo: clean in master.
+        # Cases are formatted as sms text, expected notification body
         cases = [
             (
                 "Hello there, check this awesome app I found:\nhttps://odoo.com",
                 '<p>Hello there, check this awesome app I found:<br>'
-                '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a></p>',
-                # same
-                '<p>Hello there, check this awesome app I found:<br/>'
                 '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a></p>',
             ), (
                 "Hello there, check this awesome <b>app</b> I found:\nhttps://odoo.com",
                 # b is kept as is in notification, but link is still added as well
                 '<p>Hello there, check this awesome &lt;b&gt;app&lt;/b&gt; I found:<br>'
                 '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a></p>',
-                # html was interpreted and converted
-                '<p>Hello there, check this awesome *app* I found:<br/>'
-                '<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a></p>',
             ),
             (
                 # Here, we check that the sms sent is the sms written.
-                # The only expected difference is that links are converted to be clickable.
-                # Note that we acknowledge the erroneous href created in the notification*
-                # left for later *: todo: fix (probably in master)
                 "Hello there, check this awesome <b>app</b> I found:\n*https://odoo.com*",
                 '<p>Hello there, check this awesome &lt;b&gt;app&lt;/b&gt; I found:<br>'
-                '*<a href="https://odoo.com*" target="_blank" rel="noreferrer noopener">https://odoo.com*</a></p>',
-                '<p>Hello there, check this awesome *app* I found:<br/>'
-                '*<a href="https://odoo.com*" target="_blank" rel="noreferrer noopener">https://odoo.com*</a></p>',
+                '*<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a>*</p>',
             ),
         ]
 
-        for sms_content, expected_notification_content, old_expected_notification_content in cases:
+        for sms_content, expected_notification_content in cases:
             with self.subTest(sms_content=sms_content):
-                # compare with old rendering
-                old_notification_content = plaintext2html(html2plaintext(sms_content))
-                self.assertEqual(old_notification_content, old_expected_notification_content, msg=old_notification_content)
-
                 with self.with_user('admin'):
                     composer = self.env['sms.composer'].with_context(
                         active_model='res.partner', active_id=self.partner_employee).create({'body': sms_content})
