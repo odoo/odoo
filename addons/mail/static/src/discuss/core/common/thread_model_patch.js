@@ -18,8 +18,8 @@ const threadPatch = {
         this.onlineMembers = Record.many("ChannelMember", {
             /** @this {import("models").Thread} */
             compute() {
-                return this.channelMembers.filter(
-                    (member) => member.persona.im_status === "online"
+                return this.channelMembers.filter((member) =>
+                    this.store.onlineMemberStatuses.includes(member.persona.im_status)
                 );
             },
             sort(m1, m2) {
@@ -32,7 +32,9 @@ const threadPatch = {
         });
     },
     _computeOfflineMembers() {
-        return this.channelMembers.filter((member) => member.persona?.im_status !== "online");
+        return this.channelMembers.filter(
+            (member) => !this.store.onlineMemberStatuses.includes(member.persona?.im_status)
+        );
     },
     get avatarUrl() {
         if (this.channel_type === "channel" || this.channel_type === "group") {

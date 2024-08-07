@@ -64,6 +64,29 @@ test("should have correct members in member list", async () => {
     await contains(".o-discuss-ChannelMember", { text: "Demo" });
 });
 
+test("members should be correctly categorised into online/offline", async () => {
+    const pyEnv = await startServer();
+    const [onlinePartnerId, idlePartnerId] = pyEnv["res.partner"].create([
+        { name: "Online Partner", im_status: "online" },
+        { name: "Idle Partner", im_status: "away" },
+    ]);
+    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "im_partner" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: onlinePartnerId }),
+            Command.create({ partner_id: idlePartnerId }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Show Member List']");
+    await contains(".o-discuss-ChannelMemberList h6", { text: "Online - 2" });
+    await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 1" });
+});
+
 test("there should be a button to hide member list in the thread view topbar when the member list is visible", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
