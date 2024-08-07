@@ -993,18 +993,12 @@ overridden by modules), because:
     <xpath expr="(//img)[3]" position="replace">
         <img alt="" src="/web/image/website.s_company_team_image_3" class="img img-fluid d-block h-100" data-name="Image" data-index="2"/>
     </xpath>
-    <xpath expr="//ul[hasclass('carousel-indicators')]" position="replace">
-        <ul class="carousel-indicators">
-            <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
-                <i class="oi oi-chevron-left"/>
-            </li>
-            <li data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.s_company_team_image_1)" class="active"/>
-            <li data-bs-target="#slideshow_sample" data-bs-slide-to="1" style="background-image: url(/web/image/website.s_company_team_image_2)"/>
-            <li data-bs-target="#slideshow_sample" data-bs-slide-to="2" style="background-image: url(/web/image/website.s_company_team_image_3)"/>
-            <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
-                <i class="oi oi-chevron-right"/>
-            </li>
-        </ul>
+    <xpath expr="//div[hasclass('carousel-indicators')]" position="replace">
+        <div class="carousel-indicators">
+            <div data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.s_company_team_image_1)" class="active"/>
+            <div data-bs-target="#slideshow_sample" data-bs-slide-to="1" style="background-image: url(/web/image/website.s_company_team_image_2)"/>
+            <div data-bs-target="#slideshow_sample" data-bs-slide-to="2" style="background-image: url(/web/image/website.s_company_team_image_3)"/>
+        </div>
     </xpath>
 </template>
 

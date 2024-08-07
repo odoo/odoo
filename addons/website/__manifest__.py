@@ -253,6 +253,7 @@
             'website/static/src/snippets/s_image/options.js',
             'website/static/src/snippets/s_image_gallery/options.js',
             'website/static/src/snippets/s_image_gallery/000.xml',
+            'website/static/src/snippets/s_image_gallery/001.xml',
             'website/static/src/snippets/s_instagram_page/options.js',
             'website/static/src/snippets/s_card/001.xml',
             'website/static/src/snippets/s_card/options.js',
