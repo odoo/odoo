@@ -83,3 +83,11 @@ test("bus subscription is refreshed when channel is left", async () => {
     await click("[title='Leave Channel']");
     await assertSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
 });
+
+test("Read only channel", async () => {
+    const pyEnv = await startServer();
+    const channel_id = pyEnv["discuss.channel"].create({ name: "General", read_only: true });
+    await start();
+    await openDiscuss(channel_id);
+    await contains(`.o-mail-Composer-input[readonly][placeholder="You don't have the permission to post messages in this channel"]`, { count: 1 });
+});

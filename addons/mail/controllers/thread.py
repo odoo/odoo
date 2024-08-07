@@ -4,11 +4,12 @@ from datetime import datetime
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
-from odoo import http
+from odoo import _, http
 from odoo.http import request
 from odoo.tools import frozendict
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
+from odoo.exceptions import UserError
 
 
 class ThreadController(http.Controller):
@@ -132,6 +133,8 @@ class ThreadController(http.Controller):
         )
         if not thread:
             raise NotFound()
+        if thread_model == "discuss.channel" and thread.read_only:
+            raise UserError(_("You cannot post inside a read only channel"))
         if not request.env[thread_model]._get_thread_with_access(thread_id, "write"):
             thread.env.context = frozendict(
                 thread.env.context, mail_create_nosubscribe=True, mail_post_autofollow=False

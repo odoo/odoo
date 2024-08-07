@@ -54,7 +54,7 @@
                             t-on-paste="onPaste"
                             t-model="props.composer.text"
                             t-att-placeholder="placeholder"
-                            t-att-readOnly="!state.active"
+                            t-att-readOnly="!state.active || thread?.read_only"
                         />
                         <!--
                              This is an invisible textarea used to compute the composer
@@ -69,7 +69,7 @@
                             disabled="1"
                         />
                     </div>
-                    <div class="o-mail-Composer-actions d-flex o-mail-Composer-bg"
+                    <div t-if="!thread?.read_only" class="o-mail-Composer-actions d-flex o-mail-Composer-bg"
                         t-att-class="{
                             'ms-1': compact and ui.isSmall,
                             'mx-1': compact and !ui.isSmall,
