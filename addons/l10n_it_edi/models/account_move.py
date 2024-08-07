@@ -245,7 +245,9 @@ class AccountMove(models.Model):
         base_lines = [invl._convert_to_tax_base_line_dict() for invl in lines]
         inverse_factor = (-1 if reverse_charge_refund else 1)
         for num, line in enumerate(base_lines):
+            sign = -1 if line['record'].move_id.is_inbound() else 1
             line['sequence'] = num
+            line['price_subtotal'] = line['record'].balance * sign if convert_to_euros else line['price_subtotal']
             line['price_subtotal'] = line['price_subtotal'] * inverse_factor
             if line['discount'] != 100.0 and line['quantity']:
                 gross_price = line['price_subtotal'] / (1 - line['discount'] / 100.0)
@@ -287,7 +289,8 @@ class AccountMove(models.Model):
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
-                'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor,
+                'subtotal_price_eur': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor,
+                'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor * line_dict['rate'],
                 'unit_price': line_dict['price_unit'],
                 'discount_amount': ((line_dict['discount_amount'] - line_dict['discount_amount_before_dispatching']) / line.quantity) if line.quantity else 0,
                 'vat_tax': line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0),
