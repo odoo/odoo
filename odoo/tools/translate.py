@@ -1103,16 +1103,17 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
                 if markdown_link:
                     terms.append(markdown_link[1])
         for figure in sheet['figures']:
-            title = figure['data']['title']
-            if isinstance(title, str):
-                terms.append(title)
-            elif 'text' in title:
-                terms.append(title['text'])
-            if 'axesDesign' in figure['data']:
-                for axes in figure['data']['axesDesign'].values():
-                    terms.append(axes.get('title', {}).get('text', ''))
-            if 'baselineDescr' in figure['data']:
-                terms.append(figure['data']['baselineDescr'])
+            if figure['tag'] == 'chart':
+                title = figure['data']['title']
+                if isinstance(title, str):
+                    terms.append(title)
+                elif 'text' in title:
+                    terms.append(title['text'])
+                if 'axesDesign' in figure['data']:
+                    for axes in figure['data']['axesDesign'].values():
+                        terms.append(axes.get('title', {}).get('text', ''))
+                if 'baselineDescr' in figure['data']:
+                    terms.append(figure['data']['baselineDescr'])
     pivots = data.get('pivots', {}).values()
     lists = data.get('lists', {}).values()
     for data_source in itertools.chain(lists, pivots):
