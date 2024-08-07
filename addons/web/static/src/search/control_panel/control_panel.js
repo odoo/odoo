@@ -117,7 +117,8 @@ export class ControlPanel extends Component {
             embeddedInfos: {
                 showEmbedded:
                     this.env.config.embeddedActions?.length > 0 &&
-                    (!!this.env.config.parentActionId ||
+                    ((!!this.env.config.parentActionId &&
+                        !!JSON.parse(browser.localStorage.getItem("showEmbeddedActions"))) ||
                         !!JSON.parse(browser.localStorage.getItem(this.embeddedVisibilityKey))),
                 embeddedActions: this.defaultEmbeddedActions || [],
                 newActionIsShared: false,
@@ -300,6 +301,7 @@ export class ControlPanel extends Component {
             browser.localStorage.setItem(this.embeddedVisibilityKey, true);
         }
         this.state.embeddedInfos.showEmbedded = !this.state.embeddedInfos.showEmbedded;
+        browser.localStorage.setItem("showEmbeddedActions", this.state.embeddedInfos.showEmbedded);
     }
 
     /**
