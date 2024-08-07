@@ -597,6 +597,8 @@ actual arch.
         Determine the views that inherit from the current recordset, and return
         them as a recordset, ordered by priority then by id.
         """
+        if not self.ids:
+            return self.browse()
         self.check_access_rights('read')
         domain = self._get_inheriting_views_domain()
         e = expression(domain, self.env['ir.ui.view'])
