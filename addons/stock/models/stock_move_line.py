@@ -599,6 +599,8 @@ class StockMoveLine(models.Model):
         ml_ids_to_ignore = OrderedSet()
 
         for ml in mls_todo:
+            if not self.env['stock.move.line'].search([('id', '=', ml.id)]):
+                continue
             # if this move line is force assigned, unreserve elsewhere if needed
             ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
             available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
@@ -609,10 +611,8 @@ class StockMoveLine(models.Model):
                     abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
                     owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
             ml_ids_to_ignore.add(ml.id)
-        # Reset the reserved quantity as we just moved it to the destination location.
-        mls_todo.write({
-            'date': fields.Datetime.now(),
-        })
+            # Reset the reserved quantity as we just moved it to the destination location.
+            ml.write({'date': fields.Datetime.now()})
 
     def _synchronize_quant(self, quantity, location, action="available", in_date=False, **quants_value):
         """ quantity should be express in product's UoM"""
