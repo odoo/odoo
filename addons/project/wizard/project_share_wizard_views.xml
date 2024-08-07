@@ -16,6 +16,7 @@
                         <field name="partner_id"
                                options="{'no_create': True, 'no_open': True}"
                                domain="[('id', 'not in', parent.existing_partner_ids), ('partner_share', '=', True)]"
+                               context="{'show_email': True}"
                         />
                         <field name="access_mode"/>
                         <field name="send_invitation"/>
