@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web.ProgressBar">
+    <small class="text-info d-flex align-items-center me-2">
+        <span t-if="!props.hasError and !props.uploaded"><i class="fa fa-circle-o-notch fa-spin me-2"/></span>
+        <span class="fst-italic fw-bold text-truncate flex-grow-1 me-2" t-esc="props.name"/>
+        <span class="fw-bold text-nowrap" t-esc="props.size"/>
+    </small>
+    <small t-if="props.uploaded or props.hasError" class="d-flex align-items-center mt-1">
+        <span t-if="props.uploaded" class="text-success"><i class="fa fa-check my-1 me-1"/> File has been uploaded</span>
+        <span t-else="" class="text-danger"><i class="fa fa-times float-start my-1 me-1"/> <span class="o_we_error_text" t-esc="props.errorMessage ? props.errorMessage : 'File could not be saved'"/></span>
+    </small>
+    <div t-else="" class="progress">
+        <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" t-attf-style="width: {{this.progress}}%;" aria-label="Progress bar"><span t-esc="this.progress + '%'"/></div>
+    </div>
+    <hr/>
+</t>
+</templates>

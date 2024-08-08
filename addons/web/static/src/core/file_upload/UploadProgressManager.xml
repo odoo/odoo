@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="web.UploadProgressManager">
+        <div class="o_notification position-relative show fade mb-2 border border-info bg-white" role="alert" aria-live="assertive" aria-atomic="true">
+            <button type="button" class="btn btn-close o_notification_close p-2" aria-label="Close" t-on-click.prevent="() => props.cancelAllUpload()"/>
+            <span t-if='props.totalFilesCount' class="text-truncate"><t t-out="props.totalFilesCount"/> Uploaded</span>
+            <div class="o_notification_body ps-2 pe-4 py-2">
+                <div class="me-auto overflow-auto o_notification_content" style="max-height: 300px;">
+                    <t t-set="main_file" t-value="props.files"/>
+                    <div t-foreach="main_file" t-as="file" t-key="file" class="o_we_progressbar">
+                        <div t-if="!file_value.uploaded" class="d-flex justify-content-between">
+                            <span t-out="file_value.remainingTime" class="progress-time text-truncate"/>
+                            <button t-if="!props.multipleFiles" type="button" class="btn btn-secondary"
+                            t-on-click.prevent="() => props.abortUpload(file_value)">
+                            Cancel
+                            </button>
+                        </div>
+                        <ProgressBar progress="file_value.progress"
+                            errorMessage="file_value.errorMessage"
+                            hasError="file_value.hasError"
+                            name="file_value.name"
+                            uploaded="file_value.uploaded"
+                            size="file_value.size"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
