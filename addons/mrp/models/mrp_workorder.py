@@ -157,20 +157,13 @@ class MrpWorkorder(models.Model):
         # cyclic depends with the mo.state, mo.reservation_state and wo.state and avoid recursion error
         self.mapped('production_availability')
         for workorder in self:
-            if workorder.state == 'pending':
-                if all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
-                    workorder.state = 'ready' if workorder.production_availability == 'assigned' else 'waiting'
-                    continue
-            if workorder.state not in ('waiting', 'ready'):
+            if workorder.state not in ('pending', 'waiting', 'ready'):
                 continue
-            if not all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
+            if workorder._are_previous_workorder_blocking():
                 workorder.state = 'pending'
-                continue
-            if workorder.production_availability not in ('waiting', 'confirmed', 'assigned'):
-                continue
-            if workorder.production_availability == 'assigned' and workorder.state == 'waiting':
+            elif workorder.production_availability == 'assigned':
                 workorder.state = 'ready'
-            elif workorder.production_availability != 'assigned' and workorder.state == 'ready':
+            else:
                 workorder.state = 'waiting'
 
     @api.depends('production_state', 'date_start', 'date_finished')
@@ -897,3 +890,6 @@ class MrpWorkorder(models.Model):
 
     def _compute_current_operation_cost(self):
         return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
+
+    def _are_previous_workorder_blocking(self):
+        return any(w.state not in ('done', 'cancel') for w in self.blocked_by_workorder_ids)
