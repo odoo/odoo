@@ -628,7 +628,7 @@ class StockMoveLine(models.Model):
                         taken_from_untracked_qty = min(untracked_qty, abs(quantity))
                         Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
                         Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
-                Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
+                Quant.with_context(protect_quant_diff=True)._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
             ml_ids_to_ignore.add(ml.id)
         # Reset the reserved quantity as we just moved it to the destination location.
         mls_todo.with_context(bypass_reservation_update=True).write({

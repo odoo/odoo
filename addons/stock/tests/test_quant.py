@@ -989,3 +989,25 @@ class StockQuant(TransactionCase):
         action = quant.action_view_stock_moves()
         history = self.env['stock.move.line'].search(action['domain'])
         self.assertTrue(history)
+
+    def test_diff_unset_after_create(self):
+        """
+        Test that validating move lines does not set new quants' ``inventory_diff_quantity``
+        """
+        move = self.env['stock.move'].create({
+            'name': 'IN 1 product',
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.stock_location.id,
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.quantity_done = 1
+        move._action_done()
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', self.product.id),
+            ('location_id', '=', self.stock_location.id),
+        ])
+        self.assertFalse(quant.inventory_diff_quantity, "diff quantity should be 0 or unset")

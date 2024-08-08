@@ -188,6 +188,8 @@ class StockQuant(models.Model):
 
     @api.depends('inventory_quantity')
     def _compute_inventory_diff_quantity(self):
+        if self.env.context.get('protect_quant_diff'):
+            return
         for quant in self:
             quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
 
@@ -828,7 +830,7 @@ class StockQuant(models.Model):
                 'in_date': in_date,
             })
         else:
-            self.create({
+            new = self.create({
                 'product_id': product_id.id,
                 'location_id': location_id.id,
                 'quantity': quantity,
@@ -837,6 +839,8 @@ class StockQuant(models.Model):
                 'owner_id': owner_id and owner_id.id,
                 'in_date': in_date,
             })
+            if self.env.context.get('protect_quant_diff'):
+                new.with_context(protect_quant_diff=True).flush_recordset(['quantity', 'inventory_diff_quantity'])
         return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True), in_date
 
     def _raise_fix_unreserve_action(self, product_id):
