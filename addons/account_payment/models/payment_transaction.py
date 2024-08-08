@@ -88,7 +88,10 @@ class PaymentTransaction(models.Model):
             invoice_ids = self._fields['invoice_ids'].convert_to_cache(command_list, self)
             invoices = self.env['account.move'].browse(invoice_ids).exists()
             if len(invoices) == len(invoice_ids):  # All ids are valid
-                return separator.join(invoices.mapped('name'))
+                prefix = separator.join(invoices.mapped('name'))
+                if name := values.get('name_next_installment'):
+                    prefix = name
+                return prefix
         return super()._compute_reference_prefix(provider_code, separator, **values)
 
     #=== BUSINESS METHODS - POST-PROCESSING ===#

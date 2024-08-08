@@ -32,7 +32,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else invoice_sudo.partner_id
-        self._validate_transaction_kwargs(kwargs)
+        self._validate_transaction_kwargs(kwargs, additional_allowed_keys={'name_next_installment'})
         kwargs.update({
             'currency_id': invoice_sudo.currency_id.id,
             'partner_id': partner_sudo.id,

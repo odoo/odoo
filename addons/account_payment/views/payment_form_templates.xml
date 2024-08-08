@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="account_payment.form" inherit_id="payment.form" name="Invoice Payment Form">
+        <xpath expr="//form[@id='o_payment_form']" position="attributes">
+            <attribute name="t-att-data-amount-custom">amount_custom</attribute>
+            <attribute name="t-att-data-amount-overdue">amount_overdue</attribute>
+            <attribute name="t-att-data-amount-next-installment">amount_next_installment</attribute>
+            <attribute name="t-att-data-name-next-installment">name_next_installment</attribute>
+        </xpath>
+    </template>
+
+</odoo>

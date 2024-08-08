@@ -1,12 +1,34 @@
 <odoo>
     <template id="portal_my_invoices_payment" name="Payment on My Invoices" inherit_id="account.portal_my_invoices">
-        <xpath expr="//t[@t-call='portal.portal_table']/thead/tr/th[last()]" position="before">
-            <th></th>
+        <xpath expr="//t[@t-call='portal.portal_table']/thead/tr/th[last()]" position="after">
+            <th class="d-none d-lg-table-cell"/>
+            <th/>
         </xpath>
-        <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">
+        <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="after">
+            <td class="d-none d-lg-table-cell text-center">
+                <span
+                    t-if="invoice_data['show_installment']"
+                    t-attf-class="{{'text-danger' if invoice_data['amount_overdue'] else ''}}"
+                    t-out="invoice_data['amount_overdue'] or invoice_data['amount_next_installment']"
+                    t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"
+                />
+                <small
+                    t-if="invoice_data['show_installment'] and not invoice_data['amount_overdue']"
+                    class="o_portal_invoice_due_date"
+                    t-att-datetime="invoice_data['date_next_installment']"
+                />
+                <small t-if="invoice_data['amount_overdue']" class="text-danger">
+                    overdue
+                </small>
+            </td>
             <td class="text-center">
                 <a t-if="invoice._has_to_be_paid()"
-                    t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay Now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
+                    t-att-href="invoice.get_portal_url(anchor='portal_pay', query_string='&amp;payment=True')"
+                    title="Pay Now"
+                    aria-label="Pay now"
+                    class="btn btn-sm btn-primary"
+                    role="button"
+                >
                     <i class="fa fa-arrow-circle-right"/><span class='d-none d-md-inline'> Pay Now</span>
                 </a>
             </td>
@@ -37,14 +59,132 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title">Pay with</h3>
+                            <h3 class="modal-title">Pay Invoice</h3>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div t-if="company_mismatch">
                                 <t t-call="payment.company_mismatch_warning"/>
                             </div>
-                            <t t-else="" t-call="payment.form"/>
+                            <div t-elif="amount_custom or amount_overdue or amount_next_installment" id="o_payment_installments_modal">
+                                <div class="btn-group w-100" id="o_payment_tabs" role="tablist">
+                                    <button class="btn btn-outline-primary o_btn_payment_tab active"
+                                        id="o_payment_installments_tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#o_payment_installments"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="o_payment_installments"
+                                        aria-selected="true"
+                                    >
+                                        <strong>Installment</strong>
+                                        <br/>
+                                        <t
+                                            t-out="amount_custom or amount_overdue or amount_next_installment"
+                                            t-options="{'widget': 'monetary', 'display_currency': currency}"
+                                        />
+                                    </button>
+                                    <button class="btn btn-outline-primary o_btn_payment_tab"
+                                        id="o_payment_full_tab"
+                                        data-bs-toggle="pill"
+                                        data-bs-target="#o_payment_full"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="o_payment_full"
+                                        aria-selected="false"
+                                    >
+                                        <strong>Full Amount</strong><br/>
+                                        <t t-out="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    </button>
+                                </div>
+                                <div class="tab-content" id="o_payment_tabcontent">
+                                    <div
+                                        class="tab-pane my-3 show active"
+                                        id="o_payment_installments"
+                                        role="tabpanel"
+                                        aria-labelledby="o_payment_installments_tab"
+                                        tabindex="0"
+                                    >
+                                        <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 py-2 rounded">
+                                            <t t-call="payment.summary_item">
+                                                <t t-set="name" t-value="'amount_installment'"/>
+                                                <t t-set="label">Amount</t>
+                                                <t t-set="value" t-value="amount_custom or amount_overdue or amount_next_installment"/>
+                                                <t t-set="options"
+                                                    t-value="{'widget': 'monetary', 'display_currency': currency}"
+                                                />
+                                            </t>
+                                            <t t-call="payment.summary_item">
+                                                <t t-set="name" t-value="'reference_installment'"/>
+                                                <t t-set="label">Reference</t>
+                                                <t t-set="value" t-value="invoice_name if amount_custom or amount_overdue else invoice_name_installment"/>
+                                                <t t-set="include_separator" t-value="True"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane my-3"
+                                        id="o_payment_full"
+                                        role="tabpanel"
+                                        aria-labelledby="o_payment_full_tab"
+                                        tabindex="0"
+                                    >
+                                        <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 py-2 rounded">
+                                            <t t-call="payment.summary_item">
+                                                <t t-set="name" t-value="'amount_full'"/>
+                                                <t t-set="label">Amount</t>
+                                                <t t-set="value" t-value="amount"/>
+                                                <t t-set="options"
+                                                    t-value="{'widget': 'monetary', 'display_currency': currency}"
+                                                />
+                                            </t>
+                                            <t t-call="payment.summary_item">
+                                                <t t-set="name" t-value="'reference_full'"/>
+                                                <t t-set="label">Reference</t>
+                                                <t t-set="value" t-value="invoice_name"/>
+                                                <t t-set="include_separator" t-value="True"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <t t-call="account_payment.form"/>
+                                </div>
+                            </div>
+                            <t t-elif="amount > 0">
+                                <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
+                                    <t t-call="payment.summary_item">
+                                        <t t-set="name" t-value="'amount_full'"/>
+                                        <t t-set="label">Amount</t>
+                                        <t t-set="value" t-value="amount"/>
+                                        <t t-set="options"
+                                            t-value="{'widget': 'monetary', 'display_currency': currency}"
+                                        />
+                                    </t>
+                                    <t t-call="payment.summary_item">
+                                        <t t-set="name" t-value="'reference_full'"/>
+                                        <t t-set="label">Reference</t>
+                                        <t t-set="value" t-value="invoice_name"/>
+                                        <t t-set="include_separator" t-value="True"/>
+                                    </t>
+                                </div>
+                                <t t-call="account_payment.form"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_invoice_payment_paid" name="Invoice Paid">
+        <div class="modal fade" id="pay_with" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Pay Invoice</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning text-center" role="alert">
+                            This invoice has already been paid.
                         </div>
                     </div>
                 </div>
@@ -78,9 +218,16 @@
                  t-att-data-invoice-id="invoice.id">
                 <t t-call="payment.state_header"/>
             </div>
-            <div t-if="invoice._has_to_be_paid()" id="portal_pay">
+            <div t-if="invoice._has_to_be_paid()" id="portal_pay" t-att-data-payment="payment">
                 <t t-call="account_payment.portal_invoice_payment"/>
             </div>
+            <div t-else="" id="portal_pay" t-att-data-payment="payment">
+                <t t-call="account_payment.portal_invoice_payment_paid"/>
+            </div>
+        </xpath>
+        <xpath expr="//h3[@name='installment_amount']" position="attributes">
+            <attribute name="t-if" separator=" or " add="amount_custom"/>
+            <attribute name="t-out">amount_custom or amount_overdue or amount_next_installment</attribute>
         </xpath>
     </template>
 

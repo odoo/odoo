@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo import fields, Command
 
 from dateutil.relativedelta import relativedelta
@@ -35,6 +35,15 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                     'delay_type': 'days_after',
                     'nb_days': 30,
                 }),
+            ],
+        })
+        cls.term_advance_60days = cls.env.ref('account.account_payment_term_advance_60days')
+        cls.term_0_5_10_days = cls.env['account.payment.term'].create({
+            'name': 'term_0_5_10_days',
+            'line_ids': [
+                Command.create({'value': 'percent', 'value_amount': 10.0, 'nb_days': 0}),
+                Command.create({'value': 'percent', 'value_amount': 30.0, 'nb_days': 5}),
+                Command.create({'value': 'percent', 'value_amount': 60.0, 'nb_days': 10}),
             ],
         })
 
@@ -1499,3 +1508,187 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })
 
         self.assertEqual(wizard.amount, 39.50)
+
+    def test_keep_user_amount(self):
+        comp_curr = self.env.company.currency_id
+        foreign_curr = self.other_currency
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2016-01-01',
+            'invoice_payment_term_id': self.term_advance_60days.id,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice.action_post()
+        self.assertRecordValues(invoice.line_ids.sorted().filtered('date_maturity'), [
+            {'date_maturity': fields.Date.from_string('2016-01-01'), 'amount_currency': 345.0},
+            {'date_maturity': fields.Date.from_string('2016-03-01'), 'amount_currency': 805.0},
+        ])
+
+        wizard = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_date': '2016-01-01'})
+        self.assertRecordValues(wizard, [{
+            'amount': 345.0,
+            'currency_id': comp_curr.id,
+            'custom_user_amount': 0.0,
+            'custom_user_currency_id': False,
+            'payment_difference': 0.0,
+            'installments_mode': 'next',
+            'installments_switch_amount': 1150.0,
+        }])
+
+        # Custom amount.
+        with Form(wizard) as wizard_form:
+            wizard_form.amount = 300.0
+        self.assertRecordValues(wizard, [{
+            'amount': 300.0,
+            'currency_id': comp_curr.id,
+            'custom_user_amount': 300.0,
+            'custom_user_currency_id': comp_curr.id,
+            'payment_difference': 850.0,
+            'installments_mode': 'full',
+            'installments_switch_amount': 345.0,
+        }])
+
+        # Custom currency.
+        with Form(wizard) as wizard_form:
+            wizard_form.currency_id = foreign_curr
+        self.assertRecordValues(wizard, [{
+            'amount': 900.0,
+            'currency_id': foreign_curr.id,
+            'custom_user_amount': 900.0,
+            'custom_user_currency_id': foreign_curr.id,
+            'payment_difference': 2550.0,
+            'installments_mode': 'full',
+            'installments_switch_amount': 1035.0,
+        }])
+
+        # Switch to full installment amount.
+        with Form(wizard) as wizard_form:
+            wizard_form.amount = wizard.installments_switch_amount
+        self.assertRecordValues(wizard, [{
+            'amount': 1035.0,
+            'currency_id': foreign_curr.id,
+            'custom_user_amount': 0.0,
+            'custom_user_currency_id': False,
+            'payment_difference': 0.0,
+            'installments_mode': 'next',
+            'installments_switch_amount': 3450.0,
+        }])
+
+        # Custom amount.
+        with Form(wizard) as wizard_form:
+            wizard_form.amount = 3000.0
+        self.assertRecordValues(wizard, [{
+            'amount': 3000.0,
+            'currency_id': foreign_curr.id,
+            'custom_user_amount': 3000.0,
+            'custom_user_currency_id': foreign_curr.id,
+            'payment_difference': 450.0,
+            'installments_mode': 'full',
+            'installments_switch_amount': 1035.0,
+        }])
+
+        # Change the date (rate changed from 1:3 to 1:2).
+        with Form(wizard) as wizard_form:
+            wizard_form.payment_date = fields.Date.from_string('2017-01-01')
+        self.assertRecordValues(wizard, [{
+            'amount': 3000.0,
+            'currency_id': foreign_curr.id,
+            'custom_user_amount': 3000.0,
+            'custom_user_currency_id': foreign_curr.id,
+            'payment_difference': -700.0,
+            'installments_mode': 'full',
+            'installments_switch_amount': 2300.0,
+        }])
+
+    def test_installment_mode_single_batch(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2016-01-01',
+            'invoice_payment_term_id': self.term_0_5_10_days.id,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice.action_post()
+        self.assertRecordValues(invoice.line_ids.sorted().filtered('date_maturity'), [
+            {'date_maturity': fields.Date.from_string('2016-01-01'), 'amount_currency': 115.0},
+            {'date_maturity': fields.Date.from_string('2016-01-06'), 'amount_currency': 345.0},
+            {'date_maturity': fields.Date.from_string('2016-01-11'), 'amount_currency': 690.0},
+        ])
+
+        term_lines = invoice.line_ids.filtered('date_maturity').sorted('date_maturity')
+
+        wizard = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_date': '2015-12-31'})
+
+        self.assertRecordValues(wizard, [{
+            'amount': 115.0,
+            'payment_difference': 0.0,
+            'installments_mode': 'next',
+            'installments_switch_amount': 1150.0,
+            'communication': wizard._get_communication(term_lines[0]),
+        }])
+
+        # Paying less switch the wizard in full mode.
+        wizard.amount = 114.0
+        self.assertRecordValues(wizard, [{
+            'amount': 114.0,
+            'payment_difference': 1036.0,
+            'installments_mode': 'full',
+            'installments_switch_amount': 115.0,
+            'communication': wizard._get_communication(term_lines),
+        }])
+
+        # Case when at date of the first installment.
+        wizard.payment_date = '2016-01-01'
+        self.assertRecordValues(wizard, [{
+            'amount': 115.0,
+            'payment_difference': 0.0,
+            'installments_mode': 'next',
+            'installments_switch_amount': 1150.0,
+            'communication': wizard._get_communication(term_lines[0]),
+        }])
+
+        # Paying more switch the wizard in full mode.
+        wizard.amount = 116.0
+        self.assertRecordValues(wizard, [{
+            'amount': 116.0,
+            'payment_difference': 1034.0,
+            'installments_mode': 'full',
+            'installments_switch_amount': 115.0,
+            'communication': wizard._get_communication(term_lines),
+        }])
+
+        # First installment is overdue.
+        wizard.payment_date = '2016-01-02'
+        self.assertRecordValues(wizard, [{
+            'amount': 115.0,
+            'payment_difference': 0.0,
+            'installments_mode': 'overdue',
+            'installments_switch_amount': 1150.0,
+            'communication': wizard._get_communication(term_lines[0]),
+        }])
+
+        # Second installment is overdue.
+        wizard.payment_date = '2016-01-07'
+        self.assertRecordValues(wizard, [{
+            'amount': 460.0,
+            'payment_difference': 0.0,
+            'installments_mode': 'overdue',
+            'installments_switch_amount': 1150.0,
+            'communication': wizard._get_communication(term_lines[:2]),
+        }])
+
+        # Third installment is overdue.
+        wizard.payment_date = '2016-01-12'
+        self.assertRecordValues(wizard, [{
+            'amount': 1150.0,
+            'payment_difference': 0.0,
+            'installments_mode': 'full',
+            'installments_switch_amount': 0.0,
+            'communication': wizard._get_communication(term_lines),
+        }])

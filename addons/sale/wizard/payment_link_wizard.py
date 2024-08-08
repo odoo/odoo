@@ -29,21 +29,15 @@ class PaymentLinkWizard(models.TransientModel):
                         amount=format_amount(wizard.env, remaining_amount, wizard.currency_id),
                     )
 
-    def _get_additional_link_values(self):
-        """ Override of `payment` to add `sale_order_id` to the payment link values.
-
-        The other values related to the sales order are directly read from the sales order.
-
-        Note: self.ensure_one()
-
-        :return: The additional payment link values.
-        :rtype: dict
-        """
-        res = super()._get_additional_link_values()
+    def _prepare_query_params(self, *args):
+        """ Override of `payment` to add `sale_order_id` to the query params. """
+        res = super()._prepare_query_params(*args)
         if self.res_model != 'sale.order':
             return res
 
-        # Order-related fields are retrieved in the controller
+        # The other order-related values are read directly from the sales order in the controller.
         return {
+            'amount': self.amount,
+            'access_token': self._prepare_access_token(),
             'sale_order_id': self.res_id,
         }
