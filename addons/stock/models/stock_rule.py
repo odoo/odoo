@@ -5,7 +5,7 @@ import logging
 from collections import defaultdict, namedtuple
 from dateutil.relativedelta import relativedelta
 
-from odoo import SUPERUSER_ID, _, api, fields, models, registry
+from odoo import SUPERUSER_ID, _, api, fields, models, registry, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero
@@ -258,59 +258,96 @@ class StockRule(models.Model):
         }
         return new_move_vals
 
+    def _prepare_procurement_values(self, move_vals, product, old_values):
+        date_planned = fields.Datetime.to_datetime(move_vals['date'])
+        dates_info = {'date_planned': date_planned}
+        route_ids = old_values.get('route_ids', self.env['stock.route'])
+        if self.location_src_id.warehouse_id and self.location_src_id.warehouse_id.lot_stock_id.parent_path in self.location_src_id.parent_path:
+            dates_info = product._get_dates_info(date_planned, self.location_src_id, route_ids=route_ids)
+        warehouse = self.warehouse_id or self.picking_type_id.warehouse_id
+        if not self.location_src_id.warehouse_id:
+            warehouse = self.propagate_warehouse_id
+        description_picking = move_vals.get('description_picking', False)
+        product_lang = product.with_context(lang=self.env['res.partner'].browse(move_vals.get('partner_id')).lang or self.env.user.lang)
+        return {
+            'product_description_variants': description_picking and description_picking.replace(product_lang._get_description(self.picking_type_id), ''),
+            'date_planned': dates_info.get('date_planned'),
+            'date_order': dates_info.get('date_order'),
+            'date_deadline': fields.Datetime.to_datetime(move_vals['date_deadline']),
+            'move_dest_ids': [Command.create(move_vals)],
+            'group_id': move_vals.get('group_id', False) and self.env['procurement.group'].browse(move_vals['group_id']),
+            'route_ids': route_ids,
+            'warehouse_id': warehouse,
+            'priority': old_values.get('priority', "0"),
+            'orderpoint_id': old_values.get('orderpoint_id'),
+            'product_packaging_id': old_values.get('product_packaging_id'),
+        }
+
+    def _prepare_pull(self, procurement, taken_qties):
+        # We make a sanitary check on the `location_src_id` field.
+        if not self.location_src_id:
+            msg = _('No source location defined on stock rule: %s!', self.name)
+            raise ProcurementException([(procurement, msg)])
+
+        procure_method = self.procure_method
+        if self.procure_method == 'mts_else_mto':
+            qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
+            taken_qty_key = f'{procurement.product_id.id}_{self.location_src_id.id}'
+            if float_compare(qty_needed, 0, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
+                procure_method = 'make_to_order'
+                for move in procurement.values.get('group_id', self.env['procurement.group']).stock_move_ids:
+                    if move.rule_id == self and float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
+                        procure_method = move.procure_method
+                        break
+                taken_qties[taken_qty_key] += qty_needed
+            elif float_compare(qty_needed, procurement.product_id.with_context(location=self.location_src_id.id).free_qty - taken_qties[taken_qty_key], precision_rounding=procurement.product_id.uom_id.rounding) > 0:
+                procure_method = 'make_to_order'
+            else:
+                taken_qties[taken_qty_key] += qty_needed
+                procure_method = 'make_to_stock'
+
+        move_values = self._get_stock_move_values(*procurement)
+        move_values['procure_method'] = procure_method
+
+        if procure_method == 'make_to_order':
+            values = self._prepare_procurement_values(move_values, procurement.product_id, procurement.values)
+            origin = self.env['procurement.group'].browse(move_values['group_id']).name if move_values['group_id'] else procurement.origin or "/"
+            proc = self.env['procurement.group'].Procurement(
+                procurement.product_id, procurement.product_qty, procurement.product_uom, self.location_src_id,
+                self.name, origin, self.env['res.company'].browse(move_values['company_id']), values
+            )
+            if proc.location_id.usage == 'transit' and not proc.location_id.company_id:
+                # Make sure to start a separate chain for intercompany
+                proc.values['move_dest_ids'] = False
+                self.env['procurement.group'].run([proc])
+                return 'pull', move_values
+            run_type, vals = self.env['procurement.group']._fetch_rule_and_prepare(proc, taken_qties)
+            if not vals:
+                return 'pull', move_values
+            return run_type, vals
+        else:
+            return 'pull', move_values
+
     @api.model
-    def _run_pull(self, procurements):
+    def _run_pull(self, move_vals, procurements):
         moves_values_by_company = defaultdict(list)
-        mtso_products_by_locations = defaultdict(list)
-
-        # To handle the `mts_else_mto` procure method, we do a preliminary loop to
-        # isolate the products we would need to read the forecasted quantity,
-        # in order to to batch the read. We also make a sanitary check on the
-        # `location_src_id` field.
-        for procurement, rule in procurements:
-            if not rule.location_src_id:
-                msg = _('No source location defined on stock rule: %s!', rule.name)
-                raise ProcurementException([(procurement, msg)])
-
-            if rule.procure_method == 'mts_else_mto':
-                mtso_products_by_locations[rule.location_src_id].append(procurement.product_id.id)
-
-        # Get the forecasted quantity for the `mts_else_mto` procurement.
-        forecasted_qties_by_loc = {}
-        for location, product_ids in mtso_products_by_locations.items():
-            products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
-            forecasted_qties_by_loc[location] = {product.id: product.free_qty for product in products}
-
-        # Prepare the move values, adapt the `procure_method` if needed.
-        procurements = sorted(procurements, key=lambda proc: float_compare(proc[0].product_qty, 0.0, precision_rounding=proc[0].product_uom.rounding) > 0)
-        for procurement, rule in procurements:
-            procure_method = rule.procure_method
-            if rule.procure_method == 'mts_else_mto':
-                qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
-                if float_compare(qty_needed, 0, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
-                    procure_method = 'make_to_order'
-                    for move in procurement.values.get('group_id', self.env['procurement.group']).stock_move_ids:
-                        if move.rule_id == rule and float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
-                            procure_method = move.procure_method
-                            break
-                    forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
-                elif float_compare(qty_needed, forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id],
-                                   precision_rounding=procurement.product_id.uom_id.rounding) > 0:
-                    procure_method = 'make_to_order'
-                else:
-                    forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
-                    procure_method = 'make_to_stock'
-
-            move_values = rule._get_stock_move_values(*procurement)
-            move_values['procure_method'] = procure_method
-            moves_values_by_company[procurement.company_id.id].append(move_values)
-
+        for move in move_vals:
+            moves_values_by_company[move['company_id']].append(move)
         for company_id, moves_values in moves_values_by_company.items():
             # create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             moves = self.env['stock.move'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(moves_values)
-            # Since action_confirm launch following procurement_group we should activate it.
-            moves._action_confirm()
+            self._confirm_new_moves(moves, procurements)
         return True
+
+    def _confirm_new_moves(self, moves, procurements):
+        current = moves.move_dest_ids
+        while current:
+            moves |= current
+            current = current.move_dest_ids
+        for proc in procurements:
+            if proc.values.get('move_dest_ids'):
+                moves -= proc.values.get('move_dest_ids')
+        moves.with_context(do_not_procure=True)._action_confirm()
 
     def _get_custom_move_fields(self):
         """ The purpose of this method is to be override in order to easily add
@@ -345,18 +382,18 @@ class StockRule(models.Model):
         # a new move with the correct qty
         qty_left = product_qty
 
-        move_dest_ids = []
-        if not self.location_dest_id.should_bypass_reservation():
-            move_dest_ids = values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or []
-
         # when create chained moves for inter-warehouse transfers, set the warehouses as partners
-        if not partner and move_dest_ids:
-            move_dest = values['move_dest_ids']
+        if not partner and values.get('move_dest_ids'):
             if location_dest_id == company_id.internal_transit_location_id:
-                partners = move_dest.location_dest_id.warehouse_id.partner_id
+                move_dest = values['move_dest_ids']
+                if 'id' not in move_dest:
+                    move_dest = move_dest[0][2]
+                    partners = self.browse(move_dest['rule_id']).warehouse_id.partner_id
+                else:
+                    partners = move_dest.location_dest_id.warehouse_id.partner_id
                 if len(partners) == 1:
                     partner = partners
-                move_dest.partner_id = self.location_src_id.warehouse_id.partner_id or self.company_id.partner_id
+                move_dest['partner_id'] = self.location_src_id.warehouse_id.partner_id.id or self.company_id.partner_id.id
 
         # If the quantity is negative the move should be considered as a refund
         if float_compare(product_qty, 0.0, precision_rounding=product_uom.rounding) < 0:
@@ -371,7 +408,7 @@ class StockRule(models.Model):
             'partner_id': partner.id if partner else False,
             'location_id': self.location_src_id.id,
             'location_final_id': location_dest_id.id,
-            'move_dest_ids': move_dest_ids,
+            'move_dest_ids': values.get('move_dest_ids', False),
             'rule_id': self.id,
             'procure_method': self.procure_method,
             'origin': origin,
@@ -468,6 +505,25 @@ class ProcurementGroup(models.Model):
             procurement.product_qty, precision_rounding=procurement.product_uom.rounding
         )
 
+    def _fetch_rule_and_prepare(self, procurement, taken_qties):
+        procurement.values.setdefault('company_id', procurement.location_id.company_id)
+        procurement.values.setdefault('priority', '0')
+        procurement.values.setdefault('date_planned', procurement.values.get('date_planned', False) or fields.Datetime.now())
+        if self._skip_procurement(procurement):
+            return False, False
+        rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
+        if not rule:
+            error = _(
+                'No rule has been found to replenish "%(product)s" in "%(location)s".\nVerify the routes configuration on the product.',
+                product=procurement.product_id.display_name, location=procurement.location_id.display_name)
+            raise ProcurementException([(procurement, error)])
+        action = 'pull' if rule.action == 'pull_push' else rule.action
+        if hasattr(rule, '_prepare_%s' % action):
+            return getattr(rule, '_prepare_%s' % action)(procurement, taken_qties)
+        else:
+            _logger.error("The method _run_%s doesn't exist on the procurement rules", action)
+            return False, False
+
     @api.model
     def run(self, procurements, raise_user_error=True):
         """Fulfil `procurements` with the help of stock rules.
@@ -491,30 +547,22 @@ class ProcurementGroup(models.Model):
                 raise UserError('\n'.join(errors))
             else:
                 raise ProcurementException(procurement_errors)
+
         actions_to_run = defaultdict(list)
+        taken_qties = defaultdict(float)
         procurement_errors = []
         for procurement in procurements:
-            procurement.values.setdefault('company_id', procurement.location_id.company_id)
-            procurement.values.setdefault('priority', '0')
-            procurement.values.setdefault('date_planned', procurement.values.get('date_planned', False) or fields.Datetime.now())
-            if self._skip_procurement(procurement):
-                continue
-            rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
-            if not rule:
-                error = _('No rule has been found to replenish "%(product)s" in "%(location)s".\nVerify the routes configuration on the product.',
-                    product=procurement.product_id.display_name, location=procurement.location_id.display_name)
-                procurement_errors.append((procurement, error))
-            else:
-                action = 'pull' if rule.action == 'pull_push' else rule.action
-                actions_to_run[action].append((procurement, rule))
+            try:
+                key, vals = self._fetch_rule_and_prepare(procurement, taken_qties)
+                if key:
+                    actions_to_run[key].append(vals)
+            except ProcurementException as e:
+                procurement_errors += e.procurement_exceptions
 
-        if procurement_errors:
-            raise_exception(procurement_errors)
-
-        for action, procurements in actions_to_run.items():
+        for action, values in actions_to_run.items():
             if hasattr(self.env['stock.rule'], '_run_%s' % action):
                 try:
-                    getattr(self.env['stock.rule'], '_run_%s' % action)(procurements)
+                    getattr(self.env['stock.rule'], '_run_%s' % action)(values, procurements)
                 except ProcurementException as e:
                     procurement_errors += e.procurement_exceptions
             else:

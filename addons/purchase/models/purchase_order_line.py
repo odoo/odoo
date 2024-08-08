@@ -252,7 +252,7 @@ class PurchaseOrderLine(models.Model):
            :rtype: datetime
            :return: desired Schedule Date for the PO line
         """
-        date_order = po.date_order if po else self.order_id.date_order
+        date_order = po['date_order'] if po else self.order_id.date_order
         if date_order:
             return date_order + relativedelta(days=seller.delay if seller else 0)
         else:
@@ -592,27 +592,28 @@ class PurchaseOrderLine(models.Model):
         return res
 
     @api.model
-    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po):
+    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po_vals):
         partner = supplier.partner_id
         uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id, rounding_method='HALF-UP')
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
         today = fields.Date.today()
+        date_order = 'date_order' in po_vals and po_vals['date_order']
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner,
             quantity=uom_po_qty,
-            date=po.date_order and max(po.date_order.date(), today) or today,
+            date=date_order and max(po_vals['date_order'].date(), today) or today,
             uom_id=product_id.uom_po_id)
 
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
-        taxes = po.fiscal_position_id.map_tax(product_taxes)
+        taxes = (po_vals['fiscal_position_id'] or self.env['account.fiscal.position']).map_tax(product_taxes)
 
         price_unit = seller.price if seller else product_id.standard_price
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(
-            price_unit, product_taxes, taxes, company_id)
-        if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
-            price_unit = seller.currency_id._convert(
-                price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())
+        price_unit = self.env['account.tax']._fix_tax_included_price_company(price_unit, product_taxes, taxes, company_id)
+        currency_id = 'currency_id' in po_vals and po_vals['currency_id']
+        currency_id = currency_id.id if 'id' in po_vals else currency_id
+        if price_unit and seller and ('currency_id' in po_vals) and seller.currency_id.id != currency_id:
+            price_unit = seller.currency_id._convert(price_unit, po_vals['currency_id'], po_vals['company_id'], date_order or fields.Date.today())
 
         product_lang = product_id.with_prefetch().with_context(
             lang=partner.lang,
@@ -622,7 +623,7 @@ class PurchaseOrderLine(models.Model):
         if product_lang.description_purchase:
             name += '\n' + product_lang.description_purchase
 
-        date_planned = self.order_id.date_planned or self._get_date_planned(seller, po=po)
+        date_planned = self.order_id.date_planned or self._get_date_planned(seller, po=po_vals)
         discount = seller.discount or 0.0
 
         return {
@@ -633,7 +634,7 @@ class PurchaseOrderLine(models.Model):
             'price_unit': price_unit,
             'date_planned': date_planned,
             'taxes_id': [(6, 0, taxes.ids)],
-            'order_id': po.id,
+            'order_id': po_vals.id if 'id' in po_vals else False,
             'discount': discount,
         }
 

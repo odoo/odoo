@@ -67,7 +67,7 @@ class TestOldRules(TestStockCommon):
                 }
             ),
         ])
-        ship, pack, pick = self.env['stock.move'].search([('product_id', '=', self.productA.id)])
+        pick, pack, ship = self.env['stock.move'].search([('product_id', '=', self.productA.id)])
 
         # by default they all the same `date`
         self.assertEqual(set((ship + pack + pick).mapped('date')), {pick.date})

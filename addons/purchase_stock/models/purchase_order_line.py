@@ -267,7 +267,7 @@ class PurchaseOrderLine(models.Model):
     def _check_orderpoint_picking_type(self):
         warehouse_loc = self.order_id.picking_type_id.warehouse_id.view_location_id
         dest_loc = self.move_dest_ids.location_id or self.orderpoint_id.location_id
-        if warehouse_loc and dest_loc and dest_loc.warehouse_id and not warehouse_loc.parent_path in dest_loc[0].parent_path:
+        if warehouse_loc and dest_loc and dest_loc.warehouse_id and warehouse_loc.parent_path not in dest_loc[0].parent_path:
             raise UserError(_('The warehouse of operation type (%(operation_type)s) is inconsistent with location (%(location)s) of reordering rule (%(reordering_rule)s) for product %(product)s. Change the operation type or cancel the request for quotation.',
                               product=self.product_id.display_name, operation_type=self.order_id.picking_type_id.display_name, location=self.orderpoint_id.location_id.display_name, reordering_rule=self.orderpoint_id.display_name))
 
@@ -322,7 +322,7 @@ class PurchaseOrderLine(models.Model):
         if line_description and product_id.name != line_description:
             res['name'] += '\n' + line_description
         res['date_planned'] = values.get('date_planned')
-        res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
+        res['move_dest_ids'] = values.get('move_dest_ids', [])
         res['location_final_id'] = location_dest_id.id
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
         res['propagate_cancel'] = values.get('propagate_cancel')
@@ -348,7 +348,7 @@ class PurchaseOrderLine(models.Model):
             description_picking = values['product_description_variants']
         lines = self.filtered(
             lambda l: l.propagate_cancel == values['propagate_cancel']
-            and (l.orderpoint_id == values['orderpoint_id'] if values['orderpoint_id'] and not values['move_dest_ids'] else True)
+            and (l.orderpoint_id == values['orderpoint_id'] if values.get('orderpoint_id', False) and not values.get('move_dest_ids') else True)
         )
 
         # In case 'product_description_variants' is in the values, we also filter on the PO line
