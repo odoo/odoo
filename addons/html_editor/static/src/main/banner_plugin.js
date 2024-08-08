@@ -75,6 +75,13 @@ export class BannerPlugin extends Plugin {
             </div`
         ).childNodes[0];
         this.shared.domInsert(bannerElement);
+        // If the first child of editable is contenteditable false element
+        // a chromium bug prevents selecting the container. Prepend a
+        // zero-width space so it's no longer the first child.
+        if (this.editable.firstChild === bannerElement) {
+            const zws = document.createTextNode("\u200B");
+            bannerElement.before(zws);
+        }
         this.shared.setCursorStart(bannerElement.querySelector(".o_editor_banner > div > p"));
         this.dispatch("ADD_STEP");
     }

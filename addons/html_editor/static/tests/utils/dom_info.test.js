@@ -351,4 +351,11 @@ describe("getDeepestPosition", () => {
         [node, offset] = getDeepestPosition(editable, 1);
         expect([node, offset]).toEqual([a, 1]);
     });
+    test("should not skip zwnbsp", () => {
+        const [a] = insertTestHtml('\ufeff<a href="#">abc</a>');
+        const editable = a.parentElement;
+        const zwnbsp = editable.firstChild;
+        const [node, offset] = getDeepestPosition(editable, 0);
+        expect([node, offset]).toEqual([zwnbsp, 0]);
+    });
 });
