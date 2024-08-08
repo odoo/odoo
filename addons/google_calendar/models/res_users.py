@@ -163,10 +163,7 @@ class User(models.Model):
     @api.model
     def check_calendar_credentials(self):
         res = super().check_calendar_credentials()
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        client_id = get_param('google_calendar_client_id')
-        client_secret = get_param('google_calendar_client_secret')
-        res['google_calendar'] = bool(client_id and client_secret)
+        res['google_calendar'] = self.env['google.service']._has_setup_credentials()
         return res
 
     def check_synchronization_status(self):
