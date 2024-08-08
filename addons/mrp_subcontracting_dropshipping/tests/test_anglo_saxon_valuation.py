@@ -208,3 +208,62 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
                 {'reference': dropship_backorder.name, 'quantity': 0, 'value': -8000},
             ]
         )
+
+    def test_account_line_entry_kit_bom_dropship(self):
+        """ An order delivered via dropship for some kit bom product variant should result in
+        accurate journal entries in the expense and stock output accounts if the cost on the
+        purchase order line has been manually edited.
+        """
+        kit_final_prod = self.product_a
+        kit_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_final_prod.product_tmpl_id.id,
+            'product_uom_id': kit_final_prod.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+        })
+        kit_bom.bom_line_ids = [(0, 0, {
+            'product_id': self.product_b.id,
+            'product_qty': 1,
+        })]
+
+        self.env['product.supplierinfo'].create({
+            'product_id': self.product_b.id,
+            'partner_id': self.partner_a.id,
+            'price': 2000,
+        })
+
+        (kit_final_prod + self.product_b).categ_id.write({
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time',
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_b.id,
+            'order_line': [(0, 0, {
+                'price_unit': 900,
+                'product_id': kit_final_prod.id,
+                'route_id': self.dropship_route.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order._get_purchase_orders()[0]
+        purchase_order.button_confirm()
+        dropship_transfer = purchase_order.picking_ids[0]
+        dropship_transfer.move_ids[0].quantity = 2.0
+        dropship_transfer.button_validate()
+
+        account_move = sale_order._create_invoices()
+        account_move.action_post()
+
+        self.assertRecordValues(
+            account_move.line_ids,
+            [
+                {'name': 'product_a',                       'debit': 0.0,       'credit': 1800.0},
+                {'name': '15% (Copy)',                      'debit': 0.0,       'credit': 270.0},
+                {'name': 'INV/2024/00001 installment #1',   'debit': 621.0,     'credit': 0.0},
+                {'name': 'INV/2024/00001 installment #2',   'debit': 1449.0,    'credit': 0.0},
+                {'name': 'product_a',                       'debit': 0.0,       'credit': 4000.0},
+                {'name': 'product_a',                       'debit': 4000.0,    'credit': 0.0},
+            ]
+        )
