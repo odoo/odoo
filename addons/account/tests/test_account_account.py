@@ -742,6 +742,119 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         self.assertEqual(self.env['account.chart.template'].with_company(company_2).ref('test_account_3'), accounts[1])
         self.assertEqual(self.env['account.chart.template'].with_company(company_2).ref('test_account_4'), accounts[1])
 
+    def test_unmerge(self):
+        company_1 = self.company_data['company']
+        company_2 = self.company_data_2['company']
+
+        # Step 1: Create a merged account and check that it's correct.
+        accounts = self.env['account.account']._load_records([
+            {
+                'xml_id': f'account.{company_1.id}_test_account_1',
+                'values': {
+                    'name': 'My First Account',
+                    'code': '100234',
+                    'account_type': 'asset_current',
+                    'company_ids': [Command.link(company_1.id)],
+                    'tax_ids': [Command.link(self.company_data['default_tax_sale'].id)],
+                    'tag_ids': [Command.link(self.env.ref('account.account_tag_operating').id)],
+                },
+            },
+            {
+                'xml_id': f'account.{company_2.id}_test_account_2',
+                'values': {
+                    'name': 'My Second Account',
+                    'code': '100235',
+                    'account_type': 'asset_current',
+                    'company_ids': [Command.link(company_2.id)],
+                    'tax_ids': [Command.link(self.company_data_2['default_tax_sale'].id)],
+                    'tag_ids': [Command.link(self.env.ref('account.account_tag_investing').id)],
+                },
+            },
+        ])
+        accounts.with_context({
+            'account_merge_confirm': True,
+            'allowed_company_ids': [company_1.id, company_2.id],
+        }).action_merge()
+        self.assertFalse(accounts[1].exists())
+
+        account = accounts[0]
+        self.assertRecordValues(account, [{
+            'company_ids': [company_1.id, company_2.id],
+            'name': 'My First Account',
+            'code': '100234',
+            'tax_ids': [self.company_data['default_tax_sale'].id, self.company_data_2['default_tax_sale'].id],
+            'tag_ids': [self.env.ref('account.account_tag_operating').id, self.env.ref('account.account_tag_investing').id],
+        }])
+        self.assertRecordValues(account.with_company(company_2), [{'code': '100235'}])
+        self.assertEqual(self.env['account.chart.template'].ref('test_account_1'), account)
+        self.assertEqual(self.env['account.chart.template'].with_company(company_2).ref('test_account_2'), account)
+
+        # Step 2: Create some AMLs in the merged account, in both companies.
+        move_1 = self.env['account.move'].create([
+            {
+                'journal_id': self.company_data['default_journal_sale'].id,
+                'date': '2024-07-20',
+                'line_ids': [
+                    Command.create({
+                        'account_id': account.id,
+                        'balance': 10.0,
+                    }),
+                    Command.create({
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'balance': -10.0,
+                    })
+                ]
+            },
+        ])
+        move_2 = self.env['account.move'].with_company(company_2).create([
+            {
+                'journal_id': self.company_data_2['default_journal_sale'].id,
+                'date': '2024-07-20',
+                'line_ids': [
+                    Command.create({
+                        'account_id': account.id,
+                        'balance': 10.0,
+                    }),
+                    Command.create({
+                        'account_id': self.company_data_2['default_account_receivable'].id,
+                        'balance': -10.0,
+                    })
+                ]
+            }
+        ])
+
+        # Step 3: Unmerge the account
+        new_account = account.with_context({
+            'account_unmerge_confirm': True,
+            'allowed_company_ids': [company_1.id, company_2.id],
+        })._action_unmerge()
+
+        # Check that the account fields are correct
+        self.assertRecordValues(account, [{
+            'company_ids': [company_1.id],
+            'name': 'My First Account',
+            'code': '100234',
+            'tax_ids': self.company_data['default_tax_sale'].ids,
+            'tag_ids': [self.env.ref('account.account_tag_operating').id, self.env.ref('account.account_tag_investing').id],
+        }])
+        self.assertRecordValues(account.with_company(company_2), [{'code': False}])
+        self.assertRecordValues(new_account.with_company(company_2), [{
+            'company_ids': [company_2.id],
+            'name': 'My First Account',
+            'code': '100235',
+            'tax_ids': self.company_data_2['default_tax_sale'].ids,
+            'tag_ids': [self.env.ref('account.account_tag_operating').id, self.env.ref('account.account_tag_investing').id],
+        }])
+        self.assertRecordValues(new_account, [{'code': False}])
+
+        # Check that the XMLids were correctly unmerged
+        self.assertEqual(self.env['account.chart.template'].ref('test_account_1'), account)
+        self.assertEqual(self.env['account.chart.template'].with_company(company_2).ref('test_account_2'), new_account)
+
+        # Check that the account was correctly set on AMLs.
+        self.assertRecordValues(move_1.line_ids[0], [{'account_id': account.id}])
+        self.assertRecordValues(move_2.line_ids[0], [{'account_id': new_account.id}])
+
     def test_account_code_mapping(self):
         account = self.env['account.account'].create({
             'code': 'test1',

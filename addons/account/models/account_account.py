@@ -2,6 +2,7 @@ from bisect import bisect_left
 from collections import defaultdict
 import itertools
 import re
+import json
 
 from odoo import api, fields, models, _, Command
 from odoo.osv import expression
@@ -1228,6 +1229,282 @@ class AccountAccount(models.Model):
             account_to_merge_into.with_company(company).sudo().code = code
 
         account_to_merge_into.sudo().company_ids = company_ids_to_write
+
+    def action_unmerge(self):
+        """ Split the account `self` into several accounts, one per company.
+        The original account's codes are assigned respectively to the account created in each company.
+
+        From an accounting perspective, this does not change anything to the journal items, since their
+        account codes will remain unchanged. """
+
+        self._check_action_unmerge_possible()
+
+        self._action_unmerge_get_user_confirmation()
+
+        self._action_unmerge()
+
+        return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
+
+    def _check_action_unmerge_possible(self):
+        """ Raises an error if the recordset `self` cannot be unmerged. """
+        if len(self) != 1:
+            raise UserError(_("You must select a single account to un-merge."))
+
+        if len(self.company_ids) == 1:
+            raise UserError(_(
+                "Account %s cannot be unmerged as it already belongs to a single company. "
+                "The unmerge operation only splits an account based on its companies.",
+                self.display_name,
+            ))
+
+    def _action_unmerge_get_user_confirmation(self):
+        """ Open a RedirectWarning asking the user whether to proceed with the merge. """
+        if self.env.context.get('account_unmerge_confirm'):
+            return
+
+        msg = _(
+            "Are you sure? This will split the account into one account per company:",
+            account=self.display_name,
+            num_accounts=len(self.company_ids),
+        )
+        msg += ''.join(f'\n    - {company.name}: {self.with_company(company).display_name}' for company in self.company_ids)
+        action = self.env['ir.actions.actions']._for_xml_id('account.action_unmerge_accounts')
+        raise RedirectWarning(msg, action, _("Unmerge"), additional_context={**self.env.context, 'account_unmerge_confirm': True})
+
+    def _action_unmerge(self):
+        # Step 1: Check access rights.
+        self.check_access_rights('write')
+        self.check_access_rule('write')
+        if forbidden_companies := (self.sudo().company_ids - self.env.companies):
+            raise UserError(_(
+                "You do not have the right to perform this operation as you do not have access to the following companies: %s.",
+                ", ".join(c.name for c in forbidden_companies)
+            ))
+
+        # Step 2: Create new accounts.
+        base_company = self.env.company if self.env.company in self.company_ids else self.company_ids[0]
+        companies_to_update = self.company_ids - base_company
+        check_company_fields = {fname for fname, field in self._fields.items() if field.relational and field.check_company}
+        new_account_by_company = {
+            company: self.copy(default={
+                'name': self.name,
+                'company_ids': [Command.set(company.ids)],
+                **{
+                    fname: self[fname].filtered(lambda record: record.company_id == company)
+                    for fname in check_company_fields
+                }
+            })
+            for company in companies_to_update
+        }
+        new_accounts = self.env['account.account'].union(*new_account_by_company.values())
+
+        # Step 3: Update foreign keys in DB.
+
+        new_account_id_by_company_id = {str(company.id): new_account.id for company, new_account in new_account_by_company.items()}
+        new_account_id_by_company_id[base_company.id] = self.id  # Needed for update of xmlids
+        new_account_id_by_company_id_json = json.dumps(new_account_id_by_company_id)
+        (self | new_accounts).invalidate_recordset()
+
+        # 3.1: Add fields on other models that reference account.account
+        many2x_fields = self.env['ir.model.fields'].search([
+            ('ttype', 'in', ('many2one', 'many2many')),
+            ('relation', '=', 'account.account'),
+            ('store', '=', True)
+        ])
+        for field_to_update in many2x_fields:
+            model = field_to_update.model
+            if not self.env[model]._auto:
+                continue
+            if model == 'res.company':
+                company_id_field = 'id'
+            elif 'company_id' in self.env[model]:
+                company_id_field = 'company_id'
+            else:
+                continue
+            if not self.env[model]._fields[company_id_field].store:
+                continue
+            if field_to_update.ttype == 'many2one':
+                table = self.env[model]._table
+                account_column = field_to_update.name
+                model_column = 'id'
+            else:
+                table = field_to_update.relation_table
+                account_column = field_to_update.column2
+                model_column = field_to_update.column1
+            records_to_update = self.env[model].search([(field_to_update.name, '=', self.id)])
+            records_to_update.invalidate_recordset([field_to_update.name])
+
+            # We use a subquery + _field_to_sql in order to handle related company_id fields.
+            company_id_query = self.env[model]._where_calc([(field_to_update.name, '=', self.id)])
+            company_id_select = company_id_query.select(
+                SQL('%s AS id', self.env[model]._field_to_sql(company_id_query.table, 'id')),
+                SQL('%s AS company_id', self.env[model]._field_to_sql(company_id_query.table, company_id_field, company_id_query)),
+            )
+            query = SQL(
+                """
+                 UPDATE %(table)s
+                    SET %(account_column)s = (
+                            %(new_account_id_by_company_id_json)s::jsonb->>
+                            table_with_company_id.%(company_id_column)s::text
+                        )::int
+                   FROM (%(company_id_select)s) table_with_company_id
+                  WHERE table_with_company_id.id = %(model_column)s
+                    AND %(table)s.%(account_column)s = %(account_id)s
+                    AND table_with_company_id.%(company_id_column)s IN %(company_ids_to_update)s
+                """,
+                table=SQL.identifier(table),
+                account_column=SQL.identifier(account_column),
+                new_account_id_by_company_id_json=new_account_id_by_company_id_json,
+                company_id_column=SQL.identifier(company_id_field),
+                company_id_select=company_id_select,
+                model_column=SQL.identifier(table, model_column),
+                account_id=self.id,
+                company_ids_to_update=tuple(new_account_id_by_company_id),
+            )
+            self.env.cr.execute(query)
+
+        # 3.2: Add Reference fields that reference account.account
+        # Include the 'value_reference' field on ir.property that is nominally a char (used e.g. for default receivable accounts)
+        reference_fields = self.env['ir.model.fields'].search([
+            '|',
+            '&', ('ttype', '=', 'reference'), ('store', '=', True),
+            '&', ('model', '=', 'ir.property'), ('name', '=', 'value_reference'),
+        ])
+        for field_to_update in reference_fields:
+            model = field_to_update.model
+            if not self.env[model]._auto:
+                continue
+            if model == 'res.company':
+                company_id_field = 'id'
+            elif 'company_id' in self.env[model]:
+                company_id_field = 'company_id'
+            else:
+                continue
+            if not self.env[model]._fields[company_id_field].store:
+                continue
+            records_to_update = self.env[model].search([(field_to_update.name, '=', self.id)])
+            records_to_update.invalidate_recordset([field_to_update.name])
+            query = SQL(
+                """
+                 UPDATE %(table)s
+                    SET %(column)s = 'account.account,' || (%(new_account_id_by_company_id_json)s::jsonb->>%(company_id_column)s::text)
+                  WHERE %(column)s = %(value_to_update)s
+                    AND %(company_id_column)s IN %(company_ids_to_update)s
+                """,
+                table=SQL.identifier(self.env[model]._table),
+                column=SQL.identifier(field_to_update.name),
+                new_account_id_by_company_id_json=new_account_id_by_company_id_json,
+                company_id_column=SQL.identifier(company_id_field),
+                value_to_update=f'account.account,{self.id}',
+                company_ids_to_update=tuple(new_account_id_by_company_id),
+            )
+            self.env.cr.execute(query)
+
+        # 3.3: Add Many2OneReference fields that reference account.account
+        many2one_reference_fields = self.env['ir.model.fields'].search([
+            ('ttype', '=', 'many2one_reference'),
+            ('store', '=', True),
+            '!',
+            ('model', '=', 'studio.approval.request'),  # A weird Many2oneReference which doesn't have its model field on the model.
+            ('name', '=', 'res_id'),
+        ])
+        for field_to_update in many2one_reference_fields:
+            model = field_to_update.model
+            model_field = self.env[model]._fields[field_to_update.name]._related_model_field
+            if not self.env[model]._auto or not self.env[model]._fields[model_field].store:
+                continue
+            if model == 'res.company':
+                company_id_field = 'id'
+            elif 'company_id' in self.env[model]:
+                company_id_field = 'company_id'
+            else:
+                continue
+            if not self.env[model]._fields[company_id_field].store:
+                continue
+            records_to_update = self.env[model].search([(field_to_update.name, '=', self.id), (model_field, '=', 'account.account')])
+            records_to_update.invalidate_recordset([field_to_update.name])
+            query = SQL(
+                """
+                 UPDATE %(table)s
+                    SET %(column)s = (%(new_account_id_by_company_id_json)s::jsonb->>%(company_id_column)s::text)::int
+                  WHERE %(column)s = %(account_id)s
+                    AND %(model_column)s = 'account.account'
+                    AND %(company_id_column)s IN %(company_ids_to_update)s
+                """,
+                table=SQL.identifier(self.env[model]._table),
+                column=SQL.identifier(field_to_update.name),
+                new_account_id_by_company_id_json=new_account_id_by_company_id_json,
+                company_id_column=SQL.identifier(company_id_field),
+                account_id=self.id,
+                model_column=SQL.identifier(model_field),
+                company_ids_to_update=tuple(new_account_id_by_company_id),
+            )
+            self.env.cr.execute(query)
+
+        # 3.4: Update ir_property.
+        # First, remove values already existing for the new accounts (e.g. their codes)
+        self.env['ir.property'].invalidate_model()
+        self.env.cr.execute(SQL(
+            """
+             DELETE FROM ir_property
+              WHERE res_id = %(new_account_res_ids)s
+            """,
+            new_account_res_ids=tuple(f'account.account,{new_account.id}' for new_account in new_accounts),
+        ))
+        # Then, dispatch the values of the existing account to the new accounts.
+        self.env.cr.execute(SQL(
+            """
+             UPDATE ir_property
+                SET res_id = 'account.account,' || (%(new_account_id_by_company_id_json)s::jsonb->>company_id::text)
+              WHERE res_id = %(account_res_id)s
+                AND company_id IN %(company_ids_to_update)s
+            """,
+            new_account_id_by_company_id_json=new_account_id_by_company_id_json,
+            account_res_id=f'account.account,{self.id}',
+            company_ids_to_update=tuple(new_account_id_by_company_id),
+        ))
+
+        # 3.5. Split account xmlids based on the company_id that is present within the xmlid
+        self.env['ir.model.data'].invalidate_model()
+        self.env.cr.execute(SQL(
+            """
+             UPDATE ir_model_data
+                SET res_id = (
+                        %(new_account_id_by_company_id_json)s::jsonb->>
+                        substring(name, %(xmlid_regex)s)
+                    )::int
+              WHERE module = 'account'
+                AND model = 'account.account'
+                AND res_id = %(account_id)s
+                AND name ~ %(xmlid_regex)s
+            """,
+            new_account_id_by_company_id_json=new_account_id_by_company_id_json,
+            xmlid_regex=r'([\d]+)_.*',
+            account_id=self.id,
+        ))
+
+        # Clear ir.model.data ormcache
+        self.env.registry.clear_cache()
+
+        # Step 4: Change check_company fields to only keep values compatible with the account's company, and update company_ids on account.
+        write_vals = {'company_ids': [Command.set(base_company.ids)]}
+        check_company_fields = {field for field in self._fields.values() if field.relational and field.check_company}
+        for field in check_company_fields:
+            corecord = self[field.name]
+            filtered_corecord = corecord.filtered_domain(corecord._check_company_domain(base_company))
+            write_vals[field.name] = filtered_corecord.id if field.type == 'many2one' else [Command.set(filtered_corecord.ids)]
+
+        self.write(write_vals)
+
+        # Step 5: Put a log in the chatter of the newly-created accounts
+        msg_body = _(
+            "This account was split off from %(account_name)s (%(company_name)s).",
+            account_name=self._get_html_link(title=self.display_name),
+            company_name=base_company.name,
+        )
+        new_accounts._message_log_batch(bodies={a.id: msg_body for a in new_accounts})
+
+        return new_accounts
 
 
 class AccountGroup(models.Model):
