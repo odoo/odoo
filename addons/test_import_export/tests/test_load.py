@@ -1424,6 +1424,18 @@ class test_realworld(SavepointCaseWithUserDemo):
         )
         self.assertIs(result['ids'], False)
 
+    def test_no_install_mode(self):
+        """Test that the data is imported without the `install_mode` context key"""
+        self.env.registry.clear_cache()
+        Model = self.env['export.with.non.demo.constraint']
+        result = Model.with_context(import_file=True).load(
+            ['name'],
+            [['test']],
+        )
+        self.assertEqual(len(result['messages']), 1)
+        self.assertEqual(result['messages'][0]['message'], "Name must start with an uppercase letter")
+        self.assertIs(result['ids'], False)
+
 
 class test_date(ImporterCase):
     model_name = 'export.date'
