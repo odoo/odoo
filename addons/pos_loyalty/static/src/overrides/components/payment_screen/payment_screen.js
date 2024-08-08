@@ -3,8 +3,13 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 import { patch } from "@web/core/utils/patch";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { omit } from "@web/core/utils/objects";
+import { useService } from "@web/core/utils/hooks";
 
 patch(PaymentScreen.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.report = useService("report");
+    },
     //@override
     async validateOrder(isForceValidate) {
         const pointChanges = {};
