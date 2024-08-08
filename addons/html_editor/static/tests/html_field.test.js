@@ -1573,7 +1573,7 @@ describe("save image", () => {
                 "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
             )
         );
-        await animationFrame();
+        await waitFor("img");
         const img = htmlEditor.editable.querySelector("img");
         expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
         expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
@@ -1631,7 +1631,7 @@ describe("save image", () => {
                 "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
             )
         );
-        await animationFrame();
+        await waitFor("img");
         const img = htmlEditor.editable.querySelector("img");
         expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
         expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
@@ -1700,7 +1700,7 @@ describe("save image", () => {
                 "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
             )
         );
-        await animationFrame();
+        await waitFor("img");
         const img = htmlEditor.editable.querySelector("img");
         expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
         expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
@@ -1758,7 +1758,7 @@ describe("save image", () => {
                 "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
             )
         );
-        await animationFrame();
+        await waitFor("img");
         const img = htmlEditor.editable.querySelector("img");
         expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
         expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
