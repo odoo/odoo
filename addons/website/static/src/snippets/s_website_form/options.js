@@ -11,6 +11,8 @@ import { renderToElement } from "@web/core/utils/render";
 import { escape } from "@web/core/utils/strings";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import wUtils from '@website/js/utils';
+import { localization } from "@web/core/l10n/localization";
+const { DateTime } = luxon;
 
 let currentActionName;
 
@@ -1056,6 +1058,13 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         if (!value) {
             return;
         }
+        Object.assign(this.$target[0].dataset, {
+            requirementComparator: "",
+            customError: "",
+            errorMessage: "",
+            requirementCondition: "",
+            requirementBetween: "",
+        });
         const oldLabelText = this.$target[0].querySelector('.s_website_form_label_content').textContent;
         const field = this._getCustomField(value, oldLabelText);
         this._setActiveProperties(field);
@@ -1253,6 +1262,28 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             const allowMultipleFiles = params.activeValue > 1;
             this.$target[0].toggleAttribute("multiple", allowMultipleFiles);
         }
+        if (params.attributeName === "requirementComparator") {
+            Object.assign(this.$target[0].dataset, {
+                customError: "",
+                errorMessage: "",
+                requirementCondition: "",
+                requirementBetween: "",
+            });
+        }
+        if (["requirementCondition", "requirementBetween"].includes(params.attributeName)) {
+            const {
+                requirementComparator: comparator,
+                requirementCondition: condition,
+                requirementBetween: between,
+                type,
+            } = this.$target[0].dataset;
+            this.$target[0].dataset.errorMessage = this._defaultMessage(
+                comparator,
+                condition,
+                between,
+                type
+            );
+        }
     },
 
     //----------------------------------------------------------------------
@@ -1301,7 +1332,64 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _computeWidgetVisibility: function (widgetName, params) {
         const dependencyEl = this._getDependencyEl();
+        const currentEl = this.$target[0].querySelector(".s_website_form_input");
         switch (widgetName) {
+            // For Requirement
+            case "error_message_opt":
+                const buttonEl = this.el.querySelector('[data-name="error_message_opt"]');
+                const isCustomError = this.$target[0].dataset.customError;
+                buttonEl.classList.toggle("fa-eye", !!isCustomError);
+                buttonEl.classList.toggle("fa-eye-slash", !isCustomError);
+                break;
+            case "error_message_input_opt":
+                return !!this.$target[0].dataset.requirementComparator;
+            case "require_condition_opt":
+                return (
+                    currentEl.nodeName === "SELECT" ||
+                    !["checkbox", "radio", "file"].includes(currentEl.type)
+                );
+            case "require_condition_text_opt":
+                return (
+                    !currentEl.classList.contains("datetimepicker-input") &&
+                    (currentEl.nodeName === "TEXTAREA" ||
+                        ["text", "email", "tel", "url", "search", "password"].includes(
+                            currentEl.type
+                        ))
+                );
+            case "require_condition_num_opt":
+                return currentEl.type === "number";
+            case "require_condition_time_comparators_opt":
+                return currentEl.classList.contains("datetimepicker-input");
+            case "require_condition_additional_text":
+                return (
+                    this.$target[0].dataset.requirementComparator &&
+                    !currentEl.classList.contains("datetimepicker-input") &&
+                    (currentEl.nodeName === "TEXTAREA" ||
+                        ["text", "email", "tel", "url", "search", "password", "number"].includes(
+                            currentEl.type
+                        ))
+                );
+            case "require_condition_additional_datetime_1":
+                return (
+                    currentEl.closest(".s_website_form_datetime") &&
+                    this.$target[0].dataset.requirementComparator
+                );
+            case "require_condition_additional_date":
+                return (
+                    currentEl.closest(".s_website_form_date") &&
+                    this.$target[0].dataset.requirementComparator
+                );
+            case "require_condition_additional_datetime_2":
+                return (
+                    currentEl.closest(".s_website_form_datetime") &&
+                    ["between", "!between"].includes(this.$target[0].dataset.requirementComparator)
+                );
+            case "require_condition_additional_date_end":
+                return (
+                    currentEl.closest(".s_website_form_date") &&
+                    ["between", "!between"].includes(this.$target[0].dataset.requirementComparator)
+                );
+            // For Visibility
             case 'hidden_condition_time_comparators_opt':
                 return dependencyEl?.classList.contains("datetimepicker-input");
             case 'hidden_condition_date_between':
@@ -1703,6 +1791,79 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _getSelect: function () {
         return this.$target[0].querySelector('select');
+    },
+    /**
+     * Generates an error message for requirement set on field if validation fails.
+     *
+     * @private
+     * @param {string} comparator The method used to form the error message.
+     * @param {string} [condition] The expected value of the field.
+     * @param {string} [between] The maximum date value if the comparator is
+     *      'between' or '!between'.
+     * @returns {string} The default error message.
+     */
+    _defaultMessage(comparator, condition, between, type) {
+        const textMessages = {
+            contains: _t("This field must include keyword %s.", condition),
+            "!contains": _t("This field must not include keyword %s.", condition),
+            substring: _t("This field must include keyword %s.", condition),
+            "!substring": _t("This field must not include keyword %s.", condition),
+            greater: _t("Invalid: field is not greater than %s.", condition),
+            less: _t("Invalid: field is not less than %s.", condition),
+            "greater or equal": _t("Invalid: field is not greater than or equal to %s.", condition),
+            "less or equal": _t("Invalid: field is not less than or equal to %s.", condition),
+        };
+
+        if (textMessages[comparator]) {
+            return textMessages[comparator];
+        }
+
+        if (["date", "datetime"].includes(type)) {
+            const format = type === "date" ? localization.dateFormat : localization.dateTimeFormat;
+            const start = formatDate(DateTime.fromSeconds(parseInt(condition)), { format });
+            const end = formatDate(DateTime.fromSeconds(parseInt(between)), { format });
+
+            const dateMessages = {
+                dateEqual: _t(
+                    "Entered date or time is not correct! It must be %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "date!equal": _t(
+                    "Entered date or time is not correct! It must not be %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                before: _t(
+                    "Entered date or time is not correct! It must be before %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                after: _t(
+                    "Entered date or time is not correct! It must be after %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "equal or before": _t(
+                    "Entered date or time is not correct! It must be before or equal to %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "equal or after": _t(
+                    "Entered date or time is not correct! It must be after or equal to %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                between: _t(
+                    "Entered date or time is not correct! It must be within %(start)s and %(end)s (%(format)s).",
+                    { start, end, format }
+                ),
+                "!between": _t(
+                    "Entered date or time is not correct! It must not be within %(start)s and %(end)s (%(format)s).",
+                    { start, end, format }
+                ),
+            };
+
+            if (dateMessages[comparator]) {
+                return dateMessages[comparator];
+            }
+        }
+
+        return _t("An error has occurred, the form has not been sent.");
     },
 });
 

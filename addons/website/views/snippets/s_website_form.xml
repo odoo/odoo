@@ -237,6 +237,74 @@
                 data-apply-to="input[type='file']"
                 data-unit="MB"/>
 
+            <we-row data-name="require_condition_opt" string="Requirement">
+                <we-select data-name="require_condition_text_opt" data-attribute-name="requirementComparator" data-no-preview="true">
+                    <!-- str comparator possibilities -->
+                    <we-button data-select-data-attribute="" data-name="no_requirement_opt">None</we-button>
+                    <we-button data-select-data-attribute="substring">Contains</we-button>
+                    <we-button data-select-data-attribute="!substring">Doesn't contain</we-button>
+                </we-select>
+                <we-select data-name="require_condition_num_opt" data-attribute-name="requirementComparator" data-no-preview="true">
+                    <!-- number comparator possibilities -->
+                    <we-button data-select-data-attribute="" data-name="no_requirement_opt">None</we-button>
+                    <we-button data-select-data-attribute="greater">Is number greater than</we-button>
+                    <we-button data-select-data-attribute="less">Is number less than</we-button>
+                    <we-button data-select-data-attribute="greater or equal">Is number greater than or equal to</we-button>
+                    <we-button data-select-data-attribute="less or equal">Is number less than or equal to</we-button>
+                </we-select>
+                <we-select data-name="require_condition_time_comparators_opt" data-attribute-name="requirementComparator" data-no-preview="true">
+                    <!-- date & datetime comparator possibilities -->
+                    <we-button data-select-data-attribute="" data-name="no_requirement_opt">None</we-button>
+                    <we-button data-select-data-attribute="after">Is date after</we-button>
+                    <we-button data-select-data-attribute="before">Is date before</we-button>
+                    <we-button data-select-data-attribute="equal or after">Is date after or equal to</we-button>
+                    <we-button data-select-data-attribute="equal or before">Is date before or equal to</we-button>
+                    <we-button data-select-data-attribute="between">Is date between (included)</we-button>
+                    <we-button data-select-data-attribute="!between">Is date not between (excluded)</we-button>
+                </we-select>
+                <we-button class="fa fa-eye-slash"
+                    data-dependencies="!no_requirement_opt"
+                    title="Add predefined error message"
+                    data-attribute-name="customError"
+                    data-select-data-attribute="true"
+                    data-name="error_message_opt"
+                    data-no-preview="true"/>
+            </we-row>
+            <!-- Condition possible values  -->
+            <we-input string="Enter Condition"
+                class="o_we_sublevel_1 o_we_large"
+                data-name="require_condition_additional_text"
+                data-attribute-name="requirementCondition"
+                data-select-data-attribute=""/>
+            <we-datetimepicker string="Enter Date"
+                class="o_we_sublevel_1 o_we_large"
+                data-name="require_condition_additional_datetime_1"
+                data-attribute-name="requirementCondition"
+                data-select-data-attribute="" />
+            <we-datepicker string="Enter Date"
+                class="o_we_sublevel_1 o_we_large"
+                data-name="require_condition_additional_date"
+                data-attribute-name="requirementCondition"
+                data-select-data-attribute=""/>
+            <we-datetimepicker string="End Date"
+                class="o_we_sublevel_1 o_we_large"
+                data-name="require_condition_additional_datetime_2"
+                data-attribute-name="requirementBetween"
+                data-select-data-attribute=""/>
+            <we-datepicker string="End Date"
+                class="o_we_sublevel_1 o_we_large"
+                data-name="require_condition_additional_date_end"
+                data-attribute-name="requirementBetween"
+                data-select-data-attribute="" />
+            <!-- Error message -->
+            <we-input string="Error Message"
+                class="o_we_sublevel_1 o_we_large"
+                placeholder="Write custom error message"
+                data-request-focus="true"
+                data-attribute-name="errorMessage"
+                data-select-data-attribute=""
+                data-name="error_message_input_opt"
+                data-dependencies="error_message_opt"/>
             <we-select string="Visibility" data-no-preview="true">
                 <we-button data-set-visibility="visible" data-select-class="">Always Visible</we-button>
                 <we-button data-set-visibility="hidden" data-select-class="s_website_form_field_hidden">Hidden</we-button>
