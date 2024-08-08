@@ -530,7 +530,7 @@
                         <page string="Miscellaneous" name="miscellaneous">
                             <group>
                                 <group>
-                                    <field name="picking_type_id" readonly="state != 'draft'"/>
+                                    <field name="picking_type_id" readonly="state not in ('draft', 'confirmed')"/>
                                     <field name="location_src_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" readonly="state != 'draft'"/>
                                     <field name="location_src_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                                     <field name="warehouse_id" invisible="1"/>
