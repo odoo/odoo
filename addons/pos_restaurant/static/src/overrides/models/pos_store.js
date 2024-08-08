@@ -256,7 +256,15 @@ patch(PosStore.prototype, {
             await this.syncAllOrders();
         } finally {
             this.loadingOrderState = false;
-            let currentOrder = this.getTableOrders(table.id).find((order) =>
+
+            const tableOrders = this.models["pos.order"].filter(
+                (o) =>
+                    o.table_id?.id === table.id &&
+                    // Include the orders that are in tipping state.
+                    (!o.finalized || o.uiState.screen_data?.value?.name === "TipScreen")
+            );
+
+            let currentOrder = tableOrders.find((order) =>
                 orderUuid ? order.uuid === orderUuid : !order.finalized
             );
 
