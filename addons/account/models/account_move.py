@@ -5004,6 +5004,49 @@ class AccountMove(models.Model):
     def is_outbound(self, include_receipts=True):
         return self.move_type in self.get_outbound_types(include_receipts)
 
+    def _get_installments_data(self):
+        self.ensure_one()
+        term_lines = self.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        return term_lines._get_installments_data()
+
+    def get_next_installment_due(self):
+        self.ensure_one()
+        return next((x for x in self._get_installments_data() if not x['reconciled']), None)
+
+    def get_amount_overdue(self):
+        self.ensure_one()
+        return sum(
+            x['amount_residual_currency_unsigned']
+            for x in self._get_installments_data()
+            if x['type'] == 'overdue'
+        )
+
+    def _get_invoice_portal_extra_values(self):
+        self.ensure_one()
+        installment = self.get_next_installment_due()
+        amount_overdue = self.get_amount_overdue()
+        show_payment_info = (
+            self.payment_state not in ('paid', 'in_payment', 'reversed') and self.move_type == 'out_invoice'
+        )
+        show_amount_overdue = show_payment_info and amount_overdue and amount_overdue != self.amount_residual
+        show_installment = (
+            show_payment_info
+            and installment
+            and installment['type'] != 'early_payment_discount'
+            and installment['amount_residual_currency_unsigned'] != self.amount_residual
+        )
+        return {
+            'invoice': self,
+            'amount_paid': self.amount_total - self.amount_residual,
+            'amount_due': self.amount_residual,
+            'show_installment': show_installment or show_amount_overdue,
+            'show_payment_info': show_payment_info,
+            'amount_next_installment': installment['amount_residual_currency_unsigned'] if show_installment else 0.0,
+            'date_next_installment': installment['date_maturity'] if show_installment else None,
+            'name_next_installment': f"{self.name}-{installment['number']}" if show_installment else "",
+            'amount_overdue': amount_overdue if show_amount_overdue else 0.0,
+        }
+
     def _get_accounting_date(self, invoice_date, has_tax, lock_dates=None):
         """Get correct accounting date for previous periods, taking tax lock date and affected journal into account.
         When registering an invoice in the past, we still want the sequence to be increasing.

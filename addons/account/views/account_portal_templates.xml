@@ -53,12 +53,13 @@
                     <th>Invoice #</th>
                     <th>Invoice Date</th>
                     <th class='d-none d-md-table-cell'>Due Date</th>
+                    <th class="text-end pe-3">Amount Due</th>
                     <th>Status</th>
-                    <th class="text-end">Amount Due</th>
                 </tr>
             </thead>
             <tbody>
-                <t t-foreach="invoices" t-as="invoice">
+                <t t-foreach="invoices" t-as="invoice_data">
+                    <t t-set="invoice" t-value="invoice_data['invoice']"/>
                     <tr>
                         <td>
                             <a t-att-href="invoice.get_portal_url()" t-att-title="invoice.name">
@@ -68,6 +69,7 @@
                         </td>
                         <td><span t-field="invoice.invoice_date"/></td>
                         <td class='d-none d-md-table-cell'><span t-field="invoice.invoice_date_due"/></td>
+                        <td class="text-end pe-3"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                         <td name="invoice_status">
                             <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
                                 <span t-if="invoice.payment_state in ('paid', 'in_payment')"
@@ -92,7 +94,6 @@
                                 </span>
                             </t>
                         </td>
-                        <td class="text-end"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                     </tr>
                 </t>
             </tbody>
@@ -114,10 +115,32 @@
                     <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
                     <t t-set="title">
                         <h2 class="mb-0 text-break">
-                            <span t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
-                            <span t-else="1" t-field="invoice.amount_total"/>
+                            <span t-field="invoice.amount_total"/>
                         </h2>
-                        <div class="small" t-if="invoice.payment_state not in ('paid', 'in_payment', 'reversed') and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
+                        <div class="small" t-if="show_payment_info">
+                            <i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/>
+                        </div>
+                        <div class="my-3 w-100">
+                            <div class="alert alert-success w-100 px-2 py-1 text-center" t-if="amount_paid">
+                                Amount Paid: <span t-out="amount_paid" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"/>
+                            </div>
+                            <div class="alert alert-warning w-100 px-2 py-1 text-center" t-if="amount_due">
+                                Amount Due: <span t-out="amount_due" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"/>
+                            </div>
+                        </div>
+                        <h4 name="installment_title" class="w-100" t-if="show_installment">
+                            Installment
+                        </h4>
+                        <h3
+                            name="installment_amount"
+                            class="mb-0 text-break"
+                            t-if="show_installment"
+                            t-out="amount_overdue or amount_next_installment"
+                            t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"
+                        />
+                        <div name="installment_due_date" class="small" t-if="show_installment">
+                            <i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="date_next_installment or invoice.invoice_date_due"/>
+                        </div>
                     </t>
 
                     <t t-set="entries">

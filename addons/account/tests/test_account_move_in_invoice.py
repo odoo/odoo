@@ -1552,9 +1552,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         action_data = move.action_register_payment()
         with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
             self.assertEqual(wiz_form.payment_date.strftime('%Y-%m-%d'), '2023-02-01')
-            self.assertEqual(wiz_form.amount, 920)
+            self.assertEqual(wiz_form.amount, 276)  # First installment of 30%
             self.assertTrue(wiz_form.group_payment)
-            self.assertFalse(wiz_form._get_modifier('group_payment', 'invisible'))
+            self.assertTrue(wiz_form._get_modifier('group_payment', 'invisible'))
             self.assertFalse(wiz_form._get_modifier('group_payment', 'readonly'))
 
         # We can also force the registration of the payment of a draft move with a button hidden
