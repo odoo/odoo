@@ -20,7 +20,6 @@ import {
     getButtons,
     DEFAULT_LAST_ROW,
 } from "@point_of_sale/app/generic_components/numpad/numpad";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_refund";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { parseUTCString } from "@point_of_sale/utils";
@@ -117,50 +116,6 @@ export class TicketScreen extends Component {
     onCreateNewOrder() {
         this.pos.add_new_order();
         this.pos.showScreen("ProductScreen");
-    }
-    _selectNextOrder(currentOrder) {
-        const currentOrderIndex = this._getOrderList().indexOf(currentOrder);
-        const orderList = this._getOrderList();
-        this.pos.set_order(orderList[currentOrderIndex + 1] || orderList[currentOrderIndex - 1]);
-    }
-    async onDeleteOrder(order) {
-        const screen = order.get_screen_data();
-
-        if (
-            ["ProductScreen", "PaymentScreen"].includes(screen.name) &&
-            order.get_orderlines().length > 0
-        ) {
-            const confirmed = await ask(this.dialog, {
-                title: _t("Existing orderlines"),
-                body: _t(
-                    "%s has a total amount of %s, are you sure you want to delete this order?",
-                    order.name,
-                    this.getTotal(order)
-                ),
-            });
-            if (!confirmed) {
-                return false;
-            }
-            if (this.state.selectedOrder === order) {
-                this.state.selectedOrder = null;
-            }
-        }
-
-        order.uiState.displayed = false;
-        if (order.id === this.pos.get_order()?.id) {
-            this._selectNextOrder(order);
-        }
-
-        const result = await this.pos.deleteOrders([order]);
-        if (!result) {
-            order.uiState.displayed = true;
-        } else {
-            if (this.pos.get_open_orders().length > 0) {
-                this.state.selectedOrder = this.pos.get_open_orders()[0];
-            }
-        }
-
-        return true;
     }
     async onNextPage() {
         if (this.state.page < this.getNbrPages()) {
