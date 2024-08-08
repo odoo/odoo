@@ -27,12 +27,12 @@
     <record id="hr_employee_skill_report_view_list" model="ir.ui.view">
         <field name="model">hr.employee.skill.report</field>
         <field name="arch" type="xml">
-            <list expand="0">
-                <field name="employee_id" widget="many2one_avatar_user"/>
-                <field name="skill_type_id"/>
-                <field name="skill_id"/>
-                <field name="skill_level"/>
-                <field name="level_progress" widget="percentage"/>
+            <list expand="0" edit="1" editable="bottom">
+                <field name="employee_id" widget="many2one_avatar_user" options="{'no_create': True, 'no_open': True}"/>
+                <field name="skill_type_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="skill_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="skill_level" options="{'no_create': True, 'no_open': True}"/>
+                <field name="level_progress" widget="percentage" options="{'no_create': True, 'no_open': True}"/>
             </list>
         </field>
     </record>
@@ -69,6 +69,13 @@
             'search_default_employee': 1,
             'search_default_employees_with_skills': 1,
         }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+            </p><p>
+                This report will give you an overview of the skills per Employee.
+                Create them in configuration and add them on the Employee.
+            </p>
+        </field>
     </record>
 
     <record id="action_hr_employee_skill_log_department" model="ir.actions.act_window">

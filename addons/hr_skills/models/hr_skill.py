@@ -9,7 +9,7 @@ class Skill(models.Model):
     _description = "Skill"
     _order = "sequence, name"
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
     skill_type_id = fields.Many2one('hr.skill.type', required=True, ondelete='cascade')
     color = fields.Integer(related='skill_type_id.color')

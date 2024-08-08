@@ -21,7 +21,7 @@ class HrEmployeeBase(models.AbstractModel):
         help='Select the user responsible for approving "Time Off" of this employee.\n'
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
     remaining_leaves = fields.Float(
-        compute='_compute_remaining_leaves', string='Remaining Paid Time Off',
+        compute='_compute_remaining_leaves', string='Available Time Off Days',
         help='Total number of paid time off allocated to this employee, change this value to create allocation/time off request. '
              'Total based on all the time off types without overriding limit.')
     current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Time Off Status",

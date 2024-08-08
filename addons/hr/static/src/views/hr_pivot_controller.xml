@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.PivotView" t-inherit="web.PivotView">
+        <t t-call="web.ActionHelper" position="replace">
+            <t t-if="!model.hasData() or model.useSampleModel and props.info.noContentHelp">
+                <HrActionHelper noContentHelp="props.info.noContentHelp" />
+            </t>
+        </t>
+    </t>
+</odoo>

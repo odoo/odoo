@@ -15,4 +15,16 @@
             </div>
         </field>
     </record>
+
+    <record id="res_partner_view_search" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter name="employees" string="Employees" domain="[('employee_ids', '!=', False)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

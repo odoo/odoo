@@ -15,7 +15,7 @@
                     type="action"
                     groups="hr_holidays.group_hr_holidays_user"
                     context="{'default_employee_id': id, 'deduct_extra_hours': True}"
-                    invisible="total_overtime &lt;= 1"/>
+                    invisible="total_overtime &lt;= 1 or not active"/>
             </xpath>
         </field>
     </record>

@@ -42,7 +42,7 @@ class HrEmployeeBase(models.AbstractModel):
         ("home", "Home"),
         ("office", "Office"),
         ("other", "Other")], compute="_compute_work_location_name_type")
-    user_id = fields.Many2one('res.users')
+    user_id = fields.Many2one('res.users', help="")
     share = fields.Boolean(related='user_id.share')
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', check_company=True)

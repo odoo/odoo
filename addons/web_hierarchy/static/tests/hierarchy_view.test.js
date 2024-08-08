@@ -1375,3 +1375,12 @@ test("Reload the view with the same unfolded records when clicking with a view b
         { message: "The view should have reloaded the same data (with Louis)" }
     );
 });
+
+test("The view displays the No Content help", async () => {
+    Employee._records = [];
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+    expect("div.o_view_nocontent").toHaveCount(1);
+});

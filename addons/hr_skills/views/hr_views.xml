@@ -329,7 +329,7 @@
         <field name="model">hr.skill.type</field>
         <field name="arch" type="xml">
             <search string="Search Skill Type">
-                <field name="name"/>
+                <field name="name" string="Skill Types"/>
                 <field name="skill_ids"/>
                 <field name="skill_level_ids"/>
                 <field name="active" invisible="1"/>
@@ -344,7 +344,7 @@
         <field name="model">hr.skill.type</field>
         <field name="arch" type="xml">
             <list string="Skill Types">
-                <field name="name"/>
+                <field name="name" string="Skill Types"/>
                 <field name="color" widget="color_picker" optional="show"/>
                 <field name="skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="skill_level_ids" widget="many2many_tags_skills"/>

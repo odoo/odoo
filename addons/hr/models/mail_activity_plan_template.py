@@ -21,29 +21,82 @@ class MailActivityPLanTemplate(models.Model):
             if template.responsible_type in {'coach', 'manager', 'employee'}:
                 raise ValidationError(_('Those responsible types are limited to Employee plans.'))
 
+    def _get_closest_parent_user(self, employee, responsible, error_message):
+        responsible_parent = responsible
+        viewed_responsible = [employee]
+        while True:
+            if not responsible_parent:
+                return {
+                    'error': error_message,
+                    'responsible': False
+                }
+            if responsible_parent.user_id:
+                return {
+                    'error': False,
+                    'responsible': responsible_parent.user_id
+                }
+            if responsible_parent in viewed_responsible:
+                return {
+                    "error": _(
+                        "Oops! It seems there is a problem with your team structure.\
+                        We found a circular reporting loop and no one in that loop is linked to a user.\
+                        Please double-check that everyone reports to the correct manager."
+                    ),
+                    "responsible": False,
+                }
+            else:
+                viewed_responsible.append(responsible_parent)
+                responsible_parent = responsible_parent.parent_id
+
     def _determine_responsible(self, on_demand_responsible, employee):
         if self.plan_id.res_model != 'hr.employee' or self.responsible_type not in {'coach', 'manager', 'employee'}:
             return super()._determine_responsible(on_demand_responsible, employee)
-        error = False
-        responsible = False
+        result = {"error": "", "responsible": False}
         if self.responsible_type == 'coach':
             if not employee.coach_id:
-                error = _('Coach of employee %s is not set.', employee.name)
-            responsible = employee.coach_id.user_id
-            if employee.coach_id and not responsible:
-                error = _("The user of %s's coach is not set.", employee.name)
+                result['error'] = _('Coach of employee %s is not set.', employee.name)
+            result['responsible'] = employee.coach_id.user_id
+            if employee.coach_id and not result['responsible']:
+                # If a plan cannot be launched due to the coach not being linked to an user,
+                # attempt to assign it to the coach's manager user. If that manager is also not linked
+                # to an user, continue searching upwards until a manager with a linked user is found.
+                result = self._get_closest_parent_user(
+                    employee=employee,
+                    responsible=employee.coach_id.parent_id,
+                    error_message=_(
+                        "The user of %s's coach is not set.", employee.name
+                    ),
+                )
+
         elif self.responsible_type == 'manager':
             if not employee.parent_id:
-                error = _('Manager of employee %s is not set.', employee.name)
-            responsible = employee.parent_id.user_id
-            if employee.parent_id and not responsible:
-                error = _("The manager of %s should be linked to a user.", employee.name)
+                result['error'] = _('Manager of employee %s is not set.', employee.name)
+            result['responsible'] = employee.parent_id.user_id
+            if employee.parent_id and not result['responsible']:
+                # If a plan cannot be launched due to the manager not being linked to an user,
+                # attempt to assign it to the manager's manager user. If that manager is also not linked
+                # to an user, continue searching upwards until a manager with a linked user is found.
+                result = self._get_closest_parent_user(
+                    employee=employee,
+                    responsible=employee.parent_id.parent_id,
+                    error_message=_(
+                        "The manager of %s should be linked to a user.", employee.name
+                    ),
+                )
+
         elif self.responsible_type == 'employee':
-            responsible = employee.user_id
-            if not responsible:
-                error = _('The employee %s should be linked to a user.', employee.name)
-        if error or responsible:
-            return {
-                'responsible': responsible,
-                'error': error,
-            }
+            result['responsible'] = employee.user_id
+            if not result['responsible']:
+                # If a plan cannot be launched due to the employee not being linked to an user,
+                # attempt to assign it to the manager's user. If the manager is also not linked
+                # to an user, continue searching upwards until a manager with a linked user is found.
+                result = self._get_closest_parent_user(
+                    employee=employee,
+                    responsible=employee.parent_id,
+                    error_message=_(
+                        "The employee %s should be linked to a user.", employee.name
+                    ),
+                )
+
+        if result['error'] or result['responsible']:
+            return result

@@ -52,6 +52,16 @@
     'assets': {
         'web.assets_backend': [
             'hr/static/src/**/*',
+            ('remove', 'hr/static/src/views/hr_graph_view.js'),
+            ('remove', 'hr/static/src/views/hr_graph_controller.xml'),
+            ('remove', 'hr/static/src/views/hr_pivot_view.js'),
+            ('remove', 'hr/static/src/views/hr_pivot_controller.xml'),
+        ],
+        'web.assets_backend_lazy': [
+            'hr/static/src/views/hr_graph_view.js',
+            'hr/static/src/views/hr_graph_controller.xml',
+            'hr/static/src/views/hr_pivot_view.js',
+            'hr/static/src/views/hr_pivot_controller.xml',
         ],
         'web.qunit_suite_tests': [
             'hr/static/tests/legacy/**/*',

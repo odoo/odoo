@@ -37,7 +37,7 @@
                     <group expand="0" string="Group By">
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
-                        <filter name="group_job" string="Job" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
                         <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'create_date'}"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
                     </group>
@@ -88,9 +88,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="mobile_phone" widget="phone"/>
+                                <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com"/>
                                 <field name="work_phone" widget="phone"/>
-                                <field name="work_email" widget="email"/>
+                                <field name="mobile_phone" widget="phone"/>
                                 <field name="category_ids" widget="many2many_tags"
                                     options="{'color_field': 'color', 'no_create_edit': True}"
                                     placeholder="Tags" groups="hr.group_hr_user"/>
@@ -100,7 +100,7 @@
                             </group>
                             <group>
                                 <field name="department_id"/>
-                                <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}"/>
+                                <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
                                 <field name="parent_id" widget="many2one_avatar_user"/>
                                 <field name="coach_id" widget="many2one_avatar_user"/>
                             </group>
@@ -114,7 +114,7 @@
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"highlight_first_line": True}'/>
-                                            <field name="work_location_id" context="{'default_address_id': address_id}" />
+                                            <field name="work_location_id" context="{'default_address_id': address_id}" placeholder="e.g. Building 2, Remote, etc."/>
                                         </group>
                                         <group name="managers" string="Approvers" class="hide-group-if-empty" invisible="1">
                                             <!-- is overridden in other hr related modules -->
@@ -125,7 +125,7 @@
                                             <field name="departure_date"/>
                                         </group>
                                         <group string="Schedule">
-                                            <field name="resource_calendar_id"/>
+                                            <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
                                             <field name="id" invisible="1"/>
                                             <field name="tz" required="id"/>
                                         </group>
@@ -144,10 +144,9 @@
                                             <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
                                             <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
-                                        <field name="private_email" string="Email" placeholder="myprivateemail@example.com"/>
-                                        <field name="private_phone" string="Phone"/>
+                                        <field name="private_email" placeholder="e.g. myprivateemail@example.com"/>
+                                        <field name="private_phone"/>
                                         <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" readonly="not id"/>
-                                        <field name="lang" string="Language"/>
                                         <label for="distance_home_work"/>
                                         <div class="o_row" name="div_km_home_work">
                                             <field name="distance_home_work" class="o_hr_narrow_field"/>
@@ -155,16 +154,7 @@
                                         </div>
                                         <field name="private_car_plate" />
                                     </group>
-                                    <group string="Family Status">
-                                        <field name="marital"/>
-                                        <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
-                                        <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
-                                        <field name="children"/>
-                                    </group>
-                                    <group string="Emergency" name="emergency">
-                                        <field name="emergency_contact"/>
-                                        <field name="emergency_phone" class="o_force_ltr"/>
-                                        <separator string="Citizenship"/>
+                                    <group string="Citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="identification_id"/>
                                         <field name="ssnid"/>
@@ -173,6 +163,15 @@
                                         <field name="birthday"/>
                                         <field name="place_of_birth"/>
                                         <field name="country_of_birth"/>
+                                    </group>
+                                    <group string="Emergency" name="emergency">
+                                        <field name="emergency_contact"/>
+                                        <field name="emergency_phone" class="o_force_ltr"/>
+                                        <separator string="Family Status"/>
+                                        <field name="marital"/>
+                                        <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="children"/>
                                     </group>
                                     <group string="Education">
                                         <field name="certificate"/>
@@ -188,7 +187,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
+                            <page name="hr_settings" string="Settings" groups="hr.group_hr_user">
                                 <group>
                                     <group string='Status' name="active_group">
                                         <field name="employee_type"/>
@@ -196,6 +195,7 @@
                                         <div class="o_row">
                                             <field name="user_id"
                                                 string="Related User"
+                                                help=""
                                                 domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
                                                 context="{'default_create_employee_id': id}"
                                                 widget="many2one_avatar_user"/>
@@ -229,9 +229,13 @@
             <field name="name">hr.employee.view.graph</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <graph string="New Employees Over Time" type="line" sample="1">
+                <graph string="New Employees Over Time" type="line" sample="1" js_class="hr_graph_view">
                     <field name="create_date" interval="month"/>
                     <field name="id"/>
+                    <field name="color" type="measure" invisible="1"/>
+                    <field name="distance_home_work" type="measure" invisible="1"/>
+                    <field name="km_home_work" type="measure" invisible="1"/>
+                    <field name="children" type="measure" invisible="1"/>
                 </graph>
             </field>
         </record>
@@ -240,9 +244,13 @@
             <field name="name">hr.employee.view.pivot</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <pivot string="New Employees Over Time" sample="1">
+                <pivot string="New Employees Over Time" sample="1" js_class="hr_pivot_view">
                     <field name="create_date" interval="month" type="row"/>
                     <field name="id"/>
+                    <field name="color" type="measure" invisible="1"/>
+                    <field name="distance_home_work" type="measure" invisible="1"/>
+                    <field name="km_home_work" type="measure" invisible="1"/>
+                    <field name="children" type="measure" invisible="1"/>
                 </pivot>
             </field>
         </record>
