@@ -28,6 +28,7 @@
                         <t t-call="mail.NotificationMessage"/>
                     </t>
                     <Message t-else=""
+                        asCard="props.thread.model === 'mail.box'"
                         className="getMessageClassName(msg)"
                         isInChatWindow="props.isInChatWindow"
                         message="msg"

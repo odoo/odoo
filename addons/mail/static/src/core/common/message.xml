@@ -3,7 +3,7 @@
 
     <t t-name="mail.Message">
         <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
-            <div class="o-mail-Message position-relative pt-1"
+            <div class="o-mail-Message position-relative"
                 t-att-class="attClass"
                 role="group"
                 t-att-aria-label="messageTypeText"
