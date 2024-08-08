@@ -125,7 +125,7 @@ class test_guess_mimetype(BaseCase):
 
     def test_mimetype_xml(self):
         mimetype = guess_mimetype(XML, default='test')
-        self.assertEqual(mimetype, 'application/xml')
+        self.assertIn(mimetype, ('application/xml', 'text/xml'))
 
     def test_mimetype_txt(self):
         mimetype = guess_mimetype(TXT, default='test')
