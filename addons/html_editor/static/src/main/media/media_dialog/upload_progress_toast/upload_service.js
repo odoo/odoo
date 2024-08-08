@@ -18,13 +18,14 @@ export const uploadService = {
         const progressToast = reactive({
             files: {},
             isVisible: false,
+            uploadInProgress: false,
+            close: (value) => {
+                progressToast.isVisible = value;
+            },
         });
 
         registry.category("main_components").add("UploadProgressToast", {
             Component: UploadProgressToast,
-            props: {
-                close: () => (progressToast.isVisible = false),
-            },
         });
 
         const addFile = (file) => {
@@ -68,6 +69,7 @@ export const uploadService = {
              * @param {Function} onUploaded
              */
             uploadFiles: async (files, { resModel, resId, isImage }, onUploaded) => {
+                progressToast.uploadInProgress = true;
                 // Upload the smallest file first to block the user the least possible.
                 const sortedFiles = Array.from(files).sort((a, b) => a.size - b.size);
                 for (const file of sortedFiles) {
@@ -109,6 +111,7 @@ export const uploadService = {
                     }
                     try {
                         const xhr = new XMLHttpRequest();
+                        progressToast.xhr = xhr;
                         xhr.upload.addEventListener("progress", (ev) => {
                             const rpcComplete = (ev.loaded / ev.total) * 100;
                             file.progress = rpcComplete;
@@ -164,6 +167,7 @@ export const uploadService = {
                                 );
                             }
                             file.uploaded = true;
+                            progressToast.uploadInProgress = false;
                             await onUploaded(attachment);
                         }
                         // If there's an error, display the error message for longer
