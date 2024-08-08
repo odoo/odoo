@@ -110,7 +110,11 @@ div#total {
         &::before {
             // Avoid inner borders overlapping the table borders
             content: '';
+            // Position absolute will place the pseudo-element
+            // above the table. We need to prevent events on this pseudo-element
+            // to avoid messing up eventual user interaction with the table itself (report editor)
             @include o-position-absolute(0, 0, 0, 0);
+            pointer-events: none;
             border: $border-width solid $gray-700;
         }
 
