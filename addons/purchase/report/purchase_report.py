@@ -51,7 +51,6 @@ class PurchaseReport(models.Model):
     qty_received = fields.Float('Qty Received', readonly=True)
     qty_billed = fields.Float('Qty Billed', readonly=True)
     qty_to_be_billed = fields.Float('Qty to be Billed', readonly=True)
-    days_to_arrival = fields.Float('Effective Days To Arrival', digits=(16, 2), readonly=True, aggregator='avg')
 
     @property
     def _table_query(self) -> SQL:
@@ -78,15 +77,6 @@ class PurchaseReport(models.Model):
                     c.currency_id,
                     t.uom_id as product_uom,
                     extract(epoch from age(po.date_approve,po.date_order))/(24*60*60)::decimal(16,2) as delay,
-                    extract(
-                        epoch from age(
-                            l.date_planned,
-                            COALESCE(
-                                order_effective_date.date_done,
-                                po.date_order
-                            )
-                        )
-                    )/(24*60*60)::decimal(16,2) as days_to_arrival,
                     extract(epoch from age(l.date_planned,po.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr_lines,
                     sum(l.price_total / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * currency_table.rate as price_total,
@@ -119,10 +109,8 @@ class PurchaseReport(models.Model):
                 left join uom_uom line_uom on (line_uom.id=l.product_uom)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
                 left join %(currency_table)s ON currency_table.company_id = po.company_id
-                %(days_to_arrival)s
             """,
-            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today()),
-            days_to_arrival=self._join_days_to_arrival()
+            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
         )
 
     def _where(self) -> SQL:
@@ -130,31 +118,6 @@ class PurchaseReport(models.Model):
             """
             WHERE
                 l.display_type IS NULL
-            """,
-        )
-
-    def _join_days_to_arrival(self) -> SQL:
-        return SQL(
-            """
-            LEFT JOIN (
-                SELECT MIN(picking.date_done)                       AS date_done,
-                       purchase.id                                  AS purchase_id
-                FROM purchase_order 							    AS purchase
-                JOIN purchase_order_line						    AS order_line
-                    ON order_line.order_id = purchase.id
-                JOIN stock_move									    AS move
-                    ON move.purchase_line_id = order_line.id
-                JOIN stock_picking								    AS picking
-                    ON picking.id = move.picking_id
-                JOIN stock_location								    AS location_dest
-                    ON location_dest.id = picking.location_dest_id
-                WHERE picking.state = 'done'
-                    AND location_dest.usage != 'supplier'
-                    AND picking.date_done IS NOT NULL
-                GROUP BY
-                    purchase.id
-            ) order_effective_date
-                ON order_effective_date.purchase_id = l.order_id
             """,
         )
 
@@ -187,8 +150,7 @@ class PurchaseReport(models.Model):
                 partner.country_id,
                 partner.commercial_partner_id,
                 po.id,
-                currency_table.rate,
-                order_effective_date.date_done
+                currency_table.rate
             """,
         )
 
