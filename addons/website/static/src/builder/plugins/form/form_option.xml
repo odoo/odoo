@@ -225,6 +225,85 @@
                 records="state.valueList.availableRecords" />
         </div>
     </BuilderRow>
+    <BuilderRow label.translate="Requirement"
+            t-if="domStateCurrentFieldInput.hasDateTimePicker or domStateCurrentFieldInput.isTextArea or canHaveTextValidationCondition.includes(domStateCurrentFieldInput.type)">
+        <BuilderSelect id="'require_condition_text_opt'"
+                t-if="!domStateCurrentFieldInput.hasDateTimePicker and (domStateCurrentFieldInput.isTextArea || ['text', 'email', 'tel', 'url', 'search', 'password'].includes(domStateCurrentFieldInput.type))"
+                preview="false"
+                dataAttributeAction="'requirementComparator'"
+                action="'setRequirementComparator'">
+            <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'substring'">Contains</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'!substring'">Doesn't contain</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderSelect id="'require_condition_num_opt'"
+                t-elif="domStateCurrentFieldInput.type === 'number'"
+                preview="false"
+                dataAttributeAction="'requirementComparator'"
+                action="'setRequirementComparator'">
+            <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'greater'">Is number greater than</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'less'">Is number less than</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'greater or equal'">Is number greater than or equal to</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'less or equal'">Is number less than or equal to</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderSelect id="'require_condition_time_comparators_opt'"
+                t-elif="domStateCurrentFieldInput.hasDateTimePicker"
+                preview="false"
+                dataAttributeAction="'requirementComparator'"
+                action="'setRequirementComparator'">
+            <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'after'">Is date after</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'before'">Is date before</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'equal or after'">Is date after or equal to</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'equal or before'">Is date before or equal to</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'between'">Is date between (included)</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'!between'">Is date not between (excluded)</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderButton id="'error_message_opt'"
+            t-if="!isActiveItem('no_requirement_opt')"
+            title.translate="Add predefined error message"
+            className="'fa ' + (isActiveItem('error_message_opt') ? 'fa-eye' : 'fa-eye-slash')"
+            preview="false"
+            action="'setCustomErrorMessage'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-if="isTextConditionForRequirementOptionVisible">
+        <BuilderTextInput id="'require_condition_additional_text'"
+            placeholder.translate="Enter requirement conditions"
+            dataAttributeAction="'requirementCondition'"
+            action="'setDefaultErrorMessage'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-elif="domStateCurrentFieldInput.isFormDateTime and domState.elDataset.requirementComparator">
+        <BuilderDateTimePicker id="'require_condition_additional_datetime_1'"
+            placeholder.translate="Enter requirement conditions"
+            dataAttributeAction="'requirementCondition'"
+            action="'setDefaultErrorMessage'"
+            type="'datetime'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-elif="domStateCurrentFieldInput.isFormDate and domState.elDataset.requirementComparator">
+        <BuilderDateTimePicker id="'require_condition_additional_date'"
+            placeholder.translate="Enter requirement conditions"
+            dataAttributeAction="'requirementCondition'"
+            action="'setDefaultErrorMessage'"
+            type="'date'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-if="domStateCurrentFieldInput.isFormDateTime and ['between', '!between'].includes(domState.elDataset.requirementComparator)">
+        <BuilderDateTimePicker id="'require_condition_additional_datetime_2'"
+            placeholder.translate="Enter requirement conditions"
+            dataAttributeAction="'requirementBetween'"
+            action="'setDefaultErrorMessage'"
+            type="'datetime'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-elif="domStateCurrentFieldInput.isFormDate and ['between', '!between'].includes(domState.elDataset.requirementComparator)">
+        <BuilderDateTimePicker id="'require_condition_additional_date_end'"
+            placeholder.translate="Enter requirement conditions"
+            dataAttributeAction="'requirementBetween'"
+            action="'setDefaultErrorMessage'"
+            type="'date'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Error Message" level="1" t-if="isActiveItem('error_message_opt')">
+        <BuilderTextInput placeholder.translate="Write custom error message" id="'error_message_input_opt'" dataAttributeAction="'errorMessage'"/>
+    </BuilderRow>
     <BuilderRow label.translate="Visibility">
         <BuilderSelect preview="false" action="'setVisibility'">
             <BuilderSelectItem actionValue="'visible'" classAction="''">Always Visible</BuilderSelectItem>
