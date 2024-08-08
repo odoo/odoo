@@ -10,7 +10,8 @@
     'summary': 'Event: meeting and chat rooms',
     'website': 'https://www.odoo.com/app/events',
     'depends': [
-        'website_event_jitsi',
+        'website_event',
+        'website_discuss_room',
     ],
     'demo': ['data/website_event_meet_demo.xml'],
     'data': [

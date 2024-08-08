@@ -6,8 +6,11 @@
         <field name="inherit_id" ref="event.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//block[@name='events_setting_container']" position="inside">
-                <setting>
-                    <field name="jitsi_server_domain" placeholder="meet.jit.si"/>
+                <setting string="Jitsi" help="Set default jitsi server URL">
+                    <div class="content-group">
+                        <label for="jitsi_server_domain" class="me-2"/>
+                        <field name="jitsi_server_domain" placeholder="meet.jit.si" required="True"/>
+                    </div>
                 </setting>
             </xpath>
         </field>

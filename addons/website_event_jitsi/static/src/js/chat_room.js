@@ -4,63 +4,31 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToElement } from "@web/core/utils/render";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { rpc } from "@web/core/network/rpc";
+import { patch } from "@web/core/utils/patch";
 
-publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
-    selector: '.o_wjitsi_room_widget',
-    events: {
-        'click .o_wjitsi_room_link': '_onChatRoomClick',
-    },
+patch(publicWidget.registry.ChatRoom.prototype, {
 
-    /**
-      * Manage the chat room (Jitsi), update the participant count...
-      *
-      * The widget takes some options
-      * - 'room-name', the name of the Jitsi room
-      * - 'chat-room-id', the ID of the `chat.room` record
-      * - 'auto-open', the chat room will be automatically opened when the page is loaded
-      * - 'check-full', check if the chat room is full before joining
-      * - 'attach-to', a JQuery selector of the element on which we will add the Jitsi
-      *                iframe. If nothing is specified, it will open a modal instead.
-      * - 'default-username': the username to use in the chat room
-      * - 'jitsi-server': the domain name of the Jitsi server to use
-      */
-    start: async function () {
-        await this._super.apply(this, arguments);
-        this.roomName = this.$el.data('room-name');
-        this.chatRoomId = parseInt(this.$el.data('chat-room-id'));
-        // automatically open the current room
-        this.autoOpen = parseInt(this.$el.data('auto-open') || 0);
-        // before joining, perform a RPC call to verify that the chat room is not full
-        this.checkFull = parseInt(this.$el.data('check-full') || 0);
-        // query selector of the element on which we attach the Jitsi iframe
-        // if not defined, the widget will pop in a modal instead
-        this.attachTo = this.$el.data('attach-to') || false;
-        // default username for jitsi
-        this.defaultUsername = this.$el.data('default-username') || false;
-
-        this.jitsiServer = this.$el.data('jitsi-server') || 'meet.jit.si';
-
-        this.maxCapacity = parseInt(this.$el.data('max-capacity')) || Infinity;
-
-        if (this.autoOpen) {
-            await this._onChatRoomClick();
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     /**
-      * Click on a chat room to join it.
-      *
-      * @private
-      */
-    _onChatRoomClick: async function () {
+     * @override
+     */
+    _onChatRoomClick() {
+        if (this.chatRoomProvider === 'jitsi') {
+            this._openJitsiChatRoom();
+        }
+        super._onChatRoomClick();
+    },
+
+    _openJitsiChatRoom: async function () {
+        this.jitsiServer = this.chatRoomUrl;
         if (this.checkFull) {
             // maybe we didn't refresh the page for a while and so we might join a room
             // which is full, so we perform a RPC call to verify that we can really join
-            let isChatRoomFull = await rpc('/jitsi/is_full', { room_name: this.roomName });
+            const isChatRoomFull = await rpc('/chat_room/is_full', { chat_room_name: this.chatRoomName });
 
             if (isChatRoomFull) {
                 window.location.reload();
@@ -68,7 +36,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
             }
         }
 
-        if (await this._openMobileApplication(this.roomName)) {
+        if (await this._openMobileApplication(this.chatRoomName)) {
             // we opened the mobile application
             return;
         }
@@ -77,28 +45,29 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
 
         if (this.attachTo) {
             // attach the Jitsi iframe on the given parent node
-            let $parentNode = $(this.attachTo);
-            $parentNode.find("iframe").trigger("empty");
-            $parentNode.empty();
-
-            await this._joinJitsiRoom($parentNode);
+            const parentNode = document.querySelector(this.attachTo);
+            await this._joinJitsiRoom(parentNode);
         } else {
-            // create a model and append the Jitsi iframe in it
-            let $jitsiModal = $(renderToElement('chat_room_modal', {}));
-            $("body").append($jitsiModal);
-            $jitsiModal.modal('show');
+            // create a modal and append the Jitsi iframe in it
+            const jitsiModal = renderToElement('chat_room_modal', {});
+            const body = document.querySelector("body")
+            body.append(jitsiModal);
+            body.classList.add("modal-open");
 
-            let jitsiRoom = await this._joinJitsiRoom($jitsiModal.find('.modal-body'));
+            const jitsiRoom = await this._joinJitsiRoom(jitsiModal.querySelector('.modal-body'));
 
             // close the modal when hanging up
             jitsiRoom.addEventListener('videoConferenceLeft', async () => {
-                $('.o_wjitsi_room_modal').modal('hide');
+                body.querySelector('.o_wjitsi_room_modal').remove();
+                body.classList.remove("modal-open");
             });
 
-            // when the modal is closed, delete the Jitsi room object and clear the DOM
-            $jitsiModal.on('hidden.bs.modal', async () => {
+            // Close the modal when the user dismiss it
+            const dismissButton = jitsiModal.querySelector(".modal-footer .btn-primary");
+            dismissButton.addEventListener('click', () => {
                 jitsiRoom.dispose();
-                $(".o_wjitsi_room_modal").remove();
+                document.querySelector(".o_wdiscuss_room_modal").remove();
+                body.classList.remove("modal-open");
             });
         }
     },
@@ -133,18 +102,18 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       * Update on the 29 June 2020
       *
       * @private
-      * @param {jQuery} $jitsiModal, jQuery modal element in which we add the Jitsi room
+      * @param {HTMLElement} jitsiModal, modal element in which we add the Jitsi room
       * @returns {JitsiRoom} the newly created Jitsi room
       */
-    _joinJitsiRoom: async function ($parentNode) {
-        let jitsiRoom = await this._createJitsiRoom(this.roomName, $parentNode);
-
+    _joinJitsiRoom: async function (parentNode) {
+        const jitsiRoom = await this._createJitsiRoom(this.chatRoomName, parentNode);
+        parentNode.querySelector('.o_wdiscuss_chat_room_loading').remove();
         if (this.defaultUsername) {
             jitsiRoom.executeCommand("displayName", this.defaultUsername);
         }
 
         let timeoutCall = null;
-        const updateParticipantCount = (joined) => {
+        const updateParticipantCount = () => {
             this.allParticipantIds = Object.keys(jitsiRoom._participants).sort();
             // if we reached the maximum capacity, update immediately the participant count
             const timeoutTime = this.allParticipantIds.length >= this.maxCapacity ? 0 : 2000;
@@ -158,19 +127,18 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
                 if (this.participantId === this.allParticipantIds[0]) {
                     // only the first participant of the room send the new participant
                     // count so we avoid to send to many HTTP requests
-                    this._updateParticipantCount(this.allParticipantIds.length, joined);
+                    this._updateParticipantCount(this.allParticipantIds.length);
                 }
             }, timeoutTime);
         };
 
-        jitsiRoom.addEventListener('participantJoined', () => updateParticipantCount(true));
-        jitsiRoom.addEventListener('participantLeft', () => updateParticipantCount(false));
+        jitsiRoom.addEventListener('participantJoined', () => updateParticipantCount());
+        jitsiRoom.addEventListener('participantLeft', () => updateParticipantCount());
 
         // update the participant count when joining the room
         jitsiRoom.addEventListener('videoConferenceJoined', async (event) => {
             this.participantId = event.id;
-            updateParticipantCount(true);
-            $('.o_wjitsi_chat_room_loading').addClass('d-none');
+            updateParticipantCount();
 
             // recheck if the room is not full
             if (this.checkFull && this.allParticipantIds.length > this.maxCapacity) {
@@ -185,7 +153,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
             this.allParticipantIds = Object.keys(jitsiRoom._participants)
             if (!this.allParticipantIds.length) {
                 // bypass the checks and timer of updateParticipantCount
-                this._updateParticipantCount(this.allParticipantIds.length, false);
+                this._updateParticipantCount(this.allParticipantIds.length);
             }
         });
 
@@ -199,11 +167,10 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       * @param {integer} count, current number of participant in the room
       * @param {boolean} joined, true if someone joined the room
       */
-    _updateParticipantCount: async function (count, joined) {
-        await rpc('/jitsi/update_status', {
-            room_name: this.roomName,
-            participant_count: count,
-            joined: joined,
+    _updateParticipantCount: async function (count) {
+        await rpc('/chat_room/update_status', {
+            room_name: this.chatRoomName,
+            participant_count: count
         });
     },
 
@@ -216,13 +183,13 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       * Redirect on the Jitsi mobile application if we are on mobile.
       *
       * @private
-      * @param {string} roomName
+      * @param {string} chatRoomName
       * @returns {boolean} true is we were redirected to the mobile application
       */
-    _openMobileApplication: async function (roomName) {
+    _openMobileApplication: async function (chatRoomName) {
         if (uiUtils.isSmall()) {
             // we are on mobile, open the room in the application
-            window.location = `intent://${this.jitsiServer}/${encodeURIComponent(roomName)}#Intent;scheme=org.jitsi.meet;package=org.jitsi.meet;end`;
+            window.location = `intent://${this.jitsiServer}/${encodeURIComponent(chatRoomName)}#Intent;scheme=org.jitsi.meet;package=org.jitsi.meet;end`;
             return true;
         }
         return false;
@@ -232,17 +199,17 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       * Create a Jitsi room on the given DOM element.
       *
       * @private
-      * @param {string} roomName
-      * @param {jQuery} $parentNode
+      * @param {string} chatRoomName
+      * @param {HTMLElement} parentNode
       * @returns {JitsiRoom} the newly created Jitsi room
       */
-    _createJitsiRoom: async function (roomName, $parentNode) {
+    _createJitsiRoom: async function (chatRoomName, parentNode) {
       await this._loadJisti();
         const options = {
-            roomName: roomName,
+            roomName: chatRoomName,
             width: "100%",
             height: "100%",
-            parentNode: $parentNode[0],
+            parentNode: parentNode,
             configOverwrite: {disableDeepLinking: true},
         };
         return new window.JitsiMeetExternalAPI(this.jitsiServer, options);
@@ -262,5 +229,3 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       }
     },
 });
-
-export default publicWidget.registry.ChatRoom;

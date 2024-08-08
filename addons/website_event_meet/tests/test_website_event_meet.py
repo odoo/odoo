@@ -53,9 +53,9 @@ class TestWebsiteEventMeet(EventCase):
             "target_audience": "dev",
             "room_max_capacity": "20",
         })
-        self.assertEqual(meeting_room_1.room_name, 'odoo-room-test-meeting-room')
+        self.assertEqual(meeting_room_1.room_name, 'Test meeting room')
         meeting_room_2 = meeting_room_1.copy()
-        self.assertEqual(meeting_room_2.room_name, 'odoo-room-test-meeting-room-1')
+        self.assertEqual(meeting_room_2.room_name, 'Test meeting room-1')
 
         chat_room_1 = meeting_room_1.chat_room_id
         chat_room_2 = meeting_room_2.chat_room_id
@@ -68,7 +68,7 @@ class TestWebsiteEventMeet(EventCase):
         self.assertEqual(chat_room_2.max_capacity, "20", "Must copy the max capacity")
 
         meeting_room_3 = meeting_room_1.copy()
-        self.assertEqual(meeting_room_3.room_name, 'odoo-room-test-meeting-room-2')
+        self.assertEqual(meeting_room_3.room_name, 'Test meeting room-2')
         # Ensure room_max_capacity is copied to new meeting room
         self.assertEqual(meeting_room_3.room_max_capacity, "20")
         # Ensure max_capacity in linked chat room is same
