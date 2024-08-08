@@ -490,7 +490,7 @@ describe("to blockquote", () => {
 
     test("setTag should work after control+a", async () => {
         const { el, editor } = await setupEditor("<p>[]abcd</p>");
-        press("control+a");
+        press(["ctrl", "a"]);
         expect(getContent(el)).toBe("[<p>abcd</p>]");
         setTag("h1")(editor);
         expect(getContent(el)).toBe("[<h1>abcd</h1>]");

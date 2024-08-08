@@ -9,7 +9,7 @@ import {
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
-import { DIRECTIONS, childNodeIndex, endPos, nodeSize, startPos } from "../utils/position";
+import { DIRECTIONS, childNodeIndex, endPos, nodeSize } from "../utils/position";
 import {
     getAdjacentCharacter,
     normalizeCursorPosition,
@@ -122,9 +122,6 @@ export class SelectionPlugin extends Plugin {
         "rectifySelection",
         // "collapseIfZWS",
     ];
-    static resources = (p) => ({
-        shortcuts: [{ hotkey: "control+a", command: "SELECT_ALL" }],
-    });
 
     setup() {
         this.resetSelection();
@@ -148,22 +145,6 @@ export class SelectionPlugin extends Plugin {
             this.isPointerDown = false;
             this.preventNextMousedownFix = false;
         });
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "SELECT_ALL":
-                {
-                    const selection = this.getEditableSelection();
-                    const containerSelector = "#wrap>*, .oe_structure>*, [contenteditable]";
-                    const container =
-                        selection && closestElement(selection.anchorNode, containerSelector);
-                    const [anchorNode, anchorOffset] = startPos(container);
-                    const [focusNode, focusOffset] = endPos(container);
-                    this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
-                }
-                break;
-        }
     }
 
     resetSelection() {
