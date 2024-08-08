@@ -593,10 +593,12 @@
                                     context="{'company_id': parent.company_id}"
                                     groups="uom.group_uom"
                                     options='{"no_open": True}'
+                                    width="60px"
                                     optional="show"/>
                                 <field
                                     name="customer_lead"
                                     optional="hide"
+                                    width="80px"
                                     readonly="parent.state not in ['draft', 'sent', 'sale'] or is_downpayment"/>
                                 <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging" optional="show"/>
                                 <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
@@ -611,7 +613,12 @@
                                     context="{'active_test': True}"
                                     readonly="qty_invoiced &gt; 0 or is_downpayment"
                                     optional="show"/>
-                                <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show"/>
+                                <field
+                                    name="discount"
+                                    string="Disc.%"
+                                    groups="sale.group_discount_per_so_line"
+                                    width="60px"
+                                    optional="show"/>
                                 <field name="is_downpayment" column_invisible="True"/>
                                 <field name="price_subtotal" string="Tax excl." invisible="is_downpayment"/>
                                 <field name="price_total"
