@@ -460,6 +460,8 @@ actual arch.
     def _compute_warning_info(self):
         for view in self:
             view.warning_info = ''
+            if isinstance(view.id, models.NewId):
+                continue
             try:
                 if view.inherit_id:
                     view_arch = etree.fromstring(view.arch)
