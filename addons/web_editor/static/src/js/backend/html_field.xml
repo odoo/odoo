@@ -8,7 +8,7 @@
                 t-att-sandbox="sandboxedPreview ? 'allow-same-origin allow-popups allow-popups-to-escape-sandbox' : false"></iframe>
             </t>
             <t t-else="">
-                <div  t-ref="readonlyElement" class="o_readonly" t-out="markupValue" />
+                <div t-ref="readonlyElement" class="o_readonly" t-out="markupValue" />
             </t>
         </t>
         <div t-else="" class="h-100" t-ref="spellcheck" t-att-class="{'d-flex': this.wysiwygOptions.snippets}">

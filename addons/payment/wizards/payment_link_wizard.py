@@ -51,35 +51,59 @@ class PaymentLinkWizard(models.TransientModel):
             record = self.env[link.res_model].browse(link.res_id)
             link.company_id = record.company_id if 'company_id' in record else False
 
-    def _get_access_token(self):
+    @api.depends('amount', 'currency_id', 'partner_id', 'company_id')
+    def _compute_link(self):
+        for payment_link in self:
+            related_document = self.env[payment_link.res_model].browse(payment_link.res_id)
+            base_url = related_document.get_base_url()  # Generate links for the right website.
+            url = self._prepare_url(base_url, related_document)
+            query_params = self._prepare_query_params(related_document)
+            anchor = self._prepare_anchor()
+            if '?' in url:
+                payment_link.link = f'{url}&{urls.url_encode(query_params)}{anchor}'
+            else:
+                payment_link.link = f'{url}?{urls.url_encode(query_params)}{anchor}'
+
+    def _prepare_url(self, base_url, related_document):
+        """ Build the URL of the payment link with the website's base URL and return it.
+        :param str base_url: The website's base URL.
+        :param recordset related_document: The record for which the payment link is generated.
+        :return: The URL of the payment link.
+        :rtype: str
+        """
+        return f'{base_url}/payment/pay'
+
+    def _prepare_query_params(self, related_document):
+        """ Prepare the query string params to append to the payment link URL.
+
+        Note: self.ensure_one()
+
+        :param recordset related_document: The record for which the payment link is generated.
+        :return: The query params of the payment link.
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {
+            'amount': self.amount,
+            'access_token': self._prepare_access_token(),
+            'currency_id': self.currency_id.id,
+            'partner_id': self.partner_id.id,
+            'company_id': self.company_id.id,
+        }
+
+    def _prepare_access_token(self):
         self.ensure_one()
         return payment_utils.generate_access_token(
             self.partner_id.id, self.amount, self.currency_id.id
         )
 
-    @api.depends('amount', 'currency_id', 'partner_id', 'company_id')
-    def _compute_link(self):
-        for payment_link in self:
-            related_document = self.env[payment_link.res_model].browse(payment_link.res_id)
-            base_url = related_document.get_base_url()  # Don't generate links for the wrong website
-            url_params = {
-                'amount': self.amount,
-                'access_token': self._get_access_token(),
-                **self._get_additional_link_values(),
-            }
-            payment_link.link = f'{base_url}/payment/pay?{urls.url_encode(url_params)}'
-
-    def _get_additional_link_values(self):
-        """ Return the additional values to append to the payment link.
+    def _prepare_anchor(self):
+        """ Prepare the anchor to append to the payment link.
 
         Note: self.ensure_one()
 
-        :return: The additional payment link values.
-        :rtype: dict
+        :return: The anchor of the payment link.
+        :rtype: str
         """
         self.ensure_one()
-        return {
-            'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.id,
-            'company_id': self.company_id.id,
-        }
+        return ''

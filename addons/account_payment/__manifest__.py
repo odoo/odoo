@@ -19,6 +19,7 @@
         'views/account_move_views.xml',
         'views/account_journal_views.xml',
         'views/account_payment_views.xml',
+        'views/payment_form_templates.xml',
         'views/payment_provider_views.xml',
         'views/payment_transaction_views.xml',
 
@@ -27,6 +28,13 @@
         'wizards/payment_refund_wizard_views.xml',
         'wizards/res_config_settings_views.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'account_payment/static/src/js/payment_form.js',
+            'account_payment/static/src/js/portal_invoice_page_payment.js',
+            'account_payment/static/src/js/portal_my_invoices_payment.js',
+        ],
+    },
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',

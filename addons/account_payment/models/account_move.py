@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools import str2bool
+from odoo.tools import format_date, str2bool
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -101,9 +101,26 @@ class AccountMove(models.Model):
 
     def _get_default_payment_link_values(self):
         self.ensure_one()
+        installments = [
+            {
+                'number': installment['number'],
+                'amount': installment['amount_residual_currency_unsigned'],
+                'date_maturity': format_date(self.env, installment['date_maturity']),
+            }
+            for installment in self._get_installments_data()
+            if not installment['reconciled']
+        ]
+        max_amount = next_amount = sum(installment['amount'] for installment in installments)
+        amount_overdue = self.get_amount_overdue()
+        if amount_overdue:
+            next_amount = amount_overdue
+        elif installments:
+            next_amount = installments[0]['amount']
+
         return {
-            'amount': self.amount_residual,
+            'amount': next_amount,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
-            'amount_max': self.amount_residual,
+            'open_installments': installments,
+            'amount_max': max_amount,
         }
