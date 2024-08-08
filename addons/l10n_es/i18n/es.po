@@ -100,6 +100,7 @@ msgstr ""
 #. module: l10n_es
 #: model:account.report.column,name:l10n_es.mod_111_column
 #: model:account.report.column,name:l10n_es.mod_115_column
+#: model:account.report.column,name:l10n_es.mod_130_column
 #: model:account.report.column,name:l10n_es.mod_303_column
 #: model:account.report.column,name:l10n_es.mod_390_column_sect1
 #: model:account.report.column,name:l10n_es.mod_390_column_sect2
@@ -255,9 +256,33 @@ msgid "General regime"
 msgstr "Régimen general"
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_title_1
+msgid ""
+"I. Economic activities in the direct assessment system, normal or simplified"
+" mode, other than agriculture, livestock farming, forestry and fishing."
+msgstr ""
+"I. Actividades económicas en régimen de estimación directa, modalidad normal"
+" osimplificada, distintas de la agricultura, ganadería, silvicultura y "
+"pesca."
+
+#. module: l10n_es
 #: model_terms:ir.ui.view,arch_db:l10n_es.report_invoice_document
 msgid "ID:"
 msgstr ""
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_title_2
+msgid ""
+"II. Agriculture, livestock farming, forestry and fishing in the direct "
+"assessment system, normal or simplified mode."
+msgstr ""
+"II. Agricultura, ganadería, silvicultura y pesca en régimen de estimación "
+"directa, modalidad normal o simplificada."
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_title_3
+msgid "III. Total settlement."
+msgstr "III. Liquidación total."
 
 #. module: l10n_es
 #: model:account.report,name:l10n_es.mod_390_section_2
@@ -736,6 +761,11 @@ msgid "Tax Report(Mod 115)"
 msgstr "Informe de impuestos (Mod 115)"
 
 #. module: l10n_es
+#: model:account.report,name:l10n_es.mod_130
+msgid "Tax Report(Mod 130)"
+msgstr "Informe de impuestos (Mod 130)"
+
+#. module: l10n_es
 #: model:ir.model.fields,field_description:l10n_es.field_account_tax__l10n_es_type
 msgid "Tax Type (Spain)"
 msgstr "Tipo de impuesto (España)"
@@ -857,6 +887,11 @@ msgid "[01] Nº of recipients"
 msgstr "[01] Nº de perceptores"
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_01
+msgid "[01] Revenue"
+msgstr "[01] Ingresos"
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_111_casilla_02
 msgid "[02] Amount of perceptions"
 msgstr "[02] Importe de las percepciones"
@@ -872,6 +907,11 @@ msgid "[02] Cuota devengada 4%"
 msgstr "[02] Cuota devengada 4 %"
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_02
+msgid "[02] Supplies"
+msgstr "[02] Suministros"
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_111_casilla_03
 msgid "[03] Amount of withholdings"
 msgstr "[03] Importe de las retenciones"
@@ -882,6 +922,11 @@ msgid "[03] Base imponible 10%"
 msgstr ""
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_03
+msgid "[03] Box 01 - Box 02"
+msgstr "[03] Casilla 01 - Casilla 02"
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_303_casilla_03
 msgid "[03] Contribution 4%"
 msgstr "[03] Cuota 4 %"
@@ -890,6 +935,11 @@ msgstr "[03] Cuota 4 %"
 #: model:account.report.line,name:l10n_es.mod_115_casilla_03
 msgid "[03] Withholdings"
 msgstr "[03] Retenciones"
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_04
+msgid "[04] 20% (or custom %) applied on Box 03"
+msgstr "[04] 20% (o % personalizado) aplicado a la casilla 03"
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_303_casilla_04
@@ -917,6 +967,11 @@ msgid "[05] Base imponible 21%"
 msgstr "[05] Base imponible 21 %"
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_05
+msgid "[05] Residual amounts of past quarters"
+msgstr "[05] Importes residuales de trimestres anteriores"
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_115_casilla_05
 msgid "[05] Result to report"
 msgstr "[05] Resultado a ingresar"
@@ -942,6 +997,11 @@ msgid "[06] Cuota devengada 21%"
 msgstr "[06] Cuota devengada 21 %"
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_06
+msgid "[06] Sum of withholding's"
+msgstr "[06] Suma de las retenciones"
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_390_casilla_07
 msgid "[07] Base imponible 4%"
 msgstr "[07] Base imponible 4 %"
@@ -950,6 +1010,11 @@ msgstr "[07] Base imponible 4 %"
 #: model:account.report.line,name:l10n_es.mod_303_casilla_07
 msgid "[07] Base taxable 21%"
 msgstr "[07] Base imponible 21 %"
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_07
+msgid "[07] Box 04 - Box 05 - Box 06"
+msgstr "[07] Casilla 04 - Casilla 05 - Casilla 06"
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_111_casilla_07
@@ -965,6 +1030,16 @@ msgstr "[08] Importe de las percepciones"
 #: model:account.report.line,name:l10n_es.mod_390_casilla_08
 msgid "[08] Cuota devengada 4%"
 msgstr "[08] Cuota devengada 4 %"
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_08
+msgid "[08] Revenue"
+msgstr "[08] Ingresos"
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_09
+msgid "[09] 2% (or custom %) applied on Box 08"
+msgstr "[09] 2% (o % personalizado) aplicado a la casilla 08"
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_111_casilla_09
@@ -1075,6 +1150,11 @@ msgid "[10] Nº of recipients"
 msgstr "[10] Nº de perceptores"
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_10
+msgid "[10] Sum of withholding's"
+msgstr "[10] Suma de las retenciones"
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_303_casilla_110
 msgid "[110] Contributions to be compensated pending from previous periods"
 msgstr "[110] Cuotas a compensar pendientes de periodos anteriores"
@@ -1109,6 +1189,11 @@ msgstr ""
 #: model:account.report.line,name:l10n_es.mod_390_casilla_11
 msgid "[11] Base imponible 21%"
 msgstr "[11] Base imponible 21 %"
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_11
+msgid "[11] Box 09 - Box 10"
+msgstr "[11] Casilla 09 - Casilla 10"
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_303_casilla_11
@@ -1186,6 +1271,11 @@ msgid "[12] Base taxable"
 msgstr "[12] Base imponible"
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_12
+msgid "[12] Box 07 + Box 11"
+msgstr "[12] Casilla 07 + Casilla 11"
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_390_casilla_12
 msgid "[12] Cuota devengada 21%"
 msgstr "[12] Cuota devengada 21 %"
@@ -1209,6 +1299,15 @@ msgstr "[13] Cuota"
 #: model:account.report.line,name:l10n_es.mod_111_casilla_13
 msgid "[13] Nº of recipients"
 msgstr "[13] Nº de perceptores"
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_13
+msgid ""
+"[13] Value of the reduction based on sum of net earnings from the previous "
+"tax year"
+msgstr ""
+"[13] Valor de la reducción basado en la suma de los ingresos netos del "
+"ejercicio fiscal anterior"
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_390_casilla_140
@@ -1269,6 +1368,11 @@ msgstr "[14] Importe de las percepciones"
 #: model:account.report.line,name:l10n_es.mod_303_casilla_14
 msgid "[14] Base taxable"
 msgstr "[14] Base imponible"
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_14
+msgid "[14] Box 12 - Box 13"
+msgstr "[14] Casilla 12 - Casilla 13"
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_390_casilla_14
@@ -1366,6 +1470,11 @@ msgid "[15] Contributions"
 msgstr "[15] Cuota"
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_15
+msgid "[15] Negative amount of previous self-assessments"
+msgstr "[15] Cantidad negativa de autoevaluaciones previas"
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_390_casilla_160
 msgid "[160] Bienes corrientes : base imponible"
 msgstr "[160] Bienes corrientes: base imponible"
@@ -1436,6 +1545,15 @@ msgid "[16] Base taxable 1%"
 msgstr "[16] Base imponible 1%"
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_16
+msgid ""
+"[16] Deduction for allocating amounts to the payment of loans for the "
+"acquisition or rehabilitation"
+msgstr ""
+"[16] Deducción por destinar cantidades al pago de préstamos para la "
+"adquisición o rehabilitación"
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_111_casilla_16
 msgid "[16] Nº of recipients"
 msgstr "[16] Nº de perceptores"
@@ -1494,6 +1612,11 @@ msgstr ""
 #: model:account.report.line,name:l10n_es.mod_390_casilla_179
 msgid "[179] Bienes de inversión : base imponible"
 msgstr "[179] Bienes de inversión: base imponible"
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_17
+msgid "[17] Box 14 - Box 15 - Box 16"
+msgstr "[17] Casilla 14 - Casilla 15 - Casilla 16"
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_111_casilla_17
@@ -1556,6 +1679,11 @@ msgid "[18] Amount of income on account"
 msgstr "[18] Importe de los ingresos a cuenta"
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_18
+msgid "[18] Complementary declaration"
+msgstr "[18] Declaración complementaria"
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_303_casilla_18
 msgid "[18] Contribution 1%"
 msgstr "[18] Cuota 1 %"
@@ -1584,6 +1712,11 @@ msgstr "[197] Cuota deducible 4 %"
 #: model:account.report.line,name:l10n_es.mod_303_casilla_19
 msgid "[19] Base taxable 1.4%"
 msgstr "[19] Base imponible 1,4 %"
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_130_casilla_19
+msgid "[19] Box 17 - Box 18"
+msgstr "[19] Casilla 17 - Casilla 18"
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_111_casilla_19
