@@ -77,6 +77,7 @@ export class Message extends Component {
         showDates: true,
     };
     static props = [
+        "asCard?",
         "registerMessageRef?",
         "hasActions?",
         "isInChatWindow?",
@@ -189,13 +190,19 @@ export class Message extends Component {
     get attClass() {
         return {
             [this.props.className]: true,
+            "o-card p-2 mt-2 bg-view": this.props.asCard,
+            "pt-1": !this.props.asCard,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
             "o-selected": this.props.messageToReplyTo?.isSelected(
                 this.props.thread,
                 this.props.message
             ),
             "o-squashed": this.props.squashed,
-            "mt-1": !this.props.squashed && this.props.thread && !this.env.messageCard,
+            "mt-1":
+                !this.props.squashed &&
+                this.props.thread &&
+                !this.env.messageCard &&
+                !this.props.asCard,
             "px-2": this.props.isInChatWindow,
             "opacity-50": this.props.messageToReplyTo?.isNotSelected(
                 this.props.thread,

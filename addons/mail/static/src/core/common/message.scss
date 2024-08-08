@@ -1,6 +1,11 @@
 .o-mail-Message {
     transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
 
+    &.o-card {
+        outline: $border-width solid $border-color;
+        outline-offset: -$border-width;
+    }
+
     &.o-highlighted {
         transform: translateY(-#{map-get($spacers, 3)});
     }
