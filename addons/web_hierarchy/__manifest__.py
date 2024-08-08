@@ -21,7 +21,7 @@ an organization such as an Organization Chart for employees for instance.
         'web.assets_backend_lazy_dark': [
             ('before', 'web_hierarchy/static/src/hierarchy.variables.scss', 'web_hierarchy/static/src/hierarchy.variables.dark.scss'),
         ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'web_hierarchy/static/tests/**/*',
         ],
     },
