@@ -493,3 +493,22 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
             payment.journal_id = default_journal
             self.assertEqual(payment.payment_method_line_id.journal_id.id, default_journal.id)
+
+    def test_payments_copy_data(self):
+        payment_1, payment_2 = self.env['account.payment'].create([
+            {
+                'partner_id': self.partner_a.id,
+                'amount': 50,
+            },
+            {
+                'partner_id': self.partner_b.id,
+                'amount': 100,
+            },
+        ])
+        duplicate_payment_1, duplicate_payment_2 = (payment_1 + payment_2).copy()
+
+        self.assertEqual(duplicate_payment_1.partner_id, payment_1.partner_id)
+        self.assertEqual(duplicate_payment_2.partner_id, payment_2.partner_id)
+
+        self.assertEqual(duplicate_payment_1.amount, payment_1.amount)
+        self.assertEqual(duplicate_payment_2.amount, payment_2.amount)

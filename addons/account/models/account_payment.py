@@ -896,12 +896,16 @@ class AccountPayment(models.Model):
         for payment in self:
             payment.display_name = payment.name or _('Draft Payment')
 
-    def copy(self, default=None):
-        return super().copy(default={
-            'journal_id': self.journal_id.id,
-            'payment_method_line_id': self.payment_method_line_id.id,
-            **(default or {}),
-        })
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default)
+        for payment, vals in zip(self, vals_list):
+            vals.update({
+                'journal_id': payment.journal_id.id,
+                'payment_method_line_id': payment.payment_method_line_id.id,
+                **(vals or {}),
+            })
+        return vals_list
 
     # -------------------------------------------------------------------------
     # SYNCHRONIZATION account.payment -> account.move
