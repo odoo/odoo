@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Maitê Dietze, 2024
+# Tiffany Chang, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Tiffany Chang, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -307,10 +308,11 @@ msgstr ""
 "                        Prezado <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
 "                        Você foi convidado pelo <t t-out=\"object.create_uid.name or ''\">OdooBot</t> da <t t-out=\"object.company_id.name or ''\">YourCompany</t> a se conectar ao Odoo.\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-style=\"background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                Aceitar convite\n"
 "                            </a>\n"
 "                        </div>\n"
+"                        <b> Este link permanecerá válido durante <t t-out=\"int(int(object.env['ir.config_parameter'].sudo().get_param('auth_signup.signup.validity.hours',144))/24)\"></t> dias </b> <br>\n"
 "                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"></t>\n"
 "                        Seu domínio Odoo é: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br>\n"
 "                        Seu e-mail de login é: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br><br>\n"
@@ -845,17 +847,17 @@ msgstr "Enviado ao portal do usuário em que ele se registrou"
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New Portal Signup"
-msgstr "Configurações: Novo cadastro no portal"
+msgstr "Definições: Novo cadastro no portal"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New User Invite"
-msgstr "Configurações: Novo convite de usuário"
+msgstr "Definições: Novo convite de usuário"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
-msgstr "Configurações: Lembrete de usuário não registrado"
+msgstr "Definições: Lembrete de usuário não registrado"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -930,7 +932,7 @@ msgid ""
 "menu *Action*."
 msgstr ""
 "Para enviar convites em modo B2B, abra um contato ou selecione-o na visão de"
-" lista e clique em \"Gerenciamento de acesso portal\" e selecione o menu "
+" lista e clique em \"Gerenciamento de acesso ao portal\" e selecione o menu "
 "suspenso *Ação*."
 
 #. module: auth_signup
