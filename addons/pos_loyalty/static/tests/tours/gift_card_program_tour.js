@@ -113,3 +113,20 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
             PosLoyalty.finalizeOrder("Cash", "50"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyGiftCardNoPoints", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            TextInputPopup.inputText("044123456"),
+            Dialog.confirm(),
+            PosLoyalty.orderTotalIs("0.00"),
+            ProductScreen.clickNumpad("Price"),
+            ProductScreen.modeIsActive("Price"),
+            ProductScreen.clickNumpad("5"),
+            PosLoyalty.orderTotalIs("5.00"),
+            PosLoyalty.finalizeOrder("Cash", "5"),
+        ].flat(),
+});

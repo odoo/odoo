@@ -2093,3 +2093,21 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyRewardProductTag",
             login="pos_user",
         )
+
+    def test_gift_card_no_points(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True, 'list_price': 49.99})
+
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        self.main_pos_config.write({'gift_card_settings': 'scan_use'})
+        self.env["loyalty.generate.wizard"].with_context(
+            {"active_id": gift_card_program.id}
+        ).create({"coupon_qty": 1, 'points_granted': 0}).generate_coupons()
+        gift_card_program.coupon_ids.code = '044123456'
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyGiftCardNoPoints",
+            login="accountman",
+        )
