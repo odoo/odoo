@@ -712,31 +712,33 @@ QUnit.module("Fields", (hooks) => {
         }
 
         assert.strictEqual(
-            target.querySelector("input[type=file]").files.length,
-            0,
-            "there shouldn't be any file"
+            target.querySelector("img[data-alt='Binary file']").dataset.src,
+            "/web/static/img/placeholder.png",
+            "image field should not be set"
         );
 
         await setFiles();
-        assert.strictEqual(
-            target.querySelector("input[type=file]").files.length,
-            1,
-            "there should be a single file"
+        assert.ok(
+            target
+                .querySelector("img[data-alt='Binary file']")
+                .dataset.src.includes("data:image/png;base64"),
+            "image field should be set"
         );
 
         await clickSave(target);
         await click(target, ".o_form_button_create");
         assert.strictEqual(
-            target.querySelector("input[type=file]").files.length,
-            0,
-            "there shouldn't be any file"
+            target.querySelector("img[data-alt='Binary file']").dataset.src,
+            "/web/static/img/placeholder.png",
+            "image field should be reset"
         );
 
         await setFiles();
-        assert.strictEqual(
-            target.querySelector("input[type=file]").files.length,
-            1,
-            "there should be a single file"
+        assert.ok(
+            target
+                .querySelector("img[data-alt='Binary file']")
+                .dataset.src.includes("data:image/png;base64"),
+            "image field should be set"
         );
     });
 
