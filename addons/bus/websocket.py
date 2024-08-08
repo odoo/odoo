@@ -941,7 +941,7 @@ class WebsocketConnectionHandler:
         """
         current_thread = threading.current_thread()
         current_thread.type = 'websocket'
-        if version != cls._VERSION:
+        if httprequest.user_agent and version != cls._VERSION:
             # Close the connection from an outdated worker. We can't use a
             # custom close code because the connection is considered successful,
             # preventing exponential reconnect backoff. This would cause old
@@ -949,6 +949,8 @@ class WebsocketConnectionHandler:
             # Clean closes don't trigger reconnections, assuming they are
             # intentional. The reason indicates to the origin worker not to
             # reconnect, preventing old workers from lingering after updates.
+            # Non browsers are ignored since IOT devices do not provide the
+            # worker version.
             websocket.disconnect(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
             with WebsocketRequest(db, httprequest, websocket) as req:

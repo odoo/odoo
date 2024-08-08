@@ -282,12 +282,24 @@ class TestWebsocketCaryall(WebsocketCase):
         with patch.object(WebsocketConnectionHandler, "_VERSION", "1.0.1"), patch.object(
             self, "_WEBSOCKET_URL", f"{self._BASE_WEBSOCKET_URL}?version=1.0.0"
         ):
-            websocket = self.websocket_connect(ping_after_connect=False)
+            websocket = self.websocket_connect(
+                ping_after_connect=False, header={"User-Agent": "Chrome/126.0.0.0"}
+            )
             self.assert_close_with_code(websocket, CloseCode.CLEAN, "OUTDATED_VERSION")
 
-        # Version not passed, should be considered as outdated
+        # Version not passed, User-Agent present, should be considered as outdated
         with patch.object(WebsocketConnectionHandler, "_VERSION", "1.0.1"), patch.object(
             self, "_WEBSOCKET_URL", self._BASE_WEBSOCKET_URL
         ):
-            websocket = self.websocket_connect(ping_after_connect=False)
+            websocket = self.websocket_connect(
+                ping_after_connect=False, header={"User-Agent": "Chrome/126.0.0.0"}
+            )
             self.assert_close_with_code(websocket, CloseCode.CLEAN, "OUTDATED_VERSION")
+        # Version not passed, User-Agent not present, should not be considered
+        # as outdated
+        with patch.object(WebsocketConnectionHandler, "_VERSION", None), patch.object(
+            self, "_WEBSOCKET_URL", self._BASE_WEBSOCKET_URL
+        ):
+            websocket = self.websocket_connect()
+            websocket.ping()
+            websocket.recv_data_frame(control_frame=True)  # pong
