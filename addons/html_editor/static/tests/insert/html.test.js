@@ -176,7 +176,7 @@ describe("collapsed selection", () => {
             parseHTML(editor.document, "<table><tbody><tr><td/></tr></tbody></table>")
         );
         expect(getContent(editor.editable)).toBe(
-            `<p class="oe_unbreakable">content</p><table><tbody><tr><td></td></tr></tbody></table>[]`
+            `<p class="oe_unbreakable">content[]</p><table><tbody><tr><td></td></tr></tbody></table>`
         );
     });
 
