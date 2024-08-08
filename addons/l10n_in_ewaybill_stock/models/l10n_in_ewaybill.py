@@ -427,6 +427,8 @@ class Ewaybill(models.Model):
         """
             This method is used to convert date from Indian timezone to UTC
         """
+        if not str_date:
+            return False
         try:
             local_time = datetime.strptime(str_date, time_format)
         except ValueError:
