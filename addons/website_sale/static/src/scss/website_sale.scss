@@ -595,7 +595,9 @@ a.no-decoration {
 }
 
 .o_red_highlight {
-    background: map-get($theme-colors, 'danger') !important;
+    --background-color: #{map-get($theme-colors, 'danger')};
+    --bg-solid: var(--background-color) !important;
+
     box-shadow: 0 0 0 0 rgba(240,8,0,0.4);
     transition: all 0.5s linear;
 }
