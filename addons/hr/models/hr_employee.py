@@ -90,7 +90,7 @@ class HrEmployeePrivate(models.Model):
     identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user", tracking=True)
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     bank_account_id = fields.Many2one(
-        'res.partner.bank', 'Bank Account Number',
+        'res.partner.bank', 'Bank Account',
         domain="[('partner_id', '=', work_contact_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         groups="hr.group_hr_user",
         tracking=True,
@@ -128,7 +128,7 @@ class HrEmployeePrivate(models.Model):
             ('contractor', 'Contractor'),
             ('freelance', 'Freelancer'),
         ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
-        help="The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract History. Only Employee type is supposed to be under contract and will have a Contract History.")
+        help="Categorize your Employees by type. This field also has an impact on contracts. Only Employees, Students and Trainee will have contract history.")
 
     job_id = fields.Many2one(tracking=True)
     # employee in company

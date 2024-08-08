@@ -54,6 +54,9 @@ export class HierarchyController extends Component {
         });
         this.searchBarToggler = useSearchBarToggler();
     }
+    get displayNoContent() {
+        return this.model.resIds.length === 0;
+    }
 
     async openRecord(node, mode) {
         const activeIds = this.model.root.resIds;
