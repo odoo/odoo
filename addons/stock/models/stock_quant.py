@@ -319,6 +319,15 @@ class StockQuant(models.Model):
         """ Only allowed fields should be modified """
         return super(StockQuant, self.with_context(inventory_mode=True))._load_records_write(values)
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+        Override to display the inventory_quantity_auto_apply:sum in group by of the list view
+        """
+        if 'inventory_quantity_auto_apply' in fields and 'quantity' not in fields:
+            fields.append('inventory_quantity_auto_apply:sum')
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
     def _read_group_select(self, aggregate_spec, query):
         if aggregate_spec == 'inventory_quantity:sum' and self.env.context.get('inventory_report_mode'):
             return SQL("NULL"), []
