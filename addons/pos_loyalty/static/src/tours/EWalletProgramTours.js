@@ -133,5 +133,5 @@ ProductScreen.exec.addOrderline("product_a", "1");
 PosLoyalty.check.eWalletButtonState({ highlighted: true, text: getEWalletText("Pay") });
 PosLoyalty.do.clickEWalletButton(getEWalletText("Pay"));
 PosLoyalty.check.pointsAwardedAre("100"),
-PosLoyalty.exec.finalizeOrder("Cash", "90.00");
+PosLoyalty.exec.finalizeOrder("Cash", "90");
 Tour.register("PosLoyaltyPointsEwallet", { test: true, url: "/pos/web" }, getSteps());
