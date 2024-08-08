@@ -21,3 +21,8 @@ registerWebsiteOption("BadgeOptions", {
     selector: ".s_badge",
 });
 
+registerWebsiteOption("WebsiteHrOptions", {
+    template: "website.s_hr_options",
+    selector: ".s_hr",
+    target: "hr",
+});

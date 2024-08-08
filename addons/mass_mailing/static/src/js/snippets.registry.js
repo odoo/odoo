@@ -12,3 +12,9 @@ registerMassMailingOption("MassMailingIconTools", {
     selector: "span.fa, i.fa, img",
     exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
 });
+
+registerMassMailingOption("MassMailingHrOptions", {
+    template: "mass_mailing.s_hr_options",
+    selector: ".s_hr",
+    target: "hr",
+});
