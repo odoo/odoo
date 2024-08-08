@@ -5204,8 +5204,7 @@ class BaseModel(metaclass=MetaModel):
             :return: the records corresponding to ``data_list``
         """
         original_self = self.browse()
-        # records created during installation should not display messages
-        self = self.with_context(install_mode=True)
+
         imd = self.env['ir.model.data'].sudo()
 
         # The algorithm below partitions 'data_list' into three sets: the ones
