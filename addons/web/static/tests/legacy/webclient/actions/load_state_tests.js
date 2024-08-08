@@ -21,7 +21,7 @@ import {
     setupWebClientRegistries,
 } from "./../helpers";
 import { errorService } from "@web/core/errors/error_service";
-import { router, startRouter } from "@web/core/browser/router";
+import { router, routerBus, startRouter } from "@web/core/browser/router";
 
 import { Component, onMounted, xml } from "@odoo/owl";
 import { redirect } from "@web/core/utils/urls";
@@ -1174,6 +1174,64 @@ QUnit.module("ActionManager", (hooks) => {
             "pushState http://example.com/odoo/action-3",
         ]);
         assert.strictEqual(webReadLoad, 1);
+    });
+
+    QUnit.test("properly reload dynamic actions from sessionStorage", async function (assert) {
+        patchWithCleanup(browser.sessionStorage, {
+            setItem(key, value) {
+                assert.step(`set ${key}-${value}`);
+                super.setItem(key, value);
+            },
+            getItem(key) {
+                const res = super.getItem(key);
+                assert.step(`get ${key}-${res}`);
+                return res;
+            },
+        });
+
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC(route) {
+                if (route === "/web/dataset/call_button/partner/object") {
+                    return {
+                        type: "ir.actions.act_window",
+                        res_model: "partner",
+                        views: [[1, "kanban"]],
+                    };
+                }
+            },
+        });
+
+        await doAction(webClient, {
+            type: "ir.actions.act_window",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+        });
+
+        assert.containsOnce(target, ".o_form_view");
+
+        await click(target, ".o_statusbar_buttons .btn-secondary[type='object']");
+        await nextTick();
+        await nextTick();
+
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.verifySteps([
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","res_id":1,"views":[[false,"form"]]}',
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"active_model":"partner","active_id":1,"active_ids":[1]}}',
+        ]);
+
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/m-partner/1/m-partner");
+
+        // Emulate a Reload
+        routerBus.trigger("ROUTE_CHANGE");
+        await nextTick();
+        await nextTick();
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.verifySteps([
+            'get current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"active_model":"partner","active_id":1,"active_ids":[1]}}',
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"active_model":"partner","active_id":1,"active_ids":[1]}}',
+        ]);
     });
 
     QUnit.module("Load State: legacy urls");
