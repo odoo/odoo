@@ -96,7 +96,7 @@ class AccountMove(models.Model):
         """ List of document types that can be used as an invoice and refund. This list can be increased once needed
         and demonstrated. As far as we've checked document types of wsfev1 don't allow negative amounts so, for example
         document 60 and 61 could not be used as refunds. """
-        return ['99', '186', '188', '189']
+        return ['99', '186', '188', '189', '60']
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
@@ -107,7 +107,7 @@ class AccountMove(models.Model):
             codes = self.journal_id._get_journal_codes()
             if codes:
                 domain.append(('code', 'in', codes))
-            if self.move_type == 'in_refund':
+            if self.move_type in ['out_refund', 'in_refund']:
                 domain = ['|', ('code', 'in', self._get_l10n_ar_codes_used_for_inv_and_ref())] + domain
         return domain
 
