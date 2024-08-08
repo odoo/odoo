@@ -21,7 +21,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
-import { router, startRouter } from "@web/core/browser/router";
+import { router, routerBus, startRouter } from "@web/core/browser/router";
 import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { _t } from "@web/core/l10n/translation";
@@ -1324,6 +1324,57 @@ describe(`new urls`, () => {
             "web_search_read",
             "has_group",
             "pushState http://example.com/odoo/action-3",
+        ]);
+    });
+
+    test("properly reload dynamic actions from sessionStorage", async () => {
+        patchWithCleanup(browser.sessionStorage, {
+            setItem(key, value) {
+                expect.step(`set ${key}-${value}`);
+                super.setItem(key, value);
+            },
+            getItem(key) {
+                const res = super.getItem(key);
+                expect.step(`get ${key}-${res}`);
+                return res;
+            },
+        });
+
+        onRpc("/web/dataset/call_button/partner/object", () => ({
+            type: "ir.actions.act_window",
+            res_model: "partner",
+            views: [[1, "kanban"]],
+        }));
+        await mountWebClient();
+
+        await getService("action").doAction({
+            type: "ir.actions.act_window",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+        });
+
+        expect(`.o_form_view`).toHaveCount(1);
+
+        await contains(`.o_statusbar_buttons .btn-secondary[type='object']`).click();
+        await animationFrame();
+
+        expect(`.o_kanban_view`).toHaveCount(1);
+        expect.verifySteps([
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","res_id":1,"views":[[false,"form"]]}',
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"partner","active_id":1,"active_ids":[1]}}',
+        ]);
+
+        expect(browser.location.href).toBe("http://example.com/odoo/m-partner/1/m-partner");
+
+        // Emulate a Reload
+        routerBus.trigger("ROUTE_CHANGE");
+        await animationFrame();
+        await animationFrame();
+        expect(`.o_kanban_view`).toHaveCount(1);
+        expect.verifySteps([
+            'get current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"partner","active_id":1,"active_ids":[1]}}',
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"active_model":"partner","active_id":1,"active_ids":[1]}}',
         ]);
     });
 });
