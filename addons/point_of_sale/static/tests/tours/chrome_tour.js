@@ -122,6 +122,7 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
             Dialog.confirm(),
 
             PaymentScreen.clickBack(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
             ProductScreen.isShown(),
 
             // Allow order changes after the error
