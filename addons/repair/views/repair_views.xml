@@ -181,7 +181,7 @@
                     </page>
                     <page string="Miscellaneous" name="page_miscellaneous">
                         <group>
-                            <field name="picking_type_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="picking_type_id" options="{'no_create': True}" readonly="state in ('done', 'cancel')"/>
                         </group>
                         <group string="Locations" groups="stock.group_stock_multi_locations" name="locations">
                             <field name="location_id" readonly="state != 'draft'" options="{'no_create': True}"/>

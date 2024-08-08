@@ -628,7 +628,6 @@ class Picking(models.Model):
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs')
     use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots')
-    hide_picking_type = fields.Boolean(compute='_compute_hide_picking_type')
     partner_id = fields.Many2one(
         'res.partner', 'Contact',
         check_company=True, index='btree_not_null')
@@ -710,11 +709,6 @@ class Picking(models.Model):
     def _compute_has_deadline_issue(self):
         for picking in self:
             picking.has_deadline_issue = picking.date_deadline and picking.date_deadline < picking.scheduled_date or False
-
-    @api.depends('state')
-    def _compute_hide_picking_type(self):
-        for picking in self:
-            picking.hide_picking_type = picking.state != "draft" and picking.ids and 'default_picking_type_id' in picking.env.context
 
     @api.depends('move_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -929,7 +923,7 @@ class Picking(models.Model):
     @api.depends('picking_type_id', 'partner_id')
     def _compute_location_id(self):
         for picking in self:
-            if picking.state != 'draft' or picking.return_id:
+            if picking.state in ('cancel', 'done') or picking.return_id:
                 continue
             picking = picking.with_company(picking.company_id)
             if picking.picking_type_id:
@@ -1086,7 +1080,7 @@ class Picking(models.Model):
         return pickings
 
     def write(self, vals):
-        if vals.get('picking_type_id') and any(picking.state != 'draft' for picking in self):
+        if vals.get('picking_type_id') and any(picking.state in ('done', 'cancel') for picking in self):
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
         # set partner as a follower and unfollow old partner
         if vals.get('partner_id'):

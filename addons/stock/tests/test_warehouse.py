@@ -3,8 +3,6 @@
 from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
-from odoo.exceptions import UserError
-from odoo.tools import mute_logger
 
 
 class TestWarehouse(TestStockCommon):
@@ -818,3 +816,37 @@ class TestWarehouse(TestStockCommon):
         test_warehouse.sequence = 100
         location._compute_warehouse_id()
         self.assertEqual(location.warehouse_id, test_warehouse)
+
+    def test_location_updates_wh(self):
+        warehouse_A = self.env['stock.warehouse'].create({
+            'name': 'Warehouse X',
+            'code': 'WH_X',
+            'delivery_steps': 'pick_pack_ship'
+        })
+        warehouse_B = self.env['stock.warehouse'].create({
+            'name': 'Warehouse Y',
+            'code': 'WH_Y',
+            'delivery_steps': 'pick_pack_ship'
+        })
+        picking_out = self.env['stock.picking'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': warehouse_A.pick_type_id.id,
+            'location_id': warehouse_A.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        customer_move = self.env['stock.move'].create({
+            'name': self.product.name,
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': warehouse_A.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        picking_form = Form(picking_out)
+        picking_form.picking_type_id = warehouse_B.pick_type_id
+        picking_form.save()
+        self.assertEqual(customer_move.warehouse_id, warehouse_B)
+        self.assertEqual(picking_out.picking_type_id, warehouse_B.pick_type_id)
+        picking_out.button_validate()
+        self.assertEqual(customer_move.move_dest_ids.warehouse_id, warehouse_B)

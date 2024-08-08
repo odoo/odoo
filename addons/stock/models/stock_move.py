@@ -708,6 +708,15 @@ Please change the quantity done or the rounding precision of your unit of measur
                     move_to_check_location.procure_method = 'make_to_stock'
                     move_to_check_location.move_orig_ids = [Command.clear()]
                     ml.unlink()
+        if 'location_id' in vals or 'location_dest_id' in vals:
+            wh_by_moves = defaultdict(self.env['stock.move'].browse)
+            for move in self:
+                move_warehouse = move.location_id.warehouse_id or move.location_dest_id.warehouse_id
+                if move_warehouse == move.warehouse_id:
+                    continue
+                wh_by_moves[move_warehouse] |= move
+            for warehouse, moves in wh_by_moves.items():
+                moves.warehouse_id = warehouse.id
         if move_to_confirm:
             move_to_confirm._action_assign()
         if receipt_moves_to_reassign:
