@@ -162,7 +162,11 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
     }
 
     get isProductClickable() {
-        return this.props.record.model.root.data.state !== "draft";
+        if (this.props.record.model.root.data) {
+            return this.props.record.model.root.data.state !== "draft";
+        }
+        
+        return this.props.record._parentRecord.data.state !== "draft";
     }
 
     get isSectionOrNote() {
