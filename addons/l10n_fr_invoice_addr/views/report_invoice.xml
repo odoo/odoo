@@ -28,7 +28,7 @@
                 <t t-set="has_service" t-value="'service' in tax_scopes"/>
                 <t t-set="has_consu" t-value="'consu' in tax_scopes"/>
 
-                <div t-if="has_service or has_consu" class="col mb-2" name="operation_type">
+                <div t-if="has_service or has_consu" t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" name="operation_type">
                     <strong>Operation Type:</strong>
                     <br/>
                     <span t-if="has_service and has_consu">
