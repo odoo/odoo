@@ -130,7 +130,7 @@ class AccountMove(models.Model):
         for move in others:
             move.l10n_it_edi_is_self_invoice = False
         if purchases:
-            it_tax_report_vj_lines = self.env['account.report.line'].search([
+            it_tax_report_vj_lines = self.env['account.report.line'].sudo().search([
                 ('report_id.country_id.code', '=', 'IT'),
                 ('code', '=like', 'VJ%')
             ])
