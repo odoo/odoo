@@ -3,16 +3,15 @@
 
 from ast import literal_eval
 from collections import defaultdict
-import functools
 import itertools
 import logging
 import psycopg2
 import datetime
 
 from odoo import api, fields, models, Command
-from odoo import SUPERUSER_ID, _
+from odoo import _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, SQL
 
 _logger = logging.getLogger('odoo.addons.base.partner.merge')
 
@@ -194,7 +193,12 @@ class MergePartnerAutomatic(models.TransientModel):
         for update_record in additional_update_records:
             update_records(update_record['model'], src=record, field_model=update_record['field_model'])
 
-        records = self.env['ir.model.fields'].sudo().search([('ttype', '=', 'reference')])
+        # Include the 'value_reference' field on ir.property that is nominally a char but works like a Reference field
+        records = self.env['ir.model.fields'].sudo().search([
+            '|',
+            '&', ('ttype', '=', 'reference'), ('store', '=', True),
+            '&', ('model', '=', 'ir.property'), ('name', '=', 'value_reference')
+        ])
         for record in records:
             try:
                 Model = self.env[record.model]
@@ -216,22 +220,41 @@ class MergePartnerAutomatic(models.TransientModel):
         self.env.flush_all()
 
         # Company-dependent fields
+        self.env['ir.property'].invalidate_model()
         with self._cr.savepoint():
-            params = {
-                'destination_id': f'{referenced_model},{dst_record.id}',
-                'source_ids': tuple(f'{referenced_model},{src}' for src in src_records.ids),
-            }
-            self._cr.execute("""
-        UPDATE ir_property AS _ip1
-        SET res_id = %(destination_id)s
-        WHERE res_id IN %(source_ids)s
-        AND NOT EXISTS (
-             SELECT
-             FROM ir_property AS _ip2
-             WHERE _ip2.res_id = %(destination_id)s
-             AND _ip2.fields_id = _ip1.fields_id
-             AND _ip2.company_id = _ip1.company_id
-        )""", params)
+            source_ids = tuple(f'{referenced_model},{src}' for src in src_records.ids)
+            destination_id = f'{referenced_model},{dst_record.id}'
+
+            self.env.cr.execute(SQL(
+                """
+                 UPDATE ir_property AS _ip1
+                    SET res_id = %(destination_id)s
+                  WHERE id IN (
+                         SELECT DISTINCT ON (fields_id, company_id)
+                                id
+                           FROM ir_property
+                          WHERE res_id IN %(source_ids)s
+                          ORDER BY fields_id, company_id, res_id
+                        )
+                    AND NOT EXISTS (
+                         SELECT
+                           FROM ir_property AS _ip2
+                          WHERE _ip2.res_id = %(destination_id)s
+                            AND _ip2.fields_id = _ip1.fields_id
+                            AND _ip2.company_id = _ip1.company_id
+                        )
+                """,
+                source_ids=source_ids,
+                destination_id=destination_id,
+            ))
+            # Remove any properties still referring to the source records.
+            self.env.cr.execute(SQL(
+                """
+                DELETE FROM ir_property
+                WHERE res_id IN %(source_ids)s
+                """,
+                source_ids=source_ids,
+            ))
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):
