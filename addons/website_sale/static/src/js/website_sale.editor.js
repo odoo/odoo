@@ -1,6 +1,7 @@
 import { SnippetOption } from "@web_editor/js/editor/snippets.options";
 import options from "@web_editor/js/editor/snippets.options.legacy";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import { SnippetSave } from "@web_editor/js/editor/snippets.options";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import "@website/js/editor/snippets.options";
@@ -736,12 +737,12 @@ registerWebsiteOption("WebsiteSaleProductAttribute", {
 });
 
 // Disable save for alternative products snippet
-options.registry.SnippetSave.include({
+patch(SnippetSave.prototype, {
     /**
      * @override
      */
     async _computeVisibility() {
-        return await this._super(...arguments)
+        return await super._computeVisibility(...arguments)
             && !this.$target.hasClass('o_wsale_alternative_products');
     }
 });
