@@ -1,6 +1,7 @@
 const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { waitUntilSubscribe } from "@bus/../tests/legacy/helpers/websocket_event_deferred";
 
 import { RATING } from "@im_livechat/embed/common/livechat_service";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -76,11 +77,19 @@ test("Feedback with rating and comment", async (assert) => {
 test("Closing folded chat window should open it with feedback", async () => {
     await startServer();
     await loadDefaultConfig();
-    await start();
+    await start({
+        mockRPC(route) {
+            if (route === "/mail/action") {
+                step(route);
+            }
+        },
+    });
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
+    await waitUntilSubscribe("mail.guest_null");
     await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await assertSteps(["/mail/action"]);
     await click("[title='Fold']");
     await contains(".o-mail-ChatWindow.o-folded");
     await click("[title='Close Chat Window']");

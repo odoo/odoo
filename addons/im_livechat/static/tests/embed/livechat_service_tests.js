@@ -60,7 +60,7 @@ test("previous operator prioritized", async () => {
 test("Only necessary requests are made when creating a new chat", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
-    await start({
+    const env = await start({
         mockRPC(route, args) {
             if (!route.includes("assets")) {
                 step(`${route} - ${JSON.stringify(args)}`);
@@ -86,6 +86,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
     await assertSteps([]);
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
+    await click(".o-mail-Composer-input");
     const [threadId] = pyEnv["discuss.channel"].search([], { order: "id DESC" });
     await assertSteps([
         `/im_livechat/get_session - ${JSON.stringify({
@@ -118,6 +119,10 @@ test("Only necessary requests are made when creating a new chat", async () => {
             },
             thread_id: threadId,
             thread_model: "discuss.channel",
+        })}`,
+        `/discuss/channel/set_last_seen_message - ${JSON.stringify({
+            channel_id: env.services["im_livechat.livechat"].thread.id,
+            last_message_id: env.services["im_livechat.livechat"].thread.messages[0].id,
         })}`,
     ]);
 });

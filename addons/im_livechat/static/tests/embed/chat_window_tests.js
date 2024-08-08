@@ -1,6 +1,7 @@
 const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
@@ -27,6 +28,7 @@ test("do not save fold state of temporary live chats", async () => {
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
     await assertSteps([]);
+    await waitUntilSubscribe();
     await insertText(".o-mail-Composer-input", "Hello");
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello" });

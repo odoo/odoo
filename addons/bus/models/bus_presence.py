@@ -73,7 +73,7 @@ class BusPresence(models.Model):
 
     def _get_bus_target(self):
         self.ensure_one()
-        return self.env.ref("base.group_user")
+        return self.user_id.partner_id if self.user_id else None
 
     def _get_identity_field_name(self):
         self.ensure_one()
@@ -108,10 +108,12 @@ class BusPresence(models.Model):
         """
         notifications = []
         for presence in self:
-            if identity_data := presence._get_identity_data():
+            identity_data = presence._get_identity_data()
+            target = presence._get_bus_target()
+            if identity_data and target:
                 notifications.append(
                     (
-                        presence._get_bus_target(),
+                        (target, "presence"),
                         "bus.bus/im_status_updated",
                         {"im_status": im_status or presence.status, **identity_data},
                     )
