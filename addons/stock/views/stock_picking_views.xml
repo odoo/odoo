@@ -222,9 +222,8 @@
                             </div>
                             <field name="partner_id" nolabel="1" readonly="state in ['cancel', 'done']" placeholder="e.g. Lumber Inc"/>
                             <field name="picking_type_id" options="{'no_open': True}"
-                                   invisible="hide_picking_type"
-                                   readonly="state != 'draft' and id"
-                                   domain="context.get('restricted_picking_type_code') and [('code', '=', context.get('restricted_picking_type_code'))] or [(1,'=',1)]"/>
+                                   readonly="state in ('done', 'cancel')"
+                                   domain="[('code', 'in', ('incoming', 'outgoing', 'internal'))]" />
                             <field name="location_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/>
                             <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'incoming'" readonly="state == 'done'"/>
