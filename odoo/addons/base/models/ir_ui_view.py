@@ -630,8 +630,10 @@ actual arch.
         #    studio have a priority=99 to be loaded last.
         # 2/ sort by view id: the order the views were inserted in the
         #    database. e.g. base views are placed before stock ones.
-
-        rows = self.env.execute_query(query)
+        if isinstance(self.id, models.NewId):
+            rows = []
+        else:
+            rows = self.env.execute_query(query)
         views = self.browse(row[0] for row in rows)
 
         # optimization: fill in cache of inherit_id and mode
