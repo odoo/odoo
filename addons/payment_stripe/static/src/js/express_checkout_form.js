@@ -122,7 +122,7 @@ paymentExpressCheckoutForm.include({
                 addresses.shipping_address = {
                     name: ev.shippingAddress.recipient,
                     email: ev.payerEmail,
-                    phone: ev.shippingAddress.phone,
+                    phone: ev.shippingAddress.phone || ev.payerPhone,
                     street: ev.shippingAddress.addressLine[0],
                     street2: ev.shippingAddress.addressLine[1],
                     zip: ev.shippingAddress.postalCode,
