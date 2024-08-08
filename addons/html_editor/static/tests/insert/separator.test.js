@@ -48,6 +48,15 @@ describe("insert separator", () => {
             contentAfter: "<table><tbody><tr><td><hr><p>[]<br></p></td></tr></tbody></table>",
         });
     });
+
+    test("should insert a seperator within a block node", async () => {
+        await testEditor({
+            contentBefore: "<div>[]<br></div>",
+            stepFunction: insertSeparator,
+            contentAfter: "<hr><div>[]<br></div>",
+        });
+    });
+
     test("should set the contenteditable attribute to false on the separator when inserted as a child after normalization", async () => {
         const { el, editor } = await setupEditor("<p>[]<br></p>");
         const div = editor.document.createElement("div");

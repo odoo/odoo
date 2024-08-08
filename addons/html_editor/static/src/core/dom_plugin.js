@@ -417,9 +417,11 @@ export class DomPlugin extends Plugin {
     insertSeparator() {
         const selection = this.shared.getEditableSelection();
         const sep = this.document.createElement("hr");
-        const element = closestElement(selection.startContainer, (el) =>
-            paragraphRelatedElements.includes(el.tagName)
-        );
+        const block = closestBlock(selection.startContainer);
+        const element =
+            closestElement(selection.startContainer, (el) =>
+                paragraphRelatedElements.includes(el.tagName)
+            ) || (block && block.nodeName !== "LI" ? block : null);
 
         if (element && element !== this.editable) {
             element.before(sep);
