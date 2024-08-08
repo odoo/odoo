@@ -5673,6 +5673,13 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
         }]).action_apply_inventory()
 
+        # Not in stock product
+        product4 = self.env['product.product'].create({
+            'name': 'Product D',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
         # Creates a delivery for a bunch of products.
         delivery_form = Form(self.env['stock.picking'])
         delivery_form.picking_type_id = self.env.ref('stock.picking_type_out')
@@ -5685,12 +5692,16 @@ class StockMove(TransactionCase):
         with delivery_form.move_ids_without_package.new() as move:
             move.product_id = product3
             move.product_uom_qty = 10
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = product4
+            move.product_uom_qty = 10
         delivery = delivery_form.save()
         delivery.action_confirm()
 
         # Delivers a part of the quantity, creates a backorder for the remaining qty.
         delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product).qty_done = 6
         delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2).qty_done = 2
+        delivery.move_ids.filtered(lambda ml: ml.product_id == product4).quantity_done = 2
         backorder_wizard_dict = delivery.button_validate()
         backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
         backorder_wizard_form.save().process()  # Creates the backorder.
@@ -5698,20 +5709,25 @@ class StockMove(TransactionCase):
         first_backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)], limit=1)
         # Checks the values.
         aggregate_values = delivery.move_line_ids._get_aggregated_product_quantities()
-        self.assertEqual(len(aggregate_values), 2)
+        self.assertEqual(len(aggregate_values), 3)
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
+        sml3 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product4)
         aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
         aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['qty_done'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
         self.assertEqual(aggregate_val_2['qty_done'], 2)
+        self.assertEqual(aggregate_val_3['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_3['qty_done'], 2)
 
         # Delivers a part of the BO's qty., and creates an another backorder.
         first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == self.product).qty_done = 4
         first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2).qty_done = 6
         first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3).qty_done = 7
+        first_backorder.move_ids.filtered(lambda ml: ml.product_id == product4).quantity_done = 8
         backorder_wizard_dict = first_backorder.button_validate()
         backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
         backorder_wizard_form.save().process()  # Creates the backorder.
@@ -5720,30 +5736,38 @@ class StockMove(TransactionCase):
 
         # Checks the values for the original delivery.
         aggregate_values = delivery.move_line_ids._get_aggregated_product_quantities()
-        self.assertEqual(len(aggregate_values), 2)
+        self.assertEqual(len(aggregate_values), 3)
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
+        sml3 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product4)
         aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
         aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['qty_done'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
         self.assertEqual(aggregate_val_2['qty_done'], 2)
+        self.assertEqual(aggregate_val_3['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_3['qty_done'], 2)
         # Checks the values for the first back order.
         aggregate_values = first_backorder.move_line_ids._get_aggregated_product_quantities()
-        self.assertEqual(len(aggregate_values), 3)
+        self.assertEqual(len(aggregate_values), 4)
         sml1 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
+        sml4 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product4)
         aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
         aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
         aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.product_uom_id.id}']
+        aggregate_val_4 = aggregate_values[f'{product4.id}_{product4.name}__{sml4.product_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 4)
         self.assertEqual(aggregate_val_1['qty_done'], 4)
         self.assertEqual(aggregate_val_2['qty_ordered'], 8)
         self.assertEqual(aggregate_val_2['qty_done'], 6)
         self.assertEqual(aggregate_val_3['qty_ordered'], 10)
         self.assertEqual(aggregate_val_3['qty_done'], 7)
+        self.assertEqual(aggregate_val_4['qty_ordered'], 8)
+        self.assertEqual(aggregate_val_4['qty_done'], 8)
 
         # Delivers a part of the second BO's qty. but doesn't create a backorder this time.
         second_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3).qty_done = 3
@@ -5753,30 +5777,38 @@ class StockMove(TransactionCase):
 
         # Checks again the values for the original delivery.
         aggregate_values = delivery.move_line_ids._get_aggregated_product_quantities()
-        self.assertEqual(len(aggregate_values), 2)
+        self.assertEqual(len(aggregate_values), 3)
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
+        sml3 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product4)
         aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
         aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['qty_done'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
         self.assertEqual(aggregate_val_2['qty_done'], 2)
+        self.assertEqual(aggregate_val_3['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_3['qty_done'], 2)
         # Checks again the values for the first back order.
         aggregate_values = first_backorder.move_line_ids._get_aggregated_product_quantities()
-        self.assertEqual(len(aggregate_values), 3)
+        self.assertEqual(len(aggregate_values), 4)
         sml1 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
+        sml4 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product4)
         aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
         aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
         aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.product_uom_id.id}']
+        aggregate_val_4 = aggregate_values[f'{product4.id}_{product4.name}__{sml4.product_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 4)
         self.assertEqual(aggregate_val_1['qty_done'], 4)
         self.assertEqual(aggregate_val_2['qty_ordered'], 8)
         self.assertEqual(aggregate_val_2['qty_done'], 6)
         self.assertEqual(aggregate_val_3['qty_ordered'], 10)
         self.assertEqual(aggregate_val_3['qty_done'], 7)
+        self.assertEqual(aggregate_val_4['qty_ordered'], 8)
+        self.assertEqual(aggregate_val_4['qty_done'], 8)
         # Checks the values for the second back order.
         aggregate_values = second_backorder.move_line_ids._get_aggregated_product_quantities()
         self.assertEqual(len(aggregate_values), 2)
