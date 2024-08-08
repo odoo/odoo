@@ -21,6 +21,8 @@ export const config = {
  * @param {number} [options.leaveDuration] the leaveDuration of the transition
  * @param {Function} [options.onLeave] a function that will be called when the
  *  element will be removed in the next render cycle
+ * @param {boolean} options.transitionWhenMounted can be used to set or
+ * unset transition when the component is already mounted.
  * @returns {{ shouldMount, class }} an object containing two fields that
  *  indicate whether an element on which the transition is applied should be
  *  mounted and the class string that should be put on it
@@ -30,6 +32,7 @@ export function useTransition({
     initialVisibility = true,
     leaveDuration = 500,
     onLeave = () => {},
+    transitionWhenMounted = true,
 }) {
     const component = useComponent();
     const state = useState({
@@ -79,7 +82,7 @@ export function useTransition({
             // when true - transition from enter to enter-active
             // when false - transition from enter-active to leave, unmount after leaveDuration
             if (newState) {
-                state.stage = "enter";
+                state.stage = !transitionWhenMounted && state.shouldMount ? "skip" : "enter"; // dummy class "skip" to stop transition
                 state.shouldMount = true;
                 // force a render here so that we get a patch even if the state didn't change
                 component.render();
@@ -120,15 +123,17 @@ export class Transition extends Component {
         leaveDuration: { type: Number, optional: true },
         onLeave: { type: Function, optional: true },
         slots: Object,
+        transitionWhenMounted: { type: Boolean, optional: true },
     };
 
     setup() {
-        const { visible, leaveDuration, name, onLeave } = this.props;
+        const { visible, leaveDuration, name, onLeave, transitionWhenMounted } = this.props;
         this.transition = useTransition({
             initialVisibility: visible,
             leaveDuration,
             name,
             onLeave,
+            transitionWhenMounted,
         });
         onWillUpdateProps(({ visible = true }) => {
             this.transition.shouldMount = visible;
