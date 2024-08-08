@@ -50,6 +50,9 @@ class TestPartnerVCard(HttpCase):
             'country_id': self.env.ref('base.us').id,
             'zip': '97649',
             'website': 'https://test.example.com',
+            'child_ids': [
+                Command.create({'type': 'other'})
+            ]
         }])
         self.authenticate("admin", "admin")
 
@@ -102,3 +105,13 @@ class TestPartnerVCard(HttpCase):
             res = self.url_open('/web/partner/vcard?partner_ids=%s,%s' %
                             (self.partners[0].id, self.partners[1].id))
         self.assertEqual(res.status_code, 403)
+
+    def test_fetch_single_partner_vcard_without_name(self):
+        """
+        Test to fetch a vcard of a partner create through
+        child of another partner without name
+        """
+        partner = self.partners[1].child_ids[0]
+        res = self.url_open('/web/partner/vcard?partner_ids=%s' % partner.id)
+        vcard = vobject.readOne(res.text)
+        self.assertEqual(vcard.contents["n"][0].value.family, partner.complete_name, "Vcard will have the complete name when it dosen't have name")
