@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import math
-
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.tools import format_duration
 
 
 class SaleOrderLine(models.Model):
@@ -36,19 +35,7 @@ class SaleOrderLine(models.Model):
                 if line.remaining_hours_available:
                     remaining_time = ''
                     if is_hour:
-                        hours, minutes = divmod(abs(line.remaining_hours) * 60, 60)
-                        round_minutes = minutes / 30
-                        minutes = math.ceil(round_minutes) if line.remaining_hours >= 0 else math.floor(round_minutes)
-                        if minutes > 1:
-                            minutes = 0
-                            hours += 1
-                        else:
-                            minutes = minutes * 30
-                        remaining_time = ' ({sign}{hours:02.0f}:{minutes:02.0f} {remaining})'.format(
-                            sign='-' if line.remaining_hours < 0 else '',
-                            hours=hours,
-                            minutes=minutes,
-                            remaining=unit_label)
+                        remaining_time = f' ({format_duration(line.remaining_hours)} {unit_label})'
                     elif is_day:
                         remaining_days = company.project_time_mode_id._compute_quantity(line.remaining_hours, encoding_uom, round=False)
                         remaining_time = f' ({remaining_days:.02f} {unit_label})'
