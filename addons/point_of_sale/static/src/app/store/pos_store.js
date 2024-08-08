@@ -1580,7 +1580,7 @@ export class PosStore extends Reactive {
             this.mobile_pane == "left" ||
             [PaymentScreen, ActionScreen].includes(this.mainScreen.component)
         ) {
-            this.mobile_pane = "right";
+            this.mobile_pane = this.mainScreen.component === PaymentScreen ? "left" : "right";
             this.showScreen("ProductScreen");
         }
     }
