@@ -29,7 +29,7 @@
                     >
                         <t t-esc="getTable().getName()"/>
                     </button>  
-                    <div t-if="pos.get_order() and !pos.get_order()?.table_id" 
+                    <div t-if="showFloatingOrderName" 
                         t-attf-class="table-free-order-label btn btn-primary btn-lg lh-lg" 
                         t-on-click="() => this.switchTable()"
                         t-esc="pos.get_order().getFloatingOrderName()"

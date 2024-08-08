@@ -45,11 +45,14 @@ patch(Navbar.prototype, {
         const draftOrders = super.getFloatingOrders() || [];
         return draftOrders.filter((o) => !o.table_id);
     },
+    get showFloatingOrderName() {
+        return this.pos.get_order() && !this.pos.get_order()?.table_id;
+    },
     get showTableNumber() {
         return typeof this.getTable()?.table_number === "number";
     },
     get showSwitchTableButton() {
-        return this.pos.mainScreen.component.name === "FloorScreen";
+        return !this.showTableNumber && !this.showFloatingOrderName;
     },
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";
