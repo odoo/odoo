@@ -225,11 +225,18 @@ class SaleOrderLine(models.Model):
         return suppliers[0]
 
     def _purchase_service_match_purchase_order(self, partner, company=False):
-        return self.env['purchase.order'].search([
-            ('partner_id', '=', partner.id),
-            ('state', '=', 'draft'),
-            ('company_id', '=', (company and company or self.env.company).id),
-        ], order='id desc')
+        result = self.env['purchase.order.line']._read_group(
+            [
+                ('partner_id', '=', partner.id),
+                ('state', '=', 'draft'),
+                ('company_id', '=', (company and company or self.env.company).id),
+                ('sale_order_id', '=', self.order_id.id),
+            ],
+            ['order_id'],
+            order='order_id',
+            limit=1,
+        )
+        return result[0][0] if result else self.env['purchase.order']
 
     def _create_purchase_order(self, supplierinfo):
         values = self._purchase_service_prepare_order_values(supplierinfo)
