@@ -7,7 +7,8 @@
             <field name="arch" type="xml">
                 <form string="Email message" duplicate="0">
                     <header>
-                        <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
+                        <field name="message_type" invisible="1"/>
+                        <button name="send" string="Send Now" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'outgoing'), ('message_type', '=', 'user_notification')]}"/>
                         <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
                         <button name="cancel" string="Cancel" type="object" states='outgoing'/>
                         <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
@@ -101,7 +102,7 @@
                     <field name="state" widget="badge" decoration-muted="state in ('sent', 'cancel')"
                         decoration-info="state=='outgoing'" decoration-danger="state=='exception'"/>
                     <field name="to_delete" invisible="1"/>
-                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane" states='outgoing'/>
+                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane" attrs="{'invisible': ['|', ('state', '!=', 'outgoing'), ('message_type', '=', 'user_notification')]}"/>
                     <button name="mark_outgoing" string="Retry" type="object" icon="fa-repeat" states='exception,cancel'/>
                     <button name="cancel" string="Cancel Email" type="object" icon="fa-times-circle" states='outgoing'/>
                 </tree>
