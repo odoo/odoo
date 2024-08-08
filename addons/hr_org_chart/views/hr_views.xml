@@ -42,6 +42,28 @@
             </div>
         </field>
     </record>
+    
+    <record id="hr_employee_view_pivot_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.view.pivot.inherit.org_chart</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_employee_view_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="department_color" type="measure" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="hr_employee_view_graph_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.view.graph.inherit.org_chart</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_employee_view_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="department_color" type="measure" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
 
     <record id="hr_employee_hierarchy_view" model="ir.ui.view">
         <field name="name">hr.employee.view.hierarchy</field>

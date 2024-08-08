@@ -36,6 +36,7 @@ class EmployeeBase(models.AbstractModel):
 class Employee(models.Model):
     _inherit = "hr.employee"
 
+    legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user")
     vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts', groups="hr.group_hr_user")
     contract_id = fields.Many2one(
@@ -45,6 +46,12 @@ class Employee(models.Model):
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count', groups="hr.group_hr_user")
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
     first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user", store=True)
+
+    @api.depends('name')
+    def _compute_legal_name(self):
+        for employee in self:
+            if not employee.legal_name:
+                employee.legal_name = employee.name
 
     def _get_first_contracts(self):
         self.ensure_one()
