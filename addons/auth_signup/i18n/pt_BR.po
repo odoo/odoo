@@ -3,16 +3,37 @@
 # 	* auth_signup
 #
 # Translators:
+<<<<<<< master
 # Martin Trigaux, 2022
 # Luis Bispo, 2023
 #
+||||||| 5e28dcf717a7184f226773b3c84b409da24c1336
+# Wil Odoo, 2024
+# Maitê Dietze, 2024
+# 
+=======
+# Wil Odoo, 2024
+# Maitê Dietze, 2024
+# Tiffany Chang, 2024
+# 
+>>>>>>> 3639d356e470889fa1858c5f42806eb466e6db48
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< master
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Luis Bispo, 2023\n"
+||||||| 5e28dcf717a7184f226773b3c84b409da24c1336
+"POT-Creation-Date: 2024-07-15 18:11+0000\n"
+"PO-Revision-Date: 2024-07-16 09:15+0000\n"
+"Last-Translator: Maitê Dietze, 2024\n"
+=======
+"POT-Creation-Date: 2024-07-15 18:11+0000\n"
+"PO-Revision-Date: 2024-07-16 09:15+0000\n"
+"Last-Translator: Tiffany Chang, 2024\n"
+>>>>>>> 3639d356e470889fa1858c5f42806eb466e6db48
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -195,16 +216,47 @@ msgid ""
 "                        A password reset was requested for the Odoo account linked to this email.\n"
 "                        You may change your password by following this link which will remain valid during 24 hours:<br>\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+<<<<<<< master
 "                            <a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                Change password\n"
+||||||| 5e28dcf717a7184f226773b3c84b409da24c1336
+"                            <a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Aceitar convite\n"
+=======
+"                            <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-style=\"background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Aceitar convite\n"
+>>>>>>> 3639d356e470889fa1858c5f42806eb466e6db48
 "                            </a>\n"
 "                        </div>\n"
+<<<<<<< master
 "                        If you do not expect this, you can safely ignore this email.<br><br>\n"
 "                        Thanks,\n"
 "                        <t t-if=\"user.signature\">\n"
 "                            <br>\n"
 "                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "                        </t>\n"
+||||||| 5e28dcf717a7184f226773b3c84b409da24c1336
+"                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"></t>\n"
+"                        Seu domínio Odoo é: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br>\n"
+"                        Seu e-mail de login é: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br><br>\n"
+"                        Não conhece o Odoo? É um software empresarial tudo em um adorado por mais de 7 milhões de usuários. O Odoo melhorará sua experiência no trabalho e aumentará sua produtividade significativamente.\n"
+"                        <br><br>\n"
+"                        Siga o nosso <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> para começar a explorar a ferramenta.\n"
+"                        <br><br>\n"
+"                        Aproveite o Odoo!<br>\n"
+"                        -- <br>Equipe da <t t-out=\"object.company_id.name or ''\">YourCompany</t> \n"
+=======
+"                        <b> Este link permanecerá válido durante <t t-out=\"int(int(object.env['ir.config_parameter'].sudo().get_param('auth_signup.signup.validity.hours',144))/24)\"></t> dias </b> <br>\n"
+"                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"></t>\n"
+"                        Seu domínio Odoo é: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br>\n"
+"                        Seu e-mail de login é: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br><br>\n"
+"                        Não conhece o Odoo? É um software empresarial tudo em um adorado por mais de 7 milhões de usuários. O Odoo melhorará sua experiência no trabalho e aumentará sua produtividade significativamente.\n"
+"                        <br><br>\n"
+"                        Siga o nosso <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> para começar a explorar a ferramenta.\n"
+"                        <br><br>\n"
+"                        Aproveite o Odoo!<br>\n"
+"                        -- <br>Equipe da <t t-out=\"object.company_id.name or ''\">YourCompany</t> \n"
+>>>>>>> 3639d356e470889fa1858c5f42806eb466e6db48
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -541,22 +593,40 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New Portal Signup"
+<<<<<<< master
 msgstr ""
+||||||| 5e28dcf717a7184f226773b3c84b409da24c1336
+msgstr "Configurações: Novo cadastro no portal"
+=======
+msgstr "Definições: Novo cadastro no portal"
+>>>>>>> 3639d356e470889fa1858c5f42806eb466e6db48
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New User Invite"
+<<<<<<< master
 msgstr ""
+||||||| 5e28dcf717a7184f226773b3c84b409da24c1336
+msgstr "Configurações: Novo convite de usuário"
+=======
+msgstr "Definições: Novo convite de usuário"
+>>>>>>> 3639d356e470889fa1858c5f42806eb466e6db48
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
+<<<<<<< master
 msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.reset_password_email
 msgid "Settings: User Reset Password"
 msgstr ""
+||||||| 5e28dcf717a7184f226773b3c84b409da24c1336
+msgstr "Configurações: Lembrete de usuário não registrado"
+=======
+msgstr "Definições: Lembrete de usuário não registrado"
+>>>>>>> 3639d356e470889fa1858c5f42806eb466e6db48
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -647,8 +717,28 @@ msgstr "O formulário não foi preenchido corretamente."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+<<<<<<< master
 msgid "To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*."
 msgstr "Para enviar convites em modo B2B, abra um contato ou selecione na listagem e clique em 'Gerenciamento de Acesso ao Portal' e selecione o menu dropdown *Ação*."
+||||||| 5e28dcf717a7184f226773b3c84b409da24c1336
+msgid ""
+"To send invitations in B2B mode, open a contact or select several ones in "
+"list view and click on 'Portal Access Management' option in the dropdown "
+"menu *Action*."
+msgstr ""
+"Para enviar convites em modo B2B, abra um contato ou selecione-o na visão de"
+" lista e clique em \"Gerenciamento de acesso portal\" e selecione o menu "
+"suspenso *Ação*."
+=======
+msgid ""
+"To send invitations in B2B mode, open a contact or select several ones in "
+"list view and click on 'Portal Access Management' option in the dropdown "
+"menu *Action*."
+msgstr ""
+"Para enviar convites em modo B2B, abra um contato ou selecione-o na visão de"
+" lista e clique em \"Gerenciamento de acesso ao portal\" e selecione o menu "
+"suspenso *Ação*."
+>>>>>>> 3639d356e470889fa1858c5f42806eb466e6db48
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
