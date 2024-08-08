@@ -1050,3 +1050,56 @@ class TestSalesTeam(SaleCommon):
         self.env.flush_all()
         self.assertEqual(so.amount_tax, 12.36)
         self.assertEqual(so.amount_total, 135.96)
+
+    def test_recompute_taxes_rounded_globally_currency_precision(self):
+        '''
+        Check that taxes computation are made in the currency of the company
+        configured on the SO lines.
+        '''
+        # create a currency with no decimal
+        currency_b = self.env['res.currency'].create({
+            'name': 'B',
+            'symbol': 'B',
+            'rounding': 1.000000,
+        })
+        # create a company with currency_b as currency
+        company_b = self.env['res.company'].create({
+            'name': 'Company B',
+            'tax_calculation_rounding_method': 'round_globally',
+            'currency_id': currency_b.id,
+        })
+        # set company_b as default company of current user
+        self.env.user.company_id = company_b
+
+        pricelist_b = self.env['product.pricelist'].with_company(company_b).create({
+            'name': 'pricelist b',
+            'currency_id': self.env.ref('base.USD').id,
+        })
+        tax_group_a = self.env['account.tax.group'].create({
+            'name': 'Tax Group',
+            'company_id': company_b.id,
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'Tax A',
+            'amount': 19,
+            'company_id': company_b.id,
+            'country_id': self.env.ref('base.us').id,
+            'tax_group_id': tax_group_a.id,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'company_id': company_b.id,
+            'pricelist_id': pricelist_b.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 15.31,
+                    'tax_id': tax.ids,
+                }),
+            ],
+        })
+        self.assertEqual(so.amount_tax, 2.91)
+        self.assertEqual(so.amount_total, 18.22)
+        self.assertEqual(so.order_line.price_tax, 2.91)
+        self.assertEqual(so.order_line.price_total, 18.22)
