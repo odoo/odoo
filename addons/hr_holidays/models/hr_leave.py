@@ -936,15 +936,25 @@ class HolidaysRequest(models.Model):
                     else:
                         employees = self.mapped('employee_id')
                     self._check_double_validation_rules(employees, values['state'])
-            if 'date_from' in values:
-                values['request_date_from'] = values['date_from']
-            if 'date_to' in values:
-                values['request_date_to'] = values['date_to']
         result = super(HolidaysRequest, self).write(values)
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
                 if employee_id:
                     holiday.add_follower(employee_id)
+
+        protected_fields = {'date_from', 'date_to'}
+        date_from_to = protected_fields & set(values)
+
+        if date_from_to:
+            with self.env.protecting([self._fields[field] for field in protected_fields], self):
+                for leave in self:
+                    leave_tz = timezone(leave.tz)
+
+                    for date_field in date_from_to:
+                        request_date_field = pytz.utc.localize(leave[date_field]).astimezone(leave_tz).date()
+
+                        if leave['request_' + date_field] != request_date_field:
+                            leave['request_' + date_field] = request_date_field
 
         return result
 
