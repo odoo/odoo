@@ -197,20 +197,20 @@ export class Store extends BaseStore {
             return true;
         } else if (ev.target.tagName === "A" && model && id) {
             ev.preventDefault();
-            Promise.resolve(this.env.services.action.doAction({
-                type: "ir.actions.act_window",
-                res_model: model,
-                views: [[false, "form"]],
-                res_id: id,
-            })).then(() => {
-                if (!this.env.isSmall) {
-                    this.env.services["mail.thread"].open(thread, true, { autofocus: false });
-                }
-            });
+            Promise.resolve(
+                this.env.services.action.doAction({
+                    type: "ir.actions.act_window",
+                    res_model: model,
+                    views: [[false, "form"]],
+                    res_id: id,
+                })
+            ).then(() => this.onLinkFollowed(thread));
             return true;
         }
         return false;
     }
+
+    onLinkFollowed(fromThread) {}
 
     setup() {
         super.setup();
