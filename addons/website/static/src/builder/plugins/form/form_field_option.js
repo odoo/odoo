@@ -2,7 +2,13 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import { FormModelRequiredFieldAlert } from "./form_model_required_field_alert";
-import { getDependencyEl, getFieldName, getMultipleInputs, isFieldCustom } from "./utils";
+import {
+    getDependencyEl,
+    getFieldName,
+    getMultipleInputs,
+    isFieldCustom,
+    getCurrentFieldInputEl,
+} from "./utils";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
@@ -64,6 +70,32 @@ export class FormFieldOption extends BaseOptionComponent {
                 hasDateTimePicker: dependencyEl.classList.contains("datetimepicker-input"),
             };
         });
+
+        this.domStateCurrentFieldInput = useDomState(el => {
+            const currentFieldInputEl = getCurrentFieldInputEl(el);
+            if (!currentFieldInputEl) {
+                return {
+                    type: "",
+                    nodeName: "",
+                    isRecordField: false,
+                    isFormDate: false,
+                    isFormDateTime: false,
+                    hasDateTimePicker: false,
+                    isTextArea: false,
+                };
+            }
+            return {
+                type: currentFieldInputEl.type,
+                nodeName: currentFieldInputEl.nodeName,
+                isRecordField:
+                    currentFieldInputEl.closest(".s_website_form_field")?.dataset.type === "record",
+                isFormDate: !!currentFieldInputEl.closest(".s_website_form_date"),
+                isFormDateTime: !!currentFieldInputEl.closest(".s_website_form_datetime"),
+                hasDateTimePicker: currentFieldInputEl.classList.contains("datetimepicker-input"),
+                isTextArea: currentFieldInputEl.nodeName === "TEXTAREA",
+            };
+        });
+
         onWillStart(async () => {
             const el = this.env.getEditingElement();
             const fieldOptionData = await this.props.loadFieldOptionData(el);
@@ -84,6 +116,17 @@ export class FormFieldOption extends BaseOptionComponent {
             this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
         });
         // TODO select field's hack ?
+    }
+    get canHaveTextValidationCondition() {
+        return [
+            "text",
+            "email",
+            "tel",
+            "url",
+            "search",
+            "password",
+            "number",
+        ];
     }
     get isTextConditionValueVisible() {
         const el = this.env.getEditingElement();
@@ -108,6 +151,22 @@ export class FormFieldOption extends BaseOptionComponent {
             ) ||
                 dependencyEl.nodeName === "TEXTAREA") &&
             !["set", "!set"].includes(el.dataset.visibilityComparator)
+        );
+    }
+    /**
+     * Determines the visibility of the text condition input field used for
+     * validation.
+     *
+     * @returns {boolean} Whether the text condition input should be visible.
+     */
+    get isTextConditionForRequirementOptionVisible() {
+        const el = this.env.getEditingElement();
+        const currentFieldInputEl = getCurrentFieldInputEl(el);
+        return (
+            el.dataset.requirementComparator &&
+            !this.domStateCurrentFieldInput.hasDateTimePicker &&
+            (this.domStateCurrentFieldInput.isTextArea ||
+                this.canHaveTextValidationCondition.includes(currentFieldInputEl.type))
         );
     }
     get isTextConditionOperatorVisible() {
