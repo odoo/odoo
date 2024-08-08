@@ -71,23 +71,21 @@
                     </page>
                 </page>
                 <div name="list_price_uom" position="after">
-                    <t invisible="type == 'combo'">
-                        <label for="taxes_id"/>
-                        <div name="taxes_div" class="o_row">
-                            <field
-                                name="taxes_id"
-                                widget="many2many_tags"
-                                class="oe_inline"
-                                context="{
-                                    'default_type_tax_use': 'sale',
-                                    'search_default_sale': 1,
-                                    'search_default_service': type == 'service',
-                                    'search_default_goods': type == 'consu',
-                                }"
-                            />
-                            <field name="tax_string" class="oe_inline"/>
-                        </div>
-                    </t>
+                    <label for="taxes_id" invisible="type == 'combo'"/>
+                    <div name="taxes_div" class="o_row" invisible="type == 'combo'">
+                        <field
+                            name="taxes_id"
+                            widget="many2many_tags"
+                            class="oe_inline"
+                            context="{
+                                'default_type_tax_use': 'sale',
+                                'search_default_sale': 1,
+                                'search_default_service': type == 'service',
+                                'search_default_goods': type == 'consu',
+                            }"
+                        />
+                        <field name="tax_string" class="oe_inline"/>
+                    </div>
                 </div>
                 <div name="standard_price_uom" position="after">
                     <field name="supplier_taxes_id"
