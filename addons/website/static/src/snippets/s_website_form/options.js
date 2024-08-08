@@ -1054,6 +1054,11 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         if (!value) {
             return;
         }
+        this.$target[0].dataset.requirementComparator = "";
+        this.$target[0].dataset.customError = "";
+        this.$target[0].dataset.errorMessage = "";
+        this.$target[0].dataset.requirementCondition = "";
+        this.$target[0].dataset.requirementBetween = "";
         const oldLabelText = this.$target[0].querySelector('.s_website_form_label_content').textContent;
         const field = this._getCustomField(value, oldLabelText);
         this._setActiveProperties(field);
@@ -1251,6 +1256,12 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             const allowMultipleFiles = params.activeValue > 1;
             this.$target[0].toggleAttribute("multiple", allowMultipleFiles);
         }
+        if (params.attributeName === "requirementComparator") {
+            this.$target[0].dataset.customError = "";
+            this.$target[0].dataset.errorMessage = "";
+            this.$target[0].dataset.requirementCondition = "";
+            this.$target[0].dataset.requirementBetween = "";
+        }
     },
 
     //----------------------------------------------------------------------
@@ -1299,7 +1310,67 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _computeWidgetVisibility: function (widgetName, params) {
         const dependencyEl = this._getDependencyEl();
+        const currentEl = this.$target[0].querySelector(".s_website_form_input");
         switch (widgetName) {
+            // For Requirement
+            case "error_message_opt":
+                const buttonEl = this.el.querySelector('[data-name="error_message_opt"]');
+                const isCustomError = this.$target[0].dataset.customError;
+                buttonEl.classList.toggle("fa-eye", isCustomError);
+                buttonEl.classList.toggle("fa-eye-slash", !isCustomError);
+                break;
+            case "error_message_input_opt":
+                return !!this.$target[0].dataset.requirementComparator;
+            case "require_condition_opt":
+                return (
+                    currentEl.nodeName === "SELECT" ||
+                    !["checkbox", "radio", "file"].includes(currentEl.type)
+                );
+            case "require_condition_text_opt":
+                if (currentEl.classList.contains("datetimepicker-input")) {
+                    return false;
+                }
+                return (
+                    currentEl.nodeName === "TEXTAREA" ||
+                    ["text", "email", "tel", "url", "search", "password"].includes(currentEl.type)
+                );
+            case "require_condition_num_opt":
+                return currentEl.type === "number";
+            case "require_condition_time_comparators_opt":
+                return currentEl.classList.contains("datetimepicker-input");
+            case "require_condition_additional_text":
+                if (
+                    !this.$target[0].dataset.requirementComparator ||
+                    currentEl.classList.contains("datetimepicker-input")
+                ) {
+                    return false;
+                }
+                return (
+                    ["text", "email", "tel", "url", "search", "password", "number"].includes(
+                        currentEl.type
+                    ) || currentEl.nodeName === "TEXTAREA"
+                );
+            case "require_condition_additional_datetime_1":
+                return (
+                    currentEl.closest(".s_website_form_datetime") &&
+                    this.$target[0].dataset.requirementComparator
+                );
+            case "require_condition_additional_date":
+                return (
+                    currentEl.closest(".s_website_form_date") &&
+                    this.$target[0].dataset.requirementComparator
+                );
+            case "require_condition_additional_datetime_2":
+                return (
+                    currentEl.closest(".s_website_form_datetime") &&
+                    ["between", "!between"].includes(this.$target[0].dataset.requirementComparator)
+                );
+            case "require_condition_additional_date_end":
+                return (
+                    currentEl.closest(".s_website_form_date") &&
+                    ["between", "!between"].includes(this.$target[0].dataset.requirementComparator)
+                );
+            // For Visibility
             case 'hidden_condition_time_comparators_opt':
                 return dependencyEl?.classList.contains("datetimepicker-input");
             case 'hidden_condition_date_between':
