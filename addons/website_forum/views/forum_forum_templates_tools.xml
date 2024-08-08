@@ -6,7 +6,7 @@
 <!-- ============================================================ -->
 
 <template id="show_flag_validator">
-    <a href="#" t-att-data-post-id="object.id" t-attf-data-action="validate" t-attf-class="o_wforum_flag_validator flag_validator btn btn-success #{'' if object.state == 'flagged' else 'd-none'} my-2 me-2" title="Validate" data-bs-toggle="tooltip" data-bs-placement="top">
+    <a href="#" t-att-data-post-id="object.id" t-attf-data-action="/forum/{{object.id}}/validate" t-attf-class="o_wforum_flag_validator flag_validator btn btn-success #{'' if object.state == 'flagged' else 'd-none'} my-2 me-2" title="Validate" data-bs-toggle="tooltip" data-bs-placement="top">
         <i class="fa fa-check"/> Accept
     </a>
     <a href="#" t-attf-data-action="/forum/#{object.id}/ask_for_mark_as_offensive" t-attf-class="o_wforum_flag_mark_as_offensive flag_validator #{'' if object.state == 'flagged' else 'd-none'} btn btn-danger my-2 me-2" title="Mark as Offensive"  data-bs-toggle="tooltip" data-bs-placement="top">

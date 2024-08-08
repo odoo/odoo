@@ -69,12 +69,19 @@ export class SelectMenu extends Component {
         required: { type: Boolean, optional: true },
         searchable: { type: Boolean, optional: true },
         autoSort: { type: Boolean, optional: true },
+        placeholder: { type: String, optional: true },
         searchPlaceholder: { type: String, optional: true },
         value: { optional: true },
         multiSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
         onSelect: { type: Function, optional: true },
         slots: { type: Object, optional: true },
+        element: { type: HTMLElement, optional: true },
+        choiceFetchFunction: { type: Function, optional: true },
+        // To allow create option & pre-computation on creation.
+        // @return [choices].
+        onCreate: { type: Function, optional: true },
+        disabled: { type: Boolean, optional: true },
     };
 
     static SCROLL_SETTINGS = {
@@ -89,7 +96,13 @@ export class SelectMenu extends Component {
             displayedOptions: [],
             searchValue: "",
         });
+        if (this.props.element) {
+            this.props.element.value = this.props.value;
+            this.props.element.style.display = "none";
+        }
+        this.buttonRef = useRef("buttonRef");
         this.inputRef = useRef("inputRef");
+        this.selectedIds = [];
         this.menuRef = useChildRef();
         this.debouncedOnInput = useDebounced(
             () => this.onInput(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
@@ -97,12 +110,20 @@ export class SelectMenu extends Component {
         );
         this.isOpen = false;
 
+        this.choiceValues = this.getSelectedChoice(this.props);
         this.selectedChoice = this.getSelectedChoice(this.props);
         onWillUpdateProps((nextProps) => {
             if (this.props.value !== nextProps.value) {
+                if (this.props.choiceFetchFunction) {
+                    nextProps.choices = this.state.choices;
+                }
                 this.selectedChoice = this.getSelectedChoice(nextProps);
             }
         });
+        useEffect(
+            () => this.buttonRef.el.classList.toggle("disabled", !!this.props.disabled),
+            () => [this.props.disabled]
+        );
         useEffect(
             () => {
                 if (this.isOpen) {
@@ -124,11 +145,7 @@ export class SelectMenu extends Component {
     }
 
     get multiSelectChoices() {
-        const choices = [
-            ...this.props.choices,
-            ...this.props.groups.flatMap((g) => g.choices),
-        ].filter((c) => this.props.value.includes(c.value));
-        return choices.map((c) => {
+        return this.choiceValues.map((c) => {
             return {
                 id: c.value,
                 text: c.label,
@@ -136,6 +153,11 @@ export class SelectMenu extends Component {
                     const values = [...this.props.value];
                     values.splice(values.indexOf(c.value), 1);
                     this.props.onSelect(values);
+                    this.choiceValues.splice(
+                        this.choiceValues.findIndex((choice) => choice.id == c.id),
+                        1
+                    );
+                    this.setValues(values);
                 },
             };
         });
@@ -161,6 +183,7 @@ export class SelectMenu extends Component {
                 await this.executeOnInput("");
             }
         }
+        await this.fetchOptions();
         this.filterOptions();
     }
 
@@ -194,7 +217,8 @@ export class SelectMenu extends Component {
         await this.props.onInput(searchString);
     }
 
-    onInput(searchString) {
+    async onInput(searchString) {
+        await this.fetchOptions(searchString);
         this.filterOptions(searchString);
         this.state.searchValue = searchString;
 
@@ -210,22 +234,56 @@ export class SelectMenu extends Component {
 
     getSelectedChoice(props) {
         const choices = [...props.choices, ...props.groups.flatMap((g) => g.choices)];
+        if (this.props.multiSelect) {
+            return choices.filter((c) => this.props.value.includes(c.value));
+        }
         return choices.find((c) => c.value === props.value);
     }
 
-    onItemSelected(value) {
+    async onCreateOption(searchString) {
+        let choice = {
+            id: `_${searchString.trim()}`,
+            label: searchString.trim(),
+            value: searchString.trim(),
+        };
+        if (this.props.onCreate) {
+            choice = await this.props.onCreate(choice);
+        }
+        this.props.choices.push(choice);
+        this.state.choices = this.props.choices;
+        await this.onItemSelected(choice);
+    }
+    async onItemSelected(choice) {
         if (this.props.multiSelect) {
             const values = [...this.props.value];
-            const valueIndex = values.indexOf(value);
+            const valueIndex = values.indexOf(choice.value);
 
             if (valueIndex !== -1) {
                 values.splice(valueIndex, 1);
                 this.props.onSelect(values);
+                this.choiceValues.splice(
+                    this.choiceValues.findIndex((c) => c.id == choice.id),
+                    1
+                );
+                this.setValues(values);
             } else {
-                this.props.onSelect([...this.props.value, value]);
+                this.props.onSelect([...this.props.value, choice.value]);
+                this.choiceValues = [...this.choiceValues, choice];
+                this.setValues([...this.props.value, choice.value]);
             }
-        } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
-            this.props.onSelect(value);
+        } else if (!this.selectedChoice || this.selectedChoice.value !== choice.value) {
+            this.props.onSelect(choice.value);
+            this.setValues([choice.value]);
+        }
+    }
+
+    setValues(values) {
+        if (this.props.element) {
+            const selectedValues = new Set(values);
+            this.selectedIds = this.props.choices
+                .filter((choice) => selectedValues.has(choice.value))
+                .map((choice) => choice.id);
+            this.props.element.value = this.selectedIds;
         }
     }
 
@@ -234,13 +292,27 @@ export class SelectMenu extends Component {
     // ==========================================================================================
 
     /**
+     * Fetches the choices by calling choiceFetchFunction provided in props.
+     * After fetchning the choices set the choices in state and props.
+     *
+     * @param {String} searchString
+     */
+    async fetchOptions(searchString = "") {
+        if (this.props.choiceFetchFunction) {
+            const choices = await this.props.choiceFetchFunction(searchString);
+            this.state.choices = choices;
+            this.props.choices = choices;
+        }
+    }
+
+    /**
      * Filters the choices based on the searchString and
      * slice the result to display a reasonable amount to
      * try to prevent any delay when opening the select.
      *
      * @param {String} searchString
      */
-    filterOptions(searchString = "", groups) {
+    async filterOptions(searchString = "", groups) {
         const groupsList = groups || [{ choices: this.props.choices }, ...this.props.groups];
 
         this.state.choices = [];

@@ -1081,3 +1081,29 @@ test("Can add custom data to choices", async () => {
     await open();
     expect(".coolClass").toHaveText("hi");
 });
+
+test("Placeholder added succesfully", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                choices="this.choices"
+                value="this.state.value"
+                placeholder="'Choose any option'"
+            />
+        `;
+        setup() {
+            this.choices = [
+                { label: "Z", value: "world" },
+                { label: "A", value: "company" },
+            ];
+            this.placeholder = "";
+            this.state = useState({ value: "" });
+        }
+    }
+    await mountSingleApp(MyParent);
+    expect(".o_select_menu_toggler_slot").toHaveText("Choose any option");
+    await open();
+    expect(".o_select_menu_toggler_slot").toHaveText("Choose any option");
+});
