@@ -8,6 +8,7 @@
             'w-100 h-100 o-mobile': ui.isSmall,
             'o-folded': props.chatWindow.folded,
             'rounded-top-3': !ui.isSmall,
+            'o-large': store.chatHub.isBig,
         }"
         t-on-keydown="onKeydown"
         tabindex="1"

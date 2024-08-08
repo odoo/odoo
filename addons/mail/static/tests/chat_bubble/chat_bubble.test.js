@@ -325,7 +325,7 @@ test("Can close all chat windows at once", async () => {
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
     await hover(".o-mail-ChatHub-hiddenBtn");
-    await click("button.fa.fa-ellipsis-h[aria-label='Chat Hub Options']");
+    await click("button.fa.fa-ellipsis-h[title='Chat Options']");
     await click("button.o-mail-ChatHub-option", { text: "Close all conversations" });
     await contains(".o-mail-ChatBubble", { count: 0 });
 });
@@ -345,7 +345,7 @@ test("Can compact chat hub", async () => {
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
     await hover(".o-mail-ChatHub-hiddenBtn");
-    await click("button.fa.fa-ellipsis-h[aria-label='Chat Hub Options']");
+    await click("button.fa.fa-ellipsis-h[title='Chat Options']");
     await click("button.o-mail-ChatHub-option", { text: "Hide all conversations" });
     await contains(".o-mail-ChatBubble i.fa.fa-commenting");
     await click(".o-mail-ChatBubble i.fa.fa-commenting");
