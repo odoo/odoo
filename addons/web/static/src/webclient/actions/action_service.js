@@ -509,7 +509,7 @@ export function makeActionManager(env, router = _router) {
                     type: "ir.actions.act_window",
                     views: [[state.view_id ? state.view_id : false, "form"]],
                 };
-            } else if (state.view_type) {
+            } else {
                 // This is a window action on a multi-record view => restores it from
                 // the session storage
                 const storedAction = browser.sessionStorage.getItem("current_action");
