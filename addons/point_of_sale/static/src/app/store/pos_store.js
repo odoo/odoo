@@ -243,6 +243,30 @@ export class PosStore extends Reactive {
         }
     }
 
+    async onDeleteOrder(order) {
+        if (order.get_orderlines().length > 0) {
+            const confirmed = await ask(this.dialog, {
+                title: _t("Existing orderlines"),
+                body: _t(
+                    "%s has a total amount of %s, are you sure you want to delete this order?",
+                    order.name,
+                    this.env.utils.formatCurrency(order.get_total_with_tax())
+                ),
+            });
+            if (!confirmed) {
+                return false;
+            }
+        }
+        const orderIsDeleted = await this.deleteOrders([order]);
+        if (orderIsDeleted) {
+            order.uiState.displayed = false;
+            this.afterOrderDeletion();
+        }
+    }
+    afterOrderDeletion() {
+        this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
+    }
+
     async deleteOrders(orders, serverIds = []) {
         const ids = new Set();
         for (const order of orders) {
