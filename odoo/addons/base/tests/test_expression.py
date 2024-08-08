@@ -1952,6 +1952,7 @@ class TestMany2many(TransactionCase):
         ''']):
             self.User.search([('groups_id', 'in', group.ids)], order='id')
 
+        group_color = group.color
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
@@ -1978,7 +1979,7 @@ class TestMany2many(TransactionCase):
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id.color', '=', 1)], order='id')
+            self.User.search([('groups_id.color', '=', group_color)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
