@@ -9,6 +9,7 @@ export class ChatHub extends Record {
     WINDOW_GAP = 10; // for a single end, multiply by 2 for left and right together.
     WINDOW_INBETWEEN = 5;
     WINDOW = 360; // same value as $o-mail-ChatWindow-width
+    WINDOW_LARGE = 510; // same value as $o-mail-ChatWindow-widthLarge
 
     /** @returns {import("models").ChatHub} */
     static get(data) {
@@ -18,7 +19,22 @@ export class ChatHub extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-
+    isBig = Record.attr(false, {
+        compute() {
+            return browser.localStorage.getItem("mail.user_setting.chat_window_big") === "true";
+        },
+        onUpdate() {
+            /** @this {import("models").ChatHub} */
+            if (this.isBig) {
+                browser.localStorage.setItem(
+                    "mail.user_setting.chat_window_big",
+                    this.isBig.toString()
+                );
+            } else {
+                browser.localStorage.removeItem("mail.user_setting.chat_window_big");
+            }
+        },
+    });
     compact = false;
     /** From left to right. Right-most will actually be folded */
     opened = Record.many("ChatWindow", {
@@ -78,7 +94,9 @@ export class ChatHub extends Record {
         const available = browser.innerWidth - startGap - endGap - chatBubblesWidth;
         const maxAmountWithoutHidden = Math.max(
             1,
-            Math.floor(available / (this.WINDOW + this.WINDOW_INBETWEEN))
+            Math.floor(
+                available / ((this.isBig ? this.WINDOW_LARGE : this.WINDOW) + this.WINDOW_INBETWEEN)
+            )
         );
         return maxAmountWithoutHidden;
     }
