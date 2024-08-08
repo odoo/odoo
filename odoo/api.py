@@ -1163,6 +1163,8 @@ class Cache(object):
             except KeyError:
                 ids.append(record_id)
             else:
+                if field.type == "monetary":
+                    value = field.convert_to_cache(value, records.browse(record_id))
                 if val != value:
                     ids.append(record_id)
         return records.browse(ids)
