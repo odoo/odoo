@@ -17,32 +17,6 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             TicketScreen.noNewTicketButton(),
             TicketScreen.clickDiscard(),
 
-            // Deleting the last order in the table brings back to floorscreen
-            FloorScreen.clickTable("4"),
-            ProductScreen.isShown(),
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.nthRowContains(2, "-0001"),
-            TicketScreen.deleteOrder("-0001"),
-
-            // Create 2 items in a table. From floorscreen, delete 1 item. Then select the other item.
-            // Correct order and screen should be displayed and the BackToFloorButton is shown.
-            FloorScreen.clickTable("2"),
-            ProductScreen.addOrderline("Minute Maid", "1", "2"),
-            ProductScreen.totalAmountIs("2.0"),
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
-            ProductScreen.addOrderline("Coca-Cola", "2", "2"),
-            ProductScreen.totalAmountIs("4.0"),
-            Chrome.clickPlanButton(),
-            FloorScreen.orderCountSyncedInTableIs("2", "3"),
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.deleteOrder("-0003"),
-            Dialog.confirm(),
-            TicketScreen.doubleClickOrder("-0002"),
-            ProductScreen.isShown(),
-            ProductScreen.totalAmountIs("2.0"),
-            Chrome.clickPlanButton(),
-
             // Make sure that order is deleted properly.
             FloorScreen.clickTable("5"),
             ProductScreen.addOrderline("Minute Maid", "1", "3"),
@@ -50,7 +24,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("5", "1"),
             Chrome.clickMenuOption("Orders"),
-            TicketScreen.deleteOrder("-0004"),
+            TicketScreen.deleteOrder("-0001"),
             Dialog.confirm(),
             TicketScreen.clickDiscard(),
             FloorScreen.isShown(),

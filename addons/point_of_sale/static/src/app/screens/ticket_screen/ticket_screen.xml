@@ -75,7 +75,7 @@
                                     <div class="col narrow p-2">
                                         <div><t t-esc="getStatus(order)"></t></div>
                                     </div>
-                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
+                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
                                         <i class="fa fa-trash" aria-hidden="true"/>
                                     </div>
                                     <div t-else="" class="col very-narrow p-2"></div>
@@ -93,7 +93,7 @@
                                         <div class="orderStatus"><t t-esc="getStatus(order)"></t></div>
                                     </div>
                                     <div class="col p-2">
-                                        <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2 rounded-2" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
+                                        <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2 rounded-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
                                             <i class="fa fa-trash" aria-hidden="true"/> Delete
                                         </div>
                                     </div>
