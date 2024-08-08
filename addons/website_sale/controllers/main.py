@@ -974,14 +974,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order_sudo._has_deliverable_products():
             available_dms = order_sudo._get_delivery_methods()
             checkout_page_values['delivery_methods'] = available_dms
-            delivery_method = order_sudo._get_preferred_delivery_method(available_dms)
-            rate = delivery_method.rate_shipment(order_sudo)
-            if (
-                not order_sudo.carrier_id
-                or not rate.get('success')
-                or order_sudo.amount_delivery != rate['price']
-            ):
-                order_sudo._set_delivery_method(delivery_method, rate=rate)
+            if delivery_method := order_sudo._get_preferred_delivery_method(available_dms):
+                rate = delivery_method.rate_shipment(order_sudo)
+                if (
+                    not order_sudo.carrier_id
+                    or not rate.get('success')
+                    or order_sudo.amount_delivery != rate['price']
+                ):
+                    order_sudo._set_delivery_method(delivery_method, rate=rate)
             can_skip_delivery = self.can_skip_delivery_step(order_sudo, available_dms)
 
         if try_skip_step and can_skip_delivery:
