@@ -20,13 +20,16 @@ patch(ProductScreen.prototype, {
     get selectedOrderlineQuantity() {
         const order = this.pos.get_order();
         const orderline = order.get_selected_orderline();
-        if (this.pos.config.module_pos_restaurant && this.pos.orderPreparationCategories.size) {
-            let orderline_name = orderline.product_id.display_name;
-            if (orderline.description) {
-                orderline_name += " (" + orderline.description + ")";
-            }
+        const isForPreparation = orderline.product_id.pos_categ_ids
+            .map((categ) => categ.id)
+            .some((id) => this.pos.orderPreparationCategories.has(id));
+        if (
+            this.pos.config.module_pos_restaurant &&
+            this.pos.orderPreparationCategories.size &&
+            isForPreparation
+        ) {
             const changes = Object.values(this.pos.getOrderChanges().orderlines).find(
-                (change) => change.name == orderline_name
+                (change) => change.name == orderline.get_full_product_name()
             );
             return changes ? changes.quantity : false;
         }
