@@ -2007,10 +2007,22 @@ class AccountTax(models.Model):
         # Update/create the tax lines.
         global_tax_details = self._aggregate_taxes(to_process, company, grouping_key_generator=grouping_key_generator)
 
+<<<<<<< saas-17.2
         for grouping_key, tax_data in global_tax_details['tax_details'].items():
             if tax_data['currency_id']:
                 currency = self.env['res.currency'].browse(tax_data['currency_id'])
                 tax_amount = currency.round(tax_data['tax_amount_currency'])
+||||||| 688ea6ba1433169523bdab928cf6c1950b71b514
+        for grouping_key, tax_values in global_tax_details['tax_details'].items():
+            if tax_values['currency_id']:
+                currency = self.env['res.currency'].browse(tax_values['currency_id'])
+                tax_amount = currency.round(tax_values['tax_amount'])
+=======
+        for grouping_key, tax_values in global_tax_details['tax_details'].items():
+            if tax_values['currency_id']:
+                currency = self.env['res.currency'].browse(tax_values['currency_id'])
+                tax_amount = currency.round(tax_values['tax_amount_currency'])
+>>>>>>> f592909d79d1c48674bdb43991d8b8d56b6f0628
                 res['totals'][currency]['amount_tax'] += tax_amount
 
             if grouping_key in existing_tax_line_map:
