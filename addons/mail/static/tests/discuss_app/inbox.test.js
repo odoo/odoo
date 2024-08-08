@@ -660,3 +660,29 @@ test("Counter should be incremented by 1 when receiving a message with a mention
     );
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
 });
+
+test("can reply to email message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const messageId = pyEnv["mail.message"].create({
+        author_id: null,
+        email_from: "md@oilcompany.fr",
+        body: "an email message",
+        model: "res.partner",
+        needaction: true,
+        needaction_partner_ids: [serverState.partnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-Message");
+    await click("[title='Expand']");
+    await click("[title='Reply']");
+    await contains(".o-mail-Composer", { text: "Replying to md@oilcompany.fr" });
+});
