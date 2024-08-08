@@ -86,13 +86,13 @@
     <t t-name="point_of_sale.PaymentScreenBack">
         <t t-if="ui.isSmall">
             <button class="btn-switchpane back-button validation-button btn btn-light btn-lg lh-lg "
-                t-on-click="() => pos.showScreen('ProductScreen')">
+                t-on-click="() => pos.onClickBackButton()">
                 <i class="oi oi-chevron-left fa-fw" role="img" aria-label="Go Back" title="Go Back" />
             </button>
         </t>
         <t t-else="">
             <button class="button back back-button validation btn btn-light btn-lg w-50 py-3 lh-lg "
-                t-on-click="() => pos.showScreen('ProductScreen')">
+                t-on-click="() => pos.onClickBackButton()">
                 <span class="back_text">Back</span>
             </button>
         </t>
