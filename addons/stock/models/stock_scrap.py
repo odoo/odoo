@@ -118,7 +118,6 @@ class StockScrap(models.Model):
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'state': 'draft',
-            'product_uom_qty': self.scrap_qty,
             'location_id': self.location_id.id,
             'scrapped': True,
             'scrap_id': self.id,
@@ -140,6 +139,7 @@ class StockScrap(models.Model):
 
     def do_scrap(self):
         self._check_company()
+        self = self.with_context(clean_context(self.env.context))
         for scrap in self:
             scrap.name = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
             move = self.env['stock.move'].create(scrap._prepare_move_values())
