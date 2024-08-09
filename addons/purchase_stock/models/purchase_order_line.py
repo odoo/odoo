@@ -392,3 +392,7 @@ class PurchaseOrderLine(models.Model):
     def _update_qty_received_method(self):
         """Update qty_received_method for old PO before install this module."""
         self.search(['!', ('state', 'in', ['purchase', 'done'])])._compute_qty_received_method()
+
+    def _merge_po_line(self, rfq_line):
+        super()._merge_po_line(rfq_line)
+        self.move_dest_ids += rfq_line.move_dest_ids
