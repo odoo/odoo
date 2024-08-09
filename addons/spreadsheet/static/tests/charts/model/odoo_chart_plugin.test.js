@@ -91,8 +91,8 @@ test("Odoo bar chart runtime loads the data", async () => {
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data).toEqual({
         datasets: [
             {
-                backgroundColor: "rgb(31,119,180)",
-                borderColor: "rgb(31,119,180)",
+                backgroundColor: "#4EA7F2",
+                borderColor: "#4EA7F2",
                 data: [1, 3],
                 label: "Count",
             },
@@ -124,7 +124,7 @@ test("Odoo pie chart runtime loads the data", async () => {
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data).toEqual({
         datasets: [
             {
-                backgroundColor: ["rgb(31,119,180)", "rgb(255,127,14)", "rgb(174,199,232)"],
+                backgroundColor: ["#4EA7F2", "#3188E6", "#056BD9"],
                 borderColor: "#FFFFFF",
                 data: [1, 3],
                 label: "",
@@ -157,13 +157,13 @@ test("Odoo line chart runtime loads the data", async () => {
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data).toEqual({
         datasets: [
             {
-                backgroundColor: "rgb(31,119,180)",
-                borderColor: "rgb(31,119,180)",
+                backgroundColor: "#4EA7F2",
+                borderColor: "#4EA7F2",
                 data: [1, 3],
                 label: "Count",
                 lineTension: 0,
                 fill: false,
-                pointBackgroundColor: "rgb(31,119,180)",
+                pointBackgroundColor: "#4EA7F2",
             },
         ],
         labels: ["false", "true"],
