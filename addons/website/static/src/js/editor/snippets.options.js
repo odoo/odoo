@@ -5030,7 +5030,7 @@ registerWebsiteOption("horizontal_alignment", {
 
 registerWebsiteOption("block_width_option", {
     template: "website.block_width_option",
-    selector: ".s_alert, .s_blockquote, .s_text_highlight",
+    selector: ".s_blockquote, .s_text_highlight",
 });
 
 registerWebsiteOption("vertical_alignment", {
