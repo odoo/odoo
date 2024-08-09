@@ -121,6 +121,7 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
         img = properties.get('background-image', "none")
 
         if img.startswith('url(/web/image/'):
+            img = img[:4] + '&quot;' + img[4:]
             suffix = ""
             if height is not None:
                 suffix += "&height=%s" % height
@@ -128,7 +129,9 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
                 suffix += "&width=%s" % width
             if suffix:
                 suffix = '?' not in img and "?%s" % suffix or suffix
-                img = img[:-1] + suffix + ')'
+                img = img[:-1] + suffix + '&quot;' + ')'
+            else:
+                img = img[:-1] + '&quot;' + img[-1:]
         return img
 
     def write(self, vals):
