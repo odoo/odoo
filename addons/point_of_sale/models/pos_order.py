@@ -1498,8 +1498,6 @@ class PosOrderLine(models.Model):
                 # Trigger the Scheduler for Pickings
                 tracked_lines = order.lines.filtered(lambda l: l.product_id.tracking != 'none')
                 lines_by_tracked_product = groupby(sorted(tracked_lines, key=lambda l: l.product_id.id), key=lambda l: l.product_id.id)
-                for line in order.lines:
-                    line.sale_order_line_id.move_ids.mapped("move_line_ids").unlink()
                 pickings_to_confirm.action_confirm()
                 for product_id, lines in lines_by_tracked_product:
                     lines = self.env['pos.order.line'].concat(*lines)
