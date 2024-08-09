@@ -295,3 +295,42 @@ class TestWebsocketCaryall(WebsocketCase):
         ):
             websocket = self.websocket_connect(ping_after_connect=False)
             self.assert_close_with_code(websocket, CloseCode.CLEAN, "OUTDATED_VERSION")
+
+    def test_websocket_dispatching_order(self):
+        og_serve_forever = WebsocketConnectionHandler._serve_forever
+        odoo_ws = None
+
+        def serve_forever(websocket, *args):
+            nonlocal odoo_ws
+            odoo_ws = websocket
+            og_serve_forever(websocket, *args)
+
+        with patch.object(Websocket, "SENT_NOTIF_MAX_SIZE", 10), patch.object(
+            WebsocketConnectionHandler, "_serve_forever", side_effect=serve_forever
+        ):
+            websocket = self.websocket_connect()
+            self.subscribe(websocket, ["my_channel"], self.env["bus.bus"]._bus_last_id())
+            # Websocket should have saved initial notification id
+            self.assertEqual(odoo_ws._min_notif_id, self.env["bus.bus"]._bus_last_id())
+            # But it shouldn't save it afterwards as the server one is more accurate
+            self.subscribe(websocket, ["my_channel"], self.env["bus.bus"]._bus_last_id() + 100)
+            self.assertEqual(odoo_ws._min_notif_id, self.env["bus.bus"]._bus_last_id())
+            recv_notif_ids = []
+            for _ in range(Websocket.SENT_NOTIF_MAX_SIZE):
+                self.env["bus.bus"]._sendone("my_channel", "notif_type", "message")
+                self.trigger_notification_dispatching(["my_channel"])
+                recv_notif_ids.extend([n["id"] for n in json.loads(websocket.recv())])
+            # Notification ids were kept
+            self.assertEqual(len(odoo_ws._sent_notif_ids), Websocket.SENT_NOTIF_MAX_SIZE)
+            # Notification ids are sorted in descending order
+            self.assertEqual(odoo_ws._sent_notif_ids, sorted(recv_notif_ids, reverse=True))
+            smaller_id = odoo_ws._sent_notif_ids[-1]
+            self.env["bus.bus"]._sendone("my_channel", "notif_type", "message")
+            self.trigger_notification_dispatching(["my_channel"])
+            recv_notif_ids.extend([n["id"] for n in json.loads(websocket.recv())])
+            # Sent notif ids are bound to SENT_NOTIF_MAX_SIZE
+            self.assertEqual(len(odoo_ws._sent_notif_ids), Websocket.SENT_NOTIF_MAX_SIZE)
+            # Last id was removed when the new one was added
+            self.assertNotIn(smaller_id, odoo_ws._sent_notif_ids)
+            # No duplicates were received
+            self.assertEqual(len(recv_notif_ids), len(set(recv_notif_ids)))
