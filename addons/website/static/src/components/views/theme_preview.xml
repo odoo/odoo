@@ -40,7 +40,7 @@
     </t>
 
     <t t-name="website.ThemePreviewKanban.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
-        <xpath expr="//t[@t-call='web.Breadcrumbs']" position="replace">
+        <xpath expr="//t[@t-else]/Breadcrumbs" position="replace">
             <t t-call="website.ThemePreviewKanban.ControlPanel.BreadCrumbs"/>
         </xpath>
         <xpath expr="//div[contains(@class,'o_control_panel_navigation')]" position="replace">
