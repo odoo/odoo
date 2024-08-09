@@ -29,15 +29,8 @@ export function clickPaymentMethod(name, isCheckNeeded = false, options = {}) {
 
     const step = [
         {
-            isActive: ["desktop"],
             content: `click '${name}' payment method`,
             trigger: `.paymentmethods .button.paymentmethod .payment-name:contains("${name}")`,
-            run: "click",
-        },
-        {
-            isActive: ["mobile"],
-            content: `click '${name}' payment method`,
-            trigger: `.paymentmethods .button.paymentmethod .payment-name:contains("${name}"):not(:visible)`,
             run: "click",
         },
     ];

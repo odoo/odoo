@@ -6,6 +6,12 @@
     &:hover {
         background-color: $o-gray-200;
     }
+    
+    @media (hover: none) {
+        &:hover {
+            background-color: $white;
+        }
+    }
 
     &.selected {
         background-color: $o-component-active-bg;
