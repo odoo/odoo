@@ -6,7 +6,8 @@ from urllib.parse import urlsplit
 
 from odoo import models
 from odoo.http import request
-from odoo.tools import lazy
+from odoo.tools import config, lazy
+from odoo.addons.base.models.assetsbundle import JavascriptAsset
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
@@ -214,3 +215,18 @@ class IrQweb(models.AbstractModel):
             'website.assets_all_wysiwyg',
         }
         return (js_assets | assets, css_assets | assets)
+
+    def _pregenerate_assets_bundles(self):
+        if config['test_enable'] or config['test_file'] or config['test_tags']:
+            # Expose templates in templates.js
+            _fetch_content = JavascriptAsset._fetch_content
+
+            def _fetch_content_mocked(self):
+                raw = _fetch_content(self)
+                if raw and self._filename and self._filename.endswith('/web/static/src/core/templates.js'):
+                    raw = raw + 'export const __test__allTemplates = templates;'
+                    _logger.info("Prepared templates.js for tests")
+                return raw
+
+            JavascriptAsset._fetch_content = _fetch_content_mocked
+        return super()._pregenerate_assets_bundles()
