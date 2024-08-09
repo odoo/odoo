@@ -50,6 +50,21 @@
             </xpath>
         </field>
     </record>
+    <record id="view_order_form_inherit_consignment_info" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.consignment.info</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group string="Consignment Information">
+                        <field name="consignment_number"/>
+                        <field name="carrier"/>
+                        <field name="status"/>
+                        <field name="tracking_url"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
 
 
 

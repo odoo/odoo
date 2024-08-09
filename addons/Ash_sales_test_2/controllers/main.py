@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 class QuotationController(http.Controller):
 
-    @http.route('/api/add_quotation', type='json', auth='user', methods=['POST'])
+    @http.route('/api/add_order', type='json', auth='user', methods=['POST'])
     def add_quotation(self, **post):
         
         logger.info(f"Received data: {post}")
@@ -35,14 +35,34 @@ class QuotationController(http.Controller):
                     'error': 'Order lines should be a list'
                 }
 
+            order_lines_data = []
+            for line in order_lines:
+                default_code = line.get('default_code')
+                if not default_code:
+                    logger.error("Default code is missing for a product line")
+                    return {
+                        'error': 'Default code is missing for a product line'
+                    }
+
+                # Search for the product using default_code
+                product = request.env['product.product'].sudo().search([('default_code', '=', default_code)], limit=1)
+                if not product:
+                    logger.error(f"Product with default code {default_code} not found")
+                    return {
+                        'error': f'Product with default code {default_code} not found'
+                    }
+
+                # Add product line data
+                order_lines_data.append((0, 0, {
+                    'product_id': product.id,
+                    'product_uom_qty': line.get('quantity', 1.0),
+                    'price_unit': line.get('price_unit', 0.0)
+                }))
+
             # Create the sale order
             order = request.env['sale.order'].sudo().create({
                 'partner_id': partner_id,
-                'order_line': [(0, 0, {
-                    'product_id': line['product_id'],
-                    'product_uom_qty': line['quantity'],
-                    'price_unit': line.get('price_unit', 0.0)
-                }) for line in order_lines],
+                'order_line': order_lines_data,
                 'customer_name': delivery_details.get('name', ''),
                 'customer_address': delivery_details.get('address', ''),
                 'customer_suburb': delivery_details.get('suburb', ''),
@@ -51,7 +71,6 @@ class QuotationController(http.Controller):
                 'customer_email': delivery_details.get('email', ''),
                 'customer_phone': delivery_details.get('phone_number', ''),
             })
-
 
             logger.info(f"Created quotation: {order.name}")
 

@@ -39,64 +39,98 @@ class ProductInventoryController(http.Controller):
 
         return request.make_response(json.dumps(product_list), headers=[('Content-Type', 'application/json')])
     
-   
-    @http.route('/api/add_products', type='json', auth='user', methods=['POST'])
-    def add_products_api(self, **post):
+
+
+    @http.route('/api/test2', type='json', auth='user', methods=['POST'])
+    def add_or_update_products(self, **post):
         try:
             Product = request.env['product.product']
             StockChangeProductQty = request.env['stock.change.product.qty']
             products_data = post.get('products')
-            print(products_data)  # Print the products data
 
             if not products_data:
                 return Response(json.dumps({'error': 'No products provided'}), status=400, content_type='application/json')
 
-            created_products = []
+            updated_products = []
             for product_data in products_data:
                 logger.info(f"Product data: {product_data}")
 
-                required_fields = {
-                    'name': product_data.get('name'),
-                    'detailed_type': product_data.get('detailed_type', 'product'),  # Default type if not provided
-                    'list_price': product_data.get('list_price'),
-                    'categ_id': product_data.get('categ_id'),  # Assuming categ_id is the category ID
-                    'default_code': product_data.get('default_code', '')
-                }
+                # Check if a product with the same default_code already exists
+                existing_product = Product.search([('default_code', '=', product_data.get('default_code'))], limit=1)
 
-                # Check if all required fields are provided
-                missing_fields = [key for key, value in required_fields.items() if value is None]
-                if missing_fields:
-                    return Response(
-                        json.dumps({'error': f'Missing required fields: {", ".join(missing_fields)}'}),
-                        status=400,
-                        content_type='application/json'
-                    )
-
-                # Create the product with required fields
-                new_product = Product.create(required_fields)
-
-                # Get the new quantity from the API call
-                new_quantity = product_data.get('new_quantity')
-                if new_quantity is not None:
-                    # Create stock change with both product_id and product_tmpl_id
-                    stock_change = StockChangeProductQty.create({
-                        'product_id': new_product.id,
-                        'product_tmpl_id': new_product.product_tmpl_id.id,  # Use product_tmpl_id
-                        'new_quantity': new_quantity,
+                if existing_product:
+                    # Update the existing product with new data
+                    existing_product.write({
+                        'name': product_data.get('name'),
+                        'detailed_type': product_data.get('detailed_type', 'product'),  # Default type if not provided
+                        'list_price': product_data.get('list_price'),
+                        'categ_id': product_data.get('categ_id'),
+                        'sku': product_data.get('sku', ''),
+                        'outer_gtin': product_data.get('outer_gtin', ''),
+                        'brand': product_data.get('brand', ''),
+                        'source': product_data.get('source', ''),
+                        'pack_size_pcs': product_data.get('pack_size_pcs', 0),
+                        'carton_length': product_data.get('carton_length', ''),
+                        'carton_width': product_data.get('carton_width', ''),
+                        'carton_height': product_data.get('carton_height', ''),
+                        'product_length': product_data.get('product_length', ''),
+                        'product_width': product_data.get('product_width', ''),
+                        'product_height': product_data.get('product_height', ''),
+                        'image_url': product_data.get('image_url', ''),
+                        'volume': product_data.get('volume'),
+                        'weight': product_data.get('weight'),
                     })
-                    stock_change.change_product_qty()
+                    updated_products.append({
+                        'id': existing_product.id,
+                        'name': existing_product.name,
+                        'default_code': existing_product.default_code,
+                        'list_price': existing_product.list_price,
+                        'qty_available': existing_product.qty_available,
+                    })
+                else:
+                    # Create a new product if it doesn't exist
+                    new_product = Product.create({
+                        'name': product_data.get('name'),
+                        'detailed_type': product_data.get('detailed_type', 'product'),  # Default type if not provided
+                        'list_price': product_data.get('list_price'),
+                        'categ_id': product_data.get('categ_id'),
+                        'default_code': product_data.get('default_code', ''),
+                        'sku': product_data.get('sku', ''),
+                        'outer_gtin': product_data.get('outer_gtin', ''),
+                        'brand': product_data.get('brand', ''),
+                        'source': product_data.get('source', ''),
+                        'pack_size_pcs': product_data.get('pack_size_pcs', 0),
+                        'carton_length': product_data.get('carton_length', ''),
+                        'carton_width': product_data.get('carton_width', ''),
+                        'carton_height': product_data.get('carton_height', ''),
+                        'product_length': product_data.get('product_length', ''),
+                        'product_width': product_data.get('product_width', ''),
+                        'product_height': product_data.get('product_height', ''),
+                        'image_url': product_data.get('image_url', ''),
+                        'volume': product_data.get('volume'),
+                        'weight': product_data.get('weight'),
+                    })
 
-                # Append created product details to response
-                created_products.append({
-                    'id': new_product.id,
-                    'name': new_product.name,
-                    'default_code': new_product.default_code,
-                    'list_price': new_product.list_price,
-                    'qty_available': new_product.qty_available,
-                })
+                    # Handle stock quantity if provided
+                    new_quantity = product_data.get('new_quantity')
+                    if new_quantity is not None:
+                        stock_change = StockChangeProductQty.create({
+                            'product_id': new_product.id,
+                            'product_tmpl_id': new_product.product_tmpl_id.id,
+                            'new_quantity': new_quantity,
+                        })
+                        stock_change.change_product_qty()
 
-            return Response(json.dumps({'success': True, 'products': created_products}), content_type='application/json')
+                    updated_products.append({
+                        'id': new_product.id,
+                        'name': new_product.name,
+                        'default_code': new_product.default_code,
+                        'list_price': new_product.list_price,
+                        'qty_available': new_product.qty_available,
+                    })
+
+            return Response(json.dumps({'success': True, 'products': updated_products}), content_type='application/json')
 
         except Exception as e:
-            logger.error(f"Error adding products via API: {e}")
+            logger.error(f"Error adding or updating products via API: {e}")
             return Response(json.dumps({'error': str(e)}), status=500, content_type='application/json')
