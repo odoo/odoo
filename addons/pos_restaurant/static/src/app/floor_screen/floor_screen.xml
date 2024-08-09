@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.FloorScreen">
-        <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 p-2 bg-300 text-start overflow-hidden">
+        <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-300 text-start overflow-hidden">
             <t t-set="editButtonClass" t-value="'btn btn-lg'" />
             <t t-set="hasSelectedTable" t-value="selectedTables.length > 0" />
             <t t-set="firstSelectedTable" t-value="selectedTables.length ? selectedTables[0] : null" />
-            <div class="d-flex flex-row flex-wrap justify-content-between border-bottom border-top bg-light" t-attf-class=" {{ pos.isEditMode and selectedTables.length != 0 ? 'rounded-top' : 'rounded-3'}} ">
+            <div class="d-flex flex-row flex-wrap justify-content-between border-bottom bg-light">
                 <!-- Left Side Div -->
                 <div class="floor-selector d-flex gap-2 p-2 align-items-center overflow-auto">
                     <t t-foreach="pos.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
@@ -95,12 +95,11 @@
                     </button>
                 </div>
             </div>
-            <div t-ref="floor-map-scroll" class="overflow-scroll flex-grow-1 flex-shrink-1 flex-basis-0 w-auto rounded-3 mt-2" t-attf-style="background: {{activeFloor?.background_color}}"> 
+            <div t-ref="floor-map-scroll" class="overflow-auto flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" t-attf-style="background: {{activeFloor?.background_color}}"> 
                 <div t-on-click="onClickFloorMap" t-on-touchstart="_onPinchStart" t-on-touchmove="_onPinchMove" t-on-touchend="_onPinchEnd"
-                    t-attf-class="floor-map position-relative w-100 h-100 overflow-scroll {{ pos.isEditMode ? 'floor-grid' : ''}}"
+                    t-attf-class="floor-map position-relative w-100 h-100 {{ pos.isEditMode ? 'floor-grid' : ''}}"
                     t-ref="floor-map-ref"
                     t-attf-style="
-                        -webkit-touch-callout: none; // for iOS
                         height: {{state.floorHeight}} !important;
                         width: {{state.floorWidth}} !important;
                         {{ activeFloor?.floor_background_image and pos.floorPlanStyle !== 'kanban' ?
@@ -111,7 +110,7 @@
                         <div t-if="!activeTables?.length" class="empty-floor d-flex align-items-center justify-content-center h-100 fs-3 text-center text-muted" t-ref="map">
                             <span>Oops! No tables available.<br/>Add a new table to get started.</span>
                         </div>
-                        <div t-else="" t-ref="map" class="h-100 w-100" t-att-class="{'d-flex align-items-center justify-content-center flex-wrap': pos.floorPlanStyle == 'kanban'}">
+                        <div t-else="" t-ref="map" t-att-class="{'floor-kanban d-grid gap-3 p-3': pos.floorPlanStyle == 'kanban'}">
                            <t t-foreach="activeTables.sort((a,b)=>a.id-b.id)" t-as="table" t-key="table.id" >
                                 <t t-set="isOccupied" t-value="pos.getCustomerCount(table.id) > 0 || table.uiState.orderCount > 0"/>
                                 <t t-set="isIntersecting" t-value="state.potentialLink?.child?.id === table.id"/>
@@ -121,7 +120,7 @@
                                     t-on-click.stop="(ev) => this.onClickTable(table, ev)"
                                     class="table o_draggable d-flex flex-column align-items-center justify-content-between cursor-pointer"
                                     t-att-class="{
-                                        'm-2 position-relative': pos.floorPlanStyle == 'kanban',
+                                        'position-relative m-0': pos.floorPlanStyle == 'kanban',
                                         'position-absolute': pos.floorPlanStyle !== 'kanban',
                                         'selected': state.selectedTableIds.includes(table.id),
                                     }"
@@ -134,8 +133,9 @@
                                                 opacity: {{state.potentialLink ? (isIntersecting or isIntersected ? 1 : 0.25) : 1}};
                                                 {{pos.floorPlanStyle == 'kanban' ?
                                                     `
-                                                        width: 120px;
-                                                        height: 120px;
+                                                        width: 100%;
+                                                        min-height: 120px;
+}
                                                     ` :
                                                     `
                                                         width: ${table.width}px;
@@ -161,7 +161,7 @@
                                             'text-bg-info'  : !table.uiState.changeCount and table.uiState.skipCount,
                                             'text-bg-dark'  : !table.uiState.changeCount and !table.uiState.skipCount
                                         }"
-                                        class="order-count d-flex align-items-center justify-content-center position-absolute top-0 start-100 translate-middle rounded-circle smaller fw-bolder"
+                                        class="order-count d-flex align-items-center justify-content-center position-absolute top-0 start-100 translate-middle rounded-circle smaller fw-bolder z-2"
                                         t-attf-style="width: 2rem; height: 2rem;"
                                     />
                                     <t t-if="state.selectedTableIds.includes(table.id)">

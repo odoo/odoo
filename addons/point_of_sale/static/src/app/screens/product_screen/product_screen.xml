@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductScreen">
-        <div class="product-screen d-flex gap-3 h-100 p-2">
+        <div class="product-screen d-flex h-100">
             <div t-att-class="{'flex-grow-1 w-100 mw-100': ui.isSmall, 'd-none': ui.isSmall and pos.mobile_pane !== 'left'}"
-                class="leftpane d-flex flex-column">
+                class="leftpane d-flex flex-column p-2">
                 <OrderSummary />
                 <div class="pads">
-                    <div class="control-buttons d-flex justify-content-between gap-2 w-100 py-2">
+                    <div t-attf-class="control-buttons d-flex justify-content-between gap-2 w-100 py-2">
                         <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
                     </div>
                     <div class="subpads d-flex flex-column gap-2">
@@ -22,11 +22,11 @@
                 </div>
             </div>
             <div class="rightpane d-flex flex-grow-1 flex-column" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
-                <div class="d-flex flex-column flex-grow-1 overflow-y-auto">
-                    <CategorySelector class="'product-categories sticky-top d-flex gap-1 flex-wrap pb-2'" 
+                <div class="position-relative d-flex flex-column flex-grow-1 overflow-y-auto">
+                    <CategorySelector class="'product-categories sticky-top d-flex gap-1 flex-wrap p-2'" 
                     categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
                     <CameraBarcodeScanner t-if="pos.scanning"/>
-                    <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto">
+                    <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto px-2 pt-0 pb-2">
                         <ProductCard
                             t-foreach="productsToDisplay" t-as="product" t-key="product.id"
                             productId="product.id"
@@ -47,21 +47,23 @@
                     <div t-if="searchWord" class="search-more-button d-flex justify-content-center m-2">
                         <button class="btn btn-primary btn-lg lh-lg" t-on-click="onPressEnterKey">Search more</button>
                     </div>
+                    <t t-if="ui.isSmall">
+                        <div class="product-reminder position-absolute bottom-0 d-flex justify-content-center align-items-center w-100 py-1 px-2" t-if="pos.get_order().get_selected_orderline() and pos.hasJustAddedProduct" t-key="animationKey" >
+                            <span class="flex-fill py-2 rounded-3 text-bg-info text-center fw-bolder"><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
+                        </div>
+                    </t>
                 </div>
                 <t t-if="ui.isSmall">
-                    <div class="product-reminder d-flex justify-content-center align-items-center p-2 rounded-3 text-bg-info fw-bolder" t-if="pos.get_order().get_selected_orderline() and pos.hasJustAddedProduct" t-key="animationKey" >
-                        <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
-                    </div>
-                    <div class="switchpane d-flex gap-2 mt-2">
-                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg w-50" t-attf-class="{{ currentOrder?.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
+                    <div class="switchpane d-flex gap-2 p-2 border-top bg-view">
+                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg w-50" t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
                             <span class="d-block">Pay</span>
                             <span t-esc="total" />
                         </button>
-                        <button class="btn-switchpane btn btn-light review-button w-50" t-on-click="switchPane">
+                        <button class="btn-switchpane btn btn-secondary review-button w-50" t-on-click="switchPane">
                             <span class="d-block">Cart</span>
-                            <span><t t-esc="items"/> items</span>
+                            <small><t t-esc="items"/> items</small>
                         </button>
-                        <button t-if="pos.scanning" class="btn-switchpane btn btn-secondar btn-lg w-50" t-on-click="() => this.pos.scanning = false">
+                        <button t-if="pos.scanning" class="btn-switchpane btn btn-secondary btn-lg w-50" t-on-click="() => this.pos.scanning = false">
                             <span class="d-block">Products</span>
                         </button>
                     </div>

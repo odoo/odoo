@@ -27,8 +27,8 @@
         </t>
         <t t-else="">
             <div class="payment-screen screen d-flex flex-column h-100 ">
-                <div class="main-content d-flex gap-3 h-100 p-2 bg-200 overflow-auto">
-                    <div class="left-content d-flex flex-column col-md-4">
+                <div class="main-content d-flex gap-2 h-100 bg-200 overflow-auto">
+                    <div class="left-content d-flex flex-column col-md-4 p-2">
                         <t t-call="point_of_sale.PaymentScreenMethods" />
                         <t t-call="point_of_sale.PaymentScreenButtons" />
                         <Numpad class="'py-2'"  buttons="getNumpadButtons()"/>
@@ -37,7 +37,7 @@
                             <t t-call="point_of_sale.PaymentScreenValidate" />
                         </div>
                     </div>
-                    <div class="center-content d-flex flex-column flex-grow-1 gap-2">
+                    <div class="center-content d-flex flex-column flex-grow-1 gap-2 py-2">
                         <t t-call="point_of_sale.PaymentScreenDue" />
                         <div class="payment-summary d-flex flex-grow-1 flex-column gap-2 overflow-y-auto justify-content-center rounded-3 bg-view">
                             <PaymentScreenStatus order="currentOrder" />
@@ -141,13 +141,13 @@
     </t>
 
     <t t-name="point_of_sale.PaymentScreenMethods">
-        <div class="paymentmethods-container overflow-auto mb-3" t-att-class="ui.isSmall ? 'my-2 rounded-3' : 'flex-grow-1'">
-            <div class="paymentmethods d-flex gap-1 gap-lg-2" t-att-class="{ 'p-1 overflow-y-auto rounded-3 bg-view': ui.isSmall, 'flex-column': !ui.isSmall }">
+        <div class="paymentmethods-container mb-3" t-att-class="ui.isSmall ? 'my-2 rounded-3' : 'flex-grow-1'">
+            <div class="paymentmethods  gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-300': ui.isSmall, 'd-flex flex-column gap-lg-2': !ui.isSmall }">
                 <t t-foreach="payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
-                    <div class="button paymentmethod btn btn-light btn-lg lg-lh" t-att-class="ui.isSmall ? 'd-flex flex-grow-1 justify-content-center border' : ''" t-on-click="() => this.addNewPaymentLine(paymentMethod)">
-                        <div class="payment-method-display d-flex align-items-center gap-2">
+                    <div class="button paymentmethod btn btn-light btn-lg lh-lg flex-fill" t-on-click="() => this.addNewPaymentLine(paymentMethod)">
+                        <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
                             <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />
-                            <span class="payment-name d-none d-lg-inline-block" t-esc="paymentMethod.name" />
+                            <span class="payment-name" t-esc="paymentMethod.name" />
                         </div>
                     </div>
                 </t>

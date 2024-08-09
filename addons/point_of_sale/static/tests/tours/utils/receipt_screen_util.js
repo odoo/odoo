@@ -68,7 +68,7 @@ export function totalAmountContains(value) {
     return [
         {
             isActive: ["desktop"], // not rendered on mobile
-            trigger: `.receipt-screen .top-content h1:contains("${value}")`,
+            trigger: `.receipt-screen .o_payment_successful:contains("${value}")`,
         },
         {
             isActive: ["mobile"], // On mobile, at least wait for the receipt screen to show
