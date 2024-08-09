@@ -211,6 +211,9 @@
                 <t t-snippet="website.s_image_title" string="Image Title" group="images">
                     <keywords>headline, header, content, picture, photo, illustration, media, visual, combination</keywords>
                 </t>
+                <t t-snippet="website.s_image_frame" string="Image Frame" group="images">
+                    <keywords>header, intro, home, content, introduction, overview, spotlight, presentation, welcome, context, description, primary, highlight, lead</keywords>
+                </t>
 
                 <!-- People group -->
                 <t t-snippet="website.s_company_team" string="Team" group="people">
@@ -760,7 +763,7 @@
 
     <!-- Grid only -->
     <div data-js="layout_column"
-        data-selector="section.s_masonry_block"
+        data-selector="section.s_masonry_block, section.s_image_frame"
         data-target="> *:has(> .row)">
         <t t-call="website.grid_layout_options"/>
     </div>
@@ -769,7 +772,7 @@
     <div data-js="layout_column"
         data-selector="section"
         data-target="> *:has(> .row), > .s_allow_columns"
-        data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal">
+        data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame">
         <we-row>
             <we-button-group string="Layout" data-no-preview="true">
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
