@@ -8,7 +8,7 @@ import { markup } from "@odoo/owl";
 registry.category("web_tour.tours").add('hr_recruitment_tour',{
     url: "/odoo",
     rainbowManMessage: () => markup(_t("<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>")),
-    fadeout: 'very_slow',
+    fadeout: "slow",
     sequence: 230,
     steps: () => [stepUtils.showAppsMenuItem(), {
     isActive: ["community"],
