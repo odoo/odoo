@@ -188,7 +188,34 @@
         </field>
     </record>
 
+    <record id="inventory_aging_action" model="ir.actions.act_window">
+        <field name="name">Inventory Aging</field>
+        <field name="res_model">stock.valuation.layer</field>
+        <field name="view_mode">pivot,tree,graph</field>
+        <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('stock_valuation_layer_pivot')}),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('stock_valuation_layer_tree')})]"/>
+        <field name="context">{
+            'search_default_has_remaining_qty': True,
+            'search_default_incoming': True,
+            'pivot_column_groupby': ['create_date:month'],
+            'pivot_row_groupby': ['categ_id'],
+            'pivot_measures': ['remaining_qty', 'remaining_value'],
+            'graph_mode': 'bar',
+            'graph_groupbys': ['create_date:month'],
+            }</field>
+        <field name="domain">[('product_id.type', '=', 'product')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face"/>
+            <p>
+                There are no valuation layers. Valuation layers are created when there are product moves that impact the valuation of the stock.
+            </p>
+        </field>
+    </record>
+
     <menuitem id="menu_valuation" name="Valuation" parent="stock.menu_warehouse_report" sequence="250" action="stock_valuation_layer_action"/>
+    <menuitem id="menu_inventory_aging" name="Inventory Aging" parent="stock.menu_warehouse_report" sequence="260" action="inventory_aging_action"/>
 
     <record id="stock_valuation_layer_picking" model="ir.ui.view">
         <field name="name">stock.valuation.layer.picking</field>
