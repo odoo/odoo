@@ -55,6 +55,19 @@
     > * {
         padding: var(--grid-item-padding-y) var(--grid-item-padding-x) !important;
     }
+
+    // Adapt the horizontal margins of the first inner row of a grid item, to
+    // make them compensate the grid item horizontal padding (to avoid an
+    // overflow).
+    .o_grid_item .row {
+        --grid-inner-row-gutter-x: clamp(0px, 2 * var(--grid-item-padding-x), 30px);
+        margin-left: calc(-0.5 * var(--grid-inner-row-gutter-x));
+        margin-right: calc(-0.5 * var(--grid-inner-row-gutter-x));
+
+        .row {
+            --grid-inner-row-gutter-x: var(--gutter-x);
+        }
+    }
 }
 
 @include media-breakpoint-up(lg) {
