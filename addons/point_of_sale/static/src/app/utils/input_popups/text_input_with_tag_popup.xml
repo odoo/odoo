@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.TextInputWithTagPopup">
+         <Dialog title="props.title">
+            <t t-foreach="props.buttons" t-as="button" t-key="button_index">
+                <button t-on-click="() => this.buttonClick(button)" type="button" t-attf-class="btn me-2 mb-2 toggle-button {{button.isSelected? 'btn-primary' : 'btn-secondary'}}" >
+                    <t t-esc="button.label"/>
+                </button>
+            </t>
+
+
+            <div class="d-flex flex-wrap p-1 border" t-on-click="onClickTextContainer">
+                 <t t-foreach="state.tagList" t-as="tag" t-key="tag_index">
+                     <div class="ms-1 p-2 badge rounded-pill bg-info text-info bg-opacity-25 d-flex align-items-center" t-esc="tag"></div>
+                 </t>
+                 <div class="flex-grow-1">
+                     <input t-att-rows="props.rows"
+                            class="form-control form-control-lg mx-auto border-0"
+                            type="text"
+                            t-ref="input"
+                            t-att-placeholder="props.placeholder"
+                            t-on-keydown="onKeydown" />
+                 </div>
+            </div>
+
+            <t t-set-slot="footer">
+                <div class="d-flex w-100 justify-content-start gap-2">
+                    <button class="btn btn-primary o-default-button" t-on-click="confirm">Apply</button>
+                    <button class="btn btn-secondary o-default-button" t-on-click="close">Discard</button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>
