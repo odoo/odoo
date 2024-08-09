@@ -910,6 +910,19 @@
         <field name="target">new</field>
     </record>
 
+    <record id="action_merger" model="ir.actions.server">
+        <field name="name">Merge</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name='groups_id' eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="state">code</field>
+        <field name="sequence">1</field>
+        <field name="code">
+            if records:
+                action = records.action_merge()
+        </field>
+    </record>
+
     <record id="action_rfq_form" model="ir.actions.act_window">
         <field name="name">Requests for Quotation</field>
         <field name="res_model">purchase.order</field>

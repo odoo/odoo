@@ -685,3 +685,7 @@ class PurchaseOrderLine(models.Model):
             'res_id': self.order_id.id,
             'view_mode': 'form',
         }
+
+    def _merge_po_line(self, rfq_line):
+        self.product_qty += rfq_line.product_qty
+        self.price_unit = min(self.price_unit, rfq_line.price_unit)

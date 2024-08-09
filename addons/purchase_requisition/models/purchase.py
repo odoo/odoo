@@ -249,6 +249,15 @@ class PurchaseOrder(models.Model):
             best_price_unit_ids.update(lines.ids)
         return list(best_price_ids), list(best_date_ids), list(best_price_unit_ids)
 
+    def _prepare_grouped_data(self, rfq):
+        match_fields = super()._prepare_grouped_data(rfq)
+        return match_fields + (rfq.requisition_id.id,)
+
+    def _merge_alternative_po(self, rfqs):
+        if self.alternative_po_ids:
+            super()._merge_alternative_po(rfqs)
+            self.alternative_po_ids += rfqs.mapped('alternative_po_ids')
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
