@@ -6,6 +6,7 @@ import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen
 import * as PosSale from "@pos_sale/../tests/tours/utils/pos_sale_utils";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosSettleOrder", {
@@ -248,5 +249,17 @@ registry.category("web_tour.tours").add("PoSApplyDownpayment", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosShipLaterNoDefault", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.isShown(),
+            Utils.negateStep(PaymentScreen.shippingLaterHighlighted()),
         ].flat(),
 });
