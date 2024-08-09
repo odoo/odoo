@@ -118,7 +118,6 @@ class StockScrap(models.Model):
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'state': 'draft',
-            'product_uom_qty': self.scrap_qty,
             'location_id': self.location_id.id,
             'scrapped': True,
             'scrap_id': self.id,
@@ -140,6 +139,7 @@ class StockScrap(models.Model):
 
     def do_scrap(self):
         self._check_company()
+        self = self.with_context(clean_context(self.env.context))
         for scrap in self:
             scrap.name = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
             move = self.env['stock.move'].create(scrap._prepare_move_values())
@@ -187,7 +187,8 @@ class StockScrap(models.Model):
             location=self.location_id.id,
             lot_id=self.lot_id.id,
             package_id=self.package_id.id,
-            owner_id=self.owner_id.id
+            owner_id=self.owner_id.id,
+            strict=True,
         ).product_id.qty_available
         scrap_qty = self.product_uom_id._compute_quantity(self.scrap_qty, self.product_id.uom_id)
         return float_compare(available_qty, scrap_qty, precision_digits=precision) >= 0
