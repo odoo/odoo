@@ -207,3 +207,5 @@ export function setUrlFilters(filters) {
         urlFilters = prev;
     };
 }
+
+export const __test__allTemplates = templates;
