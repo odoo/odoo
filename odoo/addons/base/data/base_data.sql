@@ -138,3 +138,11 @@ select setval('res_users_id_seq', 1);
 insert into res_groups (id, name) VALUES (1, '{"en_US": "Employee"}');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('group_user', 'base', 'res.groups', true, 1);
 select setval('res_groups_id_seq', 1);
+
+-- ALTER FUNCTION public.now() RENAME TO now_builtin;
+-- CREATE FUNCTION now() RETURNS timestamptz AS $$
+--     SELECT coalesce(
+--         current_setting('odoo.now', true)::timestamptz,
+--         now_builtin()
+--     );
+-- $$ LANGUAGE sql;

@@ -15,7 +15,7 @@ import threading
 import time
 import uuid
 from contextlib import contextmanager
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from inspect import currentframe
 
 import psycopg2
@@ -342,6 +342,9 @@ class Cursor(BaseCursor):
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         start = real_time()
+        # ensure postgres is patched
+        if self.dbname != 'postgres':
+            self.now()
         try:
             params = params or None
             res = self._obj.execute(query, params)
@@ -504,8 +507,20 @@ class Cursor(BaseCursor):
     def now(self):
         """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """
         if self._now is None:
-            self.execute("SELECT (now() AT TIME ZONE 'UTC')")
-            self._now = self.fetchone()[0]
+            dt = datetime.now(timezone.utc)
+            self._now = dt.replace(tzinfo=None)
+
+            self._obj.execute("SELECT current_user")
+            [current_user] = self._obj.fetchone()
+            self._obj.execute("SELECT proowner::regrole FROM pg_proc WHERE proname = 'now'")
+            [owner] = self._obj.fetchone()
+            _logger.runbot("PATCHING now in %s as %s OWNER %s", self.dbname, current_user, owner)
+            self._obj.execute("ALTER FUNCTION now() RENAME TO now_builtin")
+            self._obj.execute("ALTER FUNCTION now_builtin() RENAME TO now")
+            self._obj.execute(
+                "select set_config('odoo.now', %s, true)",
+                [dt.isoformat(" ", timespec="seconds")],
+            )
         return self._now
 
 
@@ -533,7 +548,6 @@ class TestCursor(BaseCursor):
     _cursors_stack = []
     def __init__(self, cursor, lock, readonly):
         super().__init__()
-        self._now = None
         self._closed = False
         self._cursor = cursor
         self.readonly = readonly
@@ -600,11 +614,7 @@ class TestCursor(BaseCursor):
         return getattr(self._cursor, name)
 
     def now(self):
-        """ Return the transaction's timestamp ``datetime.now()``. """
-        if self._now is None:
-            self._now = datetime.now()
-        return self._now
-
+        return self._cursor.now()
 
 class PsycoConnection(psycopg2.extensions.connection):
     def lobject(*args, **kwargs):
