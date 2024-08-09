@@ -14,6 +14,11 @@ import { TourStep } from "./tour_step";
 
 export class TourInteractive {
     mode = "manual";
+    anchorEl;
+    currentAction;
+    currentActionIndex;
+    removeListeners = () => {};
+
     /**
      * @param {Tour} data
      */
@@ -21,10 +26,6 @@ export class TourInteractive {
         Object.assign(this, data);
         this.steps = this.steps.map((step) => new TourStep(step, this));
         this.actions = this.steps.flatMap((s) => this.getSubActions(s));
-        this.anchorEl;
-        this.currentAction;
-        this.currentActionIndex;
-        this.removeListeners = () => {};
     }
 
     /**
@@ -60,6 +61,17 @@ export class TourInteractive {
         }
     }
 
+    /**
+     * @returns {HTMLElement[]}
+     */
+    findTriggers() {
+        return this.currentAction.anchor
+            .split(/,\s*(?![^(]*\))/)
+            .map((part) => hoot.queryFirst(part, { visible: true }))
+            .filter((el) => !!el)
+            .map((el) => this.getAnchorEl(el, this.currentAction.event));
+    }
+
     play() {
         this.removeListeners();
         if (this.currentActionIndex === this.actions.length) {
@@ -83,10 +95,11 @@ export class TourInteractive {
         }
 
         console.log(this.currentAction.event, this.currentAction.anchor);
-        this.anchorEl = hoot.queryFirst(this.currentAction.anchor, { visible: true });
 
         tourState.set(this.name, "currentIndex", this.currentActionIndex);
-        this.setActionListeners();
+        const anchorEls = this.findTriggers();
+        this.setActionListeners(anchorEls);
+        this.updatePointer();
     }
 
     updatePointer() {
@@ -101,16 +114,15 @@ export class TourInteractive {
         });
     }
 
-    setActionListeners() {
-        if (this.anchorEl) {
-            this.anchorEl = this.getAnchorEl(this.anchorEl, this.currentAction.event);
-            const consumeEvents = this.getConsumeEventType(this.anchorEl, this.currentAction.event);
-            this.removeListeners = this.setupListeners({
-                anchorEl: this.anchorEl,
-                consumeEvents,
-                onMouseEnter: () => this.pointer.showContent(true),
-                onMouseLeave: () => this.pointer.showContent(false),
-                onScroll: () => this.updatePointer(),
+    /**
+     * Set listeners for each anchor element.
+     * @param {HTMLElement[]} anchorEls
+     */
+    setActionListeners(anchorEls) {
+        const cleanups = anchorEls.flatMap((anchorEl, index) => {
+            const toListen = {
+                anchorEl,
+                consumeEvents: this.getConsumeEventType(anchorEl, this.currentAction.event),
                 onConsume: () => {
                     this.pointer.hide();
                     this.currentActionIndex++;
@@ -123,9 +135,25 @@ export class TourInteractive {
                         this.play();
                     }
                 },
-            });
-            this.updatePointer();
-        }
+            };
+            if (index === 0) {
+                this.anchorEl = anchorEl;
+                return this.setupListeners({
+                    ...toListen,
+                    onMouseEnter: () => this.pointer.showContent(true),
+                    onMouseLeave: () => this.pointer.showContent(false),
+                    onScroll: () => this.updatePointer(),
+                });
+            } else {
+                return this.setupListeners(toListen);
+            }
+        });
+        this.removeListeners = () => {
+            delete this.anchorEl;
+            while (cleanups.length) {
+                cleanups.pop()();
+            }
+        };
     }
 
     /**
@@ -181,11 +209,7 @@ export class TourInteractive {
             cleanups.push(() => scrollEl.removeEventListener("scroll", debouncedOnScroll));
         }
 
-        return () => {
-            while (cleanups.length) {
-                cleanups.pop()();
-            }
-        };
+        return cleanups;
     }
 
     /**
@@ -364,18 +388,12 @@ export class TourInteractive {
 
     _onMutation() {
         if (this.currentAction) {
-            let tempAnchor = hoot.queryFirst(this.currentAction.anchor, { visible: true });
-            tempAnchor = tempAnchor && this.getAnchorEl(tempAnchor, this.currentAction.event);
-            if (
-                (!this.anchorEl && tempAnchor) ||
-                (this.anchorEl && tempAnchor && tempAnchor !== this.anchorEl)
-            ) {
-                this.anchorEl = tempAnchor;
+            const tempAnchors = this.findTriggers();
+            if (tempAnchors.length && (!this.anchorEl || !tempAnchors.includes(this.anchorEl))) {
                 this.removeListeners();
-                this.setActionListeners();
-            } else if (!tempAnchor && this.anchorEl) {
+                this.setActionListeners(tempAnchors);
+            } else if (!tempAnchors.length && this.anchorEl) {
                 this.pointer.hide();
-                this.anchorEl = tempAnchor;
                 if (!hoot.queryFirst(".o_home_menu", { visible: true })) {
                     this.backward();
                 }
