@@ -97,27 +97,6 @@ button {
 
 /*  ********* The Webkit Scrollbar  ********* */
 
-// Remove this scrollbar double button
-::-webkit-scrollbar-button:vertical:start:increment,
-::-webkit-scrollbar-button:vertical:end:decrement,
-::-webkit-scrollbar-button:horizontal:start:increment,
-::-webkit-scrollbar-button:horizontal:end:decrement
-{
-    display: none;
-}
-.pos *::-webkit-scrollbar{
-    width:  4px;
-    height: 4px;
-}
-.pos *::-webkit-scrollbar-track{
-    background: $gray-200;
-    border-left: solid 1px rgb(200,200,200);
-}
-.pos *::-webkit-scrollbar-thumb{
-    background: rgb(168,168,168);
-    background: #393939;
-    min-height: 30px;
-}
 .pos.big-scrollbars *::-webkit-scrollbar{
     width:  40px;
     height: 40px;
@@ -187,7 +166,7 @@ button {
 
 @for $size from 2 through length($o-colors) {
     .o_colorlist_item_color_transparent_#{$size - 1} {
-        $-bg: adjust-color(nth($o-colors, $size), $lightness: 35%, $saturation: 15%);
+        $-bg: adjust-color(nth($o-colors, $size), $lightness: 28%, $saturation: 15%);
         $-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
         @include o-print-color($-bg, background-color, bg-opacity);
         @include o-print-color($-color, color, text-opacity);

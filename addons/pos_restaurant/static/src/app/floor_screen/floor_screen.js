@@ -249,11 +249,11 @@ export class FloorScreen extends Component {
             (tableL) => {
                 if (hasTouch()) {
                     if (tableL) {
-                        this.floorScrollBox.el.classList.remove("overflow-scroll");
+                        this.floorScrollBox.el.classList.remove("overflow-auto");
                         this.floorScrollBox.el.classList.add("overflow-hidden");
                     } else {
                         this.floorScrollBox.el.classList.remove("overflow-hidden");
-                        this.floorScrollBox.el.classList.add("overflow-scroll");
+                        this.floorScrollBox.el.classList.add("overflow-auto");
                     }
                 }
             },

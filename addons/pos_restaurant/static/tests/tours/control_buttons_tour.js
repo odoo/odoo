@@ -24,7 +24,12 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             FloorScreen.clickTable("2"),
             ProductScreen.orderIsEmpty(),
             Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
             FloorScreen.clickTable("4"),
+            Order.hasLine({
+                productName: "Water",
+                quantity: "5",
+            }),
 
             // Test SplitBillButton
             ProductScreen.clickControlButton("Split"),

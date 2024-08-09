@@ -12,10 +12,23 @@
   padding-inline: 150px;
 }
 
+.paymentmethods {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.paymentmethod:nth-child(odd):last-child {
+  grid-column: span 2;
+}
+
 .payment-method-icon {
     max-width: 50px;
     max-height: 50px;
     vertical-align: middle;
+    
+    @include media-breakpoint-down(sm) {
+      max-width: 32px;
+      max-height: 32px;
+    }
 }
 
 .paymentlines-container .total {

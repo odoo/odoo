@@ -1,9 +1,15 @@
 .pos-receipt-container {
     direction: ltr;
-}
 
-.receipt-screen .default-view .pos-receipt-container {
-    flex-basis: 400px;
+    .order-container {
+        padding: 0;
+        pointer-events: none;
+
+        .orderline:hover {
+            background: none;
+        }
+    
+    }    
 }
 
 @page {

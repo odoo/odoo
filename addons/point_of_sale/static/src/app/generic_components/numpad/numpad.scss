@@ -10,6 +10,12 @@
   }
 }
 
+.modal-body .numpad-button {
+  @include media-breakpoint-down(xl) {
+    padding: map-get($spacers, 2) 0;
+  }
+}
+
 .numpad-button {
   @include media-breakpoint-down(xl) {
     padding: 0;

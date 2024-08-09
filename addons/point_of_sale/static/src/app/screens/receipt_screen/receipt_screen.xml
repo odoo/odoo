@@ -4,41 +4,38 @@
     <t t-name="point_of_sale.ReceiptScreen">
         <div class="receipt-screen screen h-100 bg-100">
             <div class="screen-content d-flex flex-column h-100">
-                <div class="top-content d-flex align-items-center py-3 border-bottom text-center" t-if="!ui.isSmall">
-                    <div class="top-content-center flex-grow-1">
-                        <h1 class="mb-0">
-                            <t t-esc="orderAmountPlusTip" />
-                        </h1>
-                    </div>
-                </div>
                 <div class="default-view d-flex flex-lg-row flex-column overflow-hidden flex-grow-1">
-                    <div class="actions d-flex flex-column justify-content-between flex-lg-grow-1 flex-grow-0 flex-shrink-1 flex-basis-0">
-                        <div class="o_payment_successful d-flex flex-column p-3">
-                            <h1>Payment Successful</h1>
-                            <div class="buttons mt-3">
+                    <div class="actions d-flex flex-column justify-content-between flex-lg-grow-1 flex-grow-0 flex-shrink-1 flex-basis-0 border-end">
+                        <div class="o_payment_successful d-flex flex-column w-100 w-xxl-75 p-3 pt-xxl-5 mx-auto">
+                            <div class="d-flex flex-column align-items-center p-1 p-lg-3 border border-success rounded-3 bg-success-subtle text-success fs-3">
+                                <i t-if="!ui.isSmall" class="fa fa-fw fa-2x fa-check-circle"/>
+                                <span class="fs-3 fw-bolder">Payment Successful</span>
+                                <span class="fs-4 fw-bold"><t t-esc="orderAmountPlusTip" /></span>
+                            </div>
+                            <hr />
+                            <div class="receipt-options d-flex flex-column gap-2">
                                 <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doPrint.call()">
                                     <i t-attf-class="fa {{doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
                                 </button>
-                            </div>
-                            <small class="text-muted text-center my-2">OR</small>
-                            <div class="d-flex gap-1" t-att-class="{'flex-column': this.ui.isSmall}">
-                                <div class="flex-grow-1 p-0 border-0 position-relative send-receipt-input">
-                                    <input type="text" class="border p-3 bg-view w-100 pe-5" t-attf-placeholder="{{ state.mode === 'email' ? 'e.g. john.doe@mail.com' : 'e.g. 0123456789' }}" t-model="state.input" />
-                                    <div t-att-class="{'opacity-25': !isValidInput}"  t-on-click="() => this.actionSendReceipt()" class="position-absolute end-0 top-0 h-100 d-flex align-items-center text-primary cursor-pointer">
-                                        <i class="fa fa-arrow-circle-right fs-1 pe-3" aria-hidden="true" />
+                                <div class="d-flex gap-1" t-att-class="{'flex-column': this.ui.isSmall}">
+                                    <div class="flex-grow-1 p-0 border-0 position-relative send-receipt-input">
+                                        <input type="text" class="border p-3 bg-view w-100 pe-5" t-attf-placeholder="{{ state.mode === 'email' ? 'e.g. john.doe@mail.com' : 'e.g. 0123456789' }}" t-model="state.input" />
+                                        <div t-att-class="{'opacity-25': !isValidInput}"  t-on-click="() => this.actionSendReceipt()" class="position-absolute end-0 top-0 h-100 d-flex align-items-center text-primary cursor-pointer">
+                                            <i class="fa fa-arrow-circle-right fs-1 pe-3" aria-hidden="true" />
+                                        </div>
+                                    </div>
+                                    <div t-att-class="{'mt-1': this.ui.isSmall}" class="gap-1 d-flex sending-receipt-management justify-content-center">
+                                        <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall, 'px-5': !this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary btn-lg lh-lg d-flex align-items-center justify-content-center w-100" >
+                                            <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ?  'fa-fw fa-spin fa-circle-o-notch' : 'fa-envelope'}}" aria-hidden="true" />
+                                        </button>
                                     </div>
                                 </div>
-                                <div t-att-class="{'mt-1': this.ui.isSmall}" class="gap-1 d-flex sending-receipt-management justify-content-center">
-                                    <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall, 'px-5': !this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary btn-lg lh-lg d-flex align-items-center justify-content-center w-100" >
-                                        <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ?  'fa-fw fa-spin fa-circle-o-notch' : 'fa-envelope'}}" aria-hidden="true" />
-                                    </button>
+                                <div class="notice text-center">
+                                    <t t-set="usedMethod" t-value="sendReceipt.lastArgs?.[0]?.name" />
+                                    <div t-if="sendReceipt.status === 'loading'" class="text-info">Sending <t t-esc="usedMethod"/> in progress</div>
+                                    <div t-if="sendReceipt.status === 'success'" class="text-success"><t t-esc="usedMethod"/> is sent successfully</div>
+                                    <div t-if="sendReceipt.status === 'error'" class="text-danger">Sending <t t-esc="usedMethod"/> failed. Please try again</div>
                                 </div>
-                            </div>
-                            <div class="notice mt-2">
-                                <t t-set="usedMethod" t-value="sendReceipt.lastArgs?.[0]?.name" />
-                                <div t-if="sendReceipt.status === 'loading'" class="text-info">Sending <t t-esc="usedMethod"/> in progress</div>
-                                <div t-if="sendReceipt.status === 'success'" class="text-success"><t t-esc="usedMethod"/> is sent successfully</div>
-                                <div t-if="sendReceipt.status === 'error'" class="text-danger">Sending <t t-esc="usedMethod"/> failed. Please try again</div>
                             </div>
                         </div>
                         <t t-set="splittedOrder" t-value="this.currentOrder.originalSplittedOrder and !this.currentOrder.originalSplittedOrder.finalized"/>
@@ -51,8 +48,8 @@
                             </button>
                         </div>
                     </div>
-                    <div class="pos-receipt-container d-flex flex-grow-1 flex-lg-grow-0 user-select-none justify-content-center bg-200 text-center overflow-hidden">
-                        <div class="d-inline-block m-3 p-3 border rounded bg-view text-start overflow-y-auto">
+                    <div class="pos-receipt-container d-flex flex-grow-1 flex-lg-grow-0 w-100 w-lg-50 user-select-none justify-content-center bg-200 text-center overflow-hidden">
+                        <div class="d-inline-block m-2 m-lg-3 p-3 border rounded bg-view text-start overflow-y-auto">
                             <OrderReceipt data="pos.orderExportForPrinting(pos.get_order())" formatCurrency="env.utils.formatCurrency" />
                         </div>
                     </div>
