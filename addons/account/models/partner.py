@@ -607,6 +607,13 @@ class ResPartner(models.Model):
     # amount of their generated incoming/outgoing account moves
     supplier_rank = fields.Integer(default=0, copy=False)
     customer_rank = fields.Integer(default=0, copy=False)
+    autopost_bills = fields.Selection(
+        selection=[('always', 'Always'), ('ask', 'Ask after 3 validations without edits'), ('never', 'Never')],
+        string='Auto-post bills',
+        help="Automatically post bills for this trusted partner",
+        default='ask',
+        required=True,
+    )
 
     # Technical field holding the amount partners that share the same account number as any set on this partner.
     duplicated_bank_account_partners_count = fields.Integer(

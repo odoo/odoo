@@ -222,6 +222,9 @@ class ResConfigSettings(models.TransientModel):
     # Audit trail
     check_account_audit_trail = fields.Boolean(string='Audit Trail', related='company_id.check_account_audit_trail', readonly=False)
 
+    # Autopost of bills
+    autopost_bills = fields.Boolean(related='company_id.autopost_bills', readonly=False)
+
     @api.depends('country_code')
     def _compute_is_account_peppol_eligible(self):
         # we want to show Peppol settings only to customers that are eligible for Peppol,

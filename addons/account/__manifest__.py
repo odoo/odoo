@@ -25,6 +25,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/onboarding_data.xml',
         'views/account_payment_view.xml',
         'wizard/account_automatic_entry_wizard_views.xml',
+        'wizard/account_autopost_bills_wizard.xml',
         'wizard/account_unreconcile_view.xml',
         'wizard/account_move_reversal_view.xml',
         'wizard/account_resequence_views.xml',

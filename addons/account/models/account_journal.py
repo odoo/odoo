@@ -891,7 +891,7 @@ class AccountJournal(models.Model):
         # will create an invoice with a tentative to enhance with EDI / OCR..
         all_invoices = self.env['account.move']
         for attachment in attachments:
-            invoice = self.env['account.move'].create({
+            invoice = self.env['account.move'].with_context(skip_is_manually_modified=True).create({
                 'journal_id': self.id,
                 'move_type': move_type,
             })
@@ -906,6 +906,13 @@ class AccountJournal(models.Model):
             ).message_post(attachment_ids=attachment.ids)
 
             attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+            if (
+                invoice.company_id.autopost_bills
+                and invoice.partner_id.autopost_bills == 'always'
+                and not invoice.abnormal_amount_warning
+                and not invoice.restrict_mode_hash_table
+            ):
+                invoice.action_post()
 
         return all_invoices
 
