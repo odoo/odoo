@@ -434,6 +434,7 @@ function registerThemeHomepageTour(name, steps) {
             url: "/",
             sequence: 50,
             saveAs: "homepage",
+            test: true, // disable manual mode for theme homepage tours - FIXME
             waitFor: () => waitFor('.o_iframe[is-ready="true"]', { timeout: 5000 }),
         },
         () => [
