@@ -89,7 +89,8 @@ class SaleOrder(models.Model):
                         'products': products_data,
                     }
                     # Send data to external API
-                    release_url = "http://127.0.0.1:5000/api/orders"
+                    #release_url = "http://127.0.0.1:5000/api/orders"
+                    release_url = "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
 
                     headers = {
                         "shipConnect": session_id,
