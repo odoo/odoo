@@ -19,8 +19,18 @@ const StepSchema = {
     debugHelp: { type: String, optional: true },
     isActive: { type: Array, element: String, optional: true },
     run: { type: [String, Function], optional: true },
-    timeout: { type: Number, optional: true },
-    tooltipPosition: { type: String, optional: true },
+    timeout: {
+        optional: true,
+        validate(value) {
+            return value >= 0 && value <= 60000;
+        },
+    },
+    tooltipPosition: {
+        optional: true,
+        validate(value) {
+            return ["top", "bottom", "left", "right"].includes(value);
+        },
+    },
     trigger: { type: String },
     //ONLY IN DEBUG MODE
     pause: { type: Boolean, optional: true },
@@ -28,16 +38,20 @@ const StepSchema = {
 };
 
 const TourSchema = {
-    name: { type: String, optional: true },
-    steps: Function,
-    url: { type: String, optional: true },
-    rainbowManMessage: { type: [String, Function], optional: true },
-    rainbowMan: { type: Boolean, optional: true },
-    sequence: { type: Number, optional: true },
     checkDelay: { type: Number, optional: true },
-    test: { type: Boolean, optional: true },
+    fadeout: {
+        optional: true,
+        validate(value) {
+            return ["fast", "medium", "slow", "no"].includes(value);
+        },
+    },
+    name: { type: String, optional: true },
+    rainbowManMessage: { type: [String, Function, Boolean], optional: true },
     saveAs: { type: String, optional: true },
-    fadeout: { type: String, optional: true },
+    sequence: { type: Number, optional: true },
+    steps: Function,
+    test: { type: Boolean, optional: true },
+    url: { type: String, optional: true },
     wait_for: { type: [Function, Object], optional: true },
 };
 
@@ -77,7 +91,6 @@ export const tourService = {
                     return steps;
                 },
                 url: tour.url,
-                rainbowMan: tour.rainbowMan === undefined ? true : !!tour.rainbowMan,
                 rainbowManMessage: tour.rainbowManMessage,
                 fadeout: tour.fadeout || "medium",
                 sequence: tour.sequence || 1000,
@@ -175,7 +188,10 @@ export const tourService = {
             };
         }
 
-        function showRainbowManMessage({ rainbowManMessage, fadeout }) {
+        function showSuccessMessage({ rainbowManMessage, fadeout }) {
+            if (!rainbowManMessage) {
+                return;
+            }
             let message;
             if (typeof rainbowManMessage === "function") {
                 message = rainbowManMessage({
@@ -257,7 +273,7 @@ export const tourService = {
                     new TourInteractive(tour).start(pointer, () => {
                         pointer.stop();
                         orm.call("web_tour.tour", "consume", [[tour.name]]);
-                        showRainbowManMessage(tour);
+                        showSuccessMessage(tour);
                         endTour(tour);
                     });
                 }
@@ -284,7 +300,7 @@ export const tourService = {
                 new TourInteractive(tour).start(pointer, () => {
                     pointer.stop();
                     orm.call("web_tour.tour", "consume", [[tour.name]]);
-                    showRainbowManMessage(tour);
+                    showSuccessMessage(tour);
                     endTour(tour);
                 });
             }

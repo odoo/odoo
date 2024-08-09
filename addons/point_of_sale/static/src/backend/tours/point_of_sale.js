@@ -5,7 +5,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add("point_of_sale_tour", {
     url: "/odoo",
-    rainbowMan: false,
+    rainbowManMessage: false,
     sequence: 45,
     steps: () => [
         stepUtils.showAppsMenuItem(),
