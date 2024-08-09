@@ -18,6 +18,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     setup() {
         super.setup();
         this.titleField = "name";
+        this.alwaysEditableColumns = ["analytic_distribution"];
         useEffect(
             () => this.focusToName(this.props.list.editedRecord),
             () => [this.props.list.editedRecord]
@@ -34,6 +35,20 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     isSectionOrNote(record=null) {
         record = record || this.record;
         return ['line_section', 'line_note'].includes(record.data.display_type);
+    }
+
+    isCellReadonly(column, record) {
+        if (column && this.alwaysEditableColumns.includes(column.name)) {
+            return false;
+        }
+        return super.isCellReadonly(column, record);
+    }
+
+    isInlineEditable(record, column=null) {
+        if (column && this.alwaysEditableColumns.includes(column.name)) {
+            return true;
+        }
+        return super.isInlineEditable(record, column);
     }
 
     getRowClass(record) {

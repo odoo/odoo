@@ -478,7 +478,7 @@ export class ListRenderer extends Component {
         if (column.widget) {
             return false;
         }
-        if (record.isInEdition && (record.model.multiEdit || this.isInlineEditable(record))) {
+        if (record.isInEdition && (record.model.multiEdit || this.isInlineEditable(record, column))) {
             // in a x2many non editable list, a record is in edition when it is opened in a dialog,
             // but in the list we want it to still be displayed in readonly.
             return false;
@@ -1128,7 +1128,7 @@ export class ListRenderer extends Component {
             record = this.props.list.records[recordIndex] || record;
         };
 
-        if ((this.props.list.model.multiEdit && record.selected) || this.isInlineEditable(record)) {
+        if ((this.props.list.model.multiEdit && record.selected) || this.isInlineEditable(record, column)) {
             if (record.isInEdition && this.props.list.editedRecord === record) {
                 const cell = this.tableRef.el.querySelector(
                     `.o_selected_row td[name='${column.name}']`
@@ -1248,7 +1248,7 @@ export class ListRenderer extends Component {
         return futureCell && getElementToFocus(futureCell);
     }
 
-    isInlineEditable(record) {
+    isInlineEditable(record, column=null) {
         // /!\ the keyboard navigation works under the hypothesis that all or
         // none records are editable.
         return !!this.props.editable;

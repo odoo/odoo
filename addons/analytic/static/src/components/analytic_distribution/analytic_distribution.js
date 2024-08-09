@@ -674,15 +674,21 @@ export const analyticDistribution = {
             availableTypes: ["many2one"],
         }
     ],
-    extractProps: ({ attrs, options }) => ({
-        business_domain: options.business_domain,
-        account_field: options.account_field,
-        product_field: options.product_field,
-        amount_field: options.amount_field,
-        business_domain_compute: attrs.business_domain_compute,
-        force_applicability: options.force_applicability,
-        allow_save: !options.disable_save,
-    }),
+    extractProps: ({ attrs, options }) => {
+        const props = {
+            business_domain: options.business_domain,
+            account_field: options.account_field,
+            product_field: options.product_field,
+            amount_field: options.amount_field,
+            business_domain_compute: attrs.business_domain_compute,
+            force_applicability: options.force_applicability,
+            allow_save: !options.disable_save,
+        };
+        if (options.hasOwnProperty('readonly')) {
+            props['readonly'] = options.readonly
+        }
+        return props;
+    }
 };
 
 registry.category("fields").add("analytic_distribution", analyticDistribution);
