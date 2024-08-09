@@ -32,7 +32,6 @@ patch(PosStore.prototype, {
             return;
         }
         const sale_order = await this._getSaleOrder(clickedOrderId);
-        sale_order.shipping_date = this.config.ship_later && sale_order.shipping_date;
 
         const currentSaleOrigin = this.get_order()
             .get_orderlines()
@@ -70,15 +69,6 @@ patch(PosStore.prototype, {
     },
     async _getSaleOrder(id) {
         const sale_order = (await this.data.read("sale.order", [id]))[0];
-        if (sale_order.picking_ids[0]) {
-            const result = await this.data.read(
-                "stock.picking",
-                [sale_order.picking_ids[0]],
-                ["scheduled_date"]
-            );
-            const picking = result[0];
-            sale_order.shipping_date = picking.scheduled_date;
-        }
         return sale_order;
     },
     async settleSO(sale_order, orderFiscalPos) {
