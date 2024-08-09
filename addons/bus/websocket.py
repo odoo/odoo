@@ -244,6 +244,10 @@ class Websocket:
         # available.
         self.__notif_sock_w, self.__notif_sock_r = socket.socketpair()
         self._channels = set()
+        # Keep track of notifications sent in the last 10 seconds to ensure no
+        # notification will be missed and no duplicate will be sent.
+        self._sent_notifs = []
+        self._min_notif_id = 0
         self._last_notif_sent_id = 0
         # Websocket start up
         self.__selector = (
@@ -275,6 +279,7 @@ class Websocket:
                         else CloseCode.KEEP_ALIVE_TIMEOUT
                     )
                     continue
+                self._trim_sent_notifs()
                 if not readables:
                     self._send_ping_frame()
                     continue
@@ -314,8 +319,8 @@ class Websocket:
     def subscribe(self, channels, last):
         """ Subscribe to bus channels. """
         self._channels = channels
-        if self._last_notif_sent_id < last:
-            self._last_notif_sent_id = last
+        if self._min_notif_id < last:
+            self._min_notif_id = last
         # Dispatch past notifications if there are any.
         self.trigger_notification_dispatching()
 
@@ -631,6 +636,19 @@ class Websocket:
                         exc_info=True
                     )
 
+    def _trim_sent_notifs(self):
+        """
+        Clears old sent notifications and updates the minimum ID to fetch.
+
+        Since smaller ID notifications might be committed before larger ones,
+        fetching notifications with IDs only greater than the last sent ID could
+        lead to missing some. To prevent this, we track notifications sent in
+        the past 10 seconds to ensure none are missed.
+        """
+        last_sent_id = max((notif[0] for notif in self._sent_notifs), default=self._min_notif_id)
+        self._sent_notifs = [notif for notif in self._sent_notifs if time.time() - notif[1] < 10]
+        self._min_notif_id = min((notif[0] for notif in self._sent_notifs), default=last_sent_id)
+
     def _dispatch_bus_notifications(self):
         """
         Dispatch notifications related to the registered channels. If
@@ -647,11 +665,13 @@ class Websocket:
                 raise SessionExpiredException()
             # Mark the notification request as processed.
             self.__notif_sock_r.recv(1)
-            notifications = env['bus.bus']._poll(self._channels, self._last_notif_sent_id)
+            notifications = env["bus.bus"]._poll(
+                self._channels, self._min_notif_id, [n[0] for n in self._sent_notifs]
+            )
         if not notifications:
             return
-        self._last_notif_sent_id = notifications[-1]['id']
         self._send(notifications)
+        self._sent_notifs.extend([(n["id"], time.time()) for n in notifications])
 
 
 class TimeoutReason(IntEnum):
