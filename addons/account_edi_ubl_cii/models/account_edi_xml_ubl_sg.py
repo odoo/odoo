@@ -45,7 +45,7 @@ class AccountEdiXmlUBLSG(models.AbstractModel):
 
         return vals_list
 
-    def _get_tax_sg_codes(self, invoice, tax):
+    def _get_tax_sg_codes(self, tax):
         """ https://www.peppolguide.sg/billing/bis/#_gst_category_codes
         """
         tax_category_code = 'SR'
@@ -53,12 +53,12 @@ class AccountEdiXmlUBLSG(models.AbstractModel):
             tax_category_code = 'ZR'
         return tax_category_code
 
-    def _get_tax_category_list(self, invoice, taxes):
+    def _get_tax_category_list(self, customer, supplier, taxes):
         # OVERRIDE
         res = []
         for tax in taxes:
             res.append({
-                'id': self._get_tax_sg_codes(invoice, tax),
+                'id': self._get_tax_sg_codes(tax),
                 'percent': tax.amount if tax.amount_type == 'percent' else False,
                 'tax_scheme_vals': {'id': 'GST'},
             })
