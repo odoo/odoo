@@ -1,5 +1,5 @@
 import { describe, expect, getFixture, onError as onErrorHoot, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { click, press } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getBasicData } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
@@ -7,7 +7,7 @@ import {
     defineSpreadsheetDashboardModels,
     getDashboardServerData,
 } from "@spreadsheet_dashboard/../tests/helpers/data";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, getMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -327,4 +327,33 @@ test("Changing filter values will create a new share", async function () {
     expect(target.querySelector(".o_field_CopyClipboardChar")?.innerText).toBe(
         `localhost:8069/share/url/2`
     );
+});
+
+test("Clicking 'Edit' icon navigates to dashboard edit view", async function () {
+    const action = {
+        type: "ir.actions.client",
+        tag: "action_edit_dashboard",
+        params: {
+            spreadsheet_id: 1,
+        },
+    };
+    await createSpreadsheetDashboard({
+        mockRPC: async function (route, args) {
+            if (args.method === "action_edit_dashboard" && args.model === "spreadsheet.dashboard") {
+                expect.step("action_edit_dashboard");
+                return action;
+            }
+        },
+    });
+    const env = getMockEnv();
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
+            expect.step("doAction");
+            expect(action.params.spreadsheet_id).toBe(1);
+            expect(action.tag).toBe("action_edit_dashboard");
+        },
+    });
+    click(".o_edit_dashboard");
+    await animationFrame();
+    expect.verifySteps(["action_edit_dashboard", "doAction"]);
 });
