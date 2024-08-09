@@ -228,6 +228,9 @@ class ResCompany(models.Model):
     # Audit trail
     check_account_audit_trail = fields.Boolean(string='Audit Trail')
 
+    # Autopost Wizard
+    autopost_bills = fields.Boolean(string='Auto-validate bills', default=True)
+
     def _get_company_root_delegated_field_names(self):
         return super()._get_company_root_delegated_field_names() + [
             'fiscalyear_last_day',

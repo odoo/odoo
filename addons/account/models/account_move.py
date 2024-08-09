@@ -500,6 +500,7 @@ class AccountMove(models.Model):
     )
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
     invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)
+    is_manually_modified = fields.Boolean()
 
     # === Fiduciary mode fields === #
     quick_edit_mode = fields.Boolean(compute='_compute_quick_edit_mode')
@@ -2760,6 +2761,8 @@ class AccountMove(models.Model):
         self._sanitize_vals(vals)
 
         for move in self:
+            if 'is_manually_modified' not in vals and not self.env.context.get('skip_is_manually_modified'):
+                move.is_manually_modified = True
             violated_fields = set(vals).intersection(move._get_integrity_hash_fields() + ['inalterable_hash'])
             if move.inalterable_hash and violated_fields:
                 raise UserError(_(
@@ -4232,6 +4235,9 @@ class AccountMove(models.Model):
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
             raise AccessError(_("You don't have the access rights to post an invoice."))
 
+        # Avoid marking is_manually_modified as True when posting an invoice
+        self = self.with_context(skip_is_manually_modified=True)  # noqa: PLW0642
+
         validation_msgs = set()
 
         for invoice in self.filtered(lambda move: move.is_invoice(include_receipts=True)):
@@ -4402,6 +4408,45 @@ class AccountMove(models.Model):
             move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=timeout)
         return self
 
+    def _show_autopost_bills_wizard(self):
+        if (
+            len(self) != 1
+            or self.state != "posted"
+            or not self.is_purchase_document(include_receipts=True)
+            or self.restrict_mode_hash_table
+            or all(not l.is_imported for l in self.line_ids)
+            or not self.partner_id
+            or self.partner_id.autopost_bills != "ask"
+            or not self.company_id.autopost_bills
+            or self.is_manually_modified
+        ):
+            return False
+        prev_bills_same_partner = self.search([
+            ('id', '!=', self.id),
+            ('partner_id', '=', self.partner_id.id),
+            ('state', '=', 'posted'),
+            ('move_type', 'in', self.get_purchase_types(include_receipts=True)),
+        ], order="create_date DESC", limit=10)
+        nb_unmodified_bills = 1  # +1 for current bill that hasn't been modified either
+        for move in prev_bills_same_partner:
+            if move.is_manually_modified:
+                break
+            nb_unmodified_bills += 1
+        if nb_unmodified_bills < 3:
+            return False
+        wizard = self.env['account.autopost.bills.wizard'].create({
+            'partner_id': self.partner_id.id,
+            'nb_unmodified_bills': nb_unmodified_bills,
+        })
+        return {
+            'name': _("Autopost Bills"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.autopost.bills.wizard',
+            'res_id': wizard.id,
+            'views': [(False, 'form')],
+            'target': 'new',
+        }
+
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
     # -------------------------------------------------------------------------
@@ -4564,6 +4609,8 @@ class AccountMove(models.Model):
             }
         if other_moves:
             other_moves._post(soft=False)
+        if autopost_bills_wizard := other_moves._show_autopost_bills_wizard():
+            return autopost_bills_wizard
         return False
 
     def js_assign_outstanding_line(self, line_id):
@@ -5176,6 +5223,8 @@ class AccountMove(models.Model):
         # Add custom behavior when receiving a new invoice through the mail's gateway.
         if (custom_values or {}).get('move_type', 'entry') not in ('out_invoice', 'in_invoice', 'entry'):
             return super().message_new(msg_dict, custom_values=custom_values)
+
+        self = self.with_context(skip_is_manually_modified=True)  # noqa: PLW0642
 
         company = self.env['res.company'].browse(custom_values['company_id']) if custom_values.get('company_id') else self.env.company
 

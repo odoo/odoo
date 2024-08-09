@@ -224,6 +224,9 @@
                             <setting id="show_purchase_receipts" help="Activate to create purchase receipt">
                                 <field name="group_show_purchase_receipts"/>
                             </setting>
+                            <setting id="autopost_bills" help="After importing three bills for a vendor without making changes, Odoo will suggest automatically validating future bills. You can toggle this feature at any time in the vendor's profile.">
+                                <field name="autopost_bills"/>
+                            </setting>
                         </block>
                         <block title="Vendor Payments" id="print_vendor_checks_setting_container">
                             <setting id="print_checks" groups="account.group_account_user" string="Checks" company_dependent="1" help="Print checks to pay your vendors"
