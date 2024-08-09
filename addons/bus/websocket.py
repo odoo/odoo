@@ -1,4 +1,5 @@
 import base64
+import bisect
 import functools
 import hashlib
 import json
@@ -223,6 +224,12 @@ class Websocket:
     # or received within CONNECTION_TIMEOUT - 15 seconds.
     CONNECTION_TIMEOUT = 60
     INACTIVITY_TIMEOUT = CONNECTION_TIMEOUT - 15
+    # Smaller ID notifications might be committed after larger ones, fetching
+    # notifications with IDs only greater than the last sent ID could lead to
+    # missing some. To prevent this, we track notifications sent in the past to
+    # ensure none are missed. This is the maximum number of sent notifications
+    # to keep in queue.
+    SENT_NOTIF_MAX_SIZE = 500
     # How many requests can be made in excess of the given rate.
     RL_BURST = int(config['websocket_rate_limit_burst'])
     # How many seconds between each request.
@@ -245,6 +252,8 @@ class Websocket:
         self.__notif_sock_w, self.__notif_sock_r = socket.socketpair()
         self._channels = set()
         self._last_notif_sent_id = 0
+        self._sent_notif_ids = []
+        self._min_notif_id = 0
         # Websocket start up
         self.__selector = (
             selectors.PollSelector()
@@ -314,8 +323,10 @@ class Websocket:
     def subscribe(self, channels, last):
         """ Subscribe to bus channels. """
         self._channels = channels
-        if self._last_notif_sent_id < last:
-            self._last_notif_sent_id = last
+        # Only assign the last id according to the client request once: the
+        # server is more accurate later on.
+        if self._min_notif_id == 0:
+            self._min_notif_id = last
         # Dispatch past notifications if there are any.
         self.trigger_notification_dispatching()
 
@@ -647,10 +658,15 @@ class Websocket:
                 raise SessionExpiredException()
             # Mark the notification request as processed.
             self.__notif_sock_r.recv(1)
-            notifications = env['bus.bus']._poll(self._channels, self._last_notif_sent_id)
+            notifications = env["bus.bus"]._poll(
+                self._channels, self._min_notif_id, self._sent_notif_ids
+            )
         if not notifications:
             return
-        self._last_notif_sent_id = notifications[-1]['id']
+        for notification in notifications:
+            if len(self._sent_notif_ids) == self.SENT_NOTIF_MAX_SIZE:
+                self._min_notif_id = self._sent_notif_ids.pop()
+            bisect.insort(self._sent_notif_ids, notification["id"], key=lambda x: -1 * x)
         self._send(notifications)
 
 
