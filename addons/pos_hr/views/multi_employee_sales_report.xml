@@ -11,8 +11,8 @@
 
     <template id="multi_employee_sales_report">
         <t t-set="company" t-value="env.company"/>
-        <t t-call="web.html_container">
-            <t t-call="web.internal_layout">
+        <t t-call="point_of_sale.pos_daily_sales_html_container">
+            <t t-call="web.basic_layout">
                 <t t-foreach="employee_ids" t-as="employee_id" t-key="employee_id">
                     <t t-call="pos_hr.single_employee_sales_report">
                         <t t-set="data" t-value="env['report.pos_hr.single_employee_sales_report'].get_sale_details(date_start, date_stop, config_ids, session_ids, employee_id)"/>
