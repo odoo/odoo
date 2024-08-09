@@ -4,11 +4,11 @@
  * @param {HTMLElement} el
  * @returns {HTMLElement | null}
  */
-export function closestScrollableX(el) {
+export function closestScrollableX(el, shouldVisible = false) {
     if (!el) {
         return null;
     }
-    if (el.scrollWidth > el.clientWidth && el.clientWidth > 0) {
+    if (shouldVisible || el.scrollWidth > el.clientWidth && el.clientWidth > 0) {
         const overflow = getComputedStyle(el).getPropertyValue("overflow-x");
         if (/\bauto\b|\bscroll\b/.test(overflow)) {
             return el;
@@ -17,8 +17,8 @@ export function closestScrollableX(el) {
     return closestScrollableX(el.parentElement);
 }
 
-function isScrollableY(el) {
-    if (el && el.scrollHeight > el.clientHeight && el.clientHeight > 0) {
+function isScrollableY(el, shouldVisible = false) {
+    if (shouldVisible || el && el.scrollHeight > el.clientHeight && el.clientHeight > 0) {
         const overflow = getComputedStyle(el).getPropertyValue("overflow-y");
         if (/\bauto\b|\bscroll\b/.test(overflow)) {
             return true;
@@ -33,14 +33,14 @@ function isScrollableY(el) {
  * @param {HTMLElement} el
  * @returns {HTMLElement | null}
  */
-export function closestScrollableY(el) {
+export function closestScrollableY(el, shouldVisible = false) {
     if (!el) {
         return null;
     }
-    if (isScrollableY(el)) {
+    if (isScrollableY(el, shouldVisible)) {
         return el;
     }
-    return closestScrollableY(el.parentElement);
+    return closestScrollableY(el.parentElement, shouldVisible);
 }
 
 /**
