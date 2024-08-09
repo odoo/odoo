@@ -121,7 +121,9 @@ class StockPicking(models.Model):
         res = super().button_validate()
         to_assign_ids = set()
         if self and self.env.context.get('pickings_to_detach'):
-            self.env['stock.picking'].browse(self.env.context['pickings_to_detach']).batch_id = False
+            pickings_to_detach = self.env['stock.picking'].browse(self.env.context['pickings_to_detach'])
+            pickings_to_detach.batch_id = False
+            pickings_to_detach.move_ids.filtered(lambda m: not m.quantity).picked = False
             to_assign_ids.update(self.env.context['pickings_to_detach'])
 
         for picking in self:
