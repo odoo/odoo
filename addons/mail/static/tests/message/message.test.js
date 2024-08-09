@@ -45,7 +45,41 @@ test("Start edition on click edit", async () => {
     await contains(".o-mail-Message-editable .o-mail-Composer-input", { value: "Hello world" });
 });
 
+<<<<<<< saas-17.2:addons/mail/static/tests/message/message.test.js
 test("Edit message (mobile)", async () => {
+||||||| ea4983e77f65d8d963818bb92f95f998db2f1846:addons/mail/static/tests/message/message_tests.js
+QUnit.test("Edit message (mobile)", async () => {
+=======
+QUnit.test("Editing message keeps the mentioned channels", async () => {
+    const pyEnv = await startServer();
+    const channelId1 = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "other",
+        channel_type: "channel",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId1);
+    await insertText(".o-mail-Composer-input", "#");
+    await click(".o-mail-Composer-suggestion strong", { text: "#other" });
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o_channel_redirect", { count: 1, text: "#other" });
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message-editable .o-mail-Composer-input", {
+        value: "#other",
+    });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
+    await click(".o-mail-Message a", { text: "save" });
+    await contains(".o-mail-Message-content", { text: "#other bye" });
+    await click(".o_channel_redirect", { text: "#other" });
+    await contains(".o-mail-Discuss-threadName", { value: "other" });
+});
+
+QUnit.test("Edit message (mobile)", async () => {
+>>>>>>> e8b75638b4466f5dd8a1ed2a2ed6001941ccd626:addons/mail/static/tests/message/message_tests.js
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
