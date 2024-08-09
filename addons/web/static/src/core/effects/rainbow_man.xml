@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.RainbowMan">
-        <div class="o_reward position-absolute top-0 bottom-0 start-0 end-0 w-100 h-100" t-att-class="{ o_reward_fading: state.isFading }" t-on-animationend="onAnimationEnd">
+        <div class="o_reward position-fixed top-0 start-0 w-100 h-100" t-att-class="{ o_reward_fading: state.isFading }" t-on-animationend="onAnimationEnd">
             <svg class="o_reward_rainbow_man position-absolute top-0 bottom-0 start-0 end-0 m-auto overflow-visible" viewBox="0 0 400 400">
                 <defs>
                     <radialGradient id="o_reward_gradient_bg" cx="200" cy="200" r="200" gradientUnits="userSpaceOnUse">
