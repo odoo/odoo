@@ -11,6 +11,7 @@ const ReceiptScreen = { ...ReceiptScreenPos, ...ReceiptScreenSale };
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+import { negateStep } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosSettleOrder", {
@@ -306,5 +307,18 @@ registry.category("web_tour.tours").add("PoSApplyDownpayment", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosShipLaterNoDefault", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.isShown(),
+            negateStep(PaymentScreen.shippingLaterHighlighted()),
         ].flat(),
 });
