@@ -65,28 +65,37 @@ class PosPayment(models.Model):
 
     def _create_payment_moves(self, is_reverse=False):
         result = self.env['account.move']
-        for payment in self:
+        change_payment = self.filtered(lambda p: p.is_change and p.payment_method_id.type == 'cash')
+        for payment in self.filtered(lambda p: not p.is_change):
             payment_method = payment.payment_method_id
             if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=payment.pos_order_id.currency_id.rounding):
                 continue
-            payment_move = payment._create_payment_move_entry(is_reverse)
+            payment_move = payment._create_payment_move_entry(is_reverse, change=(payment.payment_method_id.type == 'cash' and change_payment))
+            if payment.payment_method_id.type == 'cash' and change_payment:
+                change_payment = False
             payment.write({'account_move_id': payment_move.id})
             result |= payment_move
             payment_move._post()
         return result
 
-    def _create_payment_move_entry(self, is_reverse=False):
+    def _create_payment_move_entry(self, is_reverse=False, change=False):
         self.ensure_one()
         order = self.pos_order_id
         pos_session = order.session_id
         journal = pos_session.config_id.journal_id
+        pos_payment_ids = self.ids
+        if change:
+            pos_payment_ids += change.ids
         payment_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
             'journal_id': journal.id,
             'date': fields.Date.context_today(order, order.date_order),
             'ref': _('Invoice payment for %s (%s) using %s') % (order.name, order.account_move.name, self.payment_method_id.name),
-            'pos_payment_ids': self.ids,
+            'pos_payment_ids': pos_payment_ids,
         })
-        amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': self.amount}, self.payment_date)
+        payment_amount = self.amount
+        if change:
+            payment_amount += change.amount
+        amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': payment_amount}, self.payment_date)
         credit_line_values = self._prepare_credit_line_payment(payment_move)
         credit_line_vals = pos_session._credit_amounts(credit_line_values, amounts['amount'], amounts['amount_converted'])
         debit_line_values = self._prepare_debit_line_payment(payment_move, is_reverse)
