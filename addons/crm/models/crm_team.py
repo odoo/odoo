@@ -565,6 +565,13 @@ class Team(models.Model):
             'duplicates': leads_dup_ids,
         }
 
+    def _get_lead_to_assign_domain(self):
+        return [
+            ('user_id', '=', False),
+            ('date_open', '=', False),
+            ('team_id', 'in', self.ids),
+        ]
+
     def _assign_and_convert_leads(self, force_quota=False):
         """ Main processing method to assign leads to sales team members. It also
         converts them into opportunities. This method should be called after
@@ -598,11 +605,14 @@ class Team(models.Model):
         quota_per_member = {member: member._get_assignment_quota(force_quota=force_quota) for member in self.crm_team_member_ids}
         counter = 0
         leads_per_team = dict(self.env['crm.lead']._read_group(
-            [('user_id', '=', False), ('date_open', '=', False), ('team_id', 'in', teams_with_members.ids)],
+            teams_with_members._get_lead_to_assign_domain(),
             ['team_id'],
-            ['id:recordset'],
+            # Do not use recordset aggregation to avoid fetching all the leads at once in memory
+            # We want to have in memory only leads for the current team
+            # and make sure we need them before fetching them
+            ['id:array_agg'],
         ))
-        for team, leads_to_assign in leads_per_team.items():
+        for team, leads_to_assign_ids in leads_per_team.items():
             members_to_assign = list(team.crm_team_member_ids.filtered(lambda member:
                 not member.assignment_optout and quota_per_member.get(member, 0) > 0
             ).sorted(key=lambda member: quota_per_member.get(member, 0), reverse=True))
@@ -612,6 +622,9 @@ class Team(models.Model):
                 member: {"assigned": self.env["crm.lead"], "quota": quota_per_member[member]}
                 for member in members_to_assign
             })
+            # Need to check that record still exists since the ids have been fetched at the begining of the process
+            # Previous iteration has commited the change, records may have been deleted in the meanwhile
+            leads_to_assign = self.env['crm.lead'].browse(leads_to_assign_ids).exists()
             leads_per_member = {
                 member: leads_to_assign.filtered_domain(literal_eval(member.assignment_domain or '[]'))
                 for member in members_to_assign
@@ -634,9 +647,12 @@ class Team(models.Model):
 
                 if auto_commit and counter % commit_bundle_size == 0:
                     self.env.cr.commit()
-
-        if auto_commit:
-            self.env.cr.commit()
+            # Make sure we commit at least at the end of the team
+            if auto_commit:
+                self.env.cr.commit()
+            # Once we are done with a team we don't need to keep the leads in memory
+            # Try to avoid to explode memory usage
+            self.env.invalidate_all()
 
         _logger.info('Assigned %s leads to %s salesmen', sum(len(r['assigned']) for r in result_data.values()), len(result_data))
         for member, member_info in result_data.items():
