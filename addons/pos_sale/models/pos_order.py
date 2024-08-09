@@ -178,6 +178,7 @@ class PosOrderLine(models.Model):
                     lambda pick: pick.state == 'done' and pick.picking_type_code == 'outgoing'
                 )
 
+<<<<<<< saas-17.4
                 if outgoing_pickings:
                     moves = outgoing_pickings.move_ids.filtered(
                         lambda m: m.state == 'done' and m.product_id == order_line.product_id
@@ -191,6 +192,29 @@ class PosOrderLine(models.Model):
         params = super()._load_pos_data_fields(config_id)
         params += ['sale_order_origin_id', 'sale_order_line_id', 'down_payment_details']
         return params
+||||||| 0527b4b2ffe7d42222334b06a22739cf4963c617
+    def _order_line_fields(self, line, session_id=None):
+        result = super()._order_line_fields(line, session_id)
+        vals = result[2]
+        if vals.get('sale_order_origin_id', False):
+            vals['sale_order_origin_id'] = vals['sale_order_origin_id']['id']
+        if vals.get('sale_order_line_id', False):
+            #We need to make sure the order line has not been deleted while the order was being handled in the PoS
+            order_line = self.env['sale.order.line'].search([('id', '=', vals['sale_order_line_id']['id'])], limit=1)
+            vals['sale_order_line_id'] = order_line.id if order_line else False
+        return result
+=======
+    def _order_line_fields(self, line, session_id=None):
+        result = super()._order_line_fields(line, session_id)
+        vals = result[2]
+        if vals.get('sale_order_origin_id', False):
+            vals['sale_order_origin_id'] = vals['sale_order_origin_id']['id']
+        if vals.get('sale_order_line_id', False):
+            #We need to make sure the order line has not been deleted while the order was being handled in the PoS
+            order_line = self.env['sale.order.line'].search([('id', '=', vals['sale_order_line_id']['id'])], limit=1)
+            vals['sale_order_line_id'] = order_line.id if order_line else False
+        return result
+>>>>>>> 4e4bcfd8a2585cf61adf37cda2e9efcc06aaf60a
 
     def _launch_stock_rule_from_pos_order_lines(self):
         orders = self.mapped('order_id')
