@@ -5028,6 +5028,11 @@ registerWebsiteOption("horizontal_alignment", {
     selector: ".s_share, .s_text_highlight, .s_social_media",
 });
 
+registerWebsiteOption("block_width_option", {
+    template: "website.block_width_option",
+    selector: ".s_alert, .s_blockquote, .s_text_highlight",
+});
+
 registerWebsiteOption("vertical_alignment", {
     class: vAlignment,
     template: "website.vertical_alignment_option",
