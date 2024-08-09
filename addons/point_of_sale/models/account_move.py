@@ -57,7 +57,7 @@ class AccountMove(models.Model):
                     reconciled_partials = move._get_all_reconciled_invoice_partials()
                     for i, reconciled_partial in enumerate(reconciled_partials):
                         counterpart_line = reconciled_partial['aml']
-                        pos_payment = counterpart_line.move_id.sudo().pos_payment_ids
+                        pos_payment = counterpart_line.move_id.sudo().pos_payment_ids[:1]
                         move.invoice_payments_widget['content'][i].update({
                             'pos_payment_name': pos_payment.payment_method_id.name,
                         })
