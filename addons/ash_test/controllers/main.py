@@ -47,20 +47,30 @@ class InventoryController(http.Controller):
             picking = StockPicking.create(picking_vals)
             logger.info("Created picking: %s", picking)
 
+            # Track exceptions for missing products
+            missing_products = []
+
             # Create stock moves for the products
             for product_data in products_data:
-                product_id = product_data.get('product_id')
+                default_code = product_data.get('default_code')
                 product_uom_qty = product_data.get('product_uom_qty')
 
-                if not all([product_id, product_uom_qty]):
+                if not all([default_code, product_uom_qty]):
                     logger.warning("Skipping product with missing fields: %s", product_data)
                     continue
 
+                # Search for the product using default_code
+                product = request.env['product.product'].sudo().search([('default_code', '=', default_code)], limit=1)
+                if not product:
+                    logger.error("Product with default code %s not found", default_code)
+                    missing_products.append(default_code)
+                    continue  # Skip this product and move to the next
+
                 move_vals = {
-                    'name': 'Receipt of %s' % request.env['product.product'].browse(product_id).name,
-                    'product_id': product_id,
+                    'name': 'Receipt of %s' % product.name,
+                    'product_id': product.id,
                     'product_uom_qty': product_uom_qty,
-                    'product_uom': request.env['product.product'].browse(product_id).uom_id.id,
+                    'product_uom': product.uom_id.id,
                     'picking_id': picking.id,
                     'location_id': location_id,
                     'location_dest_id': location_dest_id,
@@ -75,7 +85,11 @@ class InventoryController(http.Controller):
             # Check the moves associated with the picking
             logger.info("Picking moves: %s", picking.move_ids_without_package)
 
-            return Response(json.dumps({'success': True, 'receipt_id': picking.id}), content_type='application/json')
+            # Log any missing products
+            if missing_products:
+                logger.warning("The following products were not found and were skipped: %s", missing_products)
+
+            return Response(json.dumps({'success': True, 'receipt_id': picking.id, 'missing_products': missing_products}), content_type='application/json')
 
         except Exception as e:
             logger.error("Error creating receipt via API: %s", e)
