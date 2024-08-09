@@ -1957,3 +1957,54 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         moves = self.env['account.move'].search([('ref', '=', f'pos_order_{order.id}')])
         self.assertEqual(len(moves), 2)
+
+    def test_change_is_deducted_from_cash(self):
+        self.pos_config.open_ui()
+        pos_session = self.pos_config.current_session_id
+        product_order = {'data':
+          {'amount_paid': 450,
+           'amount_return': 50,
+           'amount_tax': 0,
+           'amount_total': 450,
+           'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
+           'lines': [[0, 0, {
+                'discount': 0,
+                'id': 42,
+                'pack_lot_ids': [],
+                'price_unit': 450.0,
+                'product_id': self.product3.id,
+                'price_subtotal': 450.0,
+                'price_subtotal_incl': 450.0,
+                'tax_ids': [[6, False, []]],
+                'qty': 1,
+            }]],
+           'name': 'Order 12346-123-1234',
+           'partner_id': self.partner1.id,
+           'pos_session_id': pos_session.id,
+           'sequence_number': 2,
+           'statement_ids': [[0, 0, {
+                'amount': 400,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.bank_payment_method.id
+            }], [0, 0, {
+                'amount': 100,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.cash_payment_method.id
+            }]],
+           'uid': '12346-123-1234',
+           'user_id': self.env.uid,
+           'to_invoice': True
+            }
+        }
+
+        pos_order_id = self.PosOrder.create_from_ui([product_order])[0]['id']
+        pos_order = self.PosOrder.search([('id', '=', pos_order_id)])
+        payments = pos_order.account_move.invoice_payments_widget['content']
+
+        self.assertEqual(pos_order.amount_return, 50)
+        self.assertEqual(payments[0]['pos_payment_name'], 'Bank')
+        self.assertEqual(payments[0]['amount'], 400)
+        self.assertEqual(payments[1]['pos_payment_name'], 'Cash')
+        self.assertEqual(payments[1]['amount'], 50)
