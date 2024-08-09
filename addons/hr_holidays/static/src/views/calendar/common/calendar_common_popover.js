@@ -16,7 +16,7 @@ export class TimeOffCalendarCommonPopover extends CalendarCommonPopover {
         onWillStart(async () => {
             this.record = this.props.record.rawRecord;
             this.state = this.record.state;
-            this.isManager = (await user.hasGroup("hr_holidays.group_hr_holidays_user")) || this.record.leave_manager_id?.[0] === user.userId;
+            this.isManager = (await user.hasGroup("hr_holidays.group_hr_holidays_responsible")) || this.record.leave_manager_id?.[0] === user.userId;
         });
     }
 
