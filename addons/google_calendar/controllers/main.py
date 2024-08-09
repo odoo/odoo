@@ -63,5 +63,5 @@ class GoogleCalendarController(CalendarController):
     @http.route()
     def check_calendar_credentials(self):
         res = super().check_calendar_credentials()
-        res['google_calendar'] = request.env['google.service']._has_setup_credentials()
+        res['google_calendar'] = request.env['res.users']._has_setup_credentials()
         return res

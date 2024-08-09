@@ -42,13 +42,6 @@ class GoogleService(models.AbstractModel):
         ICP = self.env['ir.config_parameter'].sudo()
         return ICP.get_param('google_%s_client_id' % service)
 
-    def _has_setup_credentials(self):
-        """ Checks if both Client ID and Client Secret are defined in the database. """
-        sudo_get_param = self.env['ir.config_parameter'].sudo().get_param
-        client_id = sudo_get_param('google_calendar_client_id')
-        client_secret = sudo_get_param('google_calendar_client_secret')
-        return bool(client_id and client_secret)
-
     @api.model
     def _get_authorize_uri(self, service, scope, redirect_uri, state=None, approval_prompt=None, access_type=None):
         """ This method return the url needed to allow this instance of Odoo to access to the scope
