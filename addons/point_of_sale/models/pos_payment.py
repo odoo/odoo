@@ -65,7 +65,12 @@ class PosPayment(models.Model):
 
     def _create_payment_moves(self, is_reverse=False):
         result = self.env['account.move']
-        for payment in self:
+        change_payment = self.filtered(lambda p: p.is_change and p.payment_method_id.type == 'cash')
+        payment_to_change = self.filtered(lambda p: not p.is_change and p.payment_method_id.type == 'cash')[:1]
+        normal_payments = (self - payment_to_change) - change_payment if change_payment else self
+
+        # Handle normal payments
+        for payment in normal_payments:
             payment_method = payment.payment_method_id
             if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=payment.pos_order_id.currency_id.rounding):
                 continue
@@ -73,20 +78,42 @@ class PosPayment(models.Model):
             payment.write({'account_move_id': payment_move.id})
             result |= payment_move
             payment_move._post()
+
+        # Handle change payments
+        if change_payment and payment_to_change:
+            result |= payment_to_change._create_payment_move_with_change(is_reverse, change_payment)
+
         return result
+
+    def _create_payment_move_with_change(self, is_reverse, change_payment):
+        if self.payment_method_id.type != 'pay_later' and not float_is_zero(self.amount, precision_rounding=self.pos_order_id.currency_id.rounding):
+            payment_move = self._generate_payment_move(is_reverse, change_payment)
+            self.write({'account_move_id': payment_move.id})
+            payment_move._post()
+            return payment_move
 
     def _create_payment_move_entry(self, is_reverse=False):
         self.ensure_one()
+        return self._generate_payment_move(is_reverse)
+
+    def _generate_payment_move(self, is_reverse, change_payment=None):
         order = self.pos_order_id
         pos_session = order.session_id
         journal = pos_session.config_id.journal_id
+        pos_payment_ids = self.ids
+        payment_amount = self.amount
+
+        if change_payment:
+            pos_payment_ids += change_payment.ids
+            payment_amount += change_payment.amount
+
         payment_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
             'journal_id': journal.id,
             'date': fields.Date.context_today(order, order.date_order),
             'ref': _('Invoice payment for %s (%s) using %s') % (order.name, order.account_move.name, self.payment_method_id.name),
-            'pos_payment_ids': self.ids,
+            'pos_payment_ids': pos_payment_ids,
         })
-        amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': self.amount}, self.payment_date)
+        amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': payment_amount}, self.payment_date)
         credit_line_values = self._prepare_credit_line_payment(payment_move)
         credit_line_vals = pos_session._credit_amounts(credit_line_values, amounts['amount'], amounts['amount_converted'])
         debit_line_values = self._prepare_debit_line_payment(payment_move, is_reverse)
