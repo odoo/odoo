@@ -6,7 +6,9 @@ export class ActionScreen extends Component {
     static components = { ActionContainer };
     static props = {};
     static template = xml`
-        <ActionContainer/>
+        <div class="o_web_client">
+            <ActionContainer/>
+        </div>
     `;
 }
 registry.category("pos_screens").add("ActionScreen", ActionScreen);
