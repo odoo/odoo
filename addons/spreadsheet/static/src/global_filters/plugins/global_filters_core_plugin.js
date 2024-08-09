@@ -250,7 +250,11 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
         for (const globalFilter of data.globalFilters || []) {
             if (globalFilter.type === "text" && globalFilter.rangeOfAllowedValues) {
                 globalFilter.rangeOfAllowedValues = this.getters.getRangeFromSheetXC(
-                    "", // there's no default sheet, global filters are cross-sheet
+                    // The default sheet id doesn't matter here, the exported range string
+                    // is fully qualified and contains the sheet name.
+                    // The getter expects a valid sheet id though, let's give it the
+                    // first sheet id.
+                    data.sheets[0].id,
                     globalFilter.rangeOfAllowedValues
                 );
             }
@@ -269,7 +273,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
             if (filter.type === "text" && filter.rangeOfAllowedValues) {
                 filterData.rangeOfAllowedValues = this.getters.getRangeString(
                     filter.rangeOfAllowedValues,
-                    ""
+                    "" // force the range string to be fully qualified (with the sheet name)
                 );
             }
             return filterData;
