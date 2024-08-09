@@ -447,6 +447,7 @@ function registerThemeHomepageTour(name, steps) {
         url: '/',
         sequence: 50,
         saveAs: "homepage",
+        test: true, // disable manual mode for theme homepage tours - FIXME
         },
         () => [
             ...clickOnEditAndWaitEditMode(),
