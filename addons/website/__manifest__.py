@@ -138,6 +138,7 @@
         'views/snippets/s_numbers_list.xml',
         'views/snippets/s_quadrant.xml',
         'views/snippets/s_cta_card.xml',
+        'views/snippets/s_image_frame.xml',
         'views/new_page_template_templates.xml',
         'views/website_views.xml',
         'views/website_pages_views.xml',
