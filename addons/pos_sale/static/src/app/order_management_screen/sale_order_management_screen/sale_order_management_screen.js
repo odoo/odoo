@@ -437,16 +437,6 @@ export class SaleOrderManagementScreen extends Component {
         const sale_lines = await this._getSOLines(sale_order.order_line);
         sale_order.order_line = sale_lines;
 
-        if (sale_order.picking_ids[0]) {
-            const result = await this.pos.data.read(
-                "stock.picking",
-                [sale_order.picking_ids[0]],
-                ["scheduled_date"]
-            );
-            const picking = result[0];
-            sale_order.shipping_date = picking.scheduled_date;
-        }
-
         return sale_order;
     }
 
