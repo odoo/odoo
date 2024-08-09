@@ -1085,6 +1085,59 @@ test("automatic tour with alternative trigger", async () => {
     expect.verifySteps(["on step", "on step", "on step", "on step", "succeeded"]);
 });
 
+test("manual tour with alternative trigger", async () => {
+    patchWithCleanup(browser.console, {
+        log: (s) => {
+            !s.includes("═") ? expect.step(s) : "";
+        },
+    });
+    registry.category("web_tour.tours").add("tour_des_flandres_2", {
+        test: false,
+        sequence: 93,
+        steps: () => [
+            {
+                trigger: ".button1, .button2",
+                run: "click",
+            },
+            {
+                trigger: "body:not(:visible), .button4, .button3",
+                run: "click",
+            },
+            {
+                trigger: ".interval1, .interval2, .button5",
+                run: "click",
+            },
+            {
+                trigger: "button:contains(0, hello):enabled, button:contains(2, youpi)",
+                run: "click",
+            },
+        ],
+    });
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <div class="container">
+                    <button class="button0">0, hello</button>
+                    <button class="button1">Button 1</button>
+                    <button class="button2">2, youpi</button>
+                    <button class="button3">Button 3</button>
+                    <button class="button4">Button 4</button>
+                    <button class="button5">Button 5</button>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    getService("tour_service").startTour("tour_des_flandres_2", { mode: "manual" });
+    await contains(".button2").click();
+    await contains(".button3").click();
+    await contains(".button5").click();
+    await contains(".button2").click();
+    expect.verifySteps(["click", "click", "click", "click", "tour succeeded"]);
+});
+
 test("Tour backward when the pointed element disappear", async () => {
     registry.category("web_tour.tours").add("tour1", {
         sequence: 10,
