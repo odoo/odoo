@@ -35,6 +35,7 @@
                     data: JSON.stringify({}),
                 }).done(function(password) {
                     $('.password').val(password['result']);
+                    navigator.clipboard.writeText(password['result']);
                 });
             });
         });
