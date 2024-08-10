@@ -934,23 +934,27 @@ class Picking(models.Model):
         return True
 
     def action_detailed_operations(self):
-        view_id = self.env.ref('stock.view_stock_move_line_detailed_operation_tree').id
-        return {
-            'name': _('Detailed Operations'),
-            'view_mode': 'tree',
-            'type': 'ir.actions.act_window',
-            'res_model': 'stock.move.line',
-            'views': [(view_id, 'tree')],
-            'domain': [('id', 'in', self.move_line_ids.ids)],
-            'context': {
-                'default_picking_id': self.id,
-                'default_location_id': self.location_id.id,
-                'default_location_dest_id': self.location_dest_id.id,
-                'default_company_id': self.company_id.id,
-                'show_lots_text': self.show_lots_text,
-                'picking_code': self.picking_type_code,
+        action_ref = self.env.ref("stock.stock_move_line_action_view_tree", raise_if_not_found=False)
+        if action_ref:
+            action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action_view_tree")
+        else:
+            action = {
+                'name': _('Detailed Operations'),
+                'view_mode': 'tree',
+                'type': 'ir.actions.act_window',
+                'res_model': 'stock.move.line',
+                'views': [(self.env.ref('stock.view_stock_move_line_detailed_operation_tree').id, 'tree')],
             }
+        action['domain'] = [('id', 'in', self.move_line_ids.ids)]
+        action['context'] = {
+            'default_picking_id': self.id,
+            'default_location_id': self.location_id.id,
+            'default_location_dest_id': self.location_dest_id.id,
+            'default_company_id': self.company_id.id,
+            'show_lots_text': self.show_lots_text,
+            'picking_code': self.picking_type_code
         }
+        return action
 
     def _action_done(self):
         """Call `_action_done` on the `stock.move` of the `stock.picking` in `self`.
