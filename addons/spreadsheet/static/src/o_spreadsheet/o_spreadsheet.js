@@ -40670,7 +40670,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * @param sheetXC the string description of a range, in the form SheetName!XC:XC
          */
         getRangeFromSheetXC(defaultSheetId, sheetXC) {
-            if (!rangeReference.test(sheetXC)) {
+            if (!rangeReference.test(sheetXC) || !this.getters.tryGetSheet(defaultSheetId)) {
                 return new RangeImpl({
                     sheetId: "",
                     zone: { left: -1, top: -1, right: -1, bottom: -1 },
@@ -43440,9 +43440,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.49';
-    __info__.date = '2024-08-02T08:36:54.838Z';
-    __info__.hash = '97d415b';
+    __info__.version = '16.0.50';
+    __info__.date = '2024-08-09T12:40:09.004Z';
+    __info__.hash = '3972870';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
