@@ -784,6 +784,17 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             for leave in leaves:
                 employees |= leave._get_employees_from_holiday_type()
             leave_data = leave_type.get_allocation_data(employees, date_from)
+
+            # Fetch the allocation records for validation
+            allocation_records = self.env['hr.leave.allocation'].search([
+                ('holiday_status_id', '=', leave_type.id),
+                ('employee_id', 'in', employees.ids),
+                ('state', '=', 'validate')
+            ])
+            # Validate against the allocation period
+            for allocation in allocation_records:
+                if leave.request_date_from < allocation.date_from or leave.request_date_to > allocation.date_to:
+                    raise ValidationError(_("The leave dates are outside the allocation period."))
             if leave_type.allows_negative:
                 max_excess = leave_type.max_allowed_negative
                 for employee in employees:
