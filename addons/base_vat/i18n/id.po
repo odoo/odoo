@@ -213,11 +213,17 @@ msgstr "Nomor PPN %s tidak dapat ditafsirkan oleh server VIES."
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"Negara yang dideteksi oleh nomor PPN asing ini tidak tidak cocok dengan yang"
-" ditetapkan pada posisi fiskal ini."
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -274,3 +280,10 @@ msgstr "posisi fiskal [%s]"
 #, python-format
 msgid "partner [%s]"
 msgstr "partner [%s]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr "XXXXXXXXX [9 digit] dan harus mematuhi Luhn algorithm checksum"
