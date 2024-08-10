@@ -1113,7 +1113,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "كتلة برمجية إنشائية "
+msgstr "حجب "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
@@ -1284,6 +1284,15 @@ msgstr "إلغاء"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Cancelled"
 msgstr "تم الإلغاء "
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6866,6 +6875,13 @@ msgstr "لا يمكنك تحريك أمر تصنيع إذا كان قد تم إ�
 #, python-format
 msgid "You cannot produce the same serial number twice."
 msgstr "لا يمكنك إنشاء الرقم التسلسلي ذاته مرتين. "
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot start a work order that is already done or cancelled"
+msgstr "لا يمكنك بدء أمر عمل منتهي أو تم إلغاؤه "
 
 #. module: mrp
 #. odoo-python

@@ -5,8 +5,8 @@
 # Translators:
 # Simon S, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
-# Martin Trigaux, 2023
 # Daniel Osser <danielosser@gmail.com>, 2023
+# Martin Trigaux, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Lasse L, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
@@ -220,11 +220,17 @@ msgstr "Momsnumret %s kunde inte tolkas av VIES-servern."
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"Det land som har hittats för utländskt VAT nummer är inte det samma som är "
-"angivet som skatteregion."
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -281,3 +287,10 @@ msgstr "skatteregion [%s]"
 #, python-format
 msgid "partner [%s]"
 msgstr "företag [%s]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
