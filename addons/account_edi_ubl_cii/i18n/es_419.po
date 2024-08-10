@@ -792,8 +792,18 @@ msgstr "El código EAS 9955 es obsoleto, use 0007."
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid ""
+"Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
+"instead."
+msgstr ""
+"Los códigos EAS Peppol 0037, 0212, 0213 y 0215 son obsoletos, use 0216."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
 "Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
-msgstr "Los códigos EAS 0212 y 0213 son obsoletos, use 0216."
+msgstr "Los códigos EAS Peppol 0212 y 0213 son obsoletos, use 0216."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -828,6 +838,17 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #, python-format
 msgid "Tax '%s' is invalid: %s"
 msgstr "El impuesto \"%s\" no es válido: %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr ""
+"El punto de conexión de Peppol no es válido, debe contener 10 dígitos (el "
+"número de registro de la empresa). El formato esperado es: 1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

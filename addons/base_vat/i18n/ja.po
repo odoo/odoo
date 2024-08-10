@@ -206,9 +206,17 @@ msgstr "VAT 番号 %s はVIESサーバで解釈することはできませんで
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
-msgstr "この国外納税者番号に検知された国は、会計ポジションに設定した国と一致しません。"
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -263,3 +271,10 @@ msgstr "会計ポジション [%s]"
 #, python-format
 msgid "partner [%s]"
 msgstr "取引先 [%s]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr "XXXXXXXXX [9 桁] でLuhnアルゴリズムのチェックサムにならう必要があります。"

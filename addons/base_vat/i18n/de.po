@@ -216,11 +216,23 @@ msgstr "Die USt-IdNr. %s konnte nicht vom MIAS-Server ausgewertet werden."
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"Das für diese ausländische MwSt.-Nummer ermittelte Land stimmt nicht mit dem"
-" Land überein, das in dieser Steuerposition angegeben ist."
+"Das für diese ausländische MwSt.-Nummer ermittelte Land stimmt mit keinem "
+"der Länder überein, aus denen sich die Ländergruppe für diese Steuerposition"
+" zusammensetzt."
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"Das Land der ausländischen MwSt.-Nummer konnte nicht erkannt werden. Bitte "
+"weisen Sie der Steuerposition ein Land zu oder legen Sie eine Ländergruppe "
+"fest"
 
 #. module: base_vat
 #. odoo-python
@@ -277,3 +289,12 @@ msgstr "Steuerposition [%s]"
 #, python-format
 msgid "partner [%s]"
 msgstr "Partner [%s]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXX [9 Ziffern] und es sollte die Prüfsumme des Luhn-Algorithmus "
+"einhalten"

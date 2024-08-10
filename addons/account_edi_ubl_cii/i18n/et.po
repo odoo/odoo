@@ -9,8 +9,9 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2023
 # Andre Roomet <andreroomet@gmail.com>, 2023
 # Katrin Kampura, 2023
-# Anna, 2023
 # Birgit Vijar, 2024
+# Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Birgit Vijar, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,7 +89,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0130
 msgid "0130 - Directorates of the European Commission"
-msgstr ""
+msgstr "0130 - Euroopa Komisjoni direktoraadid"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0135
@@ -103,7 +104,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0151
 msgid "0151 - Australian Business Number (ABN) Scheme"
-msgstr ""
+msgstr "0151 - Austraalia ärinumbri (ABN) skeem"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0183
@@ -171,12 +172,12 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0201
 msgid "0201 - Codice Univoco Unità Organizzativa iPA"
-msgstr ""
+msgstr "0201 - Ühtne organisatsiooniüksuse kood iPA"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0202
 msgid "0202 - Indirizzo di Posta Elettronica Certificata"
-msgstr ""
+msgstr "0202 - Sertifitseeritud e-posti aadress"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0204
@@ -283,7 +284,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9920
 msgid "9920 - Agencia Española de Administración Tributaria"
-msgstr ""
+msgstr "9920 - Hispaania maksuameti agentuur"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9922
@@ -298,7 +299,7 @@ msgstr "9923 - Albaania käibemaksukohustuslase number"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9924
 msgid "9924 - Bosnia and Herzegovina VAT number"
-msgstr ""
+msgstr "9924 - Bosnia ja Hertsegoviina käibemaksukohustuslase number"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9925
@@ -458,7 +459,7 @@ msgstr "9957 - Prantsuse käibemaksukohustuslase number"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9959
 msgid "9959 - Employer Identification Number (EIN, USA)"
-msgstr ""
+msgstr "9959 - Tööandja identifitseerimisnumber (EIN, USA)"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_config_settings_view_form
@@ -764,6 +765,17 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid ""
+"Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
+"instead."
+msgstr ""
+"PEPPOL EAS koodid 0037, 0212, 0213, 0215 on vananenud. Palun kasuta koodi "
+"0216."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
 "Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
 msgstr ""
 
@@ -800,6 +812,15 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #, python-format
 msgid "Tax '%s' is invalid: %s"
 msgstr "Maks '%s' on kehtetu: %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -855,7 +876,7 @@ msgstr "Valuuta '%s' ei ole aktiivne."
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The element %s is required on %s."
-msgstr ""
+msgstr "Element %s on vajalik %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -949,6 +970,8 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
+"Unikaalne identifikaator, mida kasutavad BIS Billing 3.0 ja selle tuletised,"
+" tuntud ka kui 'Endpoint ID'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

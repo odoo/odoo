@@ -2317,11 +2317,10 @@ msgid ""
 "allowances for mileage, per diem, accommodation"
 "                                         or meal."
 msgstr ""
-"Cuando el costo de un producto de gasto no es 0, el usuario que utiliza este"
-" producto no podrá cambiar el importe del gasto, solo la cantidad. Utilice "
-"un costo diferente a 0 para las categorías de gastos financiadas por la "
-"empresa a costo fijo, como los subsidios por kilometraje, alojamiento o "
-"comida."
+"Cuando el costo de un producto de gasto no es 0, el usuario que lo utiliza "
+"no podrá cambiar el importe del gasto, solo la cantidad. Utilice un costo "
+"distinto a 0 para las categorías de gastos financiadas por la empresa a "
+"costo fijo, como los subsidios por kilometraje, alojamiento o comida."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2391,7 +2390,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "You cannot cancel an expense sheet linked to a journal entry"
-msgstr ""
+msgstr "No puede cancelar una hoja de gastos vinculada a un asiento contable"
 
 #. module: hr_expense
 #. odoo-python
@@ -2573,3 +2572,14 @@ msgstr "en validación"
 msgid "use OCR to fill data from a picture of the bill"
 msgstr ""
 "use el OCR para completar los datos a partir de una foto de la factura"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
+msgid ""
+"Do you really want to invoice your own company? Remove the \"Company Name\" "
+"from the partner to fix the configuration. Cancel this invoice and start "
+"again."
+msgstr ""
+"¿Desea facturar a su propia empresa? Elimine el nombre de la empresa del "
+"contacto para solucionar la configuración. Cancele esta factura y comience "
+"de nuevo."

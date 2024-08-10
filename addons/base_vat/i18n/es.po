@@ -212,11 +212,21 @@ msgstr "El número de IVA %s no pudo ser interpretado por el servidor VIES."
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"El país detectado para este NIF extranjero no coincide con el establecido en"
-" esta posición fiscal."
+"El país detectado para este NIF extranjero no coincide con ninguno de los "
+"países del grupo de países establecido en esta posición fiscal."
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"No se ha podido detectar el país del NIF extranjero. Asigne un país a la "
+"posición fiscal o establezca un grupo de países"
 
 #. module: base_vat
 #. odoo-python
@@ -273,3 +283,12 @@ msgstr "posición fiscal [%s]"
 #, python-format
 msgid "partner [%s]"
 msgstr "contacto [%s]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXX [9 dígitos] y debe respetar la suma de verificación del algoritmo "
+"Luhn"

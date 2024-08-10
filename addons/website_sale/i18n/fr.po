@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Jolien De Paepe, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1032,14 +1032,6 @@ msgid "Can Publish"
 msgstr "Peut publier"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "You can't use a video as the product's main image."
-msgstr ""
-"Vous ne pouvez pas utiliser une vidéo comme image principale du produit."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Cards"
 msgstr "Cartes"
@@ -1298,7 +1290,7 @@ msgstr "Calculer les frais d'expédition et expédier avec Easypost"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Shiprocket"
-msgstr ""
+msgstr "Calculer les frais d'expédition et expédier avec Shiprocket"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4579,6 +4571,14 @@ msgstr ""
 "                                            Si vous souhaitez modifier votre adresse d'expédition, créez"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr ""
+"Vous ne pouvez pas utiliser une vidéo comme image principale du produit."
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4625,6 +4625,18 @@ msgstr "Votre email"
 #, python-format
 msgid "Your Name"
 msgstr "Votre nom"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
+"Vous ne pouvez pas effectuer de paiement à partir de votre compte auprès de "
+"la société %s. Veuillez vous déconnecter et créer un nouveau compte pour ce "
+"site web, ou contacter l'administrateur du site web."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

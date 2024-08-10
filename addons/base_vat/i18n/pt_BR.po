@@ -3,8 +3,8 @@
 # 	* base_vat
 # 
 # Translators:
-# Maitê Dietze, 2024
 # Wil Odoo, 2024
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -216,11 +216,22 @@ msgstr ""
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"O país detectado para esse número de identificação fiscal estrangeiro não "
-"corresponde ao país definido nessa posição fiscal."
+"O país detectado para este número de identificação fiscal estrangeiro não "
+"corresponde a nenhum dos países que compõem o grupo de países definido nesta"
+" posição fiscal."
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"Não foi possível detetar o país do número de identificação fiscal "
+"estrangeiro. Atribua um país à posição fiscal ou defina um grupo de países"
 
 #. module: base_vat
 #. odoo-python
@@ -278,3 +289,12 @@ msgstr "posição fiscal [%s]"
 #, python-format
 msgid "partner [%s]"
 msgstr "usuário [%s]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXXXX [9 dígitos] e deve respeitar a soma de verificação do algoritmo "
+"Luhn"

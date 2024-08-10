@@ -29,6 +29,7 @@
 # Triine Aavik <triine@avalah.ee>, 2024
 # Leaanika Randmets, 2024
 # Tairi Tiimann, 2024
+# Siim Raasuke, 2024
 # 
 msgid ""
 msgstr ""
@@ -36,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tairi Tiimann, 2024\n"
+"Last-Translator: Siim Raasuke, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1510,6 +1511,8 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"Olemasoleva pakkumise ettevõtte muutmine võib vajada mõningaid käsitsi "
+"kohandusi ridade detailides. Võiksite kaaluda hindade uuendamist."
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -1921,6 +1924,8 @@ msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
+"Päevade arv pakkumise esitamise ja aegumise vahel. 0 päeva tähendab, et "
+"automaatne aegumine on välja lülitatud."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
@@ -3566,7 +3571,7 @@ msgstr "Ettemakse protsent"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Ettemaksu protsent peab olema kehtiv protsent."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3967,7 +3972,7 @@ msgstr "Aruandlus"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
 msgid "Request a online payment from the customer to confirm the order."
-msgstr ""
+msgstr "Nõua tellimuse kinnitamiseks kliendilt veebimakset."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
@@ -3980,6 +3985,8 @@ msgid ""
 "Request an online prepayment from your customers to confirm orders. You can "
 "ask them to fully pay the order or partially with a downpayment"
 msgstr ""
+"Nõua tellimuse kinnitamiseks klientidelt veebiettemaksu. Sa võid paluda neil"
+" tellimus täielikult või osaliselt tasuda."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4125,8 +4132,8 @@ msgstr "Müügianalüüs"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "Müügianalüüs kliendi lõikes"
+msgid "Sales Analysis Per Customers"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
@@ -4435,6 +4442,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
+"Kliendile e-posti saatmine on kasulik, kui peate jagama konkreetset teavet "
+"või sisu toote kohta (juhised, reeglid, lingid, meedia jne). E-posti mallide"
+" loomine ja seadistamine toimub toote detailide vormist (raamatupidamise "
+"vahekaardil)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -4452,6 +4463,7 @@ msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm"
 " their order"
 msgstr ""
+"Kliendile saadetud, kui makse on saadud, kuid ei kinnita tellimust koheselt."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4570,6 +4582,8 @@ msgid ""
 "Some confirmed sale orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"Mõned kinnitatud müügikäsud on valitud. Nende seotud dokumendid võivad\n"
+"                        tühistamise tõttu muutuda."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4578,7 +4592,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__source_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__source_id
 msgid "Source"
-msgstr "Kandideerimise allikad"
+msgstr "Allikas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__origin
@@ -4921,20 +4935,20 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "Ettemaksmiseks arveldatava summa protsent."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_percent
 msgid ""
 "The percentage of the amount needed that must be paid by the customer to "
 "confirm the order."
-msgstr ""
+msgstr "Protsent summast, mis tuleb kliendil tellimuse kinnitamiseks tasuda."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
+msgstr "Protsent summast, mis tuleb maksta, et kinnitada hinnapakkumised."
 
 #. module: sale
 #. odoo-python
@@ -5370,6 +5384,8 @@ msgid ""
 "Validated expenses and vendor bills can be re-invoiced to a customer at its "
 "cost or sales price."
 msgstr ""
+"Kinnitatud kulud ja tarnijate arved saab klientidele ümberarveldada nende "
+"kulude või müügihinna järgi."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5438,7 +5454,7 @@ msgstr "Hoiatus %s"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Warning for the change of your quotation's company"
-msgstr ""
+msgstr "Hoiatus teie pakkumise ettevõtte muutmise kohta"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
