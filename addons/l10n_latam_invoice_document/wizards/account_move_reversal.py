@@ -58,6 +58,7 @@ class AccountMoveReversal(models.TransientModel):
                     'journal_id': record.journal_id.id,
                     'partner_id': record.move_ids.partner_id.id,
                     'company_id': record.move_ids.company_id.id,
+                    'reversed_entry_id': record.move_ids.id,
                 })
                 record.l10n_latam_available_document_type_ids = refund.l10n_latam_available_document_type_ids
 
