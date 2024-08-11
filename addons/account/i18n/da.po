@@ -14,8 +14,8 @@
 # Martin Trigaux, 2024
 # Kjeld Borch Egevang <kjeld@mail4us.dk>, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
-# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Mads Søndergaard, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Mads Søndergaard, 2024\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1716,13 +1716,13 @@ msgstr "Kontokode, 2 første tal"
 msgid ""
 "Account for the difference amount after the expense discount has been "
 "granted"
-msgstr ""
+msgstr "Konto for forskelsbeløbet, efter at udgiftsrabatten er givet"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
-msgstr ""
+msgstr "Konto for forskelsbeløbet, efter at indkomstrabatten er givet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -1841,6 +1841,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
 msgstr ""
+"Konto: Bogfør kladdeposteringer med auto_post aktiveret og regnskabsdato "
+"frem til i dag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2810,7 +2812,7 @@ msgstr "På dato"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
 msgid "At the beginning of the fiscal year"
-msgstr ""
+msgstr "Ved begyndelsen af regnskabsåret"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_period
@@ -5171,7 +5173,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_date
 msgid "Date example"
-msgstr ""
+msgstr "Dato eksempel"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__opening_date
@@ -6021,7 +6023,7 @@ msgstr "Veksel"
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__epd
 #, python-format
 msgid "Early Payment Discount"
-msgstr ""
+msgstr "Rabat ved tidlig betaling"
 
 #. module: account
 #. odoo-python
@@ -6030,19 +6032,19 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Early Payment Discount (%s)"
-msgstr ""
+msgstr "Rabat ved tidlig betaling (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Early Payment Discount (Exchange Difference)"
-msgstr ""
+msgstr "Rabat ved tidlig betaling (ombytningsdifference)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__early_payment_discount_mode
 msgid "Early Payment Discount Mode"
-msgstr ""
+msgstr "Rabattilstand for tidlig betaling"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__discount_percentage
@@ -6111,12 +6113,12 @@ msgstr "Tom"
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,help:account.field_res_config_settings__account_use_credit_limit
 msgid "Enable the use of credit limit on partners."
-msgstr ""
+msgstr "Aktiver brug af kreditgrænse på partnere."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__by_default
 msgid "Enabled by Default"
-msgstr ""
+msgstr "Aktiveret som standard"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__end_date
@@ -6254,17 +6256,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
 msgid "Example Amount"
-msgstr ""
+msgstr "Eksempel Beløb"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_invalid
 msgid "Example Invalid"
-msgstr ""
+msgstr "Eksempel ugyldigt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_preview
 msgid "Example Preview"
-msgstr ""
+msgstr "Eksempel på forhåndsvisning"
 
 #. module: account
 #. odoo-javascript
@@ -8410,7 +8412,7 @@ msgstr "Journalpost"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Journal Item %s updated"
-msgstr ""
+msgstr "Journalpost %s opdateret"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_label
@@ -9574,6 +9576,12 @@ msgstr "Negativ værdi for mængde-feltet hvis payment_type er outbound"
 #: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__excluded
 msgid "Never"
 msgstr "Aldrig"
+
+#. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -11409,7 +11417,7 @@ msgstr "QIF Import"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
 msgid "QR Code URL"
-msgstr ""
+msgstr "QR Kode URL"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

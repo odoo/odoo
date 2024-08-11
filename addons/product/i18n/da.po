@@ -43,6 +43,8 @@ msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s med %(discount)s %% rabat og %(surcharge)s ekstra gebyr\n"
+"Eksrmpel: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -88,7 +90,7 @@ msgstr "'Produkter pakning - %s' % (object.name)"
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
-msgstr ""
+msgstr "- Stregkode \"%s\" er allerede tildelt produkt(er): %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -171,7 +173,7 @@ msgstr "<span class=\"o_stat_text\"> Produkter</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Related Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Relaterede produkter</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -215,7 +217,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "En stregkode kan kun tildeles én emballage."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -234,7 +236,7 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "En emballage bruger allerede stregkoden"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -242,13 +244,15 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"En pris er et sæt af salgs priser, eller regler til udregning af prisen for salgsordre linjer baseret på produkter, produkt kategorier, datoer, og bestilt mængde.\n"
+"                     Dette er det perfekte værktøj til at håndtere flere prissætninger, sæson rabatter, osv."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 #, python-format
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "Et produkt bruger allerede stregkoden"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
@@ -288,7 +292,7 @@ msgstr "Aktiv"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr ""
+msgstr "Aktive produkter"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
@@ -340,12 +344,12 @@ msgstr "Avanceres pris regler (rabatter, formularer)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Alle produkt-tag"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "Alle produktvarianter, der bruger dette tag"
 
 #. module: product
 #. odoo-python
@@ -501,6 +505,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Stregkode(r) allerede tildelt:\n"
+"\n"
+"%s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -580,12 +587,12 @@ msgstr "Underkatagorier"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "Vælg Etiketlayout"
 
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "Vælg ark layoutet for at udskrive etiketterne"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -697,6 +704,8 @@ msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
 msgstr ""
+"Forbrugsvarer er fysiske produkter, for hvilke du ikke administrerer "
+"lagerniveauet: de er altid tilgængelige."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -716,7 +725,7 @@ msgstr "Indeholdt kvantitet"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_positive_qty
 msgid "Contained Quantity should be positive."
-msgstr ""
+msgstr "Indeholdt mængde skal være positiv."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -982,7 +991,7 @@ msgstr "Vis navn"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Display Pricelist"
-msgstr ""
+msgstr "Vis prisliste"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_type
@@ -1019,7 +1028,7 @@ msgstr "Varighed"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr ""
+msgstr "Dymo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -1070,12 +1079,12 @@ msgstr "Givent regelnavn for denne prislistelinje"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr ""
+msgstr "Ekstra indhold"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Extra Fee"
-msgstr ""
+msgstr "Ekstra gebyr"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
@@ -1174,12 +1183,12 @@ msgstr "Generer Prisliste"
 #. module: product
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 msgid "Generate Pricelist Report"
-msgstr ""
+msgstr "Generer prislisterapport"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Get product pictures using Barcode"
-msgstr ""
+msgstr "Få produktbilleder ved hjælp af stregkode"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1196,7 +1205,7 @@ msgstr "Giver rækkefølgen, når der vises en produktliste"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Google Images"
-msgstr ""
+msgstr "Google Billeder"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -1544,6 +1553,8 @@ msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
 msgstr ""
+"Leder du efter en skræddersyet bambusbejdse, der matcher eksisterende "
+"møbler? Kontakt os for et tilbud."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_main_attachment_id
@@ -1644,7 +1655,7 @@ msgstr "Navn"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
 msgid "Never (option)"
-msgstr ""
+msgstr "Aldrig (valgmulighed)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
@@ -1678,6 +1689,8 @@ msgid ""
 "No product to print, if the product is archived please unarchive it before "
 "printing its label."
 msgstr ""
+"Intet produkt at udskrive, hvis produktet er arkiveret, bedes du fjerne det "
+"fra arkivet, før du udskriver dets etiket."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -1700,7 +1713,7 @@ msgstr "Bemærk:"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
 msgid "Number Related Products"
-msgstr ""
+msgstr "Antal relaterede produkter"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1852,6 +1865,8 @@ msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
 msgstr ""
+"Tryk på en knap og se dit skrivebord glide ubesværet fra sidde- til ståhøjde"
+" på få sekunder."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -1946,7 +1961,7 @@ msgstr "Prisliste regel"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Pricelist Rules"
-msgstr ""
+msgstr "Prisliste regler"
 
 #. module: product
 #. odoo-javascript
@@ -2071,7 +2086,7 @@ msgstr "Produktetiket (PDF)"
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr ""
+msgstr "Produktetikette rapport"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2153,7 +2168,7 @@ msgstr "Produkt skabelon egenskab værdi"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Produktskabelon-tags"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
@@ -2164,7 +2179,7 @@ msgstr "Produkt skbl"
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
 #: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
 msgid "Product Tooltip"
-msgstr ""
+msgstr "Produktværktøjstip"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__detailed_type
@@ -2208,7 +2223,7 @@ msgstr "Produktvarianter"
 #: code:addons/product/report/product_label_report.py:0
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
-msgstr ""
+msgstr "Produktmodel ikke defineret. Kontakt venligst din administrator."
 
 #. module: product
 #. odoo-python
@@ -2282,7 +2297,7 @@ msgstr "Købs beskrivelse"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase UoM"
-msgstr ""
+msgstr "Køb UoM"
 
 #. module: product
 #. odoo-javascript
@@ -2372,7 +2387,7 @@ msgstr "Rækker"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
-msgstr ""
+msgstr "Regel tip"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2404,7 +2419,7 @@ msgstr "Salgspris"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
 msgid "Sales Price"
-msgstr ""
+msgstr "Salgspris"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
@@ -2486,6 +2501,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Angiv det faste beløb, der skal lægges til eller trækkes fra (hvis negativt)"
+" til beløbet beregnet med rabatten."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2564,7 +2581,7 @@ msgstr "Tags"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr ""
+msgstr "Tags bruges til at søge efter et produkt efter et givet tema."
 
 #. module: product
 #. odoo-python
@@ -2572,14 +2589,14 @@ msgstr ""
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The Internal Reference '%s' already exists."
-msgstr ""
+msgstr "Den interne reference '%s' eksisterer allerede."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The Type of this product doesn't match the Detailed Type"
-msgstr ""
+msgstr "Typen af ​​dette produkt matcher ikke den detaljerede type"
 
 #. module: product
 #. odoo-python
@@ -2629,6 +2646,8 @@ msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
 "position is 125 cm."
 msgstr ""
+"Minimumshøjden er 65 cm, og ved stående arbejde er den maksimale "
+"højdeposition 125 cm."
 
 #. module: product
 #. odoo-python
@@ -2689,7 +2708,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "Afrundingsmetoden skal udelukkende være positiv."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2737,6 +2756,9 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
+"Denne konfiguration af produktattributter, værdier og ekskluderinger ville "
+"ikke føre til nogen mulig variant. Venligst arkivér eller slet dit produkt "
+"direkte, hvis det er meningen."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -2826,7 +2848,7 @@ msgstr "Type af undtagelsesaktivitet registreret "
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "Unable to find report template for %s format"
-msgstr ""
+msgstr "Kan ikke finde rapportskabelon for %s format"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2861,7 +2883,7 @@ msgstr "Enhed"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "Mersalg og krydssalg"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -2889,7 +2911,7 @@ msgstr "Værdi"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_count
 msgid "Value Count"
-msgstr ""
+msgstr "Værditælling"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
@@ -3068,6 +3090,8 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
+"Vi er særligt opmærksomme på detaljerne, og derfor er vores skriveborde af "
+"en overlegen kvalitet."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight

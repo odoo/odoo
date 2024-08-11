@@ -6787,7 +6787,7 @@ msgstr "全返金とドラフト請求書"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Future Activities"
-msgstr "将来の活動"
+msgstr "今後の活動"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_currency_exchange_account_id
@@ -9425,6 +9425,12 @@ msgstr "支払タイプが出金の場合の金額フィールドの負の値"
 #: model:ir.model.fields.selection,name:account.selection__res_company__early_pay_discount_computation__excluded
 msgid "Never"
 msgstr "作成しない"
+
+#. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -12836,10 +12842,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"活動に基づく状態\n"
-"延滞：期限は既に過ぎました\n"
-"当日：活動日は本日です\n"
-"予定：将来の活動。"
+"活動に基づくステータス\n"
+"遅延: 期日が過ぎています\n"
+"今日: 活動日は今日です\n"
+"予定: 今後の活動。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step

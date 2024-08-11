@@ -16,17 +16,17 @@
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # Eimantas <eimantas@focusate.eu>, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
 # Aleksandr Jadov <a.jadov@tata.lt>, 2022
 # Anatolij, 2022
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Donatas <donatasvaliulis16@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Jonas Zinkevicius <jozi@odoo.com>, 2023
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
 # Aurelija Vitkauskiene, 2024
 # Arunas V. <arunas@devoro.com>, 2024
+# Jonas Zinkevicius <jozi@odoo.com>, 2024
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Arunas V. <arunas@devoro.com>, 2024\n"
+"Last-Translator: Audrius Palenskis <audrius.palenskis@gmail.com>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,6 +109,20 @@ msgstr ""
 #, python-format
 msgid "%s product(s) found for \"%s\"."
 msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "%s untaxed"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "%s with %s"
+msgstr "%s su %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5178,6 +5192,8 @@ msgstr "Atnaujinti ekraną"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
@@ -5452,6 +5468,13 @@ msgstr "Pardavimų eilučių skaičius"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
 msgstr "Pardavimo įrašas"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Sales"
+msgstr "Pardavimai"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -6250,8 +6273,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
-"The amount of your payment lines must be rounded to validate the "
-"transaction."
+"The amount of your payment lines must be rounded to validate the transaction.\n"
+"The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
 
 #. module: point_of_sale
@@ -6354,8 +6377,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\n"
-"                        Please contact your manager to accept the closing difference."
+"Please contact your manager to accept the closing difference."
 msgstr ""
 
 #. module: point_of_sale

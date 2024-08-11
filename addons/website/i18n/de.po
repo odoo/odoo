@@ -10,8 +10,8 @@
 # Chris Egal <sodaswed@web.de>, 2023
 # Stefan Reisich <nafex@gmx.net>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -238,8 +238,8 @@ msgstr "+ Neue Website"
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "+1 (650) 555-0111"
-msgstr "+1 (650) 555-0111"
+msgid "+1 555-555-5556"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -868,11 +868,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 msgstr ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_add_language
@@ -2187,6 +2185,7 @@ msgstr "Hintergrund"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -5179,7 +5178,10 @@ msgid "Header Visible"
 msgstr "Kopfzeile Sichtbar"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Headings"
 msgstr "Überschriften"
 
@@ -5189,27 +5191,42 @@ msgid "Headings 1"
 msgstr "Überschriften 1"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 2"
 msgstr "Überschriften 2"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 3"
 msgstr "Überschriften 3"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 4"
 msgstr "Überschriften 4"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 5"
 msgstr "Überschriften 5"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 6"
 msgstr "Überschriften 6"
 
@@ -5351,8 +5368,8 @@ msgid "Home page of the current website"
 msgstr "Startseite der aktuellen Website"
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -6472,7 +6489,10 @@ msgid "Linkedin"
 msgstr "Linkedin"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Links"
 msgstr "Links"
 
@@ -7906,6 +7926,11 @@ msgid "Popup"
 msgstr "Pop-up"
 
 #. module: website
+#: model:ir.model,name:website.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "Portalbenutzer-Konfiguration"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Portfolio"
 msgstr "Portfolio"
@@ -8005,6 +8030,13 @@ msgstr "Preisgestaltung"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary"
 msgstr "Primär"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Primary Buttons"
+msgstr "Primäre Schaltflächen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8725,6 +8757,13 @@ msgstr "Zweite Liste der Funktionen"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary"
 msgstr "Sekundär"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Secondary Buttons"
+msgstr "Sekundäre Schaltflächen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9547,9 +9586,12 @@ msgid "Test your robots.txt with Google Search Console"
 msgstr "Testen Sie Ihre robots.txt mit der Google Search Console"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, python-format
 msgid "Text"
 msgstr "Text"
 
@@ -9890,8 +9932,8 @@ msgstr "Drittes Menü"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "This URL is contained in the '%s' of the following '%s'"
-msgstr "Diese URL ist enthalten in „%s“ des folgenden „%s“"
+msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -10917,6 +10959,13 @@ msgid "We are in good company."
 msgstr "Wir befinden uns in guter Gesellschaft."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "We couldn't find the Facebook page"
+msgstr "Wir konnten die Facebook-Seite nicht finden!"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
@@ -11378,6 +11427,13 @@ msgstr "Jahr"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Yes"
+msgstr "Ja"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
 #, python-format
 msgid ""
@@ -11484,6 +11540,13 @@ msgid ""
 msgstr ""
 "Sie können dieses Website-Menü nicht löschen, da es als übergeordnetes "
 "Standardmenü für neue Websites dient (z. B. /shop, /event, ...)."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "You didn't provide a valid Facebook link"
+msgstr "Sie haben keinen gültigen Facebook-Link angegeben"
 
 #. module: website
 #. odoo-python

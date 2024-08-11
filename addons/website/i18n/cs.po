@@ -14,10 +14,10 @@
 # Jiří Podhorecký, 2023
 # Jakub Krkoška, 2023
 # Tomáš Píšek, 2023
-# Wil Odoo, 2024
 # Jakub Smolka, 2024
 # Katerina Horylova, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -239,8 +239,8 @@ msgstr "+ nová webová stránka"
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "+1 (650) 555-0111"
-msgstr "+420 601 111 222"
+msgid "+1 555-555-5556"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -860,11 +860,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 msgstr ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+420 601 "
-"111 222</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_add_language
@@ -2165,6 +2163,7 @@ msgstr "Pozadí"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -5136,7 +5135,10 @@ msgid "Header Visible"
 msgstr "Záhlaví viditelné"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Headings"
 msgstr "Nadpisy"
 
@@ -5146,27 +5148,42 @@ msgid "Headings 1"
 msgstr "Nadpis 1"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 2"
 msgstr "Nadpis 2"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 3"
 msgstr "Nadpis 3"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 4"
 msgstr "Nadpis 4"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 5"
 msgstr "Nadpis 5"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 6"
 msgstr "Nadpis 6"
 
@@ -5304,8 +5321,8 @@ msgid "Home page of the current website"
 msgstr "Domovská stránka aktuálního webu"
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -6415,7 +6432,10 @@ msgid "Linkedin"
 msgstr "Linkedin"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Links"
 msgstr "Odkazy"
 
@@ -7846,6 +7866,11 @@ msgid "Popup"
 msgstr "Vyskakovat"
 
 #. module: website
+#: model:ir.model,name:website.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "Nastavení portálového uživatele"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Portfolio"
 msgstr "Portfolio"
@@ -7945,6 +7970,13 @@ msgstr "Ceny"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary"
 msgstr "Hlavní"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Primary Buttons"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8664,6 +8696,13 @@ msgstr "Druhý seznam funkcí"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary"
 msgstr "Sekundární"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Secondary Buttons"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9481,9 +9520,12 @@ msgid "Test your robots.txt with Google Search Console"
 msgstr "Otestujte soubor robots.txt pomocí Google Search Console"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, python-format
 msgid "Text"
 msgstr "Text"
 
@@ -9820,8 +9862,8 @@ msgstr "Třetí nabídka"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "This URL is contained in the '%s' of the following '%s'"
-msgstr "Tato adresa URL je obsažena v '%s' následujících '%s'"
+msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -10836,6 +10878,13 @@ msgid "We are in good company."
 msgstr "Jsme v dobré společnosti"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "We couldn't find the Facebook page"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
@@ -11287,6 +11336,13 @@ msgstr "Rok"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Yes"
+msgstr "Ano"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
 #, python-format
 msgid ""
@@ -11387,6 +11443,13 @@ msgid ""
 msgstr ""
 "Tuto nabídku webu nemůžete smazat, protože slouží jako výchozí nadřazená "
 "nabídka pro nové weby (např. /obchod, /událost, ...)."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "You didn't provide a valid Facebook link"
+msgstr ""
 
 #. module: website
 #. odoo-python

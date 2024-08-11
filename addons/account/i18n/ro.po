@@ -12,6 +12,7 @@
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Larisa_nexterp, 2024
+# Alin Miclea, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Larisa_nexterp, 2024\n"
+"Last-Translator: Alin Miclea, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9645,6 +9646,12 @@ msgid "Never"
 msgstr "Niciodată"
 
 #. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
 msgstr "Nume Jurnal Nou"
@@ -14073,6 +14080,8 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
 msgstr ""
+"Țara numărului de TVA străin nu a putut fi detectată.Vă rugăm să atribuiți o"
+" țară poziției fiscale sau să stabiliți un grup de țări"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id

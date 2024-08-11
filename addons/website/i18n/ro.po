@@ -11,7 +11,9 @@
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2023
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Martin Trigaux, 2024
+# Wil Odoo, 2024
 # Maria Muntean, 2024
+# Corina Calin, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Maria Muntean, 2024\n"
+"Last-Translator: Corina Calin, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -236,8 +238,8 @@ msgstr "+ Nou site web"
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "+1 (650) 555-0111"
-msgstr "+1 (650) 555-0111"
+msgid "+1 555-555-5556"
+msgstr "+1 555-555-5556"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -858,11 +860,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 msgstr ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_add_language
@@ -2170,6 +2172,7 @@ msgstr "Fundal "
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -4429,13 +4432,13 @@ msgstr "Instalarea nu a reușit \"%s\""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Farm Friendly Chicken Supreme"
-msgstr ""
+msgstr "Ferma Friendly Chicken Supreme"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__favicon
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Favicon"
-msgstr ""
+msgstr "Favicon"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
@@ -4473,7 +4476,7 @@ msgstr "Caracteristici"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Features Grid"
-msgstr ""
+msgstr "Caracteristici grilă"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
@@ -4512,7 +4515,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_binary
 msgid "File streaming helper model for controllers"
-msgstr ""
+msgstr "Model de ajutor pentru streaming de fișiere pentru controlere"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -4978,6 +4981,8 @@ msgid ""
 "Google doesn't need to be pinged anymore. It will automatically fetch your "
 "/sitemap.xml."
 msgstr ""
+"Google nu mai are nevoie să fie interogat. Acesta va prelua automat fișierul"
+" /sitemap.xml."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -5148,7 +5153,10 @@ msgid "Header Visible"
 msgstr "Antet Vizibil"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Headings"
 msgstr "Rubrici"
 
@@ -5158,27 +5166,42 @@ msgid "Headings 1"
 msgstr "Rubrici 1"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 2"
 msgstr "Rubrici 2"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 3"
 msgstr "Rubrici 3"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 4"
 msgstr "Rubrici 4"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 5"
 msgstr "Rubrici 5"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 6"
 msgstr "Rubrici 6"
 
@@ -5249,7 +5272,7 @@ msgstr "Ascundeți pentru"
 #: code:addons/website/static/src/snippets/s_popup/000.js:0
 #, python-format
 msgid "Hide the cookies bar"
-msgstr ""
+msgstr "Ascundeți bara de cookie-uri"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
@@ -5303,7 +5326,7 @@ msgstr "Acasă"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Home <span class=\"visually-hidden\">(current)</span>"
-msgstr ""
+msgstr "Home <span class=\"visually-hidden\">(current)</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -5319,8 +5342,8 @@ msgid "Home page of the current website"
 msgstr "Pagina de pornire a site-ului curent"
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -5530,7 +5553,7 @@ msgstr "Imagine"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Image - Text"
-msgstr ""
+msgstr "Imagine - Text"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -5540,7 +5563,7 @@ msgstr "Coperta imaginii"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Image Gallery"
-msgstr ""
+msgstr "Galerie de imagini"
 
 #. module: website
 #. odoo-javascript
@@ -5583,7 +5606,7 @@ msgstr "Subtitrări imagini"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Images Wall"
-msgstr ""
+msgstr "Imagini de perete"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6433,7 +6456,10 @@ msgid "Linkedin"
 msgstr "Linkedin"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Links"
 msgstr "Link-uri"
 
@@ -6627,7 +6653,7 @@ msgstr "Media"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Media List"
-msgstr ""
+msgstr "Listă Media "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -6781,7 +6807,7 @@ msgstr "Mobil"
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Mobile Alignment"
-msgstr ""
+msgstr "Aliniere mobilă"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -7195,7 +7221,7 @@ msgstr "Fără suport"
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid "No website domain configured for this website."
-msgstr ""
+msgstr "Niciun domeniu configurat pentru acest site web."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -7871,6 +7897,11 @@ msgid "Popup"
 msgstr "Pup-up"
 
 #. module: website
+#: model:ir.model,name:website.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "Config Utilizator Portal"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Portfolio"
 msgstr "Portofoliu"
@@ -7915,7 +7946,7 @@ msgstr "Set predefinit"
 #: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
 #, python-format
 msgid "Press %(key)s to exit full screen"
-msgstr ""
+msgstr "Apăsați %(key)s pentru a ieși din ecranul complet"
 
 #. module: website
 #. odoo-javascript
@@ -7970,6 +8001,13 @@ msgstr "Prețuri"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary"
 msgstr "Primar"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Primary Buttons"
+msgstr "Butoane primare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8223,7 +8261,7 @@ msgstr "Redirecționare către URL într-o filă nouă"
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
 #, python-format
 msgid "Redirecting..."
-msgstr ""
+msgstr "Redirecționare..."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
@@ -8691,6 +8729,13 @@ msgid "Secondary"
 msgstr "Secundar"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Secondary Buttons"
+msgstr "Butoane secundare"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary Style"
 msgstr "Stil secundar"
@@ -8967,7 +9012,7 @@ msgstr "Afișați harta site-ului"
 #: code:addons/website/static/src/snippets/s_popup/000.js:0
 #, python-format
 msgid "Show the cookies bar"
-msgstr ""
+msgstr "Afișați bara de cookie-uri"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8982,7 +9027,7 @@ msgstr "Afișați/Ascundeți pe Mobil"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Showcase"
-msgstr ""
+msgstr "Prezentare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9510,9 +9555,12 @@ msgid "Test your robots.txt with Google Search Console"
 msgstr "Testare robots.txt cu Google Search Console"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, python-format
 msgid "Text"
 msgstr "Text"
 
@@ -9852,8 +9900,8 @@ msgstr "Al treilea meniu"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "This URL is contained in the '%s' of the following '%s'"
-msgstr "Această adresă URL este conținută în '%s' din următoarele '%s'"
+msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -10877,6 +10925,13 @@ msgid "We are in good company."
 msgstr "Suntem în companie bună."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "We couldn't find the Facebook page"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
@@ -11335,6 +11390,13 @@ msgstr "An"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Yes"
+msgstr "Da"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
 #, python-format
 msgid ""
@@ -11429,6 +11491,13 @@ msgstr ""
 msgid ""
 "You cannot delete this website menu as this serves as the default parent "
 "menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "You didn't provide a valid Facebook link"
 msgstr ""
 
 #. module: website

@@ -7,9 +7,9 @@
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
 # Tatsuki Kanda, 2023
-# Junko Augias, 2024
-# Wil Odoo, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +92,20 @@ msgstr ""
 #, python-format
 msgid "%s product(s) found for \"%s\"."
 msgstr "%sプロダクトが \"%s\"用に見つかりました。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "%s untaxed"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "%s with %s"
+msgstr "%s及び%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5156,6 +5170,8 @@ msgstr "ディスプレイの更新"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
@@ -5342,7 +5358,7 @@ msgstr "返却済"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Reversal of POS closing entry %s for order %s from session %s"
-msgstr "セッション%sからのオーダ%sに対するPOSクロージングエントリ%sの取消"
+msgstr "セッション%sからのオーダ%sに対するPOSクロージングエントリ%sの逆仕訳"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5430,6 +5446,13 @@ msgstr "販売ライン数"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
 msgstr "販売行"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Sales"
+msgstr "販売"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -6231,9 +6254,9 @@ msgstr "現金での支払方法を設定していない場合は、支払期日
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
-"The amount of your payment lines must be rounded to validate the "
-"transaction."
-msgstr "取引を有効にするには、支払明細の金額を四捨五入する必要があります。"
+"The amount of your payment lines must be rounded to validate the transaction.\n"
+"The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

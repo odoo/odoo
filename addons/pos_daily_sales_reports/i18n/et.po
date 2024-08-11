@@ -10,21 +10,23 @@
 # Egon Raamat <egon@avalah.ee>, 2023
 # Maidu Targama <m.targama@gmail.com>, 2023
 # Eneli Õigus <enelioigus@gmail.com>, 2023
-# Anna, 2023
 # JanaAvalah, 2023
 # Leaanika Randmets, 2023
 # Martin Trigaux, 2023
 # Patrick-Jordan Kiudorv, 2023
 # Rivo Zängov <eraser@eraser.ee>, 2023
 # Triine Aavik <triine@avalah.ee>, 2023
+# Anna, 2024
+# Siim Raasuke, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 06:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2023-04-14 06:18+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2023\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,12 +37,12 @@ msgstr ""
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "<strong>Amount of discounts</strong>:"
-msgstr ""
+msgstr "<strong>Allahindluste summa</strong>:"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "<strong>Config names</strong>"
-msgstr ""
+msgstr "<strong>Seadistuse nimed</strong>"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
@@ -75,7 +77,7 @@ msgstr "Tühista"
 #. module: pos_daily_sales_reports
 #: model:ir.model.fields,field_description:pos_daily_sales_reports.field_pos_session__closing_notes
 msgid "Closing Notes"
-msgstr ""
+msgstr "Sulgemismärkmed"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
@@ -123,7 +125,7 @@ msgstr "Allahindlus:"
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "Discounts:"
-msgstr ""
+msgstr "Allahindlused:"
 
 #. module: pos_daily_sales_reports
 #: model:ir.model.fields,field_description:pos_daily_sales_reports.field_pos_daily_sales_reports_wizard__display_name
@@ -162,6 +164,11 @@ msgstr "Viimati uuendatud"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
+msgid "Multiple Report"
+msgstr ""
+
+#. module: pos_daily_sales_reports
+#: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "Name"
 msgstr "Nimi"
 
@@ -175,12 +182,12 @@ msgstr "Maksudeta"
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "Number of transactions:"
-msgstr ""
+msgstr "Tehingute arv:"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "Order reference"
-msgstr ""
+msgstr "Tellimuse viide"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
@@ -190,7 +197,7 @@ msgstr "Maksed"
 #. module: pos_daily_sales_reports
 #: model:ir.model,name:pos_daily_sales_reports.model_pos_daily_sales_reports_wizard
 msgid "Point of Sale Daily Report"
-msgstr ""
+msgstr "Müügipunkti igapäevane aruanne"
 
 #. module: pos_daily_sales_reports
 #: model:ir.model,name:pos_daily_sales_reports.model_report_point_of_sale_report_saledetails
@@ -210,7 +217,7 @@ msgstr "Kassa Sessioon"
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.view_pos_daily_sales_reports_wizard
 msgid "Pos session"
-msgstr ""
+msgstr "Müügipunkti seanss"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.view_pos_daily_sales_reports_wizard
@@ -237,7 +244,7 @@ msgstr "Kogus"
 #: code:addons/pos_daily_sales_reports/static/src/xml/SaleDetailsReport.xml:0
 #, python-format
 msgid "REFUNDED:"
-msgstr ""
+msgstr "TAGASTATUD:"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
@@ -249,7 +256,7 @@ msgstr "Tagasimaksed"
 #: code:addons/pos_daily_sales_reports/static/src/xml/SaleDetailsReport.xml:0
 #, python-format
 msgid "SOLD:"
-msgstr ""
+msgstr "MÜÜDUD:"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
@@ -265,17 +272,17 @@ msgstr "Müügi detailid"
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "Session Control"
-msgstr ""
+msgstr "Seansi kontroll"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "Session ID:"
-msgstr ""
+msgstr "Seansi ID:"
 
 #. module: pos_daily_sales_reports
 #: model:ir.ui.menu,name:pos_daily_sales_reports.menu_report_daily_details
 msgid "Session Report"
-msgstr ""
+msgstr "Seansi aruanne"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
@@ -285,12 +292,12 @@ msgstr "Maksu summa"
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "Taxes on refunds"
-msgstr ""
+msgstr "Tagastuste maksud"
 
 #. module: pos_daily_sales_reports
 #: model_terms:ir.ui.view,arch_db:pos_daily_sales_reports.pos_daily_report
 msgid "Taxes on sales"
-msgstr ""
+msgstr "Müügimaksud"
 
 #. module: pos_daily_sales_reports
 #. odoo-python

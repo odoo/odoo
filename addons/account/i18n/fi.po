@@ -41,8 +41,8 @@
 # Konsta Aavaranta, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Jessica Jakara, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -50,7 +50,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jessica Jakara, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9724,6 +9724,12 @@ msgid "Never"
 msgstr "Ei koskaan"
 
 #. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
 msgstr "Uusi päiväkirjan nimi"
@@ -14135,6 +14141,8 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
 msgstr ""
+"Ulkomaisen alv-numeron maata ei voitu havaita. Määritä maa verokannalle tai "
+"aseta maaryhmä"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -16753,7 +16761,7 @@ msgstr ""
 msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
-msgstr ""
+msgstr "Et voi luoda verokantaa, jonka maa ei kuulu valittuun maaryhmään."
 
 #. module: account
 #: code:addons/account/models/partner.py:0

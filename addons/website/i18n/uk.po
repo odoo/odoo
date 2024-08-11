@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2023
 # Svyatoslav Nadozirny, 2023
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr "\" попередження з"
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "\"%s form submission\" <%s>"
-msgstr ""
+msgstr "\"%s надання форми\" <%s>"
 
 #. module: website
 #. odoo-python
@@ -230,8 +230,8 @@ msgstr "+ Новий веб-сайт"
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "+1 (650) 555-0111"
-msgstr "+1 (650) 555-0111"
+msgid "+1 555-555-5556"
+msgstr "+1 555-555-5556"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -852,11 +852,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 msgstr ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_add_language
@@ -2161,6 +2161,7 @@ msgstr "Фон"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -5130,7 +5131,10 @@ msgid "Header Visible"
 msgstr "Видимість хедера"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Headings"
 msgstr "Заголовки"
 
@@ -5140,27 +5144,42 @@ msgid "Headings 1"
 msgstr "Заголовок 1"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 2"
 msgstr "Заголовок 2"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 3"
 msgstr "Заголовок 3"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 4"
 msgstr "Заголовок 4"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 5"
 msgstr "Заголовок 5"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 6"
 msgstr "Заголовок 6"
 
@@ -5224,6 +5243,13 @@ msgstr "Приховати"
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Hide For"
 msgstr "Сховати для"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
@@ -5293,8 +5319,8 @@ msgid "Home page of the current website"
 msgstr "Головна сторінка поточного веб-сайту"
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -6407,7 +6433,10 @@ msgid "Linkedin"
 msgstr "Linkedin"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Links"
 msgstr "Посилання"
 
@@ -7845,6 +7874,11 @@ msgid "Popup"
 msgstr "Виникаюче вікно"
 
 #. module: website
+#: model:ir.model,name:website.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "Налаштування користувача порталу"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Portfolio"
 msgstr "Портфоліо"
@@ -7888,7 +7922,7 @@ msgstr "Попередньо встановлений"
 #. odoo-javascript
 #: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
 #, python-format
-msgid "Press %(key)s to exit full string"
+msgid "Press %(key)s to exit full screen"
 msgstr ""
 
 #. module: website
@@ -7944,6 +7978,13 @@ msgstr "Ціноутворення"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary"
 msgstr "Основний"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Primary Buttons"
+msgstr "Основні кнопки"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8665,6 +8706,13 @@ msgid "Secondary"
 msgstr "Другорядний"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Secondary Buttons"
+msgstr "Другорядні кнопки"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary Style"
 msgstr "Другорядний стиль"
@@ -8934,6 +8982,13 @@ msgstr "Показати політику reCaptcha"
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Show site map"
 msgstr "Показати карту сайту"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9472,9 +9527,12 @@ msgid "Test your robots.txt with Google Search Console"
 msgstr "Протестуйте ваш robots.txt через консоль Google Search"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, python-format
 msgid "Text"
 msgstr "Текст"
 
@@ -9807,8 +9865,8 @@ msgstr "Третє меню"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "This URL is contained in the '%s' of the following '%s'"
-msgstr "URL містить '%s' наступного '%s'"
+msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -10831,6 +10889,13 @@ msgid "We are in good company."
 msgstr "Ми у хорошій компанії."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "We couldn't find the Facebook page"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
@@ -11287,6 +11352,13 @@ msgstr "Рік"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Yes"
+msgstr "Так"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
 #, python-format
 msgid ""
@@ -11385,6 +11457,13 @@ msgstr ""
 msgid ""
 "You cannot delete this website menu as this serves as the default parent "
 "menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "You didn't provide a valid Facebook link"
 msgstr ""
 
 #. module: website
