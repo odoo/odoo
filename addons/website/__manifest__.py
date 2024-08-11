@@ -85,6 +85,7 @@
         'views/snippets/s_media_list.xml',
         'views/snippets/s_showcase.xml',
         'views/snippets/s_timeline.xml',
+        'views/snippets/s_timeline_list.xml',
         'views/snippets/s_process_steps.xml',
         'views/snippets/s_accordion.xml',
         'views/snippets/s_numbers_showcase.xml',
