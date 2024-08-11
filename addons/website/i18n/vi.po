@@ -211,9 +211,13 @@ msgstr "+ Website mới"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
+msgid "+1 555-555-5556"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
-msgid "+1 (650) 555-0111"
-msgstr "+1 (650) 555-0111"
+msgid "+1 555-555-5556\""
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -246,8 +250,6 @@ msgstr ""
 "...và chuyển đổi nội dung dòng thời gian để phù hợp với nhu cầu của bạn."
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -680,10 +682,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
-"                        <span class=\"o_force_ltr\"><small>+1 (650) 555-0111</small></span>"
+"                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</small></span>"
 msgstr ""
-"<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
-"                        <span class=\"o_force_ltr\"><small>+1 (650) 555-0111</small></span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -780,11 +780,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 msgstr ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+84 (0) 869"
-" 233 290</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -1130,8 +1128,8 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
-msgid "<span class=\"o_force_ltr\">+1 (650) 555-0111</span>"
-msgstr "<span class=\"o_force_ltr\">+1 (650) 555-0111</span>"
+msgid "<span class=\"o_force_ltr\">+1 555-555-5556</span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -1461,6 +1459,14 @@ msgid "A color block"
 msgstr "Một khối màu"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid ""
+"A font with the same name already exists.\n"
+"Try renaming the uploaded file."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_image_text_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_text_image_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_text_image_text_template
@@ -1760,10 +1766,15 @@ msgstr "Thêm năm"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "Add a Google Font"
-msgstr "Thêm Phông chữ Google"
+msgid "Add a Custom Font"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "Add a Google font or upload a custom font"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2477,7 +2488,7 @@ msgstr "Ví dụ cơ bản"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Basic sales &amp; marketing for up to 2 users"
-msgstr "Bán hàng cơ bản & amp; tiếp thị cho tối đa 2 người dùng"
+msgstr "Bán hàng cơ bản & amp; marketing cho tối đa 2 người dùng"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
@@ -2599,6 +2610,12 @@ msgstr "Viết và đăng nội dung blog phù hợp"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "Blur"
 msgstr "Làm mờ"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Bold"
+msgstr "In đậm"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action_menu
@@ -3064,6 +3081,12 @@ msgstr "Chọn một tên liên kết"
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 msgid "Choose another theme"
 msgstr "Chọn một chủ đề khác"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Choose from list"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -3739,6 +3762,12 @@ msgstr "Mã tùy chỉnh"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Custom Field"
 msgstr "Trường Tùy chỉnh"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Custom Font"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4558,6 +4587,12 @@ msgstr "Vẫn chỉnh sửa HTML"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
+msgid "Edit Head and Body Code"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 #: code:addons/website/static/src/js/widgets/link_popover_widget.js:0
 #: model:ir.ui.menu,name:website.custom_menu_edit_menu
@@ -4892,6 +4927,12 @@ msgid "Explore"
 msgstr "Explore"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Explore on"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_gallery_s_text_block_2nd
 msgid ""
 "Explore our captivating gallery, a visual journey showcasing our finest work"
@@ -5056,6 +5097,18 @@ msgstr "Trường cho dữ liệu biểu mẫu tùy chỉnh"
 #: model:ir.model,name:website.model_ir_model_fields
 msgid "Fields"
 msgstr "Trường "
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/main.py:0
+msgid "File '%s' exceeds maximum allowed file size"
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/main.py:0
+msgid "File '%s' is not recognized as a font"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -5266,6 +5319,24 @@ msgstr "Nhóm phông chữ"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font Size"
 msgstr "Cỡ Font"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "Font access"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "Font exists"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "Font name already used"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__footer_visible
@@ -5592,12 +5663,6 @@ msgstr "Google Analytics"
 #: model:ir.model.fields,field_description:website.field_website__google_analytics_key
 msgid "Google Analytics Key"
 msgstr "Khóa Google Analytics"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "Google Font address"
-msgstr "Địa chỉ Phông chữ của Google"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6794,7 +6859,6 @@ msgstr "Giữ trống để sử dụng giá trị mặc định"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_ir_attachment__key
-#: model:ir.model.fields,field_description:website.field_product_document__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__key
@@ -7100,6 +7164,8 @@ msgid "Library"
 msgstr "Thư viện"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "Light"
@@ -7753,7 +7819,7 @@ msgstr "Phân hệ"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_marketing_automation
 msgid "Module Marketing Automation"
-msgstr "Phân hệ Tiếp thị Tự động"
+msgstr "Phân hệ Marketing Tự động"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_livechat
@@ -8128,12 +8194,6 @@ msgid "None"
 msgstr "Không"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "Không có sẵn để bán"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "Chưa được đăng"
@@ -8352,7 +8412,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Online"
-msgstr "Trực tuyến"
+msgstr "Online"
 
 #. module: website
 #. odoo-javascript
@@ -9080,8 +9140,15 @@ msgstr "Nhấn <Tab> cho tiếp theo ["
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Preview"
 msgstr "Xem trước"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Preview of"
+msgstr "Xem trước của"
 
 #. module: website
 #. odoo-javascript
@@ -9288,7 +9355,7 @@ msgstr "Đăng thông tin việc làm và cho mọi người ứng tuyển"
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_event
 msgid "Publish on-site and online events"
-msgstr "Đăng sự kiện tại chỗ và trực tuyến"
+msgstr "Đăng sự kiện tại chỗ và online"
 
 #. module: website
 #. odoo-javascript
@@ -9459,6 +9526,8 @@ msgid "Refresh route's list"
 msgstr "Làm mới danh sách tuyến"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Regular"
@@ -9990,6 +10059,12 @@ msgstr "Vừa vặn an toàn và thoải mái"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Select a Google Font..."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "Select an image for social share"
 msgstr "Chọn một hình ảnh để chia sẻ xã hội"
@@ -10003,12 +10078,6 @@ msgstr "Chọn và xóa khối <br/> để xóa một số bước."
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Select and delete blocks to remove features."
 msgstr "Chọn và xóa các khối để xóa các tính năng."
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "Select one font on"
-msgstr "Chọn một phông chữ trên"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -11012,6 +11081,8 @@ msgid ""
 "The company “%(company_name)s” cannot be archived because it has a linked website “%(website_name)s”.\n"
 "Change that website's company first."
 msgstr ""
+"Không thể lưu trữ công ty “%(company_name)s” vì có trang web “%(website_name)s” được liên kết với công ty này.\n"
+"Trước tiên hãy thay đổi công ty của trang web đó."
 
 #. module: website
 #. odoo-javascript
@@ -11144,6 +11215,18 @@ msgid "The name of the page usable in a URL"
 msgstr "Tên của trang có thể sử dụng được trong URL"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "The quick brown fox jumps over the lazy dog."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "The selected font cannot be accessed."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "The selected templates will be reset to their factory settings."
 msgstr ""
@@ -11213,7 +11296,6 @@ msgstr "Màu sắc chủ đề"
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
-#: model:ir.model.fields,field_description:website.field_product_document__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_menu__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_page__theme_template_id
@@ -11490,6 +11572,14 @@ msgstr "Không thể chỉnh sửa bản dịch này."
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid ""
+"This uploaded font already exists.\n"
+"To replace an existing font, remove it first."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid ""
 "This value will be escaped to be compliant with all major browsers and used "
@@ -11646,6 +11736,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "To be successful your content needs to be useful to your readers."
 msgstr "Để thành công, nội dung cần phải có ích cho người đọc."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "To comply with some local regulations"
+msgstr ""
 
 #. module: website
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_2
@@ -12156,7 +12252,7 @@ msgid ""
 "                                                and any specific marketing campaign that brought you to the website."
 msgstr ""
 "Được sử dụng để thu thập thông tin về tương tác của bạn với trang web, các trang bạn đã xem,\n"
-"                                               và bất kỳ chiến dịch tiếp thị cụ thể nào do trang web này mang đến."
+"                                               và bất kỳ chiến dịch marketing cụ thể nào do trang web này mang đến."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -12519,6 +12615,12 @@ msgstr ""
 "hiện tại của bạn và bất kỳ thách thức nào bạn gặp phải."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+msgid "We couldn't find the Facebook page"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
@@ -12613,7 +12715,6 @@ msgstr "Khách truy cập trang web"
 #: model:ir.model.fields,field_description:website.field_ir_asset__website_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
-#: model:ir.model.fields,field_description:website.field_product_document__website_id
 #: model:ir.model.fields,field_description:website.field_res_company__website_id
 #: model:ir.model.fields,field_description:website.field_res_partner__website_id
 #: model:ir.model.fields,field_description:website.field_res_users__website_id
@@ -13153,6 +13254,12 @@ msgid "You cannot duplicate this field."
 msgstr "Bạn không thể nhân bản trường này."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+msgid "You didn't provide a valid Facebook link"
+msgstr ""
+
+#. module: website
 #. odoo-python
 #: code:addons/website/models/mixins.py:0
 msgid "You do not have the rights to publish/unpublish"
@@ -13419,12 +13526,6 @@ msgid "and"
 msgstr "và"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "and copy paste the address of the font page here."
-msgstr "và sao chép, dán địa chỉ của trang phông chữ vào đây."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "big"
 msgstr "lớn"
@@ -13522,7 +13623,7 @@ msgstr "phát triển thương hiệu"
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 msgid "e-learning platform"
-msgstr "nền tảng học trực tuyến"
+msgstr "nền tảng học online"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -13548,7 +13649,7 @@ msgstr "thương mại điện tử"
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_elearning
 msgid "eLearning"
-msgstr "Học trực tuyến"
+msgstr "Học online"
 
 #. module: website
 #. odoo-python
@@ -13637,12 +13738,6 @@ msgstr "support@openerp.vn"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "hero, jumbotron"
 msgstr "anh hùng, jumbotron"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "https://fonts.google.com/specimen/Roboto"
-msgstr "https://fonts.google.com/specimen/Roboto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -13889,6 +13984,12 @@ msgstr "với mục đích chính là"
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "yes"
 msgstr "có"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "zip, ttf, woff, woff2, otf"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options

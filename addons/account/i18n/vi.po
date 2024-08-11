@@ -5,14 +5,15 @@
 # Translators:
 # Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Nancy Momoland <thanh.np2502@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-07-24 12:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Nancy Momoland <thanh.np2502@gmail.com>, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,13 +93,13 @@ msgstr "%(action)s cho sổ nhật ký %(journal)s"
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Excl. Taxes"
-msgstr ""
+msgstr "%(amount)s Chưa bao gồm thuế"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Incl. Taxes"
-msgstr ""
+msgstr "%(amount)s Bao gồm thuế"
 
 #. module: account
 #. odoo-python
@@ -119,6 +120,8 @@ msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"Dòng sao kê liên quan của %(move)s đã chuyển qua trạng thái không hợp lệ.\n"
+"Để nhất quán, bút toán phải luôn có đúng một dòng tạm thời."
 
 #. module: account
 #. odoo-python
@@ -133,8 +136,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, "
 "%(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_billed)s Đã lập hoá đơn mua hàng, "
-"%(quantity_received)s Đã nhận với đơn giá %(unit_price)s "
+"%(order)s - %(order_line)s; %(quantity_billed) đã lên hóa đơn, "
+"%(quantity_received)s Đã nhận với giá %(unit_price)s mỗi cái"
 
 #. module: account
 #. odoo-python
@@ -168,7 +171,7 @@ msgstr "%(tag)s (%(country_code)s)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
-msgstr ""
+msgstr "%(tax_name)s (làm tròn)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -272,6 +275,10 @@ msgid ""
 "    --\n"
 "    <br/>"
 msgstr ""
+".\n"
+"    <br/>\n"
+"    --\n"
+"    <br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -296,7 +303,7 @@ msgstr ". Bạn có thể muốn đặt một số cao hơn ở đây."
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 msgid "... (%(nb_of_values)s other)"
-msgstr ""
+msgstr "... (%(nb_of_values)s khác)"
 
 #. module: account
 #. odoo-javascript
@@ -620,7 +627,11 @@ msgid ""
 "            Please remit payment at your earliest convenience.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br><br>\n"
-"                Please use the following communication for your payment: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"                Please use the following communication for your payment: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    on the account <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
@@ -637,51 +648,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Xin chào\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
-"        </t>\n"
-"        <br><br>\n"
-"        Đây là\n"
-"        <t t-if=\"object.name\">\n"
-"            hoá đơn của bạn<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            hoá đơn\n"
-"        </t>\n"
-"        <t t-if=\"object.invoice_origin\">\n"
-"            (với mã tham chiếu: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"        </t>\n"
-"        có số tiền là <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143.750,00$</span>\n"
-"        từ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
-"            Hoá đơn này đã được thanh toán.\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            Vui lòng thanh toán vào thời điểm sớm nhất mà bạn thấy thuận tiện.\n"
-"            <t t-if=\"object.payment_reference\">\n"
-"                <br><br>\n"
-"                Vui lòng điền thông tin thanh toán như sau: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
-"            </t>\n"
-"        </t>\n"
-"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
-"            <br><br>\n"
-"            PS: Bạn có thể xem lại bảng chấm công của mình <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">trên cổng thông tin.</a>\n"
-"        </t>\n"
-"        <br><br>\n"
-"        Nếu bạn có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng tôi.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -728,12 +694,12 @@ msgstr "<em>Hóa đơn nháp</em>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
 msgid "<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Ngày\" role=\"img\" title=\"Ngày\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
 msgid "<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Ngày\" title=\"Ngày\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -802,6 +768,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Alias Domain"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Cấu hình miền bí danh"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -854,6 +821,9 @@ msgid ""
 "                                        <span groups=\"base.group_multi_currency\">in </span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only\" groups=\"account.group_account_readonly\" invisible=\"move_type == 'entry'\">\n"
+"                                        <span groups=\"base.group_multi_currency\">bằng </span>\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -996,15 +966,6 @@ msgid "<span class=\"text-warning\">Medium risk</span>: Iban"
 msgstr "<span class=\"text-warning\">Rủi ro trung bình</span>: Iban"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_advance_payment
-msgid ""
-"<span invisible=\"advance_payment_method != 'percentage'\" class=\"oe_inline\">% </span>\n"
-"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" name=\"amount_warning\" title=\"title\">\n"
-"                            <i class=\"fa fa-warning\"/>\n"
-"                        </span>"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "<span invisible=\"not early_discount\"> % if paid within </span>"
 msgstr ""
@@ -1107,7 +1068,7 @@ msgstr "<span> đến hạn vào </span>"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
-msgstr ""
+msgstr "<span> on </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1227,7 +1188,7 @@ msgstr "<span>Đây là bản xem trước Điều khoản &amp; điều kiện 
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<span>This payment has the same partner, amount and date as </span>"
-msgstr ""
+msgstr "<span>Thanh toán này có cùng đối tác, số tiền và ngày với </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1370,8 +1331,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Một từ điển Python sẽ được đánh giá để cung cấp giá trị mặc định khi tạo tập"
-" dữ liệu mới cho bí danh này. "
+"Thư viên Python sẽ được biểu thị/đánh giá để cung cấp các giá trị mặc định "
+"khi tạo mới các bản ghi cho bí danh này."
 
 #. module: account
 #. odoo-python
@@ -1497,14 +1458,6 @@ msgid "A section title"
 msgstr "Tiêu đề phần"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_advance_payment_wizard__advance_payment_method
-msgid ""
-"A standard invoice is issued with all the order lines ready for invoicing, "
-"according to their invoicing policy (based on ordered or delivered "
-"quantity)."
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "A statement should only contain lines from the same journal."
@@ -1537,7 +1490,7 @@ msgstr "Có thể đặt cảnh báo đối với đối tác (Tài khoản)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__aba_routing
 msgid "ABA/Routing"
-msgstr ""
+msgstr "ABA/Routing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
@@ -1691,16 +1644,6 @@ msgid "Account Mapping"
 msgstr "Thay thế tài khoản"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__account_move_ids
-msgid "Account Move"
-msgstr "Dịch chuyển tài khoản"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__account_move_line_ids
-msgid "Account Move Line"
-msgstr "Dòng bút toán kế toán"
-
-#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Đảo bút toán tài khoản"
@@ -1714,7 +1657,7 @@ msgstr "Account Move Send"
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Account Name"
-msgstr "Tên tài khoản "
+msgstr "Tên tài khoản kế toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_acc_number
@@ -1725,16 +1668,6 @@ msgstr "Tên tài khoản "
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Account Number"
 msgstr "Số tài khoản"
-
-#. module: account
-#: model:ir.model,name:account.model_account_order_line_mixin
-msgid "Account Order Line Mixin"
-msgstr ""
-
-#. module: account
-#: model:ir.model,name:account.model_account_order_mixin
-msgid "Account Order Mixin"
-msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_payable
@@ -1951,6 +1884,11 @@ msgid ""
 msgstr ""
 "Tài khoản: Vào sổ các bút toán nháp có bật auto_post và ngày hạch toán đến "
 "hôm nay"
+
+#. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr "Kế toán viên"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2326,8 +2264,8 @@ msgstr ""
 "{new_date}"
 
 #. module: account
-#: model:ir.model,name:account.model_account_advance_payment_wizard
-msgid "Advance Payment Account Move"
+#: model:res.groups,name:account.group_account_basic
+msgid "Advanced Billing"
 msgstr ""
 
 #. module: account
@@ -2414,7 +2352,7 @@ msgstr "Tất cả bút toán được chọn để đảo phải thuộc về c
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
 msgid "Allow Product Margin"
-msgstr "Cho phép lợi nhuận sản phẩm "
+msgstr "Lợi nhuận sản phẩm cho phép"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
@@ -2460,11 +2398,6 @@ msgstr "Cho phép sử dụng kế toán Storno."
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows you to use the analytic accounting."
 msgstr "Cho phép sử dụng kế toán phân tích."
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__amount_invoiced
-msgid "Already invoiced"
-msgstr "Đã xuất hoá đơn"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -2513,7 +2446,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__aba_routing
 msgid "American Bankers Association Routing Number"
-msgstr ""
+msgstr "Số định tuyến của Hiệp hội Ngân hàng Hoa Kỳ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
@@ -2577,11 +2510,6 @@ msgid "Amount Type"
 msgstr "Loại giao dịch"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__amount_invoiced
-msgid "Amount already invoiced"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_currency
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_currency
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
@@ -2597,12 +2525,6 @@ msgstr "Số tiền cần thanh toán (tiền tệ của công ty)"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount_currency
 msgid "Amount to Pay (foreign currency)"
 msgstr "Số tiền cần thanh toán (ngoại tệ)"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__amount_to_invoice
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__amount_to_invoice
-msgid "Amount to invoice"
-msgstr "Số tiền cần xuất hóa đơn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_words
@@ -2925,7 +2847,7 @@ msgstr "Tệp đính kèm"
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_activated
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_activated
 msgid "Audit Log Activated"
-msgstr ""
+msgstr "Đã kích hoạt nhật ký kiểm toán"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -3363,11 +3285,6 @@ msgid "Based on Payment"
 msgstr "Dựa trên thanh toán"
 
 #. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Basic"
-msgstr "Cơ sở"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "Thanh toán hàng loạt"
@@ -3422,11 +3339,6 @@ msgid "Billing"
 msgstr "Lập hóa đơn"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Billing Administrator"
-msgstr "Quản trị viên thanh toán"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3468,6 +3380,11 @@ msgstr "Để trống nếu là 0"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Chặn tin nhắn"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr "Kế toán chứng từ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3700,11 +3617,6 @@ msgstr "Kết chuyển sang"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_journal_default_account_44
-#: model:account.account,name:account.1_cash_journal_default_account_50
-#: model:account.account,name:account.1_cash_journal_default_account_51
-#: model:account.account,name:account.1_cash_journal_default_account_52
-#: model:account.account,name:account.1_cash_journal_default_account_53
-#: model:account.account,name:account.1_cash_journal_default_account_54
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -3758,7 +3670,7 @@ msgstr "Tài khoản chuyển thuế cơ sở dòng tiền"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
 msgid "Cash Difference Expense"
-msgstr "Cash Difference Expense"
+msgstr "Tài khoản ghi nhận chênh lệch tiền chi phí"
 
 #. module: account
 #. odoo-python
@@ -3770,7 +3682,7 @@ msgstr "Lãi chênh lệch tiền mặt"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income"
-msgstr "Cash Difference Income"
+msgstr "Tài khoản ghi nhận chênh lệch tiền doanh thu"
 
 #. module: account
 #. odoo-python
@@ -3875,9 +3787,9 @@ msgid ""
 "accordance with their internal legislation. Any withholding at source will "
 "be paid by the client to the tax authorities. Under no circumstances can"
 msgstr ""
-"Theo luật nội bộ, một số quốc gia áp dụng khấu trừ tại nguồn đối với số tiền"
-" hóa đơn. Mọi khoản khấu trừ tại nguồn sẽ được khách hàng nộp cho cơ quan "
-"thuế. Trong mọi trường hợp,"
+"Một số quốc gia áp dụng khấu lưu tại nguồn đối với số lượng hóa đơn, phù hợp"
+" với luật nội bộ của họ. Mọi khoản khấu trừ tại nguồn sẽ được khách hàng nộp"
+" cho cơ quan thuế. Trong mọi trường hợp không thể"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__action__change_account
@@ -3972,7 +3884,7 @@ msgstr "Hệ thống tài khoản đã được thiết lập!"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 msgid "Check Partner(s) Email(s)"
-msgstr ""
+msgstr "Kiểm tra (các) email của (các) đối tác"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -4174,7 +4086,6 @@ msgstr "Công ty là đối tác"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_id
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__company_id
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_id
@@ -4191,7 +4102,6 @@ msgstr "Công ty là đối tác"
 #: model:ir.model.fields,field_description:account.field_account_move_line__company_id
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__company_id
 #: model:ir.model.fields,field_description:account.field_account_move_send__company_id
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__company_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__company_id
 #: model:ir.model.fields,field_description:account.field_account_payment__company_id
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__company_id
@@ -4220,7 +4130,7 @@ msgstr "Công ty"
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_company_id
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_company_id
 msgid "Company "
-msgstr "Công ty"
+msgstr "Công ty  "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -4526,19 +4436,9 @@ msgid "Create Automatic Entries"
 msgstr "Tạo bút toán tự động"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_advance_payment
-msgid "Create Draft"
-msgstr "Tạo bản nháp"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Create Entry"
 msgstr "Tạo bút toán"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__advance_payment_method
-msgid "Create Invoice"
-msgstr "Tạo Hoá đơn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4918,7 +4818,6 @@ msgstr "Tiền tệ"
 #. module: account
 #: model:ir.model,name:account.model_res_currency
 #: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
@@ -4926,8 +4825,6 @@ msgstr "Tiền tệ"
 #: model:ir.model.fields,field_description:account.field_account_move__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__currency_id
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__currency_id
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment__currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_term__currency_id
@@ -5600,7 +5497,6 @@ msgid "Depreciation"
 msgstr "Khấu hao"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__name
 #: model:ir.model.fields,field_description:account.field_account_tax__description
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_preview
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_preview
@@ -5697,7 +5593,6 @@ msgstr "% CK"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 #: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
-#: model_terms:ir.ui.view,arch_db:account.view_account_advance_payment
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Discard"
@@ -5717,7 +5612,6 @@ msgstr "% chiết khấu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__discount
 msgid "Discount (%)"
 msgstr "Chiết khấu (%)"
 
@@ -5775,7 +5669,7 @@ msgstr "Hiển thị tiền tố tài khoản"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__display_alias_fields
 msgid "Display Alias Fields"
-msgstr ""
+msgstr "Hiển thị trường bí danh"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
@@ -5788,11 +5682,6 @@ msgid "Display Days Next Month"
 msgstr "Hiển thị ngày vào tháng tiếp theo"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__display_draft_invoice_warning
-msgid "Display Draft Invoice Warning"
-msgstr "Hiện thị cảnh báo hoá đơn nháp"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
 msgid "Display Force Post"
 msgstr "Hiển thị Bắt buộc ghi sổ"
@@ -5803,11 +5692,6 @@ msgstr "Hiển thị Bắt buộc ghi sổ"
 #: model:ir.model.fields,field_description:account.field_account_payment__display_inactive_currency_warning
 msgid "Display Inactive Currency Warning"
 msgstr "Hiển thị cảnh báo tiền tệ không hoạt động"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__display_invoice_amount_warning
-msgid "Display Invoice Amount Warning"
-msgstr "Hiển thị cảnh báo số tiền hoá đơn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__display_mail_composer
@@ -5887,7 +5771,6 @@ msgstr "Hiển thị mã QR SEPA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__display_type
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__display_type
 msgid "Display Type"
 msgstr "Loại hiển thị"
 
@@ -5976,71 +5859,6 @@ msgid "Down"
 msgstr "Xuống"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_order_line_mixin.py:0
-#: code:addons/account/wizard/account_advance_payment.py:0
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__amount
-msgid "Down Payment"
-msgstr "Khoản trả trước"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_order_line_mixin.py:0
-msgid "Down Payment (Cancelled)"
-msgstr "Khoản trả trước (Bị huỷ)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_order_line_mixin.py:0
-msgid "Down Payment (ref: %(reference)s on %(date)s)"
-msgstr "Khoản trả trước (mã: %(reference)s vào %(date)s)"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__fixed_amount
-msgid "Down Payment Amount (Fixed)"
-msgstr "Số tiền trả trước (cố định)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_order_line_mixin.py:0
-msgid "Down Payment: %(date)s (Draft)"
-msgstr "Khoản trả trước: %(date)s (Nháp)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_order_line_mixin.py:0
-#: code:addons/account/models/account_order_mixin.py:0
-msgid "Down Payments"
-msgstr "Khoản trả trước"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_advance_payment_wizard__advance_payment_method__fixed
-#: model:ir.model.fields.selection,name:account.selection__purchase_advance_payment_wizard__advance_payment_method__fixed
-#: model:ir.model.fields.selection,name:account.selection__sale_advance_payment_inv__advance_payment_method__fixed
-msgid "Down payment (fixed amount)"
-msgstr "Khoản trả trước (số tiền cố định)"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_advance_payment_wizard__advance_payment_method__percentage
-#: model:ir.model.fields.selection,name:account.selection__purchase_advance_payment_wizard__advance_payment_method__percentage
-#: model:ir.model.fields.selection,name:account.selection__sale_advance_payment_inv__advance_payment_method__percentage
-msgid "Down payment (percentage)"
-msgstr "Khoản trả trước (phần trăm)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_advance_payment.py:0
-msgid "Down payment of %(amount)s%%"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_order_line_mixin__is_downpayment
-msgid ""
-"Down payments are made when creating account moves from an order. They are "
-"not copied when duplicating an order."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_download
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -6111,8 +5929,6 @@ msgid "Draft Invoice"
 msgstr "Hóa đơn nháp"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_advance_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Draft Invoices"
 msgstr "Hóa đơn nháp"
@@ -6208,7 +6024,7 @@ msgstr "Điều khoản đến hạn"
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_move_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__duplicate_move_ids
 msgid "Duplicate Move"
-msgstr ""
+msgstr "Bút toán trùng lặp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
@@ -6225,7 +6041,7 @@ msgstr "Chứng từ trùng lặp"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Duplicated Payments"
-msgstr ""
+msgstr "Thanh toán trùng lặp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__duplicated_ref_ids
@@ -6309,7 +6125,7 @@ msgstr "Chiết khấu thanh toán sớm áp dụng cho điều khoản thanh to
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Early Payment Discount of"
-msgstr ""
+msgstr "Chiết khấu thanh toán sớm của"
 
 #. module: account
 #. odoo-python
@@ -6502,12 +6318,12 @@ msgstr "Tên bút toán"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr "Epd Dirty"
+msgstr "Thuế bẩn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
 msgid "Epd Key"
-msgstr "Cần Epd"
+msgstr "Khóa Epd"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_needed
@@ -6539,7 +6355,8 @@ msgid ""
 "Error while loading the localization. You should probably update your "
 "localization app first."
 msgstr ""
-"Lỗi khi tải gói ngôn ngữ bản địa . Bạn vui lòng cập nhật gói ngôn ngữ trước"
+"Lỗi khi tải bản địa hóa. Có lẽ bạn nên cập nhật ứng dụng bản địa hóa của "
+"mình trước."
 
 #. module: account
 #. odoo-python
@@ -6876,7 +6693,6 @@ msgstr "Chu kỳ tài chính"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__position_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
@@ -7012,13 +6828,14 @@ msgstr "Font biểu tượng, ví dụ: fa-tasks"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid "For any other question, write to"
-msgstr ""
+msgstr "Đối với các câu hỏi khác, hãy liên hệ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid ""
 "For new invoices, please ensure a PDF or electronic invoice file is attached"
 msgstr ""
+"Đối với hóa đơn mới, vui lòng đảm bảo đính kèm tệp hóa đơn PDF hoặc điện tử"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -7216,7 +7033,7 @@ msgstr "Hoạt động trong tương lai"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Future-dated"
-msgstr ""
+msgstr "Trong tương lai"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7281,7 +7098,7 @@ msgstr "Trở lại"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid "Go to the accounting settings"
-msgstr ""
+msgstr "Đi đến cài đặt kế toán"
 
 #. module: account
 #. odoo-python
@@ -7390,6 +7207,13 @@ msgid "Has Entries"
 msgstr "Có bút toán"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
+#: model:ir.model.fields,field_description:account.field_account_move__show_update_fpos
+#: model:ir.model.fields,field_description:account.field_account_payment__show_update_fpos
+msgid "Has Fiscal Position Changed"
+msgstr "Vị trí tài chính đã thay đổi"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_iban_warning
 msgid "Has Iban Warning"
@@ -7444,11 +7268,6 @@ msgid "Has Unreconciled Entries"
 msgstr "Có bút toán chưa đối chiếu"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__has_down_payments
-msgid "Has down payments"
-msgstr "Có khoản trả trước"
-
-#. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
 msgid "Hash integrity result PDF"
 msgstr "Kết quả toàn vẹn dữ liệu hash PDF"
@@ -7460,6 +7279,9 @@ msgid ""
 "    <br/><br/>\n"
 "    Your email has been discarded. the e-mail address you have used only accepts new invoices:"
 msgstr ""
+"Xin chào,\n"
+"    <br/><br/>\n"
+"    Email của bạn đã bị hủy. Địa chỉ email bạn đã sử dụng chỉ chấp nhận hóa đơn mới:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -8190,6 +8012,7 @@ msgstr ""
 msgid ""
 "Internal field to shorten expression_ids creation for the tax_tags engine"
 msgstr ""
+"Trường nội bộ để rút ngắn quá trình tạo expression_ids cho công cụ tax_tags"
 
 #. module: account
 #. odoo-javascript
@@ -8243,11 +8066,6 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 msgid "Invalid fiscal year last day"
 msgstr "Ngày kết thúc năm tài chính không hợp lệ"
-
-#. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "Định giá tồn kho"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -8393,7 +8211,6 @@ msgstr "Một hoá đơn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__state
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__invoice_status
 msgid "Invoice Status"
 msgstr "Trạng thái hóa đơn"
 
@@ -8460,12 +8277,12 @@ msgstr "Hóa đơn đã thanh toán"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_actions_report__is_invoice_report
 msgid "Invoice report"
-msgstr ""
+msgstr "Báo cáo hoá đơn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__pdf_template_id
 msgid "Invoice template:"
-msgstr ""
+msgstr "Mẫu hoá đơn:"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
@@ -8557,7 +8374,7 @@ msgstr "Đã gửi hoá đơn"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Invoices sent successfully."
-msgstr "Hóa đơn đã được gửi thành công"
+msgstr "Hóa đơn được gửi thành công."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8649,14 +8466,9 @@ msgid "Is Complete"
 msgstr "Hoàn tất"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__is_downpayment
-msgid "Is Downpayment"
-msgstr "Là khoản trả trước"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
 msgid "Is Entries"
-msgstr ""
+msgstr "Là bút toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -8727,11 +8539,6 @@ msgstr "Là Storno"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_valid
 msgid "Is Valid"
 msgstr "Hợp lệ"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__is_downpayment
-msgid "Is a down payment"
-msgstr "Là khoản trả trước"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
@@ -8918,13 +8725,13 @@ msgstr "Hạng mục bút toán"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s created"
-msgstr ""
+msgstr "Hạng mục bút toán %s đã được tạo"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s deleted"
-msgstr ""
+msgstr "Hạng mục bút toán %s đã bị xoá"
 
 #. module: account
 #. odoo-python
@@ -9139,7 +8946,7 @@ msgstr "Nhãn thuế trên hóa đơn"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 msgid "Label on PoS Receipts"
-msgstr ""
+msgstr "Nhãn trên Biên lai PoS"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__mail_lang
@@ -9329,7 +9136,7 @@ msgstr "Trái"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_legal_notes
 msgid "Legal Notes"
-msgstr "Ghi chú mang tính pháp lý..."
+msgstr "Ghi Chú Pháp Lý"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -9556,7 +9363,7 @@ msgstr "Tạo bút toán dồn tích"
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid ""
 "Make sure you first activate the audit trail in the accounting settings"
-msgstr ""
+msgstr "Hãy nhớ kích hoạt dấu vết kiểm toán trong cài đặt kế toán trước"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -10036,7 +9843,7 @@ msgstr "Phủ định số dư thuế"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
 msgid "Negative value of amount field if payment_type is outbound"
-msgstr "Giá trị âm của trường số tiền nếu payment_type là gửi đi "
+msgstr "Giá trị âm của trường số tiền nếu loại thanh toán là dạng nhận về"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -10054,7 +9861,6 @@ msgstr "Không bao giờ"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_order_mixin.py:0
 #: code:addons/account/models/account_tax.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New"
@@ -10079,16 +9885,6 @@ msgstr "Giá trị mới"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "Mới nhất trước tiên"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10288,9 +10084,6 @@ msgstr "Tôi không chắc lắm. Hãy giúp tôi!"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_note
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_note
-#: model:ir.model.fields.selection,name:account.selection__account_order_line_mixin__display_type__line_note
-#: model:ir.model.fields.selection,name:account.selection__purchase_order_line__display_type__line_note
-#: model:ir.model.fields.selection,name:account.selection__sale_order_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Note"
@@ -10587,11 +10380,6 @@ msgid "Only administrators can install chart templates"
 msgstr "Chỉ quản trị viên mới có thể cài đặt mẫu hệ thống"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_advance_payment_wizard__amount_invoiced
-msgid "Only confirmed down payments and invoiced amounts are considered."
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Only draft journal entries can be cancelled."
@@ -10725,27 +10513,6 @@ msgstr "Tuỳ chọn"
 #: model:ir.model.fields,help:account.field_account_account__tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
 msgstr "Thẻ tùy chọn mà bạn có thể muốn gắn cho báo cáo tuỳ chỉnh"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__order_ids
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__order_id
-msgid "Order"
-msgstr "Đơn hàng"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__count
-msgid "Order Count"
-msgstr "Số lượng đơn hàng"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__order_line
-msgid "Order Line"
-msgstr "Dòng đơn hàng"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__name
-msgid "Order Reference"
-msgstr "Mã đơn hàng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -11051,7 +10818,6 @@ msgstr "Đã thanh toán một phần"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__partner_id
 #: model:ir.model.fields,field_description:account.field_account_move__partner_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__partner_id
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__partner_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__partner_id
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_partner_id
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_partner_id
@@ -11146,7 +10912,7 @@ msgstr "(Các) đối tác phải có địa chỉ email."
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Partners"
-msgstr "Đối tác"
+msgstr "Các đối tác"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_missing_account_list_view
@@ -11343,7 +11109,6 @@ msgstr "Chi tiết điều khoản thanh toán"
 #: model:ir.model,name:account.model_account_payment_term
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payment_term_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_payment_term_id
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__payment_term_id
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_payment_term_id
 #: model:ir.model.fields,field_description:account.field_account_payment_term__name
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__payment_id
@@ -11613,7 +11378,7 @@ msgstr "Vui lòng sử dụng nội dung sau khi thanh toán:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__pos_receipt_label
 msgid "PoS receipt label"
-msgstr ""
+msgstr "Nhãn biên lai PoS"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_url
@@ -11785,7 +11550,6 @@ msgstr "Mô tả vấn đề"
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_id
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__product_id
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__product
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -11930,11 +11694,6 @@ msgid "Quantity"
 msgstr "Số lượng"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__qty_to_invoice
-msgid "Quantity to Invoice"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Quantity:"
 msgstr "Số lượng:"
@@ -11970,23 +11729,14 @@ msgid "RD Expenses"
 msgstr "Chi phí RD"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
-msgstr "Đánh giá"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Đánh số thứ tự lại"
+
+#. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr "Chỉ đọc"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12058,6 +11808,13 @@ msgid "Recognition Date"
 msgstr "Ngày công nhận"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Recompute all taxes and accounts based on this fiscal position"
+msgstr ""
+"Tính toán lại tất cả các loại thuế và tài khoản dựa trên vị thế tài chính "
+"này"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Reconciled"
@@ -12114,7 +11871,7 @@ msgstr "Tập dữ liệu"
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "Recursion found for tax “%s”."
-msgstr ""
+msgstr "Tìm thấy đệ quy cho thuế “%s”."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -12124,7 +11881,7 @@ msgstr "Thuế đã giảm trừ:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__ref
 msgid "Ref."
-msgstr "Tham chiếu"
+msgstr "Tham chiếu."
 
 #. module: account
 #. odoo-python
@@ -12200,13 +11957,6 @@ msgstr "Bấm để tạo một biên lai mua hàng mới"
 #: model_terms:ir.actions.act_window,help:account.action_account_payments_transfer
 msgid "Register a payment"
 msgstr "Ghi nhận một khoản thanh toán"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_advance_payment_wizard__advance_payment_method__delivered
-#: model:ir.model.fields.selection,name:account.selection__purchase_advance_payment_wizard__advance_payment_method__delivered
-#: model:ir.model.fields.selection,name:account.selection__sale_advance_payment_inv__advance_payment_method__delivered
-msgid "Regular invoice/bill"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__related_moves
@@ -12833,9 +12583,6 @@ msgstr "Tìm kiếm mã hóa đơn/thanh toán trong tham chiếu của sao kê"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
-#: model:ir.model.fields.selection,name:account.selection__account_order_line_mixin__display_type__line_section
-#: model:ir.model.fields.selection,name:account.selection__purchase_order_line__display_type__line_section
-#: model:ir.model.fields.selection,name:account.selection__sale_order_line__display_type__line_section
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Section"
 msgstr "Phần"
@@ -13285,11 +13032,6 @@ msgstr ""
 " sẽ được đặt tên bằng tiền tố này theo mặc định."
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Show Accounting Features - Readonly"
-msgstr "Hiển thị tính năng kế toán - Chỉ đọc"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -13320,11 +13062,6 @@ msgid "Show Force Tax Included"
 msgstr "Hiển thị Bắt buộc thuế được bao gồm"
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Show Full Accounting Features"
-msgstr "Hiển thị đầy đủ tính năng kế toán"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Journal Entries to Hash"
@@ -13353,7 +13090,7 @@ msgstr "Hiển thị chi tiết điều khoản thanh toán"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__show_pdf_template_menu
 msgid "Show Pdf Template Menu"
-msgstr ""
+msgstr "Hiện menu mẫu PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -13410,7 +13147,7 @@ msgstr "Thư bưu điện"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Some documents are being sent by another process already."
-msgstr ""
+msgstr "Một số chứng từ đang được gửi bởi một quá trình khác."
 
 #. module: account
 #. odoo-python
@@ -13687,7 +13424,6 @@ msgstr "Tiêu đề..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__price_subtotal
 msgid "Subtotal"
 msgstr "Thành tiền"
 
@@ -13769,7 +13505,6 @@ msgstr "Dòng mục tiêu"
 #: model:ir.model,name:account.model_account_tax
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_tax
 #: model:ir.model.fields,field_description:account.field_account_move__amount_tax
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__price_tax
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_tax
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tax_id
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_tax_id
@@ -13982,7 +13717,7 @@ msgstr "Thẻ thuế"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
 msgid "Tax Tags Formula Shortcut"
-msgstr ""
+msgstr "Lối tắt công thức thẻ thuế"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
@@ -14026,12 +13761,12 @@ msgstr "Dòng phân bổ thuế đã tạo ra dòng bút toán này, nếu có"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Tax excl."
-msgstr "Chưa bao gồm thuế"
+msgstr "Chưa bao gồm thuế."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Tax incl."
-msgstr "Bao gồm thuế"
+msgstr "Đã gồm thuế."
 
 #. module: account
 #. odoo-python
@@ -14059,8 +13794,6 @@ msgstr "Thuế đã sử dụng"
 #: code:addons/account/models/account_account.py:0
 #: model:ir.actions.act_window,name:account.action_tax_form
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_ids
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__tax_ids
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__amount_tax
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__tax_ids
 #: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__taxes
 #: model:ir.ui.menu,name:account.menu_action_tax_form
@@ -14083,7 +13816,7 @@ msgstr "Thuế được áp dụng"
 #: model:ir.model.fields,field_description:account.field_account_move__taxes_legal_notes
 #: model:ir.model.fields,field_description:account.field_account_payment__taxes_legal_notes
 msgid "Taxes Legal Notes"
-msgstr "Ghi chú mang tính pháp lý về thuế..."
+msgstr "Ghi Chú Pháp Lý về Thuế"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14125,11 +13858,6 @@ msgstr ""
 "Trường kỹ thuật chứa các quốc gia mà công ty này đang sử dụng các tính năng "
 "liên quan đến thuế (do đó các tính năng mà phân hệ l10n cần hiển thị các "
 "trường liên quan đến thuế)."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_order_line_mixin__display_type
-msgid "Technical field for UX purpose."
-msgstr "Trường kỹ thuật cho mục đích UX."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -14261,8 +13989,8 @@ msgid ""
 "The Early Payment Discount functionality can only be used with payment terms"
 " using a single 100% line. "
 msgstr ""
-"Chức năng chiết khấu thanh toán sớm chỉ có thể được áp dụng cho các điều "
-"khoản thanh toán sử dụng duy nhất một dòng 100%."
+"Chức năng Chiết khấu thanh toán sớm chỉ có thể được sử dụng với các điều "
+"khoản thanh toán sử dụng một chi tiết 100% dòng. "
 
 #. module: account
 #. odoo-python
@@ -14517,6 +14245,16 @@ msgid "The company this distribution line belongs to."
 msgstr "Công ty chứa dòng phân phối này."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The country code of the foreign VAT number does not match any country in the"
+" group."
+msgstr ""
+"Mã quốc gia của số VAT nước ngoài không khớp với bất kỳ quốc gia nào trong "
+"nhóm."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
 msgstr "Quốc gia áp dụng nhóm thuế này."
@@ -14591,7 +14329,7 @@ msgstr "Ngày được thêm phải là số và phải nằm trong khoảng t�
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid "The days added must be between 0 and 31."
-msgstr "Ngày được thêm phải nằm trong khoảng từ 0 tới 31"
+msgstr "Những ngày được thêm phải nằm trong khoảng từ 0 đến 31."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id
@@ -14664,11 +14402,6 @@ msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
 "Vị trí tài chính quy định các loại thuế/tài khoản được dùng cho liên hệ này."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_advance_payment_wizard__fixed_amount
-msgid "The fixed amount to be invoiced in advance."
-msgstr "Số tiền cố định sẽ được lập hóa đơn trước."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14772,7 +14505,7 @@ msgstr "Bút toán tạo ra bút toán thuế cơ sở dòng tiền này."
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "The journal in which to upload the invoice is not specified. "
-msgstr "Chưa chỉ định sổ nhật ký để tải hóa đơn lên."
+msgstr "Sổ để tải hóa đơn lên chưađược chỉ định. "
 
 #. module: account
 #. odoo-python
@@ -14907,11 +14640,6 @@ msgstr "Khoản thanh toán đã tạo ra bút toán này"
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 msgid "The payment's currency."
 msgstr "Tiền tệ của khoản thanh toán."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_advance_payment_wizard__amount
-msgid "The percentage of amount to be invoiced in advance."
-msgstr "Phần trăm số tiền sẽ được lập hóa đơn trước."
 
 #. module: account
 #. odoo-python
@@ -15258,12 +14986,6 @@ msgstr ""
 "thu\" hoặc \"phải trả\"."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_advance_payment.py:0
-msgid "The value of a down payment amount must be positive."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
 msgid ""
 "The warning informs a rounding factor change might be dangerous on "
@@ -15547,7 +15269,7 @@ msgstr "Hóa đơn này đang được gửi trong nền."
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid "This is the Audit Trail Report"
-msgstr ""
+msgstr "Đây là Báo cáo dấu vết kiểm toán"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -15607,7 +15329,7 @@ msgstr "Bút toán này đã được đảo khoá."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
-msgstr ""
+msgstr "Bút toán này được cài đặt để tự động vào sổ vào ngày %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15683,6 +15405,15 @@ msgid "This recurring move will be posted up to and including this date."
 msgstr "Bút toán định kỳ này sẽ được vào sổ cho đến và bao gồm cả ngày này."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"This will update all taxes and accounts based on the currently selected "
+"fiscal position."
+msgstr ""
+"Điều này sẽ cập nhật tất cả các loại thuế và tài khoản dựa trên vị thế tài "
+"chính hiện được chọn."
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
 msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
@@ -15755,6 +15486,8 @@ msgid ""
 "To add information to a previously sent invoice, reply to your \"sent\" "
 "email"
 msgstr ""
+"Để thêm thông tin vào hóa đơn đã gửi trước đó, hãy trả lời email \"đã gửi\" "
+"của bạn"
 
 #. module: account
 #. odoo-python
@@ -15774,6 +15507,9 @@ msgid ""
 "manually validated. You should go on the partner bank account of %(partner)s"
 " in order to validate it."
 msgstr ""
+"Để ghi lại các khoản thanh toán bằng %(method_name)s, tài khoản ngân hàng "
+"của người nhận phải được xác thực theo cách thủ công. Bạn nên đi đến tài "
+"khoản ngân hàng của %(partner)s để tiến hành xác thực."
 
 #. module: account
 #. odoo-python
@@ -15783,6 +15519,9 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to"
 " validate it."
 msgstr ""
+"Để ghi lại các khoản thanh toán với %(payment_method)s, tài khoản ngân hàng "
+"của người nhận phải được xác thực theo cách thủ công. Bạn nên vào tài khoản "
+"ngân hàng đối tác để tiến hành xác thực."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -15807,8 +15546,6 @@ msgstr "Hoạt động hôm nay"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__price_total
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__amount_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
@@ -15965,7 +15702,7 @@ msgstr "Tổng theo loại tiền tệ đã ký"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs & revenues by project, department, etc"
-msgstr "Theo dõi chi phí & doanh thu theo dự án, phòng ban,..."
+msgstr "Theo dõi chi phí và doanh thu theo dự án, bộ phận, v.v"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_details
@@ -16148,7 +15885,6 @@ msgstr "Định danh duy nhất cho dòng này."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__price_unit
 msgid "Unit Price"
 msgstr "Đơn giá"
 
@@ -16160,7 +15896,6 @@ msgstr "Đơn giá:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__product_uom
 msgid "Unit of Measure"
 msgstr "Đơn vị tính"
 
@@ -16213,7 +15948,7 @@ msgstr "Bỏ đối chiếu"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 msgid "Unreconcile Transactions"
-msgstr "Bỏ đối chiếu giao dịch "
+msgstr "Giao dịch chưa đối soát"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -16238,7 +15973,6 @@ msgstr "Giao dịch chưa đối chiếu"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 msgid "Untaxed Amount"
@@ -16254,7 +15988,7 @@ msgstr "Số tiền trước thuế đã ký"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal_currency
 msgid "Untaxed Amount in Currency"
-msgstr ""
+msgstr "Số tiền chưa tính thuế bằng tiền tệ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -16290,6 +16024,11 @@ msgstr "Lên"
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Update Only"
 msgstr "Chỉ cập nhật"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Update Taxes and Accounts"
+msgstr "Cập nhật thuế và tài khoản"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16511,7 +16250,7 @@ msgstr "Đã xác thực"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Validating"
-msgstr ""
+msgstr "Xác thực"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
@@ -16963,7 +16702,7 @@ msgstr "Bạn chỉ có thể gửi từ cùng một công ty."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can only send sales documents"
-msgstr "Bạn chỉ có thể gửi chứng từ bán hàng."
+msgstr "Bạn chỉ có thể gửi tài liệu bán hàng"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -17134,6 +16873,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
+"You can't reset to draft those journal entries. You need to request a "
+"cancellation instead."
+msgstr ""
+"Bạn không thể đặt lại để soạn thảo các mục nhật ký đó. Thay vào đó, bạn cần "
+"phải yêu cầu hủy bỏ."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr ""
 "Bạn không thể thêm/sửa các bút toán tính từ ngày khoá sổ %s trở về trước."
@@ -17168,6 +16917,16 @@ msgid ""
 msgstr ""
 "Bạn không thể thay đổi loại tài khoản được đặt là Tài khoản ngân hàng trên "
 "sổ nhật ký thành Phải thu hoặc Phải trả."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
+"Bạn không thể tạo vị thế tài chính với một quốc gia nằm ngoài nhóm quốc gia "
+"đã chọn."
 
 #. module: account
 #. odoo-python
@@ -17301,6 +17060,9 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
+"Bạn không thể chỉnh sửa nhật ký di chuyển tài khoản nếu nó đã được đăng một "
+"lần, trừ khi tên bị xóa hoặc được đặt thành \"/\". Điều này có thể tạo ra "
+"một khoảng trống trong trình tự."
 
 #. module: account
 #. odoo-python
@@ -17310,6 +17072,9 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
+"Bạn không thể chỉnh sửa nhật ký di chuyển tài khoản với số thứ tự được chỉ "
+"định, trừ khi tên bị xóa hoặc được đặt thành \"/\". Điều này có thể tạo ra "
+"một khoảng trống trong trình tự."
 
 #. module: account
 #. odoo-python
@@ -17696,7 +17461,7 @@ msgstr "bí danh"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "amounts for"
-msgstr ""
+msgstr "số tiền cho"
 
 #. module: account
 #. odoo-javascript
@@ -17750,7 +17515,7 @@ msgstr "đóng"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
-msgstr ""
+msgstr "ngày cho"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -17760,77 +17525,77 @@ msgstr "đến hạn nếu thanh toán trước"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g BE15001559627230"
-msgstr "VD: VN15001559627230"
+msgstr "vd: VN15001559627230"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g Bank of America"
-msgstr "VD: Ngân hàng Hoa Kỳ"
+msgstr "vd: Ngân hàng nhà nước"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g GEBABEBB"
-msgstr "VD: GEBABEBB"
+msgstr "vd: GEBABEBB"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. 101000"
-msgstr "VD: 101000"
+msgstr "ví dụ. 101000"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "e.g. 30 days"
-msgstr "VD: 30 ngày"
+msgstr "ví dụ. 30 ngày"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "e.g. Bank Fees"
-msgstr "VD: Phí ngân hàng"
+msgstr "vd: Phí ngân hàng"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "e.g. Cash"
-msgstr "VD: Tiền mặt"
+msgstr "ví dụ. Tiền mặt"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. Current Assets"
-msgstr "VD: Tài sản lưu động"
+msgstr "e.g. Tài sản ngắn hạn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Customer Invoices"
-msgstr "VD: Hóa đơn bán hàng"
+msgstr "e.g. Hóa đơn bán hàng"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "e.g. GAAP, IFRS, ..."
-msgstr "VD: GAAP, IFRS, ..."
+msgstr "vd: GAAP, IFRS, ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. INV"
-msgstr "VD: INV"
+msgstr "e.g. INV"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "e.g. My Company"
-msgstr "VD: My Company"
+msgstr "ví dụ. Công ty của tôi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "e.g. Payment terms: 30 days after invoice date"
-msgstr "VD: Điều khoản thanh toán: 30 ngày sau ngày lập hoá đơn"
+msgstr "ví dụ. Thời hạn thanh toán: 30 ngày kể từ ngày xuất hóa đơn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "e.g. https://www.odoo.com"
-msgstr "VD: https://www.odoo.com"
+msgstr "vd: https://www.odoo.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. mycompany.com"
-msgstr "VD: mycompany.com"
+msgstr "ví dụ. \"mycompany.com\""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -17845,7 +17610,7 @@ msgstr "nằm ngoài khoảng thời gian điển hình."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "has been applied."
-msgstr ""
+msgstr "đã được áp dụng."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -17881,7 +17646,7 @@ msgstr "hoá đơn"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "is a key action. Have you reviewed everything?"
-msgstr ""
+msgstr "là một hành động quan trọng. Bạn đã kiểm tra kỹ thông tin chưa?"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -17910,12 +17675,12 @@ msgstr "pháp luật."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this customer."
-msgstr ""
+msgstr "được kê dưới đây cho khách hàng này."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this vendor."
-msgstr ""
+msgstr "được kê dưới đây cho nhà cung cấp này."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -18078,7 +17843,7 @@ msgstr "người dùng"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "will auto-confirm on their respective dates."
-msgstr ""
+msgstr "sẽ tự động xác nhận vào ngày tương ứng."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

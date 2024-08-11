@@ -3,16 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-07-24 12:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -624,7 +624,11 @@ msgid ""
 "            Please remit payment at your earliest convenience.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br><br>\n"
-"                Please use the following communication for your payment: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"                Please use the following communication for your payment: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    on the account <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
@@ -641,51 +645,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        عزيزي\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)،\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t>،\n"
-"        </t>\n"
-"        <br><br>\n"
-"        إليك\n"
-"        <t t-if=\"object.name\">\n"
-"            فاتورتك <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            الفاتورة\n"
-"        </t>\n"
-"        <t t-if=\"object.invoice_origin\">\n"
-"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"        </t>\n"
-"        والتي تبلغ قيمتها <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-"        من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
-"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
-"            لقد تم دفع قيمة هذه الفاتورة بالفعل.\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            يرجى تحويل المدفوعات في أقرب وقت ممكن.\n"
-"            <t t-if=\"object.payment_reference\">\n"
-"                <br><br>\n"
-"                يرجى استخدام المرجع التالي لإكمال عملية الدفع: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
-"            </t>\n"
-"        </t>\n"
-"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
-"            <br><br>\n"
-"            ملاحظة: يمكنك مراجعة الجداول الزمنية <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">من البوابة.</a>\n"
-"        </t>\n"
-"        <br><br>\n"
-"        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>ميتشل آدمن</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -1007,19 +966,6 @@ msgstr "<span class=\"text-nowrap\">2,350.00</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"text-warning\">Medium risk</span>: Iban"
 msgstr "<span class=\"text-warning\">خطورة متوسطة</span>: Iban "
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_advance_payment
-msgid ""
-"<span invisible=\"advance_payment_method != 'percentage'\" class=\"oe_inline\">% </span>\n"
-"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" name=\"amount_warning\" title=\"title\">\n"
-"                            <i class=\"fa fa-warning\"/>\n"
-"                        </span>"
-msgstr ""
-"<span invisible=\"advance_payment_method != 'percentage'\" class=\"oe_inline\">% </span>\n"
-"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" name=\"amount_warning\" title=\"العنوان \">\n"
-"                            <i class=\"fa fa-warning\"/>\n"
-"                        </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1502,16 +1448,6 @@ msgid "A section title"
 msgstr "عنوان القسم "
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_advance_payment_wizard__advance_payment_method
-msgid ""
-"A standard invoice is issued with all the order lines ready for invoicing, "
-"according to their invoicing policy (based on ordered or delivered "
-"quantity)."
-msgstr ""
-"يتم إصدار الفاتورة القياسية مع كافة بنود الطلب جاحزة لفوترتها، وفقاً لسياسة "
-"الفوترة الخاصة بها (بناءً على الكميات المطلوبة أو التي تم توصيلها). "
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "A statement should only contain lines from the same journal."
@@ -1696,16 +1632,6 @@ msgid "Account Mapping"
 msgstr "تخطيط الحسابات "
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__account_move_ids
-msgid "Account Move"
-msgstr "حركة الحساب"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__account_move_line_ids
-msgid "Account Move Line"
-msgstr "بند حركة الحساب "
-
-#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "عكس حركة الحساب "
@@ -1730,16 +1656,6 @@ msgstr "اسم الحساب"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Account Number"
 msgstr "رقم الحساب"
-
-#. module: account
-#: model:ir.model,name:account.model_account_order_line_mixin
-msgid "Account Order Line Mixin"
-msgstr "Mixin لبند طلب الحساب "
-
-#. module: account
-#: model:ir.model,name:account.model_account_order_mixin
-msgid "Account Order Mixin"
-msgstr "Mixin لطلب الحساب "
 
 #. module: account
 #: model:account.account,name:account.1_payable
@@ -1955,6 +1871,11 @@ msgid ""
 msgstr ""
 "الحساب: قم بترحيل مسودات القيود عندما تكون خاصية auto_post مُمَكّنة ويكون "
 "تاريخ المحاسبة حتى اليوم "
+
+#. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr "محاسب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2329,9 +2250,9 @@ msgstr ""
 "{new_date} "
 
 #. module: account
-#: model:ir.model,name:account.model_account_advance_payment_wizard
-msgid "Advance Payment Account Move"
-msgstr "حركة حساب الدفع المقدم "
+#: model:res.groups,name:account.group_account_basic
+msgid "Advanced Billing"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -2464,11 +2385,6 @@ msgid "Allows you to use the analytic accounting."
 msgstr "يتيح لك استخدام المحاسبة التحليلية. "
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__amount_invoiced
-msgid "Already invoiced"
-msgstr "مفوتر بالفعل "
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
 msgid "Always"
 msgstr "دائمًا"
@@ -2579,11 +2495,6 @@ msgid "Amount Type"
 msgstr "نوع المبلغ"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__amount_invoiced
-msgid "Amount already invoiced"
-msgstr "تمت فوترة المبلغ بالفعل "
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_currency
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_currency
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
@@ -2599,12 +2510,6 @@ msgstr "المبلغ الذي يجب دفعه (بعملة الشركة) "
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount_currency
 msgid "Amount to Pay (foreign currency)"
 msgstr "المبلغ الذي يجب دفعه (بالعملة الأجنبية) "
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__amount_to_invoice
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__amount_to_invoice
-msgid "Amount to invoice"
-msgstr "المبلغ المراد فوترته "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_words
@@ -3359,11 +3264,6 @@ msgid "Based on Payment"
 msgstr "بناءً على السداد"
 
 #. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Basic"
-msgstr "أساسي "
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "الدفعات المجمعة "
@@ -3418,11 +3318,6 @@ msgid "Billing"
 msgstr "الفوترة "
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Billing Administrator"
-msgstr "مدير الفوترة "
-
-#. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3464,6 +3359,11 @@ msgstr "فارغ إذا كان صفر "
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "رسالة الحظر"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr "ماسك الدفاتر "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3684,11 +3584,6 @@ msgstr "الترحيل لـ"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_journal_default_account_44
-#: model:account.account,name:account.1_cash_journal_default_account_50
-#: model:account.account,name:account.1_cash_journal_default_account_51
-#: model:account.account,name:account.1_cash_journal_default_account_52
-#: model:account.account,name:account.1_cash_journal_default_account_53
-#: model:account.account,name:account.1_cash_journal_default_account_54
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4155,7 +4050,6 @@ msgstr "الشركات التي تشير إلى شريك "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_id
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__company_id
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_id
@@ -4172,7 +4066,6 @@ msgstr "الشركات التي تشير إلى شريك "
 #: model:ir.model.fields,field_description:account.field_account_move_line__company_id
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__company_id
 #: model:ir.model.fields,field_description:account.field_account_move_send__company_id
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__company_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__company_id
 #: model:ir.model.fields,field_description:account.field_account_payment__company_id
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__company_id
@@ -4507,19 +4400,9 @@ msgid "Create Automatic Entries"
 msgstr "إنشاء قيود تلقائية"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_advance_payment
-msgid "Create Draft"
-msgstr "إنشاء مسودة "
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Create Entry"
 msgstr "إنشاء قيد "
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__advance_payment_method
-msgid "Create Invoice"
-msgstr "إنشاء فاتورة"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4896,7 +4779,6 @@ msgstr "العملات"
 #. module: account
 #: model:ir.model,name:account.model_res_currency
 #: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
@@ -4904,8 +4786,6 @@ msgstr "العملات"
 #: model:ir.model.fields,field_description:account.field_account_move__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__currency_id
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__currency_id
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment__currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_term__currency_id
@@ -5570,7 +5450,6 @@ msgid "Depreciation"
 msgstr "إهلاك"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__name
 #: model:ir.model.fields,field_description:account.field_account_tax__description
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_preview
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_preview
@@ -5668,7 +5547,6 @@ msgstr "خصم %"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 #: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
-#: model_terms:ir.ui.view,arch_db:account.view_account_advance_payment
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Discard"
@@ -5688,7 +5566,6 @@ msgstr "الخصم %"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__discount
 msgid "Discount (%)"
 msgstr "خصم (%)"
 
@@ -5759,11 +5636,6 @@ msgid "Display Days Next Month"
 msgstr "عرض أيام الشهر التالي "
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__display_draft_invoice_warning
-msgid "Display Draft Invoice Warning"
-msgstr "عرض تحذير مسودة الفاتورة "
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
 msgid "Display Force Post"
 msgstr "عرض فرض الترحيل "
@@ -5774,11 +5646,6 @@ msgstr "عرض فرض الترحيل "
 #: model:ir.model.fields,field_description:account.field_account_payment__display_inactive_currency_warning
 msgid "Display Inactive Currency Warning"
 msgstr "عرض تحذير عدم فعالية العملة "
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__display_invoice_amount_warning
-msgid "Display Invoice Amount Warning"
-msgstr "عرض تحذير مبلغ الفاتورة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__display_mail_composer
@@ -5858,7 +5725,6 @@ msgstr "عرض رمز QR الخاص بـ SEPA "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__display_type
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__display_type
 msgid "Display Type"
 msgstr "نوع العرض"
 
@@ -5945,73 +5811,6 @@ msgid "Down"
 msgstr "أسفل "
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_order_line_mixin.py:0
-#: code:addons/account/wizard/account_advance_payment.py:0
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__amount
-msgid "Down Payment"
-msgstr "الدفعة المقدّمة"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_order_line_mixin.py:0
-msgid "Down Payment (Cancelled)"
-msgstr "الدفعة المقدمة (ملغية) "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_order_line_mixin.py:0
-msgid "Down Payment (ref: %(reference)s on %(date)s)"
-msgstr "دفعة مقدمة (المرجع: %(reference)s في %(date)s) "
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__fixed_amount
-msgid "Down Payment Amount (Fixed)"
-msgstr "مبلغ الدفعة المقدمة (ثابت) "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_order_line_mixin.py:0
-msgid "Down Payment: %(date)s (Draft)"
-msgstr "الدفعة المقدمة: %(date)s (مسودة) "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_order_line_mixin.py:0
-#: code:addons/account/models/account_order_mixin.py:0
-msgid "Down Payments"
-msgstr "الدفعات المقدّمة "
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_advance_payment_wizard__advance_payment_method__fixed
-#: model:ir.model.fields.selection,name:account.selection__purchase_advance_payment_wizard__advance_payment_method__fixed
-#: model:ir.model.fields.selection,name:account.selection__sale_advance_payment_inv__advance_payment_method__fixed
-msgid "Down payment (fixed amount)"
-msgstr "دفعة مقدّمة (مبلغ ثابت)"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_advance_payment_wizard__advance_payment_method__percentage
-#: model:ir.model.fields.selection,name:account.selection__purchase_advance_payment_wizard__advance_payment_method__percentage
-#: model:ir.model.fields.selection,name:account.selection__sale_advance_payment_inv__advance_payment_method__percentage
-msgid "Down payment (percentage)"
-msgstr "دفعة مقدّمة (نسبة)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_advance_payment.py:0
-msgid "Down payment of %(amount)s%%"
-msgstr "الدفعة المقدمة لـ %(amount)s%% "
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_order_line_mixin__is_downpayment
-msgid ""
-"Down payments are made when creating account moves from an order. They are "
-"not copied when duplicating an order."
-msgstr ""
-"يتم تسجيل الدفعات المقدّمة عند إنشاء حركات الحساب من الطلب. لا يتم نسخها عند"
-" إنشاء نسخة من الطلب. "
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_download
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -6082,8 +5881,6 @@ msgid "Draft Invoice"
 msgstr "مسودة فاتورة"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_advance_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Draft Invoices"
 msgstr "مسودة فواتير"
@@ -6846,7 +6643,6 @@ msgstr "الفترات المالية"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__position_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
@@ -7359,6 +7155,13 @@ msgid "Has Entries"
 msgstr "يحتوي على قيود "
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
+#: model:ir.model.fields,field_description:account.field_account_move__show_update_fpos
+#: model:ir.model.fields,field_description:account.field_account_payment__show_update_fpos
+msgid "Has Fiscal Position Changed"
+msgstr "تغير الوضع المالي "
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_iban_warning
 msgid "Has Iban Warning"
@@ -7411,11 +7214,6 @@ msgstr "يحتوي على بنود كشف الحساب البنكي "
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
 msgstr "يحتوي قيود غير مسواة"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__has_down_payments
-msgid "Has down payments"
-msgstr "يحتوي على الدفعات المقدمة "
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
@@ -8204,11 +8002,6 @@ msgid "Invalid fiscal year last day"
 msgstr "آخر أيام السنة المالية غير صحيح "
 
 #. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "تقييم المخزون "
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
 msgstr "قيمة المخزون"
@@ -8352,7 +8145,6 @@ msgstr "الفوترة الفردية "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__state
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__invoice_status
 msgid "Invoice Status"
 msgstr "حالة الفاتورة"
 
@@ -8609,11 +8401,6 @@ msgid "Is Complete"
 msgstr "مكتمل "
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__is_downpayment
-msgid "Is Downpayment"
-msgstr "دفعة مقدّمة "
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
 msgid "Is Entries"
 msgstr "قيود "
@@ -8687,11 +8474,6 @@ msgstr "Is Storno"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_valid
 msgid "Is Valid"
 msgstr "صالح "
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__is_downpayment
-msgid "Is a down payment"
-msgstr "دفعة مقدّمة "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
@@ -10009,7 +9791,6 @@ msgstr "مطلقًا"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_order_mixin.py:0
 #: code:addons/account/models/account_tax.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New"
@@ -10034,16 +9815,6 @@ msgstr "قيم جديدة "
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "الأحدث أولاً "
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "الفعالية التالية في تقويم الأنشطة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10243,9 +10014,6 @@ msgstr "لست واثقاً... أريد المساعدة! "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_note
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_note
-#: model:ir.model.fields.selection,name:account.selection__account_order_line_mixin__display_type__line_note
-#: model:ir.model.fields.selection,name:account.selection__purchase_order_line__display_type__line_note
-#: model:ir.model.fields.selection,name:account.selection__sale_order_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Note"
@@ -10534,11 +10302,6 @@ msgid "Only administrators can install chart templates"
 msgstr "وحدهم المدراء باستطاعتهم تثبيت قوالب المخططات البيانية "
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_advance_payment_wizard__amount_invoiced
-msgid "Only confirmed down payments and invoiced amounts are considered."
-msgstr "يتم اعتبار الدفعات المقدمة والمبالغ المفوترة المؤكدة فقط. "
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Only draft journal entries can be cancelled."
@@ -10671,27 +10434,6 @@ msgstr "اختياري "
 #: model:ir.model.fields,help:account.field_account_account__tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
 msgstr "علامات تصنيف اختيارية قد تحتاج لاستخدامها لإنشاء تقارير مخصصة "
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__order_ids
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__order_id
-msgid "Order"
-msgstr "الطلب"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_advance_payment_wizard__count
-msgid "Order Count"
-msgstr "عدد الطلبات "
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__order_line
-msgid "Order Line"
-msgstr "بند الأمر"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__name
-msgid "Order Reference"
-msgstr "مرجع الطلب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -10996,7 +10738,6 @@ msgstr "مسدد جزئياً "
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__partner_id
 #: model:ir.model.fields,field_description:account.field_account_move__partner_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__partner_id
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__partner_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__partner_id
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_partner_id
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_partner_id
@@ -11288,7 +11029,6 @@ msgstr "تفاصيل شروط الدفع "
 #: model:ir.model,name:account.model_account_payment_term
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payment_term_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_payment_term_id
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__payment_term_id
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_payment_term_id
 #: model:ir.model.fields,field_description:account.field_account_payment_term__name
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__payment_id
@@ -11716,7 +11456,6 @@ msgstr "وصف المشكلة"
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_id
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__product_id
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__product
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -11861,11 +11600,6 @@ msgid "Quantity"
 msgstr "الكمية"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__qty_to_invoice
-msgid "Quantity to Invoice"
-msgstr "الكمية المراد فوترتها "
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Quantity:"
 msgstr "الكمية:"
@@ -11901,23 +11635,14 @@ msgid "RD Expenses"
 msgstr "نفقات البحث والتطوير "
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
-msgstr "التقييمات "
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "إعادة تسلسل "
+
+#. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr "للقراءة فقط "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -11987,6 +11712,11 @@ msgstr "المستلمين"
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Recognition Date"
 msgstr "تاريخ الإثبات "
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Recompute all taxes and accounts based on this fiscal position"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -12131,13 +11861,6 @@ msgstr "تسجيل إيصال شراء جديد"
 #: model_terms:ir.actions.act_window,help:account.action_account_payments_transfer
 msgid "Register a payment"
 msgstr "تسجيل دفعة"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_advance_payment_wizard__advance_payment_method__delivered
-#: model:ir.model.fields.selection,name:account.selection__purchase_advance_payment_wizard__advance_payment_method__delivered
-#: model:ir.model.fields.selection,name:account.selection__sale_advance_payment_inv__advance_payment_method__delivered
-msgid "Regular invoice/bill"
-msgstr "فاتورة عميل/فاتورة مورّد دورية "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__related_moves
@@ -12764,9 +12487,6 @@ msgstr "قم بالبحث في مرجع كشف الحساب لإيجاد مرج�
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
-#: model:ir.model.fields.selection,name:account.selection__account_order_line_mixin__display_type__line_section
-#: model:ir.model.fields.selection,name:account.selection__purchase_order_line__display_type__line_section
-#: model:ir.model.fields.selection,name:account.selection__sale_order_line__display_type__line_section
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Section"
 msgstr "القسم"
@@ -13208,11 +12928,6 @@ msgstr ""
 "البادئة افتراضياً. "
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Show Accounting Features - Readonly"
-msgstr "إظهار الخصائص المحاسبية - للقراءة فقط "
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -13241,11 +12956,6 @@ msgstr "إظهار تفاصيل الخصم "
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
 msgstr "Show Force Tax Included"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Show Full Accounting Features"
-msgstr "عرض كافة الخصائص المحاسبية "
 
 #. module: account
 #. odoo-python
@@ -13610,7 +13320,6 @@ msgstr "الموضوع..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__price_subtotal
 msgid "Subtotal"
 msgstr "الناتج الفرعي"
 
@@ -13692,7 +13401,6 @@ msgstr "البند المستهدف "
 #: model:ir.model,name:account.model_account_tax
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_tax
 #: model:ir.model.fields,field_description:account.field_account_move__amount_tax
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__price_tax
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_tax
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tax_id
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_tax_id
@@ -13982,8 +13690,6 @@ msgstr "الضريبة المستخدمة "
 #: code:addons/account/models/account_account.py:0
 #: model:ir.actions.act_window,name:account.action_tax_form
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_ids
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__tax_ids
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__amount_tax
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__tax_ids
 #: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__taxes
 #: model:ir.ui.menu,name:account.menu_action_tax_form
@@ -14048,11 +13754,6 @@ msgstr ""
 "حقل تقني يحتوي على الدول التي تستخدم هذه الشركة خصائص متعلقة بالضرائب من "
 "أجلها (وبالتالي، التي تحتاج تطبيقات l10n إظهار حقول متعلقة بالضرائب من "
 "أجلها). "
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_order_line_mixin__display_type
-msgid "Technical field for UX purpose."
-msgstr "حقل تقني يهدف لتحسين تجربة المستخدم."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -14425,6 +14126,14 @@ msgid "The company this distribution line belongs to."
 msgstr "الشركة التي ينتمي إليها هذا التوزيع. "
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The country code of the foreign VAT number does not match any country in the"
+" group."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
 msgstr "الدولة التي تكون هذه المجوعة الضريبية سارية فيها. "
@@ -14568,11 +14277,6 @@ msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
 "يحدِّد الوضع المالي الضرائب/الحسابات المستخدمة لجهة الاتصال المُختارة. "
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_advance_payment_wizard__fixed_amount
-msgid "The fixed amount to be invoiced in advance."
-msgstr "المبلغ الثابت لفوترته مسبقاً. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14806,11 +14510,6 @@ msgstr "الدفعة التي أنشأت هذا القيد "
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 msgid "The payment's currency."
 msgstr "عملة الدفع. "
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_advance_payment_wizard__amount
-msgid "The percentage of amount to be invoiced in advance."
-msgstr "النسبة من المبلغ التي يجب فوترتها مقدماً. "
 
 #. module: account
 #. odoo-python
@@ -15141,12 +14840,6 @@ msgid ""
 "'receivable' or 'payable'."
 msgstr ""
 "يجب ألا يكون نوع حساب اليومية الدائن/المدين 'حساب مدين' أو 'حساب دائن'. "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_advance_payment.py:0
-msgid "The value of a down payment amount must be positive."
-msgstr "يجب أن تكون قيمة مبلغ الدفعة المقدّمة قيمة موجبة."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -15562,6 +15255,13 @@ msgid "This recurring move will be posted up to and including this date."
 msgstr "سيتم ترحيل هذخ الحركة الدورية حتى وفي هذا التاريخ. "
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"This will update all taxes and accounts based on the currently selected "
+"fiscal position."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
 msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
@@ -15690,8 +15390,6 @@ msgstr "أنشطة اليوم "
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__price_total
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__amount_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
@@ -16030,7 +15728,6 @@ msgstr "المعرّف الفريد لهذا البند. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__price_unit
 msgid "Unit Price"
 msgstr "سعر الوحدة"
 
@@ -16042,7 +15739,6 @@ msgstr "سعر الوحدة:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
-#: model:ir.model.fields,field_description:account.field_account_order_line_mixin__product_uom
 msgid "Unit of Measure"
 msgstr "وحدة القياس"
 
@@ -16120,7 +15816,6 @@ msgstr "المعاملات غير المسواة "
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
-#: model:ir.model.fields,field_description:account.field_account_order_mixin__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 msgid "Untaxed Amount"
@@ -16172,6 +15867,11 @@ msgstr "أعلى "
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Update Only"
 msgstr "التحديث فقط "
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Update Taxes and Accounts"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16990,6 +16690,14 @@ msgstr "لا يمكنك تسجيل مدفوعات لحركات صادرة وو�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
+"You can't reset to draft those journal entries. You need to request a "
+"cancellation instead."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr "لا يمكنك إضافة/تعديل القيود قبل وأثناء تاريخ الإقفال %s."
 
@@ -17020,6 +16728,14 @@ msgid ""
 msgstr ""
 "لا يمكنك تغيير نوع حساب تم تعيينه كحساب بنكي في دفتر يومية إلى حساب دائن أو "
 "حساب مدين. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
 
 #. module: account
 #. odoo-python

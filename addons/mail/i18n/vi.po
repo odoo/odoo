@@ -85,7 +85,7 @@ msgstr "%(author name)s từ %(channel name)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_bubble.js:0
 msgid "%(authorName)s: %(body)s"
-msgstr ""
+msgstr "%(authorName)s: %(body)s"
 
 #. module: mail
 #. odoo-javascript
@@ -102,6 +102,12 @@ msgid ""
 msgstr ""
 "%(email)s không được công nhận là email hợp lệ. Đây là điều kiện bắt buộc để"
 " tạo một khách hàng mới."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/models.py:0
+msgid "%(model_name)s.%(field_path)s does not seem to be a valid field path"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -319,7 +325,7 @@ msgstr "%s đã giơ tay"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "%s started a live conference"
-msgstr "%s đã bắt đầu cuộc họp trực tuyến"
+msgstr "%s đã bắt đầu cuộc họp online"
 
 #. module: mail
 #. odoo-javascript
@@ -336,7 +342,7 @@ msgstr "%s\" yêu cầu quyền truy cập tính năng \"quay màn hình\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_attachment_links
 msgid "&amp;#128229;"
-msgstr ""
+msgstr "&amp;#128229;"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -2212,8 +2218,10 @@ msgstr "Công ty"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/web/activity_mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Compose Email"
@@ -6718,7 +6726,7 @@ msgstr "Giá trị cũ"
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "Online"
-msgstr "Trực tuyến"
+msgstr "Online"
 
 #. module: mail
 #. odoo-javascript
@@ -10246,8 +10254,8 @@ msgid ""
 "email server (@mycompany.odoo.com)."
 msgstr ""
 "Sử dụng máy chủ email của riêng bạn là bắt buộc để gửi/nhận email trong các "
-"phiên bản Cộng đồng và Doanh nghiệp. Người dùng trực tuyến đã được hưởng lợi"
-" từ máy chủ email sẵn sàng sử dụng (@tencongty.com)."
+"phiên bản Cộng đồng và Doanh nghiệp. Người dùng online đã được hưởng lợi từ "
+"máy chủ email sẵn sàng sử dụng (@tencongty.com)."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
@@ -10293,7 +10301,7 @@ msgstr "Xem %s"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "View Profile"
-msgstr ""
+msgstr "Xem trang cá nhân"
 
 #. module: mail
 #. odoo-javascript
@@ -10339,7 +10347,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Voice Detection"
-msgstr ""
+msgstr "Phát hiện giọng nói"
 
 #. module: mail
 #. odoo-javascript
@@ -10420,6 +10428,12 @@ msgstr ""
 "Chúng tôi không thể tạo bí danh %(alias_name)s vì miền %(alias_domain_name)s"
 " thuộc về công ty %(alias_company_names)s trong khi tài liệu đích thuộc về "
 "công ty %(company_name)s."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/models.py:0
+msgid "We were not able to fetch value of field '%(field)s'"
+msgstr "Chúng tôi không thể tìm nạp giá trị của trường '%(field)s'"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks

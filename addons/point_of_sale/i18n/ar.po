@@ -98,7 +98,7 @@ msgstr "+ متجر جديد "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "/pos/ticket"
-msgstr ""
+msgstr "/pos/ticket"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -247,6 +247,16 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h4>\n"
+"        عزيزنا <t t-out=\"object.partner_id.name or 'Valuable Customer'\">Azure Interior</t>،\n"
+"    </h4>\n"
+"    <p style=\"font-size: 13px;\">\n"
+"لدينا عرض لفترة محدودة من أجلك! استمتع بخصم بنسبة 20% من عملية الشراء التالية التي تقوم بها لدينا.\n"
+"يسرنا أن نكون في خدمتك دائماً.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_pos_kanban
@@ -279,6 +289,9 @@ msgid ""
 "             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
 "</p>"
 msgstr ""
+"<p>عزيزنا %(client_name)s،<br/>إليك الإيصال %(is_invoiced)sالخاص بالطلب"
+"             %(pos_name)s والذي تبلغ قيمته %(amount)s من %(company_name)s. "
+"</p> "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1244,7 +1257,7 @@ msgstr "إلغاء"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 msgid "Cancel Orders"
-msgstr ""
+msgstr "إلغاء الطلبات "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1586,7 +1599,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 msgid "Choose how the URL to the portal will be print on the receipt."
-msgstr ""
+msgstr "اختر كيفية طباعة رابط URL الخاص بالبوابة على الإيصال. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1683,7 +1696,7 @@ msgstr "تاريخ الإغلاق "
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_closing_entry_by_product
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Closing Entry by product"
-msgstr ""
+msgstr "قيد الإقفال حسب المنتج "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_notes
@@ -1796,7 +1809,7 @@ msgstr "سعر الكومبو "
 #. odoo-python
 #: code:addons/point_of_sale/models/product.py:0
 msgid "Combo products cannot contains variants or attributes"
-msgstr ""
+msgstr "لا يمكن أن تحتوي مجموعات المنتجات على متغيرات أو خصائص "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
@@ -1810,6 +1823,7 @@ msgid ""
 "Combos allows to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
+"تتيح لك مجموعات المنتجات اختيار منتج واحد بين مجموعة من الخيارات لكل فئة. "
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_company
@@ -1953,7 +1967,7 @@ msgstr "جهة الاتصال"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Contact Info"
-msgstr ""
+msgstr "معلومات التواصل "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2610,6 +2624,8 @@ msgid ""
 "Display the breakdown of sales lines by product in the automatically "
 "generated closing entry."
 msgstr ""
+"قم بعرض تفاصيل بنود البيع حسب المنتج في قيد الإقفال الذي يتم إنشاؤه "
+"تلقائياً. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pricer
@@ -3036,13 +3052,13 @@ msgstr "أخضر"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_green_hood_product_template
 msgid "Green Hood"
-msgstr ""
+msgstr "قلنسوة خضراء "
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 msgid "Gross Weight:"
-msgstr ""
+msgstr "الوزن الإجمالي: "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
@@ -3976,7 +3992,7 @@ msgstr "الاسم"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Need an invoice for your purchase ?"
-msgstr ""
+msgstr "أتحتاج إلى فاتورة لعملية الشراء التي قمت بها؟ "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4005,7 +4021,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 msgid "Net Weight:"
-msgstr ""
+msgstr "الوزن الصافي: "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5022,7 +5038,7 @@ msgstr "يرجى تحديد حساب الدخل لهذا المنتج: '%(produc
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 msgid "Please enter a valid email address"
-msgstr ""
+msgstr "يرجى إدخال عنوان بريد إلكتروني صالح "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -5101,7 +5117,7 @@ msgstr "يُرجى مسح كود QR باستخدام %s "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
-msgstr ""
+msgstr "يرجى اختيار طريقة دفع "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5117,7 +5133,7 @@ msgstr "واجهة نقطة البيع "
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.pos_email_marketing_template
 msgid "PoS Marketing"
-msgstr ""
+msgstr "التسويق في نقطة البيع "
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_note
@@ -5314,7 +5330,7 @@ msgstr "مجموعة مستخدمي نقطة البيع"
 #. module: point_of_sale
 #: model:mail.template,name:point_of_sale.pos_email_marketing_template
 msgid "Point of Sale: Marketing"
-msgstr ""
+msgstr "نقطة البيع: التسويق "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
@@ -5340,7 +5356,7 @@ msgstr "رابط الوصول لبوابة العملاء"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Portal URL:"
-msgstr ""
+msgstr "رابط URL للبوابة: "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_allowed_pricelist_ids
@@ -5609,6 +5625,8 @@ msgid ""
 "Print information on the receipt to allow the costumer to easily request the"
 " invoice anytime, from Odoo's portal"
 msgstr ""
+"قم بطباعة المعلومات على الإيصال للسماح للعميل بطلب الفاتورة في أي وقت من "
+"بوابة أودو. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5616,6 +5634,8 @@ msgid ""
 "Print information on the receipt to allow the customer to easily request the"
 " invoice anytime, from Odoo's portal."
 msgstr ""
+"قم بطباعة المعلومات على الإيصال للسماح للعميل بطلب الفاتورة في أي وقت من "
+"بوابة أودو. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5895,12 +5915,12 @@ msgstr "الدفع عن طريق كود QR "
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_ticket_portal_url_display_mode__qr_code
 msgid "QR code"
-msgstr ""
+msgstr "QR Code"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_ticket_portal_url_display_mode__qr_code_and_url
 msgid "QR code + URL"
-msgstr ""
+msgstr "QR code + URL"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6482,7 +6502,7 @@ msgstr "لا تتأثر واجهات الطلب الذاتي. "
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_use_ticket_qr_code
 msgid "Self-service invoicing"
-msgstr ""
+msgstr "فوترة الخدمة الذاتية "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6505,7 +6525,7 @@ msgstr "إرسال بريد إلكتروني"
 #. module: point_of_sale
 #: model:mail.template,description:point_of_sale.pos_email_marketing_template
 msgid "Send Marketing Emails from Point of Sale"
-msgstr ""
+msgstr "قم بإرسال رسائل البريد الإلكتروني التسويقية من نقطة البيع "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8346,7 +8366,7 @@ msgstr "جهاز الدفع بالبطاقة Vantiv "
 msgid ""
 "Versatile cotton hoodie with an adjustable drawstring hood and front zipper "
 "closure."
-msgstr ""
+msgstr "سترة مع قلنسوة يمكن التحكم بحجمها، مع سحّاب في الأمام. "
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_ui_view
@@ -8679,6 +8699,8 @@ msgid ""
 "You must set the iot box's IP address to use an IoT-connected screen. You'll"
 " find the field under the 'IoT Box' option."
 msgstr ""
+"عليك تعيين عنوان IP حتى تتمكن من استخدام شاشة متصلة بجهاز IoT. ستجد الحقل "
+"أسفل خيار جهاز IoT. "
 
 #. module: point_of_sale
 #. odoo-python
@@ -8781,7 +8803,7 @@ msgstr "مثال: المشروبات الغازية "
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "e.g. Starter - Meal - Desert"
-msgstr ""
+msgstr "مثال: المقبلات - الوجبة الرئيسية - التحلية "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form

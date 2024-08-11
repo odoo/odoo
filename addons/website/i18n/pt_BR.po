@@ -3,8 +3,8 @@
 # 	* website
 # 
 # Translators:
-# Wil Odoo, 2024
 # Maitê Dietze, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:10+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -212,9 +212,13 @@ msgstr "Adicionar novo site"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
+msgid "+1 555-555-5556"
+msgstr "+1 555-555-5556"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
-msgid "+1 (650) 555-0111"
-msgstr "+1 (650) 555-0111"
+msgid "+1 555-555-5556\""
+msgstr "+1 555-555-5556\""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -247,8 +251,6 @@ msgstr ""
 "...e mudar o conteúdo da linha do tempo para atender às suas necessidades."
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -678,10 +680,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
-"                        <span class=\"o_force_ltr\"><small>+1 (650) 555-0111</small></span>"
+"                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</small></span>"
 msgstr ""
 "<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
-"                        <span class=\"o_force_ltr\"><small>+1 (650) 555-0111</small></span>"
+"                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</small></span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -779,11 +781,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 msgstr ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+55 (41) "
-"2555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
@@ -1133,8 +1135,8 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
-msgid "<span class=\"o_force_ltr\">+1 (650) 555-0111</span>"
-msgstr "<span class=\"o_force_ltr\">+1 (650) 555-0111</span>"
+msgid "<span class=\"o_force_ltr\">+1 555-555-5556</span>"
+msgstr "<span class=\"o_force_ltr\">+1 555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -1474,6 +1476,14 @@ msgid "A color block"
 msgstr "Um bloco de cor"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid ""
+"A font with the same name already exists.\n"
+"Try renaming the uploaded file."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_image_text_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_text_image_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_text_image_text_template
@@ -1774,10 +1784,15 @@ msgstr "Adicionar ano"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "Add a Google Font"
-msgstr "Adicione uma Google Font"
+msgid "Add a Custom Font"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "Add a Google font or upload a custom font"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2615,6 +2630,12 @@ msgid "Blur"
 msgstr "Blur"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Bold"
+msgstr "Negrito"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action_menu
 msgid "Book your table today"
 msgstr "Agende sua mesa hoje"
@@ -3075,6 +3096,12 @@ msgstr "Escolha o nome da âncora"
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 msgid "Choose another theme"
 msgstr "Escolha outro tema"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Choose from list"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -3749,6 +3776,12 @@ msgstr "Código personalizado"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Custom Field"
 msgstr "Campo personalizado"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Custom Font"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4571,6 +4604,12 @@ msgstr "Editar HTML mesmo assim"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
+msgid "Edit Head and Body Code"
+msgstr "Editar o código do cabeçalho e do conteúdo"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 #: code:addons/website/static/src/js/widgets/link_popover_widget.js:0
 #: model:ir.ui.menu,name:website.custom_menu_edit_menu
@@ -4906,6 +4945,12 @@ msgid "Explore"
 msgstr "Explorar"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Explore on"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_gallery_s_text_block_2nd
 msgid ""
 "Explore our captivating gallery, a visual journey showcasing our finest work"
@@ -5070,6 +5115,18 @@ msgstr "Campo para dados de formulário personalizado"
 #: model:ir.model,name:website.model_ir_model_fields
 msgid "Fields"
 msgstr "Campos"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/main.py:0
+msgid "File '%s' exceeds maximum allowed file size"
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/main.py:0
+msgid "File '%s' is not recognized as a font"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -5280,6 +5337,24 @@ msgstr "Família de fontes"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font Size"
 msgstr "Tamanho da fonte"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "Font access"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "Font exists"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "Font name already used"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__footer_visible
@@ -5606,12 +5681,6 @@ msgstr "Google Analytics"
 #: model:ir.model.fields,field_description:website.field_website__google_analytics_key
 msgid "Google Analytics Key"
 msgstr "Chave do Google Analytics"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "Google Font address"
-msgstr "Endereço do Google Font"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6811,7 +6880,6 @@ msgstr "Deixe em branco para usar o valor padrão"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_ir_attachment__key
-#: model:ir.model.fields,field_description:website.field_product_document__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__key
@@ -7116,6 +7184,8 @@ msgid "Library"
 msgstr "Biblioteca"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "Light"
@@ -8148,12 +8218,6 @@ msgid "None"
 msgstr "Nenhum"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "Indisponível para venda"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "Não publicado"
@@ -9100,8 +9164,15 @@ msgstr "Pressione <Tab> para próximo ["
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Preview"
 msgstr "Pré-visualizar"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Preview of"
+msgstr "Pré-visualização de"
 
 #. module: website
 #. odoo-javascript
@@ -9480,6 +9551,8 @@ msgid "Refresh route's list"
 msgstr "Atualizar lista de rotas"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Regular"
@@ -10010,6 +10083,12 @@ msgstr "Encaixe seguro e confortável"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "Select a Google Font..."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "Select an image for social share"
 msgstr "Selecione uma imagem para compartilhar nas redes sociais"
@@ -10023,12 +10102,6 @@ msgstr "Selecione e exclua blocos <br/>para remover alguns passos."
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Select and delete blocks to remove features."
 msgstr "Selecione e exclua blocos para remover recursos."
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "Select one font on"
-msgstr "Selecione uma fonte em"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -11168,6 +11241,18 @@ msgid "The name of the page usable in a URL"
 msgstr "O nome da página utilizável em URL"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "The quick brown fox jumps over the lazy dog."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid "The selected font cannot be accessed."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "The selected templates will be reset to their factory settings."
 msgstr ""
@@ -11236,7 +11321,6 @@ msgstr "Cores do tema"
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
-#: model:ir.model.fields,field_description:website.field_product_document__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_menu__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_page__theme_template_id
@@ -11508,6 +11592,14 @@ msgstr "Esta tradução não é editável."
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+msgid ""
+"This uploaded font already exists.\n"
+"To replace an existing font, remove it first."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid ""
 "This value will be escaped to be compliant with all major browsers and used "
@@ -11665,6 +11757,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "To be successful your content needs to be useful to your readers."
 msgstr "Para ter sucesso, o seu conteúdo deve ser útil aos seus leitores."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "To comply with some local regulations"
+msgstr ""
 
 #. module: website
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_2
@@ -12539,6 +12637,12 @@ msgstr ""
 "que você enfrenta."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+msgid "We couldn't find the Facebook page"
+msgstr "Não conseguimos encontrar a página do Facebook"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
@@ -12633,7 +12737,6 @@ msgstr "Visitantes da web"
 #: model:ir.model.fields,field_description:website.field_ir_asset__website_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
-#: model:ir.model.fields,field_description:website.field_product_document__website_id
 #: model:ir.model.fields,field_description:website.field_res_company__website_id
 #: model:ir.model.fields,field_description:website.field_res_partner__website_id
 #: model:ir.model.fields,field_description:website.field_res_users__website_id
@@ -13173,6 +13276,12 @@ msgid "You cannot duplicate this field."
 msgstr "Não é possível duplicar este campo."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+msgid "You didn't provide a valid Facebook link"
+msgstr "Você não forneceu um link válido do Facebook"
+
+#. module: website
 #. odoo-python
 #: code:addons/website/models/mixins.py:0
 msgid "You do not have the rights to publish/unpublish"
@@ -13435,12 +13544,6 @@ msgid "and"
 msgstr "e"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "and copy paste the address of the font page here."
-msgstr "e copie e cole o endereço da página da fonte aqui."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "big"
 msgstr "grande"
@@ -13653,12 +13756,6 @@ msgstr "ola@minhaempresa.com"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "hero, jumbotron"
 msgstr "hero, jumbotron"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "https://fonts.google.com/specimen/Roboto"
-msgstr "https://fonts.google.com/specimen/Roboto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -13905,6 +14002,12 @@ msgstr "com o objetivo principal de"
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "yes"
 msgstr "sim"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+msgid "zip, ttf, woff, woff2, otf"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options

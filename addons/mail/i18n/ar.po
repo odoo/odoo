@@ -3,8 +3,8 @@
 # 	* mail
 # 
 # Translators:
-# Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,6 +100,12 @@ msgid ""
 msgstr ""
 "لم يتم التعرف على %(email)s كعنوان بريد إلكتروني صالح. إنه مطلوب لإنشاء عميل"
 " جديد. "
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/models.py:0
+msgid "%(model_name)s.%(field_path)s does not seem to be a valid field path"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2003,7 +2009,7 @@ msgstr "الدردشة"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Chat Hub Options"
-msgstr ""
+msgstr "خيارات Chat Hub "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_type
@@ -2082,7 +2088,7 @@ msgstr "إغلاق نافذة الدردشة "
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Close Chat Window (ESC)"
-msgstr ""
+msgstr "إغلاق نافذة الدردشة (ESC) "
 
 #. module: mail
 #. odoo-javascript
@@ -2094,7 +2100,7 @@ msgstr "إغلاق البحث "
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Close all conversations"
-msgstr ""
+msgstr "إغلاق كافة المحادثات "
 
 #. module: mail
 #. odoo-javascript
@@ -2196,8 +2202,10 @@ msgstr "الشركة "
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/web/activity_mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Compose Email"
@@ -4274,7 +4282,7 @@ msgstr "إخفاء الرسائل المثبتة "
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Hide all conversations"
-msgstr ""
+msgstr "إخفاء كافة المحادثات "
 
 #. module: mail
 #. odoo-javascript
@@ -4757,7 +4765,7 @@ msgstr "غير صالح "
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Invalid domain “%(domain)s” (type “%(domain_type)s”)"
-msgstr ""
+msgstr "النطاق غير صالح \"%(domain)s\" (النوع \"%(domain_type)s\") "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_invalid
@@ -4769,7 +4777,7 @@ msgstr "عنوان البريد الإلكتروني غير صالح"
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Invalid email address “%s”"
-msgstr ""
+msgstr "عنوان البريد الإلكتروني غير صالح \"%s\" "
 
 #. module: mail
 #. odoo-python
@@ -7455,13 +7463,13 @@ msgstr "الإشعارات المنبثقة "
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Push to Talk"
-msgstr ""
+msgstr "اضغط للتحدث "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
 msgid "Push to talk"
-msgstr ""
+msgstr "اضغط للتحدث "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__push_to_talk_key
@@ -8235,37 +8243,37 @@ msgstr "رؤية كافة الرسائل المثبتة. "
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user)s"
-msgstr ""
+msgstr "شوهدت من قِبَل %(user)s "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s and %(user2)s"
-msgstr ""
+msgstr "شوهدت من قِبَل %(user1)s و %(user2)s "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s, %(user2)s and %(user3)s"
-msgstr ""
+msgstr "شوهدت من قِبَل %(user1)s و %(user2)s و %(user3)s "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s, %(user2)s, %(user3)s and %(count)s others"
-msgstr ""
+msgstr "شوهدت من قِبَل %(user1)s و %(user2)s و %(user3)s و %(count)s آخرين "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s, %(user2)s, %(user3)s and 1 other"
-msgstr ""
+msgstr "شوهدت من قِبَل %(user1)s و %(user2)s و %(user3)s وشخص واحد آخر "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by everyone"
-msgstr ""
+msgstr "شوهدت من قِبَل الجميع "
 
 #. module: mail
 #. odoo-javascript
@@ -8977,6 +8985,8 @@ msgid ""
 "Template rendering should only be called with a list of IDs. Received "
 "“%(res_ids)s” instead."
 msgstr ""
+"يجب استدعاء تكوين القالب فقط باستخدام قائمة من المعرفات؛ تم استلام "
+"\"%(res_ids)s\" عوضاً عن ذلك. "
 
 #. module: mail
 #. odoo-python
@@ -9445,7 +9455,7 @@ msgstr "صورة المناقشة "
 #: code:addons/mail/static/src/core/common/chat_bubble.xml:0
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Thread image"
-msgstr ""
+msgstr "صورة المحادثة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__model_is_thread
@@ -10237,7 +10247,7 @@ msgstr "عرض %s"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "View Profile"
-msgstr ""
+msgstr "عرض الملف التعريفي "
 
 #. module: mail
 #. odoo-javascript
@@ -10272,18 +10282,18 @@ msgstr "صوت "
 #. module: mail
 #: model:ir.ui.menu,name:mail.menu_call_settings
 msgid "Voice & Video"
-msgstr ""
+msgstr "الصوت والصورة "
 
 #. module: mail
 #: model:ir.actions.client,name:mail.discuss_call_settings_action
 msgid "Voice & Video Settings"
-msgstr ""
+msgstr "إعدادات الصوت والصورة "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Voice Detection"
-msgstr ""
+msgstr "رصد الصوت "
 
 #. module: mail
 #. odoo-javascript
@@ -10364,6 +10374,12 @@ msgstr ""
 "لم نتمكن من إنشاء اللقب %(alias_name)s لأن النطاق %(alias_domain_name)s "
 "ينتمي إلى الشركة %(alias_company_names)s بينما المستند المستهدف ينتمي إلى "
 "الشركة %(company_name)s. "
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/models.py:0
+msgid "We were not able to fetch value of field '%(field)s'"
+msgstr "لم نتمكن من جلب قيمة الحقل '%(field)s' "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks

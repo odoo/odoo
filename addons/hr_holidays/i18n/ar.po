@@ -116,7 +116,7 @@ msgstr "%(name)s (%(duration)s أيام) "
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s hour(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s ساعات) "
 
 #. module: hr_holidays
 #. odoo-python
@@ -532,6 +532,8 @@ msgid ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Days</span>\n"
 "                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">Hours</span>"
 msgstr ""
+"<span class=\"ml8\" invisible=\"request_unit == 'hour'\">أيام</span>\n"
+"                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">ساعات</span> "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -610,6 +612,8 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
+"<span>الموظف في منطقة زمنية تختلف عن منطقتك! إليك التواريخ والأوقات بمنطقة الموظف الزمنية</span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -954,7 +958,7 @@ msgstr "طلبات تخصيص رصيد إجازات"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approval"
-msgstr ""
+msgstr "الموافقة الثانية على المخصصات "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
@@ -970,12 +974,14 @@ msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to "
 "validate it."
 msgstr ""
+"يجب أن تكون حالة المخصصات \"بانتظار الموافقة\" أو \"بانتظار الموافقة "
+"الثانية\" حتى تتمكن من تصديقها. "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
-msgstr ""
+msgstr "يجب أن يتم تأكيد المخصصات (\"بانتظار الموافقة\") حتى تتم الموافقة عليها. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -995,12 +1001,16 @@ msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
 msgstr ""
+"يجب أن يتم تأكيد طلب المخصصات أو منح الموافقة الثانية أو تصديقها حتى تتمكن "
+"من رفضها. "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
 msgstr ""
+"يجب أن تكون حالة المخصصات \"تم الرفض\" حتى تتمكن من إعادة تعيينها إلى حالة "
+"\"بانتظار الموافقة\". "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1205,6 +1215,8 @@ msgid ""
 "Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
+"عند معالجة طلبات الإجازات على دفعات، لا يمكن إدارة عملية التقسيم التلقائي للإجازات إذا كانت هناك إجازات متضاربة محسوبة بالساعات. الإجازة المتضاربة: \n"
+"%s "
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1544,7 +1556,7 @@ msgstr "صورة الغلاف"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Create Allocations"
-msgstr ""
+msgstr "إنشاء مخصصات "
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
@@ -2045,31 +2057,31 @@ msgstr "الأنشطة المستقبلية"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate Time Off"
-msgstr ""
+msgstr "إنشاء إجازة "
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Generate time off allocations for multiple employees"
-msgstr ""
+msgstr "إنشاء مخصصات إجازة لعدة موظفين "
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate time off for multiple employees"
-msgstr ""
+msgstr "إنشاء إجازات لعدة موظفين "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "Generated Allocations"
-msgstr ""
+msgstr "المخصصات المنشأة "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
 msgid "Generated Time Off"
-msgstr ""
+msgstr "الإجازة المنشأة "
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2286,7 +2298,7 @@ msgstr "متابع"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_name_custom
 msgid "Is Name Custom"
-msgstr ""
+msgstr "اسم مخصص "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
@@ -2480,7 +2492,7 @@ msgstr "التعيين كمسودة "
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Mark as ready to approve"
-msgstr ""
+msgstr "التحديد كجاهز للموافقة "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
@@ -2593,7 +2605,7 @@ msgstr "صباحاً "
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_generate_multi_wizard
 msgid "Multiple Requests"
-msgstr ""
+msgstr "عدة طلبات "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
@@ -3040,7 +3052,7 @@ msgstr "طباعة"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to cancel an approved time off"
-msgstr ""
+msgstr "أعطِ سبباً للإلغائك لإجازة قد تمت الموافقة عليها "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -3050,7 +3062,7 @@ msgstr "عام"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
 msgid "Public Holiday Included"
-msgstr ""
+msgstr "شاملة الإجازات الرسمية "
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3066,17 +3078,12 @@ msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
 msgstr ""
+"يجب أن يتم حساب الإجازات الرسمية ضمن مدة الإجازة عند التقدم بطلب إجازة "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
 msgid "Rate"
 msgstr "المعدل "
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
-msgid "Ratings"
-msgstr "التقييمات "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
@@ -3316,7 +3323,7 @@ msgstr "عرض اليوم الثاني من الشهر "
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Second approval request for %(allocation_type)s"
-msgstr ""
+msgstr "طلب الموافقة الثاني على %(allocation_type)s "
 
 #. module: hr_holidays
 #. odoo-python
@@ -3419,6 +3426,15 @@ msgstr "الإجازة المرضية "
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
 msgstr "بعض الإجازات لا يمكن ربطها بأي مخصصات. لرؤية تلك الإجازات، "
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
+#, python-format
+msgid ""
+"Some of the accrual plans you're trying to delete are linked to an existing "
+"allocation. Delete or cancel them first."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -4320,18 +4336,6 @@ msgid "Waiting for Approval"
 msgstr "بانتظار الموافقة "
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__website_message_ids
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__website_message_ids
-msgid "Website Messages"
-msgstr "رسائل الموقع الإلكتروني "
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave__website_message_ids
-#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__website_message_ids
-msgid "Website communication history"
-msgstr "سجل تواصل الموقع الإلكتروني "
-
-#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__wed
 msgid "Wednesday"
 msgstr "الأربعاء"
@@ -4480,6 +4484,9 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
+"لا يمكنك تعديل إعداد 'شاملة الإجازة الرسمية' نظراً لوجود إجازة واحدة أو أكثر"
+" من ذلك النوع متضاربة مع الإجازة الرسمية، مما يعني أن رصيد إجازات هؤلاء "
+"الموظفين سيتأثر بهذا التغيير. "
 
 #. module: hr_holidays
 #. odoo-python

@@ -83,6 +83,8 @@ msgid ""
 ", it's 100% free! You'll save time creating beautiful quotations and track "
 "sales."
 msgstr ""
+", è 100% gratis! Risparmierai tempo creando preventivi fantastici e "
+"tracciando le vendite."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
@@ -536,6 +538,9 @@ msgid ""
 "billing, according to their bill policy (based on ordered or received "
 "quantity)."
 msgstr ""
+"In base alla politica di fatturazione (quantità ordinate o ricevute) viene "
+"creata una fattura fornitore ordinaria con tutte le righe dell'ordine "
+"disponibili per la fatturazione."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
@@ -689,6 +694,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Allow creating vendor bills for down payments on purchase orders"
 msgstr ""
+"Consente di creare fatture fornitore per acconti su ordini di acquisto"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -704,7 +710,7 @@ msgstr "Importo"
 #: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount_invoiced
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_invoiced
 msgid "Amount already billed"
-msgstr ""
+msgstr "Importo già fatturato"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay_pass
@@ -726,7 +732,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__amount_to_invoice
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_to_invoice
 msgid "Amount to be billed"
-msgstr ""
+msgstr "Importo da fatturare"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -841,7 +847,7 @@ msgstr "Righe fattura"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
 msgid "Bill Purchase Order"
-msgstr ""
+msgstr "Fattura ordine di acquisto"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -919,6 +925,8 @@ msgstr "N. ordini di acquisto annullati"
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Cannot delete a purchase order line which is in state “%s”."
 msgstr ""
+"Impossibile eliminare una riga ordine di acquisto che si trova nello stato "
+"“%s”."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1029,13 +1037,13 @@ msgstr "Gli ordini di acquisto confermati non sono modificabili"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Connect with your software!"
-msgstr ""
+msgstr "Collegati al tuo software!"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "Connect your software"
-msgstr ""
+msgstr "Collega il tuo software"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1069,6 +1077,8 @@ msgid ""
 "Copy this URL, and paste it (Ctrl-V) in your <span class=\"fw-bold\">list of"
 " quotations</span> in Odoo. Enjoy the automation!"
 msgstr ""
+"Copia l'URL e incollalo (Ctrl-V) nell'<span class=\"fw-bold\">elenco di "
+"preventivi</span> in Odoo. Approfitta dell'automazione!"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__country_code
@@ -1101,7 +1111,7 @@ msgstr "Crea una nuova variante prodotto"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Create bills"
-msgstr ""
+msgstr "Crea fatture"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_advance_payment_wizard__create_uid
@@ -1292,7 +1302,7 @@ msgstr "Anticipi"
 #. odoo-python
 #: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
 msgid "Down payment vendor bill"
-msgstr ""
+msgstr "Fattura fornitore acconto"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__is_downpayment
@@ -1300,12 +1310,15 @@ msgid ""
 "Down payments are made when creating account moves from an order. They are "
 "not copied when duplicating an order."
 msgstr ""
+"Gli acconti vengono creati durante la generazione di movimenti contabili a "
+"partire da un ordine. Non vengono copiati al momento della duplicazione di "
+"un ordine."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/wizard/purchase_make_bill_advance.py:0
 msgid "Draft Bills"
-msgstr ""
+msgstr "Fatture fornitore in bozza"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
@@ -1850,7 +1863,7 @@ msgstr "Non Confermato"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Not using Odoo?"
-msgstr ""
+msgstr "Non stai utilizzando Odoo?"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1942,7 +1955,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount_invoiced
 msgid "Only confirmed down payments and invoiced amounts are considered."
-msgstr ""
+msgstr "Si considerano solo gli acconti confermati e gli importi fatturati."
 
 #. module: purchase
 #. odoo-python
@@ -2165,7 +2178,7 @@ msgstr "Acquisti"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_advance_payment_wizard
 msgid "Purchase Advance Payment Bill"
-msgstr ""
+msgstr "Fattura fornitore acquisto con pagamento anticipato"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
@@ -2443,7 +2456,7 @@ msgstr "Quantità"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
 msgid "Quantity to Invoice"
-msgstr ""
+msgstr "Quantità da fatturare"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2511,7 +2524,7 @@ msgstr "Reinvia con e-mail"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Read the documentation"
-msgstr ""
+msgstr "Leggi la documentazione"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_send_reminder
@@ -2834,7 +2847,7 @@ msgstr "Preferiti"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Start on Odoo"
-msgstr ""
+msgstr "Inizia su Odoo"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__state
@@ -2979,7 +2992,7 @@ msgstr "Termini e condizioni"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
 msgid "The Down Payment is greater than the amount remaining to be billed."
-msgstr ""
+msgstr "L'acconto è maggiore dell'importo che resta da fatturare."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__country_code
@@ -2995,16 +3008,19 @@ msgstr ""
 msgid ""
 "The amount to be billed = Purchase Order Total - Amount already billed."
 msgstr ""
+"Importo da fatturare = Totale ordine di acquisto - Importo già fatturato."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__fixed_amount
 msgid "The fixed amount billed in advance."
-msgstr ""
+msgstr "Importo fisso fatturato in anticipo."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
 msgid "The new bill will deduct draft bills linked to this purchase order."
 msgstr ""
+"La nuova fattura fornitore dedurrà le fatture in bozza collegate a "
+"quest'ordine d'acquisto."
 
 #. module: purchase
 #. odoo-python
@@ -3015,7 +3031,7 @@ msgstr "La ricevuta dell'ordine è stata confermata da %s."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_advance_payment_wizard__amount
 msgid "The percentage of amount billed in advance."
-msgstr ""
+msgstr "La percentuale dell'importo fatturato in anticipo."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3041,7 +3057,7 @@ msgstr "Al momento non ci sono richieste di preventivo per il tuo account."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_advance_payment_wizard
 msgid "There are existing Draft Bills for this Purchase Order."
-msgstr ""
+msgstr "Esistono fatture in bozza per questo ordine di acquisto,"
 
 #. module: purchase
 #. odoo-python
@@ -3050,6 +3066,9 @@ msgid ""
 "There are no invoiceable lines. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
 msgstr ""
+"Nessuna riga fatturabile. Se un prodotto ha una politica di controllo basata"
+" sulla quantità ricevuta, controllare che la quantità stessa sia stata "
+"ricevuta."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3157,7 +3176,7 @@ msgstr "Totale"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total Qty purchased"
-msgstr ""
+msgstr "Totale qtà acquistate"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
@@ -3186,7 +3205,7 @@ msgstr "Importo totale"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total purchased amount"
-msgstr ""
+msgstr "Importo totale acquistato"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_confirmed
@@ -3304,6 +3323,8 @@ msgid ""
 "Use the above REST URL to get structured data of the purchase order in UBL "
 "format."
 msgstr ""
+"Utilizza l'URL REST in alto per ottenere dati organizzati  in formato UBL "
+"relativi all'ordine di acquisto."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -3424,7 +3445,7 @@ msgstr "RdP in attesa"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Want to import this document in Odoo?"
-msgstr ""
+msgstr "Vuoi importare il documento in Odoo?"
 
 #. module: purchase
 #. odoo-python
@@ -3506,6 +3527,8 @@ msgstr ""
 msgid ""
 "You can find a vendor by their Name, TIN, Email, or Internal Reference."
 msgstr ""
+"Un fornitore può essere trovato per nome, codice fiscale, e-mail o "
+"riferimento interno."
 
 #. module: purchase
 #. odoo-python
@@ -3520,7 +3543,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "You don't use a good CRM software?"
-msgstr ""
+msgstr "Non utilizzi un buon software CRM?"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -3564,12 +3587,12 @@ msgstr "giorno/i prima"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "to create quotes automatically."
-msgstr ""
+msgstr "per creare preventivi automaticamente."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "to learn all the ways to connect your software with"
-msgstr ""
+msgstr "per imparare come collegare il tuo software con"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
