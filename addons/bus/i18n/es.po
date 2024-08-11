@@ -56,6 +56,11 @@ msgid "Display Name"
 msgstr "Nombre mostrado"
 
 #. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "Enrutamiento HTTP "
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
 msgid "ID"
@@ -112,14 +117,29 @@ msgstr "En línea"
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
 msgstr "Actualizar"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
 
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 msgid "The page appears to be out of date."
 msgstr "Parece que la página no está actualizada."
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -129,7 +149,7 @@ msgstr "Usuario"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
-msgstr "Usuario conectado"
+msgstr "Conexión del usuario"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
@@ -144,9 +164,9 @@ msgid ""
 " users it is important to change it immediately for security reasons. I will"
 " keep nagging you about it!"
 msgstr ""
-"¡Tu contraseña es la predeterminada (admin)! Si este sistema está expuesto a"
-" usuarios no confiables, es importante cambiarlo de inmediato por razones de"
-" seguridad. ¡Te seguiré molestando al respecto!"
+"Está usando la contraseña por defecto (admin). Si se expone este sistema a "
+"usuarios no confiables, es importante que la cambie inmediatamente por "
+"motivos de seguridad. Seguiré advirtiéndole al respecto."
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket

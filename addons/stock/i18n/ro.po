@@ -10389,9 +10389,15 @@ msgstr "Nu puteți schimba tipul unui produs care a fost deja utilizat."
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-msgid "You can not delete moves linked to another operation"
-msgstr "Nu puteți șterge mutările legate de altă operațiune."
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+"Nu puteți crea un punct de comandă amânat care nu este declanșat manual."
 
 #. module: stock
 #. odoo-python
@@ -10440,6 +10446,18 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "Puteți prelucra doar 1.0%s din produse cu număr de serie unic."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Puteți amâna doar punctele de comandă manuale. Ar trebui să arhivați "
+"punctele de comandă „declanșate automat” dacă nu doriți ca acestea să fie "
+"declanșate."
 
 #. module: stock
 #. odoo-python

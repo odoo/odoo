@@ -10062,9 +10062,14 @@ msgstr "您不能更改已使用的產品類型."
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-msgid "You can not delete moves linked to another operation"
-msgstr "不可刪除關聯至另一操作的移動"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "你不可建立並非手動觸發的延後訂單點。"
 
 #. module: stock
 #. odoo-python
@@ -10107,6 +10112,15 @@ msgstr "每次遷移，只能移動存放在單一公司使用地點的正數數
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "只能處理1.0個%s具有唯一序號的產品."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr "你只可延後手動訂單點。若不想觸發「自動觸發」的訂單點，請將它們封存。"
 
 #. module: stock
 #. odoo-python

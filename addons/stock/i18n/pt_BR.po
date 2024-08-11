@@ -10436,9 +10436,16 @@ msgstr "Não é possível alterar o tipo de um produto que já foi usado."
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-msgid "You can not delete moves linked to another operation"
-msgstr "Não é possível excluir movimentações vinculadas a outra operação"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+"Não é possível criar um ponto de pedido adiado que não seja acionado "
+"manualmente."
 
 #. module: stock
 #. odoo-python
@@ -10488,6 +10495,17 @@ msgstr ""
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Só é possível processar 1,0 %s de produtos com número de série exclusivo."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Você só pode adiar pontos de pedidos manuais. Você deve arquivar os pontos "
+"de pedido de \"acionamento automático\" se não quiser que sejam acionados."
 
 #. module: stock
 #. odoo-python

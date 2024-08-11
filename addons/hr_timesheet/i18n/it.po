@@ -123,8 +123,8 @@ msgid ""
 "<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on Sub-tasks:</span>\n"
 "                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
 msgstr ""
-"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Ore impiegate per sotto-attività:</span>\n"
-"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Giorni impiegati per sotto-attività:</span>"
+"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Ore impiegate per sottolavori:</span>\n"
+"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Giorni impiegati per sottolavori:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -302,9 +302,9 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"Conto analitico al quale sono legati il progetto, le sotto-attività e i rispettivi fogli ore. \n"
+"Conto analitico al quale sono legati il progetto, i sotto-lavori e i rispettivi fogli ore. \n"
 "Traccia i costi e i ricavi del tuo progetto inserendo il conto analitico nei vari documenti (ad es. ordini di vendita, fatture, ordini di acquisto, fatture fornitore, note spese ecc.).\n"
-"Il conto analitico può essere modificato su ogni attività se necessario.\n"
+"Il conto analitico può essere modificato su ogni lavoro se necessario.\n"
 "Il conto analitico è necessario per l'utilizzo dei fogli ore."
 
 #. module: hr_timesheet
@@ -315,7 +315,7 @@ msgid ""
 "Analyze the projects and tasks on which your employees spend their time.<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
-"Analizza i progetti e le attività sui quali lavorano i tuoi dipendenti.<br>\n"
+"Analizza i progetti e i lavori sui quali lavorano i tuoi dipendenti.<br>\n"
 "                Valuta quale parte è fatturabile e quali costi rappresenta."
 
 #. module: hr_timesheet
@@ -1159,8 +1159,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
 msgstr ""
-"Tempo speso sull'attività e sulle sotto-attività (e alle loro sotto-"
-"attività). "
+"Tempo speso sul lavoro e sui sotto-lavori (e i rispettivi sotto-lavori). "
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_report_project_task_user__total_hours_spent
@@ -1449,14 +1448,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"Usa queste parole chiave nel titolo per configurare nuove attività:\n"
+"Usa queste parole chiave nel titolo per configurare nuovi lavori:\n"
 "\n"
-"        30h Assegna 30 ore all'attività\n"
-"        #tags Configura tag per l'attività\n"
-"        @user Assegna l'attivià ad un utente\n"
-"        ! Configura la priorità dell'attività come elevata\n"
+"        30h Assegna 30 ore al lavoro\n"
+"        #tags Configura tag per il lavoro\n"
+"        @user Assegna il lavoro ad un utente\n"
+"        ! Configura la priorità del lavoro come elevata\n"
 "\n"
-"        Assicurati di utilizzare il formato e l'ordine giusti ad es. Migliora lo schermo di configurazione 5h #feature #v16 @Mitchell !"
+"        Assicurati di utilizzare il formato e l'ordine giusti ad es. Migliora lo schermo di configurazione 5h #feature #v16 @Mitchell!"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id

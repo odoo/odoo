@@ -1245,6 +1245,15 @@ msgstr "취소됨"
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Cannot delete a manufacturing order in done state."
 msgstr "완료 상태인 제조 주문은 삭제할 수 없습니다."
@@ -6583,6 +6592,13 @@ msgstr "취소되거나 완료된 제조 주문은 이동할 수 없습니다."
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot produce the same serial number twice."
 msgstr "동일한 일련번호를 두 번 생성할 수 없습니다."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot start a work order that is already done or cancelled"
+msgstr "이미 완료되었거나 취소된 작업 주문은 시작할 수 없습니다."
 
 #. module: mrp
 #. odoo-python

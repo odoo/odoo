@@ -7,6 +7,7 @@
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Alin Miclea, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:05+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2024\n"
+"Last-Translator: Alin Miclea, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,9 @@ msgid ""
 "You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
+"\n"
+"Este posibil să aveți nevoie de versiunea Enterprise pentru a instala modulul de date.Vă rugăm să vizitați https://www.odoo.com/pricing-plan pentru mai multe informații.\n"
+"Dacă aveți nevoie de teme pentru site-uri web, acestea pot fi descărcate de pe https://github.com/odoo/design-themes.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
@@ -57,13 +61,13 @@ msgstr "Închide"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Connection to %s failed The list of industry modules cannot be fetched"
-msgstr ""
+msgstr "Conectare %s eșuată Lista modulelor industriale nu poate fi preluată"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Connection to %s failed, the module %s cannot be downloaded."
-msgstr ""
+msgstr "Conectare %s eșuată, modulul %s nu poate fi descărcat."
 
 #. module: base_import_module
 #. odoo-python
@@ -87,6 +91,8 @@ msgid ""
 "Demo data should only be used on test databases. Once they are loaded, they "
 "cannot be entirely removed!"
 msgstr ""
+"Datele demonstrative trebuie utilizate numai în bazele de date de testare. "
+"Odată încărcate, nu pot fi îndepărtate complet!"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
@@ -102,6 +108,10 @@ msgid ""
 " %(error_message)s \n"
 "\n"
 msgstr ""
+"Eroare la importarea modulului '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -143,12 +153,12 @@ msgstr "Importați Modulul"
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import demo data"
-msgstr ""
+msgstr "Importați date demo"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
-msgstr ""
+msgstr "Importați datele demo ale modulului"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
@@ -169,12 +179,12 @@ msgstr "Instalare"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Install an Industry"
-msgstr ""
+msgstr "Instalați o industrie"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Install the application"
-msgstr ""
+msgstr "Instalați aplicația"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -199,7 +209,7 @@ msgstr "Modulul pentru fișiere .ZIP"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
-msgstr ""
+msgstr "Tip modul"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -209,7 +219,7 @@ msgstr "Fișier modul (.zip)"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__modules_dependencies
 msgid "Modules Dependencies"
-msgstr ""
+msgstr "Dependențe module"
 
 #. module: base_import_module
 #. odoo-python
@@ -226,13 +236,13 @@ msgstr ""
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
 msgid "Official Apps"
-msgstr ""
+msgstr "Aplicații oficiale"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Only administrators can install data modules."
-msgstr ""
+msgstr "Numai administratorii pot instala module de date."
 
 #. module: base_import_module
 #. odoo-python
@@ -267,7 +277,7 @@ msgstr "Personalizările Studio necesită aplicația Odoo Studio."
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "The following modules will also be installed:\n"
-msgstr ""
+msgstr "De asemenea, vor fi instalate următoarele module:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -276,6 +286,8 @@ msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
 msgstr ""
+"Instalarea modulului de date ar eșua, deoarece următoarele dependențe nu pot"
+" fi găsite în calea de completare:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -283,12 +295,14 @@ msgstr ""
 msgid ""
 "The list of industry applications cannot be fetched. Please try again later"
 msgstr ""
+"Lista aplicațiilor din industrie nu poate fi preluată. Vă rugăm încercați "
+"din nou mai târziu"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "The module %s cannot be downloaded"
-msgstr ""
+msgstr "Modulul %s nu poate fi descărcat"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
