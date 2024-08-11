@@ -6,6 +6,7 @@
 # Wil Odoo, 2024
 # Jolien De Paepe, 2024
 # Larissa Manderfeld, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:09+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2168,12 +2169,12 @@ msgstr "Repliée dans la vue Kanban"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr "Suivre et commenter des tâches de vos projets"
+msgstr "Suivez et commentez des tâches de vos projets"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr "Suivre l'évolution de vos projets"
+msgstr "Suivez l'évolution de vos projets"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3349,6 +3350,15 @@ msgid "Once a Month"
 msgstr "Une fois par mois"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
+msgstr ""
+"Seules les images jpeg, png, bmp et tiff peuvent être ajoutées en pièce "
+"jointe."
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 msgid "Oops! Something went wrong. Try to reload the page and log in."
@@ -4209,6 +4219,22 @@ msgstr "Erreur d'envoi SMS"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
 msgstr "Visage triste"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to paste images in description"
+msgstr ""
+"Enregistrer la tâche pour pouvoir insérer des images dans la description"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to drag images in Description"
+msgstr ""
+"Enregistrer la tâche pour pouvoir glisser des images dans la description"
 
 #. module: project
 #. odoo-javascript
