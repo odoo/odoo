@@ -1864,6 +1864,19 @@ if records:
             </field>
         </record>
 
+        <record model="ir.actions.server" id="action_move_force_register_payment">
+            <field name="name">Pay</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="state">code</field>
+            <field name="binding_view_types">list,form</field>
+            <field name="code">
+if records:
+    action = records.action_force_register_payment()
+            </field>
+        </record>
+
         <record model="ir.actions.server" id="action_check_hash_integrity">
             <field name="name">Data Inalterability Check</field>
             <field name="model_id" ref="account.model_res_company"/>

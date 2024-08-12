@@ -5,7 +5,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from odoo import fields, Command
 from odoo.osv import expression
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from datetime import date
 
 from collections import defaultdict
@@ -1550,6 +1550,35 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             self.assertTrue(wiz_form.group_payment)
             self.assertFalse(wiz_form._get_modifier('group_payment', 'invisible'))
             self.assertFalse(wiz_form._get_modifier('group_payment', 'readonly'))
+
+        # We can also force the registration of the payment of a draft move with a button hidden
+        # in the gear icon menu.
+        move = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2023-01-30'),
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                }),
+            ],
+        })
+        action_register_payment = move.action_force_register_payment()  # should not raise an error on non-posted move
+        self.assertTrue(action_register_payment)
+        wizard = self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({})
+
+        action_create_payment = wizard.action_create_payments()
+        payment = self.env[action_create_payment['res_model']].browse(action_create_payment['res_id'])
+
+        move.action_post()
+        self.assertFalse(move.payment_ids)  # don't auto reconcile payments
+
+        # Reconcile manually, the move is now fully paid
+        (move.line_ids[-1] | payment.line_ids.filtered(lambda line: line.account_id == move.line_ids[-1].account_id)).reconcile()
+
+        # If the move is already fully paid, we should alert the user
+        with self.assertRaisesRegex(UserError, r"You can only register payments for \(partially\) unpaid documents."):
+            move.action_force_register_payment()
 
     def test_in_invoice_switch_type_1(self):
         # Test creating an account_move with an in_invoice_type and switch it in an in_refund,
