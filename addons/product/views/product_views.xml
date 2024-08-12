@@ -118,27 +118,27 @@
                                                 />
                                             </span>
                                     </div>
-                                    <t invisible="
-                                        (product_variant_count &gt; 1 and not is_product_variant)
-                                        or type == 'combo'
-                                    ">
-                                        <label for="standard_price"/>
-                                        <div name="standard_price_uom">
-                                            <field
-                                                name="standard_price"
-                                                class="oe_inline"
-                                                widget="monetary"
-                                                options="{
-                                                    'currency_field': 'cost_currency_id',
-                                                    'field_digits': True,
-                                                }"
-                                            />
-                                            <span groups="uom.group_uom">
-                                                per
-                                                <field name="uom_name" class="oe_inline"/>
-                                            </span>
-                                        </div>
-                                    </t>
+                                    <label
+                                        for="standard_price"
+                                        invisible="(product_variant_count &gt; 1 and not is_product_variant) or type == 'combo'"/>
+                                    <div
+                                        name="standard_price_uom"
+                                        invisible="(product_variant_count &gt; 1 and not is_product_variant) or type == 'combo'"
+                                    >
+                                        <field
+                                            name="standard_price"
+                                            class="oe_inline"
+                                            widget="monetary"
+                                            options="{
+                                                'currency_field': 'cost_currency_id',
+                                                'field_digits': True,
+                                            }"
+                                        />
+                                        <span groups="uom.group_uom">
+                                            per
+                                            <field name="uom_name" class="oe_inline"/>
+                                        </span>
+                                    </div>
                                     <field name="categ_id" string="Category"/>
                                     <field name="company_id"
                                         groups="base.group_multi_company"
