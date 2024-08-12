@@ -263,6 +263,13 @@
         <WeButton selectClass="'w-100'" name="'so_width_100'">100%</WeButton>
     </WeSelect>
 </t>
+<t t-name="website.block_align_option">
+    <WeButtonGroup title.translate="Alignment" dependencies="'!so_width_100'">
+        <WeButton class="'fa fa-fw fa-align-left'" tooltip.translate="'Left'" selectClass="'me-auto'"/>
+        <WeButton class="'fa fa-fw fa-align-center'" tooltip.translate="'Center'" selectClass="'mx-auto'"/>
+        <WeButton class="'fa fa-fw fa-align-right'" tooltip.translate="'Right'" selectClass="'ms-auto'"/>
+    </WeButtonGroup>
+</t>
 
 <!-- Header - Borders & Shadows -->
 <t t-name="website.HeaderBox">

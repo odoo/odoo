@@ -5033,6 +5033,11 @@ registerWebsiteOption("block_width_option", {
     selector: ".s_blockquote, .s_text_highlight",
 });
 
+registerWebsiteOption("block_align_option", {
+    template: "website.block_align_option",
+    selector: ".s_alert, .s_card, .s_blockquote, .s_text_highlight",
+});
+
 registerWebsiteOption("vertical_alignment", {
     class: vAlignment,
     template: "website.vertical_alignment_option",
