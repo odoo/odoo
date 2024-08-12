@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, Command
+from odoo import _, api, fields, models, Command
 from odoo.tools import float_round, float_compare
+from odoo.exceptions import UserError
 
 
 class MrpProductionSplitMulti(models.TransientModel):
@@ -29,6 +30,8 @@ class MrpProductionSplit(models.TransientModel):
         'mrp.production.split.line', 'mrp_production_split_id',
         'Split Details', compute="_compute_details", store=True, readonly=False)
     valid_details = fields.Boolean("Valid", compute="_compute_valid_details")
+    split_pre_production_picking = fields.Boolean("Split Pre Production picking", default=True,
+        help="When enabled, new split pre-production pickings will be created for each generated MO.")
 
     @api.depends('production_detailed_vals_ids')
     def _compute_counter(self):
@@ -44,7 +47,7 @@ class MrpProductionSplit(models.TransientModel):
                 continue
             quantity = float_round(wizard.product_qty / wizard.counter, precision_rounding=wizard.product_uom_id.rounding)
             remaining_quantity = wizard.product_qty
-            for _ in range(wizard.counter - 1):
+            for i in range(wizard.counter - 1):
                 commands.append(Command.create({
                     'quantity': quantity,
                     'user_id': wizard.production_id.user_id,
@@ -66,10 +69,23 @@ class MrpProductionSplit(models.TransientModel):
                 wizard.valid_details = float_compare(wizard.product_qty, sum(wizard.production_detailed_vals_ids.mapped('quantity')), precision_rounding=wizard.product_uom_id.rounding) == 0
 
     def action_split(self):
+        if self.split_pre_production_picking:
+            if len(self.production_id.picking_ids) > 1 or self.production_id.picking_ids.state == "done":
+                raise UserError(_("Cannot split pre-production picking: the pre-picking for this manufacturing order is already done."))
+
         productions = self.production_id._split_productions({self.production_id: [detail.quantity for detail in self.production_detailed_vals_ids]})
         for production, detail in zip(productions, self.production_detailed_vals_ids):
             production.user_id = detail.user_id
             production.date_start = detail.date
+
+        # Split the pre-production picking if `split_pre_production_picking` is enabled for the 2-step or 3-step MRP process
+        if self.split_pre_production_picking and self.production_id.warehouse_id.manufacture_steps in ['pbm_sam', 'pbm']:
+            self.production_id.picking_ids.action_cancel()
+            for production in productions:
+                production.move_raw_ids.write({'state': 'draft'})
+                production.write({'state': 'draft'})
+                production.action_confirm()
+
         if self.production_split_multi_id:
             saved_production_split_multi_id = self.production_split_multi_id.id
             self.production_split_multi_id.production_ids = [Command.unlink(self.id)]

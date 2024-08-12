@@ -477,6 +477,15 @@ class StockMove(models.Model):
     def _action_confirm(self, merge=True, merge_into=False):
         moves = self.action_explode()
         merge_into = merge_into and merge_into.action_explode()
+        # It's necessary to set production_id to False when creating a new pre-picking for each split production.
+        filtered_moves = moves.filtered(
+            lambda m: (
+                m.warehouse_id.manufacture_steps in ['pbm_sam', 'pbm'] and
+                m.move_dest_ids.raw_material_production_id
+            )
+        )
+        for move in filtered_moves:
+            move.production_id = False
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
 
@@ -559,7 +568,10 @@ class StockMove(models.Model):
 
     def _prepare_procurement_origin(self):
         self.ensure_one()
-        if self.raw_material_production_id and self.raw_material_production_id.orderpoint_id:
+        if (
+            self.raw_material_production_id and
+            (self.raw_material_production_id.orderpoint_id or self.warehouse_id.manufacture_steps in ['pbm_sam', 'pbm'])
+        ):
             return self.origin
         return super()._prepare_procurement_origin()
 
@@ -738,3 +750,17 @@ class StockMove(models.Model):
                         for move in self):
             res = 'assigned'
         return res
+
+    def _search_picking_for_assignation(self):
+        self.ensure_one()
+        # For a 3-step MRP process, when splitting an MO into sub-MOs:
+        # If the first MO's post-pickings are not confirmed, and completing the second MO
+        # it will merge its post-pickings with the first. So due to that Canceling the second MO's post-picking
+        # would also cancel the first MO (also vice-versa), which is not desired.
+        # We need to ensure that each split MO proceeds independently.
+        if (
+            self.move_dest_ids.raw_material_production_id.mrp_production_backorder_count > 1 or
+            self.move_orig_ids.production_id.mrp_production_backorder_count > 1
+        ):
+            return False
+        return super()._search_picking_for_assignation()

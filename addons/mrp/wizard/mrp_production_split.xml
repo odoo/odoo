@@ -32,14 +32,15 @@
                     <group>
                         <group>
                             <field name="production_id" readonly="1"/>
+                            <field name="product_id"/>
                         </group>
                         <group>
-                            <field name="product_id"/>
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <span><field name="product_qty"/></span>
                                 <span><field name="product_uom_id" groups="uom.group_uom"/></span>
                             </div>
+                            <field name="split_pre_production_picking"/>
                         </group>
                         <group>
                             <field name="counter"/>
