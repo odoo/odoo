@@ -50,7 +50,6 @@ export class SelfOrder extends Reactive {
         this.currency = this.models["res.currency"].getFirst();
 
         this.markupDescriptions();
-        this.access_token = this.config.access_token;
         this.lastEditedProductId = null;
         this.currentProduct = 0;
         this.priceLoading = false;
@@ -72,6 +71,16 @@ export class SelfOrder extends Reactive {
             this.initKioskData();
         } else {
             await this.initMobileData();
+        }
+
+        // The router should have access_token right after the config_id
+        this.router.urlOpts.configId = this.config.id;
+        if (this.ordering) {
+            this.router.urlOpts.token = this.access_token;
+
+            if (this.table_identifier) {
+                this.router.urlOpts.tableIdentifier = this.table_identifier;
+            }
         }
 
         this.onNotified = getOnNotified(this.bus, this.access_token);
@@ -127,6 +136,10 @@ export class SelfOrder extends Reactive {
             this.addToCart(product, 1, "", {}, {});
             this.router.navigate("cart");
         });
+    }
+
+    setTableIdentifier(identifier) {
+        this.router.urlOpts.tableIdentifier = identifier;
     }
 
     subscribeToOrderChannel(order) {
@@ -403,6 +416,7 @@ export class SelfOrder extends Reactive {
     }
 
     initData() {
+        this.table_identifier = odoo.table_identifier;
         this.productCategories = this.models["pos.category"].getAll();
         this.productByCategIds = this.models["product.product"].getAllBy("pos_categ_ids");
         const productWoCat = this.models["product.product"].filter(
@@ -484,8 +498,9 @@ export class SelfOrder extends Reactive {
     }
 
     initKioskData() {
-        if (this.session && this.access_token) {
+        if (this.session && odoo.access_token) {
             this.ordering = true;
+            this.access_token = odoo.access_token;
         }
 
         this.idleTimout = false;
@@ -510,9 +525,10 @@ export class SelfOrder extends Reactive {
         if (this.config.self_ordering_mode !== "qr_code") {
             if (
                 this.session &&
-                this.access_token &&
+                odoo.access_token &&
                 this.config.self_ordering_mode !== "consultation"
             ) {
+                this.access_token = odoo.access_token;
                 this.ordering = true;
             }
 

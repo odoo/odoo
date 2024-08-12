@@ -8,34 +8,34 @@
             <LoadingOverlay />
         </div>
         <Router t-if="selfIsReady" pos_config_id="selfOrder.config.id">
-            <t t-set-slot="default" route="`/pos-self/${selfOrder.config.id}`">
+            <t t-set-slot="default" route="``">
                 <LandingPage />
             </t>
-            <t t-set-slot="product_list" route="`/pos-self/${selfOrder.config.id}/products`">
+            <t t-set-slot="product_list" route="`/products`">
                 <ProductListPage />
             </t>
-            <t t-set-slot="product" route="`/pos-self/${selfOrder.config.id}/product/{int:id}`" t-slot-scope="url">
+            <t t-set-slot="product" route="`/product/{int:id}`" t-slot-scope="url">
                 <ProductPage product="selfOrder.models['product.product'].get(url.id)" />
             </t>
-            <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.config.id}/combo-selection/{int:id}`" t-slot-scope="url">
+            <t t-set-slot="combo_selection" route="`/combo-selection/{int:id}`" t-slot-scope="url">
                 <ComboPage product="selfOrder.models['product.product'].get(url.id)" />
             </t>
-            <t t-set-slot="cart" route="`/pos-self/${selfOrder.config.id}/cart`">
+            <t t-set-slot="cart" route="`/cart`">
                 <CartPage />
             </t>
-            <t t-set-slot="payment" route="`/pos-self/${selfOrder.config.id}/payment`">
+            <t t-set-slot="payment" route="`/payment`">
                 <PaymentPage />
             </t>
-            <t t-set-slot="confirmation" route="`/pos-self/${selfOrder.config.id}/confirmation/{string:orderAccessToken}/{string:screenMode}`" t-slot-scope="url">
+            <t t-set-slot="confirmation" route="`/confirmation/{string:orderAccessToken}/{string:screenMode}`" t-slot-scope="url">
                 <ConfirmationPage orderAccessToken="url.orderAccessToken" screenMode="url.screenMode" />
             </t>
-            <t t-set-slot="location" route="`/pos-self/${selfOrder.config.id}/location`">
+            <t t-set-slot="location" route="`/location`">
                 <EatingLocationPage />
             </t>
-            <t t-set-slot="stand_number" route="`/pos-self/${selfOrder.config.id}/stand_number`">
+            <t t-set-slot="stand_number" route="`/stand_number`">
                 <StandNumberPage />
             </t>
-            <t t-set-slot="orderHistory" route="`/pos-self/${selfOrder.config.id}/orders`">
+            <t t-set-slot="orderHistory" route="`/orders`">
                 <OrdersHistoryPage />
             </t>
         </Router>

@@ -15,15 +15,14 @@ export class SelfOrderRouter extends Reactive {
         this.registeredRoutes = {};
         this.historyPage = "";
         this.activeSlot = null;
+        this.urlOpts = {
+            configId: null,
+            token: null,
+            tableIdentifier: null,
+        };
         window.addEventListener("popstate", (event) => {
             this.path = window.location.pathname;
         });
-    }
-
-    addTableIdentifier(table) {
-        const url = new URL(browser.location.href);
-        url.searchParams.set("table_identifier", table.identifier);
-        history.replaceState({}, "", url);
     }
 
     back() {
@@ -39,6 +38,19 @@ export class SelfOrderRouter extends Reactive {
         this.historyPage = window.location.pathname;
     }
 
+    get basePath() {
+        let url = `/pos-self/${this.urlOpts.configId}`;
+
+        if (this.urlOpts.token) {
+            url += `/${this.urlOpts.token}`;
+        }
+
+        if (this.urlOpts.tableIdentifier) {
+            url += `/${this.urlOpts.tableIdentifier}`;
+        }
+
+        return url;
+    }
     /**
      * Navigate to the given relative route.
      * We use the history API to navigate to it.
@@ -49,9 +61,11 @@ export class SelfOrderRouter extends Reactive {
         const { route } = this.registeredRoutes[routeName];
         const url = new URL(browser.location.href);
 
-        url.pathname = route.replace(/\{\w+:(\w+)\}/g, (match, paramName) => {
-            return routeParams[paramName];
-        });
+        url.pathname =
+            this.basePath +
+            route.replace(/\{\w+:(\w+)\}/g, (match, paramName) => {
+                return routeParams[paramName];
+            });
 
         history.pushState({}, "", url);
         this.path = window.location.pathname;
