@@ -2536,7 +2536,16 @@ class MailThread(models.AbstractModel):
         messages_all = self.env['mail.message']
         for record in self:
             if template:
+                # Notify author if email_cc points to him
+                if self.env.context.get('mail_notify_author'):
+                    notify_author = True
+                elif self.env.user.company_id.email:
+                    notify_author = self.env.user.company_id.email in template._render_field('email_cc', record.ids)[record.id]
+                else:
+                    notify_author = False
+
                 composer = self.env['mail.compose.message'].with_context(
+                    mail_notify_author=notify_author,
                     default_composition_mode='comment',
                     default_model=self._name,
                     default_res_ids=record.ids,
