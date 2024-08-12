@@ -132,13 +132,15 @@ class ImBus(models.Model):
         self._sendmany([[channel, notification_type, message]])
 
     @api.model
-    def _poll(self, channels, last=0):
+    def _poll(self, channels, last=0, ignore_ids=None):
         # first poll return the notification in the 'buffer'
         if last == 0:
             timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
             domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         else:  # else returns the unread notifications
             domain = [('id', '>', last)]
+        if ignore_ids:
+            domain.append(("id", "not in", ignore_ids))
         channels = [json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels]
         domain.append(('channel', 'in', channels))
         notifications = self.sudo().search_read(domain, ["message"])
