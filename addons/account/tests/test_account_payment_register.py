@@ -779,13 +779,6 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         ])
 
     def test_register_payment_constraints(self):
-        # Test to register a payment for a draft journal entry.
-        self.out_invoice_1.button_draft()
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.env['account.payment.register']\
-                .with_context(active_model='account.move', active_ids=self.out_invoice_1.ids)\
-                .create({})
-
         # Test to register a payment for an already fully reconciled journal entry.
         self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=self.out_invoice_2.ids)\

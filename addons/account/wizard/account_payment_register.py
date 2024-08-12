@@ -146,6 +146,7 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_show_require_partner_bank') # used to know whether the field `partner_bank_id` should be required
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
     duplicate_move_ids = fields.Many2many(comodel_name='account.move', compute='_compute_duplicate_moves')
+    is_register_payment_on_draft = fields.Boolean(compute='_compute_is_register_payment_on_draft')
 
     # == trust check ==
     untrusted_bank_ids = fields.Many2many('res.partner.bank', compute='_compute_trust_values')
@@ -687,6 +688,11 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.duplicate_move_ids = self.env['account.move']
 
+    @api.depends('line_ids')
+    def _compute_is_register_payment_on_draft(self):
+        for wizard in self:
+            wizard.is_register_payment_on_draft = any(l.parent_state == 'draft' for l in wizard.line_ids)
+
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
         """ Retrieve move ids for possible duplicates of payments. Duplicates moves:
         - Have the same partner_id, amount and date as the payment
@@ -782,8 +788,6 @@ class AccountPaymentRegister(models.TransientModel):
             available_lines = self.env['account.move.line']
             valid_account_types = self.env['account.payment']._get_valid_payment_account_types()
             for line in lines:
-                if line.move_id.state != 'posted':
-                    raise UserError(_("You can only register payment for posted journal entries."))
 
                 if line.account_type not in valid_account_types:
                     continue
@@ -1028,7 +1032,11 @@ class AccountPaymentRegister(models.TransientModel):
             for account in payment_lines.account_id:
                 (payment_lines + lines)\
                     .with_context(**extra_context)\
-                    .filtered_domain([('account_id', '=', account.id), ('reconciled', '=', False)])\
+                    .filtered_domain([
+                        ('account_id', '=', account.id),
+                        ('reconciled', '=', False),
+                        ('parent_state', '=', 'posted'),
+                    ])\
                     .reconcile()
 
     def _create_payments(self):
@@ -1096,6 +1104,8 @@ class AccountPaymentRegister(models.TransientModel):
         return payments
 
     def action_create_payments(self):
+        if self.is_register_payment_on_draft:
+            self.payment_difference_handling = 'open'
         payments = self._create_payments()
 
         if self._context.get('dont_redirect_to_payments'):

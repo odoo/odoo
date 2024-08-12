@@ -81,7 +81,7 @@
                             <label for="payment_difference"/>
                             <div>
                                 <field name="payment_difference"/>
-                                <field name="payment_difference_handling" widget="radio" nolabel="1"/>
+                                <field name="payment_difference_handling" widget="radio" nolabel="1" invisible="is_register_payment_on_draft"/>
                                 <div invisible="hide_writeoff_section or payment_difference_handling == 'open'">
                                     <label for="writeoff_account_id" string="Post Difference In" class="oe_edit_only"/>
                                     <field name="writeoff_account_id"
