@@ -3,7 +3,7 @@
 
 from psycopg2 import IntegrityError
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command
 from odoo.tests import tagged, TransactionCase, Form
 from odoo.tools import mute_logger
@@ -184,3 +184,69 @@ class TestLoyalty(TransactionCase):
         loyalty_program.action_archive()
         # Make sure that the main product didn't get archived
         self.assertTrue(product.active)
+
+    def test_product_company_change_restricted_to_same_company(self):
+        """
+        Check that we can't change the company of a product if it has a
+        reward linked to it and the product is not in the same company as the
+        reward.
+        """
+
+        product = self.env['product.product'].create({
+            'name': 'Test',
+            'company_id': self.env.company.id,
+        })
+
+        self.env['loyalty.reward'].create({
+            'program_id': self.program.id,
+            'discount_line_product_id': product.id,
+            'company_id': self.env.company.id,
+        })
+
+        with self.assertRaises(UserError):
+            product.product_tmpl_id.company_id = self.env.company.id + 1
+
+        product.product_tmpl_id.company_id = False
+        product.product_tmpl_id.company_id = self.env.company.id
+
+        # Other product, not linked to a reward, should not be impacted
+        other_product = self.env['product.product'].create({
+            'name': 'Test 2',
+            'company_id': self.env.company.id,
+        })
+        other_product.product_tmpl_id.company_id = self.env.company.id + 1
+
+    def test_loyalty_program_update_company(self):
+        """
+        Check that we can't change the company of a loyalty program if it
+        has rewards linked to products that are not in the same company.
+        """
+
+        product_a = self.env['product.product'].create({
+            'name': 'Test A',
+            'company_id': self.env.company.id,
+        })
+        product_b = self.env['product.product'].create({
+            'name': 'Test B',
+        })
+
+        program = self.env['loyalty.program'].create({
+            'name': 'Test Program',
+            'reward_ids': [
+                Command.create({'discount_line_product_id': product_a.id}),
+                Command.create({'discount_line_product_id': product_b.id})
+            ],
+            'company_id': self.env.company.id,
+        })
+
+        with self.assertRaises(UserError):
+            program.company_id = self.env.company.id + 1
+
+        with self.assertRaises(UserError):
+            program.company_id = False
+
+        # After removing the company from the product, we should be able
+        # to change the company of the program
+        product_a.company_id = False
+        program.company_id = self.env.company.id + 1
+        program.company_id = False

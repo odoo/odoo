@@ -136,6 +136,15 @@ class LoyaltyProgram(models.Model):
         if any(not program.reward_ids for program in self):
             raise ValidationError(_('A program must have at least one reward.'))
 
+    @api.constrains('company_id')
+    def _validate_company(self):
+        if products := self.reward_ids.discount_line_product_id.filtered(lambda r: r.company_id and r.company_id != self.company_id):
+            raise UserError(
+                _("You cannot edit the company because some of the reward products are specific"
+                  " to a company. Please remove the company for this products first: %(product_names)s.",
+                  product_names=', '.join(products.with_context(display_default_code=False).mapped('display_name')))
+            )
+
     def _compute_total_order_count(self):
         self.total_order_count = 0
 
