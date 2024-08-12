@@ -380,6 +380,11 @@
                         <field name="expression_ids">
                             <record id="account_tax_report_line_cd_deductible_report_balance" model="account.report.expression">
                                 <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CD_REPORT_CREDIT._applied_carryover_balance</field>
+                            </record>
+                            <record id="account_tax_report_line_cd_deductible_report_balance_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
                                 <field name="date_scope">previous_tax_period</field>
@@ -511,7 +516,12 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CD_CREDIT.balance - CD_REPAYMENT_ASKED.balance</field>
                                 <field name="subformula">if_above(EUR(0))</field>
-                                <field name="carryover_target">CD_REPORT_CREDIT.balance</field>
+                            </record>
+                            <record id="account_tax_report_line_cd_calculation_credit_reportable_carryover" model="account.report.expression">
+                                <field name="label">_carryover_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CD_CREDIT_REPORTABLE.balance</field>
+                                <field name="carryover_target">CD_REPORT_CREDIT._applied_carryover_balance</field>
                             </record>
                         </field>
                     </record>
