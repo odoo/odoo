@@ -1130,6 +1130,7 @@ class ChromeBrowser:
             '--user-data-dir': user_data_dir,
             '--window-size': window_size,
             '--no-first-run': '',
+<<<<<<< master
             # FIXME: these next 2 flags are temporarily uncommented to allow client
             # code to manually run garbage collection. This is done as currently
             # the Chrome unit test process doesn't have access to its available
@@ -1138,6 +1139,19 @@ class ChromeBrowser:
             # configured.
             '--enable-precise-memory-info': '',
             '--js-flags': '--expose-gc',
+||||||| a989aa1cf91d06bd795daf457e179263f72eb8ed
+            # '--enable-precise-memory-info': '', # uncomment to debug memory leaks in qunit suite
+            # '--js-flags': '--expose-gc', # uncomment to debug memory leaks in qunit suite
+=======
+            # '--enable-precise-memory-info': '',  # uncomment to debug memory leaks in unit tests
+            # FIXME: the next flag is temporarily uncommented to allow client
+            # code to manually run garbage collection. This is done as currently
+            # the Chrome unit test process doesn't have access to its available
+            # memory, so it cannot run the GC efficiently and may run out of memory
+            # and crash. These should be re-commented when the process is correctly
+            # configured.
+            '--js-flags': '--expose-gc',  # uncomment to debug memory leaks in unit tests
+>>>>>>> 7a97da138dc1f3127e8b7156dc21d791ae87a7ed
         }
         if headless:
             switches.update(headless_switches)
