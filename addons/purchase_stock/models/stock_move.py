@@ -158,7 +158,7 @@ class StockMove(models.Model):
         returned_move = self.origin_returned_move_id
         pdiff_exists = bool((self | returned_move).stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
 
-        if not am_vals_list or not self.purchase_line_id or pdiff_exists:
+        if not am_vals_list or not self.purchase_line_id or pdiff_exists or float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding):
             return am_vals_list
 
         layer = self.env['stock.valuation.layer'].browse(svl_id)
@@ -167,7 +167,8 @@ class StockMove(models.Model):
         if returned_move and self._is_out() and self._is_returned(valued_type='out'):
             returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
             returned_unit_cost = returned_layer.value / returned_layer.quantity
-            unit_diff = layer.unit_cost - returned_unit_cost
+            layer_unit_cost = layer.value / layer.quantity
+            unit_diff = layer_unit_cost - returned_unit_cost
         elif returned_move and returned_move._is_out() and returned_move._is_returned(valued_type='out'):
             returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
             unit_diff = returned_layer.unit_cost - self.purchase_line_id._get_gross_price_unit()
