@@ -319,15 +319,13 @@ export class Store extends BaseStore {
                     views: [[false, "form"]],
                     res_id: id,
                 })
-            ).then(() => {
-                if (!this.env.isSmall) {
-                    this.env.services["mail.thread"].open(thread, true, { autofocus: false });
-                }
-            });
+            ).then(() => this.onLinkFollowed(thread));
             return true;
         }
         return false;
     }
+
+    onLinkFollowed(fromThread) {}
 
     setup() {
         super.setup();
