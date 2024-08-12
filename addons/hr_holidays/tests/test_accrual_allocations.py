@@ -1867,3 +1867,67 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
 
             self.assertEqual(allocation.lastcall, datetime.date(2017, 12, 5))
+
+    def test_future_accural_time_with_leaves_taken_in_the_past(self):
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'accrued_gain_time': 'start',
+            'carryover_date': 'year_start',
+            'level_ids': [(0, 0, {
+                'start_count': 1,
+                'start_type': 'day',
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'daily',
+                'cap_accrued_time': True,
+                'maximum_leave': 10
+            })],
+        })
+
+        def get_reamining_leaves(*args):
+            return leave_type.get_allocation_data(self.employee_emp, datetime.date(*args))[self.employee_emp][0][1][
+                'remaining_leaves']
+
+        with freeze_time("2024-03-01"):
+            # Simulate creating an allocation from frontend interface
+            with Form(self.env['hr.leave.allocation']) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = accrual_plan
+                f.employee_ids.add(self.employee_emp)
+                f.holiday_status_id = leave_type
+                f.date_from = '2024-02-01'
+                f.name = "Accrual allocation for employee"
+
+            allocation = f.record
+            allocation.action_validate()
+            self.assertEqual(get_reamining_leaves(2024, 3, 1), 10, "The cap is reached, no more leaves should be accrued")
+
+            leave = self.env['hr.leave'].create({
+                'name': 'leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-02-26',
+                'request_date_to': '2024-03-01',
+            })
+            leave.action_validate()
+            self.assertEqual(get_reamining_leaves(2024, 3, 1), 5, "5 day should be deduced from the allocation")
+            self.assertEqual(get_reamining_leaves(2024, 3, 3), 7, "2 days should be added to the accrual allocation")
+            self.assertEqual(get_reamining_leaves(2024, 3, 3), 7, "Function return result should persist")
+            self.assertEqual(get_reamining_leaves(2024, 3, 10), 10, "Accrual allocation should be capped at 10")
+
+            leave = self.env['hr.leave'].create({
+                'name': 'leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-03-04',
+                'request_date_to': '2024-03-08',
+            })
+            leave.action_validate()
+            self.assertEqual(get_reamining_leaves(2024, 3, 4), 3, "5 days should be deduced from the allocation and a new day should be accrued")
+            self.assertEqual(get_reamining_leaves(2024, 3, 11), 10, "Accrual allocation should be capped at 10")
