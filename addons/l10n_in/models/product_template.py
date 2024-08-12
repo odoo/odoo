@@ -3,6 +3,7 @@
 
 import re
 from odoo import api, models, fields, _
+from odoo.exceptions import UserError
 
 
 class ProductTemplate(models.Model):
@@ -32,3 +33,11 @@ class ProductTemplate(models.Model):
                 )
                 continue
             record.l10n_in_hsn_warning = False
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        if self.env['account.move.line'].sudo().search_count([
+            ('product_id', 'in', self.product_variant_ids.ids), ('parent_state', '=', 'posted')
+        ]):
+            raise UserError(_("You cannot change the product type because there are posted accounting moves associated with this product."))
+        return super()._onchange_type()

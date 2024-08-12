@@ -112,7 +112,7 @@ class AccountEdiFormat(models.Model):
                 (is_purchase and "Bill Reference" or "Invoice")))
         for line in goods_lines:
             if line.display_type == 'product':
-                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
+                hsn_code = self.env['account.move']._l10n_in_extract_digits(line.l10n_in_hsn_code)
                 if not hsn_code:
                     error_message.append(_("HSN code is not set in product line %s", line.name))
                 elif not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code):
@@ -406,13 +406,14 @@ class AccountEdiFormat(models.Model):
             else:
                 return 1
 
+        AccountMove = self.env["account.move"]
         saler_buyer = self._get_l10n_in_edi_saler_buyer_party(invoices)
         seller_details = saler_buyer.get("seller_details")
         dispatch_details = saler_buyer.get("dispatch_details")
         buyer_details = saler_buyer.get("buyer_details")
         ship_to_details = saler_buyer.get("ship_to_details")
         sign = invoices.is_inbound() and -1 or 1
-        extract_digits = self._l10n_in_edi_extract_digits
+        extract_digits = AccountMove._l10n_in_extract_digits
         tax_details = self._l10n_in_prepare_edi_tax_details(invoices)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
@@ -446,14 +447,14 @@ class AccountEdiFormat(models.Model):
                 self._get_l10n_in_edi_ewaybill_line_details(line, line_tax_details, sign)
                 for line, line_tax_details in invoice_line_tax_details.items()
             ],
-            "totalValue": self._l10n_in_round_value(tax_details.get("base_amount")),
-            "cgstValue": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
-            "sgstValue": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
-            "igstValue": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
-            "cessValue": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
-            "cessNonAdvolValue": self._l10n_in_round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
-            "totInvValue": self._l10n_in_round_value((tax_details.get("base_amount") + tax_details.get("tax_amount"))),
+            "totalValue": AccountMove._l10n_in_round_value(tax_details.get("base_amount")),
+            "cgstValue": AccountMove._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
+            "sgstValue": AccountMove._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
+            "igstValue": AccountMove._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
+            "cessValue": AccountMove._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
+            "cessNonAdvolValue": AccountMove._l10n_in_round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
+            "otherValue": AccountMove._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
+            "totInvValue": AccountMove._l10n_in_round_value(tax_details.get("base_amount") + tax_details.get("tax_amount")),
         }
         is_overseas = invoices.l10n_in_gst_treatment in ("overseas", "special_economic_zone")
         if invoices.is_purchase_document(include_receipts=True):
@@ -504,7 +505,8 @@ class AccountEdiFormat(models.Model):
         return json_payload
 
     def _get_l10n_in_edi_ewaybill_line_details(self, line, line_tax_details, sign):
-        extract_digits = self._l10n_in_edi_extract_digits
+        AccountMove = self.env["account.move"]
+        extract_digits = AccountMove._l10n_in_extract_digits
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
         line_details = {
             "productName": line.product_id.name or line.name,
@@ -512,17 +514,17 @@ class AccountEdiFormat(models.Model):
             "productDesc": line.product_id.display_name,
             "quantity": line.quantity,
             "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[0] or "OTH",
-            "taxableAmount": self._l10n_in_round_value(line.balance * sign),
+            "taxableAmount": AccountMove._l10n_in_round_value(line.balance * sign),
         }
         if tax_details_by_code.get("igst_rate") or (line.move_id.l10n_in_state_id.l10n_in_tin != line.company_id.state_id.l10n_in_tin):
-            line_details.update({"igstRate": self._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00))})
+            line_details.update({"igstRate": AccountMove._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00))})
         else:
             line_details.update({
-                "cgstRate": self._l10n_in_round_value(tax_details_by_code.get("cgst_rate", 0.00)),
-                "sgstRate": self._l10n_in_round_value(tax_details_by_code.get("sgst_rate", 0.00)),
+                "cgstRate": AccountMove._l10n_in_round_value(tax_details_by_code.get("cgst_rate", 0.00)),
+                "sgstRate": AccountMove._l10n_in_round_value(tax_details_by_code.get("sgst_rate", 0.00)),
             })
         if tax_details_by_code.get("cess_rate"):
-            line_details.update({"cessRate": self._l10n_in_round_value(tax_details_by_code.get("cess_rate"))})
+            line_details.update({"cessRate": AccountMove._l10n_in_round_value(tax_details_by_code.get("cess_rate"))})
         return line_details
 
     #================================ E-invoice API methods ===========================
