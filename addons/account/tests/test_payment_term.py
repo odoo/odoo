@@ -220,7 +220,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         def assert_payment_term_values(expected_values_list):
             res = pay_term._compute_terms(
                 fields.Date.from_string('2016-01-01'), self.env.company.currency_id, self.env.company,
-                150, 150, 1000, 1000, 1,
+                150, 150, 1, 1000, 1000,
             )
             self.assertEqual(len(res), len(expected_values_list))
             for values, (company_amount, discount_balance) in zip(res, expected_values_list):
