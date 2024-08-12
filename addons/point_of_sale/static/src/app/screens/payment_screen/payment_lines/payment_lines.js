@@ -25,9 +25,6 @@ export class PaymentScreenPaymentLines extends Component {
         this.dialog = useService("dialog");
     }
 
-    formatLineAmount(paymentline) {
-        return this.env.utils.formatCurrency(paymentline.get_amount(), false);
-    }
     selectedLineClass(line) {
         return { "payment-terminal": line.get_payment_status() };
     }
