@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
+import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 Object.assign(MessagingMenu.components, { MessagingMenuQuickSearch });
 
@@ -95,7 +96,8 @@ patch(MessagingMenu.prototype, {
             partner: this.store.odoobot,
             isShown:
                 this.store.discuss.activeTab === "main" &&
-                this.notification.permission === "prompt",
+                this.notification.permission === "prompt" &&
+                !isDisplayStandalone(),
         };
     },
     get tabs() {
@@ -170,7 +172,7 @@ patch(MessagingMenu.prototype, {
         if (this.canPromptToInstall) {
             value++;
         }
-        if (this.notification.permission === "prompt") {
+        if (this.notification.permission === "prompt" && !isDisplayStandalone()) {
             value++;
         }
         return value;

@@ -19,6 +19,7 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {Object} Props
@@ -42,6 +43,7 @@ export class ChatWindow extends Component {
 
     setup() {
         super.setup();
+        this.isMobileOS = isMobileOS();
         this.store = useState(useService("mail.store"));
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
