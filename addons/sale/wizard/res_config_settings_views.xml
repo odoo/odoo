@@ -155,6 +155,9 @@
                                 <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
                             </div>
                         </setting>
+                        <setting id="setting_commission" help="Manage Sales &amp; teams targets and commissions">
+                            <field name="module_sale_commission" widget="upgrade_boolean"/>
+                        </setting>
                     </block>
                     <block title="Connectors" id="connectors_setting_container">
                         <setting id="amazon_connector" documentation="/applications/sales/sales/amazon_connector/setup.html" help="Import Amazon orders and sync deliveries">
