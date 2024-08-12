@@ -470,7 +470,7 @@ class ThemeSelectionScreen extends ApplyConfiguratorScreen {
                         }, {once: true});
                     }));
                 }
-                $(this.themeSVGPreviews[idx].el).append(svgEl);
+                this.themeSVGPreviews[idx].el.appendChild(svgEl);
             });
             // When all the images inside the svgs are loaded then remove the
             // loading effect.
