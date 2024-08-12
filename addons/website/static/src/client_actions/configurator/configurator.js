@@ -596,7 +596,7 @@ class Store {
                 color2: color2,
                 color3: mixCssColors('#FFFFFF', color2, 0.9),
                 color4: '#FFFFFF',
-                color5: mixCssColors(color1, '#000000', 0.75),
+                color5: mixCssColors(color1, '#000000', 0.125),
             };
             CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
                 recommendedPalette[attr] = recommendedPalette[this.defaultColors[attr]];
