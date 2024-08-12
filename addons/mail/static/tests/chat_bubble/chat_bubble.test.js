@@ -213,6 +213,31 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     await contains(".o-mail-ChatBubble-preview", { text: "DemoYou: Hi" });
 });
 
+test("Chat bubble preview works on author as email address", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: null,
+        body: "Some email message",
+        email_from: "md@oilcompany.fr",
+        model: "res.partner",
+        needaction: true,
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await click(".o-mail-ChatWindow [title='Fold']");
+    await hover(".o-mail-ChatBubble");
+    await contains(".o-mail-ChatBubble-preview", { text: "md@oilcompany.fr: Some email message" });
+});
+
 test("chat bubbles are synced between tabs", async () => {
     const pyEnv = await startServer();
     const marcPartnerId = pyEnv["res.partner"].create({ name: "Marc" });

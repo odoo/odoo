@@ -3,7 +3,6 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -63,10 +62,6 @@ export class ChatBubble extends Component {
         if (!lastMessage) {
             return false;
         }
-        const selfAuthored = this.store.self.eq(lastMessage.author);
-        return _t("%(authorName)s: %(body)s", {
-            authorName: selfAuthored ? "You" : lastMessage.author.name,
-            body: lastMessage.inlineBody,
-        });
+        return lastMessage.inlineBody;
     }
 }
