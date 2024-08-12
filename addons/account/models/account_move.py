@@ -4519,6 +4519,15 @@ class AccountMove(models.Model):
                 })
 
     def action_register_payment(self):
+        if any(m.state != 'posted' for m in self):
+            raise UserError(_("You can only register payment for posted journal entries."))
+        return self.action_force_register_payment()
+
+    def action_force_register_payment(self):
+        if any(m.payment_state not in ('not_paid', 'partial') for m in self):
+            raise UserError(_("You can only register payments for (partially) unpaid documents."))
+        if any(m.move_type == 'entry' for m in self):
+            raise UserError(_("You cannot register payments for miscellaneous entries."))
         return self.line_ids.action_register_payment()
 
     def action_duplicate(self):
