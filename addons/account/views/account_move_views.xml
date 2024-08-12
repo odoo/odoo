@@ -560,6 +560,7 @@
             <field name="model">account.move</field>
             <field name="mode">primary</field>
             <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="attributes">
                     <attribute name="js_class">account_x2many_list</attribute>
