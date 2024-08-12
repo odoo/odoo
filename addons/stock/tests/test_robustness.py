@@ -74,6 +74,7 @@ class TestRobustness(TransactionCase):
         test_stock_location = self.env['stock.location'].create({
             'name': "Test Location",
             'location_id': self.stock_location.id,
+            'usage': 'transit',
         })
         test_stock_location.scrap_location = True
 
@@ -112,6 +113,45 @@ class TestRobustness(TransactionCase):
 
         # unreserve
         move1._do_unreserve()
+
+    def test_internal_scrap_location_usage(self):
+        """Reservation should not be bypassed in internal scrap location."""
+
+        # change stock usage
+        test_stock_location = self.env['stock.location'].create({
+            'name': "Test Location",
+            'location_id': self.stock_location.id,
+            'usage': 'internal',
+        })
+        test_stock_location.scrap_location = True
+
+        # make some stock
+        self.env['stock.quant']._update_available_quantity(
+            self.product1,
+            test_stock_location,
+            1,
+        )
+
+        # reserve a unit
+        move1 = self.env['stock.move'].create({
+            'name': 'test_location_archive',
+            'location_id': test_stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        quant = self.env['stock.quant']._gather(
+            self.product1,
+            test_stock_location,
+        )
+
+        # assert the reservation
+        self.assertEqual(quant.reserved_quantity, 1)  # reservation is not bypassed in scrap location
+        self.assertEqual(move1.product_qty, 1)
 
     def test_package_unpack(self):
         """ Unpack a package that contains quants with a reservation

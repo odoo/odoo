@@ -348,7 +348,11 @@ class Location(models.Model):
 
     def should_bypass_reservation(self):
         self.ensure_one()
-        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location or (self.usage == 'transit' and not self.company_id)
+        return (
+            self.usage in ('supplier', 'customer', 'inventory', 'production')
+            or (self.scrap_location and self.usage != 'internal')
+            or (self.usage == 'transit' and not self.company_id)
+        )
 
     def _check_can_be_used(self, product, quantity=0, package=None, location_qty=0):
         """Check if product/package can be stored in the location. Quantity
