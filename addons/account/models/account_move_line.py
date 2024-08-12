@@ -1954,12 +1954,14 @@ class AccountMoveLine(models.Model):
         )
         if is_cross_currency_payment:
             AccountMove = self.env['account.move']
+            is_invoice = debit_aml['move_type'] in AccountMove.get_sale_types()
+            is_bill = credit_aml['move_type'] in AccountMove.get_purchase_types()
             if any(aml['move_type'] == 'entry' for aml in (credit_aml, debit_aml)) :
                 debit_currency_rate_during_payment, credit_currency_rate_during_payment = (
                     self._get_currency_debit_and_credit_rates(
                         debit_currency,
                         credit_currency,
-                        credit_aml['payment_date'] or debit_aml['payment_date']
+                        is_invoice and credit_aml['payment_date'] or debit_aml['payment_date']
                     )
                 )
             else:
@@ -1972,8 +1974,6 @@ class AccountMoveLine(models.Model):
                     or credit_currency['rate']
                 )
 
-            is_invoice = debit_aml['move_type'] in AccountMove.get_sale_types()
-            is_bill = credit_aml['move_type'] in AccountMove.get_purchase_types()
             if is_invoice or is_bill:
                 invoice_date = is_invoice and debit_aml['invoice_date'] or credit_aml['invoice_date']
                 debit_currency_rate_during_creation, credit_currency_rate_during_creation = (
@@ -2035,7 +2035,6 @@ class AccountMoveLine(models.Model):
         else:
             recon_debit_amount = debit_recon_values['residual']
             recon_credit_amount = -credit_recon_values['residual']
-
 
         # ==== Match both lines together and compute amounts to reconcile ====
 

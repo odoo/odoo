@@ -2718,3 +2718,108 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         bill = self.init_invoice(move_type='in_invoice', products=[product])
         bill_uom = bill.invoice_line_ids[0].product_uom_id
         self.assertEqual(bill_uom, uom_kgm)
+
+    def _create_account_move_with_single_item(self, type, currency, date, price):
+        return self.env['account.move'].create({
+            'move_type' : type,
+            'partner_id': self.partner_a.id,
+            'invoice_date': date,
+            'currency_id': currency.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'price_unit': price,
+                    'tax_ids': [],
+                }),
+            ]
+        })
+
+    def test_cross_currency_exchange_difference_for_increasing_rates(self):
+        currency_1 = self.setup_multi_currency_data(default_values ={
+            'name': 'Ruby',
+            'symbol': 'RUB',
+            'currency_unit_label': 'Ruby',
+            'currency_subunit_label': 'Rubs'
+        }, rate2016=0.0125, rate2017=0.012345678912345678)['currency']
+        currency_2 = self.setup_multi_currency_data(default_values ={
+            'name': 'Sapphire',
+            'symbol': 'SAP',
+            'currency_unit_label': 'Sapphire',
+            'currency_subunit_label': 'Saph'
+        }, rate2016=0.01, rate2017=0.00990099009900)['currency']
+
+        tests = [
+            { 'move_type': 'out_invoice', 'amount': 89.57, 'payment_amount': 71.83, 'exchange_amount': 89.57 },
+            { 'move_type': 'out_invoice', 'amount': 100, 'payment_amount': 80.20, 'exchange_amount': 100.20 },
+            { 'move_type': 'out_invoice', 'amount': 150, 'payment_amount': 120.30, 'exchange_amount': 150.30 },
+            { 'move_type': 'out_invoice', 'amount': 250, 'payment_amount': 200.50, 'exchange_amount': 250.25 },
+            { 'move_type': 'in_invoice', 'amount': 89.57, 'payment_amount': 71.83, 'exchange_amount': 89.57 },
+            { 'move_type': 'in_invoice', 'amount': 100, 'payment_amount': 80.20, 'exchange_amount': 100.20 },
+            { 'move_type': 'in_invoice', 'amount': 150, 'payment_amount': 120.30, 'exchange_amount': 150.30 },
+            { 'move_type': 'in_invoice', 'amount': 250, 'payment_amount': 200.50, 'exchange_amount': 250.25 },
+        ]
+
+        for test in tests:
+            move = self._create_account_move_with_single_item(test['move_type'], currency_1, '2016-10-10', test['amount'])
+            move.action_post()
+            action = move.action_register_payment()
+            self.env[action['res_model']].with_context(action['context']).create({
+                'amount': test['payment_amount'],
+                'currency_id': currency_2.id,
+                'payment_date': '2017-01-01'
+            })._create_payments()
+
+            exchange_amount = sum(pl['amount'] for pl in move.invoice_payments_widget['content'] if pl['is_exchange'])
+            self.assertEqual(
+                {'amount_residual': 0.0, 'amount_residual_signed': 0.0, 'exchange_amount': test['exchange_amount']},
+                {
+                    'amount_residual': move.amount_residual,
+                    'amount_residual_signed': move.amount_residual_signed,
+                    'exchange_amount': exchange_amount
+                }
+            )
+
+    def test_cross_currency_exchange_difference_for_decreasing_rates(self):
+        currency_1 = self.setup_multi_currency_data(default_values ={
+            'name': 'Ruby',
+            'symbol': 'RUB',
+            'currency_unit_label': 'Ruby',
+            'currency_subunit_label': 'Rubs'
+        }, rate2016=0.012345678912345678, rate2017=0.0125)['currency']
+        currency_2 = self.setup_multi_currency_data(default_values ={
+            'name': 'Sapphire',
+            'symbol': 'SAP',
+            'currency_unit_label': 'Sapphire',
+            'currency_subunit_label': 'Saph'
+        }, rate2016=0.00990099009900, rate2017=0.01)['currency']
+
+        tests = [
+            { 'move_type': 'in_invoice', 'amount': 89, 'payment_amount': 70.50, 'exchange_amount': 88.5 },
+            { 'move_type': 'in_invoice', 'amount': 100, 'payment_amount': 79.21, 'exchange_amount': 99.79 },
+            { 'move_type': 'in_invoice', 'amount': 150, 'payment_amount': 118.81, 'exchange_amount': 150.19 },
+            { 'move_type': 'in_invoice', 'amount': 250, 'payment_amount': 198.02, 'exchange_amount': 249.98 },
+            { 'move_type': 'out_invoice', 'amount': 89, 'payment_amount': 70.50, 'exchange_amount': 88.5 },
+            { 'move_type': 'out_invoice', 'amount': 100, 'payment_amount': 79.21, 'exchange_amount': 99.79 },
+            { 'move_type': 'out_invoice', 'amount': 150, 'payment_amount': 118.81, 'exchange_amount': 150.19 },
+            { 'move_type': 'out_invoice', 'amount': 250, 'payment_amount': 198.02, 'exchange_amount': 249.98 },
+        ]
+
+        for test in tests:
+            move = self._create_account_move_with_single_item(test['move_type'], currency_1, '2016-10-10', test['amount'])
+            move.action_post()
+            action = move.action_register_payment()
+            self.env[action['res_model']].with_context(action['context']).create({
+                'amount': test['payment_amount'],
+                'currency_id': currency_2.id,
+                'payment_date': '2017-01-01'
+            })._create_payments()
+
+            exchange_amount = sum(pl['amount'] for pl in move.invoice_payments_widget['content'] if pl['is_exchange'])
+            self.assertEqual(
+                {'amount_residual': 0.0, 'amount_residual_signed': 0.0, 'exchange_amount': test['exchange_amount']},
+                {
+                    'amount_residual': move.amount_residual,
+                    'amount_residual_signed': move.amount_residual_signed,
+                    'exchange_amount': exchange_amount
+                }
+            )
