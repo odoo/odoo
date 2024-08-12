@@ -50,7 +50,7 @@
         <record id="action_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
-            <field name="view_mode">tree,pivot,graph</field>
+            <field name="view_mode">tree,pivot,graph,form</field>
             <field name="domain">['|', ('journal_id', '=', False), ('journal_id.type', '=', 'bank')]</field>
             <field name="context">{'journal_type':'bank'}</field>
             <field name="search_view_id" ref="view_bank_statement_search"/>
