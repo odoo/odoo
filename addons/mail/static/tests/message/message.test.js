@@ -597,6 +597,29 @@ test("Two users reacting with the same emoji", async () => {
     await contains(".o-mail-MessageReaction", { text: "😅2" });
 });
 
+test("Can quickly add a reaction", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Add a Reaction']");
+    await click(".o-Emoji", { text: "😅" });
+    await contains(".o-mail-MessageReaction", { text: "😅1" });
+    await hover(".o-mail-MessageReactions");
+    await click("button[title='Add Reaction']");
+    await click(".o-Emoji", { text: "😏" });
+    await contains(".o-mail-MessageReaction", { text: "😏1" });
+});
+
 test("Reaction summary", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
