@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo import fields, Command
 
 from dateutil.relativedelta import relativedelta
@@ -1506,3 +1506,39 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })
 
         self.assertEqual(wizard.amount, 39.50)
+
+    def test_register_payment_amount_change(self):
+        ''' Test the amount dependencies '''
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2024-08-08',
+            'invoice_date': '2024-08-08',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.company_data['currency'].id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 600.0,
+                'tax_ids': [],
+            })],
+        })
+        invoice.action_post()
+
+        wizard = Form(self.env['account.payment.register']
+            .with_context(active_model='account.move', active_ids=invoice.ids)
+            .create({
+                'amount': 600.0,
+                'currency_id': self.company_data['currency'].id,
+                'payment_date': '2024-08-08',
+            }))
+        wizard.amount = 500
+        wizard.journal_id = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
+        self.assertEqual(wizard.amount, 600.0)
+
+        wizard.amount = 500
+        wizard.currency_id = self.other_currency
+        self.assertEqual(wizard.amount, 1200.0)
+
+        # Changing the payment date only that shouldn't change the amount of the wizard
+        wizard.amount = 1000.0
+        wizard.payment_date = fields.Date.from_string('2024-08-10')
+        self.assertEqual(wizard.amount, 1000.0)
