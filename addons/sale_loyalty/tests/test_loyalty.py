@@ -1058,3 +1058,48 @@ class TestLoyalty(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         rewards = [value.ids for value in order._get_claimable_rewards().values()]
         self.assertTrue(any(loyalty_program_tag.reward_ids[0].id in r for r in rewards))
+
+    def test_domain_on_cheapest_reward(self):
+        product_tag = self.env['product.tag'].create({'name': "Discountable"})
+        self.env['loyalty.program'].create({
+            'name': "10% Discount",
+            'program_type': 'promo_code',
+            'rule_ids': [Command.create({'code': "10discount"})],
+            'reward_ids': [
+                Command.create({
+                    'reward_type': 'discount',
+                    'discount': 10,
+                    'discount_mode': 'percent',
+                    'discount_applicability': 'cheapest',
+                    'discount_product_tag_id': product_tag.id,
+                }),
+            ],
+        })
+        self.product_A.product_tag_ids = product_tag
+        order = self.empty_order
+        order.write({
+            'order_line':[
+                # product_A: lst_price: 100, Tax included price: 115
+                Command.create({'product_id': self.product_A.id}),
+                # Product_B: lst_price: 5, Tax included price: 5.75
+                Command.create({'product_id': self.product_B.id}),
+            ]
+        })
+        self._apply_promo_code(order, '10discount')
+        msg = "Discount should only be applied to the line with a correctly tagged product."
+        self.assertEqual(order.order_line[2].price_total, -11.5, msg)
+
+        self.product_C.write({
+            'list_price': 50,
+            'product_tag_ids': product_tag,
+        })
+        order.order_line[2:].unlink()
+        order.write({
+            'order_line':[
+                # product_C: lst_price = Tax included price: 50
+                Command.create({'product_id': self.product_C.id}),
+            ]
+        })
+        self._apply_promo_code(order, '10discount')
+        msg = "Discount should be applied to the line with the cheapest valid product."
+        self.assertEqual(order.order_line[3].price_total, -5.0, msg)

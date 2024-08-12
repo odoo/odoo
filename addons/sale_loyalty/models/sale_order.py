@@ -360,10 +360,11 @@ class SaleOrder(models.Model):
             )
         return discountable, discountable_per_tax
 
-    def _cheapest_line(self):
+    def _cheapest_line(self, reward):
         self.ensure_one()
         cheapest_line = False
         cheapest_line_price_unit = False
+        domain = reward._get_discount_product_domain()
         for line in (self.order_line - self._get_no_effect_on_threshold_lines()):
             line_price_unit = self._get_order_line_price(line, 'price_unit')
             if (
@@ -371,6 +372,7 @@ class SaleOrder(models.Model):
                 or line.combo_item_id
                 or not line.product_uom_qty
                 or not line_price_unit
+                or not line.product_id.filtered_domain(domain)
             ):
                 continue
             if not cheapest_line or cheapest_line_price_unit > line_price_unit:
@@ -385,7 +387,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         assert reward.discount_applicability == 'cheapest'
 
-        cheapest_line = self._cheapest_line()
+        cheapest_line = self._cheapest_line(reward)
         if not cheapest_line:
             return False, False
 
@@ -446,7 +448,8 @@ class SaleOrder(models.Model):
             line_reward = lines.reward_id
             discounted_lines = order_lines
             if line_reward.discount_applicability == 'cheapest':
-                cheapest_line = cheapest_line or self._cheapest_line()
+                # get the discounted cheapest line applicable for given reward domain
+                cheapest_line = cheapest_line or self._cheapest_line(line_reward)
                 discounted_lines = cheapest_line
             elif line_reward.discount_applicability == 'specific':
                 discounted_lines = self._get_specific_discountable_lines(line_reward)
