@@ -129,25 +129,28 @@ class StockPicking(models.Model):
     has_kits = fields.Boolean(compute='_compute_has_kits')
     production_count = fields.Integer(
         "Count of MO generated",
-        compute='_compute_mrp_production_ids',
+        compute='_compute_count_mrp_production_ids',
         groups='mrp.group_mrp_user')
 
     production_ids = fields.Many2many(
         'mrp.production',
         compute='_compute_mrp_production_ids',
-        groups='mrp.group_mrp_user')
+        groups='mrp.group_mrp_user', store=True)
 
     @api.depends('move_ids')
     def _compute_has_kits(self):
         for picking in self:
             picking.has_kits = any(picking.move_ids.mapped('bom_line_id'))
 
-    @api.depends('group_id')
+    @api.depends('group_id', 'move_ids.move_dest_ids')
     def _compute_mrp_production_ids(self):
         for picking in self:
-            production_ids = picking.group_id.mrp_production_ids | picking.move_ids.move_dest_ids.raw_material_production_id
-            # Filter out unwanted MO types
-            picking.production_ids = production_ids.filtered(lambda p: p.picking_type_id.active)
+            production_ids = picking.move_ids.move_dest_ids.raw_material_production_id | picking.move_ids.move_orig_ids.production_id
+            picking.production_ids |= production_ids.filtered(lambda p: p.picking_type_id.active)
+
+    @api.depends('production_ids')
+    def _compute_count_mrp_production_ids(self):
+        for picking in self:
             picking.production_count = len(picking.production_ids)
 
     def action_detailed_operations(self):

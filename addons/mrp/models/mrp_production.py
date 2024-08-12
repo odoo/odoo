@@ -492,6 +492,19 @@ class MrpProduction(models.Model):
         for order in self:
             order.picking_ids = pickings_per_procurement_group.get(order.procurement_group_id.id, [])
             order.picking_ids |= order.move_raw_ids.move_orig_ids.picking_id
+            # Count only those pickings related to the current MO in a 2-step or 3-step MRP process.
+            if order.warehouse_id.manufacture_steps in ['pbm_sam', 'pbm']:
+                # We need to use `picking.production_ids` because if MO or picking cancels, we can't decide from which MO picking is created.
+                filtered_picking_ids = order.picking_ids.filtered(
+                    lambda picking: any(
+                        order in (picking.production_ids |
+                                move.move_dest_ids.raw_material_production_id |
+                                move.move_orig_ids.production_id)
+                        for move in picking.move_ids
+                    )
+                )
+                # Unlink unrelated pickings from current MO.
+                order.picking_ids = [Command.unlink(picking.id) for picking in (order.picking_ids - filtered_picking_ids)]
             order.delivery_count = len(order.picking_ids)
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')

@@ -288,6 +288,11 @@ class StockMove(models.Model):
             self.filtered(lambda m: m.raw_material_production_id.state in ('confirmed', 'progress', 'to_close'))._run_procurement(old_demand)
         return res
 
+    def _should_clear_move_orig_ids(self):
+        if self.raw_material_production_id:
+            return False
+        return super()._should_clear_move_orig_ids()
+
     def _run_procurement(self, old_qties=False):
         procurements = []
         old_qties = old_qties or {}
@@ -605,3 +610,14 @@ class StockMove(models.Model):
                         for move in self):
             res = 'assigned'
         return res
+
+    def _search_picking_for_assignation(self):
+        self.ensure_one()
+        # For a 3-step MRP process, when splitting an MO into backorders:
+        # If the first backorder's post-picking/transfer are not done, and completing the second backorder
+        # it will merge its post-picking/transfer with the first. So due to that Canceling the second backorder or backorder's post-picking
+        # would also cancel the first backorder's post-picking/transfer(also vice-versa), which is not desired.
+        # We need to ensure that each split backorder's proceeds independently.
+        if self.move_orig_ids.production_id.mrp_production_backorder_count > 1:
+            return False
+        return super()._search_picking_for_assignation()

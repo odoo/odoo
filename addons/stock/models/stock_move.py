@@ -1842,6 +1842,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         rounding = self.product_id.uom_id.rounding
         return dict((k, v) for k, v in available_move_lines.items() if float_compare(v, 0, precision_rounding=rounding) > 0)
 
+    def _should_clear_move_orig_ids(self):
+        return True
+
     def _action_assign(self, force_qty=False):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `reserved_qty` for all its move lines is
