@@ -216,7 +216,8 @@ class HolidaysAllocation(models.Model):
         employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id, date_from, ignore_future=True)[0]
         for allocation in self:
             allocation.max_leaves = allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days
-            allocation.leaves_taken = employee_days_per_allocation[allocation.employee_id][allocation.holiday_status_id][allocation]['leaves_taken']
+            origin = allocation._origin
+            allocation.leaves_taken = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]['leaves_taken']
 
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
@@ -568,11 +569,13 @@ class HolidaysAllocation(models.Model):
                 and (not self.nextcall or self.nextcall <= accrual_date)):
             return 0
 
-        fake_allocation = self.env['hr.leave.allocation'].new(origin=self)
+        fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
         fake_allocation.sudo()._process_accrual_plans(accrual_date, log=False)
         if self.type_request_unit in ['hour']:
             return float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
-        return round((fake_allocation.number_of_days - self.number_of_days), 2)
+        res = round((fake_allocation.number_of_days - self.number_of_days), 2)
+        self._invalidate_cache()
+        return res
 
     ####################################################
     # ORM Overrides methods
