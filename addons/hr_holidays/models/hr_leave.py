@@ -60,7 +60,7 @@ class HolidaysRequest(models.Model):
       - cannot validate its own leaves;
       - can reset only its own leaves;
       - can refuse all leaves;
-     - a Manager
+     - an Administrator ("Manager")
       - can do everything he wants
 
     On top of that multicompany rules apply based on company defined on the
@@ -1226,39 +1226,31 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         for holiday in self:
             val_type = holiday.validation_type
 
-            if not is_manager:
-                if holiday.state == 'cancel' and state != 'confirm':
-                    raise UserError(_('A cancelled leave cannot be modified.'))
-                if state == 'confirm':
-                    if holiday.state == 'refuse':
-                        raise UserError(_('Only a Time Off Manager can reset a refused leave.'))
-                    if holiday.date_from and holiday.date_from.date() <= fields.Date.today():
-                        raise UserError(_('Only a Time Off Manager can reset a started leave.'))
-                    if holiday.employee_id != current_employee:
-                        raise UserError(_('Only a Time Off Manager can reset other people leaves.'))
-                else:
-                    if val_type == 'no_validation' and current_employee == holiday.employee_id and (is_officer or is_manager):
-                        continue
-                    # use ir.rule based first access check: department, members, ... (see security.xml)
-                    holiday.check_access_rule('write')
+            if is_manager:
+                continue
+            if holiday.state == 'cancel' and state != 'confirm':
+                raise UserError(_('A cancelled leave cannot be modified.'))
+            if state == 'confirm':
+                if holiday.state == 'refuse':
+                    raise UserError(_('Only an Administrator can reset a refused leave.'))
+                if holiday.date_from and holiday.date_from.date() <= fields.Date.today():
+                    raise UserError(_('Only an Administrator can reset a started leave.'))
+                if holiday.employee_id != current_employee:
+                    raise UserError(_('Only an Administrator can reset other people leaves.'))
+            else:
+                if val_type == 'no_validation' and current_employee == holiday.employee_id:
+                    continue
 
-                    # This handles states validate1 validate and refuse
-                    if holiday.employee_id == current_employee\
-                            and self.env.user != holiday.employee_id.leave_manager_id\
-                            and not is_officer:
-                        raise UserError(_('Only a Time Off Officer or Manager can approve/refuse its own requests.'))
+                if self.env.user != holiday.employee_id.leave_manager_id and\
+                        (state, val_type) in [('validate', 'manager'), ('validate1', 'both')]:
+                    raise UserError(_('You must either be %s\'s Time Off Approver or an Administrator to approve this leave') % (holiday.employee_id.name))
 
-                    if (state == 'validate1' and val_type == 'both'):
-                        if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
-                            raise UserError(_('You must be either %s\'s manager or Time off Manager to approve this leave') % (holiday.employee_id.name))
+                if not is_officer and\
+                        (state, val_type) in [('validate', 'hr'), ('validate', 'both')]:
+                    raise UserError(_('You must either be a Time Off Officer or an Administrator to approve this leave'))
 
-                    if (state == 'validate' and val_type == 'manager')\
-                            and self.env.user != holiday.employee_id.leave_manager_id\
-                            and not is_officer:
-                        raise UserError(_("You must be %s's Manager to approve this leave", holiday.employee_id.name))
-
-                    if not is_officer and (state == 'validate' and val_type == 'hr'):
-                        raise UserError(_('You must either be a Time off Officer or Time off Manager to approve this leave'))
+                # use ir.rule based first access check: department, members, ... (see security.xml)
+                holiday.check_access_rule('write')
 
     @api.model
     def open_pending_requests(self):

@@ -82,10 +82,9 @@ class HolidaysType(models.Model):
         ('hr', 'By Time Off Officer'),
         ('manager', "By Employee's Approver"),
         ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Approval',
-        help="""Select the level of approval needed in case of request by employee
-            #     - No validation needed: The employee's request is automatically approved.
-            #     - Approved by Time Off Officer: The employee's request need to be manually approved
-            #       by the Time Off Officer, Employee's Approver or both.""")
+        help="Select the level of approval needed in case of request by employee"
+            "- No validation needed: The employee's request is automatically approved."
+            "- Approved by Time Off Officer, Employee's Approver or both: The employee's request must be manually approved by the Time Off Officer, Employee's Approver or both.")
 
     has_valid_allocation = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
     time_type = fields.Selection([('other', 'Worked Time'), ('leave', 'Absence')], default='leave', string="Kind of Time Off",

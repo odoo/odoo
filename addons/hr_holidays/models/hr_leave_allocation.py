@@ -726,18 +726,21 @@ class HolidaysAllocation(models.Model):
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
         for allocation in self:
             val_type = allocation.holiday_status_id.sudo().allocation_validation_type
-            if state == 'confirm':
+
+            if is_manager or state == 'confirm'\
+                    or (val_type == 'no_validation' and allocation.employee_id == current_employee):
                 continue
 
-            if not is_officer and self.env.user != allocation.employee_id.leave_manager_id and not val_type == 'no_validation':
-                raise UserError(_('Only a time off Officer/Responsible or Manager can approve or refuse time off requests.'))
+            if self.env.user != allocation.employee_id.leave_manager_id and\
+                    (state, val_type) in [('validate', 'manager'), ('validate1', 'both')]:
+                raise UserError(_('You must either be %s\'s Time Off Approver or an Administrator to approve this allocation') % (holiday.employee_id.name))
 
-            if is_officer or self.env.user == allocation.employee_id.leave_manager_id:
-                # use ir.rule based first access check: department, members, ... (see security.xml)
-                allocation.check_access_rule('write')
+            if not is_officer and\
+                    (state, val_type) in [('validate', 'hr'), ('validate', 'both')]:
+                raise UserError(_('You must either be a Time Off Officer or an Administrator to approve this allocation'))
 
-            if allocation.employee_id == current_employee and not is_manager and not val_type == 'no_validation':
-                raise UserError(_('Only a time off Manager can approve its own requests.'))
+            # use ir.rule based first access check: department, members, ... (see security.xml)
+            allocation.check_access_rule('write')
 
     @api.onchange('allocation_type')
     def _onchange_allocation_type(self):
