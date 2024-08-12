@@ -139,3 +139,10 @@ class Product(models.Model):
         website = self.env['website'].get_current_website()
         return (is_product_salable and website.has_ecommerce_access()) \
                or self.env.user.has_group('base.group_system')
+
+    @api.onchange('public_categ_ids')
+    def _onchange_public_categ_ids(self):
+        if self.public_categ_ids:
+            self.website_published = True
+        else:
+            self.website_published = False
