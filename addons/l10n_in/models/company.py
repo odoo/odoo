@@ -16,6 +16,10 @@ class ResCompany(models.Model):
         store=True,
         readonly=False,
     )
+    l10n_in_trade_name = fields.Char(
+        string="Trade Name",
+        help="The trade name to be used in EDI (E-Invoice and E-waybill) transactions."
+    )
 
     @api.depends('vat')
     def _compute_l10n_in_hsn_code_digit(self):

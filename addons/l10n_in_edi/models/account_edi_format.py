@@ -298,7 +298,7 @@ class AccountEdiFormat(models.Model):
             partner_details.update({"POS": pos_state_id.l10n_in_tin or ""})
         if set_vat:
             partner_details.update({
-                "LglNm": partner.commercial_partner_id.name,
+                "LglNm": partner.commercial_partner_id.ref_company_ids.l10n_in_trade_name or partner.commercial_partner_id.name,
                 "GSTIN": partner.vat or "URP",
             })
         else:
