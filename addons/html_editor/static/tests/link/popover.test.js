@@ -2,7 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setContent, getContent, setSelection } from "../_helpers/selection";
 import { setupEditor } from "../_helpers/editor";
-import { waitUntil, waitFor, click, queryOne, press, select } from "@odoo/hoot-dom";
+import { waitUntil, waitFor, click, queryOne, press, select, queryText } from "@odoo/hoot-dom";
 import { insertText, splitBlock, insertLineBreak } from "../_helpers/user_actions";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { cleanLinkArtifacts } from "../_helpers/format";
@@ -511,6 +511,17 @@ describe("Link formatting in the popover", () => {
 });
 
 describe("shortcut", () => {
+    test("create link shortcut should be at the first", async () => {
+        const { editor } = await setupEditor(`<p>[]</p>`);
+        editor.services.command.add("A test command", () => {}, {
+            hotkey: "alt+k",
+            category: "app",
+        });
+
+        press(["ctrl", "k"]);
+        await animationFrame();
+        expect(queryText(".o_command_name:first")).toBe("Create link");
+    });
     test("create a link with shortcut", async () => {
         const { el } = await setupEditor(`<p>[]</p>`);
 

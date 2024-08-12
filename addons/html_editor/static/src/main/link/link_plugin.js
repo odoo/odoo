@@ -128,17 +128,24 @@ export class LinkPlugin extends Plugin {
                 this.handleAutomaticLinkInsertion();
             }
         });
-        this.services.command.add(
+        // link creation is added to the command service because of a shortcut conflict,
+        // as ctrl+k is used for invoking the command palette
+        this.removeLinkShortcut = this.services.command.add(
             "Create link",
             () => {
                 this.toggleLinkTools();
             },
             {
                 hotkey: "control+k",
+                category: "shortcut_conflict",
                 isAvailable: () => this.shared.getEditableSelection().inEditable,
             }
         );
         this.ignoredClasses = new Set(this.resources["link_ignore_classes"] || []);
+    }
+
+    destroy() {
+        this.removeLinkShortcut();
     }
 
     handleCommand(command, payload) {
