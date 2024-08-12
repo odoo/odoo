@@ -56518,7 +56518,7 @@ class HeaderSizeUIPlugin extends UIPlugin {
     }
 }
 
-const UNDO_REDO_PIVOT_COMMANDS = ["ADD_PIVOT", "UPDATE_PIVOT"];
+const UNDO_REDO_PIVOT_COMMANDS = ["ADD_PIVOT", "UPDATE_PIVOT", "REMOVE_PIVOT"];
 function isPivotCommand(cmd) {
     return UNDO_REDO_PIVOT_COMMANDS.includes(cmd.type);
 }
