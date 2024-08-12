@@ -433,7 +433,7 @@ publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
                 // to hidden. Without this, the dropdowns would be invisible.
                 // (e.g., "user menu" dropdown).
                 this.hiddenOnScrollEl.style.overflow = this.fixedHeader ? "hidden" : "";
-                this.hiddenOnScrollEl.style.height = `${elHeight}px`;
+                this.hiddenOnScrollEl.style.height = this.fixedHeader ? `${elHeight}px` : "";
                 let elPadding = parseInt(getComputedStyle(this.hiddenOnScrollEl).paddingBlock);
                 if (elHeight < elPadding * 2) {
                     const heightDifference = elPadding * 2 - elHeight;
@@ -442,6 +442,14 @@ publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
                         .setProperty("padding-block", `${elPadding}px`, "important");
                 } else {
                     this.hiddenOnScrollEl.style.paddingBlock = "";
+                }
+                if (this.fixedHeader) {
+                    // The height of the "hiddenOnScrollEl" element changes, so
+                    // the height of the header also changes. Therefore, we need
+                    // to get the current height of the header and then to
+                    // update the top padding of the main element.
+                    headerHeight = this.el.getBoundingClientRect().height;
+                    this._updateMainPaddingTop();
                 }
             }
             if (!this.fixedHeader && this.dropdownClickedEl) {

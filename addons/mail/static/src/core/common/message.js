@@ -424,8 +424,18 @@ export class Message extends Component {
     prepareMessageBody(element) {}
 
     enterEditMode() {
+        const body = document.createElement("span");
+        body.innerHTML = this.props.message.body;
+        const mentionedChannelElements = body.querySelectorAll(".o_channel_redirect");
+        const mentionedChannels = Array.from(mentionedChannelElements).map((el) =>
+            this.store.Thread.insert({
+                id: el.dataset.oeId,
+                model: el.dataset.oeModel,
+            })
+        );
         const messageContent = convertBrToLineBreak(this.props.message.body);
         this.props.message.composer = {
+            mentionedChannels,
             mentionedPartners: this.props.message.recipients,
             textInputContent: messageContent,
             selection: {

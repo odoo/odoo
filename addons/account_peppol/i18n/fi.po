@@ -11,8 +11,8 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Martin Trigaux, 2023
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -268,7 +268,7 @@ msgstr "Yhteystiedot päivitettiin."
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Contact email and mobile number are required."
-msgstr ""
+msgstr "Yhteyshenkilön sähköpostiosoite ja matkapuhelinnumero vaaditaan."
 
 #. module: account_peppol
 #. odoo-python
@@ -552,13 +552,13 @@ msgstr "Peppolin tilapäivitys: %s"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Mobile Number"
-msgstr ""
+msgstr "Matkapuhelinnumero"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "Mobile number (for validation)"
-msgstr ""
+msgstr "Matkapuhelinnumero (vahvistusta varten)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -572,7 +572,7 @@ msgstr "Älä epäröi ottaa yhteyttä asiakaspalveluumme, jos tarvitset lisäap
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Please enter a mobile number to verify your application."
-msgstr ""
+msgstr "Anna matkapuhelinnumero sovelluksesi vahvistamiseksi."
 
 #. module: account_peppol
 #. odoo-python
@@ -592,6 +592,9 @@ msgid ""
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
+"Kirjoita matkapuhelinnumero oikeassa kansainvälisessä muodossa.\n"
+"Esimerkiksi: +32123456789, jossa +32 on maakoodi.\n"
+"Tällä hetkellä vain Euroopan maat ovat tuettuja."
 
 #. module: account_peppol
 #. odoo-python
@@ -828,6 +831,8 @@ msgid ""
 "To generate complete electronic invoices, also set a country for this "
 "partner."
 msgstr ""
+"Jos haluat luoda täydellisiä sähköisiä laskuja, määritä tälle kumppanille "
+"myös maa."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -835,6 +840,8 @@ msgid ""
 "To generate electronic invoices, also set a country and a bank account for "
 "this partner."
 msgstr ""
+"Jos haluat luoda sähköisiä laskuja, määritä tälle kumppanille myös maa ja "
+"pankkitili."
 
 #. module: account_peppol
 #. odoo-python
@@ -927,7 +934,7 @@ msgstr "Kumppanin PEPPOL-päätepisteen tarkistaminen"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Verify mobile number"
-msgstr ""
+msgstr "Vahvista matkapuhelinnumero"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
@@ -955,7 +962,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "You will receive a verification code to this mobile number"
-msgstr ""
+msgstr "Saat vahvistuskoodin tähän matkapuhelinnumeroon"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
