@@ -5,7 +5,7 @@ import { addModelNamesToFetch } from "@bus/../tests/helpers/model_definitions_he
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click, getFixture } from "@web/../tests/helpers/utils";
+import { click, getFixture, getNodesTextContent } from "@web/../tests/helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 
 addModelNamesToFetch([
@@ -24,7 +24,7 @@ QUnit.module('Task State Tests', {
         const userId = pyEnv['res.users'].create([
             { name: "User One", login: 'one', password: 'one' },
         ]);
-        pyEnv['project.task'].create([
+        this.tasks = pyEnv['project.task'].create([
             { name: 'task one', project_id: projectId, state: '01_in_progress', user_ids: [userId] },
             { name: 'task two', state: '03_approved' },
             { name: 'task three', state: '04_waiting_normal' },
@@ -40,12 +40,19 @@ QUnit.module('Task State Tests', {
                         </t>
                     </templates>
                 </kanban>`,
+            "project.task,false,form": `
+                <form js_class="project_task_form">
+                    <field name="project_id"/>
+                    <field name="name"/>
+                    <field name="state" widget="project_task_state_selection"/>
+                </form>
+            `,
         };
         target = getFixture();
         setupViewRegistries();
     }
 }, function () {
-    QUnit.test("Check whether task state widget works as intended", async function (assert) {
+    QUnit.test("Test task state widget in kanban", async function (assert) {
         const views = this.views;
         const { openView } = await start({ serverData: { views } });
         await openView({
@@ -64,5 +71,33 @@ QUnit.module('Task State Tests', {
         await click(target.querySelector('div[name="state"] i.fa-hourglass-o'));
         const waiting_dropdown_menu = target.querySelector('.o-dropdown--menu');
         assert.notOk(waiting_dropdown_menu , "When trying to click on the waiting icon, no dropdown menu should display");
+    });
+
+    QUnit.test("Test task state widget in form", async function (assert) {
+        const clickStateButton = () => click(target.querySelector("button.o_state_button"));
+        const getDropdownItems = () =>
+            target.querySelectorAll(".state_selection_field_menu .dropdown-item");
+        const { views, tasks: [task1, , task3] } = this;
+        const { openView } = await start({ serverData: { views } });
+
+        await openView({
+            res_model: "project.task",
+            res_id: task1,
+            views: [[false, "form"]],
+        }).then(clickStateButton);
+        assert.deepEqual(getNodesTextContent(getDropdownItems()), [
+            "In Progress",
+            "Changes Requested",
+            "Approved",
+            "Cancelled",
+            "Done",
+        ]);
+
+        await openView({
+            res_model: "project.task",
+            res_id: task3,
+            views: [[false, "form"]],
+        }).then(clickStateButton);
+        assert.deepEqual(getNodesTextContent(getDropdownItems()), ["Cancelled", "Done"]);
     });
 });
