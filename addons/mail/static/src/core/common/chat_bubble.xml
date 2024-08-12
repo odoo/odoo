@@ -28,7 +28,7 @@
                 <t t-call="mail.message_preview_prefix">
                     <t t-set="message" t-value="thread?.newestPersistentNotEmptyOfAllMessage"/>
                 </t>
-                <t t-esc="thread?.newestPersistentNotEmptyOfAllMessage.inlineBody"/>
+                <t t-esc="previewContent"/>
             </div>
         </div>
     </t>
@@ -40,6 +40,9 @@
         </t>
         <t t-elif="message.author and !message.author?.eq(thread.correspondent?.persona)">
             <t t-esc="message.author.name"/>:
+        </t>
+        <t t-elif="message.email_from">
+            <t t-esc="message.email_from"/>:
         </t>
     </t>
 
