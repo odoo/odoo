@@ -67,6 +67,7 @@ export class X2ManyField extends Component {
         this.activeActions = useActiveActions({
             crudOptions: Object.assign({}, this.props.crudOptions, {
                 onDelete: removeRecord,
+                edit: this.props.record.isInEdition,
             }),
             fieldType: this.isMany2Many ? "many2many" : "one2many",
             subViewActiveActions,
