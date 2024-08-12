@@ -514,6 +514,7 @@
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
             <field name="binding_view_types">form</field>
             <field name="state">code</field>
+            <field name="groups_id" eval="[Command.link(ref('stock.group_stock_manager'))]"/>
             <field name="code">
             if records:
                 records.action_toggle_is_locked()</field>
