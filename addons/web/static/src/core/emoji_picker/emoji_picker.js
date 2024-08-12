@@ -30,7 +30,15 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
  */
 export function useEmojiPicker(ref, props, options = {}) {
     const targets = [];
-    const popover = usePopover(EmojiPicker, { ...options, animation: false });
+    const state = useState({ isOpen: false });
+    const newOptions = {
+        ...options,
+        onClose: () => {
+            state.isOpen = false;
+            options.onClose?.();
+        },
+    };
+    const popover = usePopover(EmojiPicker, { ...newOptions, animation: false });
     props.storeScroll = {
         scrollValue: 0,
         set: (value) => {
@@ -61,6 +69,7 @@ export function useEmojiPicker(ref, props, options = {}) {
         if (popover.isOpen) {
             popover.close();
         } else {
+            state.isOpen = true;
             popover.open(ref.el, { ...props, onSelect });
         }
     }
@@ -95,12 +104,8 @@ export function useEmojiPicker(ref, props, options = {}) {
             ref.el.addEventListener("mouseenter", loadEmoji);
         }
     });
-    return {
-        add,
-        get isOpen() {
-            return popover.isOpen;
-        },
-    };
+    Object.assign(state, { add });
+    return state;
 }
 
 export const loader = {
