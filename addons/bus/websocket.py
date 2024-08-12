@@ -228,7 +228,7 @@ class Websocket:
     # How much time (in second) the history of last dispatched notifications is
     # kept in memory for each websocket.
     # To avoid duplicate notifications, we fetch them based on their ids.
-    # However during parallel transactions, ids are assigned immediately (whe
+    # However during parallel transactions, ids are assigned immediately (when
     # they are requested), but the notifications are dispatched at the time of
     # the commit. This means lower id notifications might be dispatched after
     # higher id notifications.
