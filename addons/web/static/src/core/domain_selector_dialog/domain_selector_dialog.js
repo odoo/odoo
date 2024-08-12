@@ -22,6 +22,7 @@ export class DomainSelectorDialog extends Component {
         domain: String,
         isDebugMode: { type: Boolean, optional: true },
         readonly: { type: Boolean, optional: true },
+        showArchivedCheckbox: { type: Boolean, optional: true },
         text: { type: String, optional: true },
         confirmButtonText: { type: String, optional: true },
         disableConfirmButton: { type: Function, optional: true },
@@ -32,6 +33,7 @@ export class DomainSelectorDialog extends Component {
     static defaultProps = {
         isDebugMode: false,
         readonly: false,
+        showArchivedCheckbox: true,
         context: {},
     };
 
@@ -68,6 +70,7 @@ export class DomainSelectorDialog extends Component {
             className: this.props.className,
             resModel: this.props.resModel,
             readonly: this.props.readonly,
+            showArchivedCheckbox: this.props.showArchivedCheckbox,
             isDebugMode: this.props.isDebugMode,
             defaultConnector: this.props.defaultConnector,
             domain: this.state.domain,

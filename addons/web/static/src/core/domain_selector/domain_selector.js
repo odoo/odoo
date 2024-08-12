@@ -31,11 +31,13 @@ export class DomainSelector extends Component {
         defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
         isDebugMode: { type: Boolean, optional: true },
         readonly: { type: Boolean, optional: true },
+        showArchivedCheckbox: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
     };
     static defaultProps = {
         isDebugMode: false,
         readonly: true,
+        showArchivedCheckbox: true,
         update: () => {},
     };
 
@@ -84,7 +86,8 @@ export class DomainSelector extends Component {
         });
         this.defaultCondition = defaultCondition;
 
-        this.showArchivedCheckbox = Boolean(this.fieldDefs.active);
+        this.showArchivedCheckbox =
+            this.props.showArchivedCheckbox && Boolean(this.fieldDefs.active);
         this.includeArchived = false;
         if (this.showArchivedCheckbox) {
             if (this.tree.value === "&") {
