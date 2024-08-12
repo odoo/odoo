@@ -295,3 +295,16 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PoSApplyDownpayment", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.downPaymentFirstOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
