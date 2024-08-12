@@ -48,7 +48,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'amount_type': 'percentage',
                         'tax_ids': [
                             Command.set([
-                                'tax_vst_7_taxinclusive_skr04',
+                                'tax_vst_7_skr04',
                             ]),
                         ],
                         'amount_string': '100',
@@ -64,7 +64,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'amount_type': 'percentage',
                         'tax_ids': [
                             Command.set([
-                                'tax_vst_19_taxinclusive_skr04',
+                                'tax_vst_19_skr04',
                             ]),
                         ],
                         'amount_string': '100',
@@ -80,7 +80,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'amount_type': 'percentage',
                         'tax_ids': [
                             Command.set([
-                                'tax_ust_7_taxinclusive_skr04',
+                                'tax_ust_7_skr04',
                             ]),
                         ],
                         'amount_string': '100',
@@ -96,7 +96,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'amount_type': 'percentage',
                         'tax_ids': [
                             Command.set([
-                                'tax_ust_19_taxinclusive_skr04',
+                                'tax_ust_19_skr04',
                             ]),
                         ],
                         'amount_string': '100',
@@ -112,7 +112,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'amount_type': 'percentage',
                         'tax_ids': [
                             Command.set([
-                                'tax_ust_7_taxinclusive_skr04',
+                                'tax_ust_7_skr04',
                             ]),
                         ],
                         'amount_string': '100',
@@ -128,7 +128,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'amount_type': 'percentage',
                         'tax_ids': [
                             Command.set([
-                                'tax_ust_19_taxinclusive_skr04',
+                                'tax_ust_19_skr04',
                             ]),
                         ],
                         'amount_string': '100',
