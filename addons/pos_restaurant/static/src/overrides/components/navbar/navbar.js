@@ -6,7 +6,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import {
     getButtons,
-    DECIMAL,
+    EMPTY,
     ZERO,
     BACKSPACE,
 } from "@point_of_sale/app/generic_components/numpad/numpad";
@@ -48,7 +48,12 @@ patch(Navbar.prototype, {
         const table_number = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Table Selector"),
             placeholder: _t("Enter a table number"),
-            buttons: getButtons([{ ...DECIMAL, disabled: true }, ZERO, BACKSPACE]),
+            buttons: getButtons([
+                EMPTY,
+                ZERO,
+                { ...BACKSPACE, class: "o_colorlist_item_color_transparent_1" },
+            ]),
+            confirmButtonLabel: _t("Jump to table"),
         });
         if (!table_number) {
             return;

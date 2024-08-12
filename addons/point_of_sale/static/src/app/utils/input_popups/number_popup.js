@@ -16,6 +16,7 @@ export class NumberPopup extends Component {
         formatDisplayedValue: { type: Function, optional: true },
         placeholder: { type: String, optional: true },
         isValid: { type: Function, optional: true },
+        confirmButtonLabel: { type: String, optional: true },
         getPayload: Function,
         close: Function,
     };
