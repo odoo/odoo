@@ -494,11 +494,20 @@ class Ewaybill(models.Model):
             "taxableAmount": AccountEDI._l10n_in_round_value(tax_details['total_excluded']),
         }
         for tax in tax_details.get('taxes'):
-            for gst_type in ['igst', 'sgst', 'cgst']:
+            gst_types = ['sgst', 'cgst', 'igst']
+            gst_tax_rates = {}
+            for gst_type in gst_types:
                 if tax_rate := tax.get(f'{gst_type}_rate'):
-                    line_details.update({
+                    gst_tax_rates.update({
                         f"{gst_type}Rate": AccountEDI._l10n_in_round_value(tax_rate)
                     })
+            line_details.update(
+                gst_tax_rates
+                or dict.fromkeys(
+                    [f"{gst_type}Rate" for gst_type in gst_types],
+                    0
+                )
+            )
             if cess_rate := tax.get("cess_rate"):
                 line_details.update({"cessRate": AccountEDI._l10n_in_round_value(cess_rate)})
             if cess_non_advol := tax.get("cess_non_advol_amount"):
