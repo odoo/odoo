@@ -153,7 +153,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         })
 
     def create_advance_invoice(self):
-        """ Create a sale order, an advance invoice and a final invoice. """
+        """ Create a sale order and an advance invoice. """
         self.product_a.invoice_policy = 'order'
         pricelist_huf = self.env['product.pricelist'].create({
             'name': 'HUF pricelist',
@@ -174,27 +174,33 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         })
         sale_order.action_confirm()
 
-        context = {
+        downpayment = self.env['sale.advance.payment.inv'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order.id],
             'active_id': sale_order.id,
             'default_journal_id': self.company_data['default_journal_sale'].id,
-        }
-
-        downpayment_1 = self.env['sale.advance.payment.inv'].with_context(context).create({
+        }).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 6350.0,
         })
-        downpayment_1.create_invoices()
-        advance_invoice = sale_order.invoice_ids
+        downpayment.create_invoices()
+        return sale_order, sale_order.invoice_ids
 
-        downpayment_2 = self.env['sale.advance.payment.inv'].with_context(context).create({
+    def create_final_invoice(self, sale_order):
+        """ Create a final invoice for a sale order """
+        advance_invoice = sale_order.invoice_ids
+        final_payment = self.env['sale.advance.payment.inv'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }).create({
             'advance_payment_method': 'delivered',
         })
-        downpayment_2.create_invoices()
+        final_payment.create_invoices()
         final_invoice = sale_order.invoice_ids - advance_invoice
 
-        return advance_invoice, final_invoice
+        return final_invoice
 
     def create_invoice_complex_huf(self):
         """ Create a complex invoice in HUF, with cash rounding. """
