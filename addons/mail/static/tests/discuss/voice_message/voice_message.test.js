@@ -197,6 +197,6 @@ test("make voice message in chat", async () => {
     await contains(".o-mail-VoicePlayer button[title='Play']");
     await contains(".o-mail-VoicePlayer canvas", { count: 2 }); // 1 for global waveforms, 1 for played waveforms
     await contains(".o-mail-VoicePlayer", { text: "00 : 04" }); // duration of call_02_in_.mp3
-    await contains(".o-mail-VoiceRecorder button[title='Voice Message']:disabled");
+    await contains("button[title='Voice Message']:disabled");
     cleanUp();
 });
