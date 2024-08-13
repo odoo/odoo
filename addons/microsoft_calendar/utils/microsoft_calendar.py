@@ -205,7 +205,13 @@ class MicrosoftCalendarService():
         return 'offline_access openid Calendars.ReadWrite'
 
     def _microsoft_authentication_url(self, from_url='http://www.odoo.com'):
-        return self.microsoft_service._get_authorize_uri(from_url, service='calendar', scope=self._get_calendar_scope())
+        redirect_uri = self.microsoft_service.get_base_url() + '/microsoft_account/authentication'
+        return self.microsoft_service._get_authorize_uri(
+            from_url,
+            service='calendar',
+            scope=self._get_calendar_scope(),
+            redirect_uri=redirect_uri
+        )
 
     def _can_authorize_microsoft(self, user):
         return user.has_group('base.group_erp_manager')
