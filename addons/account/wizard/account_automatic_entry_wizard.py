@@ -493,14 +493,18 @@ class AutomaticEntryWizard(models.TransientModel):
     def _format_new_transfer_move_log(self, acc_transfer_per_move):
         transfer_format = Markup("<li>%s, <strong>%%(account_source_name)s</strong></li>") % \
             _("{amount} ({debit_credit}) from {link}")
-        rslt = Markup(_("This entry transfers the following amounts to %(destination)s") + "<ul>%(transfer_logs)s</ul>") % {
-            'destination': Markup("<strong>%s</strong>") % self.destination_account_id.display_name,
-            'transfer_logs': Markup().join([
-                self._format_strings(transfer_format % {'account_source_name': account.display_name}, move, balance)
-                for move, balances_per_account in acc_transfer_per_move.items()
-                for account, balance in balances_per_account.items()
-                if account != self.destination_account_id  # Otherwise, logging it here is confusing for the user
-            ])
+        rslt = _(
+            "This entry transfers the following amounts to %(destination)s",
+            destination=Markup("<strong>%s</strong>") % self.destination_account_id.display_name,
+        ) + Markup("<ul>%(transfer_logs)s</ul>") % {
+            "transfer_logs": Markup().join(
+                [
+                    self._format_strings(transfer_format % {"account_source_name": account.display_name}, move, balance)
+                    for move, balances_per_account in acc_transfer_per_move.items()
+                    for account, balance in balances_per_account.items()
+                    if account != self.destination_account_id  # Otherwise, logging it here is confusing for the user
+                ],
+            ),
         }
         return rslt
 

@@ -156,4 +156,4 @@ class GeoCoder(models.AbstractModel):
         return self._geo_query_address_default(street=street, zip=zip, city=city, state=state, country=country)
 
     def _raise_query_error(self, error):
-        raise UserError(_('Error with geolocation server:') + ' %s' % error)
+        raise UserError(_('Error with geolocation server: %s', error))

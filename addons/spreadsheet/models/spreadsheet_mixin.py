@@ -61,7 +61,12 @@ class SpreadsheetMixin(models.AbstractModel):
                     errors.append(f"- menu with xml id '{xml_id}' used in spreadsheet '{display_name}' does not have an action")
 
             if errors:
-                raise ValidationError(_("Uh-oh! Looks like the spreadsheet file contains invalid data.") + "\n\n" + "\n".join(errors))
+                raise ValidationError(
+                    _(
+                        "Uh-oh! Looks like the spreadsheet file contains invalid data.\n\n%(errors)s",
+                        errors="\n".join(errors),
+                    ),
+                )
 
     @api.depends("spreadsheet_binary_data")
     def _compute_spreadsheet_data(self):

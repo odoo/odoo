@@ -76,14 +76,15 @@ class AccountMove(models.Model):
                 move.edi_blocking_level = error_doc.blocking_level
             else:
                 error_levels = set([doc.blocking_level for doc in move.edi_document_ids])
+                count = str(move.edi_error_count)
                 if 'error' in error_levels:
-                    move.edi_error_message = str(move.edi_error_count) + _(" Electronic invoicing error(s)")
+                    move.edi_error_message = _("%(count)s Electronic invoicing error(s)", count=count)
                     move.edi_blocking_level = 'error'
                 elif 'warning' in error_levels:
-                    move.edi_error_message = str(move.edi_error_count) + _(" Electronic invoicing warning(s)")
+                    move.edi_error_message = _("%(count)s Electronic invoicing warning(s)", count=count)
                     move.edi_blocking_level = 'warning'
                 else:
-                    move.edi_error_message = str(move.edi_error_count) + _(" Electronic invoicing info(s)")
+                    move.edi_error_message = _("%(count)s Electronic invoicing info(s)", count=count)
                     move.edi_blocking_level = 'info'
 
     @api.depends(

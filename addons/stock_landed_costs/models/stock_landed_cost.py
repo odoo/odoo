@@ -430,12 +430,13 @@ class AdjustmentLines(models.Model):
 
         # Create account move lines for quants already out of stock
         if qty_out > 0:
+            name_text = _("%(product)s: %(quantity)s already out", product=self.name, quantity=qty_out)
             debit_line = dict(base_line,
-                              name=(self.name + ": " + str(qty_out) + _(' already out')),
+                              name=name_text,
                               quantity=0,
                               account_id=already_out_account_id)
             credit_line = dict(base_line,
-                               name=(self.name + ": " + str(qty_out) + _(' already out')),
+                               name=name_text,
                                quantity=0,
                                account_id=debit_account_id)
             diff = diff * qty_out / self.quantity
@@ -452,11 +453,11 @@ class AdjustmentLines(models.Model):
             if self.env.company.anglo_saxon_accounting:
                 expense_account_id = self.product_id.product_tmpl_id.get_product_accounts()['expense'].id
                 debit_line = dict(base_line,
-                                  name=(self.name + ": " + str(qty_out) + _(' already out')),
+                                  name=name_text,
                                   quantity=0,
                                   account_id=expense_account_id)
                 credit_line = dict(base_line,
-                                   name=(self.name + ": " + str(qty_out) + _(' already out')),
+                                   name=name_text,
                                    quantity=0,
                                    account_id=already_out_account_id)
 

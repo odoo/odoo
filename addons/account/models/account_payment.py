@@ -1136,9 +1136,9 @@ class AccountPayment(models.Model):
             })
             paired_payment.move_id._post(soft=False)
             payment.paired_internal_transfer_payment_id = paired_payment
-            body = _("This payment has been created from:") + payment._get_html_link()
+            body = _("This payment has been created from: %(link)s", link=payment._get_html_link())
             paired_payment.message_post(body=body)
-            body = _("A second payment has been created:") + paired_payment._get_html_link()
+            body = _("A second payment has been created: %(link)s", link=paired_payment._get_html_link())
             payment.message_post(body=body)
 
             lines = (payment.move_id.line_ids + paired_payment.move_id.line_ids).filtered(

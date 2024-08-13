@@ -493,7 +493,7 @@ class PosOrder(models.Model):
 
     def _compute_order_name(self):
         if self.refunded_order_id.exists():
-            return self.refunded_order_id.name + _(' REFUND')
+            return _('%(refunded_order)s REFUND', refunded_order=self.refunded_order_id.name)
         else:
             return self.session_id.config_id.sequence_id._next()
 
@@ -1024,7 +1024,7 @@ class PosOrder(models.Model):
     def _prepare_refund_values(self, current_session):
         self.ensure_one()
         return {
-            'name': self.name + _(' REFUND'),
+            'name': _('%(name)s REFUND', name=self.name),
             'session_id': current_session.id,
             'date_order': fields.Datetime.now(),
             'pos_reference': self.pos_reference,
@@ -1274,7 +1274,7 @@ class PosOrderLine(models.Model):
         """
         self.ensure_one()
         return {
-            'name': self.name + _(' REFUND'),
+            'name': _('%(name)s REFUND', name=self.name),
             'qty': -(self.qty - self.refunded_qty),
             'order_id': refund_order.id,
             'price_subtotal': -self.price_subtotal,
