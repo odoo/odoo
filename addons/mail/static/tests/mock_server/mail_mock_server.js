@@ -918,7 +918,7 @@ async function processRequest(request) {
         const domain = [
             "|",
             ["create_uid", "=", this.env.user.id],
-            ["group_ids", "in", this.env.user.groups_id.map((group) => group.id)],
+            ["group_ids", "in", this.env.user.groups_id],
         ];
         store.add(
             "CannedResponse",
