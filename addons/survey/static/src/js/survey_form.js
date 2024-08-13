@@ -7,6 +7,7 @@ import { scrollTo } from "@web_editor/js/common/scrolling";
 
 import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import {
     deserializeDate,
     deserializeDateTime,
@@ -251,18 +252,27 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         }
     },
 
-    _onSubmit: function (event) {
+    _onSubmit(event) {
         event.preventDefault();
-        const options = {};
         const target = event.currentTarget;
         if (target.value === 'previous') {
-            options.previousPageId = parseInt(target.dataset['previousPageId']);
+            this._submitForm({ previousPageId: parseInt(target.dataset['previousPageId']) });
         } else if (target.value === 'next_skipped') {
-            options.nextSkipped = true;
+            this._submitForm({ nextSkipped: true });
         } else if (target.value === 'finish') {
-            options.isFinish = true;
+            // Adding pop-up before the survey is submitted
+            this.call("dialog", "add", ConfirmationDialog, {
+                title: _t("Submit confirmation"),
+                body: _t("Are you sure you want to submit the survey?"),
+                confirmLabel: _t("Submit"),
+                confirm: () => {
+                    this._submitForm({ isFinish: true });
+                },
+                cancel: () => {},
+            });
+        } else {
+            this._submitForm({});
         }
-        this._submitForm(options);
     },
 
     // Custom Events
