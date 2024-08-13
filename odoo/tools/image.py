@@ -232,6 +232,9 @@ class ImageProcess():
             if new_h > h:
                 new_w, new_h = (new_w * h) // new_h, h
 
+            # Dimensions should be at least 1.
+            new_w, new_h = max(new_w, 1), max(new_h, 1)
+
             # Correctly place the center of the crop.
             x_offset = int((w - new_w) * center_x)
             h_offset = int((h - new_h) * center_y)
