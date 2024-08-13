@@ -63,7 +63,7 @@ export class RestaurantTable extends Base {
         };
     }
     getOrder() {
-        return this["<-pos.order.table_id"][0];
+        return this.parent_id?.getOrder?.() || this["<-pos.order.table_id"][0];
     }
     setPositionAsIfLinked(parent, side) {
         // console.log("132")
