@@ -22,10 +22,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #     4: settings
     #     1: has_access_livechat
     _query_count_init_store = 17
-    _query_count = 50 + 1  # +1 is necessary to fix nondeterministic issue on runbot
+    # Queries for _query_count:
+    #     3: _compute_is_editable
+    _query_count = 53 + 1  # +1 is necessary to fix nondeterministic issue on runbot
     # Queries for _query_count_discuss_channels:
     #     1: bus last id
-    _query_count_discuss_channels = 70
+    #     3: _compute_is_editable
+    _query_count_discuss_channels = 73
 
     def setUp(self):
         super().setUp()
@@ -407,7 +410,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": "General announcements for all employees.",
                 "group_based_subscription": True,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
@@ -584,7 +587,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
@@ -613,7 +616,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
@@ -642,7 +645,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
@@ -671,7 +674,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
@@ -704,7 +707,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "livechatChannel": {"id": self.im_livechat_channel.id},
@@ -739,7 +742,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [["ADD", []]],
-                "is_editable": False,
+                "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "livechatChannel": {"id": self.im_livechat_channel.id},
