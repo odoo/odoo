@@ -91,7 +91,7 @@ export class ReceiptScreen extends Component {
         this.pos.showScreen(name, props);
     }
     isResumeVisible() {
-        return this.pos.get_open_orders().length > 1;
+        return this.pos.get_open_orders().length > 0;
     }
     async _sendReceiptToCustomer({ action }) {
         const order = this.currentOrder;
