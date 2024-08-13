@@ -64,6 +64,10 @@ export class Chatter extends Component {
         return [];
     }
 
+    get isReadonly() {
+        return this.state.thread?.isReadonly(false) && this.props.threadId;
+    }
+
     changeThread(threadModel, threadId) {
         this.state.thread = this.store.Thread.insert({ model: threadModel, id: threadId });
         if (threadId === false) {

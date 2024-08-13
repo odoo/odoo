@@ -23,11 +23,13 @@ import { Deferred, tick } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
+    MockServer,
     onRpc,
     patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
+import { mail_thread_data_access_rights } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { Composer } from "@mail/core/common/composer";
 
@@ -66,6 +68,38 @@ test("composer text input: basic rendering when linked thread is a discuss.chann
     await openDiscuss(channelId);
     await contains(".o-mail-Composer");
     await contains("textarea.o-mail-Composer-input");
+});
+
+test("composer: rendering when thread is readOnly", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        needaction: true,
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    onRpc("/mail/thread/data/access_rights", async (req) => {
+        const res = await mail_thread_data_access_rights.bind(MockServer.current)(req);
+        res["mail.thread"][0].hasWriteAccess = false;
+        res["mail.thread"][0].hasReadAccess = false;
+        return res;
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-Composer-input:disabled");
+    await contains(
+        `.o-mail-Composer-input[placeholder="You don't have the rights to post on this Document..."]`
+    );
+    await contains(".o-mail-Composer-actions", { count: 0 });
 });
 
 test("composer text input placeholder should contain channel name when thread does not have specific correspondent", async () => {

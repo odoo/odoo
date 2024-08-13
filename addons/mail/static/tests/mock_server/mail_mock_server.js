@@ -822,6 +822,32 @@ export async function mail_thread_data(request) {
     ).get_result();
 }
 
+registerRoute("/mail/thread/data/access_rights", mail_thread_data_access_rights);
+/** @type {RouteCallback} */
+export async function mail_thread_data_access_rights(request) {
+    const { thread_data } = await parseRequestParams(request);
+    const store = new mailDataHelpers.Store();
+    for (const model in thread_data) {
+        const ThreadModel = this.env[model];
+        for (const threadId of thread_data[model]) {
+            const thread = ThreadModel.browse(threadId);
+            if (!thread.length) {
+                continue;
+            }
+            store.add(
+                thread,
+                {
+                    hasWriteAccess: true, // mimic user with write access by default
+                    hasReadAccess: true,
+                    canPostOnReadonly: thread._mail_post_access === "read",
+                },
+                makeKwArgs({ as_thread: true })
+            );
+        }
+    }
+    return store.get_result();
+}
+
 registerRoute("/mail/thread/messages", mail_thread_messages);
 /** @type {RouteCallback} */
 async function mail_thread_messages(request) {

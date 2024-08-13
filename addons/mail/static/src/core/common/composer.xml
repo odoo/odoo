@@ -49,6 +49,7 @@
                             t-model="props.composer.text"
                             t-att-placeholder="placeholder"
                             t-att-readOnly="!state.active"
+                            t-att-disabled="thread?.isReadonly()"
                         />
                         <!--
                              This is an invisible textarea used to compute the composer
@@ -63,6 +64,7 @@
                         />
                     </div>
                     <div class="o-mail-Composer-actions d-flex bg-view rounded"
+                        t-if="!thread?.isReadonly()"
                         t-att-class="{
                             'ms-1': compact and ui.isSmall,
                             'mx-1': compact and !ui.isSmall,
