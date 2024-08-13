@@ -67,10 +67,7 @@ export class ChatHub extends Record {
     actuallyHidden = Record.many("ChatWindow");
 
     closeAll() {
-        while (this.opened.length > 0 || this.folded.length > 0) {
-            this.opened[0]?.delete();
-            this.folded[0]?.delete();
-        }
+        [...this.opened, ...this.folded].forEach((cw) => cw.close());
     }
 
     onRecompute() {

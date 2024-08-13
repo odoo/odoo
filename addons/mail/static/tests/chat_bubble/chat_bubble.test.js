@@ -11,6 +11,8 @@ import {
     startServer,
     triggerHotkey,
     hover,
+    step,
+    assertSteps,
 } from "../mail_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
@@ -337,15 +339,26 @@ test("More than 7 actually folded chat windows shows a 'hidden' chat bubble menu
 });
 
 test("Can close all chat windows at once", async () => {
+    const closed = new Set();
+    onRpcBefore("/discuss/channel/fold", (args) => {
+        if (args.state === "closed") {
+            closed.add(args.channel_id);
+        }
+        if (closed.size === 20) {
+            step("ALL_CLOSED");
+        }
+    });
     const pyEnv = await startServer();
-    for (let i = 1; i <= 20; i++) {
-        pyEnv["discuss.channel"].create({
-            name: String(i),
-            channel_member_ids: [
-                Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            ],
-        });
-    }
+    const channelIds = pyEnv["discuss.channel"].create(
+        Array(20)
+            .keys()
+            .map((i) => ({
+                name: String(i),
+                channel_member_ids: [
+                    Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
+                ],
+            }))
+    );
     await start();
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
@@ -353,6 +366,14 @@ test("Can close all chat windows at once", async () => {
     await click("button.fa.fa-ellipsis-h[title='Chat Options']");
     await click("button.o-mail-ChatHub-option", { text: "Close all conversations" });
     await contains(".o-mail-ChatBubble", { count: 0 });
+    await assertSteps(["ALL_CLOSED"]);
+    const members = pyEnv["discuss.channel.member"].search_read([
+        ["channel_id", "in", channelIds],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    expect(members.map((member) => member.fold_state)).toEqual(
+        [...Array(20).keys()].map(() => "closed")
+    );
 });
 
 test("Can compact chat hub", async () => {
