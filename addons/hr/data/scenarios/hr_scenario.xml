@@ -2,29 +2,29 @@
 <odoo>
     <data noupdate="1">
         <!-- Department -->
-        <record id="dep_rd" model="hr.department">
+        <record id="dep_rd" model="hr.department" forcecreate="1">
             <field name="name">Research &amp; Development</field>
             <field name="color" eval="10"/>
         </record>
-        <record id="dep_management" model="hr.department">
+        <record id="dep_management" model="hr.department" forcecreate="1">
             <field name="name">Management</field>
             <field name="color" eval="5"/>
         </record>
 
         <!-- Contract Type -->
-        <record id="contract_type_interim" model="hr.contract.type">
+        <record id="contract_type_interim" model="hr.contract.type" forcecreate="1">
             <field name="name">Interim</field>
             <field name="sequence">3</field>
         </record>
 
         <!-- Job -->
-        <record id="job_consultant" model="hr.job">
+        <record id="job_consultant" model="hr.job" forcecreate="1">
             <field name="name">Consultant</field>
             <field name="no_of_recruitment">5</field>
             <field name="contract_type_id" ref="hr.contract_type_interim"/>
             <field name="description">We are currently looking for someone like that to join our Consultant team.</field>
         </record>
-        <record id="job_developer" model="hr.job">
+        <record id="job_developer" model="hr.job" forcecreate="1">
             <field name="name">Experienced Developer</field>
             <field name="department_id" ref="hr.dep_rd"/>
             <field name="no_of_recruitment">5</field>
@@ -33,7 +33,7 @@
                 Someone who can snap out of coding and perform analysis or meet clients to explain the technical
                 possibilities that can meet their needs.</field>
         </record>
-        <record id="job_ceo" model="hr.job">
+        <record id="job_ceo" model="hr.job" forcecreate="1">
             <field name="name">Chief Executive Officer</field>
             <field name="department_id" ref="dep_management"/>
             <field name="description">
@@ -62,21 +62,21 @@
         </record>
 
         <!-- Employee category -->
-        <record id="employee_category_4" model="hr.employee.category">
+        <record id="employee_category_4" model="hr.employee.category" forcecreate="1">
             <field name="name">Employee</field>
             <field name="color" eval="6"/>
         </record>
-        <record id="employee_category_5" model="hr.employee.category">
+        <record id="employee_category_5" model="hr.employee.category" forcecreate="1">
             <field name="name">Consultant</field>
             <field name="color" eval="4"/>
         </record>
-        <record id="employee_category_demo" model="hr.employee.category">
+        <record id="employee_category_demo" model="hr.employee.category" forcecreate="1">
             <field name="name">Demo</field>
             <field name="color" eval="6"/>
         </record>
 
         <!-- Partner -->
-        <record id="work_contact_eg" model="res.partner">
+        <record id="work_contact_eg" model="res.partner" forcecreate="1">
             <field name="name">Emma Granger</field>
             <field name="email">granger@mycompany.example.com</field>
             <field name="image_1920" type="base64" file="hr/static/img/employee_awa-image.jpg"/>
@@ -91,7 +91,7 @@
             <field name="function">Agile Consultant</field>
             <field name="phone">(555)-768-6230</field>
         </record>
-        <record id="work_contact_mw" model="res.partner">
+        <record id="work_contact_mw" model="res.partner" forcecreate="1">
             <field name="name">Michael Williams</field>
             <field name="email">williams@mycompany.example.com</field>
             <field name="image_1920" type="base64" file="hr/static/img/partner_root-image.jpg"/>
@@ -106,7 +106,7 @@
             <field name="function">Chief Executive Officer</field>
             <field name="phone">(555)-768-6230</field>
         </record>
-        <record id="work_contact_sj" model="res.partner">
+        <record id="work_contact_sj" model="res.partner" forcecreate="1">
             <field name="name">Simon Jones</field>
             <field name="email">jones@mycompany.example.com</field>
             <field name="image_1920" type="base64" file="hr/static/img/employee_qdp-image.png"/>
@@ -123,7 +123,7 @@
         </record>
 
         <!-- Employee -->
-        <record id="employee_mw" model="hr.employee">
+        <record id="employee_mw" model="hr.employee" forcecreate="1">
             <field name="active">True</field>
             <field name="name">Michael Williams</field>
             <field name="private_street">349-943 Miania St.</field>
@@ -143,7 +143,7 @@
             <field name="mobile_phone">(555)-768-6235</field>
             <field name="work_contact_id" ref="work_contact_mw"/>
         </record>
-        <record id="employee_eg" model="hr.employee">
+        <record id="employee_eg" model="hr.employee" forcecreate="1">
             <field name="active">True</field>
             <field name="name">Emma Granger</field>
             <field name="department_id" ref="dep_rd"/>
@@ -166,7 +166,7 @@
             <field name="coach_id" ref="employee_mw"/>
             <field name="parent_id" ref="employee_mw"/>
         </record>
-        <record id="employee_sj" model="hr.employee">
+        <record id="employee_sj" model="hr.employee" forcecreate="1">
             <field name="active">True</field>
             <field name="name">Simon Jones</field>
             <field name="department_id" ref="dep_rd"/>

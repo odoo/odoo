@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <!-- Calendar -->
-        <record id="resource_calendar_std_38h" model="resource.calendar">
+        <record id="resource_calendar_std_38h" model="resource.calendar" forcecreate="1">
             <field name="name">Standard 32 hours/week (4 work days, friday free)</field>
             <field name="company_id" eval="False"/>
             <field name="hours_per_day">8</field>
@@ -25,16 +25,16 @@
         </record>
 
         <!-- Employee -->
-        <record id="hr.employee_mw" model="hr.employee">
+        <record id="hr.employee_mw" model="hr.employee" forcecreate="1">
             <field name="barcode">123</field>
         </record>
 
-        <record id="hr.employee_eg" model="hr.employee">
+        <record id="hr.employee_eg" model="hr.employee" forcecreate="1">
             <field name="resource_calendar_id" ref="resource_calendar_std_38h"/>
             <field name="barcode">456</field>
         </record>
 
-        <record id="hr.employee_sj" model="hr.employee">
+        <record id="hr.employee_sj" model="hr.employee" forcecreate="1">
             <field name="pin">789</field>
         </record>
     </data>

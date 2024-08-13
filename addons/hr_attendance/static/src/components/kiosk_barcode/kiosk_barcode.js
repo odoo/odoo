@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
-import { AttendanceBarcodeDialog } from "../barcode_dialog/kiosk_barcode_dialog";
+import { BarcodeDialog } from '@web/core/barcode/barcode_dialog';
 
 export class KioskBarcodeScanner extends BarcodeScanner {
     static props = {
@@ -34,7 +34,7 @@ export async function scanBarcode(env, facingMode = "environment", token) {
         res = resolve;
         rej = reject;
     });
-    env.services.dialog.add(AttendanceBarcodeDialog, {
+    env.services.dialog.add(BarcodeDialog, {
         facingMode,
         token: token,
         onResult: (result) => res(result),
