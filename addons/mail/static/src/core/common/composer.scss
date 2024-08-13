@@ -74,5 +74,10 @@
 }
 
 .o-mail-Composer-compactContainer {
-    box-shadow: 0px -3px 25px 3px rgba(50, 50, 50, 0.1);
+    &.o-mobile:not(:focus-within) {
+        margin-bottom: map-get($spacers, 4) + map-get($spacers, 2);
+    }
+    &:not(.o-mobile) {
+        box-shadow: 0px -3px 25px 3px rgba(50, 50, 50, 0.1);
+    }
 }
