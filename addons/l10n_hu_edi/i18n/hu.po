@@ -53,17 +53,6 @@ msgstr ""
 "            "
 
 #. module: l10n_hu_edi
-#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.account_move_send_form
-msgid ""
-"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
-"title=\"Some data is incorrect\" invisible=\"not "
-"l10n_hu_edi_actionable_errors\"/>"
-msgstr ""
-"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
-"title=\"Egyes adatok helytelenek\" invisible=\"not "
-"l10n_hu_edi_actionable_errors\"/>"
-
-#. module: l10n_hu_edi
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.product_template_form_view_l10n_hu_edi
 msgid "<span class=\"oe_inline o_form_label mx-3\"> : </span>"
 msgstr ""
@@ -169,6 +158,11 @@ msgstr "Technikai érvénytelenítési kód"
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__reason
 msgid "Annulment Reason"
 msgstr "Technikai érvénytelenítés indoklása"
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Authentication with NAV 3.0 successful."
+msgstr "A NAV 3.0-val történő hitelesítés sikeres."
 
 #. module: l10n_hu_edi
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
@@ -337,6 +331,17 @@ msgstr ""
 #, python-format
 msgid "Could not parse time of previous transaction"
 msgstr "Nem sikerült értelmezni az előző tranzakció idejét"
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/__init__.py:0
+#, python-format
+msgid ""
+"Could not set NAV tax types on taxes because some taxes from l10n_hu are missing.\n"
+"You should set the type manually or reload the CoA before sending invoices to NAV."
+msgstr ""
+"Nem sikerült beállítani a NAV adótípusait az adókra, mert néhány adó hiányzik a l10n_hu-ból.\n"
+"A típusokat kézzel kell beállítani, vagy újra kell tölteni a CoA-t, mielőtt a számlákat elküldi a NAV-nak."
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__create_uid
@@ -700,6 +705,17 @@ msgid "Invoice upload time"
 msgstr "Számla beküldés ideje"
 
 #. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"Invoices issued in Hungary must, with few exceptions, be reported to the "
+"NAV's Online-Invoice system!"
+msgstr ""
+"Magyarországon a kiállított számlákat, néhány kivételtől eltekintve, "
+"kötelező jelenteni az adóhatóság online számla rendszerébe!"
+
+#. module: l10n_hu_edi
 #: model:ir.model,name:l10n_hu_edi.model_account_move
 msgid "Journal Entry"
 msgstr "Könyvelési tétel"
@@ -759,14 +775,14 @@ msgid "Kilowatt hour"
 msgstr "Kilowatt óra"
 
 #. module: l10n_hu_edi
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__l10n_hu_edi_actionable_errors
-msgid "L10N Hu Edi Actionable Errors"
-msgstr "L10N Hu Edi Beavatkozható hibák"
-
-#. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__l10n_hu_edi_enable_nav_30
 msgid "L10N Hu Edi Enable Nav 30"
 msgstr "L10N Hu Edi Nav 30 engedélyezése"
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_is_active
+msgid "L10N Hu Edi Is Active"
+msgstr ""
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__write_uid
@@ -1027,9 +1043,9 @@ msgstr "Darab"
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
 #, python-format
-msgid "Please create an ATK (outside the scope of the VAT Act) type of tax!"
+msgid "Please create a sales tax with type ATK (outside the scope of the VAT Act)."
 msgstr ""
-"Kérem, hozzon létre egy ATK (az ÁFA törvény hatályán kívüli) típusú adót!"
+"Kérem, hozzon létre egy ATK típusú forgalmi adót (az ÁFA törvény hatályán kívüli)."
 
 #. module: l10n_hu_edi
 #. odoo-python
