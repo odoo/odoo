@@ -43,10 +43,10 @@ defineModels([Partner, Product]);
 onRpc("has_group", () => true);
 
 test("BinaryField is correctly rendered (readonly)", async () => {
-    onRpc("/web/content", (request) => {
+    onRpc("/web/content", async (request) => {
         expect.step("/web/content");
 
-        const body = request.text();
+        const body = await request.text();
         expect(body).toBeInstanceOf(FormData);
         expect(body.get("field")).toBe("document", {
             message: "we should download the field document",
@@ -101,10 +101,10 @@ test("BinaryField is correctly rendered (readonly)", async () => {
 });
 
 test("BinaryField is correctly rendered", async () => {
-    onRpc("/web/content", (request) => {
+    onRpc("/web/content", async (request) => {
         expect.step("/web/content");
 
-        const body = request.text();
+        const body = await request.text();
         expect(body).toBeInstanceOf(FormData);
         expect(body.get("field")).toBe("document", {
             message: "we should download the field document",
