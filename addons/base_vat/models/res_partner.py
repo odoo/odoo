@@ -206,6 +206,7 @@ class ResPartner(models.Model):
                 partner.vies_valid = partner.parent_id.vies_valid
                 continue
             try:
+                _logger.info('Calling VIES service to check VAT for validation: %s', partner.vies_vat_to_check)
                 vies_valid = check_vies(partner.vies_vat_to_check, timeout=10)
                 partner.vies_valid = vies_valid['valid']
             except (OSError, InvalidComponent, zeep.exceptions.Fault) as e:
