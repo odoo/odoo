@@ -36,14 +36,4 @@ export class Layout extends Component {
         delete slots.default;
         return slots;
     }
-    get display() {
-        const { controlPanel } = this.props.display;
-        if (!controlPanel || !this.env.inDialog) {
-            return this.props.display;
-        }
-        return {
-            ...this.props.display,
-            controlPanel,
-        };
-    }
 }
