@@ -40,10 +40,7 @@ export const imStatusService = {
                 becomeAwayTimeout = browser.setTimeout(() => updateBusPresence(), awayTime);
             }
         };
-
-        bus_service.addEventListener("connect", () => {
-            browser.setTimeout(updateBusPresence, FIRST_UPDATE_DELAY);
-        });
+        bus_service.addEventListener("connect", () => updateBusPresence(), { once: true });
         bus_service.subscribe("bus.bus/im_status_updated", async ({ partner_id, im_status }) => {
             if (session.is_public || !partner_id || partner_id !== user.partnerId) {
                 return;

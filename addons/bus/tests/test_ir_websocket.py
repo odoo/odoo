@@ -5,7 +5,7 @@ from freezegun import freeze_time
 try:
     import websocket as ws
 except ImportError:
-    websocket = None
+    ws = None
 
 from odoo.tests import new_test_user, tagged
 from .common import WebsocketCase
@@ -24,15 +24,18 @@ class TestIrWebsocket(WebsocketCase):
 
     def test_notify_on_status_change(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
-        group_user = self.env.ref("base.group_user")
         session = self.authenticate("bob_user", "bob_user")
         websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
-        self.subscribe(websocket, [], self.env["bus.bus"]._bus_last_id())
+        self.subscribe(
+            websocket,
+            [f"odoo-presence-res.partner_{bob.partner_id.id}"],
+            self.env["bus.bus"]._bus_last_id(),
+        )
         # offline => online
         self.env["bus.presence"]._update_presence(
             inactivity_period=0, identity_field="user_id", identity_value=bob.id
         )
-        self.trigger_notification_dispatching([group_user])
+        self.trigger_notification_dispatching([(bob.partner_id, "presence")])
         message = json.loads(websocket.recv())[0]["message"]
         self.assertEqual(message["type"], "bus.bus/im_status_updated")
         self.assertEqual(message["payload"]["im_status"], "online")
@@ -43,7 +46,7 @@ class TestIrWebsocket(WebsocketCase):
             self.env["bus.presence"]._update_presence(
                 inactivity_period=(AWAY_TIMER + 1) * 1000, identity_field="user_id", identity_value=bob.id
             )
-            self.trigger_notification_dispatching([group_user])
+            self.trigger_notification_dispatching([(bob.partner_id, "presence")])
             message = json.loads(websocket.recv())[0]["message"]
             self.assertEqual(message["type"], "bus.bus/im_status_updated")
             self.assertEqual(message["payload"]["im_status"], "away")
@@ -54,7 +57,7 @@ class TestIrWebsocket(WebsocketCase):
             self.env["bus.presence"]._update_presence(
                 inactivity_period=0, identity_field="user_id", identity_value=bob.id
             )
-            self.trigger_notification_dispatching([self.env.ref("base.group_user")])
+            self.trigger_notification_dispatching([(bob.partner_id, "presence")])
             message = json.loads(websocket.recv())[0]["message"]
             self.assertEqual(message["type"], "bus.bus/im_status_updated")
             self.assertEqual(message["payload"]["im_status"], "online")
@@ -65,6 +68,22 @@ class TestIrWebsocket(WebsocketCase):
             self.env["bus.presence"]._update_presence(
                 inactivity_period=0, identity_field="user_id", identity_value=bob.id
             )
-            self.trigger_notification_dispatching([group_user])
+            self.trigger_notification_dispatching([(bob.partner_id, "presence")])
             with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
                 websocket.recv()
+
+    def test_receive_missed_presences_on_subscribe(self):
+        bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
+        session = self.authenticate("bob_user", "bob_user")
+        websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
+        self.env["bus.presence"].create({"user_id": bob.id, "status": "online"})
+        self.subscribe(
+            websocket,
+            [f"odoo-presence-res.partner_{bob.partner_id.id}"],
+            self.env["bus.bus"]._bus_last_id(),
+        )
+        self.trigger_notification_dispatching([(bob.partner_id, "presence")])
+        message = json.loads(websocket.recv())[0]["message"]
+        self.assertEqual(message["type"], "bus.bus/im_status_updated")
+        self.assertEqual(message["payload"]["im_status"], "online")
+        self.assertEqual(message["payload"]["partner_id"], bob.partner_id.id)
