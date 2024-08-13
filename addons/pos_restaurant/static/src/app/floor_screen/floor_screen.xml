@@ -113,10 +113,9 @@
                         </div>
                         <div t-else="" t-ref="map" class="h-100 w-100" t-att-class="{'d-flex align-items-center justify-content-center flex-wrap': pos.floorPlanStyle == 'kanban'}">
                            <t t-foreach="activeTables.sort((a,b)=>a.id-b.id)" t-as="table" t-key="table.id" >
-                                <t t-set="isOccupied" t-value="pos.getCustomerCount(table.id) > 0 || table.uiState.orderCount > 0"/>
+                                <t t-set="isOccupied" t-value="table.getOrder() || table.uiState.orderCount > 0"/>
                                 <t t-set="isIntersecting" t-value="state.potentialLink?.child?.id === table.id"/>
                                 <t t-set="isIntersected" t-value="state.potentialLink?.parent?.id === table.id"/>
-                                <t t-set="hasBg" t-value="isOccupied or table.parent_id" />
                                 <div
                                     t-on-click.stop="(ev) => this.onClickTable(table, ev)"
                                     class="table o_draggable d-flex flex-column align-items-center justify-content-between cursor-pointer"
@@ -129,7 +128,7 @@
                                     t-attf-style="
                                                 border: 3px solid {{table.color}};
                                                 border-radius: {{table.shape === 'round' ? 1000 : 6}}px;
-                                                background: {{hasBg ? table.color || 'rgb(53, 211, 116)' : '#00000020'}};
+                                                background: {{isOccupied ? table.color || 'rgb(53, 211, 116)' : '#00000020'}};
                                                 color: {{!hasBg ? 'black' : 'white'}};
                                                 opacity: {{state.potentialLink ? (isIntersecting or isIntersected ? 1 : 0.25) : 1}};
                                                 {{pos.floorPlanStyle == 'kanban' ?
