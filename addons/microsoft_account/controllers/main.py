@@ -20,7 +20,12 @@ class MicrosoftAuth(http.Controller):
             raise BadRequest()
 
         if kw.get('code'):
-            access_token, refresh_token, ttl = request.env['microsoft.service']._get_microsoft_tokens(kw['code'], service)
+            base_url = request.httprequest.url_root.strip('/') or request.env.user.get_base_url()
+            access_token, refresh_token, ttl = request.env['microsoft.service']._get_microsoft_tokens(
+                kw['code'],
+                service,
+                redirect_uri=f'{base_url}/microsoft_account/authentication'
+            )
             request.env.user._set_microsoft_auth_tokens(access_token, refresh_token, ttl)
             return request.redirect(url_return)
         elif kw.get('error'):

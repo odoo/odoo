@@ -20,9 +20,29 @@ DEFAULT_MICROSOFT_GRAPH_ENDPOINT = 'https://graph.microsoft.com'
 
 RESOURCE_NOT_FOUND_STATUSES = (204, 404)
 
+
+def _get_microsoft_client_secret(ICP_sudo, service):
+    """ Return the client_secret for a specific service.
+
+    Note: This method serves as a hook for modules that would like share their own keys.
+        This method should never be callable from a method that return it in clear, it
+        should only be used directly in a request.
+
+    :param ICP_sudo: the model ir.config_parameters in sudo
+    :param service: the service that we need the secret key
+    :return: The ICP value
+    :rtype: str
+    """
+    return ICP_sudo.get_param('microsoft_%s_client_secret' % service)
+
 class MicrosoftService(models.AbstractModel):
     _name = 'microsoft.service'
     _description = 'Microsoft Service'
+
+    def _get_microsoft_client_id(self, service):
+        # client id is not a secret, and can be leaked without risk. e.g. in clear in authorize uri.
+        ICP = self.env['ir.config_parameter'].sudo()
+        return ICP.get_param('microsoft_%s_client_id' % service)
 
     def _get_calendar_scope(self):
         return 'offline_access openid Calendars.ReadWrite'
@@ -42,19 +62,15 @@ class MicrosoftService(models.AbstractModel):
             :param authorization_code : the code to exchange against the new refresh token
             :returns the new refresh token
         """
-        Parameters = self.env['ir.config_parameter'].sudo()
-        client_id = Parameters.get_param('microsoft_%s_client_id' % service)
-        client_secret = Parameters.get_param('microsoft_%s_client_secret' % service)
-        redirect_uri = Parameters.get_param('microsoft_redirect_uri')
-
+        ICP_sudo = self.env['ir.config_parameter'].sudo()
         scope = self._get_calendar_scope()
 
         # Get the Refresh Token From Microsoft And store it in ir.config_parameter
         headers = {"Content-type": "application/x-www-form-urlencoded"}
         data = {
-            'client_id': client_id,
-            'redirect_uri': redirect_uri,
-            'client_secret': client_secret,
+            'client_id': self._get_microsoft_client_id(service),
+            'redirect_uri': ICP_sudo.get_param('microsoft_redirect_uri'),
+            'client_secret': _get_microsoft_client_secret(ICP_sudo, service),
             'scope': scope,
             'grant_type': "refresh_token"
         }
@@ -69,7 +85,7 @@ class MicrosoftService(models.AbstractModel):
         return content.get('refresh_token')
 
     @api.model
-    def _get_authorize_uri(self, from_url, service, scope):
+    def _get_authorize_uri(self, from_url, service, scope, redirect_uri):
         """ This method return the url needed to allow this instance of Odoo to access to the scope
             of gmail specified as parameters
         """
@@ -80,38 +96,33 @@ class MicrosoftService(models.AbstractModel):
         }
 
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
-        client_id = get_param('microsoft_%s_client_id' % (service,), default=False)
 
         encoded_params = urls.url_encode({
             'response_type': 'code',
-            'client_id': client_id,
+            'client_id': self._get_microsoft_client_id(service),
             'state': json.dumps(state),
             'scope': scope,
-            'redirect_uri': base_url + '/microsoft_account/authentication',
+            'redirect_uri': redirect_uri,
             'access_type': 'offline'
         })
         return "%s?%s" % (self._get_auth_endpoint(), encoded_params)
 
     @api.model
-    def _get_microsoft_tokens(self, authorize_code, service):
+    def _get_microsoft_tokens(self, authorize_code, service, redirect_uri):
         """ Call Microsoft API to exchange authorization code against token, with POST request, to
             not be redirected.
         """
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
-        client_id = get_param('microsoft_%s_client_id' % (service,), default=False)
-        client_secret = get_param('microsoft_%s_client_secret' % (service,), default=False)
+        ICP_sudo = self.env['ir.config_parameter'].sudo()
         scope = self._get_calendar_scope()
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = {
             'code': authorize_code,
-            'client_id': client_id,
-            'client_secret': client_secret,
+            'client_id': self._get_microsoft_client_id(service),
+            'client_secret': _get_microsoft_client_secret(ICP_sudo, service),
             'grant_type': 'authorization_code',
             'scope': scope,
-            'redirect_uri': base_url + '/microsoft_account/authentication'
+            'redirect_uri': redirect_uri
         }
         try:
             dummy, response, dummy = self._do_request(self._get_token_endpoint(), params=data, headers=headers, method='POST', preuri='')
