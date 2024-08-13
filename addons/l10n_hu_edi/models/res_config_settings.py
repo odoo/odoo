@@ -30,6 +30,15 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_hu_edi_replacement_key',
         readonly=False,
     )
+    # Technical field to control display of the "Authentication with NAV 3.0 successful" banner
+    l10n_hu_edi_is_active = fields.Boolean(
+        compute='_compute_l10n_hu_edi_is_active',
+    )
+
+    @api.depends('company_id.l10n_hu_edi_server_mode')
+    def _compute_l10n_hu_edi_is_active(self):
+        for record in self:
+            record.l10n_hu_edi_is_active = record.company_id.l10n_hu_edi_server_mode in ['production', 'test']
 
     @api.model_create_multi
     def create(self, vals_list):
