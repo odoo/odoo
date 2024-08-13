@@ -181,7 +181,7 @@ class TestUiSession(HttpCase):
         # PART 2 : OPEN SESSION AND CHECK ATTENDEES
         # =========================================
 
-        with patch('odoo.addons.survey.models.survey_survey.Survey.action_open_session_manager', action_open_session_manager_mock):
+        with patch('odoo.addons.survey.models.survey_survey.SurveySurvey.action_open_session_manager', action_open_session_manager_mock):
             self.start_tour('/odoo', 'test_survey_session_start_tour', login='admin')
 
         self.assertEqual('in_progress', survey_session.session_state)
@@ -224,7 +224,7 @@ class TestUiSession(HttpCase):
         attendee_2._save_lines(scale_question, '5')
         attendee_3._save_lines(scale_question, '6')
 
-        with patch('odoo.addons.survey.models.survey_survey.Survey.action_open_session_manager', action_open_session_manager_mock):
+        with patch('odoo.addons.survey.models.survey_survey.SurveySurvey.action_open_session_manager', action_open_session_manager_mock):
             self.start_tour('/odoo', 'test_survey_session_manage_tour', login='admin')
 
         self.assertFalse(bool(survey_session.session_state))

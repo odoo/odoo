@@ -4,7 +4,7 @@
 from odoo import models
 
 
-class Followers(models.Model):
+class MailFollowers(models.Model):
     _inherit = ['mail.followers']
 
     def _get_recipient_data(self, records, message_type, subtype_id, pids=None):

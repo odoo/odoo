@@ -12,7 +12,7 @@ from unittest.mock import DEFAULT, patch
 from odoo import Command
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
-from odoo.addons.mail.wizard.mail_compose_message import MailComposer
+from odoo.addons.mail.wizard.mail_compose_message import MailComposeMessage
 from odoo.addons.test_mail.models.test_mail_models import MailTestTicket
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.fields import Datetime as FieldDatetime
@@ -3018,7 +3018,7 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(len(self._mails), 1, 'Should have sent 1 email per record')
 
         # 4: _batch_size limit for active_ids
-        with patch.object(MailComposer, '_batch_size', new=1):
+        with patch.object(MailComposeMessage, '_batch_size', new=1):
             composer_form = Form(self.env['mail.compose.message'].with_context(
                 active_ids=self.test_records.ids,
                 default_composition_mode='mass_mail',
@@ -3042,7 +3042,7 @@ class TestComposerResultsMass(TestMailComposer):
 
         # 5: mail.batch_size config parameter support, for sending only
         self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', 1)
-        with patch.object(MailComposer, '_batch_size', new=50):
+        with patch.object(MailComposeMessage, '_batch_size', new=50):
             composer_form = Form(self.env['mail.compose.message'].with_context(
                 active_ids=self.test_records.ids,
                 default_composition_mode='mass_mail',

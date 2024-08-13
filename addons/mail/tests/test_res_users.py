@@ -5,7 +5,7 @@ from psycopg2 import IntegrityError
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.addons.base.models.res_users import Users
+from odoo.addons.base.models.res_users import ResUsersPatchedInTest
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tests import tagged, users
@@ -98,7 +98,7 @@ class TestUserModifyOwnProfile(HttpCaseWithUserDemo):
         self.user_demo.tz = "Europe/Brussels"
 
         # avoid 'reload_context' action in the middle of the tour to ease steps and form save checks
-        with patch.object(Users, 'preference_save', lambda self: True):
+        with patch.object(ResUsersPatchedInTest, 'preference_save', lambda self: True):
             self.start_tour(
                 "/odoo",
                 "mail/static/tests/tours/user_modify_own_profile_tour.js",

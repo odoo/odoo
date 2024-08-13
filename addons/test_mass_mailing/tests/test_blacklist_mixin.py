@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mass_mailing.models.mailing_models import MailingBLacklist
+from odoo.addons.test_mass_mailing.models.mailing_models import MailingTestBlacklist
 from odoo.addons.test_mass_mailing.tests import common
 from odoo.exceptions import UserError
 from odoo.tests.common import users
@@ -23,15 +23,15 @@ class TestBLMixin(common.TestMassMailCommon):
 
     @users('employee')
     def test_bl_mixin_primary_field_consistency(self):
-        MailingBLacklist._primary_email = 'not_a_field'
+        MailingTestBlacklist._primary_email = 'not_a_field'
         with self.assertRaises(UserError):
             self.env['mailing.test.blacklist'].search([('is_blacklisted', '=', False)])
 
-        MailingBLacklist._primary_email = ['not_a_str']
+        MailingTestBlacklist._primary_email = ['not_a_str']
         with self.assertRaises(UserError):
             self.env['mailing.test.blacklist'].search([('is_blacklisted', '=', False)])
 
-        MailingBLacklist._primary_email = 'email_from'
+        MailingTestBlacklist._primary_email = 'email_from'
         self.env['mailing.test.blacklist'].search([('is_blacklisted', '=', False)])
 
     @users('employee')

@@ -4,8 +4,8 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo import exceptions
-from odoo.addons.crm.models.crm_lead import Lead
-from odoo.addons.crm_iap_mine.models.crm_iap_lead_mining_request import CRMLeadMiningRequest
+from odoo.addons.crm.models.crm_lead import CrmLead
+from odoo.addons.crm_iap_mine.models.crm_iap_lead_mining_request import CrmIapLeadMiningRequest
 from odoo.addons.iap.tests.common import MockIAPEnrich
 from odoo.addons.iap.tools import iap_tools
 
@@ -22,7 +22,7 @@ class MockIAPReveal(MockIAPEnrich):
     def mock_IAP_mine(self, mine, name_list=None, default_data=None, sim_error=None):
         self._new_leads = self.env['crm.lead'].sudo()
         self.mine = mine
-        crm_lead_create_origin = Lead.create
+        crm_lead_create_origin = CrmLead.create
 
         def _crm_lead_create(model, *args, **kwargs):
             res = crm_lead_create_origin(model, *args, **kwargs)
@@ -66,8 +66,8 @@ class MockIAPReveal(MockIAPEnrich):
                 'credit_error': False
             }
 
-        with patch.object(CRMLeadMiningRequest, '_iap_contact_mining', side_effect=_iap_contact_mining), \
-             patch.object(Lead, 'create', autospec=True, wraps=Lead, side_effect=_crm_lead_create):
+        with patch.object(CrmIapLeadMiningRequest, '_iap_contact_mining', side_effect=_iap_contact_mining), \
+             patch.object(CrmLead, 'create', autospec=True, wraps=CrmLead, side_effect=_crm_lead_create):
             yield
 
     def _get_iap_company_data(self, base_name, service=None, add_values=None):

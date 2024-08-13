@@ -450,7 +450,7 @@ class TestRegexRendering(common.MailCommon):
         )
         o_qweb_render = self.env['ir.qweb']._render
         for template, expected in static_templates:
-            with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+            with (patch('odoo.addons.base.models.ir_qweb.IrQweb._render', side_effect=o_qweb_render) as qweb_render,
                 patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
                 self.assertEqual(render(template), expected)
                 self.assertFalse(qweb_render.called)
@@ -468,7 +468,7 @@ class TestRegexRendering(common.MailCommon):
             ('''<p t-out="'<h1>test</h1>'"/>''', '<p>&lt;h1&gt;test&lt;/h1&gt;</p>'),
         )
         for template, expected in non_static_templates:
-            with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+            with (patch('odoo.addons.base.models.ir_qweb.IrQweb._render', side_effect=o_qweb_render) as qweb_render,
                 patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
                 rendered = render(template)
                 self.assertTrue(isinstance(rendered, Markup))

@@ -3,7 +3,7 @@
 from odoo import fields, models
 
 
-class User(models.Model):
+class ResUsers(models.Model):
     _inherit = ['res.users']
 
     resume_line_ids = fields.One2many(related='employee_id.resume_line_ids', readonly=False)

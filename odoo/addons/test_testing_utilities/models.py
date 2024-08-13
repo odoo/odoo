@@ -208,7 +208,8 @@ class Test_Testing_UtilitiesDefault(models.Model):
             self.subs = False
 
 
-class Test_Testing_UtilitiesSub3(models.Model):
+# pylint: disable=E0102
+class Test_Testing_UtilitiesSub3(models.Model):  # noqa: F811
     _description = 'Testing Utilities Subtraction 3'
 
     name = fields.Char(compute='_compute_name')
@@ -245,7 +246,7 @@ class Test_Testing_UtilitiesOnchange_Parent(models.Model):
 
 
 class Test_Testing_UtilitiesOnchange_Line(models.Model):
-    _description = 'Testing Utilities Onchange Line'
+    _description = "Testing Utilities Onchange Line"
 
     parent = fields.Many2one('test_testing_utilities.onchange_parent')
     dummy = fields.Float()
@@ -257,7 +258,7 @@ class Test_Testing_UtilitiesOnchange_Line(models.Model):
 
 
 class Test_Testing_UtilitiesOnchange_Count(models.Model):
-    _description = _name
+    _description = "Test_Testing_UtilitiesOnchange_Count"
 
     count = fields.Integer()
     line_ids = fields.One2many('test_testing_utilities.onchange_count_sub', 'parent')
@@ -272,20 +273,20 @@ class Test_Testing_UtilitiesOnchange_Count(models.Model):
 
 
 class Test_Testing_UtilitiesOnchange_Count_Sub(models.Model):
-    _description = _name
+    _description = "Test_Testing_UtilitiesOnchange_Count_Sub"
 
     parent = fields.Many2one('test_testing_utilities.onchange_count')
     name = fields.Char()
 
 
 class O2m_Readonly_Subfield_Parent(models.Model):
-    _description = _name
+    _description = "O2m_Readonly_Subfield_Parent"
 
     line_ids = fields.One2many('o2m_readonly_subfield_child', 'parent_id')
 
 
 class O2m_Readonly_Subfield_Child(models.Model):
-    _description = 'o2m_readonly_subfield_child'
+    _description = "o2m_readonly_subfield_child"
 
     name = fields.Char()
     parent_id = fields.Many2one('o2m_readonly_subfield_parent')

@@ -2,7 +2,7 @@
 from odoo import fields, models, _
 
 
-class Partner(models.Model):
+class ResPartner(models.Model):
     _inherit = ['res.partner']
 
     employee_ids = fields.One2many(

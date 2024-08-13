@@ -1428,6 +1428,9 @@ class ResUsers(models.Model):
         """
         return False
 
+
+ResUsersPatchedInTest = ResUsers
+
 #
 # Implied groups
 #
@@ -1437,7 +1440,9 @@ class ResUsers(models.Model):
 #
 
 
-class ResGroups(models.Model):
+# TODO: reorganize or split the file to avoid declaring classes multiple times
+# pylint: disable=E0102
+class ResGroups(models.Model):  # noqa: F811
     _inherit = ['res.groups']
 
     implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
@@ -1553,7 +1558,8 @@ class ResGroups(models.Model):
         return SetDefinitions(data)
 
 
-class ResUsers(models.Model):
+class UsersImplied(models.Model):
+    _name = 'res.users'
     _inherit = ['res.users']
 
     @api.model_create_multi
@@ -1576,7 +1582,7 @@ class ResUsers(models.Model):
         if demoted_users:
             # demoted users are restricted to the assigned groups only
             vals = {'groups_id': [Command.clear()] + values['groups_id']}
-            super(ResUsers, demoted_users).write(vals)
+            super(UsersImplied, demoted_users).write(vals)
         # add implied groups for all users (in batches)
         users_batch = defaultdict(self.browse)
         for user in self:
@@ -1584,7 +1590,7 @@ class ResUsers(models.Model):
         for groups, users in users_batch.items():
             gs = set(concat(g.trans_implied_ids for g in groups))
             vals = {'groups_id': [Command.link(g.id) for g in gs]}
-            super(ResUsers, users).write(vals)
+            super(UsersImplied, users).write(vals)
         return res
 
 #
@@ -1610,7 +1616,8 @@ class ResUsers(models.Model):
 #
 
 
-class ResGroups(models.Model):
+# pylint: disable=E0102
+class ResGroups(models.Model):  # noqa: F811
     _inherit = ['res.groups']
 
     @api.model_create_multi
@@ -1845,7 +1852,8 @@ class IrModuleCategory(models.Model):
         return res
 
 
-class ResUsers(models.Model):
+# pylint: disable=E0102
+class ResUsers(models.Model):  # noqa: F811
     _inherit = ['res.users']
 
     user_group_warning = fields.Text(string="User Group Warning", compute="_compute_user_group_warning")
@@ -2107,7 +2115,7 @@ class ResUsers(models.Model):
         if allfields:
             missing = missing.intersection(allfields)
         if missing:
-            self = self.sudo()  # to use super without changing class name.
+            self = self.sudo()  # noqa: PLW0642
             res.update({
                 key: dict(values, readonly=key not in self.SELF_WRITEABLE_FIELDS, searchable=False)
                 for key, values in super().fields_get(missing, attributes).items()
@@ -2230,7 +2238,8 @@ KEY_CRYPT_CONTEXT = CryptContext(
 )
 
 
-class ResUsers(models.Model):
+# pylint: disable=E0102
+class ResUsers(models.Model):  # noqa: F811
     _inherit = ['res.users']
 
     api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")

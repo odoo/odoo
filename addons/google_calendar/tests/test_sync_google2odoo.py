@@ -7,14 +7,14 @@ from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.tests.common import new_test_user
 from odoo.exceptions import ValidationError
-from odoo.addons.google_calendar.models.res_users import User
+from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent, GoogleCalendarService
 from odoo import Command, tools
 from unittest.mock import patch
 
 
-@patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
+@patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')
 class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     def setUp(self):

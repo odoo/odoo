@@ -4,6 +4,6 @@ from odoo import fields, models
 
 
 class HrContract(models.Model):
-    _inherit = 'hr.payslip'
+    _inherit = ['hr.payslip']
 
     l10n_{{code}}_field = fields.Char()

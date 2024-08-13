@@ -2693,7 +2693,6 @@ def render(template_name, values, load, **options):
         for cache_name, cache in _Registry__caches.items():
             _Registry__caches_groups.setdefault(cache_name.split('.')[0], []).append(cache)
 
-
     class MockIrQWeb(IrQweb):
         _register = False               # not visible in real registry
 

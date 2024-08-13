@@ -12,7 +12,7 @@ class TestResConfig(TransactionCase):
         self.assertEqual(self.env['ir.config_parameter'].sudo().get_param('resConfigTest.parameter1'), str(1000),
             "The parameter is not saved with its default value")
 
-        with patch('odoo.addons.base.models.ir_config_parameter.IrConfigParameter.set_param') as set_param_mock:
+        with patch('odoo.addons.base.models.ir_config_parameter.IrConfig_Parameter.set_param') as set_param_mock:
             self.env['res.config.test'].create({}).execute()
 
         set_param_mock.assert_not_called()

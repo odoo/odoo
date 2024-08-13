@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
-from odoo.addons.google_calendar.models.res_users import User
+from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import users, warmup
@@ -18,7 +18,7 @@ from odoo import tools
 from .test_token_access import TestTokenAccess
 
 @tagged('odoo2google')
-@patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
+@patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')
 class TestSyncOdoo2Google(TestSyncGoogle):
 
     def setUp(self):
@@ -836,7 +836,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
 
     @patch_api
-    @patch.object(User, '_sync_request')
+    @patch.object(ResUsers, '_sync_request')
     def test_event_sync_after_pause_period(self, mock_sync_request):
         """ Ensure that an event created during the paused synchronization period gets synchronized after resuming it. """
         # Pause the synchronization and creates the local event.
@@ -928,7 +928,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
 @tagged('odoo2google')
 class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
 
-    @patch.object(User, '_get_google_calendar_token', lambda user: user.google_calendar_token)
+    @patch.object(ResUsers, '_get_google_calendar_token', lambda user: user.google_calendar_token)
     @freeze_time("2020-01-01")
     def test_event_creation_for_user(self):
         organizer1 = self.users[0]

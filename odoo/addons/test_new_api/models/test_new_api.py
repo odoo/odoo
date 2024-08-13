@@ -24,7 +24,7 @@ class Test_New_ApiCategory(models.Model):
     parent = fields.Many2one('test_new_api.category', ondelete='cascade')
     parent_path = fields.Char(index=True)
     depth = fields.Integer(compute="_compute_depth")
-    root_categ = fields.Many2one(_name, compute='_compute_root_categ')
+    root_categ = fields.Many2one('test_new_api.category', compute='_compute_root_categ')
     display_name = fields.Char(
         compute='_compute_display_name',
         inverse='_inverse_display_name',
@@ -327,7 +327,7 @@ class Test_New_ApiCreativeworkBook(models.Model):
 
     name = fields.Char()
     editions = fields.One2many(
-        'test_new_api.creativework.edition', 'res_id', domain=[('res_model', '=', _name)]
+        'test_new_api.creativework.edition', 'res_id', domain=[('res_model', '=', 'test_new_api.creativework.book')]
     )
 
 
@@ -336,7 +336,7 @@ class Test_New_ApiCreativeworkMovie(models.Model):
 
     name = fields.Char()
     editions = fields.One2many(
-        'test_new_api.creativework.edition', 'res_id', domain=[('res_model', '=', _name)]
+        'test_new_api.creativework.edition', 'res_id', domain=[('res_model', '=', 'test_new_api.creativework.movie')]
     )
 
 
@@ -1152,8 +1152,8 @@ class Test_New_ApiMixin(models.AbstractModel):
 # in this model extension, the field 'display_name' should not be inherited from
 
 
-# 'test_new_api.mixin'
-class Test_New_ApiDisplay(models.Model):
+# pylint: disable=E0102
+class Test_New_ApiDisplay(models.Model):  # noqa: F811
     _inherit = ['test_new_api.mixin', 'test_new_api.display']
 
 
@@ -1274,7 +1274,8 @@ class Test_New_ApiModel_Selection_Base(models.Model):
     ])
 
 
-class Test_New_ApiModel_Selection_Base(models.Model):
+# pylint: disable=E0102
+class Test_New_ApiModel_Selection_Base(models.Model):  # noqa: F811
     _inherit = ['test_new_api.model_selection_base']
     _description = "Model with a selection field extension with ondelete null"
 
@@ -1283,7 +1284,8 @@ class Test_New_ApiModel_Selection_Base(models.Model):
     ], ondelete={'quux': 'set null'})
 
 
-class Test_New_ApiModel_Selection_Base(models.Model):
+# pylint: disable=E0102
+class Test_New_ApiModel_Selection_Base(models.Model):  # noqa: F811
     _inherit = ['test_new_api.model_selection_base']
     _description = "Model with a selection field extension without ondelete"
 
@@ -1327,7 +1329,8 @@ class Test_New_ApiModel_Selection_Required(models.Model):
     ], required=True, default='foo')
 
 
-class Test_New_ApiModel_Selection_Required(models.Model):
+# pylint: disable=E0102
+class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
     _inherit = ['test_new_api.model_selection_required']
     _description = "Model with a selection field extension with ondelete default"
 
@@ -1336,7 +1339,8 @@ class Test_New_ApiModel_Selection_Required(models.Model):
     ], ondelete={'baz': 'set default'})
 
 
-class Test_New_ApiModel_Selection_Required(models.Model):
+# pylint: disable=E0102
+class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
     _inherit = ['test_new_api.model_selection_required']
     _description = "Model with a selection field extension with ondelete cascade"
 
@@ -1345,7 +1349,8 @@ class Test_New_ApiModel_Selection_Required(models.Model):
     ], ondelete={'eggs': 'cascade'})
 
 
-class Test_New_ApiModel_Selection_Required(models.Model):
+# pylint: disable=E0102
+class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
     _inherit = ['test_new_api.model_selection_required']
     _description = "Model with a selection field extension with ondelete set <option>"
 
@@ -1354,7 +1359,8 @@ class Test_New_ApiModel_Selection_Required(models.Model):
     ], ondelete={'bacon': 'set bar'})
 
 
-class Test_New_ApiModel_Selection_Required(models.Model):
+# pylint: disable=E0102
+class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
     _inherit = ['test_new_api.model_selection_required']
     _description = "Model with a selection field extension with multiple ondelete policies"
 
@@ -1364,7 +1370,8 @@ class Test_New_ApiModel_Selection_Required(models.Model):
     ], ondelete={'pikachu': 'set default', 'eevee': lambda r: r.write({'my_selection': 'bar'})})
 
 
-class Test_New_ApiModel_Selection_Required(models.Model):
+# pylint: disable=E0102
+class Test_New_ApiModel_Selection_Required(models.Model):  # noqa: F811
     _inherit = ['test_new_api.model_selection_required']
     _description = "Model with a selection field extension with ondelete callback"
 
@@ -1393,7 +1400,8 @@ class Test_New_ApiModel_Selection_Required_For_Write_Override(models.Model):
     ], required=True, default='foo')
 
 
-class Test_New_ApiModel_Selection_Required_For_Write_Override(models.Model):
+# pylint: disable=E0102
+class Test_New_ApiModel_Selection_Required_For_Write_Override(models.Model):  # noqa: F811
     _inherit = ['test_new_api.model_selection_required_for_write_override']
 
     my_selection = fields.Selection(selection_add=[

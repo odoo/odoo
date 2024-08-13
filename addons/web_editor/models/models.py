@@ -15,12 +15,6 @@ class Base(models.AbstractModel):
         keys.append('sanitize_tags')
         return keys
 
-
-class BaseModel(models.AbstractModel):
-    _name = "base"
-
-    _inherit = ['base']
-
     def web_update_field_translations(self, fname, translations):
         field = self._fields[fname]
         source_lang = None

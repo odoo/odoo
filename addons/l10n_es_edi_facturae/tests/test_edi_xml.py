@@ -25,7 +25,7 @@ def _compute_is_valid(self):
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-@patch('odoo.addons.certificate.models.certificate.Certificate._compute_is_valid', _compute_is_valid)
+@patch('odoo.addons.certificate.models.certificate.CertificateCertificate._compute_is_valid', _compute_is_valid)
 class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
     @classmethod
     @AccountTestInvoicingCommon.setup_country('es')
