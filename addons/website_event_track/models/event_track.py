@@ -15,7 +15,13 @@ class EventTrack(models.Model):
     _name = 'event.track'
     _description = 'Event Track'
     _order = 'priority, date'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = [
+        'mail.thread',
+        'mail.activity.mixin',
+        'website.seo.metadata',
+        'website.published.mixin',
+        'website.searchable.mixin'
+    ]
 
     @api.model
     def _get_default_stage_id(self):
@@ -430,6 +436,36 @@ class EventTrack(models.Model):
             self.is_published = True
         elif stage.is_cancel:
             self.is_published = False
+
+    # ------------------------------------------------------------
+    # MIXINS
+    # ------------------------------------------------------------
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        event_id = self.env['ir.http']._unslug(options['event'])[1]
+        domain = [
+            '&',
+            ('event_id', '=', event_id),
+            '|',
+            ('is_published', '=', True),
+            ('stage_id.is_visible_in_agenda', '=', True),
+        ]
+        mapping = {
+            'description': {'name': 'description', 'type': 'text', 'truncate': True, 'html': True},
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'partner_name': {'name': 'partner_name', 'type': 'text', 'match': True, 'html': True},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+        }
+        return {
+            'model': 'event.track',
+            'base_domain': [domain],
+            'search_fields': ['name', 'partner_name'],
+            'fetch_fields': ['name', 'website_url', 'partner_name', 'description'],
+            'mapping': mapping,
+            'icon': 'fa-microphone',
+            'order': order,
+        }
 
     # ------------------------------------------------------------
     # MESSAGING
