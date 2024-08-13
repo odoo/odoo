@@ -1684,7 +1684,7 @@ describe("save image", () => {
         });
         onRpc(`/html_editor/modify_image/${imageRecord.id}`, async (request) => {
             if (modifyImageCount === 0) {
-                const { params } = request.json();
+                const { params } = await request.json();
                 expect(params.res_model).toBe("partner");
                 expect(params.res_id).toBe(1);
                 await modifyImagePromise;
@@ -1745,8 +1745,9 @@ describe("save image", () => {
                 txt: "<p class='test_target'><br></p>",
             },
         ];
-        onRpc("/html_editor/attachment/add_data", (request) => {
-            const { res_id, res_model } = request.json().params;
+        onRpc("/html_editor/attachment/add_data", async (request) => {
+            const { params } = await request.json();
+            const { res_id, res_model } = params;
             expect.step(`add_data: ${res_model} ${res_id}`);
             return {
                 image_src: "/test_image_url.png",
@@ -1795,7 +1796,8 @@ describe("save image", () => {
 
         const def = new Deferred();
         onRpc("/html_editor/attachment/add_data", async (request) => {
-            const { res_id, res_model } = request.json().params;
+            const { params } = await request.json();
+            const { res_id, res_model } = params;
             expect.step(`add_data-start: ${res_model} ${res_id}`);
             await def;
             expect.step(`add_data-end: ${res_model} ${res_id}`);
@@ -1863,7 +1865,8 @@ describe("save image", () => {
 
         const def = new Deferred();
         onRpc("/html_editor/attachment/add_data", async (request) => {
-            const { res_id, res_model } = request.json().params;
+            const { params } = await request.json();
+            const { res_id, res_model } = params;
             expect.step(`add_data-start: ${res_model} ${res_id}`);
             await def;
             expect.step(`add_data-end: ${res_model} ${res_id}`);
@@ -1925,8 +1928,9 @@ describe("save image", () => {
                 txt: "<p class='test_target'><br></p>",
             },
         ];
-        onRpc("/html_editor/attachment/add_data", (request) => {
-            const { res_id, res_model } = request.json().params;
+        onRpc("/html_editor/attachment/add_data", async (request) => {
+            const { params } = await request.json();
+            const { res_id, res_model } = params;
             expect.step(`add_data: ${res_model} ${res_id}`);
             return {
                 image_src: "/test_image_url.png",

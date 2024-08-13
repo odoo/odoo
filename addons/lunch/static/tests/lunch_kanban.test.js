@@ -158,8 +158,8 @@ test("Location change", async () => {
         return userInfos.user_location[0];
     });
     onRpc("/lunch/user_location_set", async (request) => {
-        const args = await request.json().params;
-        expect(args.location_id).toBe(2);
+        const { params } = await request.json();
+        expect(params.location_id).toBe(2);
         userInfos.user_location = [2, "New Office"];
         return true;
     });
@@ -187,8 +187,8 @@ test("Manager: user change", async () => {
         return userInfos.user_location[0];
     });
     onRpc("/lunch/infos", async (request) => {
-        const args = await request.json().params;
-        expect(expectedUserId).toBe(args.user_id);
+        const { params } = await request.json();
+        expect(expectedUserId).toBe(params.user_id);
         if (expectedUserId === 2) {
             userInfos = {
                 ...userInfos,
@@ -199,8 +199,8 @@ test("Manager: user change", async () => {
         return userInfos;
     });
     onRpc("/lunch/user_location_set", async (request) => {
-        const args = await request.json().params;
-        expect(args.location_id).toBe(2);
+        const { params } = await request.json();
+        expect(params.location_id).toBe(2);
         userInfos.user_location = [2, "New Office"];
         return true;
     });
@@ -309,8 +309,8 @@ test("Change existing order", async () => {
         return userInfos;
     });
     onRpc("/web/dataset/call_kw/lunch.order/update_quantity", async (request) => {
-        const args = await request.json().params;
-        expect(args.args[1]).toBe(1, { message: "should increment order quantity by 1" });
+        const { params } = await request.json();
+        expect(params.args[1]).toBe(1, { message: "should increment order quantity by 1" });
         userInfos = {
             ...userInfos,
             lines: [
@@ -361,8 +361,8 @@ test("Confirm existing order", async () => {
         return userInfos;
     });
     onRpc("/lunch/pay", async (request) => {
-        const args = await request.json().params;
-        expect(args.user_id).toBe(false); // Should confirm order of current user
+        const { params } = await request.json();
+        expect(params.user_id).toBe(false); // Should confirm order of current user
         userInfos = {
             ...userInfos,
             lines: [

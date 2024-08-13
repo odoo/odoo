@@ -38,8 +38,9 @@ test("open/close temporary channel", async () => {
 test("open/close persisted channel", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
-    onRpc("/im_livechat/get_session", (req) => {
-        if (req.json().params.persisted) {
+    onRpc("/im_livechat/get_session", async (req) => {
+        const { params } = await req.json();
+        if (params.persisted) {
             step("persisted");
         }
     });
