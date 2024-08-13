@@ -9,7 +9,7 @@ import {
     waitUntil,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, patchTranslations } from "@web/../tests/web_test_helpers";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { setupEditor } from "./_helpers/editor";
@@ -478,5 +478,30 @@ test("toolbar buttons should have title attribute", async () => {
     const toolbar = await waitFor(".o-we-toolbar");
     for (const button of toolbar.querySelectorAll("button")) {
         expect(button).toHaveAttribute("title");
+    }
+});
+
+test("toolbar buttons should have title attribute with translated text", async () => {
+    // Retrieve toolbar buttons descriptions in English
+    const { editor } = await setupEditor("");
+    const titles = editor.resources.toolbarItems.map((item) => item.name);
+    editor.destroy();
+
+    // Patch translations to return "Translated" for these terms
+    patchTranslations(Object.fromEntries(titles.map((title) => [title, "Translated"])));
+
+    // Instantiate a new editor.
+    const { editor: postPatchEditor } = await setupEditor("<p>[abc]</p>");
+
+    // Check that every registered button has the result of the call to _t
+    postPatchEditor.resources.toolbarItems.forEach((item) => {
+        expect(item.name).toBe("Translated");
+    });
+
+    await waitFor(".o-we-toolbar");
+
+    // Check that every button has a title attribute with the translated description
+    for (const button of queryAll(".o-we-toolbar button")) {
+        expect(button).toHaveAttribute("title", "Translated");
     }
 });
