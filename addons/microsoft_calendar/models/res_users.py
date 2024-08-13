@@ -9,7 +9,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
 from odoo.loglevels import exception_to_unicode
-from odoo.addons.microsoft_account.models.microsoft_service import DEFAULT_MICROSOFT_TOKEN_ENDPOINT
+from odoo.addons.microsoft_account.models.microsoft_service import DEFAULT_MICROSOFT_TOKEN_ENDPOINT, _get_microsoft_client_secret
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import InvalidSyncToken
 from odoo.tools import str2bool
 
@@ -38,11 +38,11 @@ class User(models.Model):
     def _is_microsoft_calendar_valid(self):
         return self.sudo().microsoft_calendar_token_validity and self.sudo().microsoft_calendar_token_validity >= (fields.Datetime.now() + timedelta(minutes=1))
 
-    def _refresh_microsoft_calendar_token(self):
+    def _refresh_microsoft_calendar_token(self, service):
         self.ensure_one()
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        client_id = get_param('microsoft_calendar_client_id')
-        client_secret = get_param('microsoft_calendar_client_secret')
+        ICP_sudo = self.env['ir.config_parameter'].sudo()
+        client_id = self.env['microsoft.service']._get_microsoft_client_id('calendar')
+        client_secret = _get_microsoft_client_secret(ICP_sudo, 'calendar')
 
         if not client_id or not client_secret:
             raise UserError(_("The account for the Outlook Calendar service is not configured."))
@@ -157,12 +157,17 @@ class User(models.Model):
         self.env['ir.config_parameter'].sudo().set_param("microsoft_calendar_sync_paused", True)
 
     @api.model
+    def _has_setup_microsoft_credentials(self):
+        """ Checks if both Client ID and Client Secret are defined in the database. """
+        ICP_sudo = self.env['ir.config_parameter'].sudo()
+        client_id = self.env['microsoft.service']._get_microsoft_client_id('calendar')
+        client_secret = _get_microsoft_client_secret(ICP_sudo, 'calendar')
+        return bool(client_id and client_secret)
+
+    @api.model
     def check_calendar_credentials(self):
         res = super().check_calendar_credentials()
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        client_id = get_param('microsoft_calendar_client_id')
-        client_secret = get_param('microsoft_calendar_client_secret')
-        res['microsoft_calendar'] = bool(client_id and client_secret)
+        res['microsoft_calendar'] = self._has_setup_microsoft_credentials()
         return res
 
     def check_synchronization_status(self):

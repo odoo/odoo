@@ -21,7 +21,7 @@ class MicrosoftCalendarController(CalendarController):
             MicrosoftCal = request.env["calendar.event"]._get_microsoft_service()
 
             # Checking that admin have already configured Microsoft API for microsoft synchronization !
-            client_id = request.env['ir.config_parameter'].sudo().get_param('microsoft_calendar_client_id')
+            client_id = request.env['microsoft.service']._get_microsoft_client_id('calendar')
 
             if not client_id or client_id == '':
                 action_id = ''
