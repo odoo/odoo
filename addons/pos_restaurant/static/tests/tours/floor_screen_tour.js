@@ -1,7 +1,9 @@
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
-import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as ChromePos from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
+const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 import * as Utils from "@point_of_sale/../tests/tours/utils/common";
@@ -154,7 +156,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
 
             // Check that tables are unlinked automatically when the order is done
             FloorScreen.clickTable("5"),
-            ProductScreen.tableNameShown("4"),
+            Chrome.isTabActive("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
