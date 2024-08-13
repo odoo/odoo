@@ -115,6 +115,7 @@
         'views/snippets/s_cta_badge.xml',
         'views/snippets/s_unveil.xml',
         'views/snippets/s_image_hexagonal.xml',
+        'views/snippets/s_striped_center_top.xml',
         'views/new_page_template_templates.xml',
         'views/website_views.xml',
         'views/website_pages_views.xml',
