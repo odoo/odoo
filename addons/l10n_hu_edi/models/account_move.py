@@ -918,9 +918,16 @@ class AccountMove(models.Model):
                 })
 
             elif line.display_type == 'rounding':
-                atk_tax = self.env['account.tax'].search([('l10n_hu_tax_type', '=', 'ATK'), ('company_id', '=', self.company_id.id)], limit=1)
+                atk_tax = self.env['account.tax'].search(
+                    [
+                        ('type_tax_use', '=', 'sale'),
+                        ('l10n_hu_tax_type', '=', 'ATK'),
+                        ('company_id', '=', self.company_id.id),
+                    ],
+                    limit=1,
+                )
                 if not atk_tax:
-                    raise UserError(_('Please create an ATK (outside the scope of the VAT Act) type of tax!'))
+                    raise UserError(_('Please create a sales tax with type ATK (outside the scope of the VAT Act).'))
 
                 amount_huf = line.balance if self.company_id.currency_id == currency_huf else currency_huf.round(line.amount_currency * currency_rate)
                 line_values.update({
