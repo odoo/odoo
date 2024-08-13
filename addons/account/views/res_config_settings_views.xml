@@ -102,7 +102,7 @@
                             <setting id="default_setting_options"
                                      string="Default Sending Options"
                                      company_dependent="1"
-                                     help="Those options will be selected by default when clicking &quot;Print &amp; Send&quot; on invoices">
+                                     help="Those options will be selected by default when clicking &quot;Print &amp; Send&quot; on the first invoice of a customer, if the format is available">
                                 <div class="mt16">
                                     <div class="content-group" id="send_default">
                                         <div>
@@ -110,7 +110,7 @@
                                             <label for="invoice_is_download"/>
                                         </div>
                                         <div>
-                                            <field name="invoice_is_email"/>
+                                            <field name="invoice_is_email" help="We will send by email every available format."/>
                                             <label for="invoice_is_email"/>
                                         </div>
                                     </div>
