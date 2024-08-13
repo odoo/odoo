@@ -342,6 +342,11 @@ export async function start(options) {
 export async function startServer() {
     const { env } = await makeMockServer();
     pyEnv = env;
+    pyEnv["res.users"].write([serverState.userId], {
+        groups_id: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupId]])
+            .map(({ id }) => id),
+    });
     return env;
 }
 
