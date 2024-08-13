@@ -11,6 +11,8 @@ import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 
+session.websocket_worker_version ??= session.livechatData?.options?.websocket_worker_version;
+
 /**
  * @typedef LivechatRule
  * @property {"auto_popup"|"display_button_and_text"|undefined} [action]
