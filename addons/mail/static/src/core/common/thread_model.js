@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { pyToJsLocale } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef SuggestedRecipient
@@ -971,7 +972,9 @@ export class Thread extends Record {
         );
         this.store.chatHub.opened.delete(cw);
         this.store.chatHub.opened.unshift(cw);
-        cw.focus();
+        if (!isMobileOS()) {
+            cw.focus();
+        }
         this.state = "open";
         cw.notifyState();
         return cw;
