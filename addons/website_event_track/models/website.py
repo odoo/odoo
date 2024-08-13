@@ -57,3 +57,9 @@ class Website(models.Model):
             image.image = image.image.resize((512, 512))
             image.operationsCount += 1
             website.app_icon = base64.b64encode(image.image_quality(output_format='PNG'))
+
+    def _search_get_details(self, search_type, order, options):
+        result = super()._search_get_details(search_type, order, options)
+        if search_type in ['track', 'all']:
+            result.append(self.env['event.track']._search_get_detail(self, order, options))
+        return result

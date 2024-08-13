@@ -5,34 +5,18 @@
 <template id="events_search_box_input" name="Events search box">
     <t t-call="website.website_search_box_input">
         <t t-set="_classes" t-valuef="o_wevent_event_searchbar_form flex-grow-1 #{_classes}"/>
-        <t t-set="search_type" t-valuef="events"/>
-        <t t-set="action" t-valuef="/event"/>
+        <t t-set="search_type" t-value="_search_type"/>
+        <t t-set="action" t-value="action"/>
         <t t-set="display_description" t-valuef="true"/>
         <t t-set="display_detail" t-valuef="false"/>
         <t t-set="search" t-value="search or searches and searches['search']"/>
-        <t t-set="placeholder">Search an event...</t>
+        <t t-set="placeholder" t-value="_placeholder"/>
         <t t-foreach="searches" t-as="item">
             <input t-if="item != 'search' and item_value != 'all'" type="hidden"
                 t-att-name="item" t-att-value="item_value"/>
         </t>
         <t t-out="0"/>
     </t>
-</template>
-
-<template id="events_search_box" inherit_id="website.website_search_box" primary="True">
-    <xpath expr="//div[@role='search']" position="replace">
-        <form t-attf-class="o_wevent_event_searchbar_form w-100 flex-grow-1 #{_classes}"
-              t-att-action="action if action else '/event'" method="get">
-            <t t-set="search" t-value="search or _searches and _searches['search']"/>
-            <t t-set="placeholder" t-value="placeholder or _placeholder"/>
-            <t>$0</t>
-            <t t-foreach="_searches" t-as="search">
-                <input t-if="search != 'search' and search_value != 'all'" type="hidden"
-                    t-att-name="search" t-att-value="search_value"/>
-            </t>
-            <t t-out="0"/>
-        </form>
-    </xpath>
 </template>
 
 <!-- Timer widget -->
