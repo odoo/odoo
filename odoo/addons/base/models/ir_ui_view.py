@@ -1772,6 +1772,8 @@ actual arch.
                 pass
             elif any(klass in classes for klass in ('btn-group', 'btn-toolbar', 'btn-addr')):
                 pass
+            elif node.tag == 'field' and node.get('widget') == 'url':
+                pass
             else:
                 msg = ("A simili button must be in tag a/button/select or tag `input` "
                         "with type button/submit/reset or have class in "
