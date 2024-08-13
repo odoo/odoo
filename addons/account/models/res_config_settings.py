@@ -114,7 +114,9 @@ class ResConfigSettings(models.TransientModel):
     module_account_intrastat = fields.Boolean(string='Intrastat')
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_oss = fields.Boolean(string="EU Intra-community Distance Selling")
-    module_account_invoice_extract = fields.Boolean(string="Document Digitization")
+    module_account_extract = fields.Boolean(string="Document Digitization")
+    module_account_invoice_extract = fields.Boolean("Invoice Digitization", compute='_compute_module_account_invoice_extract', readonly=False, store=True)
+    module_account_bank_statement_extract = fields.Boolean("Bank Statement Digitization", compute='_compute_module_account_bank_statement_extract', readonly=False, store=True)
     module_snailmail_account = fields.Boolean(string="Snailmail")
     module_account_peppol = fields.Boolean(string='PEPPOL Invoicing')
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
@@ -260,6 +262,16 @@ class ResConfigSettings(models.TransientModel):
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template)
         self.has_accounting_entries = self.company_id.root_id._existing_accounting()
+
+    @api.depends('module_account_extract')
+    def _compute_module_account_invoice_extract(self):
+        for config in self:
+            config.module_account_invoice_extract = config.module_account_extract and self.env['ir.module.module']._get('account_invoice_extract').state == 'installed'
+
+    @api.depends('module_account_extract')
+    def _compute_module_account_bank_statement_extract(self):
+        for config in self:
+            config.module_account_bank_statement_extract = config.module_account_extract and self.env['ir.module.module']._get('account_invoice_extract').state == 'installed'
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):
