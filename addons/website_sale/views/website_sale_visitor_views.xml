@@ -92,11 +92,11 @@
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
         <field name="arch" type="xml">
-            <field name="page_ids" position="after">
+            <field name="country_id" position="after">
                 <field name="product_ids"/>
             </field>
             <xpath expr="//div[@id='o_page_count']" position="after">
-                 <div id="o_product_count">Visited Products<span class="float-end fw-bold"><field name="product_count"/></span></div>
+                 <div id="o_product_count">Visited Products<field name="product_count" class="float-end fw-bold"/></div>
             </xpath>
         </field>
     </record>

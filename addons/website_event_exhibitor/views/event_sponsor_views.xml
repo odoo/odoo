@@ -166,29 +166,19 @@
         <field name="model">event.sponsor</field>
         <field name="arch" type="xml">
             <kanban sample="1">
-                <field name="id"/>
-                <field name="url"/>
-                <field name="partner_email"/>
-                <field name="sponsor_type_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click overflow-hidden">
-                            <div class="ribbon ribbon-top-right" invisible="not is_published or not active">
-                                <span class="text-bg-success">Published</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <div class="w-25 d-flex justify-content-center">
-                                    <img t-att-src="kanban_image('event.sponsor', 'image_128', record.id.raw_value)" class="img-fluid" alt="Sponsor image"/>
-                                </div>
-                                <div class="w-75 d-flex flex-column ms-3">
-                                    <h1 class="o_kanban_record_title"><field name="name"/></h1>
-                                    <strong>Level: <field name="sponsor_type_id"/></strong>
-                                    <span class="text-muted"><field name="exhibitor_type"/></span>
-                                    <span class="o_text_overflow" t-out="record.partner_email.value"/>
-                                    <span class="o_text_overflow" t-out="record.url.value"/>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card" class="row g-0">
+                        <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not is_published or not active"/>
+                        <aside class="col-3 o_kanban_aside_full ms-1">
+                            <field name="image_128" widget="image" options="{'img_class': 'object-fit-contain'}" alt="Sponsor image"/>
+                        </aside>
+                        <main class="col ms-3">
+                            <field name="name" class="fw-bolder fs-5"/>
+                            <strong>Level: <field name="sponsor_type_id"/></strong>
+                            <field name="exhibitor_type" class="text-muted"/>
+                            <field name="partner_email" class="text-truncate"/>
+                            <field name="url" class="text-truncate"/>
+                        </main>
                     </t>
                 </templates>
             </kanban>

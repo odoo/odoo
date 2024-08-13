@@ -45,15 +45,10 @@
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
         <field name="arch" type="xml">
-            <field name="page_ids" position="after">
-                <field name="lead_count"/>
-            </field>
             <xpath expr="//div[@id='o_page_count']" position="after">
                 <div t-if="record.lead_count.raw_value" groups="sales_team.group_sale_salesman">
                     Leads / Opportunities
-                    <span class="float-end fw-bold">
-                        <field name="lead_count"/>
-                    </span>
+                    <field name="lead_count" class="float-end fw-bold"/>
                 </div>
             </xpath>
             <xpath expr="//div[@id='wvisitor_visited_page']" position="after">

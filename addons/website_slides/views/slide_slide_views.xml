@@ -203,67 +203,52 @@
                     records_draggable="0"
                     class="o_slide_kanban"
                     sample="1">
-                    <field name="id"/>
-                    <field name="channel_id"/>
-                    <field name="slide_category"/>
-                    <field name="user_id"/>
-                    <field name="image_128"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
-                                <t t-set="placeholder" t-value="'/website_slides/static/src/img/channel-training-default.jpg'"/>
-                                <t t-if="record.image_128.raw_value" t-set="image" t-value="kanban_image('slide.slide', 'image_128', record.id.raw_value, placeholder)"/>
-                                <t t-else="" t-set="image" t-value="'/website_slides/static/src/img/channel-training-default.jpg'"/>
-                                <div class="o_kanban_image_fill_left d-none d-md-block">
-                                    <img t-attf-src="#{image}" t-att-alt="record.id.value"/>
-                                    <img class="o_kanban_image_inner_pic"
-                                        t-att-alt="record.channel_id.value"
-                                        t-att-src="kanban_image('slide.channel', 'image_128', record.channel_id.raw_value)"/>
-                                </div>
-                                <div class="o_kanban_image d-md-none">
-                                    <img class="rounded-circle" t-attf-src="#{image}" t-att-alt="record.id.value"/>
-                                    <img class="o_kanban_image_inner_pic"
-                                        t-att-alt="record.channel_id.value"
-                                        t-att-src="kanban_image('slide.channel', 'image_128', record.channel_id.raw_value)"/>
-                                </div>
-                                <div class="oe_kanban_details d-flex flex-column">
-                                    <strong class="o_kanban_record_title oe_partner_heading"><field name="name"/></strong>
-                                    <div class="text-mutex"><field name="channel_id"/></div>
-                                    <div class="o_kanban_tags_section mb-2">
-                                        <span class="oe_kanban_list_many2many">
-                                            <field name="tag_ids" widget="many2many_tags"/>
-                                        </span>
+                        <t t-name="kanban-card" class="flex-row">
+                            <aside class="o_kanban_aside_full">
+                                <t t-if="record.image_128.raw_value">
+                                    <div class="o_kanban_image_fill position-relative w-100">
+                                        <field name="image_128" class="h-100" widget="image" options="{'img_class': 'object-fit-cover'}"/>
+                                        <field name="channel_id" class="o_website_slides_inner_image position-absolute bottom-0 end-0 bg-light" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain'}"/>
                                     </div>
-                                    <div class="o_kanban_record_bottom mt-auto d-flex justify-content-between align-items-end">
-                                        <span>
-                                            <t t-if="record.slide_category.raw_value == 'infographic'">
-                                                <i class="fa fa-file-image-o me-2" aria-label="Infographic" role="img" title="Infographic"/>
-                                            </t>
-                                            <t t-elif="record.slide_category.raw_value == 'article'">
-                                                <i class="fa fa-file-code-o me-2" aria-label="article" role="img" title="Article"/>
-                                            </t>
-                                            <t t-elif="record.slide_category.raw_value == 'video'">
-                                                <i class="fa fa-file-video-o me-2" aria-label="Video" role="img" title="Video"/>
-                                            </t>
-                                            <t t-elif="record.slide_category.raw_value == 'quiz'">
-                                                <i class="fa fa-flag me-2" aria-label="Quiz" role="img" title="Quiz"/>
-                                            </t>
-                                            <t t-else=""><i class="fa fa-file-pdf-o me-2" aria-label="Document" role="img" title="Document"/></t>
-                                            <field name="slide_category"/>
-                                        </span>
-                                        <span>
-                                            <i class="fa fa-clock-o me-2" aria-label="Duration" role="img" title="Duration"/><field name="completion_time" widget="float_time"/>
-                                        </span>
-                                        <span>
-                                            <i class="fa fa-question me-2" aria-label="Number of Questions" role="img" title="Number of Questions"/><field name="questions_count"/>
-                                        </span>
-                                        <span>
-                                            <i class="fa fa-eye me-2" aria-label="Views" role="img" title="Views"/><field name="total_views"/>
-                                        </span>
-                                        <field name="user_id" widget="many2one_avatar_user"/>
-                                    </div>
-                                </div>
-                            </div>
+                                </t>
+                                <t t-else="">
+                                    <img src="/website_slides/static/src/img/channel-training-default.jpg" class="w-100" options="{'img_class': 'object-fit-cover'}" alt="Default training image"/>
+                                </t>
+                            </aside>
+                            <main>
+                                <field name="name" class="fw-bolder fs-5"/>
+                                <field name="channel_id" class="text-mutex"/>
+                                <field name="tag_ids" widget="many2many_tags" class="mb-2"/>
+                                <footer class="mt-auto d-flex justify-content-between align-items-end fs-6 pt-0">
+                                    <span>
+                                        <t t-if="record.slide_category.raw_value == 'infographic'">
+                                            <i class="fa fa-file-image-o me-2" aria-label="Infographic" role="img" title="Infographic"/>
+                                        </t>
+                                        <t t-elif="record.slide_category.raw_value == 'article'">
+                                            <i class="fa fa-file-code-o me-2" aria-label="article" role="img" title="Article"/>
+                                        </t>
+                                        <t t-elif="record.slide_category.raw_value == 'video'">
+                                            <i class="fa fa-file-video-o me-2" aria-label="Video" role="img" title="Video"/>
+                                        </t>
+                                        <t t-elif="record.slide_category.raw_value == 'quiz'">
+                                            <i class="fa fa-flag me-2" aria-label="Quiz" role="img" title="Quiz"/>
+                                        </t>
+                                        <t t-else=""><i class="fa fa-file-pdf-o me-2" aria-label="Document" role="img" title="Document"/></t>
+                                        <field name="slide_category"/>
+                                    </span>
+                                    <span class="d-flex align-items-center">
+                                        <i class="fa fa-clock-o me-2" aria-label="Duration" role="img" title="Duration"/><field name="completion_time" widget="float_time"/>
+                                    </span>
+                                    <span>
+                                        <i class="fa fa-question me-2" aria-label="Number of Questions" role="img" title="Number of Questions"/><field name="questions_count"/>
+                                    </span>
+                                    <span>
+                                        <i class="fa fa-eye me-2" aria-label="Views" role="img" title="Views"/><field name="total_views"/>
+                                    </span>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                </footer>
+                            </main>
                         </t>
                     </templates>
                 </kanban>

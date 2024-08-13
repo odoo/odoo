@@ -17,7 +17,7 @@
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
         <field name="arch" type="xml">
-            <field name="page_ids" position="after">
+            <field name="country_id" position="after">
                 <field name="mobile" widget="phone"/>
             </field>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
