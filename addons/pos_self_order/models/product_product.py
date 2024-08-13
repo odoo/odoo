@@ -73,15 +73,6 @@ class ProductProduct(models.Model):
             'fields': fields,
         }
 
-    def _get_name(self) -> str:
-        """
-        Returns the name of the product without the code.
-        ex: product_sudo.display_name is '[FURN_7888] Desk Stand with Screen (Red)'
-        :return: 'Desk Stand with Screen (Red)' (we remove the [FURN_7888] part)
-        """
-        self.ensure_one()
-        return self.with_context(display_default_code=False).display_name
-
     def _filter_applicable_attributes(self, attributes_by_ptal_id: Dict) -> List[Dict]:
         """
         The attributes_by_ptal_id is a dictionary that contains all the attributes that have

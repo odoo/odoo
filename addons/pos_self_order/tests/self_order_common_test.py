@@ -44,6 +44,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
             'taxes_id': False,
             'available_in_pos': True,
             'pos_categ_ids': [(4, pos_categ_misc.id)],
+            'default_code': '12345',
         })
         cls.fanta = cls.env['product.product'].create({
             'name': 'Fanta',

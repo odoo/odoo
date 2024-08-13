@@ -6,6 +6,13 @@ export function clickProduct(productName) {
     };
 }
 
+export function checkReferenceNotInProductName(productName, reference) {
+    return {
+        content: `Check product label has '${productName}' and not ${reference}`,
+        trigger: `.self_order_product_card span:contains('${productName}'):not(:contains("${reference}"))`,
+    };
+}
+
 export function clickCancel() {
     return [
         {
