@@ -41,7 +41,7 @@
                     name="product_quantity"
                     type="number"
                     t-att-value="this.props.quantity"
-                    t-on-change="setQuantity"/>
+                    t-on-input="debouncedSetQuantity"/>
                 <button
                     class="btn btn-secondary d-none d-md-inline-block"
                     aria-label="Add one"

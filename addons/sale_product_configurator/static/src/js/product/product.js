@@ -2,6 +2,7 @@
 
 import { Component } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
+import { useDebounced } from "@web/core/utils/timing";
 import {
     ProductTemplateAttributeLine as PTAL
 } from "../product_template_attribute_line/product_template_attribute_line";
@@ -25,6 +26,10 @@ export class Product extends Component {
         parent_product_tmpl_ids: { type: Array, element: Number, optional: true },
     };
 
+    setup() {
+        this.debouncedSetQuantity = useDebounced(this.setQuantity, 300);
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -43,6 +48,15 @@ export class Product extends Component {
      */
     setQuantity(event) {
         this.env.setQuantity(this.props.product_tmpl_id, parseFloat(event.target.value));
+    }
+
+    /**
+     * Set the quantity of the product in the state with debouncing.
+     *
+     * @param {Event} event
+     */
+    debouncedSetQuantity(event) {
+        this.debouncedSetQuantity(event);
     }
 
     /**
