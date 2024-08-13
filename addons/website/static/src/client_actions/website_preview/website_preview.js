@@ -300,11 +300,12 @@ export class WebsitePreview extends Component {
      * @private
      */
     _isTopWindowURL({ host, pathname }) {
-        const backendRoutes = ['/web', '/web/session/logout'];
+        const backendRoutes = ['/web', '/web/session/logout', '/odoo'];
         return host !== window.location.host
             || (pathname
                 && (backendRoutes.includes(pathname)
                     || pathname.startsWith('/@/')
+                    || pathname.startsWith('/odoo/')
                     || pathname.startsWith('/web/content/')
                     // This is defined here to avoid creating a
                     // website_documents module for just one patch.
