@@ -3619,9 +3619,7 @@ class AccountMove(models.Model):
                    - new: whether the invoice is newly created
                    returns True if was able to process the invoice
         """
-        if file_data['type'] in ('pdf', 'binary'):
-            return lambda *args: False
-        return
+        return None
 
     def _extend_with_attachments(self, attachments, new=False):
         """Main entry point to extend/enhance invoices with attachments.
@@ -3693,12 +3691,15 @@ class AccountMove(models.Model):
                 continue
 
             decoder = (current_invoice or current_invoice.new(self.default_get(['move_type', 'journal_id'])))._get_edi_decoder(file_data, new=new)
-            if decoder:
+            if decoder or file_data['type'] in ('pdf', 'binary'):
                 try:
                     with self.env.cr.savepoint():
                         invoice = current_invoice or self.create({})
                         existing_lines = invoice.invoice_line_ids
-                        success = decoder(invoice, file_data, new)
+                        if not decoder and file_data['type'] in ('pdf', 'binary'):
+                            success = False
+                        else:
+                            success = decoder(invoice, file_data, new)
 
                         if success or file_data['type'] == 'pdf':
                             (invoice.invoice_line_ids - existing_lines).is_imported = True
