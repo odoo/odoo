@@ -1,6 +1,7 @@
 {
     'name': 'Indian - TDS',
     'version': '1.0',
+    'countries': ['in'],
     'description': """
         Support for Indian TDS (Tax Deducted at Source).
     """,
