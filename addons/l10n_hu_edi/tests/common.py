@@ -4,7 +4,6 @@ from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 import datetime
-from unittest import mock
 
 
 class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
@@ -293,6 +292,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         invoice = self.create_invoice_simple()
         invoice.action_post()
         send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+        self.assertFalse(invoice._l10n_hu_edi_check_invoices())
         send_and_print.action_send_and_print()
         cancel_wizard = self.env['l10n_hu_edi.cancellation'].with_context({"default_invoice_id": invoice.id}).create({
             'code': 'ERRATIC_DATA',
