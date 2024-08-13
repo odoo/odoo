@@ -32,7 +32,7 @@ export class BarcodeVideoScanner extends Component {
      */
     setup() {
         this.videoPreviewRef = useRef("videoPreview");
-        this.interval = null;
+        this.detectorTimeout = null;
         this.stream = null;
         this.detector = null;
         this.overlayInfo = {};
@@ -86,12 +86,12 @@ export class BarcodeVideoScanner extends Component {
                 const settings = track.getSettings();
                 this.zoomRatio = Math.min(divWidth / settings.width, divHeight / settings.height);
             }
-            this.interval = setInterval(this.detectCode.bind(this), 100);
+            this.detectorTimeout = setTimeout(this.detectCode.bind(this), 100);
         });
 
         onWillUnmount(() => {
-            clearInterval(this.interval);
-            this.interval = null;
+            clearTimeout(this.detectorTimeout);
+            this.detectorTimeout = null;
             if (this.stream) {
                 this.stream.getTracks().forEach((track) => track.stop());
                 this.stream = null;
@@ -129,11 +129,10 @@ export class BarcodeVideoScanner extends Component {
      * Attempt to detect codes in the current camera preview's frame
      */
     async detectCode() {
-        if (this.scanPaused) {
-            return;
-        }
+        let barcodeDetected = false;
         try {
             const codes = await this.detector.detect(this.videoPreviewRef.el);
+            barcodeDetected = Boolean(codes.length);
             for (const code of codes) {
                 if (!this.isZXingBarcodeDetector() && this.overlayInfo.x && this.overlayInfo.y) {
                     const { x, y, width, height } = this.adaptValuesWithRatio(code.boundingBox);
@@ -152,13 +151,17 @@ export class BarcodeVideoScanner extends Component {
         } catch (err) {
             this.props.onError(err);
         }
+        if (!barcodeDetected || !this.props.delayBetweenScan) {
+            this.detectorTimeout = setTimeout(this.detectCode.bind(this), 100);
+        }
     }
 
     barcodeDetected(barcode) {
         if (this.props.delayBetweenScan && !this.scanPaused) {
             this.scanPaused = true;
-            setTimeout(() => {
+            this.detectorTimeout = setTimeout(() => {
                 this.scanPaused = false;
+                this.detectorTimeout = setTimeout(this.detectCode.bind(this), 100);
             }, this.props.delayBetweenScan);
         }
         this.props.onResult(barcode);
