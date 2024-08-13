@@ -855,6 +855,7 @@ class Website(models.Model):
             fallback_create_missing_industry_image('s_image_hexagonal_default_image_1', 's_company_team_image_1')
             fallback_create_missing_industry_image('s_accordion_image_default_image', 's_image_text_default_image')
             fallback_create_missing_industry_image('s_pricelist_boxed_default_background', 's_product_catalog_default_image')
+            fallback_create_missing_industry_image('s_image_title_default_image', 's_cover_default_image')
 
         except Exception:
             pass
