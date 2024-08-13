@@ -609,6 +609,8 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
+"<span>Múi giờ của nhân viên khác với bạn! Tại đây, ngày và giờ được hiển thị theo múi giờ của nhân viên</span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -956,7 +958,7 @@ msgstr "Đơn phân bổ"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approval"
-msgstr ""
+msgstr "Phê duyệt phân bổ lần hai"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
@@ -972,12 +974,16 @@ msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to "
 "validate it."
 msgstr ""
+"Để có thể được xác thực, Phân bổ phải có trạng thái là \"Cần phê duyệt\" "
+"hoặc \"Phê duyệt lần hai\"."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
+"Phân bổ phải được xác nhận (\"Cần phê duyệt\") trước khi có thể được phê "
+"duyệt."
 
 #. module: hr_holidays
 #. odoo-python
@@ -997,12 +1003,16 @@ msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
 msgstr ""
+"Để có thể bị từ chối, đơn phân bổ phải được xác nhận, phê duyệt lần hai hoặc"
+" xác thực."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
 msgstr ""
+"Để có thể đặt lại thành \"Cần phê duyệt\", Phân bổ phải có trạng thái \"Bị "
+"từ chối\"."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1207,6 +1217,8 @@ msgid ""
 "Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
+"Việc chia nghỉ phép tự động trong quá trình tạo hàng loạt không khả dụng đối với nghỉ phép trùng lặp tính theo giờ. Nghỉ phép xung đột:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1547,7 +1559,7 @@ msgstr "Ảnh bìa"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Create Allocations"
-msgstr ""
+msgstr "Tạo phân bổ"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
@@ -2050,31 +2062,31 @@ msgstr "Hoạt động trong tương lai"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate Time Off"
-msgstr ""
+msgstr "Tạo nghỉ phép"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Generate time off allocations for multiple employees"
-msgstr ""
+msgstr "Tạo phân bổ nghỉ phép cho nhiều nhân viên"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate time off for multiple employees"
-msgstr ""
+msgstr "Tạo nghỉ phép cho nhiều nhân viên"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "Generated Allocations"
-msgstr ""
+msgstr "Phân bổ đã tạo"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
 msgid "Generated Time Off"
-msgstr ""
+msgstr "Nghỉ phép đã tạo"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2292,7 +2304,7 @@ msgstr "Là người theo dõi"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_name_custom
 msgid "Is Name Custom"
-msgstr ""
+msgstr "Tên tùy chỉnh hay không"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
@@ -2486,7 +2498,7 @@ msgstr "Đánh dấu là nháp"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Mark as ready to approve"
-msgstr ""
+msgstr "Đặt là sẵn sàng phê duyệt"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
@@ -2599,7 +2611,7 @@ msgstr "Buổi sáng"
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_generate_multi_wizard
 msgid "Multiple Requests"
-msgstr ""
+msgstr "Nhiều đơn"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
@@ -3049,7 +3061,7 @@ msgstr "In"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to cancel an approved time off"
-msgstr ""
+msgstr "Cung cấp lý do để huỷ đơn nghỉ phép đã phê duyệt"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -3059,7 +3071,7 @@ msgstr "Công khai"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
 msgid "Public Holiday Included"
-msgstr ""
+msgstr "Gồm ngày lễ"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3075,6 +3087,7 @@ msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
 msgstr ""
+"Ngày lễ phải được tính vào thời gian nghỉ phép khi nộp đơn xin nghỉ phép"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3319,7 +3332,7 @@ msgstr "Hiển thị ngày của tháng thứ hai"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Second approval request for %(allocation_type)s"
-msgstr ""
+msgstr "Yêu cầu phê duyệt lần hai cho %(allocation_type)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3347,6 +3360,10 @@ msgid ""
 "            #     - Approved by Time Off Officer: The employee's request need to be manually approved\n"
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
+"Lựa chọn cấp độ phê duyệt cần thiết cho đơn của nhân viên\n"
+"            #    - Không cần xác thực: Đơn của nhân viên được tự động phê duyệt.\n"
+"            #    - Phê duyệt bởi người phụ trách nghỉ phép: Đơn của nhân viên cần được người phụ trách\n"
+"            #      nghỉ phép, Người phê duyệt của nhân viên hoặc cả hai phê duyệt thủ công."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3429,6 +3446,8 @@ msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
 msgstr ""
+"Một số kế hoạch tích lũy mà bạn muốn xóa được liên kết với một phân bổ đang "
+"tồn tại. Trước tiên, hãy xóa hoặc hủy chúng."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3757,6 +3776,8 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
 msgstr ""
+"Phần này được điền tự động bởi người dùng xác thực phân bổ ở cấp độ thứ hai "
+"(Nếu loại nghỉ phép cần xác thực lần hai)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -4494,6 +4515,9 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
+"Bạn không thể sửa đổi cài đặt 'Bao gồm ngày lễ' vì một hoặc nhiều đơn nghỉ "
+"phép thuộc loại nghỉ phép đó trùng với ngày lễ, nghĩa là thay đổi này sẽ ảnh"
+" hưởng đến số ngày còn lại của những nhân viên đó."
 
 #. module: hr_holidays
 #. odoo-python

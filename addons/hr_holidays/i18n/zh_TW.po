@@ -36,7 +36,7 @@ msgstr " 小時"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid " to %(date_to_utc)s"
-msgstr ""
+msgstr " 至 %(date_to_utc)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -611,6 +611,8 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
+"<span>該員工的時區與你不同！此處的日期及時間，以員工的時區顯示</span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -965,13 +967,13 @@ msgstr "分配類別"
 msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to "
 "validate it."
-msgstr ""
+msgstr "分配的狀態必須為「待批准」或「第二重批准」，才可進行驗證。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
-msgstr ""
+msgstr "分配必須經過確認（「待批准」），才可進行批准。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -990,13 +992,13 @@ msgstr "分配於"
 msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
-msgstr ""
+msgstr "分配請求必須經過確認、第二重批准，或完成驗證，才可拒絕。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
-msgstr ""
+msgstr "分配的狀態必須為「已拒絕」，才可重設為「待批准」。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1201,6 +1203,8 @@ msgid ""
 "Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
+"以小時為單位設立的重疊休假，不會在大批產生休假時，進行自動休假分割。衝突的休假：\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2019,19 +2023,19 @@ msgstr "未來活動"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate Time Off"
-msgstr ""
+msgstr "產生休假"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Generate time off allocations for multiple employees"
-msgstr ""
+msgstr "為多名員工產生休假分配"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate time off for multiple employees"
-msgstr ""
+msgstr "為多名員工產生休假"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2447,7 +2451,7 @@ msgstr "收回申請"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Mark as ready to approve"
-msgstr ""
+msgstr "標記為準備好進行批准"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
@@ -3000,7 +3004,7 @@ msgstr "列印"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to cancel an approved time off"
-msgstr ""
+msgstr "交代取消已獲批准休假的理由"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -3025,7 +3029,7 @@ msgstr "公眾假日"
 msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
-msgstr ""
+msgstr "申請休假時，公眾假期也應計入休假長度"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3270,7 +3274,7 @@ msgstr "第二個月日顯示"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Second approval request for %(allocation_type)s"
-msgstr ""
+msgstr "%(allocation_type)s 第二重批准請求"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3298,6 +3302,10 @@ msgid ""
 "            #     - Approved by Time Off Officer: The employee's request need to be manually approved\n"
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
+"選擇員工申請休假時所需的批准級別\n"
+"            #     - 無需驗證：員工的申請會自動獲得批准。\n"
+"            #     - 由休假主管批准：員工的申請需要由休假主管手動批准。\n"
+"            #       由休假主管、員工的主管，或兩者共同批准。"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3376,7 +3384,7 @@ msgstr "部份休假未能連結至任何分配。要查看那些休假，"
 msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
-msgstr ""
+msgstr "你嘗試刪除的累積計劃，有部份已連結至現有休假分配。請先刪除或取消它們。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3615,6 +3623,9 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"建立分配請求時，狀態為「待批准」。\n"
+"若經理拒絕分配請求，狀態為「已拒絕」。\n"
+"若經理批准分配請求，狀態為「已批准」。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
@@ -3686,7 +3697,7 @@ msgstr "此區域由驗證分配的用戶自動填入"
 msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
-msgstr ""
+msgstr "此區域由第二級驗證分配的使用者自動填入（如果休假類型需要第二級驗證）"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -4398,6 +4409,8 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
+"你不可修改「包括公眾假期」設定，因為該休假類型的一個或多個休假                         "
+"與公眾假期重疊，意味此更改將影響該些員工的剩餘休假數目。"
 
 #. module: hr_holidays
 #. odoo-python

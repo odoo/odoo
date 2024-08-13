@@ -246,6 +246,16 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h4>\n"
+"        Xin chào <t t-out=\"object.partner_id.name or 'Valuable Customer'\">Azure Interior</t>,\n"
+"    </h4>\n"
+"    <p style=\"font-size: 13px;\">\n"
+"Chúng tôi có chương trình khuyến mãi dành riêng cho bạn, nhưng có giới hạn thời gian. Hãy tận hưởng chiết khấu 20% giá cố định cho lần mua hàng tiếp theo với chúng tôi.\n"
+"Chúng tôi rất mong được tiếp tục đồng hành cùng bạn.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_pos_kanban
@@ -278,6 +288,9 @@ msgid ""
 "             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
 "</p>"
 msgstr ""
+"<p>Xin chào %(client_name)s,<br/>Đây là Biên lai của bạn %(is_invoiced)s cho"
+"             %(pos_name)s với số tiền là %(amount)s từ %(company_name)s. "
+"</p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1594,7 +1607,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 msgid "Choose how the URL to the portal will be print on the receipt."
-msgstr ""
+msgstr "Chọn cách in URL tới cổng thông tin trên biên lai."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1692,7 +1705,7 @@ msgstr "Ngày đóng"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_closing_entry_by_product
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Closing Entry by product"
-msgstr ""
+msgstr "Bút toán đóng phiên theo sản phẩm"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_notes
@@ -1805,7 +1818,7 @@ msgstr "Giá combo"
 #. odoo-python
 #: code:addons/point_of_sale/models/product.py:0
 msgid "Combo products cannot contains variants or attributes"
-msgstr ""
+msgstr "Sản phẩm combo không thể chứa biến thể hoặc thuộc tính"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
@@ -1819,6 +1832,7 @@ msgid ""
 "Combos allows to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
+"Combo cho phép chọn một sản phẩm trong số nhiều lựa chọn cho mỗi danh mục."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_company
@@ -2627,6 +2641,8 @@ msgid ""
 "Display the breakdown of sales lines by product in the automatically "
 "generated closing entry."
 msgstr ""
+"Hiển thị sự phân chia các dòng đơn bán hàng theo sản phẩm trong bút toán "
+"đóng phiên được tạo tự động."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pricer
@@ -4004,7 +4020,7 @@ msgstr "Tên"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Need an invoice for your purchase ?"
-msgstr ""
+msgstr "Bạn cần hoá đơn cho đơn mua hàng của mình?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5061,7 +5077,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 msgid "Please enter a valid email address"
-msgstr ""
+msgstr "Vui lòng nhập địa chỉ email hợp lệ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -5141,7 +5157,7 @@ msgstr "Vui lòng quét mã QR bằng %s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
-msgstr ""
+msgstr "Vui lòng chọn phương thức thanh toán"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5354,7 +5370,7 @@ msgstr "Nhóm người dùng điểm bán hàng"
 #. module: point_of_sale
 #: model:mail.template,name:point_of_sale.pos_email_marketing_template
 msgid "Point of Sale: Marketing"
-msgstr ""
+msgstr "Điểm bán hàng: Marketing"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
@@ -5648,6 +5664,8 @@ msgid ""
 "Print information on the receipt to allow the costumer to easily request the"
 " invoice anytime, from Odoo's portal"
 msgstr ""
+"In thông tin trên biên lai để khách hàng có thể dễ dàng yêu cầu hóa đơn bất "
+"cứ lúc nào, từ cổng thông tin Odoo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5655,6 +5673,8 @@ msgid ""
 "Print information on the receipt to allow the customer to easily request the"
 " invoice anytime, from Odoo's portal."
 msgstr ""
+"In thông tin trên biên lai để khách hàng có thể dễ dàng yêu cầu hóa đơn bất "
+"cứ lúc nào, từ cổng thông tin Odoo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5941,7 +5961,7 @@ msgstr "Mã QR"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_ticket_portal_url_display_mode__qr_code_and_url
 msgid "QR code + URL"
-msgstr ""
+msgstr "Mã QR + URL"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6524,7 +6544,7 @@ msgstr "Giao diện tự gọi đồ không bị ảnh hưởng."
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_use_ticket_qr_code
 msgid "Self-service invoicing"
-msgstr ""
+msgstr "Hoá đơn tự phục vụ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6547,7 +6567,7 @@ msgstr "Gửi email"
 #. module: point_of_sale
 #: model:mail.template,description:point_of_sale.pos_email_marketing_template
 msgid "Send Marketing Emails from Point of Sale"
-msgstr ""
+msgstr "Gửi Email marketing từ Điểm bán hàng"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8411,6 +8431,8 @@ msgid ""
 "Versatile cotton hoodie with an adjustable drawstring hood and front zipper "
 "closure."
 msgstr ""
+"Áo hoodie cotton đa năng kèm mũ có dây rút có thể điều chỉnh và khóa kéo "
+"phía trước."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_ui_view
@@ -8751,6 +8773,8 @@ msgid ""
 "You must set the iot box's IP address to use an IoT-connected screen. You'll"
 " find the field under the 'IoT Box' option."
 msgstr ""
+"Bạn phải thiết lập địa chỉ IP của hộp IoT để sử dụng màn hình được kết nối "
+"IoT. Bạn sẽ tìm thấy trường này bên dưới tùy chọn 'Hộp IoT'."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8854,7 +8878,7 @@ msgstr "VD: nước ngọt"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "e.g. Starter - Meal - Desert"
-msgstr ""
+msgstr "VD: Món khai vị - Món chính - Món tráng miệng"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -9010,3 +9034,4 @@ msgstr ""
 msgid ""
 "{{ state.mode === 'email' ? 'e.g. john.doe@mail.com' : 'e.g. 0123456789' }}"
 msgstr ""
+"{{ state.mode === 'email' ? 'VD: john.doe@mail.com' : 'VD: 0123456789' }}"

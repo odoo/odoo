@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-24 12:25+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -643,6 +643,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        \n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)様\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様\n"
+"        </t>\n"
+"        <br><br>\n"
+"        以下に請求書をお送りいたします。\n"
+"        <t t-if=\"object.name\">\n"
+"            請求書 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            請求書\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (参照: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        金額 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        請求元 <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            この請求書は既に支払済です。\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            お早めにお振込みくださいますようお願い申し上げます。\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                お支払いの際には以下をご使用下さい: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    アカウント <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            PS: タイムシートを <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">ポータルより</a>ご覧になれます。\n"
+"        </t>\n"
+"        <br><br>\n"
+"        ご質問がございましたら、お気軽にお問合せ下さい。\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -2212,7 +2261,7 @@ msgstr "修正仕訳{link} {percent}%% が以下の金額 {amount} から {new_d
 #. module: account
 #: model:res.groups,name:account.group_account_basic
 msgid "Advanced Billing"
-msgstr ""
+msgstr "高度な請求"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -6518,7 +6567,7 @@ msgstr "会計情報"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Fiscal Localization"
-msgstr "会計ローカリゼーション"
+msgstr "会計ローカライゼーション"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11499,7 +11548,7 @@ msgstr "認識日"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
-msgstr ""
+msgstr "この会計ポジションに基づき、全ての税および勘定科目を計算し直します。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -13849,7 +13898,7 @@ msgstr "この配分明細に属する会社。"
 msgid ""
 "The country code of the foreign VAT number does not match any country in the"
 " group."
-msgstr ""
+msgstr " 外国VAT番号の国コードがグループ内のどの国とも一致しません。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -14902,7 +14951,7 @@ msgstr "この定期的な仕訳は当日を含めこの日付まで記帳され
 msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
-msgstr ""
+msgstr "これにより、現在選択されている会計ポジションに基づき、全ての税と勘定科目が更新されます。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15497,7 +15546,7 @@ msgstr "アップデートのみ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Update Taxes and Accounts"
-msgstr ""
+msgstr "税と勘定科目を更新する"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15903,7 +15952,7 @@ msgid ""
 "Please go to Account Configuration and select or install a fiscal localization."
 msgstr ""
 "この会社に勘定科目一覧表が見つかりませんでした。設定する必要があります。\n"
-"勘定科目設定に移動し、会計ローカリゼーションを選択、又はインストールしてください。"
+"勘定科目設定に移動し、会計ローカライゼーションを選択、又はインストールしてください。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -16280,7 +16329,7 @@ msgstr "インバウンド仕訳とアウトバウンド仕訳の支払いを同
 msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
-msgstr ""
+msgstr "仕訳をドラフトにリセットすることはできません。取消を申請する必要があります。"
 
 #. module: account
 #. odoo-python
@@ -16319,7 +16368,7 @@ msgstr "仕訳で銀行勘定として設定されている勘定の種類を受
 msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
-msgstr ""
+msgstr "選択した国グループ以外の国で会計ポジションを作成することはできません。"
 
 #. module: account
 #. odoo-python

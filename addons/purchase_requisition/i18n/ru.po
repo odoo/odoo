@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.2alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-12 10:37+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2024-07-16 09:15+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: purchase_requisition
@@ -288,7 +290,7 @@ msgstr "Компания"
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 msgid "Compare Order Lines"
-msgstr "Сравните строки заказов"
+msgstr "Сравните позиции заказов"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
@@ -305,17 +307,22 @@ msgstr "Подтвердить"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__in_progress
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Confirmed"
-msgstr "Подтверждено"
+msgstr "Подтверждена"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Пересчет между единицами измерения может произойти только в том случае, если они принадлежат к одной и той же категории. Пересчет будет осуществляться на основе коэффициентов."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Пересчет между единицами измерения может произойти только в том случае, если"
+" они принадлежат к одной и той же категории. Пересчет будет осуществляться "
+"на основе коэффициентов."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid "Copy Products"
-msgstr "Копировальная продукция"
+msgstr "Копировать продукты"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
@@ -498,7 +505,8 @@ msgstr "Значок, обозначающий исключение Дела."
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Если флажок установлен, значит, новые сообщения требуют вашего внимания."
+msgstr ""
+"Если флажок установлен, значит, новые сообщения требуют вашего внимания."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
@@ -508,13 +516,25 @@ msgstr "Если отмечено, некоторые сообщения име�
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
-msgid "If the chosen vendor or if any of the products in the original PO have a blocking warning then we prevent creation of alternative PO. This is because normally these fields are cleared w/warning message within form view, but we cannot recreate that in this case."
-msgstr "Если выбранный поставщик или любой из продуктов в исходном PO имеет блокирующее предупреждение, мы не можем создать альтернативный PO. Это происходит потому, что обычно эти поля очищаются с сообщением о предупреждении в представлении формы, но мы не можем воссоздать это в данном случае."
+msgid ""
+"If the chosen vendor or if any of the products in the original PO have a "
+"blocking warning then we prevent creation of alternative PO. This is because"
+" normally these fields are cleared w/warning message within form view, but "
+"we cannot recreate that in this case."
+msgstr ""
+"Если выбранный поставщик или любой из продуктов в исходном PO имеет "
+"блокирующее предупреждение, мы не можем создать альтернативный PO. Это "
+"происходит потому, что обычно эти поля очищаются с сообщением о "
+"предупреждении в представлении формы, но мы не можем воссоздать это в данном"
+" случае."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
-msgid "If this is checked, the product quantities of the original PO will be copied"
-msgstr "Если этот флажок установлен, будут скопированы количества продуктов из оригинального PO"
+msgid ""
+"If this is checked, the product quantities of the original PO will be copied"
+msgstr ""
+"Если этот флажок установлен, будут скопированы количества продуктов из "
+"оригинального PO"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -599,7 +619,7 @@ msgstr "Новые соглашения"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr "Новое предложение"
+msgstr "Новое коммерческое предложение"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_calendar_event_id
@@ -758,7 +778,7 @@ msgstr "Группа покупок"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 msgid "Purchase Order"
-msgstr "Заказа на покупку"
+msgstr "Заказ на покупку"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
@@ -768,7 +788,7 @@ msgstr "Позиция заказа на покупку"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Purchase Order Lines"
-msgstr "Строки заказа на поставку"
+msgstr "Позиции заказа на поставку"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__purchase_ids
@@ -784,7 +804,7 @@ msgstr "Заказы на поставку с заявкой"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
-msgstr "Представитель по закупкам"
+msgstr "Ответственный за закупку"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -846,7 +866,7 @@ msgstr "Ссылка:"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr "Запрос предложения"
+msgstr "Запрос на коммерческое предложение"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -916,8 +936,12 @@ msgstr "Последовательность"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
-msgid "Set active to false to hide the Purchase Agreement Types without removing it."
-msgstr "Установите значение active на false, чтобы скрыть тип договора купли-продажи, не удаляя его."
+msgid ""
+"Set active to false to hide the Purchase Agreement Types without removing "
+"it."
+msgstr ""
+"Установите значение active на false, чтобы скрыть тип договора купли-"
+"продажи, не удаляя его."
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -927,7 +951,9 @@ msgstr "Устанавливать количество вручную"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Показать все записи, у которых дата следующего действия наступает до сегодняшнего дня"
+msgstr ""
+"Показать все записи, у которых дата следующего действия наступает до "
+"сегодняшнего дня"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -938,8 +964,11 @@ msgstr "Некоторые не очищены"
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
-msgid "Some quantities were not cleared because their status is not a RFQ status."
-msgstr "Некоторые количества не были очищены, поскольку их статус не является статусом RFQ."
+msgid ""
+"Some quantities were not cleared because their status is not a RFQ status."
+msgstr ""
+"Некоторые количества не были очищены, поскольку их статус не является "
+"статусом RFQ."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -997,7 +1026,8 @@ msgstr "Условия и положения"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
-msgid "The expected and scheduled delivery date where all the products are received"
+msgid ""
+"The expected and scheduled delivery date where all the products are received"
 msgstr "Ожидаемая и запланированная дата поставки всех продуктов получены"
 
 #. module: purchase_requisition
@@ -1008,8 +1038,14 @@ msgstr "Оригинальный PO, для которого создается 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-msgid "The vendor you have selected or at least one of the products you are copying from the original order has a blocking warning on it and cannot be selected to create an alternative."
-msgstr "Выбранный вами поставщик или хотя бы один из продуктов, которые вы копируете из исходного заказа, имеет предупреждение о блокировке и не может быть выбран для создания альтернативы."
+msgid ""
+"The vendor you have selected or at least one of the products you are copying"
+" from the original order has a blocking warning on it and cannot be selected"
+" to create an alternative."
+msgstr ""
+"Выбранный вами поставщик или хотя бы один из продуктов, которые вы копируете"
+" из исходного заказа, имеет предупреждение о блокировке и не может быть "
+"выбран для создания альтернативы."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1020,11 +1056,16 @@ msgstr "Нет никаких количеств, которые нужно оч
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
-msgid "There is already an open blanket order for this supplier. We suggest you complete this open blanket order, instead of creating a new one."
-msgstr "Для этого поставщика уже есть открытый бланкетный заказ. Мы предлагаем вам завершить этот открытый бланкетный заказ, а не создавать новый."
+msgid ""
+"There is already an open blanket order for this supplier. We suggest you "
+"complete this open blanket order, instead of creating a new one."
+msgstr ""
+"Для этого поставщика уже есть открытый бланкетный заказ. Мы предлагаем вам "
+"завершить этот открытый бланкетный заказ, а не создавать новый."
 
 #. module: purchase_requisition
 #. odoo-python
+#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 msgid "This is a blocking warning!\n"
 msgstr "Это предупреждение о блокировке!\n"
@@ -1074,7 +1115,7 @@ msgstr "Цена за единицу"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "UoM"
-msgstr "Ед. изм."
+msgstr "UoM"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
@@ -1104,7 +1145,7 @@ msgstr "VAT_DEMO"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr "Проверка"
+msgstr "Подтвердить"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__vendor_id
@@ -1167,13 +1208,19 @@ msgstr "А как насчет альтернативных запросов к�
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
-msgid "Whether or not this purchase order is linked to another purchase order as an alternative."
-msgstr "Связан ли данный заказ на поставку с другим заказом на поставку в качестве альтернативы."
+msgid ""
+"Whether or not this purchase order is linked to another purchase order as an"
+" alternative."
+msgstr ""
+"Связан ли данный заказ на поставку с другим заказом на поставку в качестве "
+"альтернативы."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_alternative_warning
 msgid "Wizard in case PO still has open alternative requests for quotation"
-msgstr "Мастер на случай, если у ДО все еще есть открытые альтернативные запросы котировок"
+msgstr ""
+"Мастер в случае, если у заказа на поставку остаются открытые альтернативные "
+"запросы котировок"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_create_alternative
@@ -1190,10 +1237,14 @@ msgstr "Вы можете удалять только черновики или 
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm agreement '%s' because there is no product line."
-msgstr "Вы не можете подтвердить соглашение \"% s\", потому что нет линейки продуктов."
+msgstr ""
+"Вы не можете подтвердить соглашение \"% s\", потому что нет линейки "
+"продуктов."
 
 #. module: purchase_requisition
 #. odoo-python
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm the blanket order without price."
 msgstr "Вы не можете подтвердить общий заказ без цены."

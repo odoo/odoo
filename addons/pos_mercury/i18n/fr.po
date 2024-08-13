@@ -1,29 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_mercury
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2024-07-15 18:11+0000\n"
+"PO-Revision-Date: 2024-07-16 09:15+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Buy a card reader"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Acheter un lecteur de carte"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -42,13 +41,13 @@ msgstr ""
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
+#: code:addons/pos_mercury/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "ABOVE AMOUNT PURSUANT"
 msgstr "MONTANT CI-DESSUS SUIVANT"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
+#: code:addons/pos_mercury/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "APPROVAL CODE:"
 msgstr "CODE D'APPROBATION :"
 
@@ -59,7 +58,7 @@ msgstr "Règle de code-barres"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
+#: code:addons/pos_mercury/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
 msgstr "LE TITULAIRE DE LA CARTE PAIE L’ÉMETTEUR DE LA CARTE"
 
@@ -97,7 +96,7 @@ msgstr "Configurer votre lecteur de carte"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Could not read card"
 msgstr "Impossible de lire la carte"
 
@@ -120,9 +119,16 @@ msgstr "Carte de crédit "
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
-msgid "Credit card refunds are not supported. Instead select your credit card payment method, click 'Validate' and refund the original charge manually through the Vantiv backend."
-msgstr "Les remboursements par carte de crédit ne sont pas pris en charge. Sélectionnez plutôt votre mode de paiement par carte de crédit, cliquez sur 'Valider' et remboursez le montant initial manuellement via le backend Vantiv."
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
+msgid ""
+"Credit card refunds are not supported. Instead select your credit card "
+"payment method, click 'Validate' and refund the original charge manually "
+"through the Vantiv backend."
+msgstr ""
+"Les remboursements par carte de crédit ne sont pas pris en charge. "
+"Sélectionnez plutôt votre mode de paiement par carte de crédit, cliquez sur "
+"'Valider' et remboursez le montant initial manuellement via le backend "
+"Vantiv."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__display_name
@@ -143,13 +149,13 @@ msgstr ""
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/ProductScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/product_screen/product_screen.js:0
 msgid "Go to payment screen to use cards"
 msgstr "Aller à l'écran de paiement pour utiliser les cartes"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Handling transaction..."
 msgstr "Transaction en cours..."
 
@@ -162,7 +168,9 @@ msgstr "ID"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
-msgstr "Identifiant du marchand pour l'authentifier auprès du serveur du fournisseur de paiement"
+msgstr ""
+"Identifiant du marchand pour l'authentifier auprès du serveur du fournisseur"
+" de paiement"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -182,13 +190,13 @@ msgstr "Numéro de facture de Vantiv Pay"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__write_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__write_date
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_id
@@ -220,52 +228,56 @@ msgstr "Aucune configuration Vantiv associée au mode de paiement."
 #. odoo-python
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 msgid "No opened point of sale session for user %s found."
-msgstr "Aucune session du point de vente ouverte trouvée pour l'utilisateur %s."
+msgstr ""
+"Aucune session du point de vente ouverte trouvée pour l'utilisateur %s."
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "No response from Vantiv (Vantiv down?)"
 msgstr "Pas de réponse de Vantiv (Vantiv en panne ?)"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "No response from server (connected to network?)"
 msgstr "Pas de réponse du serveur (connecté au réseau ?)"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/app/payment_transaction_popup/payment_transaction_popup.xml:0
+msgid "OK"
+msgstr "OK"
+
+#. module: pos_mercury
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Odoo error while processing transaction."
 msgstr "Erreur Odoo pendant le traitement de la transaction."
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
-msgid "Ok"
-msgstr "Ok"
-
-#. module: pos_mercury
-#. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
+#: code:addons/pos_mercury/static/src/app/payment_transaction_popup/payment_transaction_popup.js:0
 msgid "Online Payment"
 msgstr "Paiement en ligne"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Partially approved"
 msgstr "Partiellement approuvé"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_pwd
-msgid "Password of the merchant to authenticate him on the payment provider server"
-msgstr "Mot de passe du marchand pour l'authentifier sur le serveur du fournisseur de paiement"
+msgid ""
+"Password of the merchant to authenticate him on the payment provider server"
+msgstr ""
+"Mot de passe du marchand pour l'authentifier sur le serveur du fournisseur "
+"de paiement"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Pay with: "
 msgstr "Payer avec :"
 
@@ -281,14 +293,9 @@ msgstr "Référence du paiement chez Vantiv Pay"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Please setup your Vantiv merchant account."
 msgstr "Veuillez configurer votre compte marchand Vantiv."
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_order
-msgid "Point of Sale Orders"
-msgstr "Commandes du point de vente"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment_method
@@ -299,11 +306,6 @@ msgstr "Modes de paiement du point de vente"
 #: model:ir.model,name:pos_mercury.model_pos_payment
 msgid "Point of Sale Payments"
 msgstr "Paiements du point de vente"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_session
-msgid "Point of Sale Session"
-msgstr "Session du point de vente"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
@@ -317,31 +319,31 @@ msgstr "Transaction Vantiv Point de Vente"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Refunds not supported"
 msgstr "Les remboursements ne sont pas pris en charge"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Reversal failed, sending VoidSale..."
 msgstr "Échec de l'extourne, envoi de VoidSale..."
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Reversal succeeded"
 msgstr "Extourne réussie"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Sending reversal..."
 msgstr "Envoi de l'extourne..."
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
+#: code:addons/pos_mercury/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "TO CARDHOLDER AGREEMENT"
 msgstr "A L'ACCORD DU TITULAIRE DE LA CARTE"
 
@@ -367,13 +369,17 @@ msgstr "Les 4 derniers chiffres de la carte qui a été utilisée pour payer"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
-msgid "This can be caused by a badly executed swipe or by not having your keyboard layout set to US QWERTY (not US International)."
-msgstr "Cela peut être dû à un balayage mal exécuté ou au fait que la disposition du clavier n'est pas réglée sur US QWERTY (et non sur US International)."
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
+msgid ""
+"This can be caused by a badly executed swipe or by not having your keyboard "
+"layout set to US QWERTY (not US International)."
+msgstr ""
+"Cela peut être dû à un balayage mal exécuté ou au fait que la disposition du"
+" clavier n'est pas réglée sur US QWERTY (et non sur US International)."
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "Transaction approved"
 msgstr "Transaction approuvée"
 
@@ -428,13 +434,13 @@ msgstr "Numéro de référence Vantiv"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 msgid "VoidSale succeeded"
 msgstr "VoidSale a réussi "
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/xml/PaymentScreenPaymentLines.xml:0
+#: code:addons/pos_mercury/static/src/overrides/components/payment_screen_payment_lines/payment_screen_payment_lines.xml:0
 msgid "WAITING FOR SWIPE"
 msgstr "EN ATTENTE DU BALAYAGE"
 
@@ -449,6 +455,6 @@ msgstr ""
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
+#: code:addons/pos_mercury/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "X______________________________"
 msgstr "X______________________________"

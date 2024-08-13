@@ -285,12 +285,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span class=\"col-6\">Late</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Myöhässä</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span class=\"col-6\">Waiting</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Odottaa</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1277,6 +1277,17 @@ msgstr "Peruuta"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Cancelled"
 msgstr "Peruttu"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+"Valmistelupäiviä ei voida laskea, koska vähintään yhden komponentin tai "
+"lopputuotteen reittitiedot puuttuvat."
 
 #. module: mrp
 #. odoo-python
@@ -2874,7 +2885,7 @@ msgstr "Myöhässä olevat toimenpiteet"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late Availability"
-msgstr ""
+msgstr "Myöhäinen saatavuus"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4315,7 +4326,7 @@ msgstr "Tuotteen täydennystilaus"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "Tuotteen täydentäminen Mixin"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_tmpl_id
@@ -6629,7 +6640,7 @@ msgstr "Samaa sarjanumeroa ei voi tuottaa kahdesti."
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot start a work order that is already done or cancelled"
-msgstr ""
+msgstr "Et voi aloittaa työtilausta, joka on jo tehty tai peruutettu"
 
 #. module: mrp
 #. odoo-python

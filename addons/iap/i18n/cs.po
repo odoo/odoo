@@ -1,29 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* iap
-#
+# 
 # Translators:
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Martin Trigaux, 2022
-# Jiří Podhorecký, 2022
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"PO-Revision-Date: 2024-07-16 09:15+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_info_id
@@ -44,7 +38,7 @@ msgstr ""
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__account_uuid_hashed
 msgid "Account UUID"
-msgstr ""
+msgstr "UUID účtu"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__account_token
@@ -61,7 +55,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__balance
 msgid "Balance"
-msgstr ""
+msgstr "Zůstatek"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -84,36 +78,31 @@ msgstr "Zrušit"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
-msgstr "Firma"
-
-#. module: iap
-#: model:ir.model,name:iap.model_res_config_settings
-msgid "Config Settings"
-msgstr "Nastavení konfigurace"
+msgstr "Společnost"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_date
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr "Vytvořeno dne"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__description
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__description
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
+msgstr "Zobrazovací název"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -147,7 +136,7 @@ msgstr "IAP Účty"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_enrich_api
 msgid "IAP Lead Enrichment API"
-msgstr "IAP Obohacení potenciálni zákazník API"
+msgstr "IAP API obohacení prospektů"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -165,28 +154,23 @@ msgstr "Nedostatečný kredit pro provedení této služby."
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_date
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "Odoo IAP"
 msgstr "Odoo IAP"
-
-#. module: iap
-#: model:ir.actions.server,name:iap.open_iap_account
-msgid "Open IAP Account"
-msgstr "Otevřít IAP účet"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__service_name
@@ -224,7 +208,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_threshold
 msgid "Threshold"
-msgstr ""
+msgstr "Prahová hodnota"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__unit_name

@@ -1,32 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* iap
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"PO-Revision-Date: 2024-07-16 09:15+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_info_id
 msgid "Account Info"
-msgstr ""
+msgstr "Інформація облікового запису"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -42,29 +38,31 @@ msgstr "Токен облікового запису"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__account_uuid_hashed
 msgid "Account UUID"
-msgstr ""
+msgstr "UUID рахунку"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__account_token
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
 msgstr ""
+"Токен облікового запису є вашим ключем аутентифікації для цієї послуги. "
+"Нікому його не показуйте."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_info_ids
 msgid "Accounts from IAP"
-msgstr ""
+msgstr "Облікові записи з IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__balance
 msgid "Balance"
-msgstr ""
+msgstr "Баланс"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Buy Credit"
-msgstr ""
+msgstr "Купити кредити"
 
 #. module: iap
 #. odoo-javascript
@@ -85,11 +83,6 @@ msgid "Company"
 msgstr "Компанія"
 
 #. module: iap
-#: model:ir.model,name:iap.model_res_config_settings
-msgid "Config Settings"
-msgstr "Налаштування"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__create_uid
 msgid "Created by"
@@ -105,7 +98,7 @@ msgstr "Створено"
 #: model:ir.model.fields,field_description:iap.field_iap_account__description
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__description
 msgid "Description"
-msgstr ""
+msgstr "Опис"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
@@ -116,7 +109,7 @@ msgstr "Назва для відображення"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Hide Token"
-msgstr ""
+msgstr "Приховати токен"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -134,7 +127,7 @@ msgstr "Рахунок IAP "
 #. module: iap
 #: model:ir.model,name:iap.model_iap_account_info
 msgid "IAP Account Info"
-msgstr ""
+msgstr "Інформація облікового запису IAP"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
@@ -174,7 +167,7 @@ msgstr "Останнє оновлення"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
 msgid "Name"
-msgstr ""
+msgstr "Назва"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
@@ -182,14 +175,9 @@ msgid "Odoo IAP"
 msgstr "Odoo IAP"
 
 #. module: iap
-#: model:ir.actions.server,name:iap.open_iap_account
-msgid "Open IAP Account"
-msgstr "Відкрити рахунок IAP"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__service_name
 msgid "Related Service"
-msgstr ""
+msgstr "Повʼязана послуга"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
@@ -200,7 +188,7 @@ msgstr "Назва послуги"
 #: model:ir.model.fields,field_description:iap.field_iap_account__show_token
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Show Token"
-msgstr ""
+msgstr "Показати токен"
 
 #. module: iap
 #. odoo-javascript
@@ -222,12 +210,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_threshold
 msgid "Threshold"
-msgstr ""
+msgstr "Порогове значення"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__unit_name
 msgid "Unit Name"
-msgstr ""
+msgstr "Назва одиниці"
 
 #. module: iap
 #. odoo-javascript
@@ -245,15 +233,15 @@ msgstr "Перегляньте послуги IAP та поповніть ваш
 #: model:ir.model.fields,field_description:iap.field_iap_account__warn_me
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warn_me
 msgid "Warn me"
-msgstr ""
+msgstr "Попередити мене"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_email
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_email
 msgid "Warning Email"
-msgstr ""
+msgstr "Лист попередження"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__warn_me
 msgid "We will send you an email when your balance gets below that threshold"
-msgstr ""
+msgstr "Ми надішлемо вам лист, коли ваш баланс досягне цього порогу"
