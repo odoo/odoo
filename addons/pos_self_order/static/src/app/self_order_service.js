@@ -127,6 +127,9 @@ export class SelfOrder extends Reactive {
             this.addToCart(product, 1, "", {}, {});
             this.router.navigate("cart");
         });
+
+        // Add local order access_token in order to subscribe to the channel in case of refresh
+        this.models["pos.order"].forEach((o) => this.subscribeToOrderChannel(o));
     }
 
     subscribeToOrderChannel(order) {

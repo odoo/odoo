@@ -156,12 +156,17 @@ export class OrderSummary extends Component {
                 }
                 return true;
             }
-            const newLine = selectedLine.clone();
             const decreasedQuantity = selectedLine.saved_quantity - newQuantity;
-            newLine.order = order;
-            newLine.set_quantity(-decreasedQuantity, true);
+            this.pos.models["pos.order.line"].create({
+                price_unit: selectedLine.get_unit_price(),
+                discount: selectedLine.discount,
+                product_id: selectedLine.product_id,
+                price_subtotal: selectedLine.get_price_with_tax(),
+                price_subtotal_incl: selectedLine.get_price_with_tax(),
+                quantity: -decreasedQuantity,
+                order: order,
+            });
             selectedLine.set_quantity(selectedLine.saved_quantity);
-            order.add_orderline(newLine);
             return true;
         }
         return false;
