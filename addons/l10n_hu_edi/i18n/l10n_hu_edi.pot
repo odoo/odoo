@@ -40,13 +40,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_hu_edi
-#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.account_move_send_form
-msgid ""
-"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
-"title=\"Some data is incorrect\" invisible=\"1\"/>"
-msgstr ""
-
-#. module: l10n_hu_edi
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.product_template_form_view_l10n_hu_edi
 msgid "<span class=\"oe_inline o_form_label mx-3\"> : </span>"
 msgstr ""
@@ -144,6 +137,11 @@ msgstr ""
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__reason
 msgid "Annulment Reason"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Authentication with NAV 3.0 successful."
 msgstr ""
 
 #. module: l10n_hu_edi
@@ -632,6 +630,14 @@ msgid "Invoice upload time"
 msgstr ""
 
 #. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/wizard/account_move_send.py:0
+msgid ""
+"Invoices issued in Hungary must, with few exceptions, be reported to the "
+"NAV's Online-Invoice system!"
+msgstr ""
+
+#. module: l10n_hu_edi
 #: model:ir.model,name:l10n_hu_edi.model_account_move
 msgid "Journal Entry"
 msgstr ""
@@ -691,6 +697,11 @@ msgstr ""
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__l10n_hu_edi_enable_nav_30
 msgid "L10N Hu Edi Enable Nav 30"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_is_active
+msgid "L10N Hu Edi Is Active"
 msgstr ""
 
 #. module: l10n_hu_edi
@@ -939,7 +950,7 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-msgid "Please create an ATK (outside the scope of the VAT Act) type of tax!"
+msgid "Please create a sales tax with type ATK (outside the scope of the VAT Act)."
 msgstr ""
 
 #. module: l10n_hu_edi

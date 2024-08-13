@@ -14,6 +14,13 @@
                              help="Enter your e-invoicing credentials given by the Hungarian Authority."
                              name="l10n_hu_edi_nav_credentials">
                         <div class="row">
+                            <field name="l10n_hu_edi_is_active" invisible="1"/>
+                            <div class="alert alert-success text-center ms-3" role="alert"
+                                 invisible="not l10n_hu_edi_is_active">
+                                Authentication with NAV 3.0 successful.
+                            </div>
+                        </div>
+                        <div class="row">
                             <label string="Mode" for="l10n_hu_edi_server_mode" class="col-lg-3 o_light_label"/>
                             <field name="l10n_hu_edi_server_mode"/>
                         </div>
