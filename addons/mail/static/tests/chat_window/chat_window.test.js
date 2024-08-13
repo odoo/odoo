@@ -348,6 +348,45 @@ test("chat window: close on ESCAPE", async () => {
     await assertSteps(["channel_fold/closed"]);
 });
 
+test("chat window: close on ESCAPE (multi)", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create(
+        Array(4)
+            .keys()
+            .map((i) => ({
+                name: `channel_${i}`,
+                channel_member_ids: [
+                    Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
+                ],
+            }))
+    );
+    patchUiSize({ width: 1920 });
+    await start();
+    await contains(".o-mail-ChatWindow", { count: 4 }); // expected order: 3, 2, 1, 0
+    await contains(".o-mail-ChatWindow:eq(0)", { text: "channel_3" });
+    await contains(".o-mail-ChatWindow:eq(1)", { text: "channel_2" });
+    await contains(".o-mail-ChatWindow:eq(2)", { text: "channel_1" });
+    await contains(".o-mail-ChatWindow:eq(3)", { text: "channel_0" });
+    await focus(".o-mail-Composer-input:eq(3)");
+    triggerHotkey("Escape");
+    await contains(".o-mail-ChatWindow", { count: 3 });
+    await contains(".o-mail-ChatWindow:eq(0)", { text: "channel_3" });
+    await contains(".o-mail-ChatWindow:eq(1)", { text: "channel_2" });
+    await contains(".o-mail-ChatWindow:eq(2)", { text: "channel_1" });
+    await contains(".o-mail-ChatWindow:eq(2) .o-mail-Composer.o-focused");
+    await focus(".o-mail-Composer-input:eq(0)");
+    triggerHotkey("Escape");
+    await contains(".o-mail-ChatWindow", { count: 2 });
+    await contains(".o-mail-ChatWindow:eq(0)", { text: "channel_2" });
+    await contains(".o-mail-ChatWindow:eq(1)", { text: "channel_1" });
+    await contains(".o-mail-ChatWindow:eq(0) .o-mail-Composer.o-focused");
+    triggerHotkey("Escape");
+    await contains(".o-mail-ChatWindow", { count: 1 });
+    await contains(".o-mail-ChatWindow", { text: "channel_1" });
+    triggerHotkey("Escape");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+});
+
 test("Close composer suggestions in chat window with ESCAPE does not also close the chat window", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
