@@ -286,7 +286,15 @@ class AccountEdiFormat(models.Model):
                         'NombreRazon': com_partner.name[:120],
                     }
                 export_exempts = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_exempt_reason == 'E2')
-                invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02' if export_exempts else '01'
+                # If an invoice line contains an OSS tax, the invoice is considered as an OSS operation
+                is_oss = self._has_oss_taxes(invoice)
+
+                if is_oss:
+                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '17'
+                elif export_exempts:
+                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02'
+                else:
+                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
             else:
                 info['IDFactura']['IDEmisorFactura'] = partner_info
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.ref[:60]
@@ -576,6 +584,14 @@ class AccountEdiFormat(models.Model):
                 }
 
         return results
+
+    def _has_oss_taxes(self, invoice):
+        oss_tax_groups = self.env['ir.model.data'].search([
+            ('module', '=', 'l10n_eu_oss'),
+            ('model', '=', 'account.tax.group')])
+        lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note'))
+        tax_groups = lines.mapped('tax_ids.tax_group_id')
+        return bool(set(tax_groups.ids) & set(oss_tax_groups.mapped('res_id')))
 
     # -------------------------------------------------------------------------
     # EDI OVERRIDDEN METHODS
