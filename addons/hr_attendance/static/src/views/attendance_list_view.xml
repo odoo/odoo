@@ -2,9 +2,11 @@
 <odoo>
     <t t-name="hr_attendance.AttendanceListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
         <t t-call="web.ActionHelper" position="replace">
+        </t>
+        <table position="after">
             <t t-if="showNoContentHelper">
                 <AttendanceActionHelper noContentHelp="props.noContentHelp"/>
             </t>
-        </t>
+        </table>
     </t>
 </odoo>

@@ -74,16 +74,17 @@ actions(Check in/Check out) performed by them.
             'hr_attendance/static/src/scss/kiosk/hr_attendance.scss',
             "web/static/src/views/fields/formatters.js",
 
+            # document link
+            "web/static/src/session.js",
+            "web/static/src/views/widgets/standard_widget_props.js",
+            "web/static/src/views/widgets/documentation_link/*",
+
             # Barcode reader utils
             "barcodes/static/src/components/barcode_scanner.js",
             "barcodes/static/src/components/barcode_scanner.xml",
             "barcodes/static/src/components/barcode_scanner.scss",
             "barcodes/static/src/barcode_service.js",
 
-            # Kanban view mock
-            "web/static/src/views/kanban/kanban_controller.scss",
-            "web/static/src/search/search_panel/search_panel.scss",
-            "web/static/src/search/control_panel/control_panel.scss",
         ]
     },
     'license': 'LGPL-3',

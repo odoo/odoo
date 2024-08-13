@@ -1,3 +1,4 @@
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, onWillStart, useState } from "@odoo/owl";
@@ -12,7 +13,10 @@ export class AttendanceActionHelper extends Component {
             hasDemoData: false,
         });
         onWillStart(async () => {
-            this.state.hasDemoData = await this.orm.call("hr.attendance", "has_demo_data", []);
+            this.hasAttendanceRight = await user.hasGroup("hr_attendance.group_hr_attendance_manager");
+            if (this.hasAttendanceRight){
+                this.state.hasDemoData = await this.orm.call("hr.attendance", "has_demo_data", []);
+            }
         });
     }
 
