@@ -182,3 +182,9 @@ test("List should not be created when typing '1. ' between the existing text", a
     insertText(editor, "1. ");
     expect(getContent(el)).toBe(`<p>a1. []bc</p>`);
 });
+
+test("typing space inside formated text with a '*' at the starting of text should not transform to list", async () => {
+    const { el, editor } = await setupEditor("<p>* a<strong>b[]cd</strong>e</p>");
+    insertText(editor, " ");
+    expect(getContent(el)).toBe(`<p>* a<strong>b []cd</strong>e</p>`);
+});
