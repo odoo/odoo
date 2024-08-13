@@ -734,16 +734,21 @@ class AccountAccount(models.Model):
         '''
         if not self.ids:
             return None
-        query = """
-            UPDATE account_move_line SET
-                reconciled = CASE WHEN debit = 0 AND credit = 0 AND amount_currency = 0
-                    THEN true ELSE false END,
-                amount_residual = (debit-credit),
-                amount_residual_currency = amount_currency
-            WHERE full_reconcile_id IS NULL and account_id IN %s
-        """
-        self.env.cr.execute(query, [tuple(self.ids)])
-        self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency', 'reconciled'])
+
+        with self.env['account.move.line'].modifying_model(
+            inputs=["debit", "credit", "amount_currency", "full_reconcile_id"],
+            outputs=['amount_residual', 'amount_residual_currency', 'reconciled'],
+        ) as m:
+            m.records = self
+            query = """
+                UPDATE account_move_line SET
+                    reconciled = CASE WHEN debit = 0 AND credit = 0 AND amount_currency = 0
+                        THEN true ELSE false END,
+                    amount_residual = (debit-credit),
+                    amount_residual_currency = amount_currency
+                WHERE full_reconcile_id IS NULL and account_id IN %s
+            """
+            self.env.cr.execute(query, [tuple(self.ids)])
 
     def _toggle_reconcile_to_false(self):
         '''Toggle the `reconcile´ boolean from True -> False
@@ -752,7 +757,8 @@ class AccountAccount(models.Model):
         '''
         if not self.ids:
             return None
-        partial_lines_count = self.env['account.move.line'].search_count([
+        Lines = self.env['account.move.line']
+        partial_lines_count = Lines.search_count([
             ('account_id', 'in', self.ids),
             ('full_reconcile_id', '=', False),
             ('|'),
@@ -762,12 +768,21 @@ class AccountAccount(models.Model):
         if partial_lines_count > 0:
             raise UserError(_('You cannot switch an account to prevent the reconciliation '
                               'if some partial reconciliations are still pending.'))
-        query = """
-            UPDATE account_move_line
-                SET amount_residual = 0, amount_residual_currency = 0
-            WHERE full_reconcile_id IS NULL AND account_id IN %s
-        """
-        self.env.cr.execute(query, [tuple(self.ids)])
+        with Lines.modifying_model(
+            inputs=["full_reconcile_id"],
+            outputs=["amount_residual", "amount_residual_currency"],
+        ) as m:
+            query = """
+                UPDATE account_move_line
+                    SET amount_residual = 0, amount_residual_currency = 0
+                WHERE full_reconcile_id IS NULL AND account_id IN %s
+                RETURNING id
+            """
+            self.env.cr.execute(query, [tuple(self.ids)])
+            if self.env.cr.rowcount:
+                m.records = Lines.browse(i for [i] in self.env.cr.fetchall())
+            else:
+                m.records = Lines.browse(())
 
     @api.model
     def name_create(self, name):
@@ -983,7 +998,7 @@ class AccountGroup(models.Model):
             return
 
         self.flush_model()
-        self.env['account.account'].flush_model(['code'])
+        self.env['res.company'].flush_model(["parent_path"])
 
         if company:
             company_ids = company.root_id.ids
@@ -999,26 +1014,29 @@ class AccountGroup(models.Model):
         if account_ids:
             account_where_clause = SQL('%s AND account.id IN %s', account_where_clause, tuple(account_ids))
 
-        self._cr.execute(SQL("""
-            WITH relation AS (
-                 SELECT DISTINCT ON (account.id)
-                        account.id AS account_id,
-                        agroup.id AS group_id
-                   FROM account_account account
-                   JOIN res_company account_company ON account_company.id = account.company_id
-              LEFT JOIN account_group agroup
-                     ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
-                    AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
-                    AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
-                  WHERE %s
-               ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
-            )
-            UPDATE account_account
-               SET group_id = rel.group_id
-              FROM relation rel
-             WHERE account_account.id = rel.account_id
-        """, account_where_clause))
-        self.env['account.account'].invalidate_model(['group_id'], flush=False)
+        Account = self.env['account.account']
+        with Account.modifying_model(inputs=['code'], outputs=['group_id']) as m:
+            self._cr.execute(SQL("""
+                WITH relation AS (
+                     SELECT DISTINCT ON (account.id)
+                            account.id AS account_id,
+                            agroup.id AS group_id
+                       FROM account_account account
+                       JOIN res_company account_company ON account_company.id = account.company_id
+                  LEFT JOIN account_group agroup
+                         ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
+                        AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
+                        AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
+                      WHERE %s
+                   ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
+                )
+                UPDATE account_account
+                   SET group_id = rel.group_id
+                  FROM relation rel
+                 WHERE account_account.id = rel.account_id
+                 RETURNING account_account.id
+            """, account_where_clause))
+            m.records = Account.browse(i for [i] in self.env.cr.fetchall())
 
     def _adapt_parent_account_group(self, company=None):
         """Ensure consistency of the hierarchy of account groups.
@@ -1035,33 +1053,33 @@ class AccountGroup(models.Model):
             return
 
         self.flush_model()
-        query = SQL("""
-            WITH relation AS (
-                SELECT DISTINCT ON (child.id)
-                       child.id AS child_id,
-                       parent.id AS parent_id
-                  FROM account_group parent
-                  JOIN account_group child
-                    ON char_length(parent.code_prefix_start) < char_length(child.code_prefix_start)
-                   AND parent.code_prefix_start <= LEFT(child.code_prefix_start, char_length(parent.code_prefix_start))
-                   AND parent.code_prefix_end >= LEFT(child.code_prefix_end, char_length(parent.code_prefix_end))
-                   AND parent.id != child.id
-                   AND parent.company_id = child.company_id
-                 WHERE child.company_id IN %s
-                   AND child.parent_id IS DISTINCT FROM parent.id -- IMPORTANT avoid to update if nothing changed
-              ORDER BY child.id, char_length(parent.code_prefix_start) DESC
-            )
-            UPDATE account_group child
-               SET parent_id = relation.parent_id
-              FROM relation
-             WHERE child.id = relation.child_id
-         RETURNING child.id
-        """, tuple(company_ids))
-        self.env.cr.execute(query)
-
-        updated_rows = self.env.cr.fetchall()
-        if updated_rows:
-            self.invalidate_model(['parent_id'])
+        with self.modifying_model(outputs=["parent_id"]) as m:
+            self.env.cr.execute("""
+                WITH relation AS (
+                    SELECT DISTINCT ON (child.id)
+                           child.id AS child_id,
+                           parent.id AS parent_id
+                      FROM account_group parent
+                      JOIN account_group child
+                        ON char_length(parent.code_prefix_start) < char_length(child.code_prefix_start)
+                       AND parent.code_prefix_start <= LEFT(child.code_prefix_start, char_length(parent.code_prefix_start))
+                       AND parent.code_prefix_end >= LEFT(child.code_prefix_end, char_length(parent.code_prefix_end))
+                       AND parent.id != child.id
+                       AND parent.company_id = child.company_id
+                     WHERE child.company_id = any(%s)
+                       AND child.parent_id IS DISTINCT FROM parent.id -- IMPORTANT avoid to update if nothing changed
+                  ORDER BY child.id, char_length(parent.code_prefix_start) DESC
+                )
+                UPDATE account_group child
+                   SET parent_id = relation.parent_id
+                  FROM relation
+                 WHERE child.id = relation.child_id
+             RETURNING child.id
+            """, [company_ids])
+            if self.env.cr.rowcount:
+                m.records = self.browse(i for [i] in self.env.cr.fetchall())
+            else:
+                m.records = self.browse(())
 
 
 class AccountRoot(models.Model):

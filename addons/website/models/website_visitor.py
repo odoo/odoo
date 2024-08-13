@@ -11,7 +11,7 @@ import threading
 from odoo import fields, models, api, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.tools import split_every
+from odoo.tools import split_every, SQL
 from odoo.tools.misc import _format_time_ago
 from odoo.http import request
 from odoo.osv import expression
@@ -367,29 +367,35 @@ class WebsiteVisitor(models.Model):
 
     def _update_visitor_timezone(self, timezone):
         """ We need to do this part here to avoid concurrent updates error. """
-        query = """
-            UPDATE website_visitor
-            SET timezone = %s
-            WHERE id IN (
-                SELECT id FROM website_visitor WHERE id = %s
-                FOR NO KEY UPDATE SKIP LOCKED
-            )
-        """
-        self.env.cr.execute(query, (timezone, self.id))
+        with self.modifying_recordset(outputs=['timezone']):
+            self.env.cr.execute(SQL("""
+                UPDATE website_visitor
+                SET timezone = %s
+                WHERE id IN (
+                    SELECT id FROM website_visitor WHERE id = %s
+                    FOR NO KEY UPDATE SKIP LOCKED
+                )
+            """, timezone, self.id))
 
     def _update_visitor_last_visit(self):
         date_now = datetime.now()
-        query = "UPDATE website_visitor SET "
+        visit = SQL("")
         if self.last_connection_datetime < (date_now - timedelta(hours=8)):
-            query += "visit_count = visit_count + 1,"
-        query += """
-            last_connection_datetime = %s
-            WHERE id IN (
-                SELECT id FROM website_visitor WHERE id = %s
-                FOR NO KEY UPDATE SKIP LOCKED
-            )
-        """
-        self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
+            visit = SQL("visit_count = visit_count + 1,")
+
+        with self.modifying_recordset(
+            outputs=["visit_count", "last_connection_datetime"],
+            inputs=["visit_count"] if visit else [],
+        ):
+            self.env.cr.execute(SQL("""
+                UPDATE website_visitor SET
+                %s
+                last_connection_datetime = %s
+                WHERE id IN (
+                    SELECT id FROM website_visitor WHERE id = %s
+                    FOR NO KEY UPDATE SKIP LOCKED
+                )
+            """, visit, date_now, self.id), log_exceptions=False)
 
     def _get_visitor_timezone(self):
         tz = request.httprequest.cookies.get('tz') if request else None

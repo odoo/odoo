@@ -170,11 +170,12 @@ class PassKeyCreate(models.TransientModel):
             'credential_identifier': bytes_to_base64url(verification['credential_id']),
         })]})
         passkey = self.env.user.auth_passkey_key_ids[0]
-        self.env.cr.execute(SQL(
-            "UPDATE auth_passkey_key SET public_key = %s WHERE id = %s",
-            base64.urlsafe_b64encode(verification['credential_public_key']).decode(),
-            passkey.id,
-        ))
+        with passkey.modifying_recordset(outputs=['public_key']):
+            self.env.cr.execute(SQL(
+                "UPDATE auth_passkey_key SET public_key = %s WHERE id = %s",
+                base64.urlsafe_b64encode(verification['credential_public_key']).decode(),
+                passkey.id,
+            ))
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         _logger.info(
             "Passkey (#%d) created by %s (#%d) from %s",

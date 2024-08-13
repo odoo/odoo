@@ -105,18 +105,21 @@ class ThreadController(http.Controller):
             request.update_context(**context)
         canned_response_ids = tuple(cid for cid in kwargs.get('canned_response_ids', []) if isinstance(cid, int))
         if canned_response_ids:
-            # Avoid serialization errors since last used update is not
-            # essential and should not block message post.
-            request.env.cr.execute("""
-                UPDATE mail_canned_response SET last_used=%(last_used)s
-                WHERE id IN (
-                    SELECT id from mail_canned_response WHERE id IN %(ids)s
-                    FOR NO KEY UPDATE SKIP LOCKED
-                )
-            """, {
-                'last_used': datetime.now(),
-                'ids': canned_response_ids,
-            })
+            Model = request.env['mail.canned.response']
+            with Model.modifying_model(output=['last_used']) as m:
+                # Avoid serialization errors since last used update is not
+                # essential and should not block message post.
+                request.env.cr.execute("""
+                    UPDATE mail_canned_response SET last_used=%(last_used)s
+                    WHERE id IN (
+                        SELECT id from mail_canned_response WHERE id IN %(ids)s
+                        FOR NO KEY UPDATE SKIP LOCKED
+                    )
+                """, {
+                    'last_used': datetime.now(),
+                    'ids': canned_response_ids,
+                })
+                m.records = Model.browse(canned_response_ids if request.env.cr.rowcount else ())
         thread = request.env[thread_model]._get_thread_with_access(
             thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs
         )
