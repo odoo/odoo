@@ -158,11 +158,11 @@
         </t>
         <t t-if="this.state.active_display === 'manual'">
             <KioskManualSelection
-                employees="this.props.employees"
                 displayBackButton="!this.manualKioskMode || this.props.fromTrialMode"
                 departments="this.props.departments"
                 onSelectEmployee="(e) => this.kioskConfirm(e)"
-                onClickBack="() => this.kioskReturn()"/>
+                onClickBack="() => this.kioskReturn()"
+                token="this.props.token"/>
         </t>
         <t t-if="this.state.active_display === 'greet'">
             <KioskGreetings employeeData="this.employeeData" kioskReturn="() => this.kioskReturn(true)"/>
