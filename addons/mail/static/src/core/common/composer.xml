@@ -32,6 +32,7 @@
                 <div class="d-flex bg-view flex-grow-1"
                     t-att-class="{
                         'o-mail-Composer-compactContainer border-top': compact and !props.composer.message,
+                        'o-mobile border-bottom': isMobileOS,
                         'border': props.composer.message,
                         'border rounded-3' : normal,
                         'border rounded-3 align-self-stretch flex-column' : extended,
