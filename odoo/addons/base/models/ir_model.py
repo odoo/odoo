@@ -193,11 +193,12 @@ class Base(models.AbstractModel):
     _description = 'Base'
 
 
-class _Unknown(models.AbstractModel):
+class Unknown(models.AbstractModel):
     """
     Abstract model used as a substitute for relational fields with an unknown
     comodel.
     """
+    _name = '_unknown'
     _description = 'Unknown'
 
 
@@ -349,7 +350,7 @@ class IrModel(models.Model):
             crons.unlink()
 
         self._drop_table()
-        res = super(IrModel, self).unlink()
+        res = super().unlink()
 
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
@@ -371,7 +372,7 @@ class IrModel(models.Model):
         # writes (4,id,False) even for non dirty items.
         if 'field_id' in vals:
             vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
-        res = super(IrModel, self).write(vals)
+        res = super().write(vals)
         # ordering has been changed, reload registry to reflect update + signaling
         if 'order' in vals:
             self.env.flush_all()  # setup_models need to fetch the updated values from the db
@@ -380,7 +381,7 @@ class IrModel(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(IrModel, self).create(vals_list)
+        res = super().create(vals_list)
         manual_models = [
             vals['model'] for vals in vals_list if vals.get('state', 'manual') == 'manual'
         ]

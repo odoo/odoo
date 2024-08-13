@@ -1029,7 +1029,7 @@ class Base_ImportImport(models.TransientModel):
         try:
             file_length, rows = self._read_file(options)
             if file_length <= 0:
-                raise ImportValidationError(_("Base_ImportImport file has no content or is corrupt"))
+                raise ImportValidationError(_("Import file has no content or is corrupt"))
 
             preview = rows[:count]
 

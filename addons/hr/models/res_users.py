@@ -75,7 +75,7 @@ HR_WRITABLE_FIELDS = [
 ]
 
 
-class User(models.Model):
+class ResUsers(models.Model):
     _inherit = ['res.users']
 
     def _employee_ids_domain(self):
@@ -202,7 +202,7 @@ class User(models.Model):
         profile_view = self.env.ref("hr.res_users_view_form_profile")
         if profile_view and view_id == profile_view.id:
             self = self.with_user(SUPERUSER_ID)
-        result = super(User, self).get_view(view_id, view_type, **options)
+        result = super().get_view(view_id, view_type, **options)
         return result
 
     @api.model_create_multi
@@ -271,7 +271,7 @@ class User(models.Model):
                         ),
                         partner_ids=partner_ids,
                     )
-        result = super(User, self).write(vals)
+        result = super().write(vals)
 
         employee_values = {}
         for fname in [f for f in self._get_employee_fields_to_sync() if f in vals]:
@@ -297,7 +297,7 @@ class User(models.Model):
     def action_get(self):
         if self.env.user.employee_id:
             return self.env['ir.actions.act_window']._for_xml_id('hr.res_users_action_my')
-        return super(User, self).action_get()
+        return super().action_get()
 
     @api.depends('employee_ids')
     @api.depends_context('company')

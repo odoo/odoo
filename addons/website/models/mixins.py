@@ -230,8 +230,6 @@ class WebsitePublishedMixin(models.AbstractModel):
 
 
 class WebsitePublishedMultiMixin(WebsitePublishedMixin):
-
-    _name = 'website.published.multi.mixin'
     _inherit = ['website.published.mixin', 'website.multi.mixin']
     _description = 'Multi Website Published Mixin'
 

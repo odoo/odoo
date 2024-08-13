@@ -120,7 +120,8 @@ class Test_Base_AutomationTag(models.Model):
     name = fields.Char()
 
 
-class BaseAutomationLeadThreadTest(models.Model):
+# pylint: disable=E0102
+class BaseAutomationLeadThreadTest(models.Model):  # noqa: F811
     _inherit = ["base.automation.lead.test", "mail.thread"]
     _description = "Threaded Lead Test"
 

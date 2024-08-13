@@ -19,7 +19,7 @@ re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^
 
 
 class IrQweb(models.AbstractModel):
-    """ IrQWeb object for rendering stuff in the website context """
+    """ IrQweb object for rendering stuff in the website context """
 
     _inherit = ['ir.qweb']
 

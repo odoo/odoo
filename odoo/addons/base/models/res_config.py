@@ -121,7 +121,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
             class MyConfigWizard(models.TransientModel):
                 _name = 'my.settings'
-                _inherit = 'res.config.settings'
+                _inherit = ['res.config.settings']
 
                 default_foo = fields.type(..., default_model='my.model'),
                 group_bar = fields.Boolean(..., group='base.group_user', implied_group='my.group'),

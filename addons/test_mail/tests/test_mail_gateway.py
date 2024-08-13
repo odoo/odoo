@@ -557,7 +557,7 @@ class TestMailgateway(MailCommon):
 
         # Test that it works when the reference to container_id in alias default is not dangling.
         self.assertEqual(alias_valid.alias_status, 'not_tested')
-        with self.mock_mail_gateway(), patch('odoo.addons.mail.models.mail_alias.Alias._alias_bounce_incoming_email',
+        with self.mock_mail_gateway(), patch('odoo.addons.mail.models.mail_alias.MailAlias._alias_bounce_incoming_email',
                                              autospec=True) as _alias_bounce_incoming_email_mock:
             record = self.format_and_process(MAIL_TEMPLATE, self.email_from, f'valid@{self.alias_domain}', subject='Valid',
                                              target_model=test_model_track.model)
@@ -568,7 +568,7 @@ class TestMailgateway(MailCommon):
 
         # Test with a dangling reference that must trigger bounce emails and set the alias status to invalid.
         container_custom.unlink()
-        with self.assertRaises(Exception), patch('odoo.addons.mail.models.mail_alias.Alias._alias_bounce_incoming_email',
+        with self.assertRaises(Exception), patch('odoo.addons.mail.models.mail_alias.MailAlias._alias_bounce_incoming_email',
                                                  autospec=True) as _alias_bounce_incoming_email_mock:
             self.format_and_process(MAIL_TEMPLATE, self.email_from, f'valid@{self.alias_domain}', subject='Invalid',
                                     target_model=test_model_track.model)

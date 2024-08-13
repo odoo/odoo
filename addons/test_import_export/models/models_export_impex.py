@@ -195,6 +195,6 @@ class ExportWithRequiredField(models.Model):
 
 
 class ExportMany2oneRequiredSubfield(models.Model):
-    _name = _description = 'export.many2one.required.subfield'
+    _description = 'export.many2one.required.subfield'
 
     name = fields.Many2one('export.with.required.field')

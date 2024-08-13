@@ -257,7 +257,7 @@ class ResCompany(models.Model):
             constraint = [('id', 'in', companies.ids)]
             newself = newself.sudo()
         newself = newself.with_context(context)
-        domain = super(Company, newself)._search_display_name(operator, value)
+        domain = super(ResCompany, newself)._search_display_name(operator, value)
         return expression.AND([domain, constraint])
 
     @api.model
