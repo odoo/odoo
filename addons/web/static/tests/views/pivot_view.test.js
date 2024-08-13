@@ -4399,14 +4399,14 @@ test("no class 'o_view_sample_data' when real data are presented", async () => {
 });
 
 test("group by properties in pivot view", async () => {
-    onRpc("/web/dataset/call_kw/partner/web_search_read", (request) => {
-        const { params } = request.json();
+    onRpc("/web/dataset/call_kw/partner/web_search_read", async (request) => {
+        const { params } = await request.json();
         if (params.kwargs.specification?.properties_definition) {
             expect.step("fetch_definition");
         }
     });
-    onRpc("/web/dataset/call_kw/partner/read_group", (request) => {
-        const { params } = request.json();
+    onRpc("/web/dataset/call_kw/partner/read_group", async (request) => {
+        const { params } = await request.json();
         if (params.kwargs.groupby?.includes("properties.my_char")) {
             expect.step("read_group");
             return [
