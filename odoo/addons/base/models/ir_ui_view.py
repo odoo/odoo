@@ -461,6 +461,8 @@ actual arch.
         for view in self:
             view.warning_info = ''
             try:
+                if not view.id:
+                    continue
                 if view.inherit_id:
                     view_arch = etree.fromstring(view.arch)
                     view._valid_inheritance(view_arch)
