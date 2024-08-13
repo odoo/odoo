@@ -114,7 +114,7 @@ const FormEditor = options.Class.extend({
      */
     _getDefaultFormat: function () {
         return {
-            labelWidth: this.$target[0].querySelector('.s_website_form_label').style.width,
+            labelWidth: this.$target[0].querySelector('.s_website_form_label')?.style.width || "200px",
             labelPosition: 'left',
             multiPosition: 'horizontal',
             requiredMark: this._isRequiredMark(),
