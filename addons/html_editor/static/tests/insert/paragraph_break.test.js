@@ -257,12 +257,14 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p><b>abc</b>[]def</p>",
                 stepFunction: splitBlock,
+                contentAfterEdit: "<p><b>abc</b></p><p>[]def</p>",
                 contentAfter: "<p><b>abc</b></p><p>[]def</p>",
             });
             await testEditor({
                 // That selection is equivalent to </b>[]
                 contentBefore: "<p><b>abc[]</b>def</p>",
                 stepFunction: splitBlock,
+                contentAfterEdit: `<p><b>abc</b></p><p><b data-oe-zws-empty-inline="">[]\u200b</b>def</p>`,
                 contentAfter: "<p><b>abc</b></p><p>[]def</p>",
             });
             await testEditor({
@@ -270,6 +272,7 @@ describe("Selection collapsed", () => {
                 stepFunction: splitBlock,
                 // The space is converted to a non-breaking
                 // space so it is visible.
+                contentAfterEdit: `<p><b>abc</b></p><p><b data-oe-zws-empty-inline="">[]\u200b</b>&nbsp;def</p>`,
                 contentAfter: "<p><b>abc</b></p><p>[]&nbsp;def</p>",
             });
             await testEditor({
@@ -278,6 +281,7 @@ describe("Selection collapsed", () => {
                 // The space is converted to a non-breaking
                 // space so it is visible (because it's before a
                 // <br>).
+                contentAfterEdit: `<p><b>abc&nbsp;</b></p><p><b data-oe-zws-empty-inline="">[]\u200b</b>def</p>`,
                 contentAfter: "<p><b>abc&nbsp;</b></p><p>[]def</p>",
             });
         });
@@ -286,17 +290,20 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p>[]<b>abc</b></p>",
                 stepFunction: splitBlock,
+                contentAfterEdit: "<p><br></p><p><b>[]abc</b></p>",
                 contentAfter: "<p><br></p><p><b>[]abc</b></p>",
             });
             await testEditor({
                 // That selection is equivalent to []<b>
                 contentBefore: "<p><b>[]abc</b></p>",
                 stepFunction: splitBlock,
+                contentAfterEdit: `<p><b data-oe-zws-empty-inline="">\u200b</b><br></p><p><b>[]abc</b></p>`,
                 contentAfter: "<p><br></p><p><b>[]abc</b></p>",
             });
             await testEditor({
                 contentBefore: "<p><b>[] abc</b></p>",
                 stepFunction: splitBlock,
+                contentAfterEdit: `<p><b data-oe-zws-empty-inline="">\u200b</b><br></p><p><b>[] abc</b></p>`,
                 // The space should have been parsed away.
                 // JW cAfter: '<p><br></p><p><b>[]abc</b></p>',
                 contentAfter: "<p><br></p><p><b>[] abc</b></p>",
@@ -329,18 +336,21 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p><b>abc</b>[]</p>",
                 stepFunction: splitBlock,
+                contentAfterEdit: `<p><b>abc</b></p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 contentAfter: "<p><b>abc</b></p><p>[]<br></p>",
             });
             await testEditor({
                 // That selection is equivalent to </b>[]
                 contentBefore: "<p><b>abc[]</b></p>",
                 stepFunction: splitBlock,
+                contentAfterEdit: `<p><b>abc</b></p><p><b data-oe-zws-empty-inline="">[]\u200b</b><br></p>`,
                 contentAfter: "<p><b>abc</b></p><p>[]<br></p>",
             });
             await testEditor({
                 contentBefore: "<p><b>abc[] </b></p>",
                 stepFunction: splitBlock,
                 // The space should have been parsed away.
+                contentAfterEdit: `<p><b>abc</b></p><p><b data-oe-zws-empty-inline="">[]\u200b</b><br></p>`,
                 contentAfter: "<p><b>abc</b></p><p>[]<br></p>",
             });
         });
@@ -428,7 +438,7 @@ describe("Selection collapsed", () => {
                 contentBefore: '<p><span class="a">ab</span></p><p><span class="b">[]cd</span></p>',
                 stepFunction: splitBlock,
                 contentAfter:
-                    '<p><span class="a">ab</span></p><p><br></p><p><span class="b">[]cd</span></p>',
+                    '<p><span class="a">ab</span></p><p><span class="b">\u200b</span><br></p><p><span class="b">[]cd</span></p>',
             });
         });
 
@@ -464,6 +474,9 @@ describe("Selection collapsed", () => {
                 contentBefore:
                     '<h1><font style="color: red;" data-oe-zws-empty-inline="">[]\u200B</font><br></h1>',
                 stepFunction: splitBlock,
+                contentAfterEdit:
+                    '<h1><font style="color: red;" data-oe-zws-empty-inline="">\u200b</font><br></h1>' +
+                    '<p><font style="color: red;" data-oe-zws-empty-inline="">[]\u200b</font><br></p>',
                 contentAfter: "<h1><br></h1><p>[]<br></p>",
             });
         });
@@ -472,7 +485,30 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: `<h1 style="color: red">ab[]</h1>`,
                 stepFunction: splitBlock,
+                contentAfterEdit: `<h1 style="color: red">ab</h1><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 contentAfter: `<h1 style="color: red">ab</h1><p>[]<br></p>`,
+            });
+        });
+    });
+    describe("Styles", () => {
+        test("should split a paragraph at the end of style node", async () => {
+            await testEditor({
+                contentBefore: '<p><font style="color: red;">abc[]</font></p>',
+                stepFunction: splitBlock,
+                contentAfterEdit: `<p><font style="color: red;">abc</font></p><p><font style="color: red;" data-oe-zws-empty-inline="">[]\u200b</font><br></p>`,
+                contentAfter: `<p><font style="color: red;">abc</font></p><p>[]<br></p>`,
+            });
+            await testEditor({
+                contentBefore: '<p><font style="background-color: red;">abc[]</font></p>',
+                stepFunction: splitBlock,
+                contentAfterEdit: `<p><font style="background-color: red;">abc</font></p><p><font style="background-color: red;" data-oe-zws-empty-inline="">[]\u200b</font><br></p>`,
+                contentAfter: `<p><font style="background-color: red;">abc</font></p><p>[]<br></p>`,
+            });
+            await testEditor({
+                contentBefore: '<p><span style="font-size: 36px;">abc[]</span></p>',
+                stepFunction: splitBlock,
+                contentAfterEdit: `<p><span style="font-size: 36px;">abc</span></p><p><span style="font-size: 36px;" data-oe-zws-empty-inline="">[]\u200b</span><br></p>`,
+                contentAfter: `<p><span style="font-size: 36px;">abc</span></p><p>[]<br></p>`,
             });
         });
     });

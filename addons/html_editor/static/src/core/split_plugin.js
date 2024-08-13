@@ -115,17 +115,20 @@ export class SplitPlugin extends Plugin {
             blockToSplit.parentElement
         );
         restore();
-        const removeEmptyAndFill = (node) => {
-            if (!isBlock(node) && !isVisible(node)) {
+        const fillEmptyElement = (node) => {
+            if (node.nodeType === Node.TEXT_NODE && !isVisible(node)) {
                 const parent = node.parentElement;
                 node.remove();
-                removeEmptyAndFill(parent);
-            } else {
+                fillEmptyElement(parent);
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                if (node.hasAttribute("data-oe-zws-empty-inline")) {
+                    delete node.dataset.oeZwsEmptyInline;
+                }
                 fillEmpty(node);
             }
         };
-        removeEmptyAndFill(lastLeaf(beforeElement));
-        removeEmptyAndFill(firstLeaf(afterElement));
+        fillEmptyElement(lastLeaf(beforeElement));
+        fillEmptyElement(firstLeaf(afterElement));
 
         this.shared.setCursorStart(afterElement);
 
