@@ -18,10 +18,7 @@
                     t-att-class="swapButtonClasses"
                     t-on-click="submitOrder"
                 >
-                    <div t-if="this.uiState.clicked and displayCategoryCount.length" class="h-100 w-100 position-absolute top-0 start-0 d-flex align-items-center justify-content-center" style="backdrop-filter: blur(7px);">
-                        <img src="/web/static/img/spin.svg" style="height:35px; width:35px" alt="Loading..."/>
-                    </div>
-                    <t t-if="!(displayCategoryCount.length > 2)">Order</t>
+                    <t t-if="!(ui.isSmall or displayCategoryCount.length > 2) or (!displayCategoryCount.length and ui.isSmall)">Order</t>
                     <div t-attf-class="{{ !(displayCategoryCount.length > 2) ? 'd-flex flex-column align-items-end gap-1' : 'row row-cols-2 g-1 gx-2' }} {{ isCategoryCountOverflow ? 'mt-n3' : ''}}">
                         <t t-if="displayCategoryCount.length">
                             <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
