@@ -10,17 +10,8 @@ import {
     ZERO,
     BACKSPACE,
 } from "@point_of_sale/app/generic_components/numpad/numpad";
-import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 
 patch(Navbar.prototype, {
-    onClickPlanButton() {
-        if (this.pos.config.module_pos_restaurant) {
-            this.pos.showScreen("FloorScreen", { floor: this.floor });
-        }
-    },
-    isFloorScreenActive() {
-        return this.pos.mainScreen.component && this.pos.mainScreen.component === FloorScreen;
-    },
     /**
      * If no table is set to pos, which means the current main screen
      * is floor screen, then the order count should be based on all the orders.
@@ -44,15 +35,6 @@ patch(Navbar.prototype, {
     getFloatingOrders() {
         const draftOrders = super.getFloatingOrders() || [];
         return draftOrders.filter((o) => !o.table_id);
-    },
-    get showFloatingOrderName() {
-        return this.pos.get_order() && !this.pos.get_order()?.table_id;
-    },
-    get showTableNumber() {
-        return typeof this.getTable()?.table_number === "number";
-    },
-    get showSwitchTableButton() {
-        return !this.showTableNumber && !this.showFloatingOrderName;
     },
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";

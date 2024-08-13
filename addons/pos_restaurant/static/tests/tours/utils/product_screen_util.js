@@ -42,11 +42,3 @@ export function orderBtnIsPresent() {
         },
     ];
 }
-export function tableNameShown(table_name) {
-    return [
-        {
-            content: "Table name is shown",
-            trigger: `.table-free-order-label:contains(${table_name})`,
-        },
-    ];
-}
