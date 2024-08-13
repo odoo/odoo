@@ -871,13 +871,17 @@ class WebsocketConnectionHandler:
         'connection', 'host', 'sec-websocket-key',
         'sec-websocket-version', 'upgrade', 'origin',
     }
+    # Latest version of the websocket worker. This version should be incremented
+    # every time `websocket_worker.js` is modified to force the browser to fetch
+    # the new worker bundle.
+    _VERSION = "17.0-1"
 
     @classmethod
     def websocket_allowed(cls, request):
         return not modules.module.current_test
 
     @classmethod
-    def open_connection(cls, request):
+    def open_connection(cls, request, version):
         """
         Open a websocket connection if the handshake is successfull.
         :return: Response indicating the server performed a connection
@@ -897,6 +901,7 @@ class WebsocketConnectionHandler:
                 Websocket(socket, session),
                 db,
                 httprequest,
+                version
             ))
             # Force save the session. Session must be persisted to handle
             # WebSocket authentication.
@@ -981,12 +986,23 @@ class WebsocketConnectionHandler:
             )
 
     @classmethod
-    def _serve_forever(cls, websocket, db, httprequest):
+    def _serve_forever(cls, websocket, db, httprequest, version):
         """
         Process incoming messages and dispatch them to the application.
         """
         current_thread = threading.current_thread()
         current_thread.type = 'websocket'
+        if httprequest.user_agent and version != cls._VERSION:
+            # Close the connection from an outdated worker. We can't use a
+            # custom close code because the connection is considered successful,
+            # preventing exponential reconnect backoff. This would cause old
+            # workers to reconnect frequently, putting pressure on the server.
+            # Clean closes don't trigger reconnections, assuming they are
+            # intentional. The reason indicates to the origin worker not to
+            # reconnect, preventing old workers from lingering after updates.
+            # Non browsers are ignored since IOT devices do not provide the
+            # worker version.
+            websocket.disconnect(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
             with WebsocketRequest(db, httprequest, websocket) as req:
                 try:
