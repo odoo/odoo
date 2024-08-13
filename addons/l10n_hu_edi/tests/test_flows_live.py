@@ -57,13 +57,16 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         if 'sale_line_ids' not in self.env['account.move.line']:
             self.skipTest('Sale module not installed, skipping advance invoice tests.')
 
-        advance_invoice, final_invoice = self.create_advance_invoice()
+        sale_order, advance_invoice = self.create_advance_invoice()
         with self.set_invoice_name(advance_invoice, 'INV/2024/'):
             advance_invoice.action_post()
             send_and_print = self.create_send_and_print(advance_invoice, l10n_hu_edi_enable_nav_30=True)
             send_and_print.action_send_and_print()
             self.assertRecordValues(advance_invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
 
+        self.env['account.payment.register'].with_context(active_ids=advance_invoice.ids, active_model='account.move').create({})._create_payments()
+
+        final_invoice = self.create_final_invoice(sale_order)
         with self.set_invoice_name(final_invoice, 'INV/2024/'):
             final_invoice.action_post()
             send_and_print = self.create_send_and_print(final_invoice, l10n_hu_edi_enable_nav_30=True)
