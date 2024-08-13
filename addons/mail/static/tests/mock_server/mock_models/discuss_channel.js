@@ -252,14 +252,14 @@ export class DiscussChannel extends models.ServerModel {
             defaultDisplayMode: channel.default_display_mode,
             group_based_subscription: channel.group_ids.length > 0,
             is_editable: (() => {
-                switch (channel.channel_type) {
-                    case "channel":
-                        return channel.create_uid === this.env.uid;
-                    case "group":
-                        return Boolean(memberOfCurrentUser);
-                    default:
-                        return false;
+                if (channel.channel_type === "channel") {
+                    // Match the ACL rules
+                    return (
+                        !channel.group_public_id ||
+                        this.env.user.groups_id.includes(channel.group_public_id)
+                    );
                 }
+                return Boolean(memberOfCurrentUser);
             })(),
             memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
         });

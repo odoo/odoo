@@ -10,7 +10,7 @@ from datetime import timedelta
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_list, get_lang, html_escape
 
@@ -102,14 +102,17 @@ class Channel(models.Model):
 
     # COMPUTE / INVERSE
 
-    @api.depends('channel_type', 'is_member')
+    @api.depends("channel_type", "is_member", "group_public_id")
+    @api.depends_context("uid")
     def _compute_is_editable(self):
+        if not self.check_access_rights("write", raise_exception=False):
+            self.is_editable = False
+            return
         for channel in self:
-            if channel.channel_type == 'channel':
-                channel.is_editable = self.env.user._is_admin() or channel.create_uid.id == self.env.user.id
-            elif channel.channel_type == 'group':
-                channel.is_editable = channel.is_member and not self.env.user.share
-            else:
+            try:
+                channel.check_access_rule("write")
+                channel.is_editable = True
+            except AccessError:
                 channel.is_editable = False
 
     @api.depends('channel_type', 'image_128', 'uuid')
