@@ -141,6 +141,7 @@ class ResPartner(models.Model):
         else:
             vies_result = None
             try:
+                _logger.info('Calling VIES service to check VAT for autocomplete: %s', vat)
                 vies_result = check_vies(vat, timeout=timeout)
             except Exception:
                 _logger.warning("Failed VIES VAT check.", exc_info=True)
