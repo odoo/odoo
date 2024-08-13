@@ -733,7 +733,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         // Keep the focus on the previously focused element if any, otherwise do
         // not focus the dropdown on hover.
         if (focusedEl) {
-            focusedEl.focus();
+            focusedEl.focus({preventScroll: true});
         } else {
             const dropdownToggleEl = ev.currentTarget.querySelector(".dropdown-toggle");
             if (dropdownToggleEl) {
