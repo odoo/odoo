@@ -20,7 +20,6 @@
             </xpath>
             <xpath expr="//sheet" position="inside">
                 <group>
-                
                     <field name="is_released"/>
                 </group>
             </xpath>
@@ -50,41 +49,21 @@
             </xpath>
         </field>
     </record>
+
+    <!-- Adding consignment information to the form view -->
     <record id="view_order_form_inherit_consignment_info" model="ir.ui.view">
-            <field name="name">sale.order.form.inherit.consignment.info</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//sheet" position="inside">
-                    <group string="Consignment Information">
-                        <field name="consignment_number"/>
-                        <field name="carrier"/>
-                        <field name="status"/>
-                        <field name="tracking_url"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
-
-
-
-     <record id="view_order_form_inherit_custom_fields" model="ir.ui.view">
-        <field name="name">sale.order.form.inherit.custom.fields</field>
+        <field name="name">sale.order.form.inherit.consignment.info</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
-                <group string="Delivery Details">
-                    <field name="customer_name"/>
-                    <field name="customer_address"/>
-                    <field name="customer_suburb"/>
-                    <field name="customer_state"/>
-                    <field name="customer_postcode"/>
-                    <field name="customer_email"/>
-                    <field name="customer_phone"/>
+                <group string="Consignment Information">
+                    <field name="consignment_number"/>
+                    <field name="carrier"/>
+                    <field name="status"/>
+                    <field name="tracking_url"/>
                 </group>
             </xpath>
         </field>
     </record>
 </odoo>
-
