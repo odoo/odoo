@@ -54,6 +54,10 @@ var failCertificationSteps = [{
     content: 'Survey: submitting the certification with wrong answers',
     trigger: 'button:contains("Submit")',
     run: "click",
+}, {
+    content: "Click on Submit",
+    trigger: 'button.btn-primary:contains("Submit")',
+    run: "click",
 }];
 
 var retrySteps = [{
@@ -85,6 +89,10 @@ var succeedCertificationSteps = [{
 }, {
     content: 'Survey: submitting the certification with correct answers',
     trigger: 'button:contains("Submit")',
+    run: "click",
+}, {
+    content: "Click on Submit",
+    trigger: 'button.btn-primary:contains("Submit")',
     run: "click",
 }];
 
