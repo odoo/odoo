@@ -260,3 +260,10 @@ class TestWebsocketCaryall(WebsocketCase):
             )
             serve_forever_called_event.wait(timeout=5)
             self.assertTrue(mock.called)
+
+    def test_trigger_on_websocket_closed(self):
+        with patch('odoo.addons.bus.models.ir_websocket.IrWebsocket._on_websocket_closed') as mock:
+            ws = self.websocket_connect()
+            ws.close(CloseCode.CLEAN)
+            self.wait_remaining_websocket_connections()
+            self.assertTrue(mock.called)

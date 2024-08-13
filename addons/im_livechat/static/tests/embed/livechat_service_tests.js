@@ -78,8 +78,10 @@ QUnit.test("Only necessary requests are made when creating a new chat", async (a
     assert.verifySteps([]);
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
+    await click(".o-mail-Composer-input");
     await linkPreviewDeferred;
     assert.verifySteps([
+        "/discuss/channel/set_last_seen_message",
         "/im_livechat/get_session",
         "/mail/init_messaging",
         "/mail/message/post",
