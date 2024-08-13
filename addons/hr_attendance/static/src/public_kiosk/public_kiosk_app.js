@@ -190,7 +190,6 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
                 token : kiosk_backend_info.token,
                 companyId: kiosk_backend_info.company_id,
                 companyName: kiosk_backend_info.company_name,
-                employees: kiosk_backend_info.employees,
                 departments: kiosk_backend_info.departments,
                 kioskMode: kiosk_backend_info.kiosk_mode,
                 barcodeSource: kiosk_backend_info.barcode_source,

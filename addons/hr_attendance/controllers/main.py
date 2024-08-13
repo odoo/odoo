@@ -84,19 +84,6 @@ class HrAttendance(http.Controller):
         if not company:
             return request.not_found()
         else:
-            employee_list = [{"id": e["id"],
-                              "name": e["name"],
-                              "avatar": image_data_uri(e["avatar_256"]),
-                              "job": e["job_id"][1] if e["job_id"] else False,
-                              "department": {"id": e["department_id"][0] if e["department_id"] else False,
-                                             "name": e["department_id"][1] if e["department_id"] else False
-                                             }
-                              } for e in request.env['hr.employee'].sudo().search_read(domain=[('company_id', '=', company.id)],
-                                                                                       fields=["id",
-                                                                                               "name",
-                                                                                               "avatar_256",
-                                                                                               "job_id",
-                                                                                               "department_id"])]
             department_list = [{'id': dep["id"],
                                  'name': dep["name"],
                                  'count': dep["total_employee"]
@@ -119,7 +106,6 @@ class HrAttendance(http.Controller):
                         'token': token,
                         'company_id': company.id,
                         'company_name': company.name,
-                        'employees': employee_list,
                         'departments': department_list,
                         'kiosk_mode': kiosk_mode,
                         'from_trial_mode': from_trial_mode,
@@ -158,6 +144,21 @@ class HrAttendance(http.Controller):
                 employee.sudo()._attendance_action_change(self._get_geoip_response('kiosk'))
                 return self._get_employee_info_response(employee)
         return {}
+
+    @http.route('/hr_attendance/employees_infos', type="json", auth="public")
+    def employees_infos(self, token, limit, offset, domain):
+        company = self._get_company(token)
+        if company:
+            employees = request.env['hr.employee'].sudo().search_fetch(domain, ['id', 'display_name', 'job_id'],
+                limit=limit, offset=offset, order="name, id")
+            employees_data = [{
+                'id': employee.id,
+                'display_name': employee.display_name,
+                'job_id': employee.job_id.name,
+                'avatar': image_data_uri(employee.avatar_128)
+            } for employee in employees]
+            return {'records': employees_data, 'length': request.env['hr.employee'].sudo().search_count(domain)}
+        return []
 
     @http.route('/hr_attendance/systray_check_in_out', type="json", auth="user")
     def systray_attendance(self, latitude=False, longitude=False):
