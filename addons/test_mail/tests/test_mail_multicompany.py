@@ -9,7 +9,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 from werkzeug.urls import url_parse
 
-from odoo.addons.mail.models.mail_message import Message
+from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.models.test_mail_corner_case_models import MailTestMultiCompanyWithActivity
 from odoo.addons.test_mail.tests.common import TestRecipients
@@ -140,8 +140,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         # Other company (no access)
         # ------------------------------------------------------------
 
-        _original_car = Message._check_access
-        with patch.object(Message, '_check_access',
+        _original_car = MailMessage._check_access
+        with patch.object(MailMessage, '_check_access',
                           autospec=True, side_effect=_original_car) as mock_msg_car:
             with self.assertRaises(AccessError):
                 test_records_mc_c1.message_post(

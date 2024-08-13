@@ -14,9 +14,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class BaseModel(models.AbstractModel):
-    _name = "base"
-
+class Base(models.AbstractModel):
     _inherit = ['base']
 
     def _valid_field_parameter(self, field, name):

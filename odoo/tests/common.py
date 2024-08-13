@@ -917,7 +917,7 @@ class TransactionCase(BaseCase):
                 ['pbkdf2_sha512', 'plaintext'],
                 pbkdf2_sha512__rounds=1,
             )
-        cls._crypt_context_patcher = patch('odoo.addons.base.models.res_users.Users._crypt_context', _crypt_context)
+        cls._crypt_context_patcher = patch('odoo.addons.base.models.res_users.ResUsersPatchedInTest._crypt_context', _crypt_context)
         cls.startClassPatcher(cls._crypt_context_patcher)
 
     def setUp(self):
@@ -1947,7 +1947,7 @@ class HttpCase(TransactionCase):
                 return {'uid': self.id, 'auth_method': 'password', 'mfa': 'default'}
 
             # patching to speedup the check in case the password is hashed with many hashround + avoid to update the password
-            with patch('odoo.addons.base.models.res_users.Users._check_credentials', new=patched_check_credentials):
+            with patch('odoo.addons.base.models.res_users.ResUsersPatchedInTest._check_credentials', new=patched_check_credentials):
                 credential = {'login': user, 'password': password, 'type': 'password'}
                 auth_info = self.registry['res.users'].authenticate(session.db, credential, {'interactive': False})
             uid = auth_info['uid']

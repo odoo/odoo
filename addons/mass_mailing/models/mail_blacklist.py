@@ -4,7 +4,7 @@
 from odoo import fields, models
 
 
-class MailBlackList(models.Model):
+class MailBlacklist(models.Model):
     """ Model of blacklisted email addresses to stop sending emails."""
     _inherit = ['mail.blacklist']
 

@@ -4,7 +4,7 @@
 from odoo import models, fields
 
 
-class User(models.Model):
+class ResUsers(models.Model):
     _inherit = ['res.users']
 
     employee_cars_count = fields.Integer(related='employee_id.employee_cars_count')

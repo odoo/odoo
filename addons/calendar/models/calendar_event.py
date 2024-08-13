@@ -13,7 +13,7 @@ import uuid
 from odoo import api, fields, models, Command
 from odoo.osv.expression import AND
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.addons.calendar.models.calendar_attendee import Attendee
+from odoo.addons.calendar.models.calendar_attendee import CalendarAttendee
 from odoo.addons.calendar.models.calendar_recurrence import (
     weekday_to_field,
     RRULE_TYPE_SELECTION,
@@ -74,7 +74,7 @@ class CalendarEvent(models.Model):
 
     @api.model
     def get_state_selections(self):
-        return Attendee.STATE_SELECTION
+        return CalendarAttendee.STATE_SELECTION
 
     @api.model
     def default_get(self, fields):

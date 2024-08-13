@@ -4,9 +4,9 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo import exceptions
-from odoo.addons.crm.models.crm_lead import Lead
+from odoo.addons.crm.models.crm_lead import CrmLead
 from odoo.addons.iap.tests.common import MockIAPEnrich
-from odoo.addons.website_crm_iap_reveal.models.crm_reveal_rule import CRMRevealRule
+from odoo.addons.website_crm_iap_reveal.models.crm_reveal_rule import CrmRevealRule
 
 
 class MockIAPReveal(MockIAPEnrich):
@@ -21,7 +21,7 @@ class MockIAPReveal(MockIAPEnrich):
     @contextmanager
     def mock_IAP_reveal(self, ip_to_rules, name_list=None, default_data=None, sim_error=None):
         self._new_leads = self.env['crm.lead'].sudo()
-        crm_lead_create_origin = Lead.create
+        crm_lead_create_origin = CrmLead.create
 
         def _crm_lead_create(model, *args, **kwargs):
             res = crm_lead_create_origin(model, *args, **kwargs)
@@ -71,8 +71,8 @@ class MockIAPReveal(MockIAPEnrich):
                 'credit_error': False
             }
 
-        with patch.object(CRMRevealRule, '_iap_contact_reveal', side_effect=_iap_contact_reveal), \
-             patch.object(Lead, 'create', autospec=True, wraps=Lead, side_effect=_crm_lead_create):
+        with patch.object(CrmRevealRule, '_iap_contact_reveal', side_effect=_iap_contact_reveal), \
+             patch.object(CrmLead, 'create', autospec=True, wraps=CrmLead, side_effect=_crm_lead_create):
             yield
 
     def _get_iap_company_data(self, base_name, service=None, add_values=None):

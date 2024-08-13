@@ -7,14 +7,14 @@ from odoo import Command
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
-from odoo.addons.microsoft_calendar.models.res_users import User
+from odoo.addons.microsoft_calendar.models.res_users import ResUsers
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_token, _modified_date_in_the_future
 from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import tagged
 
 
 @tagged('post_install', '-at_install')
-@patch.object(User, '_get_microsoft_calendar_token', mock_get_token)
+@patch.object(ResUsers, '_get_microsoft_calendar_token', mock_get_token)
 class TestCreateEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'insert')
@@ -646,7 +646,7 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCommon):
             cls.users += [user]
 
     @freeze_time("2020-01-01")
-    @patch.object(User, '_get_microsoft_calendar_token', lambda user: user.microsoft_calendar_token)
+    @patch.object(ResUsers, '_get_microsoft_calendar_token', lambda user: user.microsoft_calendar_token)
     def test_event_creation_for_user(self):
         """Check that either emails or synchronization happens correctly when creating an event for another user."""
         user_root = self.env.ref('base.user_root')
