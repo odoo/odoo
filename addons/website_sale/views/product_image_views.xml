@@ -41,21 +41,15 @@
         <field name="model">product.image</field>
         <field name="arch" type="xml">
             <kanban string="Product Images" default_order="sequence">
-                <field name="id"/>
-                <field name="name"/>
-                <field name="image_1920"/>
-                <field name="video_url"/>
                 <field name="sequence" widget="handle"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="card p-0">
+                    <t t-name="kanban-card" class="p-0 border-0">
+                        <div class="card">
                             <div class="o_squared_image">
                                 <field class="card-img-top" name="image_1920" widget="x2_many_image"/>
                             </div>
-                            <div class="card-body p-0">
-                                <h4 class="card-title p-2 m-0 bg-200">
-                                    <small t-attf-title="#{record.name.value}"><field name="name" class="text-truncate d-block"/></small>
-                                </h4>
+                            <div class="p-2 m-0 bg-200" t-attf-title="#{record.name.value}">
+                                <field name="name" class="small fs-5 text-truncate d-block"/>
                             </div>
                             <!-- below 100 Kb: good -->
                             <t t-if="record.image_1920.raw_value.length &lt; 100*1000">
