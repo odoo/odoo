@@ -170,13 +170,14 @@ class StockRule(models.Model):
                 suffix += _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring products in this location.", source)
             message_dict = {
                 'pull': _(
-                    'When products are needed in <b>%(destination)s</b>, <br/> <b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill the need.',
+                    'When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill the need.',
                     destination=destination,
                     operation=operation,
                     source_location=source,
-                ) + suffix,
+                    suffix=suffix,
+                ),
                 'push': _(
-                    'When products arrive in <b>%(source_location)s</b>, <br/> <b>%(operation)s</b> are created to send them to <b>%(destination)s</b>.',
+                    'When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</b> are created to send them to <b>%(destination)s</b>.',
                     source_location=source,
                     operation=operation,
                     destination=destination,

@@ -80,9 +80,9 @@ export class GaugeField extends Component {
                         callbacks: {
                             label: function (tooltipItem) {
                                 if (tooltipItem.dataIndex === 0) {
-                                    return _t("Value: ") + gaugeValue;
+                                    return _t("Value: %(value)s", { value: gaugeValue });
                                 }
-                                return _t("Max: ") + maxLabel;
+                                return _t("Max: %(max)s", { max: maxLabel });
                             },
                         },
                     },

@@ -320,7 +320,7 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             return {
                 isValid: isValid,
                 message: !isValid &&
-                    _t("Invalid API Key. The following error was returned by Google:") + " " + (await response.text()),
+                    _t("Invalid API Key. The following error was returned by Google: %(error)s", {error: await response.text()}),
             };
         } catch {
             return {

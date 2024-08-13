@@ -210,7 +210,7 @@ class StockScrap(models.Model):
                 'default_product_uom_name': self.product_id.uom_name
             })
             return {
-                'name': self.product_id.display_name + _(': Insufficient Quantity To Scrap'),
+                'name': _('%(product)s: Insufficient Quantity To Scrap', product=self.product_id.display_name),
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.scrap',
                 'view_id': self.env.ref('stock.stock_warn_insufficient_qty_scrap_form_view').id,

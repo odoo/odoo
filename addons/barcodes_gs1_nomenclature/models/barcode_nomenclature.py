@@ -26,7 +26,7 @@ class BarcodeNomenclature(models.Model):
                 try:
                     re.compile("(?:%s)?" % nom.gs1_separator_fnc1)
                 except re.error as error:
-                    raise ValidationError(_("The FNC1 Separator Alternative is not a valid Regex: ") + str(error))
+                    raise ValidationError(_("The FNC1 Separator Alternative is not a valid Regex: %(error)s", error))
 
     @api.model
     def gs1_date_to_date(self, gs1_date):

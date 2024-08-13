@@ -365,11 +365,21 @@ class Repair(models.Model):
         if any(repair.sale_order_id for repair in self):
             concerned_ro = self.filtered('sale_order_id')
             ref_str = "\n".join(ro.name for ro in concerned_ro)
-            raise UserError(_("You cannot create a quotation for a repair order that is already linked to an existing sale order.\nConcerned repair order(s) :\n") + ref_str)
+            raise UserError(
+                _(
+                    "You cannot create a quotation for a repair order that is already linked to an existing sale order.\nConcerned repair order(s):\n%(ref_str)s",
+                    ref_str=ref_str,
+                ),
+            )
         if any(not repair.partner_id for repair in self):
             concerned_ro = self.filtered(lambda ro: not ro.partner_id)
             ref_str = "\n".join(ro.name for ro in concerned_ro)
-            raise UserError(_("You need to define a customer for a repair order in order to create an associated quotation.\nConcerned repair order(s) :\n") + ref_str)
+            raise UserError(
+                _(
+                    "You need to define a customer for a repair order in order to create an associated quotation.\nConcerned repair order(s):\n%(ref_str)s",
+                    ref_str=ref_str,
+                ),
+            )
         sale_order_values_list = []
         for repair in self:
             sale_order_values_list.append({
@@ -545,7 +555,7 @@ class Repair(models.Model):
                 return self._action_repair_confirm()
 
         return {
-            'name': self.product_id.display_name + _(': Insufficient Quantity To Repair'),
+            'name': _('%(product)s: Insufficient Quantity To Repair', product=self.product_id.display_name),
             'view_mode': 'form',
             'res_model': 'stock.warn.insufficient.qty.repair',
             'view_id': self.env.ref('repair.stock_warn_insufficient_qty_repair_form_view').id,

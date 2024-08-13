@@ -8,6 +8,7 @@ from odoo import api, models, fields, _
 from odoo.addons.website.tools import text_from_html
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
+from odoo.tools import html_escape
 
 
 class Blog(models.Model):
@@ -163,9 +164,10 @@ class BlogPost(models.Model):
             blog_post.website_url = "/blog/%s/%s" % (self.env['ir.http']._slug(blog_post.blog_id), self.env['ir.http']._slug(blog_post))
 
     def _default_content(self):
-        return '''
-            <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
-        '''
+        text = html_escape(_("Start writing here..."))
+        return """
+            <p class="o_default_snippet_text">%(text)s</p>
+        """ % {"text": text}
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id, index='btree_not_null')

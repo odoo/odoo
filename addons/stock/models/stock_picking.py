@@ -158,13 +158,13 @@ class PickingType(models.Model):
                 if vals.get('warehouse_id'):
                     wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
                     vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
-                        'name': wh.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
+                        'name': _('%(warehouse)s Sequence %(code)s', warehouse=wh.name, code=vals['sequence_code']),
                         'prefix': wh.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
                         'company_id': wh.company_id.id,
                     }).id
                 else:
                     vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
-                        'name': _('Sequence') + ' ' + vals['sequence_code'],
+                        'name': _('Sequence %(code)s', code=vals['sequence_code']),
                         'prefix': vals['sequence_code'], 'padding': 5,
                         'company_id': vals.get('company_id') or self.env.company.id,
                     }).id
@@ -189,13 +189,13 @@ class PickingType(models.Model):
             for picking_type in self:
                 if picking_type.warehouse_id:
                     picking_type.sequence_id.sudo().write({
-                        'name': picking_type.warehouse_id.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
+                        'name': _('%(warehouse)s Sequence %(code)s', warehouse=picking_type.warehouse_id.name, code=vals['sequence_code']),
                         'prefix': picking_type.warehouse_id.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
                         'company_id': picking_type.warehouse_id.company_id.id,
                     })
                 else:
                     picking_type.sequence_id.sudo().write({
-                        'name': _('Sequence') + ' ' + vals['sequence_code'],
+                        'name': _('Sequence %(code)s', code=vals['sequence_code']),
                         'prefix': vals['sequence_code'], 'padding': 5,
                         'company_id': picking_type.env.company.id,
                     })

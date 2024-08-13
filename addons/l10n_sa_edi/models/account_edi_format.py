@@ -232,7 +232,7 @@ class AccountEdiFormat(models.Model):
             PCSID_data = invoice.journal_id._l10n_sa_api_get_pcsid()
         except UserError as e:
             return ({
-                'error': _("Could not generate PCSID values: \n") + e.args[0],
+                'error': _("Could not generate PCSID values:\n%(error)s", error=e.args[0]),
                 'blocking_level': 'error',
                 'response': unsigned_xml
             }, unsigned_xml)
@@ -243,7 +243,7 @@ class AccountEdiFormat(models.Model):
             signed_xml = self._l10n_sa_get_signed_xml(invoice, unsigned_xml, x509_cert)
         except UserError as e:
             return ({
-                'error': _("Could not generate signed XML values: \n") + e.args[0],
+                'error': _("Could not generate signed XML values:\n%(error)s", error=e.args[0]),
                 'blocking_level': 'error',
                 'response': unsigned_xml
             }, unsigned_xml)
