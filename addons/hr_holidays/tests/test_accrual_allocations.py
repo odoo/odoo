@@ -1684,9 +1684,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             with Form(self.env['hr.leave.allocation']) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
+                f.date_from = '2024-01-01'
                 f.employee_ids.add(self.employee_emp)
                 f.holiday_status_id = self.leave_type
-                f.date_from = '2024-01-01'
                 f.name = "Employee Allocation"
 
             accrual_allocation = f.record
@@ -1968,3 +1968,83 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         with self.assertRaises(ValidationError):
             leave.action_confirm()
+
+    def test_compute_allocation_days_after_adding_employee(self):
+        """
+        Test the addition of the employee after the date when creating an allocation
+        will the number_of_days be computed or not. Also that the number_of_days
+        gets recomputed when changing the employee
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Monthly accrual',
+            'is_based_on_worked_time': True,
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+            'level_ids':
+                [(0, 0, {
+                    'added_value_type': 'day',
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'frequency': 'daily',
+                    'first_day_display': '1',
+                    'cap_accrued_time': False,
+                    'action_with_unused_accruals': 'all',
+                }),
+             ],
+        })
+
+        with freeze_time('2024-08-19'):
+            attendances = []
+            for index in range(3):
+                attendances.extend([
+                    (0, 0, {
+                        'name': '%s_%d' % ('20 Hours', index),
+                        'hour_from': 8,
+                        'hour_to': 10,
+                        'dayofweek': str(index),
+                        'day_period': 'morning'
+                    }),
+                    (0, 0, {
+                        'name': '%s_%d' % ('20 Hours', index),
+                        'hour_from': 10,
+                        'hour_to': 11,
+                        'dayofweek': str(index),
+                        'day_period': 'lunch'
+                    }),
+                    (0, 0, {
+                        'name': '%s_%d' % ('20 Hours', index),
+                        'hour_from': 11,
+                        'hour_to': 13,
+                        'dayofweek': str(index),
+                        'day_period': 'afternoon'
+                    })
+                ])
+            calendar_emp = self.env['resource.calendar'].create({
+                'name': '20 Hours',
+                'tz': self.employee_hrmanager.tz,
+                'attendance_ids': attendances,
+            })
+            self.employee_hrmanager.resource_calendar_id = calendar_emp.id
+
+            with Form(self.env['hr.leave.allocation']) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = accrual_plan
+                f.date_from = '2024-08-07'
+                f.holiday_status_id = self.leave_type
+                f.employee_ids.add(self.employee_emp)
+                f.name = "Employee Allocation"
+
+            accrual_allocation = f.record
+            allocation_days = accrual_allocation.number_of_days
+            self.assertEqual(accrual_allocation.number_of_days, 7.0)
+
+            with Form(accrual_allocation) as accForm:
+                accForm.employee_ids.remove(self.employee_emp.id)
+                accForm.employee_ids.add(self.employee_hrmanager)
+
+            updated_allocation = accForm.record
+
+            self.assertNotEqual(updated_allocation.number_of_days, allocation_days)
+            self.assertEqual(updated_allocation.number_of_days, 3.0)
