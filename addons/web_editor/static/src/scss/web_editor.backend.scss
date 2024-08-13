@@ -59,6 +59,12 @@
     }
 }
 
+.o_form_view {
+    .o_field_html:focus-within span.o_field_translate, .o_field_html:hover span.o_field_translate {
+        visibility: visible !important;
+    }
+}
+
 .o_field_html:not(.o_readonly_modifier) {
     .o_editor_banner_icon {
         cursor: pointer;

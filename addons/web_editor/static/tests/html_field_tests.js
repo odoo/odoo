@@ -10,6 +10,7 @@ import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { parseHTML, setSelection } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { onRendered, useEffect } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { COLOR_PICKER_TEMPLATE, wysiwygData } from "@web_editor/../tests/test_utils";
 import { OdooEditor } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
 import { uploadService } from "@web_editor/components/upload_progress_toast/upload_service";
@@ -246,6 +247,38 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.strictEqual(editable.innerHTML, `<p>first</p>`);
         await editable.dispatchEvent(new KeyboardEvent('keydown', {key: 'z', ctrlKey: true, bubbles: true, cancelable: true}));
         assert.strictEqual(editable.innerHTML, `<p>first</p>`);
+    });
+
+    QUnit.test("translate button should be displayed in multilang", async (assert) => {
+        const serviceRegistry = registry.category("services");
+        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+            force: true,
+        });
+        serverData.models.partner.fields.txt.translate = true;
+        serverData.models.partner.records.push({ id: 1, txt: "<p>first</p>" });
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                wysiwygPromise.resolve();
+            }
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editable = target.querySelector(".odoo-editor-editable");
+        const p = editable.firstElementChild;
+        Wysiwyg.setRange(p);
+        assert.strictEqual(getComputedStyle(document.querySelector(".o_field_translate")).visibility, "visible");
     });
 
 
