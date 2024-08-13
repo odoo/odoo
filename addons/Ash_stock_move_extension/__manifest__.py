@@ -1,9 +1,9 @@
 {
-    'name': 'AshSalesTest2',
+    'name': 'AshStockMove',
     'version': '1.0',
     'depends': ['sale', 'base',],
     'data': [
-        'views/views2.xml',
+        'views/views.xml',
     ],
     'installable': True,
     'auto_install': False,
