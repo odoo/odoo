@@ -106,6 +106,10 @@ registry.category("web_tour.tours").add('test_certification_success', {
         trigger: 'button[type="submit"]',
         run: "click",
     }, {
+        content: "Click on Submit",
+        trigger: 'button.btn-primary:contains("Submit")',
+        run: "click",
+    }, {
         content: "You scored",
         trigger: 'h1:contains("You scored")',
     }, {
